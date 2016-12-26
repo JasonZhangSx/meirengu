@@ -8,6 +8,7 @@
     <file type="web" url="file://$PROJECT_DIR$/news_cms" />
     <file type="web" url="file://$PROJECT_DIR$/payment" />
     <file type="web" url="file://$PROJECT_DIR$/shopping_mall" />
+    <file type="web" url="file://$PROJECT_DIR$/sms" />
     <file type="web" url="file://$PROJECT_DIR$/user_center" />
   </component>
   <component name="MavenProjectsManager">

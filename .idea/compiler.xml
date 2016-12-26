@@ -30,6 +30,7 @@
         <module name="news_cms" />
         <module name="payment" />
         <module name="shopping_mall" />
+        <module name="sms" />
         <module name="user_center" />
       </profile>
     </annotationProcessing>
@@ -44,6 +45,7 @@
       <module name="news_cms" target="1.5" />
       <module name="payment" target="1.5" />
       <module name="shopping_mall" target="1.5" />
+      <module name="sms" target="1.5" />
       <module name="user_center" target="1.5" />
     </bytecodeTargetLevel>
   </component>
