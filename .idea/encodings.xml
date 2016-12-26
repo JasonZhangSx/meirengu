@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/advertisement" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crowd_funding" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data_operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/medical_beauty" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/news_cms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/payment" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shopping_mall" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user_center" charset="UTF-8" />
+  </component>
+</project>

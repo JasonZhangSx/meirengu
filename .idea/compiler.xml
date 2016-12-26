@@ -36,17 +36,17 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="adsense" target="1.5" />
-      <module name="advertisement" target="1.5" />
-      <module name="crowd_funding" target="1.5" />
-      <module name="data_operation" target="1.5" />
+      <module name="advertisement" target="1.8" />
+      <module name="crowd_funding" target="1.8" />
+      <module name="data_operation" target="1.8" />
       <module name="mall" target="1.5" />
-      <module name="medical_beauty" target="1.5" />
+      <module name="medical_beauty" target="1.8" />
       <module name="meirengu" target="1.5" />
-      <module name="news_cms" target="1.5" />
-      <module name="payment" target="1.5" />
-      <module name="shopping_mall" target="1.5" />
-      <module name="sms" target="1.5" />
-      <module name="user_center" target="1.5" />
+      <module name="news_cms" target="1.8" />
+      <module name="payment" target="1.8" />
+      <module name="shopping_mall" target="1.8" />
+      <module name="sms" target="1.8" />
+      <module name="user_center" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
