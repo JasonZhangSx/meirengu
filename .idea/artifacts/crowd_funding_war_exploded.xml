@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="crowd_funding:war exploded">
+    <output-path>$PROJECT_DIR$/crowd_funding/target/crowd_funding</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="crowd_funding" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/crowd_funding/target/crowd_funding/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="crowd_funding/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/advertisement/advertisement.iml" filepath="$PROJECT_DIR$/advertisement/advertisement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crowd_funding/crowd_funding.iml" filepath="$PROJECT_DIR$/crowd_funding/crowd_funding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data_operation/data_operation.iml" filepath="$PROJECT_DIR$/data_operation/data_operation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/medical_beauty/medical_beauty.iml" filepath="$PROJECT_DIR$/medical_beauty/medical_beauty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meirengu.iml" filepath="$PROJECT_DIR$/meirengu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/news_cms/news_cms.iml" filepath="$PROJECT_DIR$/news_cms/news_cms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/payment/payment.iml" filepath="$PROJECT_DIR$/payment/payment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shopping_mall/shopping_mall.iml" filepath="$PROJECT_DIR$/shopping_mall/shopping_mall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user_center/user_center.iml" filepath="$PROJECT_DIR$/user_center/user_center.iml" />
+    </modules>
+  </component>
+</project>

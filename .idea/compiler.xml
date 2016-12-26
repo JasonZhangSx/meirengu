@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="advertisement" />
+        <module name="crowd_funding" />
+        <module name="data_operation" />
+        <module name="mall" />
+        <module name="medical_beauty" />
+        <module name="news_cms" />
+        <module name="payment" />
+        <module name="shopping_mall" />
+        <module name="user_center" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="adsense" target="1.5" />
+      <module name="advertisement" target="1.5" />
+      <module name="crowd_funding" target="1.5" />
+      <module name="data_operation" target="1.5" />
+      <module name="mall" target="1.5" />
+      <module name="medical_beauty" target="1.5" />
+      <module name="meirengu" target="1.5" />
+      <module name="news_cms" target="1.5" />
+      <module name="payment" target="1.5" />
+      <module name="shopping_mall" target="1.5" />
+      <module name="user_center" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

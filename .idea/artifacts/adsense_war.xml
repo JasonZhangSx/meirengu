@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="adsense:war">
+    <output-path>$PROJECT_DIR$/adsense/target</output-path>
+    <root id="archive" name="adsense.war">
+      <element id="artifact" artifact-name="adsense:war exploded" />
+    </root>
+  </artifact>
+</component>
