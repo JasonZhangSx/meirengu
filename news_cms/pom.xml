@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>news_cms</finalName>
+        <finalName>news</finalName>
     </build>
 </project>

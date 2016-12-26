@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>data_operating</finalName>
+        <finalName>data</finalName>
     </build>
 </project>

@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>user_center</finalName>
+        <finalName>uc</finalName>
     </build>
 </project>

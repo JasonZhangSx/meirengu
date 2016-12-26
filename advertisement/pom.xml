@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>advertisement</finalName>
+        <finalName>ad</finalName>
     </build>
 </project>

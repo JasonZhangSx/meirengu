@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>medical_beauty</finalName>
+        <finalName>medical</finalName>
     </build>
 </project>

@@ -19,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>crowd_funding</finalName>
+        <finalName>cf</finalName>
     </build>
 </project>
