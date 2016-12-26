@@ -17,8 +17,6 @@
         <module>data_operation</module>
         <module>advertisement</module>
         <module>crowd_funding</module>
-        <module>shopping_mall</module>
-        <module>advertisement</module>
         <module>sms</module>
     </modules>
 
