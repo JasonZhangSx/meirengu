@@ -36,7 +36,7 @@
         <aspectj.version>1.7.4</aspectj.version>
         <!-- mybatis -->
         <mybatis.version>3.4.1</mybatis.version>
-        <mybatis-spring.version>1.2.2</mybatis-spring.version>
+        <mybatis-spring.version>1.3.0</mybatis-spring.version>
         <!-- connection pool -->
         <tomcat-jdbc.version>7.0.54</tomcat-jdbc.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
