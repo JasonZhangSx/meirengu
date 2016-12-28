@@ -67,7 +67,7 @@
         <!-- Monitor -->
         <javasimon.version>3.5.1</javasimon.version>
         <!-- JSON -->
-        <jackson.version>2.4.0</jackson.version>
+        <jackson.version>2.7.3</jackson.version>
         <fastjson.version>1.1.40</fastjson.version>
         <!-- XML -->
         <dom4j.version>1.6.1</dom4j.version>
@@ -141,6 +141,26 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
             <!-- email/scheduler/freemarker -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -193,6 +213,12 @@
                 <groupId>${jdbc.driver.groupId}</groupId>
                 <artifactId>${jdbc.driver.artifactId}</artifactId>
                 <version>${jdbc.driver.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons-dbcp.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <!-- PERSISTENCE end -->
@@ -437,6 +463,11 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jaxb-annotations</artifactId>
                 <version>${jackson.version}</version>
@@ -538,6 +569,11 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
             </dependency>
 
             <!-- google java library -->
