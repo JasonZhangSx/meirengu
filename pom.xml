@@ -114,6 +114,8 @@
         <jmemcached.version>1.0.0</jmemcached.version>
         <!-- smtp server simulator -->
         <greenmail.version>1.3.1b</greenmail.version>
+        <!-- sms yunpian sdk-->
+        <yunpian-java-sdk.version>1.2.1</yunpian-java-sdk.version>
         <!-- 定义隐式依赖的版本 -->
         <hamcrest.version>1.3</hamcrest.version>
         <objenesis.version>2.1</objenesis.version>
@@ -805,6 +807,14 @@
                 <version>${greenmail.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- sms yunpian sdk -->
+            <dependency>
+                <groupId>com.yunpian.sdk</groupId>
+                <artifactId>yunpian-java-sdk</artifactId>
+                <version>${yunpian-java-sdk.version}</version>
+            </dependency>
+
             <!-- 定义隐式依赖的版本 -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
