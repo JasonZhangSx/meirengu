@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.Area" >
+    <id column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="area_parent_id" property="areaParentId" jdbcType="INTEGER" />
+    <result column="area_sort" property="areaSort" jdbcType="BIT" />
+    <result column="area_deep" property="areaDeep" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    area_id, area_name, area_parent_id, area_sort, area_deep
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from area
+    where area_id = #{areaId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from area
+    where area_id = #{areaId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.medical.model.Area" >
+    insert into area (area_id, area_name, area_parent_id, 
+      area_sort, area_deep)
+    values (#{areaId,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, #{areaParentId,jdbcType=INTEGER}, 
+      #{areaSort,jdbcType=BIT}, #{areaDeep,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.medical.model.Area" >
+    insert into area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="areaParentId != null" >
+        area_parent_id,
+      </if>
+      <if test="areaSort != null" >
+        area_sort,
+      </if>
+      <if test="areaDeep != null" >
+        area_deep,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaParentId != null" >
+        #{areaParentId,jdbcType=INTEGER},
+      </if>
+      <if test="areaSort != null" >
+        #{areaSort,jdbcType=BIT},
+      </if>
+      <if test="areaDeep != null" >
+        #{areaDeep,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.Area" >
+    update area
+    <set >
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaParentId != null" >
+        area_parent_id = #{areaParentId,jdbcType=INTEGER},
+      </if>
+      <if test="areaSort != null" >
+        area_sort = #{areaSort,jdbcType=BIT},
+      </if>
+      <if test="areaDeep != null" >
+        area_deep = #{areaDeep,jdbcType=BIT},
+      </if>
+    </set>
+    where area_id = #{areaId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.Area" >
+    update area
+    set area_name = #{areaName,jdbcType=VARCHAR},
+      area_parent_id = #{areaParentId,jdbcType=INTEGER},
+      area_sort = #{areaSort,jdbcType=BIT},
+      area_deep = #{areaDeep,jdbcType=BIT}
+    where area_id = #{areaId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.RecommendGoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.RecommendGoods" >
+    <id column="recommend_id" property="recommendId" jdbcType="INTEGER" />
+    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    recommend_id, goods_id, sort
+  </sql>
+
+  <insert id="insert" parameterType="com.meirengu.medical.model.RecommendGoods" >
+    insert into recommend_goods (recommend_id, goods_id, sort
+      )
+    values (#{recommendId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{sort,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.medical.model.RecommendGoods" >
+    insert into recommend_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recommendId != null" >
+        recommend_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recommendId != null" >
+        #{recommendId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.RecommendGoods" >
+    update recommend_goods
+    <set >
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=BIT},
+      </if>
+    </set>
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+      and goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.RecommendGoods" >
+    update recommend_goods
+    set sort = #{sort,jdbcType=BIT}
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+      and goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+</mapper>

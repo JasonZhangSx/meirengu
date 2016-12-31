@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.GoodsClassMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.GoodsClass" >
+    <id column="gc_id" property="gcId" jdbcType="INTEGER" />
+    <result column="gc_name" property="gcName" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+    <result column="gc_parent_id" property="gcParentId" jdbcType="INTEGER" />
+    <result column="gc_sort" property="gcSort" jdbcType="BIT" />
+    <result column="gc_show" property="gcShow" jdbcType="BIT" />
+    <result column="gc_title" property="gcTitle" jdbcType="VARCHAR" />
+    <result column="gc_keywords" property="gcKeywords" jdbcType="VARCHAR" />
+    <result column="gc_description" property="gcDescription" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    gc_id, gc_name, type_id, type_name, store_id, gc_parent_id, gc_sort, gc_show, gc_title, 
+    gc_keywords, gc_description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_class
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from goods_class
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.medical.model.GoodsClass" >
+    insert into goods_class (gc_id, gc_name, type_id, 
+      type_name, store_id, gc_parent_id, 
+      gc_sort, gc_show, gc_title, gc_keywords, 
+      gc_description)
+    values (#{gcId,jdbcType=INTEGER}, #{gcName,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
+      #{typeName,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, #{gcParentId,jdbcType=INTEGER}, 
+      #{gcSort,jdbcType=BIT}, #{gcShow,jdbcType=BIT}, #{gcTitle,jdbcType=VARCHAR}, #{gcKeywords,jdbcType=VARCHAR}, 
+      #{gcDescription,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.medical.model.GoodsClass" >
+    insert into goods_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gcId != null" >
+        gc_id,
+      </if>
+      <if test="gcName != null" >
+        gc_name,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="gcParentId != null" >
+        gc_parent_id,
+      </if>
+      <if test="gcSort != null" >
+        gc_sort,
+      </if>
+      <if test="gcShow != null" >
+        gc_show,
+      </if>
+      <if test="gcTitle != null" >
+        gc_title,
+      </if>
+      <if test="gcKeywords != null" >
+        gc_keywords,
+      </if>
+      <if test="gcDescription != null" >
+        gc_description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gcId != null" >
+        #{gcId,jdbcType=INTEGER},
+      </if>
+      <if test="gcName != null" >
+        #{gcName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="gcParentId != null" >
+        #{gcParentId,jdbcType=INTEGER},
+      </if>
+      <if test="gcSort != null" >
+        #{gcSort,jdbcType=BIT},
+      </if>
+      <if test="gcShow != null" >
+        #{gcShow,jdbcType=BIT},
+      </if>
+      <if test="gcTitle != null" >
+        #{gcTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="gcKeywords != null" >
+        #{gcKeywords,jdbcType=VARCHAR},
+      </if>
+      <if test="gcDescription != null" >
+        #{gcDescription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.GoodsClass" >
+    update goods_class
+    <set >
+      <if test="gcName != null" >
+        gc_name = #{gcName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="gcParentId != null" >
+        gc_parent_id = #{gcParentId,jdbcType=INTEGER},
+      </if>
+      <if test="gcSort != null" >
+        gc_sort = #{gcSort,jdbcType=BIT},
+      </if>
+      <if test="gcShow != null" >
+        gc_show = #{gcShow,jdbcType=BIT},
+      </if>
+      <if test="gcTitle != null" >
+        gc_title = #{gcTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="gcKeywords != null" >
+        gc_keywords = #{gcKeywords,jdbcType=VARCHAR},
+      </if>
+      <if test="gcDescription != null" >
+        gc_description = #{gcDescription,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.GoodsClass" >
+    update goods_class
+    set gc_name = #{gcName,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      store_id = #{storeId,jdbcType=INTEGER},
+      gc_parent_id = #{gcParentId,jdbcType=INTEGER},
+      gc_sort = #{gcSort,jdbcType=BIT},
+      gc_show = #{gcShow,jdbcType=BIT},
+      gc_title = #{gcTitle,jdbcType=VARCHAR},
+      gc_keywords = #{gcKeywords,jdbcType=VARCHAR},
+      gc_description = #{gcDescription,jdbcType=VARCHAR}
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </update>
+</mapper>

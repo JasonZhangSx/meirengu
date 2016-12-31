@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.SpecMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.Spec" >
+    <id column="sp_id" property="spId" jdbcType="INTEGER" />
+    <result column="sp_name" property="spName" jdbcType="VARCHAR" />
+    <result column="sp_format" property="spFormat" jdbcType="CHAR" />
+    <result column="sp_sort" property="spSort" jdbcType="BIT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.medical.model.Spec" extends="BaseResultMap" >
+    <result column="sp_value" property="spValue" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sp_id, sp_name, sp_format, sp_sort
+  </sql>
+  <sql id="Blob_Column_List" >
+    sp_value
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from spec
+    where sp_id = #{spId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from spec
+    where sp_id = #{spId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.medical.model.Spec" >
+    insert into spec (sp_id, sp_name, sp_format, 
+      sp_sort, sp_value)
+    values (#{spId,jdbcType=INTEGER}, #{spName,jdbcType=VARCHAR}, #{spFormat,jdbcType=CHAR}, 
+      #{spSort,jdbcType=BIT}, #{spValue,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.medical.model.Spec" >
+    insert into spec
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="spId != null" >
+        sp_id,
+      </if>
+      <if test="spName != null" >
+        sp_name,
+      </if>
+      <if test="spFormat != null" >
+        sp_format,
+      </if>
+      <if test="spSort != null" >
+        sp_sort,
+      </if>
+      <if test="spValue != null" >
+        sp_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="spId != null" >
+        #{spId,jdbcType=INTEGER},
+      </if>
+      <if test="spName != null" >
+        #{spName,jdbcType=VARCHAR},
+      </if>
+      <if test="spFormat != null" >
+        #{spFormat,jdbcType=CHAR},
+      </if>
+      <if test="spSort != null" >
+        #{spSort,jdbcType=BIT},
+      </if>
+      <if test="spValue != null" >
+        #{spValue,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.Spec" >
+    update spec
+    <set >
+      <if test="spName != null" >
+        sp_name = #{spName,jdbcType=VARCHAR},
+      </if>
+      <if test="spFormat != null" >
+        sp_format = #{spFormat,jdbcType=CHAR},
+      </if>
+      <if test="spSort != null" >
+        sp_sort = #{spSort,jdbcType=BIT},
+      </if>
+      <if test="spValue != null" >
+        sp_value = #{spValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where sp_id = #{spId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.meirengu.medical.model.Spec" >
+    update spec
+    set sp_name = #{spName,jdbcType=VARCHAR},
+      sp_format = #{spFormat,jdbcType=CHAR},
+      sp_sort = #{spSort,jdbcType=BIT},
+      sp_value = #{spValue,jdbcType=LONGVARCHAR}
+    where sp_id = #{spId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.Spec" >
+    update spec
+    set sp_name = #{spName,jdbcType=VARCHAR},
+      sp_format = #{spFormat,jdbcType=CHAR},
+      sp_sort = #{spSort,jdbcType=BIT}
+    where sp_id = #{spId,jdbcType=INTEGER}
+  </update>
+</mapper>

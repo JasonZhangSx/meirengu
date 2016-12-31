@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.HospitalMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.HospitalVo" >
+    <id column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+    <result column="hospital_name" property="hospitalName" jdbcType="VARCHAR" />
+    <result column="hospital_type" property="hospitalType" jdbcType="TINYINT" />
+    <result column="hospital_class" property="hospitalClass" jdbcType="SMALLINT" />
+    <result column="hospital_small_logo" property="hospitalSmallLogo" jdbcType="VARCHAR" />
+    <result column="hospital_logo" property="hospitalLogo" jdbcType="VARCHAR" />
+    <result column="hospital_pic" property="hospitalPic" jdbcType="VARCHAR" />
+    <result column="hospital_website" property="hospitalWebsite" jdbcType="VARCHAR" />
+    <result column="hospital_address" property="hospitalAddress" jdbcType="VARCHAR" />
+    <result column="hospital_tel" property="hospitalTel" jdbcType="INTEGER" />
+    <result column="certificate_pic" property="certificatePic" jdbcType="VARCHAR" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="contacts_tel" property="contactsTel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="setup_time" property="setupTime" jdbcType="TIMESTAMP" />
+    <result column="createby" property="createby" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="lasteditby" property="lasteditby" jdbcType="INTEGER" />
+    <result column="lastedittime" property="lastedittime" jdbcType="TIMESTAMP" />
+    <result column="doctor_sum" property="doctorSum" jdbcType="INTEGER" />
+    <result column="case_sum" property="caseSum" jdbcType="INTEGER" />
+    <result column="hospital_status" property="hospitalStatus" jdbcType="INTEGER" />
+    <result column="hospital_sort" property="hospitalSort" jdbcType="INTEGER" />
+    <result column="is_audit" property="isAudit" jdbcType="BIT" />
+    <result column="audit_account" property="auditAccount" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.medical.vo.HospitalVo" extends="BaseResultMap" >
+    <result column="hospital_remark" property="hospitalRemark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    hospital_id, hospital_name, hospital_type, hospital_class, hospital_small_logo, hospital_logo, 
+    hospital_pic, hospital_website, hospital_address, hospital_tel, contacts, contacts_tel, 
+    email, county, province, city, setup_time, createby, createtime, lasteditby, lastedittime, 
+    doctor_sum, case_sum, hospital_status, hospital_sort, is_audit, audit_account, audit_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    hospital_remark
+  </sql>
+  <!-- 条件查询医院数据 -->
+  <select id="conditionQuery" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.medical.vo.HospitalVo" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from hospital
+    <if test="hospitalId != null" >
+      where hospital_id=#{hospitalId,jdbcType=INTEGER}
+    </if>
+    <if test="hospitalName != null" >
+      and hospital_name=#{hospitalName,jdbcType=VARCHAR}
+    </if>
+    <if test="hospitalType != null" >
+      and hospital_type=#{hospitalType,jdbcType=TINYINT}
+    </if>
+    <if test="province != null" >
+      and province = #{province,jdbcType=INTEGER}
+    </if>
+    <if test="city != null" >
+      and city = #{city,jdbcType=INTEGER}
+    </if>
+  </select>
+  <!-- 甄选医院页面 -->
+  <select id="selectionHospital" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.HospitalVo" >
+    SELECT hospital_id 'hospitalId',hospital_name 'hospitalName',hospital_class 'hospitalClass', hospital_small_logo 'hospitalSmallLogo',
+    (SELECT COUNT(1) FROM doctor d WHERE d.hospital_id=h.hospital_id) 'doctorNum' ,
+    (SELECT COUNT(1) FROM `case` c WHERE c.hos_id=h.hospital_id) 'caseNum'
+    FROM hospital h
+  </select>
+   <!--LIMIT  #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}-->
+  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.HospitalVo">
+    insert into hospital
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="hospitalId != null">
+        hospital_id,
+      </if>
+      <if test="hospitalName != null">
+        hospital_name,
+      </if>
+      <if test="hospitalType != null">
+        hospital_type,
+      </if>
+      <if test="hospitalClass != null">
+        hospital_class,
+      </if>
+      <if test="hospitalSmallLogo != null">
+        hospital_small_logo,
+      </if>
+      <if test="hospitalLogo != null">
+        hospital_logo,
+      </if>
+      <if test="hospitalPic != null">
+        hospital_pic,
+      </if>
+      <if test="hospitalWebsite != null">
+        hospital_website,
+      </if>
+      <if test="hospitalAddress != null">
+        hospital_address,
+      </if>
+      <if test="hospitalTel != null">
+        hospital_tel,
+      </if>
+      <if test="contacts != null">
+        contacts,
+      </if>
+      <if test="contactsTel != null">
+        contacts_tel,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="county != null">
+        county,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="setupTime != null">
+        setup_time,
+      </if>
+      <if test="createby != null">
+        createby,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="lasteditby != null">
+        lasteditby,
+      </if>
+      <if test="lastedittime != null">
+        lastedittime,
+      </if>
+      <if test="doctorSum != null">
+        doctor_sum,
+      </if>
+      <if test="caseSum != null">
+        case_sum,
+      </if>
+      <if test="hospitalStatus != null">
+        hospital_status,
+      </if>
+      <if test="hospitalSort != null">
+        hospital_sort,
+      </if>
+      <if test="isAudit != null">
+        is_audit,
+      </if>
+      <if test="auditAccount != null">
+        audit_account,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="hospitalRemark != null">
+        hospital_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="hospitalId != null">
+        #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalName != null">
+        #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalType != null">
+        #{hospitalType,jdbcType=TINYINT},
+      </if>
+      <if test="hospitalClass != null">
+        #{hospitalClass,jdbcType=SMALLINT},
+      </if>
+      <if test="hospitalSmallLogo != null">
+        #{hospitalSmallLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalLogo != null">
+        #{hospitalLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalPic != null">
+        #{hospitalPic,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalWebsite != null">
+        #{hospitalWebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalAddress != null">
+        #{hospitalAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalTel != null">
+        #{hospitalTel,jdbcType=INTEGER},
+      </if>
+      <if test="contacts != null">
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="contactsTel != null">
+        #{contactsTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null">
+        #{county,jdbcType=INTEGER},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="setupTime != null">
+        #{setupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        #{createby,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditby != null">
+        #{lasteditby,jdbcType=INTEGER},
+      </if>
+      <if test="lastedittime != null">
+        #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doctorSum != null">
+        #{doctorSum,jdbcType=INTEGER},
+      </if>
+      <if test="caseSum != null">
+        #{caseSum,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalStatus != null">
+        #{hospitalStatus,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalSort != null">
+        #{hospitalSort,jdbcType=INTEGER},
+      </if>
+      <if test="isAudit != null">
+        #{isAudit,jdbcType=BIT},
+      </if>
+      <if test="auditAccount != null">
+        #{auditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hospitalRemark != null">
+        #{hospitalRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="conditionUpdate" parameterType="com.meirengu.medical.vo.HospitalVo">
+    update hospital
+    <set>
+      <if test="hospitalName != null">
+        hospital_name = #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalType != null">
+        hospital_type = #{hospitalType,jdbcType=TINYINT},
+      </if>
+      <if test="hospitalClass != null">
+        hospital_class = #{hospitalClass,jdbcType=SMALLINT},
+      </if>
+      <if test="hospitalSmallLogo != null">
+        hospital_small_logo = #{hospitalSmallLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalLogo != null">
+        hospital_logo = #{hospitalLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalPic != null">
+        hospital_pic = #{hospitalPic,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalWebsite != null">
+        hospital_website = #{hospitalWebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalAddress != null">
+        hospital_address = #{hospitalAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalTel != null">
+        hospital_tel = #{hospitalTel,jdbcType=INTEGER},
+      </if>
+      <if test="certificatePic != null">
+        certificate_pic = #{certificatePic,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null">
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="contactsTel != null">
+        contacts_tel = #{contactsTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null">
+        county = #{county,jdbcType=INTEGER},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="setupTime != null">
+        setup_time = #{setupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        createby = #{createby,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditby != null">
+        lasteditby = #{lasteditby,jdbcType=INTEGER},
+      </if>
+      <if test="lastedittime != null">
+        lastedittime = #{lastedittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doctorSum != null">
+        doctor_sum = #{doctorSum,jdbcType=INTEGER},
+      </if>
+      <if test="caseSum != null">
+        case_sum = #{caseSum,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalStatus != null">
+        hospital_status = #{hospitalStatus,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalSort != null">
+        hospital_sort = #{hospitalSort,jdbcType=INTEGER},
+      </if>
+      <if test="isAudit != null">
+        is_audit = #{isAudit,jdbcType=BIT},
+      </if>
+      <if test="auditAccount != null">
+        audit_account = #{auditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hospitalRemark != null">
+        hospital_remark = #{hospitalRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where hospital_id = #{hospitalId,jdbcType=INTEGER}
+  </update>
+</mapper>

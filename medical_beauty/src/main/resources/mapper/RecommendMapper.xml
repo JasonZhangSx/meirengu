@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.RecommendMapper" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.Recommend" >
+    <id column="recommend_id" property="recommendId" jdbcType="INTEGER" />
+    <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+    <result column="recommend_code" property="recommendCode" jdbcType="VARCHAR" />
+    <result column="recommend_desc" property="recommendDesc" jdbcType="VARCHAR" />
+    <result column="recommend_config" property="recommendConfig" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    recommend_id, recommend_name, recommend_code, recommend_desc, recommend_config
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from recommend
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from recommend
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.medical.model.Recommend" >
+    insert into recommend (recommend_id, recommend_name, recommend_code, 
+      recommend_desc, recommend_config)
+    values (#{recommendId,jdbcType=INTEGER}, #{recommendName,jdbcType=VARCHAR}, #{recommendCode,jdbcType=VARCHAR}, 
+      #{recommendDesc,jdbcType=VARCHAR}, #{recommendConfig,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.medical.model.Recommend" >
+    insert into recommend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recommendId != null" >
+        recommend_id,
+      </if>
+      <if test="recommendName != null" >
+        recommend_name,
+      </if>
+      <if test="recommendCode != null" >
+        recommend_code,
+      </if>
+      <if test="recommendDesc != null" >
+        recommend_desc,
+      </if>
+      <if test="recommendConfig != null" >
+        recommend_config,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recommendId != null" >
+        #{recommendId,jdbcType=INTEGER},
+      </if>
+      <if test="recommendName != null" >
+        #{recommendName,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendCode != null" >
+        #{recommendCode,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendDesc != null" >
+        #{recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendConfig != null" >
+        #{recommendConfig,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.Recommend" >
+    update recommend
+    <set >
+      <if test="recommendName != null" >
+        recommend_name = #{recommendName,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendCode != null" >
+        recommend_code = #{recommendCode,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendDesc != null" >
+        recommend_desc = #{recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendConfig != null" >
+        recommend_config = #{recommendConfig,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.Recommend" >
+    update recommend
+    set recommend_name = #{recommendName,jdbcType=VARCHAR},
+      recommend_code = #{recommendCode,jdbcType=VARCHAR},
+      recommend_desc = #{recommendDesc,jdbcType=VARCHAR},
+      recommend_config = #{recommendConfig,jdbcType=VARCHAR}
+    where recommend_id = #{recommendId,jdbcType=INTEGER}
+  </update>
+</mapper>
