@@ -18,45 +18,52 @@
     <sql id="select_columns">
         article_id as id, ac_id as acId, article_url as url, article_show as `show`,
         article_sort as sort, article_img as img, article_title as title, article_content as content,
-        article_position as `position`, article_is_commend as isCommend, article_time as `time`,
+        article_is_banner as isBanner, article_is_commend as isCommend, article_time as `time`,
         article_is_publish as isPublish, flag , create_time as createTime
     </sql>
 
     <insert id="insert" parameterType="article" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO <include refid="table_name" />
-        (article_id, ac_id, article_url, article_show, article_sort, article_title, article_content)
+        (article_id, ac_id, article_url, article_show, article_sort, article_img, article_title,
+        article_content, article_is_banner, article_is_commend, article_is_publish)
         VALUES
-        (#{id}, #{acId}, #{url}, #{show}, #{sort}, #{title}, #{content});
+        (#{id}, #{acId}, #{url}, #{show}, #{sort}, #{img}, #{title}, #{content}, #{isBanner}, #{isCommend}, #{isPublish});
     </insert>
     <update id="update" parameterType="article">
         update <include refid="table_name" />
         <set>
-            <if test="acId != null and acId != ''">
-                acId=#{acId}
+            <if test="acId != null and acId != '' and acId != 0">
+                ac_id=#{acId},
             </if>
             <if test="url != null and url != ''">
-                article_url=#{url}
+                article_url=#{url},
             </if>
             <if test="show != null and show != ''">
-                article_show=#{show}
+                article_show=#{show},
             </if>
             <if test="sort != null and sort != ''">
-                article_sort=#{sort}
+                article_sort=#{sort},
             </if>
             <if test="title != null and title != ''">
-                article_title=#{title}
+                article_title=#{title},
             </if>
             <if test="content != null and content != ''">
-                article_content=#{content}
+                article_content=#{content},
             </if>
+            <if test="img != null and img != ''">
+                article_img=#{img},
+            </if>
+                article_is_banner=#{isBanner},
+                article_is_commend=#{isCommend},
+                article_is_publish=#{isPublish}
         </set>
         <where>
-            id = #{id} and flag=1
+            article_id = #{id} and flag=1
         </where>
     </update>
 
     <update id="delete" parameterType="INTEGER">
-        update <include refid="table_name" /> set flag=0 WHERE id=#{id}
+        update <include refid="table_name" /> set flag=0 WHERE article_id=#{id}
     </update>
 
     <select id="detail" parameterType="INTEGER" resultType="Map">
@@ -64,18 +71,9 @@
         FROM article WHERE article_id=#{id} AND flag=1
     </select>
 
-    <select id="getListByParams" parameterType="article" resultType="article">
-        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE flag=1
-        <if test="id != null and id != '' and id != 0">
-            AND article_id=#{id}
-        </if>
-        <if test="acId != null and acId != '' and acId != 0">
-            AND ac_id=#{acId}
-        </if>
-        <if test="position != null and position != ''">
-            AND article_position=#{position}
-        </if>
-    </select>
+    <update id="publish" parameterType="Map" >
+        update <include refid="table_name" /> set article_is_publish=#{isPublish}, article_time=now() WHERE article_id=#{id} and flag=1
+    </update>
 
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
@@ -91,8 +89,8 @@
         <if test="acId != null and acId != '' and acId != 0">
             AND ac_id=#{acId}
         </if>
-        <if test="position != null and position != ''">
-            AND article_position=#{position}
+        <if test="isBanner != null and isBanner != ''">
+            AND article_is_banner=#{isBanner}
         </if>
         <if test="show != null and show != ''">
             AND article_show=#{show}
@@ -120,8 +118,8 @@
         <if test="acId != null and acId != '' and acId != 0">
             AND ac_id=#{acId}
         </if>
-        <if test="position != null and position != ''">
-            AND article_position=#{position}
+        <if test="isBanner != null and isBanner != ''">
+            AND article_is_banner=#{isBanner}
         </if>
         <if test="show != null and show != ''">
             AND article_show=#{show}

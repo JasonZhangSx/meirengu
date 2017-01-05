@@ -37,4 +37,12 @@ public interface ArticleService extends PageBaseService<Article>{
      */
     public Map<String, Object> detail(int id);
 
+    /**
+     * 发布/取消发布文章
+     * @param id
+     * @param isPublish
+     * @return
+     */
+    public boolean publish(int id, int isPublish);
+
 }

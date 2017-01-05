@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,18 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public Map<String, Object> detail(int id){
         return articleDao.detail(id);
+    }
+
+    @Override
+    public boolean publish(int id, int isPublish) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id", id);
+        params.put("isPublish", isPublish);
+        if(articleDao.publish(params)>0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

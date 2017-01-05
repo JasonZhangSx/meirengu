@@ -25,10 +25,14 @@ public class Article  extends BaseEntity {
     private String title;
     /** 文章内容 **/
     private String content;
-    /** 文章位置，默认为0普通文章，1为轮播推荐位，2特别策划**/
-    private int position;
+    /** 是否为轮播图文章，0为非轮播图，1为轮播图 **/
+    private int isBanner;
+    /** 是否推荐 0为不推荐，1为推荐 **/
+    private int isCommend;
     /** 文章发布时间 **/
     private Date time;
+    /** 是否发布， 1为发布，0为未发布**/
+    private int isPublish;
 
     public int getId() {
         return id;
@@ -86,14 +90,6 @@ public class Article  extends BaseEntity {
         this.content = content;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public Date getTime() {
         return time;
     }
@@ -108,5 +104,29 @@ public class Article  extends BaseEntity {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public int getIsBanner() {
+        return isBanner;
+    }
+
+    public void setIsBanner(int isBanner) {
+        this.isBanner = isBanner;
+    }
+
+    public int getIsCommend() {
+        return isCommend;
+    }
+
+    public void setIsCommend(int isCommend) {
+        this.isCommend = isCommend;
+    }
+
+    public int getIsPublish() {
+        return isPublish;
+    }
+
+    public void setIsPublish(int isPublish) {
+        this.isPublish = isPublish;
     }
 }

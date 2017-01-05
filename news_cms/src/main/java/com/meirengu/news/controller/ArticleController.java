@@ -17,6 +17,7 @@ import java.util.Map;
  * Created by 建新 on 2016/12/27.
  */
 @Controller
+@RequestMapping("/article")
 public class ArticleController extends BaseController{
 
     @Autowired
@@ -34,7 +35,7 @@ public class ArticleController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/article/recommend/list", method = {RequestMethod.POST})
+    @RequestMapping(value = "/recommend/list", method = {RequestMethod.POST})
     public Map<String, Object> recommendList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                                     @RequestParam(value = "sortby", required = false) String sortBy,
@@ -67,7 +68,7 @@ public class ArticleController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/article/list", method = {RequestMethod.POST})
+    @RequestMapping(value = "/list", method = {RequestMethod.POST})
     public Map<String, Object> list(@RequestParam(value = "ac_id", required = false, defaultValue = "0") int acId,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
@@ -99,15 +100,19 @@ public class ArticleController extends BaseController{
      * @param content
      * @return
      */
-    @RequestMapping(value = "/article/insert", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insert(@RequestParam(value = "ac_id", required = false) int acId,
-                                     @RequestParam(value = "url", required = false) String url,
-                                     @RequestParam(value = "show", required = false) int show,
-                                     @RequestParam(value = "sort", required = false) int sort,
-                                     @RequestParam(value = "title", required = false) String title,
-                                     @RequestParam(value = "content", required = false) String content){
-        Article article = this.packageA(0, acId, url, show, sort, title, content, 1);
+    public Map<String,Object> insert(@RequestParam(value = "ac_id") int acId,
+                                     @RequestParam(value = "url") String url,
+                                     @RequestParam(value = "show") int show,
+                                     @RequestParam(value = "img") String img,
+                                     @RequestParam(value = "sort") int sort,
+                                     @RequestParam(value = "title") String title,
+                                     @RequestParam(value = "content") String content,
+                                     @RequestParam(value = "is_banner") int isBanner,
+                                     @RequestParam(value = "is_commend") int isCommend,
+                                     @RequestParam(value = "is_publish") int isPublish){
+        Article article = this.packageA(0, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
         int i = this.articleService.insert(article);
         if(i > 0){
             return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
@@ -121,7 +126,7 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Map<String,Object> delete(@PathVariable("id") int id){
         int i = this.articleService.delete(id);
@@ -137,17 +142,21 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public Map<String,Object> update(@PathVariable("id") int id,
-                                     @RequestParam(value = "ac_id", required = false) int acId,
-                                     @RequestParam(value = "url", required = false) String url,
-                                     @RequestParam(value = "show", required = false) int show,
-                                     @RequestParam(value = "sort", required = false) int sort,
-                                     @RequestParam(value = "title", required = false) String title,
-                                     @RequestParam(value = "content", required = false) String content){
-        Article article = this.packageA(id, acId, url, show, sort, title, content, 1);
-        int i = this.articleService.insert(article);
+                                     @RequestParam(value = "ac_id") int acId,
+                                     @RequestParam(value = "url") String url,
+                                     @RequestParam(value = "show") int show,
+                                     @RequestParam(value = "sort") int sort,
+                                     @RequestParam(value = "img") String img,
+                                     @RequestParam(value = "title") String title,
+                                     @RequestParam(value = "content") String content,
+                                     @RequestParam(value = "is_banner") int isBanner,
+                                     @RequestParam(value = "is_commend") int isCommend,
+                                     @RequestParam(value = "is_publish") int isPublish){
+        Article article = this.packageA(id, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
+        int i = this.articleService.update(article);
         if(i > 0){
             return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
         }else{
@@ -160,14 +169,31 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> detail(@PathVariable("id") int id){
         Map<String, Object> map = articleService.detail(id);
         return super.setReturnMsg(StatusCode.STATUS_0, map, StatusCode.STATUS_0_MSG);
     }
 
-    private Article packageA(int id, int acId, String url, int show, int sort, String title, String content, int flag){
+    /**
+     * 发布文章
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> publish(@RequestParam(value = "id") int id, @RequestParam(value = "is_publish") int isPublish){
+        if(articleService.publish(id, isPublish)){
+            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
+        }else{
+            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        }
+    }
+
+    private Article packageA(int id, int acId, String url, int show, int sort,
+                             String title, String content, int flag, String img,
+                             int isBanner, int isCommend, int isPublish){
         Article article = new Article();
         article.setId(id);
         article.setAcId(acId);
@@ -177,6 +203,10 @@ public class ArticleController extends BaseController{
         article.setTitle(title);
         article.setContent(content);
         article.setFlag(flag);
+        article.setImg(img);
+        article.setIsBanner(isBanner);
+        article.setIsCommend(isCommend);
+        article.setIsPublish(isPublish);
         return article;
     }
 }

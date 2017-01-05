@@ -35,5 +35,12 @@ public interface ArticleDao extends PageDao<Article>{
      */
     public Map<String, Object> detail(int id);
 
+    /**
+     * 发布/取消发布文章
+     * @param map
+     * @return
+     */
+    public int publish(Map<String, Object> map);
+
 
 }
