@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.ArticleClassDao" >
+
+    <resultMap id="articleClassMap" type="articleClass">
+        <id column="ac_id" property="id" jdbcType="INTEGER" javaType="int"/>
+        <result column="ac_code" property="code" jdbcType="VARCHAR" javaType="string"/>
+        <result column="ac_name" property="name" jdbcType="VARCHAR" javaType="string"/>
+        <result column="ac_parent_id" property="parentId" jdbcType="INTEGER" javaType="int"/>
+        <result column="ac_sort" property="sort" jdbcType="TINYINT" javaType="int"/>
+        <result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
+        <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+    </resultMap>
+    <sql id="select_columns">
+        ac_id as id, ac_code as code, ac_name as `name`, ac_parent_id as parentId,
+        ac_sort as sort, flag, create_time as createTime
+    </sql>
+    <sql id='table_name'>article_class</sql>
+
+    <insert id="insert" parameterType="articleClass" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO <include refid="table_name" />
+        (ac_id, ac_code, ac_name, ac_parent_id, ac_sort)
+        VALUES
+        (#{id}, #{code}, #{name}, #{parentId}, #{sort});
+    </insert>
+    <update id="update" parameterType="articleClass">
+        update <include refid="table_name" />
+        <set>
+            ac_parent_id=#{parentId},
+            <if test="code != null and code != ''">
+                ac_code=#{code},
+            </if>
+            <if test="name != null and name != ''">
+                ac_name=#{name},
+            </if>
+            <if test="sort != null and sort != ''">
+                ac_sort=#{sort}
+            </if>
+        </set>
+        <where>
+            ac_id = #{id} and flag=1
+        </where>
+    </update>
+
+    <update id="delete" parameterType="INTEGER">
+        update <include refid="table_name" /> set flag=0 WHERE ac_id=#{id} and flag=1
+    </update>
+
+    <select id="detail" parameterType="INTEGER" resultType="articleClass">
+        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE ac_id=#{id} and flag=1
+    </select>
+
+    <select id="getByCodeOrName" parameterType="articleClass" resultType="articleClass">
+        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE flag=1
+        AND ac_parent_id = #{parentId}
+        AND (ac_code = #{code} OR ac_name = #{name})
+    </select>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select <include refid="select_columns" />
+        from
+        <include refid="table_name" />
+        <where>
+
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        <where>
+
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>
