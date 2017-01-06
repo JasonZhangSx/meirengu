@@ -1,5 +1,7 @@
 package com.meirengu.medical.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Hospital {
@@ -37,6 +39,7 @@ public class Hospital {
 
     private Integer city;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date setupTime;
 
     private Integer createby;

@@ -1,14 +1,23 @@
 package com.meirengu.medical.controller;
 
 import com.meirengu.medical.service.IHospitalService;
+import com.meirengu.medical.util.UtilData;
 import com.meirengu.medical.vo.HospitalVo;
+import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author: haoyang.Yu
@@ -26,7 +35,7 @@ public class HospitalController {
      * @param hospitalVo
      * @return 将结果以json格式返回
      */
-    @RequestMapping(value = "/getHospitalData",method = RequestMethod.GET)
+    @RequestMapping(value = "/show",method = RequestMethod.GET)
     @ResponseBody
     public String getHospitalData(HospitalVo hospitalVo) {
         return iHospitalService.getHospitalData(hospitalVo);
@@ -35,8 +44,9 @@ public class HospitalController {
      * 甄选医院页面
      * @param hospitalVo
      * @return 将结果以json格式返回
+     * selectionHospital
      */
-    @RequestMapping(value = "/selectionHospital",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,produces="text/html;charset=UTF-8")
     @ResponseBody
     public String selectionHospital(HospitalVo hospitalVo) {
         return iHospitalService.selectionHospital(hospitalVo);
@@ -47,12 +57,20 @@ public class HospitalController {
      * @return 将结果以json格式返回
      * TODO 只上传医院资质
      */
-    @RequestMapping(value = "/addHospital",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String addHospital(HospitalVo hospitalVo, @RequestParam("certificatePicOne") MultipartFile certificatePicOne,
-                              @RequestParam("certificatePicTwo") MultipartFile certificatePicTwo) {
-        hospitalVo.setCertificatePic(certificatePicOne.getOriginalFilename()+","+certificatePicTwo.getOriginalFilename());
-        return iHospitalService.insertSelective(hospitalVo);
+    public String addHospital(HospitalVo hospitalVo, HttpServletRequest request) {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+        Iterator<String> iter = new ArrayList<String>().iterator();
+        MultipartHttpServletRequest multiRequest = null;
+        //判断 request 是否有文件上传,即多部分请求
+        if(resolver.isMultipart(request)){
+            //转换成多部分request
+            multiRequest=(MultipartHttpServletRequest)request;
+            //取得request中的所有文件名
+            iter=multiRequest.getFileNames();
+        }
+        return iHospitalService.insertSelective(hospitalVo,iter,multiRequest);
     }
 
     /**
@@ -61,7 +79,7 @@ public class HospitalController {
      * @return 将结果以json格式返回
      * TODO 医院图片未定
      */
-    @RequestMapping(value = "/updateHospital",method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public String updateHospital(HospitalVo hospitalVo) {
         return iHospitalService.conditionUpdate(hospitalVo);
@@ -70,12 +88,12 @@ public class HospitalController {
 
     /**
      * 逻辑删除删除医院
-     * @param hospitalVo
+     * @param hospitalId
      * @return 将结果以json格式返回
      */
-    @RequestMapping(value = "/deleteHospital",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{hospitalId}",method = RequestMethod.DELETE)
     @ResponseBody
-    public String deleteHospital(HospitalVo hospitalVo) {
-        return iHospitalService.conditionDelete(hospitalVo);
+    public String deleteHospital(@PathVariable int hospitalId) {
+        return iHospitalService.conditionDelete(hospitalId);
     }
 }

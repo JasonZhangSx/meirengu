@@ -10,14 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: haoyang.Yu
@@ -55,15 +55,36 @@ public class HospitalServiceImpl implements IHospitalService {
      * 插入医院数据
      * @param hospitalVo
      * @return
+     * TODO　图片上传格式及图片名称待定
      */
     @Override
-    public String insertSelective(HospitalVo hospitalVo) {
+    public String insertSelective(HospitalVo hospitalVo,Iterator<String> iter, MultipartHttpServletRequest multipartHttpServletRequest) {
         logger.info("Request insertSelective parameter:{}", hospitalVo.toString());
         try {
-            String[] fileNum=hospitalVo.getCertificatePic().split(",");
-            for (String fileName : fileNum){
-                OutputStream doctorPic = new FileOutputStream(new File(UtilData.filePath,fileName));
+            while(iter.hasNext()){
+                //取得上传文件
+                MultipartFile file = multipartHttpServletRequest.getFile(iter.next());
+                if(file != null){
+                    //取得当前上传文件的文件名称
+                    String myFileName = file.getOriginalFilename();
+                    //如果名称不为“”,说明该文件存在，否则说明该文件不存在
+                    if(!"".equals(myFileName.trim())){
+                        //重新生成文件名，生成规则：当前时间戳+随机数
+                        String fileName = String.valueOf(System.currentTimeMillis()/1000).concat(String.valueOf(new Random().nextInt()));
+                        File localFile = new File(UtilData.filePath + fileName);
+                        try {
+                            file.transferTo(localFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
+//            hospitalVo.setHospitalSmallLogo(hospitalSmallLogoImg.getOriginalFilename());
+//            hospitalVo.setHospitalLogo(hospitalLogoImg.getOriginalFilename());
+//            hospitalVo.setHospitalPic(hospitalPicImg.getOriginalFilename());
+//            hospitalVo.setCertificatePic(certificatePicOne.getOriginalFilename()+","+certificatePicTwo.getOriginalFilename());
+            hospitalVo.setCreatetime(new Date());
             hospitalMapper.insertSelective(hospitalVo);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
         }catch (Exception e){
@@ -111,14 +132,16 @@ public class HospitalServiceImpl implements IHospitalService {
 
     /**
      * 逻辑删除医院数据
-     * @param hospitalVo
+     * @param hospitalId
      * @return
      *  TODO 修改人如何获取未定
      */
     @Override
-    public String conditionDelete(HospitalVo hospitalVo) {
-        logger.info("Request conditionDelete parameter:{}", hospitalVo.toString());
+    public String conditionDelete(int hospitalId) {
+        logger.info("Request conditionDelete parameter:{}", hospitalId);
         try {
+            HospitalVo hospitalVo = new HospitalVo();
+            hospitalVo.setHospitalId(hospitalId);
             hospitalVo.setHospitalStatus(UtilData.delete_yes);
             hospitalMapper.conditionUpdate(hospitalVo);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);

@@ -1,8 +1,11 @@
 package com.meirengu.medical.service;
 
 import com.meirengu.medical.vo.DoctorVo;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Author: haoyang.Yu
@@ -16,11 +19,29 @@ public interface IDoctorService {
      * @return 将查询结果已json格式返回
      */
     String getDoctorData(DoctorVo doctorVo);
-
+    /**
+     * 甄选医生页面
+     * @param doctorVo
+     * @return 将查询结果已json格式返回
+     */
+    String selectionDoctor(DoctorVo doctorVo);
     /**
      * 添加医生数据
      * @param doctorVo 医生Model
      * @return 修改结果返回
      */
-    String addDoctorData(DoctorVo doctorVo);
+    String addDoctorData(DoctorVo doctorVo, Iterator<String> iter, MultipartHttpServletRequest multipartHttpServletRequest);
+    /**
+     * 逻辑修改医生数据
+     * @param doctorId
+     * @return
+     */
+    String updateDoctor(int doctorId);
+
+    /**
+     * 逻辑删除医生数据
+     * @param doctorVo
+     * @return
+     */
+    String deleteDoctor(DoctorVo doctorVo);
 }

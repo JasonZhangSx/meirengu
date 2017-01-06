@@ -8,6 +8,8 @@
     <result column="doctor_profile" property="doctorProfile" jdbcType="VARCHAR" />
     <result column="doctor_pic" property="doctorPic" jdbcType="VARCHAR" />
     <result column="doctor_title" property="doctorTitle" jdbcType="VARCHAR" />
+    <result column="doctor_vice_title" property="doctorViceTitle" jdbcType="VARCHAR" />
+    <result column="doctor_label" property="doctorLabel" jdbcType="VARCHAR" />
     <result column="goodat" property="goodat" jdbcType="VARCHAR" />
     <result column="cultural_top" property="culturalTop" jdbcType="VARCHAR" />
     <result column="cultural_experience" property="culturalExperience" jdbcType="VARCHAR" />
@@ -37,11 +39,11 @@
     <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    doctor_id, hospital_id, doctor_name, doctor_profile, doctor_pic, doctor_title, goodat, 
-    cultural_top, cultural_experience, certificate_no, certificate_pic, profession_experience, 
-    academic_achievement, job_duration, country, province, city, nativecity, sex, idcard, 
-    mobile, email, qq, weixin, createby, createdate, lasteditby, lasteditdate, doctor_status, 
-    doctor_sort, is_audit, audit_account, audit_time
+    doctor_id, hospital_id, doctor_name, doctor_profile, doctor_pic, doctor_title, doctor_vice_title,
+    doctor_label, goodat, cultural_top, cultural_experience, certificate_no, certificate_pic,
+    profession_experience, academic_achievement, job_duration, country, province, city,
+    nativecity, sex, idcard, mobile, email, qq, weixin, createby, createdate, lasteditby,
+    lasteditdate, doctor_status, doctor_sort, is_audit, audit_account, audit_time
   </sql>
   <select id="conditionQuery" resultMap="BaseResultMap" parameterType="com.meirengu.medical.vo.DoctorVo">
     select
@@ -66,6 +68,22 @@
       and is_audit = #{isAudit,jdbcType=BIT}
     </if>
   </select>
+  <select id="selectionDoctor" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.DoctorVo">
+    SELECT
+        d.doctor_pic 'doctorPic',
+        d.doctor_name 'doctorName',
+        d.cultural_top 'culturalTop',
+        d.doctor_title 'doctorTitle',
+        d.doctor_vice_title 'doctorViceTitle',
+        d.doctor_label 'doctorLabel',
+        h.hospital_name 'hospitalName'
+    FROM
+        doctor d,
+        hospital h
+    WHERE
+        d.hospital_id = h.hospital_id
+    LIMIT #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
+  </select>
   <insert id="insertSelective" parameterType="com.meirengu.medical.vo.DoctorVo" >
     insert into doctor
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -86,6 +104,12 @@
       </if>
       <if test="doctorTitle != null" >
         doctor_title,
+      </if>
+      <if test="doctorViceTitle != null">
+        doctor_vice_title,
+      </if>
+      <if test="doctorLabel != null">
+        doctor_label,
       </if>
       <if test="goodat != null" >
         goodat,
@@ -182,6 +206,12 @@
       <if test="doctorProfile != null" >
         #{doctorProfile,jdbcType=VARCHAR},
       </if>
+      <if test="doctorViceTitle != null">
+        #{doctorViceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLabel != null">
+        #{doctorLabel,jdbcType=VARCHAR},
+      </if>
       <if test="doctorPic != null" >
         #{doctorPic,jdbcType=VARCHAR},
       </if>
@@ -271,7 +301,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.vo.DoctorVo" >
+  <update id="updateDoctor" parameterType="com.meirengu.medical.vo.DoctorVo" >
     update doctor
     <set >
       <if test="hospitalId != null" >
@@ -288,6 +318,12 @@
       </if>
       <if test="doctorTitle != null" >
         doctor_title = #{doctorTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorViceTitle != null">
+        doctor_vice_title = #{doctorViceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLabel != null">
+        doctor_label = #{doctorLabel,jdbcType=VARCHAR},
       </if>
       <if test="goodat != null" >
         goodat = #{goodat,jdbcType=VARCHAR},

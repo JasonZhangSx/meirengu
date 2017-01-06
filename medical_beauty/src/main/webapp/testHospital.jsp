@@ -11,48 +11,19 @@
     <title>医院测试页面</title>
 </head>
 <body>
-<a href="/hospital/selectionHospital.do">点击测试甄选医院页面数据</a>
-<form id="form" name="form" method="post" action="/hospital/addHospital.do" enctype="multipart/form-data">
+<form id="form3" name="form3" method="post" action="/hospital" enctype="multipart/form-data">
     <table border="0" align="center">
         <tr>
+            <input type="hidden" name="_method" value="DELETE">
             <td>医院姓名：</td>
-            <td><input name="hospitalName" type="input" size="20" value="123" ></td>
-            <td>上传文件1：</td>
-            <td><input name="certificatePicOne" type="file" size="20" ></td>
-            <td>上传文件2：</td>
-            <td><input name="certificatePicTwo" type="file" size="20" ></td>
+            <td><input name="hospitalName" type="input" size="20" value="123"  ></td>
+            <td>上传测试文件：</td>
+            <td><input name="testImg" type="file" size="20" ></td>
+            <td><input name="testImg1" type="file" size="20" ></td>
         </tr>
         <tr>
             <td></td><td>
-            <input type="submit" name="submit" value="提交测试添加医生" >
-            <input type="reset" name="reset" value="重置" >
-        </td>
-        </tr>
-    </table>
-</form>
-<form id="form1" name="form1" method="post" action="/hospital/updateHospital.do" enctype="multipart/form-data">
-    <table border="0" align="center">
-        <tr>
-            <td>医院姓名：</td>
-            <td><input name="hospitalName" type="input" size="20" ></td>
-        </tr>
-        <tr>
-            <td></td><td>
-            <input type="submit" name="submit" value="提交测试修改医生" >
-            <input type="reset" name="reset" value="重置" >
-        </td>
-        </tr>
-    </table>
-</form>
-<form id="form2" name="form2" method="patch" action="/hospital/deleteHospital.do" enctype="multipart/form-data">
-    <table border="0" align="center">
-        <tr>
-            <td>医院id：</td>
-            <td><input name="hospitalName" type="input" size="20" ></td>
-        </tr>
-        <tr>
-            <td></td><td>
-            <input type="submit" name="submit" value="提交测试删除医生" >
+            <input type="submit" name="submit" value="提交测试图片上传" >
             <input type="reset" name="reset" value="重置" >
         </td>
         </tr>

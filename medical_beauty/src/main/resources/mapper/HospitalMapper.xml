@@ -73,8 +73,8 @@
     (SELECT COUNT(1) FROM doctor d WHERE d.hospital_id=h.hospital_id) 'doctorNum' ,
     (SELECT COUNT(1) FROM `case` c WHERE c.hos_id=h.hospital_id) 'caseNum'
     FROM hospital h
+    LIMIT  #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
   </select>
-   <!--LIMIT  #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}-->
   <insert id="insertSelective" parameterType="com.meirengu.medical.vo.HospitalVo">
     insert into hospital
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -107,6 +107,9 @@
       </if>
       <if test="hospitalTel != null">
         hospital_tel,
+      </if>
+      <if test="certificatePic != null">
+        certificate_pic,
       </if>
       <if test="contacts != null">
         contacts,
@@ -196,6 +199,9 @@
       </if>
       <if test="hospitalTel != null">
         #{hospitalTel,jdbcType=INTEGER},
+      </if>
+      <if test="certificatePic != null">
+        #{certificatePic,jdbcType=VARCHAR},
       </if>
       <if test="contacts != null">
         #{contacts,jdbcType=VARCHAR},

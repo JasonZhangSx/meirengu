@@ -9,6 +9,13 @@ import java.util.List;
 @Repository
 public interface DoctorMapper {
 
+    /**
+     * 甄选医生页面
+     * @param doctorVo
+     * @return
+     */
+    List selectionDoctor(DoctorVo doctorVo);
+
 
     /**
      * 条件查询医生列表
@@ -29,5 +36,5 @@ public interface DoctorMapper {
      * @param doctorVo
      * @return
      */
-    int updateByPrimaryKeySelective(DoctorVo doctorVo);
+    int updateDoctor(DoctorVo doctorVo);
 }

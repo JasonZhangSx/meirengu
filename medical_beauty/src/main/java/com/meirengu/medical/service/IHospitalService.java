@@ -1,7 +1,9 @@
 package com.meirengu.medical.service;
 
 import com.meirengu.medical.vo.HospitalVo;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ public interface IHospitalService {
      * @param hospitalVo
      * @return
      */
-    String insertSelective(HospitalVo hospitalVo);
+    String insertSelective(HospitalVo hospitalVo, Iterator<String> iter, MultipartHttpServletRequest multipartHttpServletRequest);
 
     /**
      * 甄选医院页面
@@ -40,8 +42,8 @@ public interface IHospitalService {
 
     /**
      * 逻辑删除医院数据
-     * @param hospitalVo
+     * @param hospitalId
      * @return
      */
-    String conditionDelete(HospitalVo hospitalVo);
+    String conditionDelete(int hospitalId);
 }

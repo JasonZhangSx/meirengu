@@ -15,6 +15,10 @@ public class Doctor {
 
     private String doctorTitle;
 
+    private String doctorViceTitle;
+
+    private String doctorLabel;
+
     private String goodat;
 
     private String culturalTop;
@@ -115,6 +119,30 @@ public class Doctor {
 
     public void setDoctorTitle(String doctorTitle) {
         this.doctorTitle = doctorTitle == null ? null : doctorTitle.trim();
+    }
+
+    public String getDoctorViceTitle() {
+        return doctorViceTitle;
+    }
+
+    public void setDoctorViceTitle(String doctorViceTitle) {
+        this.doctorViceTitle = doctorViceTitle;
+    }
+
+    public String getDoctorLabel() {
+        return doctorLabel;
+    }
+
+    public void setDoctorLabel(String doctorLabel) {
+        this.doctorLabel = doctorLabel;
+    }
+
+    public Boolean getAudit() {
+        return isAudit;
+    }
+
+    public void setAudit(Boolean audit) {
+        isAudit = audit;
     }
 
     public String getGoodat() {
@@ -331,5 +359,46 @@ public class Doctor {
 
     public void setAuditTime(Date auditTime) {
         this.auditTime = auditTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "doctorId=" + doctorId +
+                ", hospitalId=" + hospitalId +
+                ", doctorName='" + doctorName + '\'' +
+                ", doctorProfile='" + doctorProfile + '\'' +
+                ", doctorPic='" + doctorPic + '\'' +
+                ", doctorTitle='" + doctorTitle + '\'' +
+                ", doctorViceTitle='" + doctorViceTitle + '\'' +
+                ", doctorLabel='" + doctorLabel + '\'' +
+                ", goodat='" + goodat + '\'' +
+                ", culturalTop='" + culturalTop + '\'' +
+                ", culturalExperience='" + culturalExperience + '\'' +
+                ", certificateNo='" + certificateNo + '\'' +
+                ", certificatePic='" + certificatePic + '\'' +
+                ", professionExperience='" + professionExperience + '\'' +
+                ", academicAchievement='" + academicAchievement + '\'' +
+                ", jobDuration=" + jobDuration +
+                ", country=" + country +
+                ", province=" + province +
+                ", city=" + city +
+                ", nativecity=" + nativecity +
+                ", sex=" + sex +
+                ", idcard='" + idcard + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", email='" + email + '\'' +
+                ", qq='" + qq + '\'' +
+                ", weixin='" + weixin + '\'' +
+                ", createby='" + createby + '\'' +
+                ", createdate=" + createdate +
+                ", lasteditby='" + lasteditby + '\'' +
+                ", lasteditdate=" + lasteditdate +
+                ", doctorStatus=" + doctorStatus +
+                ", doctorSort=" + doctorSort +
+                ", isAudit=" + isAudit +
+                ", auditAccount='" + auditAccount + '\'' +
+                ", auditTime=" + auditTime +
+                '}';
     }
 }
