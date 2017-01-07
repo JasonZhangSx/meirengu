@@ -6,15 +6,21 @@ package com.meirengu.news.common;
  */
 public class StatusCode {
     /** 成功 **/
-    public static final String STATUS_0 = "0";
-    public static final String STATUS_0_MSG = "ok";
+    public static final String STATUS_200 = "200";
+    public static final String STATUS_200_MSG = "ok";
     /** 客户端参数错误 **/
     public static final String STATUS_400 = "400";
     public static final String STATUS_400_MSG = "客户端参数错误";
     /** 服务器端错误 **/
     public static final String STATUS_500 = "500";
     public static final String STATUS_500_MSG = "服务器端错误";
-    /** 服务器端错误 **/
-    public static final String STATUS_600 = "600";
-    public static final String STATUS_600_MSG = "服务器端错误";
+    /** 获取值为空 **/
+    public static final String STATUS_501 = "501";
+    public static final String STATUS_501_MSG = "获取内容为空";
+    /** 类型转换异常 **/
+    public static final String STATUS_502 = "502";
+    public static final String STATUS_502_MSG = "类型转换异常";
+    /** %1$s已存在 **/
+    public static final String STATUS_503 = "503";
+    public static final String STATUS_503_MSG = "%1$s已存在";
 }

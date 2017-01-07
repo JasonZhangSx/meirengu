@@ -34,27 +34,47 @@ public class ArticleClassServiceImpl implements ArticleClassService{
     }
 
     @Override
-    public int insert(ArticleClass ac) {
-        return articleClassDao.insert(ac);
+    public int insert(ArticleClass ac) throws Exception{
+        try{
+            return articleClassDao.insert(ac);
+        }catch (Exception e){
+            throw new Exception("insert article class faile:", e);
+        }
     }
 
     @Override
-    public int update(ArticleClass ac) {
-        return articleClassDao.update(ac);
+    public int update(ArticleClass ac) throws Exception{
+        try{
+            return articleClassDao.update(ac);
+        }catch (Exception e){
+            throw new Exception("update article class faile:", e);
+        }
     }
 
     @Override
-    public int delete(int id) {
-        return articleClassDao.delete(id);
+    public int delete(int id) throws Exception{
+        try{
+            return articleClassDao.delete(id);
+        }catch (Exception e){
+            throw new Exception("delete article class faile:", e);
+        }
     }
 
     @Override
-    public ArticleClass detail(int id) {
-        return articleClassDao.detail(id);
+    public ArticleClass detail(int id) throws Exception{
+        try{
+            return articleClassDao.detail(id);
+        }catch (Exception e){
+            throw new Exception("get article class faile:", e);
+        }
     }
 
     @Override
-    public List<ArticleClass> getByCodeOrName(ArticleClass articleClass) {
-        return articleClassDao.getByCodeOrName(articleClass);
+    public List<ArticleClass> getByCodeOrName(ArticleClass articleClass) throws Exception{
+        try{
+            return articleClassDao.getByCodeOrName(articleClass);
+        }catch (Exception e){
+            throw new Exception("get article class detai faile:", e);
+        }
     }
 }

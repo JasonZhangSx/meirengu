@@ -9,18 +9,18 @@ import java.util.List;
  */
 public interface ArticleClassService extends PageBaseService<ArticleClass>{
 
-    public int insert(ArticleClass ac);
+    public int insert(ArticleClass ac) throws Exception;
 
-    public int update(ArticleClass ac);
+    public int update(ArticleClass ac) throws Exception;
 
-    public int delete(int id);
+    public int delete(int id) throws Exception;
 
-    public ArticleClass detail(int id);
+    public ArticleClass detail(int id) throws Exception;
 
     /**
      * 通过标识码或名称判断是否重复
      * @param articleClass
      * @return
      */
-    public List<ArticleClass> getByCodeOrName(ArticleClass articleClass);
+    public List<ArticleClass> getByCodeOrName(ArticleClass articleClass) throws Exception;
 }

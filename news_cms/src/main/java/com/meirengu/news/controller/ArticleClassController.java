@@ -27,13 +27,7 @@ public class ArticleClassController extends BaseController{
     @Autowired
     private ArticleClassService articleClassService;
 
-    @ResponseBody
-    @RequestMapping(value = "test")
-    public String test(){
-        return "test";
-    }
     /**
-     *
      * @param searchText 搜索框内容
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
@@ -53,9 +47,17 @@ public class ArticleClassController extends BaseController{
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
         paramMap.put("searchText", searchText);
-        page = articleClassService.getPageList(page, paramMap);
-
-        return super.setReturnMsg(StatusCode.STATUS_0, page, StatusCode.STATUS_0_MSG);
+        try{
+            page = articleClassService.getPageList(page, paramMap);
+            if(page.getList().size() != 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }
     }
 
     /**
@@ -74,16 +76,21 @@ public class ArticleClassController extends BaseController{
                                      @RequestParam("sort") String sort){
 
         ArticleClass ac = this.packageAc(0, code, name, parentId, Constants.DEL_FLAG_FALSE);
-        //先判断code和name是否有重复
-        List<ArticleClass> acList = articleClassService.getByCodeOrName(ac);
-        if(acList.size() > 0){
-            return super.setReturnMsg(StatusCode.STATUS_500, null, "code或name已存在！");
-        }
-        int i = articleClassService.insert(ac);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        } else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try{
+            //先判断code和name是否有重复
+            List<ArticleClass> acList = articleClassService.getByCodeOrName(ac);
+            if(acList.size() > 0){
+                return super.setReturnMsg(StatusCode.STATUS_503, null, String.format(StatusCode.STATUS_503_MSG, "code")+"/"+String.format(StatusCode.STATUS_503_MSG, "name"));
+            }
+            int i = articleClassService.insert(ac);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            } else {
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -95,15 +102,20 @@ public class ArticleClassController extends BaseController{
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Map<String,Object> delete(@PathVariable("id") int id){
-        ArticleClass ac = articleClassService.detail(id);
-        if(null == ac){
-            return super.setReturnMsg(StatusCode.STATUS_500, null, "该项不存在");
-        }
-        int i = articleClassService.delete(id);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        } else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try{
+            ArticleClass ac = articleClassService.detail(id);
+            if(null == ac){
+                return super.setReturnMsg(StatusCode.STATUS_500, null, "该项不存在");
+            }
+            int i = articleClassService.delete(id);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            } else {
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -120,11 +132,16 @@ public class ArticleClassController extends BaseController{
                                      @RequestParam(value = "parent_id") int parentId,
                                      @RequestParam(value = "sort", required = false) String sort){
         ArticleClass ac = this.packageAc(id, code, name, parentId, Constants.DEL_FLAG_FALSE);
-        int i = articleClassService.update(ac);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        } else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, "该项不存在");
+        try{
+            int i = articleClassService.update(ac);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            } else {
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -136,9 +153,17 @@ public class ArticleClassController extends BaseController{
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> detail(@PathVariable("id") int id){
-        ArticleClass ac = articleClassService.detail(id);
-        LOGGER.info("ac is null? " + (ac==null));
-        return super.setReturnMsg(StatusCode.STATUS_0, ac, StatusCode.STATUS_0_MSG);
+        try{
+            ArticleClass ac = articleClassService.detail(id);
+            if(null != ac){
+                return super.setReturnMsg(StatusCode.STATUS_200, ac, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_501, ac, StatusCode.STATUS_501_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }
     }
 
 

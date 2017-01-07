@@ -5,13 +5,18 @@ import com.meirengu.news.common.StatusCode;
 import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.ArticleService;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
 
 /**
  * Created by 建新 on 2016/12/27.
@@ -20,21 +25,16 @@ import java.util.Map;
 @RequestMapping("/article")
 public class ArticleController extends BaseController{
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
+
     @Autowired
     ArticleService articleService;
-
-/*
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(){
-        return "index";
-    }
-*/
 
     /**
      * 推荐列表
      * @return
      */
-    @ResponseBody
+    /*@ResponseBody
     @RequestMapping(value = "/recommend/list", method = {RequestMethod.POST})
     public Map<String, Object> recommendList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
@@ -60,8 +60,8 @@ public class ArticleController extends BaseController{
             returnMap.put("position"+i, JSON.toJSON(list));
             i++;
         }
-        return super.setReturnMsg(StatusCode.STATUS_0, returnMap, StatusCode.STATUS_0_MSG);
-    }
+        return super.setReturnMsg(StatusCode.STATUS_200, returnMap, StatusCode.STATUS_200_MSG);
+    }*/
 
     /**
      * 获取文章列表
@@ -85,9 +85,17 @@ public class ArticleController extends BaseController{
         paramMap.put("acId", acId);
         paramMap.put("isCommend", isCommend);
         paramMap.put("isPublish", 1);
-        page = articleService.getPageList(page, paramMap);
-
-        return super.setReturnMsg(StatusCode.STATUS_0, page, StatusCode.STATUS_0_MSG);
+        try{
+            page = articleService.getPageList(page, paramMap);
+            if(page.getList().size() != 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }
     }
 
     /**
@@ -113,11 +121,16 @@ public class ArticleController extends BaseController{
                                      @RequestParam(value = "is_commend") int isCommend,
                                      @RequestParam(value = "is_publish") int isPublish){
         Article article = this.packageA(0, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
-        int i = this.articleService.insert(article);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        }else{
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try{
+            int i = this.articleService.insert(article);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -129,11 +142,16 @@ public class ArticleController extends BaseController{
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Map<String,Object> delete(@PathVariable("id") int id){
-        int i = this.articleService.delete(id);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        }else{
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try{
+            int i = this.articleService.delete(id);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -156,11 +174,16 @@ public class ArticleController extends BaseController{
                                      @RequestParam(value = "is_commend") int isCommend,
                                      @RequestParam(value = "is_publish") int isPublish){
         Article article = this.packageA(id, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
-        int i = this.articleService.update(article);
-        if(i > 0){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        }else{
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try{
+            int i = this.articleService.update(article);
+            if(i > 0){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        }catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
@@ -169,11 +192,23 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = {"host=localhost"})
     @ResponseBody
-    public Map<String,Object> detail(@PathVariable("id") int id){
-        Map<String, Object> map = articleService.detail(id);
-        return super.setReturnMsg(StatusCode.STATUS_0, map, StatusCode.STATUS_0_MSG);
+    public Map<String,Object> detail(@PathVariable("id") String id){
+        try{
+            Map<String, Object> map = articleService.detail(Integer.parseInt(id));
+            if(null != map){
+                return super.setReturnMsg(StatusCode.STATUS_200, map, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_501, map, StatusCode.STATUS_501_MSG);
+            }
+        }catch (ClassCastException e){
+            LOGGER.error("class cast exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }catch (Exception e){
+            LOGGER.error("other exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }
     }
 
     /**
@@ -184,10 +219,15 @@ public class ArticleController extends BaseController{
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> publish(@RequestParam(value = "id") int id, @RequestParam(value = "is_publish") int isPublish){
-        if(articleService.publish(id, isPublish)){
-            return super.setReturnMsg(StatusCode.STATUS_0, null, StatusCode.STATUS_0_MSG);
-        }else{
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        try {
+            if(articleService.publish(id, isPublish)){
+                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            }else{
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
+        } catch (Exception e){
+            LOGGER.error("throw exception:", e);
+            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
         }
     }
 
