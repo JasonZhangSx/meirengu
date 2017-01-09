@@ -81,7 +81,7 @@
         <commons-codec.version>1.9</commons-codec.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <!-- 文件上传 -->
-        <commons-fileupload.version>1.3</commons-fileupload.version>
+        <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <!-- google java library -->
         <guava.version>17.0</guava.version>
         <!-- joda -->
@@ -110,6 +110,7 @@
         <jetty.version>7.6.15.v20140411</jetty.version>
         <!-- redis simulator -->
         <nosqlunit.version>0.7.9</nosqlunit.version>
+        <spring.data.redis.version>1.7.0.RELEASE</spring.data.redis.version>
         <!-- memcached simulator -->
         <jmemcached.version>1.0.0</jmemcached.version>
         <!-- smtp server simulator -->
@@ -168,6 +169,23 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-redis</artifactId>
+                <version>${spring.data.redis.version}</version>
+            </dependency>
+
+            <!-- fileupload begin -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
             </dependency>
 
             <!-- PERSISTENCE begin -->
