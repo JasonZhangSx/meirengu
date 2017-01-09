@@ -13,11 +13,11 @@
         <!-- 参数：配置实体 -->
         <property name="configLocation" value="classpath:/mybatis/sqlMapConfig.xml"/>
         <!-- 参数：mapper文件集合 -->
-        <!--<property name="mapperLocations">
+        <property name="mapperLocations">
             <list>
                 <value>classpath:/mybatis/*Mapper.xml</value>
             </list>
-        </property>-->
+        </property>
     </bean>
 
     <!-- 通过扫描指定目录下所有Mapper，所有的Mapper都继承了SqlMapper接口 -->
