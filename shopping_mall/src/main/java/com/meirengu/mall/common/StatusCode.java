@@ -23,4 +23,10 @@ public class StatusCode {
     /** %1$s已存在 **/
     public static final String STATUS_503 = "503";
     public static final String STATUS_503_MSG = "%1$s已存在";
+    /** 运行时异常 **/
+    public static final String STATUS_504 = "504";
+    public static final String STATUS_504_MSG = "运行时异常！";
+    /** %1$s已存在 **/
+    public static final String STATUS_4210 = "4210";
+    public static final String STATUS_4210_MSG = "参数错误！ %1$s为必填项！";
 }

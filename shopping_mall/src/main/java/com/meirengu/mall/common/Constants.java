@@ -13,4 +13,10 @@ public class Constants {
     public static final int DEL_FLAG_TRUE = 0;
     /** 不删除 **/
     public static final int DEL_FLAG_FALSE = 1;
+    /** 购物车未生成订单状态 **/
+    public static final int CART_STATE_DEFAULT = 0;
+    /** 购物车生成订单状态 **/
+    public static final int CART_STATE_TO_ORDER = 1;
+    /** 购物车删除状态 **/
+    public static final int CART_STATE_DEL = 2;
 }

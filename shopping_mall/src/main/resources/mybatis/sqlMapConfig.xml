@@ -4,6 +4,9 @@
 <configuration>
 	<!-- 实体别名设置 -->
 	<typeAliases>
-		<!--<typeAlias alias="article" type="com.meirengu.news.model.Article" />-->
+		<typeAlias alias="order" type="com.meirengu.mall.model.Order" />
+		<typeAlias alias="cart" type="com.meirengu.mall.model.Cart" />
+		<typeAlias alias="case" type="com.meirengu.mall.model.Case" />
+		<typeAlias alias="recommend" type="com.meirengu.mall.model.Recommend" />
 	</typeAliases>
 </configuration>
