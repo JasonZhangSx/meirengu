@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.sms.dao.SmsRecordDao">
+
+    <resultMap id="SmsRecord" type="SmsRecord">
+        <id column="id" property="id" jdbcType="INTEGER" javaType="int"/>
+        <result column="sid" property="sid" jdbcType="VARCHAR" javaType="string"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" javaType="string"/>
+        <result column="send_time" property="sendTime" jdbcType="DATE" javaType="Date"/>
+        <result column="text" property="text" jdbcType="VARCHAR" javaType="string"/>
+        <result column="code" property="code" jdbcType="INTEGER" javaType="int"/>
+        <result column="msg" property="mgs" jdbcType="VARCHAR" javaType="string"/>
+        <result column="count" property="count" jdbcType="INTEGER" javaType="int"/>
+        <result column="fee" property="fee" jdbcType="DECIMAL" javaType="double"/>
+        <result column="uid" property="uid" jdbcType="VARCHAR" javaType="string"/>
+        <result column="ip" property="ip" jdbcType="VARCHAR" javaType="string"/>
+    </resultMap>
+
+    <sql id='table_name'>sms_record</sql>
+    <sql id="select_columns">
+        id,sid, mobile, send_time as sendTime, text, code, msg, count, fee ,uid, ip
+    </sql>
+
+    <insert id="create" parameterType="SmsRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (id,sid, mobile, send_time, text, code, msg, count, fee ,uid, ip)
+        VALUES
+        (#{id}, #{sid}, #{mobile}, now(), #{text}, #{code}, #{msg}, #{count}, #{fee}, #{uid},#{ip});
+    </insert>
+
+</mapper>
