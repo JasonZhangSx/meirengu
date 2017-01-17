@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.mall.dao.OrderItemDao" >
+
+    <insert id="addOrderItem" parameterType="orderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item
+        (oi_id, order_id, item_id, item_name, item_price, item_num, item_image, hospital_id, doctor_id)
+        VALUES
+        (#{id}, #{orderId}, #{itemId}, #{itemName}, #{itemPrice}, #{itemNum}, #{itemImage}, #{hospitalId}, #{doctorId});
+    </insert>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        SELECT o.`order_state`, oi.`item_name`, d.`doctor_name`, d.`doctor_title`, oi.item_num, oi.item_price,
+        oi.item_image, h.hospital_id, i.item_id, o.union_sn,
+        (SELECT GROUP_CONCAT(ic_name SEPARATOR '/') FROM item_class WHERE ic_id IN (i.`ic_id`)) AS itemClass
+        FROM `order` o
+        LEFT JOIN order_item oi ON o.`order_id`=oi.`order_id`
+        LEFT JOIN item i ON i.item_id=oi.`item_id`
+        LEFT JOIN hospital h ON oi.`hospital_id`=h.`hospital_id`
+        LEFT JOIN doctor d ON oi.`doctor_id`=d.`doctor_id`
+        WHERE o.`flag`=1
+        <if test="state != null and state != ''">
+            AND o.`order_state` IN (#{state})
+        </if>
+        <if test="userId != null and userId != ''">
+            AND o.user_id=#{userId}
+        </if>
+        ORDER BY o.`add_time` DESC;
+
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        SELECT count(o.order_id)
+        FROM `order` o
+        LEFT JOIN order_item oi ON o.`order_id`=oi.`order_id`
+        LEFT JOIN item i ON i.item_id=oi.`item_id`
+        LEFT JOIN hospital h ON oi.`hospital_id`=h.`hospital_id`
+        LEFT JOIN doctor d ON oi.`doctor_id`=d.`doctor_id`
+        WHERE o.`flag`=1
+        <if test="state != null and state != ''">
+            AND o.`order_state` IN (#{state})
+        </if>
+        <if test="userId != null and userId != ''">
+            AND o.user_id=#{userId}
+        </if>
+        ORDER BY o.`add_time` DESC;
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>

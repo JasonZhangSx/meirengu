@@ -1,12 +1,16 @@
 package com.meirengu.mall.service;
 
+import com.meirengu.mall.model.Cart;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by 建新 on 2017/1/9.
+ * 购物车 service
+ * @author 建新
+ * @create 2017-01-10 17:15
  */
-public interface CartService {
+public interface CartService extends PageBaseService<Cart>{
 
     /**
      * 获取购物车列表

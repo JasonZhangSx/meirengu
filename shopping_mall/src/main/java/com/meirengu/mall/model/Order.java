@@ -4,7 +4,9 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * Created by 建新 on 2017/1/9.
+ * 订单实体类
+ * @author 建新
+ * @create 2017-01-10 17:15
  */
 public class Order extends BaseEntity{
 
@@ -35,6 +37,8 @@ public class Order extends BaseEntity{
     private String paymentCode;
     /** 支付类型:1是即时到帐,2是担保交易 **/
     private int paymentDirect;
+    /** 订单联合编号  供合并订单付款使用 **/
+    private String unionSN;
     /** 订单编号，外部支付时使用，有些外部支付系统要求特定的订单编号 **/
     private String outSN;
     /** 支付（付款）时间 **/
@@ -47,7 +51,7 @@ public class Order extends BaseEntity{
     private String invoice;
     /** 项目总价格 **/
     private double itemAmount;
-    /** 折扣架构 **/
+    /** 折扣价格 **/
     private double discount;
     /** 订单总价格 **/
     private double orderAmount;
@@ -61,6 +65,8 @@ public class Order extends BaseEntity{
     private double refundAmount;
     /** 订单来源 1:pc，2:h5，3:ios，4:android，5:三方**/
     private int orderFrom;
+    /** 删除状态 0为删除，1为未删除 **/
+    private int flag;
 
     public int getId() {
         return id;
@@ -276,5 +282,21 @@ public class Order extends BaseEntity{
 
     public void setOrderFrom(int orderFrom) {
         this.orderFrom = orderFrom;
+    }
+
+    public String getUnionSN() {
+        return unionSN;
+    }
+
+    public void setUnionSN(String unionSN) {
+        this.unionSN = unionSN;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

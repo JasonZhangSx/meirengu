@@ -2,7 +2,9 @@ package com.meirengu.mall.common;
 
 /**
  * 状态码集
- * Created by 建新 on 2016/12/29.
+ *
+ * @author 建新
+ * @create 2017-01-10 19:35
  */
 public class StatusCode {
     /** 成功 **/
@@ -29,4 +31,10 @@ public class StatusCode {
     /** %1$s已存在 **/
     public static final String STATUS_4210 = "4210";
     public static final String STATUS_4210_MSG = "参数错误！ %1$s为必填项！";
+    /** 参数错误！ 传入JSON格式参数错误！ **/
+    public static final String STATUS_4211 = "4211";
+    public static final String STATUS_4211_MSG = "参数错误！ 传入JSON格式参数错误！";
+    /** 至少购买一件商品！ **/
+    public static final String STATUS_4212 = "4212";
+    public static final String STATUS_4212_MSG = "至少购买一件商品！";
 }
