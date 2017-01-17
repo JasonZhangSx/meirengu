@@ -1,7 +1,11 @@
 package com.meirengu.mall.service;
 
+import com.meirengu.mall.model.Case;
+
 /**
- * Created by 建新 on 2017/1/9.
+ * 案例service
+ * @author 建新
+ * @create 2017-01-10 17:15
  */
-public interface CaseService {
+public interface CaseService extends PageBaseService<Case>{
 }

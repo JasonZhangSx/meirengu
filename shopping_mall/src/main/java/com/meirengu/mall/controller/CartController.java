@@ -38,8 +38,10 @@ public class CartController extends BaseController{
     public Map<String, Object> list(@RequestParam(value = "user_id", required = false) Integer userId){
 
         if(null == userId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "userId"));
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "user_id"));
         }
+
+        //用户验证是否存在
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -63,7 +65,7 @@ public class CartController extends BaseController{
      * @param itemNum 项目购买数量 必填
      * @return
      */
-    @RequestMapping(value="modifyNum", method = RequestMethod.POST)
+    @RequestMapping(value="modify-num", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> modifyNum(@RequestParam(value = "cart_id", required = false) Integer cartId,
                                          @RequestParam(value = "item_num", required = false) Integer itemNum){
@@ -138,6 +140,11 @@ public class CartController extends BaseController{
         if(null == itemNum){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_num"));
         }
+        //用户是否存在验证
+
+        //医院是否存在验证
+
+        //项目验证是否存在
 
         boolean flag = cartService.addCart(userId, hospitalId, itemId, itemNum);
         if(flag){

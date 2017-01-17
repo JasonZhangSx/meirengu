@@ -5,8 +5,10 @@
 	<!-- 实体别名设置 -->
 	<typeAliases>
 		<typeAlias alias="order" type="com.meirengu.mall.model.Order" />
+		<typeAlias alias="orderItem" type="com.meirengu.mall.model.OrderItem" />
 		<typeAlias alias="cart" type="com.meirengu.mall.model.Cart" />
 		<typeAlias alias="case" type="com.meirengu.mall.model.Case" />
 		<typeAlias alias="recommend" type="com.meirengu.mall.model.Recommend" />
+		<typeAlias alias="refund" type="com.meirengu.mall.model.Refund" />
 	</typeAliases>
 </configuration>

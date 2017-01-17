@@ -3,7 +3,9 @@ package com.meirengu.mall.model;
 import java.util.Date;
 
 /**
- * Created by 建新 on 2017/1/9.
+ * 案例实体类
+ * @author 建新
+ * @create 2017-01-10 17:15
  */
 public class Case extends BaseEntity{
 

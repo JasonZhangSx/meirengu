@@ -4,7 +4,9 @@ import com.meirengu.mall.common.Constants;
 import com.meirengu.mall.common.StatusCode;
 import com.meirengu.mall.dao.CartDao;
 import com.meirengu.mall.model.Cart;
+import com.meirengu.mall.model.Page;
 import com.meirengu.mall.service.CartService;
+import com.meirengu.mall.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by 建新 on 2017/1/9.
+ * 购物车业务实现类
+ * @author 建新
+ * @create 2017-01-10 17:15
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class CartServiceImpl implements CartService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartServiceImpl.class);
@@ -27,12 +31,16 @@ public class CartServiceImpl implements CartService{
     @Autowired
     private CartDao cartDao;
 
+    @Autowired
+    private PageService<Cart> pageService;
+
     @Override
     public List<Map<String, Object>> getCartList(Map<String, Object> map) throws Exception{
         return cartDao.getCartList(map);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public boolean delete(int cartId) {
         Map<String, Object> map = new HashMap<>();
         map.put("cartId", cartId);
@@ -44,13 +52,14 @@ public class CartServiceImpl implements CartService{
             }else{
                 return false;
             }
-        } catch (Exception e){
+        } catch (RuntimeException e){
             LOGGER.error("cart delete throw exceptions:", e);
             return false;
         }
     }
 
     @Override
+    @Transactional(readOnly = false)
     public boolean modifyNum(int cartId, int itemNum) {
         Map<String, Object> map = new HashMap<>();
         map.put("cartId", cartId);
@@ -63,13 +72,14 @@ public class CartServiceImpl implements CartService{
             }else{
                 return false;
             }
-        } catch (Exception e){
+        } catch (RuntimeException e){
             LOGGER.error("cart modifyNum throw exceptions:", e);
             return false;
         }
     }
 
     @Override
+    @Transactional(readOnly = false)
     public boolean addCart(int userId, int hospitalId, int itemId, int itemNum) {
 
         Map<String, Object> paramMap = new HashMap<>();
@@ -99,10 +109,16 @@ public class CartServiceImpl implements CartService{
                     return false;
                 }
             }
-        } catch (Exception e){
+        } catch (RuntimeException e){
             LOGGER.error("add cart throws exceptions : ", e);
             return false;
         }
 
     }
+
+    @Override
+    public Page<Cart> getPageList(Page<Cart> page, Map map) {
+        return pageService.getListByPage(page, map, cartDao);
+    }
+
 }

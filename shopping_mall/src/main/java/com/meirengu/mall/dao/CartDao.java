@@ -10,7 +10,7 @@ import java.util.Map;
  * @author 建新
  * @create 2017-01-10 17:15
  */
-public interface CartDao {
+public interface CartDao extends PageDao<Cart>{
 
     /**
      * 获取购物车列表

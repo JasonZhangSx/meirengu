@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.mall.dao.RefundDao" >
+
+
+    <insert id="addRefund" parameterType="refund" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO refund
+        (refund_id, order_id, refund_sn, order_sn, doctor_id, hospital_id, user_id, user_phone, add_time, order_amout, order_refund, refund_paymentname,
+        refund_paymentcode, refund_message, user_message, refund_type, refund_state, user_confirm)
+        VALUES
+        (#{id}, #{orderId}, #{refundSN}, #{orderSN}, #{doctorId}, #{hospitalId}, #{userId}, #{userPhone}, #{addTime}, #{orderAmout}, #{orderRefund}, #{refundPaymentname},
+        #{refundPaymentcode}, #{refundMessage}, #{userMessage}, #{refundType}, #{refundState}, #{userConfirm});
+    </insert>
+</mapper>
