@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.meirengu.medical.dao.DoctorMapper" >
+<mapper namespace="com.meirengu.medical.dao.DoctorDao" >
   <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.DoctorVo" >
     <id column="doctor_id" property="doctorId" jdbcType="INTEGER" />
     <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
@@ -84,7 +84,7 @@
         d.hospital_id = h.hospital_id
     LIMIT #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
   </select>
-  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.DoctorVo" >
+  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.DoctorVo" useGeneratedKeys="true" keyProperty="doctorId" >
     insert into doctor
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="doctorId != null" >

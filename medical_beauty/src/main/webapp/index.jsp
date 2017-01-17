@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <body>
-<h2>Hello World!</h2>
-<a href="testHospital.jsp">点击测试医院</a>
+<h2 style="text-align: center; margin-top: 50px; ">Welcome to medical_beauty</h2>
 </body>
 </html>
 

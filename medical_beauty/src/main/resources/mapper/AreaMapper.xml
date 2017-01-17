@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.meirengu.medical.dao.AreaMapper" >
-  <resultMap id="BaseResultMap" type="com.meirengu.medical.model.Area" >
+<mapper namespace="com.meirengu.medical.dao.AreaDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.AreaVo" >
     <id column="area_id" property="areaId" jdbcType="INTEGER" />
     <result column="area_name" property="areaName" jdbcType="VARCHAR" />
     <result column="area_parent_id" property="areaParentId" jdbcType="INTEGER" />
@@ -11,23 +11,12 @@
   <sql id="Base_Column_List" >
     area_id, area_name, area_parent_id, area_sort, area_deep
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="getAreaData" resultMap="BaseResultMap" parameterType="com.meirengu.medical.vo.AreaVo" >
     select 
     <include refid="Base_Column_List" />
     from area
-    where area_id = #{areaId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from area
-    where area_id = #{areaId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.meirengu.medical.model.Area" >
-    insert into area (area_id, area_name, area_parent_id, 
-      area_sort, area_deep)
-    values (#{areaId,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, #{areaParentId,jdbcType=INTEGER}, 
-      #{areaSort,jdbcType=BIT}, #{areaDeep,jdbcType=BIT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.meirengu.medical.model.Area" >
+  <insert id="addAreaData" parameterType="com.meirengu.medical.vo.AreaVo" >
     insert into area
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="areaId != null" >
@@ -64,7 +53,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.medical.model.Area" >
+  <update id="updateAreaData" parameterType="com.meirengu.medical.vo.AreaVo" >
     update area
     <set >
       <if test="areaName != null" >
@@ -80,14 +69,6 @@
         area_deep = #{areaDeep,jdbcType=BIT},
       </if>
     </set>
-    where area_id = #{areaId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.meirengu.medical.model.Area" >
-    update area
-    set area_name = #{areaName,jdbcType=VARCHAR},
-      area_parent_id = #{areaParentId,jdbcType=INTEGER},
-      area_sort = #{areaSort,jdbcType=BIT},
-      area_deep = #{areaDeep,jdbcType=BIT}
     where area_id = #{areaId,jdbcType=INTEGER}
   </update>
 </mapper>

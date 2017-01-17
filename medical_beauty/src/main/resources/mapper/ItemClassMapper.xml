@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.ItemClassDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.ItemClassVo" >
+    <id column="ic_id" property="icId" jdbcType="INTEGER" />
+    <result column="ic_name" property="icName" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="ic_parent_id" property="icParentId" jdbcType="INTEGER" />
+    <result column="ic_sort" property="icSort" jdbcType="INTEGER" />
+    <result column="ic_show" property="icShow" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ic_id, ic_name, type_id, type_name, ic_parent_id, ic_sort, ic_show
+  </sql>
+  <select id="getItemClassData" resultMap="BaseResultMap" parameterType="com.meirengu.medical.vo.ItemClassVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from item_class
+  </select>
+  <!---   where ic_id = #{icId,jdbcType=INTEGER} -->
+  <insert id="addItemClassData" parameterType="com.meirengu.medical.vo.ItemClassVo" >
+    insert into item_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="icId != null" >
+        ic_id,
+      </if>
+      <if test="icName != null" >
+        ic_name,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="icParentId != null" >
+        ic_parent_id,
+      </if>
+      <if test="icSort != null" >
+        ic_sort,
+      </if>
+      <if test="icShow != null" >
+        ic_show,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="icId != null" >
+        #{icId,jdbcType=INTEGER},
+      </if>
+      <if test="icName != null" >
+        #{icName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="icParentId != null" >
+        #{icParentId,jdbcType=INTEGER},
+      </if>
+      <if test="icSort != null" >
+        #{icSort,jdbcType=BIT},
+      </if>
+      <if test="icShow != null" >
+        #{icShow,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateItemClassData" parameterType="com.meirengu.medical.vo.ItemClassVo" >
+    update item_class
+    <set >
+      <if test="icName != null" >
+        ic_name = #{icName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="icParentId != null" >
+        ic_parent_id = #{icParentId,jdbcType=INTEGER},
+      </if>
+      <if test="icSort != null" >
+        ic_sort = #{icSort,jdbcType=BIT},
+      </if>
+      <if test="icShow != null" >
+        ic_show = #{icShow,jdbcType=BIT},
+      </if>
+    </set>
+    where ic_id = #{icId,jdbcType=INTEGER}
+  </update>
+</mapper>

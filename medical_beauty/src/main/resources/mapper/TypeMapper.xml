@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.TypeDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.TypeVo" >
+    <id column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="type_sort" property="typeSort" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    type_id, type_name, type_sort
+  </sql>
+  <select id="getTypeData" resultMap="BaseResultMap" parameterType="com.meirengu.medical.vo.TypeVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from type
+  </select>
+  <delete id="deleteTypeData" parameterType="java.lang.Integer" >
+    delete from type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="addTypeData" parameterType="com.meirengu.medical.vo.TypeVo" >
+    insert into type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="typeSort != null" >
+        type_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSort != null" >
+        #{typeSort,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateTypeData" parameterType="com.meirengu.medical.vo.TypeVo" >
+    update type
+    <set >
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSort != null" >
+        type_sort = #{typeSort,jdbcType=BIT},
+      </if>
+    </set>
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </update>
+</mapper>

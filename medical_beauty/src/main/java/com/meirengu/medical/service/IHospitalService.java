@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Author: haoyang.Yu
  * Create Date: 2016/12/29 17:40.
- * 医院接口
+ * 医院业务逻辑接口
  */
 public interface IHospitalService {
     /**

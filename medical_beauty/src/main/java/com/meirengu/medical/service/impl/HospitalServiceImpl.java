@@ -1,10 +1,12 @@
 package com.meirengu.medical.service.impl;
 
-import com.meirengu.medical.dao.HospitalMapper;
+import com.meirengu.medical.dao.HospitalDao;
 import com.meirengu.medical.service.IHospitalService;
 import com.meirengu.medical.util.CodeUtil;
+import com.meirengu.medical.util.FileUtil;
 import com.meirengu.medical.util.ResultUtil;
 import com.meirengu.medical.util.UtilData;
+import com.meirengu.medical.util.check.Validator;
 import com.meirengu.medical.vo.HospitalVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,21 +16,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 
 /**
  * Author: haoyang.Yu
  * Create Date: 2016/12/29 18:16.
- * 医生接口实现
+ * 医院业务逻辑实现
  */
 @Service
 public class HospitalServiceImpl implements IHospitalService {
     private final static Logger logger = LoggerFactory.getLogger(HospitalServiceImpl.class);
     @Autowired
-    private HospitalMapper hospitalMapper;
+    private HospitalDao hospitalDao;
 
     /**
      * 根据对应条件查询医院数据
@@ -42,11 +41,12 @@ public class HospitalServiceImpl implements IHospitalService {
         List<HospitalVo> list = new ArrayList<>();
         Map<String,Object> resultMap = new HashMap<>();
         try {
-            list=hospitalMapper.conditionQuery(hospitalVo);
+            Validator.getInstance().validate(hospitalVo);
+            list= hospitalDao.conditionQuery(hospitalVo);
             resultMap.put("list",list);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
         }catch (Exception e){
-            logger.error("getDoctorData ErrorMsg{}",e.getMessage());
+            logger.error("getDoctorData ErrorMsg:{}",e.getMessage());
             return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
         }
     }
@@ -61,34 +61,22 @@ public class HospitalServiceImpl implements IHospitalService {
     public String insertSelective(HospitalVo hospitalVo,Iterator<String> iter, MultipartHttpServletRequest multipartHttpServletRequest) {
         logger.info("Request insertSelective parameter:{}", hospitalVo.toString());
         try {
-            while(iter.hasNext()){
-                //取得上传文件
-                MultipartFile file = multipartHttpServletRequest.getFile(iter.next());
-                if(file != null){
-                    //取得当前上传文件的文件名称
-                    String myFileName = file.getOriginalFilename();
-                    //如果名称不为“”,说明该文件存在，否则说明该文件不存在
-                    if(!"".equals(myFileName.trim())){
-                        //重新生成文件名，生成规则：当前时间戳+随机数
-                        String fileName = String.valueOf(System.currentTimeMillis()/1000).concat(String.valueOf(new Random().nextInt()));
-                        File localFile = new File(UtilData.filePath + fileName);
-                        try {
-                            file.transferTo(localFile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-//            hospitalVo.setHospitalSmallLogo(hospitalSmallLogoImg.getOriginalFilename());
-//            hospitalVo.setHospitalLogo(hospitalLogoImg.getOriginalFilename());
-//            hospitalVo.setHospitalPic(hospitalPicImg.getOriginalFilename());
-//            hospitalVo.setCertificatePic(certificatePicOne.getOriginalFilename()+","+certificatePicTwo.getOriginalFilename());
+            Validator.getInstance().validate(hospitalVo);
+            Map<String,String> map = new HashMap<>();
             hospitalVo.setCreatetime(new Date());
-            hospitalMapper.insertSelective(hospitalVo);
+            hospitalDao.insertSelective(hospitalVo);
+            while(iter.hasNext()){
+                map= FileUtil.createFile(map,iter,multipartHttpServletRequest,UtilData.hospitalImagePath+hospitalVo.getHospitalId()+"/");
+                for (String s : map.keySet()){
+                    setImgValue(hospitalVo,s,map.get(s));
+                }
+                map.clear();
+            }
+            hospitalDao.conditionUpdate(hospitalVo);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
         }catch (Exception e){
-            logger.error("insertSelective ErrorMsg{}",e.getMessage());
+            logger.error("insertSelective ErrorMsg:{}",e.getMessage());
+            e.printStackTrace();
             return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
         }
     }
@@ -104,11 +92,12 @@ public class HospitalServiceImpl implements IHospitalService {
         List list = new ArrayList<>();
         Map<String,Object> resultMap = new HashMap<>();
         try {
-            list=hospitalMapper.selectionHospital(hospitalVo);
+            Validator.getInstance().validate(hospitalVo);
+            list= hospitalDao.selectionHospital(hospitalVo);
             resultMap.put("list",list);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
         }catch (Exception e){
-            logger.error("selectionHospital ErrorMsg{}",e.getMessage());
+            logger.error("selectionHospital ErrorMsg:{}",e.getMessage());
             return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
         }
     }
@@ -122,10 +111,11 @@ public class HospitalServiceImpl implements IHospitalService {
     public String conditionUpdate(HospitalVo hospitalVo) {
         logger.info("Request conditionUpdate parameter:{}", hospitalVo.toString());
         try {
-            hospitalMapper.conditionUpdate(hospitalVo);
+            Validator.getInstance().validate(hospitalVo);
+            hospitalDao.conditionUpdate(hospitalVo);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
         }catch (Exception e){
-            logger.error("conditionUpdate ErrorMsg{}",e.getMessage());
+            logger.error("conditionUpdate ErrorMsg:{}",e.getMessage());
             return ResultUtil.getResult(CodeUtil.ERROR_UPDATE.getCode(),null);
         }
     }
@@ -143,11 +133,46 @@ public class HospitalServiceImpl implements IHospitalService {
             HospitalVo hospitalVo = new HospitalVo();
             hospitalVo.setHospitalId(hospitalId);
             hospitalVo.setHospitalStatus(UtilData.delete_yes);
-            hospitalMapper.conditionUpdate(hospitalVo);
+            Validator.getInstance().validate(hospitalVo);
+            hospitalDao.conditionUpdate(hospitalVo);
             return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
         }catch (Exception e){
-            logger.error("conditionDelete ErrorMsg{}",e.getMessage());
+            logger.error("conditionDelete ErrorMsg:{}",e.getMessage());
             return ResultUtil.getResult(CodeUtil.ERROR_DELETE.getCode(),null);
         }
+    }
+
+    /**
+     * 给数据库存储图片字段赋值
+     * @param hospitalVo
+     * @param imgName
+     * @param imageValue
+     */
+    private void setImgValue(HospitalVo hospitalVo,String imgName,String imageValue){
+        switch (imgName){
+            case "hospitalSmallLogoImg" :
+                hospitalVo.setHospitalSmallLogo(imageValue);
+                break;
+            case "hospitalLogoImg" :
+                hospitalVo.setHospitalLogo(imageValue);
+                break;
+//            case "hospitalPicImg" :
+//                hospitalVo.setHospitalPic(imageValue);
+//                break;
+            case "certificatePicOne" :
+                hospitalVo.setCertificatePic(imageValue);
+                break;
+            case "certificatePicTwo" :
+                hospitalVo.setCertificatePic(hospitalVo.getCertificatePic()+","+imageValue);
+                break;
+            default:
+                if (hospitalVo.getHospitalPic()!=null){
+                    hospitalVo.setHospitalPic(hospitalVo.getHospitalPic()+","+imageValue);
+                }else {
+                    hospitalVo.setHospitalPic(imageValue);
+                }
+                break;
+        }
+
     }
 }

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Author: haoyang.Yu
  * Create Date: 2016/12/27 19:07.
- * 医生Controller--》医生所有操作
+ * 医生Controller
  */
 @Controller
 @RequestMapping("/doctor")
@@ -81,25 +81,24 @@ public class DoctorController{
     }
 
     /**
-     * 逻辑删除医生
+     * 修改医生数据
      * @param doctorVo
      * @return 将查询结果已json格式返回
      */
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    public String deleteDoctor(DoctorVo doctorVo) {
-        return iDoctorService.deleteDoctor(doctorVo);
+    public String updateDoctor(DoctorVo doctorVo) {
+        return iDoctorService.updateDoctor(doctorVo);
     }
-
     /**
-     * 修改医生数据
+     * 逻辑删除医生
      * @param doctorId
      * @return 将查询结果已json格式返回
      */
-    @RequestMapping(value = "/{doctorId}",method = RequestMethod.PUT)
+    @RequestMapping(value = "/{doctorId}",method = RequestMethod.DELETE)
     @ResponseBody
-    public String updateDoctor(@PathVariable int doctorId) {
-        return iDoctorService.updateDoctor(doctorId);
+    public String deleteDoctor(@PathVariable int doctorId) {
+        return iDoctorService.deleteDoctor(doctorId);
     }
 
 

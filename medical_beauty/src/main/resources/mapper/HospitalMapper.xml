@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.meirengu.medical.dao.HospitalMapper" >
+<mapper namespace="com.meirengu.medical.dao.HospitalDao" >
   <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.HospitalVo" >
     <id column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
     <result column="hospital_name" property="hospitalName" jdbcType="VARCHAR" />
@@ -70,17 +70,15 @@
   <!-- 甄选医院页面 -->
   <select id="selectionHospital" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.HospitalVo" >
     SELECT hospital_id 'hospitalId',hospital_name 'hospitalName',hospital_class 'hospitalClass', hospital_small_logo 'hospitalSmallLogo',
+    hospital_class 'hospitalClass' , hospital_address 'hospitalAddress',
     (SELECT COUNT(1) FROM doctor d WHERE d.hospital_id=h.hospital_id) 'doctorNum' ,
-    (SELECT COUNT(1) FROM `case` c WHERE c.hos_id=h.hospital_id) 'caseNum'
+    (SELECT COUNT(1) FROM `case` c WHERE c.hospital_id=h.hospital_id) 'caseNum'
     FROM hospital h
     LIMIT  #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
   </select>
-  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.HospitalVo">
+  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.HospitalVo" useGeneratedKeys="true" keyProperty="hospitalId" >
     insert into hospital
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="hospitalId != null">
-        hospital_id,
-      </if>
       <if test="hospitalName != null">
         hospital_name,
       </if>
@@ -170,9 +168,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="hospitalId != null">
-        #{hospitalId,jdbcType=INTEGER},
-      </if>
       <if test="hospitalName != null">
         #{hospitalName,jdbcType=VARCHAR},
       </if>

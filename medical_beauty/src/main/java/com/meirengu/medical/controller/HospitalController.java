@@ -1,32 +1,27 @@
 package com.meirengu.medical.controller;
 
 import com.meirengu.medical.service.IHospitalService;
-import com.meirengu.medical.util.UtilData;
 import com.meirengu.medical.vo.HospitalVo;
-import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Author: haoyang.Yu
  * Create Date: 2016/12/30 11:25.
  * 医院Controller
  */
+@CrossOrigin
 @Controller
 @RequestMapping("/hospital")
-public class HospitalController {
+public class HospitalController  {
     @Autowired
     private IHospitalService iHospitalService;
 

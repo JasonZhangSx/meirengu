@@ -50,4 +50,15 @@ public class Area {
     public void setAreaDeep(Boolean areaDeep) {
         this.areaDeep = areaDeep;
     }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+                "areaId=" + areaId +
+                ", areaName='" + areaName + '\'' +
+                ", areaParentId=" + areaParentId +
+                ", areaSort=" + areaSort +
+                ", areaDeep=" + areaDeep +
+                '}';
+    }
 }

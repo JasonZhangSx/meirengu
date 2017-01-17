@@ -1,69 +1,76 @@
 package com.meirengu.medical.model;
 
+import com.meirengu.medical.util.check.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-public class Hospital {
+public class Hospital implements AnnotationValidable {
     private Integer hospitalId;
-
+    @ValidateSize(attributeValue = "医院名称",maxSize = "100")
     private String hospitalName;
-
-    private Byte hospitalType;
-
+    @ValidateDigit(attributeValue = "类型")
+    @ValidateSize(attributeValue = "类型",maxSize = "2")
+    private String hospitalType;
+    @ValidateDigit(attributeValue = "医院类型")
     private Short hospitalClass;
-
+    //小logo
     private String hospitalSmallLogo;
-
+    //logo
     private String hospitalLogo;
-
+    //医院图片
     private String hospitalPic;
-
+    //医院网站
     private String hospitalWebsite;
-
+    //医院地址
     private String hospitalAddress;
-
+    @ValidateDigit(attributeValue = "医院电话")
+    @ValidateSize(attributeValue = "医院电话",maxSize = "11")
     private Integer hospitalTel;
-
+    //资格证书图片
     private String certificatePic;
 
+    @ValidateSize(attributeValue = "联系人",maxSize = "50")
     private String contacts;
-
+    //联系电话
     private String contactsTel;
 
+    @ValidatePattern(attributeValue = "邮箱",pattern="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$")
     private String email;
-
+    @ValidateDigit(attributeValue = "国家")
     private Integer county;
-
+    @ValidateDigit(attributeValue = "省")
     private Integer province;
-
+    @ValidateDigit(attributeValue = "市")
     private Integer city;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date setupTime;
-
+    //新增人
     private Integer createby;
-
+    //新增时间
     private Date createtime;
-
+    //最后修改人
     private Integer lasteditby;
-
+    //最后修改时间
     private Date lastedittime;
-
+    @ValidateDigit(attributeValue = "医院人数")
+    @ValidateSize(attributeValue = "医院人数",maxSize = "4")
     private Integer doctorSum;
-
+    @ValidateDigit(attributeValue = "案例数")
     private Integer caseSum;
-
+    @ValidateDigit(attributeValue = "医院状态")
+    @ValidateSize(attributeValue = "医院状态",maxSize = "1")
     private Integer hospitalStatus;
-
+    //排序
     private Integer hospitalSort;
-
+    //是否审核状态
     private Boolean isAudit;
-
+    //审核账号
     private String auditAccount;
-
+    //审核时间
     private Date auditTime;
-
+    //医院简介
     private String hospitalRemark;
 
     public Integer getHospitalId() {
@@ -82,11 +89,11 @@ public class Hospital {
         this.hospitalName = hospitalName == null ? null : hospitalName.trim();
     }
 
-    public Byte getHospitalType() {
+    public String getHospitalType() {
         return hospitalType;
     }
 
-    public void setHospitalType(Byte hospitalType) {
+    public void setHospitalType(String hospitalType) {
         this.hospitalType = hospitalType;
     }
 
@@ -290,14 +297,6 @@ public class Hospital {
         this.auditTime = auditTime;
     }
 
-    public String getHospitalRemark() {
-        return hospitalRemark;
-    }
-
-    public void setHospitalRemark(String hospitalRemark) {
-        this.hospitalRemark = hospitalRemark == null ? null : hospitalRemark.trim();
-    }
-
     public String getCertificatePic() {
         return certificatePic;
     }
@@ -314,12 +313,20 @@ public class Hospital {
         isAudit = audit;
     }
 
+    public String getHospitalRemark() {
+        return hospitalRemark;
+    }
+
+    public void setHospitalRemark(String hospitalRemark) {
+        this.hospitalRemark = hospitalRemark;
+    }
+
     @Override
     public String toString() {
         return "Hospital{" +
                 "hospitalId=" + hospitalId +
                 ", hospitalName='" + hospitalName + '\'' +
-                ", hospitalType=" + hospitalType +
+                ", hospitalType='" + hospitalType + '\'' +
                 ", hospitalClass=" + hospitalClass +
                 ", hospitalSmallLogo='" + hospitalSmallLogo + '\'' +
                 ", hospitalLogo='" + hospitalLogo + '\'' +

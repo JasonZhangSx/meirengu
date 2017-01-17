@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.medical.dao.ItemDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.medical.vo.ItemVo" >
+    <id column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="subtitle" property="subtitle" jdbcType="VARCHAR" />
+    <result column="ic_id" property="icId" jdbcType="VARCHAR" />
+    <result column="brand_id" property="brandId" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="doctor_id" property="doctorId" jdbcType="INTEGER" />
+    <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+    <result column="item_flag" property="itemFlag" jdbcType="BIT" />
+    <result column="original_price" property="originalPrice" jdbcType="DECIMAL" />
+    <result column="selling_price" property="sellingPrice" jdbcType="DECIMAL" />
+    <result column="charge_unit" property="chargeUnit" jdbcType="BIT" />
+    <result column="charge_remarks" property="chargeRemarks" jdbcType="VARCHAR" />
+    <result column="item_image" property="itemImage" jdbcType="VARCHAR" />
+    <result column="validity_periods" property="validityPeriods" jdbcType="BIT" />
+    <result column="special_remarks" property="specialRemarks" jdbcType="VARCHAR" />
+    <result column="limit_num" property="limitNum" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
+    <result column="contacts_phone" property="contactsPhone" jdbcType="VARCHAR" />
+    <result column="item_commend" property="itemCommend" jdbcType="BIT" />
+    <result column="item_state" property="itemState" jdbcType="BIT" />
+    <result column="close_reason" property="closeReason" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="audit_person" property="auditPerson" jdbcType="VARCHAR" />
+    <result column="commission_rate" property="commissionRate" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="BIT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.medical.vo.ItemVo" extends="BaseResultMap" >
+    <result column="item_image_more" property="itemImageMore" jdbcType="LONGVARCHAR" />
+    <result column="item_details" property="itemDetails" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    item_id, item_name, subtitle, ic_id, brand_id, type_id, doctor_id, hospital_id, item_flag, 
+    original_price, selling_price, charge_unit, charge_remarks, item_image, validity_periods, 
+    special_remarks, limit_num, end_time, area_id, create_time, create_person, contacts_phone, 
+    item_commend, item_state, close_reason, audit_time, audit_person, commission_rate, 
+    sort
+  </sql>
+  <sql id="Blob_Column_List" >
+    item_image_more, item_details
+  </sql>
+  <select id="getItemData" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.medical.vo.ItemVo" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <insert id="addItemData" parameterType="com.meirengu.medical.vo.ItemVo" useGeneratedKeys="true" keyProperty="itemId">
+    insert into item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="subtitle != null" >
+        subtitle,
+      </if>
+      <if test="icId != null" >
+        ic_id,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="doctorId != null" >
+        doctor_id,
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id,
+      </if>
+      <if test="itemFlag != null" >
+        item_flag,
+      </if>
+      <if test="originalPrice != null" >
+        original_price,
+      </if>
+      <if test="sellingPrice != null" >
+        selling_price,
+      </if>
+      <if test="chargeUnit != null" >
+        charge_unit,
+      </if>
+      <if test="chargeRemarks != null" >
+        charge_remarks,
+      </if>
+      <if test="itemImage != null" >
+        item_image,
+      </if>
+      <if test="validityPeriods != null" >
+        validity_periods,
+      </if>
+      <if test="specialRemarks != null" >
+        special_remarks,
+      </if>
+      <if test="limitNum != null" >
+        limit_num,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createPerson != null" >
+        create_person,
+      </if>
+      <if test="contactsPhone != null" >
+        contacts_phone,
+      </if>
+      <if test="itemCommend != null" >
+        item_commend,
+      </if>
+      <if test="itemState != null" >
+        item_state,
+      </if>
+      <if test="closeReason != null" >
+        close_reason,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="auditPerson != null" >
+        audit_person,
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="itemImageMore != null" >
+        item_image_more,
+      </if>
+      <if test="itemDetails != null" >
+        item_details,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null" >
+        #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="icId != null" >
+        #{icId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="doctorId != null" >
+        #{doctorId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="itemFlag != null" >
+        #{itemFlag,jdbcType=BIT},
+      </if>
+      <if test="originalPrice != null" >
+        #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellingPrice != null" >
+        #{sellingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="chargeUnit != null" >
+        #{chargeUnit,jdbcType=BIT},
+      </if>
+      <if test="chargeRemarks != null" >
+        #{chargeRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="itemImage != null" >
+        #{itemImage,jdbcType=VARCHAR},
+      </if>
+      <if test="validityPeriods != null" >
+        #{validityPeriods,jdbcType=BIT},
+      </if>
+      <if test="specialRemarks != null" >
+        #{specialRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="limitNum != null" >
+        #{limitNum,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createPerson != null" >
+        #{createPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="contactsPhone != null" >
+        #{contactsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCommend != null" >
+        #{itemCommend,jdbcType=BIT},
+      </if>
+      <if test="itemState != null" >
+        #{itemState,jdbcType=BIT},
+      </if>
+      <if test="closeReason != null" >
+        #{closeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditPerson != null" >
+        #{auditPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionRate != null" >
+        #{commissionRate,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=BIT},
+      </if>
+      <if test="itemImageMore != null" >
+        #{itemImageMore,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="itemDetails != null" >
+        #{itemDetails,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateItemData" parameterType="com.meirengu.medical.vo.ItemVo" >
+    update item
+    <set >
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null" >
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="icId != null" >
+        ic_id = #{icId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="doctorId != null" >
+        doctor_id = #{doctorId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id = #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="itemFlag != null" >
+        item_flag = #{itemFlag,jdbcType=BIT},
+      </if>
+      <if test="originalPrice != null" >
+        original_price = #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellingPrice != null" >
+        selling_price = #{sellingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="chargeUnit != null" >
+        charge_unit = #{chargeUnit,jdbcType=BIT},
+      </if>
+      <if test="chargeRemarks != null" >
+        charge_remarks = #{chargeRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="itemImage != null" >
+        item_image = #{itemImage,jdbcType=VARCHAR},
+      </if>
+      <if test="validityPeriods != null" >
+        validity_periods = #{validityPeriods,jdbcType=BIT},
+      </if>
+      <if test="specialRemarks != null" >
+        special_remarks = #{specialRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="limitNum != null" >
+        limit_num = #{limitNum,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="contactsPhone != null" >
+        contacts_phone = #{contactsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCommend != null" >
+        item_commend = #{itemCommend,jdbcType=BIT},
+      </if>
+      <if test="itemState != null" >
+        item_state = #{itemState,jdbcType=BIT},
+      </if>
+      <if test="closeReason != null" >
+        close_reason = #{closeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditPerson != null" >
+        audit_person = #{auditPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate = #{commissionRate,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=BIT},
+      </if>
+      <if test="itemImageMore != null" >
+        item_image_more = #{itemImageMore,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="itemDetails != null" >
+        item_details = #{itemDetails,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

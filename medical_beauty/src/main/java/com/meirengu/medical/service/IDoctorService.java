@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Author: haoyang.Yu
  * Create Date: 2016/12/27 19:33.
- * 医生接口
+ * 医生业务逻辑接口
  */
 public interface IDoctorService {
     /**
@@ -33,15 +33,15 @@ public interface IDoctorService {
     String addDoctorData(DoctorVo doctorVo, Iterator<String> iter, MultipartHttpServletRequest multipartHttpServletRequest);
     /**
      * 逻辑修改医生数据
-     * @param doctorId
-     * @return
-     */
-    String updateDoctor(int doctorId);
-
-    /**
-     * 逻辑删除医生数据
      * @param doctorVo
      * @return
      */
-    String deleteDoctor(DoctorVo doctorVo);
+    String updateDoctor(DoctorVo doctorVo);
+
+    /**
+     * 逻辑删除医生数据
+     * @param doctorId
+     * @return
+     */
+    String deleteDoctor(int doctorId);
 }

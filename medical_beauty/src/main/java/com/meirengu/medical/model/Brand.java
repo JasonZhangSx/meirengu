@@ -1,21 +1,25 @@
 package com.meirengu.medical.model;
 
+import com.meirengu.medical.util.check.ValidateInt;
+import com.meirengu.medical.util.check.ValidateSize;
+
 public class Brand {
     private Integer brandId;
 
+    @ValidateSize(attributeValue = "品牌名称",maxSize = "100")
     private String brandName;
 
+    @ValidateSize(attributeValue = "类别名称",maxSize = "50")
     private String brandClass;
 
+    @ValidateSize(attributeValue = "品牌图片",maxSize = "100")
     private String brandPic;
 
-    private Byte brandSort;
+    @ValidateInt(attributeValue = "排序",max = 999)
+    private Integer brandSort;
 
-    private Boolean brandRecommend;
-
-    private Integer storeId;
-
-    private Boolean brandApply;
+    @ValidateInt(attributeValue = "推荐",max = 1)
+    private Integer brandRecommend;
 
     public Integer getBrandId() {
         return brandId;
@@ -49,35 +53,31 @@ public class Brand {
         this.brandPic = brandPic == null ? null : brandPic.trim();
     }
 
-    public Byte getBrandSort() {
+    public Integer getBrandSort() {
         return brandSort;
     }
 
-    public void setBrandSort(Byte brandSort) {
+    public void setBrandSort(Integer brandSort) {
         this.brandSort = brandSort;
     }
 
-    public Boolean getBrandRecommend() {
+    public Integer getBrandRecommend() {
         return brandRecommend;
     }
 
-    public void setBrandRecommend(Boolean brandRecommend) {
+    public void setBrandRecommend(Integer brandRecommend) {
         this.brandRecommend = brandRecommend;
     }
 
-    public Integer getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Integer storeId) {
-        this.storeId = storeId;
-    }
-
-    public Boolean getBrandApply() {
-        return brandApply;
-    }
-
-    public void setBrandApply(Boolean brandApply) {
-        this.brandApply = brandApply;
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "brandId=" + brandId +
+                ", brandName='" + brandName + '\'' +
+                ", brandClass='" + brandClass + '\'' +
+                ", brandPic='" + brandPic + '\'' +
+                ", brandSort=" + brandSort +
+                ", brandRecommend=" + brandRecommend +
+                '}';
     }
 }

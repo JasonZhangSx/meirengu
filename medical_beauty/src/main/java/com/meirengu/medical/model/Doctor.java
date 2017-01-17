@@ -1,76 +1,90 @@
 package com.meirengu.medical.model;
 
+import com.meirengu.medical.util.check.AnnotationValidable;
+import com.meirengu.medical.util.check.ValidateDigit;
+import com.meirengu.medical.util.check.ValidatePattern;
+import com.meirengu.medical.util.check.ValidateSize;
+
 import java.util.Date;
 
-public class Doctor {
+public class Doctor implements AnnotationValidable {
     private Integer doctorId;
-
+    @ValidateDigit(attributeValue = "所属医院")
+    @ValidateSize(attributeValue = "所属医院",maxSize = "10")
     private Integer hospitalId;
-
+    @ValidateSize(attributeValue = "医生名称",minSize = "2",maxSize = "100")
     private String doctorName;
-
+    //医生简介
     private String doctorProfile;
-
+    //医生照片
     private String doctorPic;
-
+    //医生职称
     private String doctorTitle;
-
+    @ValidateSize(attributeValue = "副标题",maxSize = "20")
     private String doctorViceTitle;
-
+    //医生标签
     private String doctorLabel;
-
+    //擅长医术
     private String goodat;
-
+    //最高学历
     private String culturalTop;
-
+    //学习经历
     private String culturalExperience;
-
+    @ValidateSize(attributeValue = "医师资格证书号",maxSize = "20")
     private String certificateNo;
-
+    //医生执业证书快照
     private String certificatePic;
-
+    //职业经历
     private String professionExperience;
-
+    //学术成就
     private String academicAchievement;
-
+    @ValidateDigit(attributeValue = "从医年限")
+    @ValidateSize(attributeValue = "从医年限",maxSize = "11")
     private Integer jobDuration;
-
+    @ValidateDigit(attributeValue = "国家")
+    @ValidateSize(attributeValue = "国家",maxSize = "11")
     private Integer country;
-
+    @ValidateDigit(attributeValue = "省份")
+    @ValidateSize(attributeValue = "省份",maxSize = "11")
     private Integer province;
-
+    @ValidateDigit(attributeValue = "城市")
+    @ValidateSize(attributeValue = "城市",maxSize = "11")
     private Integer city;
-
+    @ValidateDigit(attributeValue = "籍贯")
+    @ValidateSize(attributeValue = "籍贯",maxSize = "11")
     private Integer nativecity;
-
+    @ValidateDigit(attributeValue = "性别")
+    @ValidateSize(attributeValue = "性别",maxSize = "1")
     private Boolean sex;
-
+    @ValidatePattern(attributeValue = "身份证号",pattern="^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$")
     private String idcard;
-
+    @ValidateDigit(attributeValue = "手机号")
+    @ValidateSize(attributeValue = "手机号",maxSize = "11")
     private String mobile;
-
+    @ValidatePattern(attributeValue = "邮箱",pattern="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$")
     private String email;
-
+    @ValidateDigit(attributeValue = "qq")
+    @ValidateSize(attributeValue = "qq",minSize = "5",maxSize = "10")
     private String qq;
-
+    @ValidateSize(attributeValue = "微信",minSize = "2",maxSize = "16")
     private String weixin;
-
+    //新增人
     private String createby;
-
+    //新增时间
     private Date createdate;
-
+    //最后修改人
     private String lasteditby;
-
+    //最后修改时间
     private Date lasteditdate;
-
+    //状态
     private Byte doctorStatus;
-
+    //排序
     private Byte doctorSort;
-
+    //审核状态
     private Boolean isAudit;
-
+    //审核 账号
     private String auditAccount;
-
+    //审核时间
     private Date auditTime;
 
     public Integer getDoctorId() {
