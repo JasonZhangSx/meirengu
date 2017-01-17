@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.uc.dao.UserDao">
+
+    <resultMap id="User" type="User">
+        <id column="user_id" property="userId" jdbcType="INTEGER" javaType="int"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR" javaType="string"/>
+        <result column="realname" property="realname" jdbcType="VARCHAR" javaType="string"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR" javaType="string"/>
+        <result column="idcard" property="idCard" jdbcType="VARCHAR" javaType="string"/>
+        <result column="password" property="password" jdbcType="VARCHAR" javaType="string"/>
+        <result column="bank_idcard" property="bankIdCard" jdbcType="VARCHAR" javaType="string"/>
+        <result column="bank_phone" property="bankPhone" jdbcType="VARCHAR" javaType="string"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" javaType="string"/>
+        <result column="sex" property="sex" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="birthday" property="birthday" jdbcType="DATE" javaType="Date"/>
+        <result column="email" property="email" jdbcType="VARCHAR" javaType="string"/>
+        <result column="qq" property="qq" jdbcType="VARCHAR" javaType="string"/>
+        <result column="wx" property="wx" jdbcType="VARCHAR" javaType="string"/>
+        <result column="area_id" property="areaId" jdbcType="INTEGER" javaType="int"/>
+        <result column="register_from" property="registerFrom" jdbcType="TINYINT" javaType="int"/>
+        <result column="register_time" property="registerTime" jdbcType="DATE" javaType="Date"/>
+        <result column="login_time" property="loginTime" jdbcType="DATE" javaType="Date"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="DATE" javaType="Date"/>
+        <result column="login_ip" property="loginIp" jdbcType="VARCHAR" javaType="string"/>
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" javaType="string"/>
+        <result column="login_from" property="loginFrom" jdbcType="TINYINT" javaType="int"/>
+        <result column="login_num" property="loginNum" jdbcType="INTEGER" javaType="int"/>
+        <result column="wx_openid" property="wxOpenid" jdbcType="VARCHAR" javaType="string"/>
+        <result column="wx_info" property="wxInfo" jdbcType="VARCHAR" javaType="string"/>
+        <result column="qq_openid" property="gqOpenid" jdbcType="VARCHAR" javaType="string"/>
+        <result column="qq_info" property="qqInfo" jdbcType="VARCHAR" javaType="string"/>
+        <result column="sina_openid" property="sinaOpenid" jdbcType="VARCHAR" javaType="string"/>
+        <result column="sina_info" property="sinaInfo" jdbcType="VARCHAR" javaType="string"/>
+        <result column="is_auth" property="isAuth" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="is_buy" property="isBuy" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="is_allow_inform" property="isAllowInform" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="is_allow_talk" property="isAllowTalk" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="state" property="state" jdbcType="TINYINT" javaType="Boolean"/>
+    </resultMap>
+
+    <sql id='table_name'>user</sql>
+    <sql id="select_columns">
+        user_id as userId, nickname, realname, phone, idcard as idCard, password, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
+        birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
+        login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
+        is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state
+    </sql>
+
+    <insert id="create" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO
+        <include refid="table_name"/>
+        (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
+        birthday,email,qq,wx,area_id,register_from,register_time,login_time,last_login_time,
+        login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
+        VALUES
+        (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
+        #{birthday}, #{email}, #{qq}, #{wx}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
+        #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
+        #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
+    </insert>
+
+    <update id="update" parameterType="User">
+        update <include refid="table_name"/>
+        <set>
+            <if test="nickname != null and nickname != ''">
+            nickname=#{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="realname != null and realname != ''">
+                realname=#{realname,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone=#{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                idcard=#{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''">
+                password=#{password,jdbcType=VARCHAR},
+            </if>
+            <if test="bankIdCard != null and bankIdCard != ''">
+                bank_idcard=#{bankIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="bankPhone != null and bankPhone != ''">
+                bank_phone=#{bankPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar=#{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex=#{sex,jdbcType=TINYINT},
+            </if>
+            <if test="birthday != null">
+                birthday=#{birthday,jdbcType=DATE},
+            </if>
+            <if test="email != null and email != ''">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="qq != null and qq != ''">
+                qq=#{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="wx != null and wx != ''">
+                wx=#{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="areaId != null">
+                area_id=#{areaId,jdbcType=INTEGER},
+            </if>
+            <if test="registerFrom != null">
+                register_from=#{registerFrom,jdbcType=INTEGER},
+            </if>
+            <if test="registerTime != null">
+                register_time=#{registerTime,jdbcType=DATE},
+            </if>
+            <if test="loginTime != null">
+                login_time=#{loginTime,jdbcType=DATE},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time=#{lastLoginTime,jdbcType=DATE},
+            </if>
+            <if test="loginIp != null and loginIp !=''">
+                login_ip=#{loginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginIp != null and lastLoginIp != ''">
+                last_login_ip=#{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="loginFrom != null">
+                login_from=#{loginFrom,jdbcType=VARCHAR},
+            </if>
+            <if test="loginNum != null">
+                login_num=#{loginNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wxOpenid != null and wxOpenid != ''">
+                wx_openid=#{wxOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="wxInfo != null and wxInfo != ''">
+                wx_info=#{wxInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="qqOpenid != null and qqOpenid != ''">
+                qq_openid=#{qqOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="qqInfo != null and qqInfo != ''">
+                qq_info=#{qqInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="sinaOpenid != null and sinaOpenid != ''">
+                sina_openid=#{sinaOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="sinaInfo != null and sinaInfo != ''">
+                sina_info=#{sinaInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="isAuth != null">
+                is_auth=#{isAuth,jdbcType=TINYINT},
+            </if>
+            <if test="isBuy != isBuy">
+                is_buy=#{isBuy,jdbcType=TINYINT},
+            </if>
+            <if test="isAllowInform != null">
+                is_allow_inform=#{isAllowInform,jdbcType=TINYINT},
+            </if>
+            <if test="isAllowTalk != null">
+                is_allow_talk=#{isAllowTalk,jdbcType=TINYINT},
+            </if>
+            <if test="state != state">
+                state=#{state,jdbcType=TINYINT},
+            </if>
+        </set>
+        <where>
+            user_id=#{userId} and state=1
+        </where>
+    </update>
+
+    <select id="retrieveByUserId" parameterType="INTEGER" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE user_id=#{userId}
+    </select>
+
+    <select id="retrieveByPhone" parameterType="String" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE phone=#{phone}
+    </select>
+
+
+</mapper>
