@@ -89,6 +89,7 @@ public class OrderServiceImpl implements OrderService{
                 order.setOrderAmount(itemPrice * itemNum);
                 order.setOrderState(Constants.ORDER_NO_PAY);
                 order.setRefundState(Constants.REFUND_STATE_WAIT);
+                order.setFlag(Constants.DEL_FLAG_FALSE);
                 order.setOrderFrom(orderFrom);
 
                 int orderAddNum = orderDao.addOrder(order);
@@ -151,17 +152,20 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional(readOnly = false)
-    public boolean deleteOrder(int orderId) {
+    /**
+     * 0 抛出异常 1 修改成功  2 修改失败（要修改的记录不存在）
+     */
+    public int deleteOrder(int orderId) {
         try{
             int i = orderDao.delete(orderId);
             if(i > 0){
-                return true;
+                return 1;
             }else {
-                return false;
+                return 2;
             }
         } catch (Exception e){
             LOGGER.error("delete order throw exception:",e);
-            return false;
+            return 0;
         }
 
     }

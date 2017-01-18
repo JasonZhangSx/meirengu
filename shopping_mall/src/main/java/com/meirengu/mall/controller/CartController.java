@@ -101,11 +101,13 @@ public class CartController extends BaseController{
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "cart_id"));
         }
 
-        boolean flag = cartService.delete(cartId);
+        int cartDelNum = cartService.delete(cartId);
 
-        if(flag){
+        if(cartDelNum == 1){
             return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-        }else{
+        }else if(cartDelNum == 2){
+            return super.setReturnMsg(StatusCode.STATUS_4213, null, StatusCode.STATUS_4213_MSG);
+        }else {
             return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
         }
     }

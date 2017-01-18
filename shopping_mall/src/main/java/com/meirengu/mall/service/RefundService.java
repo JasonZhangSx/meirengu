@@ -20,5 +20,5 @@ public interface RefundService extends PageBaseService<Order>{
      * @param refundMessage
      * @return 返回退款的金额
      */
-    double refundApply(int orderId, int userId, String userMessage, String refundMessage);
+    Map<String, Object> refundApply(int orderId, int userId, String userMessage, String refundMessage);
 }

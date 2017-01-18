@@ -37,4 +37,10 @@ public class StatusCode {
     /** 至少购买一件商品！ **/
     public static final String STATUS_4212 = "4212";
     public static final String STATUS_4212_MSG = "至少购买一件商品！";
+    /** 要操作的记录不存在！ **/
+    public static final String STATUS_4213 = "4213";
+    public static final String STATUS_4213_MSG = "要操作的记录不存在！";
+    /** 该订单状态下不能进行退款操作 **/
+    public static final String STATUS_4214 = "4214";
+    public static final String STATUS_4214_MSG = "该订单状态下不能进行退款操作！";
 }

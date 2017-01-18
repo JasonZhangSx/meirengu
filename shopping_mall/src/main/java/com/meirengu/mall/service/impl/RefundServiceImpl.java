@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +49,20 @@ public class RefundServiceImpl implements RefundService{
 
     @Override
     @Transactional(readOnly = false)
-    public double refundApply(int orderId, int userId, String userMessage, String refundMessage) {
+    public Map<String, Object> refundApply(int orderId, int userId, String userMessage, String refundMessage) {
+
+        Map<String, Object> resultMap = new HashMap<>();
+        double price = 0;
+        int state = 0; // 0 抛出异常  1 添加退款信息失败 2 订单信息不存在  3 修改订单状态失败  4 成功  5 订单状态不能退款
         //1.查出订单信息  2.添加refund数据  3.修改订单状态为退款状态
         try{
             Order order = new Order();
             order.setId(orderId);
             List<Map<String, Object>> orderDetailList = orderDao.detailList(order);
             if(orderDetailList.size() < 0 ){
-
-                return 0;
+                state = 2;
+                resultMap.put("state", state);
+                return resultMap;
             }
 
             Map<String, Object> orderDetail = orderDetailList.get(0);
@@ -67,7 +73,12 @@ public class RefundServiceImpl implements RefundService{
             String paymentName = orderDetail.get("paymentName") == null ? "" : orderDetail.get("paymentName").toString();
             String paymentCode = orderDetail.get("paymentCode") == null ? "" : orderDetail.get("paymentCode").toString();
             Double itemAmount = orderDetail.get("itemAmount") == null ? null : Double.parseDouble(orderDetail.get("itemAmount").toString());
-
+            Integer orderState = orderDetail.get("orderState") == null ? null : Integer.parseInt(orderDetail.get("orderState").toString());
+            if(orderState != Constants.ORDER_PAID){
+                state = 5;
+                resultMap.put("state", state);
+                return resultMap;
+            }
 
             Date createTime = new Date();
             String refundSN = OrderSNUtils.getRefundSN(); //退款编号
@@ -98,20 +109,31 @@ public class RefundServiceImpl implements RefundService{
                 //修改订单状态
                 int i = orderDao.modifyState(order);
                 if(i > 0){
-                    return itemAmount;
+                    state = 4;
+                    price = itemAmount;
+                    resultMap.put("state", state);
+                    resultMap.put("price", price);
+                    return resultMap;
                 }else{
+                    //修改订单状态失败
+                    state = 3;
+                    resultMap.put("state", state);
                     //事务回滚
-
-                    return 0;
+                    return resultMap;
                 }
             }else{
+                //添加退款信息失败
+                state = 1;
+                resultMap.put("state", state);
                 //事务回滚
-
-                return 0;
+                return resultMap;
             }
         }catch (Exception e){
             LOGGER.error("apply refund throw exception: ", e);
-            return 0;
+            state = 0;
+            resultMap.put("state", state);
+            //事务回滚
+            return resultMap;
         }
     }
 }
