@@ -47,13 +47,9 @@ public class OrderController extends  BaseController{
     @ResponseBody
     @RequestMapping(value = "list", method = RequestMethod.POST)
     public Map<String, Object> list(@RequestParam(value = "user_id", required = false) Integer userId,
-                                    @RequestParam(value = "state", required = false) Integer state,
+                                    @RequestParam(value = "state", required = false) String state,
                                     @RequestParam(value = "per_page", required = false) Integer pageSize,
                                     @RequestParam(value = "page", required = false) Integer pageNum){
-
-        LOGGER.info("order/list");
-        LOGGER.debug("debug order/list");
-        LOGGER.error("error order/list");
 
         if(null == userId){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "user_id"));
@@ -218,13 +214,14 @@ public class OrderController extends  BaseController{
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "order_id"));
         }
 
-        boolean flag = orderService.deleteOrder(orderId);
-        if(flag){
+        int delOrderNum = orderService.deleteOrder(orderId);
+        if(delOrderNum == 1){
             return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+        }else if(delOrderNum == 2){
+            return super.setReturnMsg(StatusCode.STATUS_4213, null, StatusCode.STATUS_4213_MSG);
         }else {
             return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
         }
-
     }
 
 
@@ -234,11 +231,11 @@ public class OrderController extends  BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="refundApply", method = RequestMethod.POST)
+    @RequestMapping(value="refund-apply", method = RequestMethod.POST)
     public Map<String, Object> refundApply(@RequestParam(value = "order_id", required = false) Integer orderId,
                                          @RequestParam(value = "user_id", required = false) Integer userId,
                                          @RequestParam(value = "user_message", required = false) String userMessage,
-                                         @RequestParam(value = "refund_Message", required = false) String refundMessage){
+                                         @RequestParam(value = "refund_message", required = false) String refundMessage){
 
         if(null == orderId){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "order_id"));
@@ -252,15 +249,36 @@ public class OrderController extends  BaseController{
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "user_message"));
         }
 
-        double refundAmount = refundService.refundApply(orderId, userId, userMessage, refundMessage);
-        if(refundAmount > 0){
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("refundAmount", refundAmount);
-            return super.setReturnMsg(StatusCode.STATUS_200, resultMap, StatusCode.STATUS_200_MSG);
-        }else {
+        // 0 抛出异常  1 添加退款信息失败 2 订单信息不存在  3 修改订单状态失败  4 成功  5 订单状态不能退款
+        Map<String, Object> resultMap = refundService.refundApply(orderId, userId, userMessage, refundMessage);
+        if(resultMap == null){
             return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        }else{
+            String state = resultMap.get("state") == null?"":resultMap.get("state").toString();
+            Double price = resultMap.get("price") == null? null : Double.parseDouble(resultMap.get("price").toString());
+            if("0".equals(state)){
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }else if("1".equals(state)){
+                LOGGER.info("add refund msg fail...");
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }else if("2".equals(state)){
+                LOGGER.info("order msg doesn't exist ...");
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }else if("3".equals(state)){
+                LOGGER.info("modify order state fail ...");
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }else if("4".equals(state)){
+                Map<String, Object> map = new HashMap<>();
+                resultMap.put("refundAmount", price);
+                return super.setReturnMsg(StatusCode.STATUS_200, map, StatusCode.STATUS_200_MSG);
+            }else if("5".equals(state)){
+                LOGGER.info("order state doesn't refund ...");
+                return super.setReturnMsg(StatusCode.STATUS_4214, null, StatusCode.STATUS_4214_MSG);
+            }else{
+                LOGGER.info("refund apply return state error : {}", state);
+                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            }
         }
 
     }
-
 }

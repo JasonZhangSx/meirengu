@@ -41,20 +41,23 @@ public class CartServiceImpl implements CartService{
 
     @Override
     @Transactional(readOnly = false)
-    public boolean delete(int cartId) {
+    /**
+     * 0 抛出异常 1 修改成功  2 修改失败（要修改的记录不存在）
+     */
+    public int delete(int cartId) {
         Map<String, Object> map = new HashMap<>();
         map.put("cartId", cartId);
         map.put("state", Constants.CART_STATE_DEL);
         try{
             int i = cartDao.update(map);
             if(i > 0){
-                return true;
+                return 1;
             }else{
-                return false;
+                return 2;
             }
         } catch (RuntimeException e){
             LOGGER.error("cart delete throw exceptions:", e);
-            return false;
+            return 0;
         }
     }
 

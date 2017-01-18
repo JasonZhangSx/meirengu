@@ -31,7 +31,7 @@ public interface OrderService extends PageBaseService<Order>{
      * @param orderId
      * @return
      */
-    boolean deleteOrder(int orderId);
+    int deleteOrder(int orderId);
 
     /**
      * 通过订单id获取订单详情

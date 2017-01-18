@@ -24,7 +24,7 @@ public interface CartService extends PageBaseService<Cart>{
      * @param cartId 购物车项目id
      * @return
      */
-    boolean delete(int cartId);
+    int delete(int cartId);
 
     /**
      * 修改购物车中某一项目的数量
