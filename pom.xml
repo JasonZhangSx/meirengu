@@ -18,6 +18,7 @@
         <module>advertisement</module>
         <module>crowd_funding</module>
         <module>sms</module>
+        <module>commons-meirengu</module>
     </modules>
 
     <properties>
@@ -90,8 +91,8 @@
         <!-- pojo copy -->
         <dozer.version>5.5.1</dozer.version>
         <!-- httpclient -->
-        <httpclient.version>4.3.4</httpclient.version>
-        <httpcore.version>4.3.2</httpcore.version>
+        <httpclient.version>4.5.2</httpclient.version>
+        <httpcore.version>4.4.5</httpcore.version>
         <!-- template engine -->
         <freemarker.version>2.3.20</freemarker.version>
         <!-- email -->
