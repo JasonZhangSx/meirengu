@@ -43,7 +43,7 @@ public class BaseController {
      */
     public Map<String, Object> setReturnMsg(String code, Object data, String msg){
         Map<String, Object> returnMap = new HashMap<String, Object>();
-        if("200".equals(code)){
+        if(StatusCode.STATUS_200.equals(code)){
             returnMap.put("code", code);
             returnMap.put("msg", msg);
             if(!StringUtils.isEmpty(data)){
@@ -55,4 +55,5 @@ public class BaseController {
         }
         return returnMap;
     }
+
 }

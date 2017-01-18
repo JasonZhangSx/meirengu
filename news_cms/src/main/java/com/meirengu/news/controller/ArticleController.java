@@ -31,39 +31,6 @@ public class ArticleController extends BaseController{
     ArticleService articleService;
 
     /**
-     * 推荐列表
-     * @return
-     */
-    /*@ResponseBody
-    @RequestMapping(value = "/recommend/list", method = {RequestMethod.POST})
-    public Map<String, Object> recommendList(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
-                                    @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
-                                    @RequestParam(value = "sortby", required = false) String sortBy,
-                                    @RequestParam(value = "order", required = false) String order,
-                                    @RequestParam(value = "search_text", required = false) String searchText){
-
-        Map paramMap = new HashMap<String, Object>();
-        Page<Article> page = super.setPageParams(pageSize,pageNum);
-        paramMap.put("sortBy", sortBy);
-        paramMap.put("order", order);
-        paramMap.put("searchText", searchText);
-        paramMap.put("isCommend", 1);
-        paramMap.put("position", 0);
-        paramMap.put("isPublish", 1);
-        page = articleService.getPageList(page, paramMap);
-        Map<String, Object> returnMap = new HashMap<String, Object>();
-        returnMap.put("position0", JSON.toJSON(page));
-        int i = 1;
-        while(i < 3){
-            paramMap.put("position", i);
-            List<Map<String, Object>> list = articleService.getList(paramMap);
-            returnMap.put("position"+i, JSON.toJSON(list));
-            i++;
-        }
-        return super.setReturnMsg(StatusCode.STATUS_200, returnMap, StatusCode.STATUS_200_MSG);
-    }*/
-
-    /**
      * 获取文章列表
      * @return
      */
@@ -110,16 +77,57 @@ public class ArticleController extends BaseController{
      */
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insert(@RequestParam(value = "ac_id") int acId,
-                                     @RequestParam(value = "url") String url,
-                                     @RequestParam(value = "show") int show,
-                                     @RequestParam(value = "img") String img,
-                                     @RequestParam(value = "sort") int sort,
-                                     @RequestParam(value = "title") String title,
-                                     @RequestParam(value = "content") String content,
-                                     @RequestParam(value = "is_banner") int isBanner,
-                                     @RequestParam(value = "is_commend") int isCommend,
-                                     @RequestParam(value = "is_publish") int isPublish){
+    public Map<String,Object> insert(@RequestParam(value = "ac_id", required = false) Integer acId,
+                                     @RequestParam(value = "url", required = false) String url,
+                                     @RequestParam(value = "show",required = false) Integer show,
+                                     @RequestParam(value = "img", required = false) String img,
+                                     @RequestParam(value = "sort", required = false) Integer sort,
+                                     @RequestParam(value = "title", required = false) String title,
+                                     @RequestParam(value = "content", required = false) String content,
+                                     @RequestParam(value = "is_banner", required = false) Integer isBanner,
+                                     @RequestParam(value = "is_commend", required = false) Integer isCommend,
+                                     @RequestParam(value = "is_publish", required = false) Integer isPublish){
+
+        if(null == acId){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "ac_id"));
+        }
+
+        if(null == url){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "url"));
+        }
+
+        if(null == show){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "show"));
+        }
+
+        if(null == img){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "img"));
+        }
+
+        if(null == sort){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "sort"));
+        }
+
+        if(null == title){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "title"));
+        }
+
+        if(null == content){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "content"));
+        }
+
+        if(null == isBanner){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_banner"));
+        }
+
+        if(null == isCommend){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_commend"));
+        }
+
+        if(null == isPublish){
+            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_publish"));
+        }
+
         Article article = this.packageA(0, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
         try{
             int i = this.articleService.insert(article);
@@ -192,7 +200,7 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = {"host=localhost"})
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> detail(@PathVariable("id") String id){
         try{

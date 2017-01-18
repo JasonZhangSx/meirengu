@@ -10,12 +10,32 @@ import java.util.List;
  */
 public interface ArticleClassDao extends PageDao<ArticleClass> {
 
+    /**
+     * 新增文章分类
+     * @param ac
+     * @return
+     */
     public int insert(ArticleClass ac);
 
+    /**
+     * 修改文章分类
+     * @param ac
+     * @return
+     */
     public int update(ArticleClass ac);
 
+    /**
+     * 根据ID删除文章分类
+     * @param id
+     * @return
+     */
     public int delete(int id);
 
+    /**
+     * 通过id获取文章分类详情
+     * @param id
+     * @return
+     */
     public ArticleClass detail(int id);
 
     /**

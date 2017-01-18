@@ -23,4 +23,16 @@ public class StatusCode {
     /** %1$s已存在 **/
     public static final String STATUS_503 = "503";
     public static final String STATUS_503_MSG = "%1$s已存在";
+    /** 上传文件为空 **/
+    public static final String STATUS_4201 = "4200";
+    public static final String STATUS_4201_MSG = "上传文件为空";
+    /** %1$s已存在 **/
+    public static final String STATUS_4210 = "4210";
+    public static final String STATUS_4210_MSG = "参数错误！ %1$s为必填项！";
+    /** 参数错误！ 传入JSON格式参数错误！ **/
+    public static final String STATUS_4211 = "4211";
+    public static final String STATUS_4211_MSG = "参数错误！ 传入JSON格式参数错误！";
+    /** 至少购买一件商品！ **/
+    public static final String STATUS_4212 = "4212";
+    public static final String STATUS_4212_MSG = "至少购买一件商品！";
 }
