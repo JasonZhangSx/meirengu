@@ -83,6 +83,8 @@
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <!-- 文件上传 -->
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
+        <!-- 美人谷通用组件包 -->
+        <commons-meirengu.version>1.0-SNAPSHOT</commons-meirengu.version>
         <!-- google java library -->
         <guava.version>17.0</guava.version>
         <!-- joda -->
@@ -590,6 +592,11 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.meirengu</groupId>
+                <artifactId>commons-meirengu</artifactId>
+                <version>${commons-meirengu.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-fileupload</groupId>
