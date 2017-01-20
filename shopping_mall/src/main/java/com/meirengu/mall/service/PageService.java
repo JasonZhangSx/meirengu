@@ -20,4 +20,5 @@ public interface PageService<E> {
 	 * @return
 	 */
 	public Page<E> getListByPage(Page<E> page, Map map, PageDao<E> pageDao);
+
 }

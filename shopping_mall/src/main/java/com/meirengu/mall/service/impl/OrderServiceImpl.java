@@ -52,7 +52,6 @@ public class OrderServiceImpl implements OrderService{
         return pageService.getListByPage(page, map, orderDao);
     }
 
-
     @Override
     @Transactional(readOnly = false)
     public String genOrders(List<Map<String, Object>> orderList) {

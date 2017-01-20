@@ -1,7 +1,6 @@
 package com.meirengu.mall.service.impl;
 
 import com.meirengu.mall.common.Constants;
-import com.meirengu.mall.common.StatusCode;
 import com.meirengu.mall.dao.CartDao;
 import com.meirengu.mall.model.Cart;
 import com.meirengu.mall.model.Page;
@@ -123,5 +122,4 @@ public class CartServiceImpl implements CartService{
     public Page<Cart> getPageList(Page<Cart> page, Map map) {
         return pageService.getListByPage(page, map, cartDao);
     }
-
 }
