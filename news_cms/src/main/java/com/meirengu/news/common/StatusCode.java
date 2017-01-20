@@ -1,8 +1,10 @@
-package com.meirengu.news.common;
+package com.meirengu.mall.common;
 
 /**
  * 状态码集
- * Created by 建新 on 2016/12/29.
+ *
+ * @author 建新
+ * @create 2017-01-10 19:35
  */
 public class StatusCode {
     /** 成功 **/
@@ -23,9 +25,9 @@ public class StatusCode {
     /** %1$s已存在 **/
     public static final String STATUS_503 = "503";
     public static final String STATUS_503_MSG = "%1$s已存在";
-    /** 上传文件为空 **/
-    public static final String STATUS_4201 = "4200";
-    public static final String STATUS_4201_MSG = "上传文件为空";
+    /** 运行时异常 **/
+    public static final String STATUS_504 = "504";
+    public static final String STATUS_504_MSG = "运行时异常！";
     /** %1$s已存在 **/
     public static final String STATUS_4210 = "4210";
     public static final String STATUS_4210_MSG = "参数错误！ %1$s为必填项！";
@@ -35,4 +37,14 @@ public class StatusCode {
     /** 至少购买一件商品！ **/
     public static final String STATUS_4212 = "4212";
     public static final String STATUS_4212_MSG = "至少购买一件商品！";
+    /** 要操作的记录不存在！ **/
+    public static final String STATUS_4213 = "4213";
+    public static final String STATUS_4213_MSG = "要操作的记录不存在！";
+    /** 该订单状态下不能进行退款操作 **/
+    public static final String STATUS_4214 = "4214";
+    public static final String STATUS_4214_MSG = "该订单状态下不能进行退款操作！";
+    /** 该订单状态下不能进行退款操作 **/
+    public static final String STATUS_4215 = "4215";
+    public static final String STATUS_4215_MSG = "%1$s和%2$s必须同时存在！";
+
 }

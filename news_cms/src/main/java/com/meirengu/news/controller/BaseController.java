@@ -1,11 +1,12 @@
 package com.meirengu.news.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.mall.common.StatusCode;
 import com.meirengu.news.common.Constants;
-import com.meirengu.news.common.StatusCode;
 import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Page;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 /**
  * Created by 建新 on 2016/12/29.
  */
+@CrossOrigin
 public class BaseController {
 
     /**

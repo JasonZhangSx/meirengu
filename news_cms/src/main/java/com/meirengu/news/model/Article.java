@@ -35,6 +35,10 @@ public class Article  extends BaseEntity {
     private int isPublish;
     /** 删除标识，0为删除，1为未删除 **/
     private int flag;
+    /** 创建人 **/
+    private int createUser;
+    /** 创建人类型 1后台用户 2客户端用户 **/
+    private int createUserType;
     /** 创建时间 **/
     private Date createTime;
 
@@ -148,5 +152,21 @@ public class Article  extends BaseEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public int getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(int createUser) {
+        this.createUser = createUser;
+    }
+
+    public int getCreateUserType() {
+        return createUserType;
+    }
+
+    public void setCreateUserType(int createUserType) {
+        this.createUserType = createUserType;
     }
 }
