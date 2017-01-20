@@ -35,5 +35,4 @@ public class PageServiceImpl<E> implements PageService<E> {
 		return page;
 	}
 
-
 }

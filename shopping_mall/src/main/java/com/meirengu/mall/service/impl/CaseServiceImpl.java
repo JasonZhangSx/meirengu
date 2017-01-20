@@ -36,5 +36,47 @@ public class CaseServiceImpl implements CaseService{
     public Page<Case> getPageList(Page<Case> page, Map map) {
         return pageService.getListByPage(page, map, caseDao);
     }
+    
 
+    @Override
+    @Transactional(readOnly = false)
+    public boolean add(Case c) {
+        try {
+            int addNum = caseDao.add(c);
+            if(addNum > 0){
+                return true;
+            }else {
+                return false;
+            }
+        } catch (RuntimeException e){
+            LOGGER.error("add case throw exception: ", e);
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public int update(Case c) {
+        try {
+            int updateNum = caseDao.update(c);
+            if(updateNum > 0){
+                return 1;
+            }else {
+                return 2;
+            }
+        } catch (RuntimeException e){
+            LOGGER.error("update case throw exception: ", e);
+            return 0;
+        }
+    }
+
+    @Override
+    public Case detail(Case c) {
+        try {
+            return caseDao.detail(c);
+        }catch (RuntimeException e){
+            LOGGER.error("get case detail throw exception: ", e);
+            return null;
+        }
+    }
 }

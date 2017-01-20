@@ -9,5 +9,24 @@ import com.meirengu.mall.model.Case;
  */
 public interface CaseDao extends PageDao<Case>{
 
+    /**
+     * 案例新增
+     * @param c
+     * @return
+     */
+    int add(Case c);
 
+    /**
+     * 修改案例信息
+     * @param c
+     * @return
+     */
+    int update(Case c);
+
+    /**
+     * 获取详情
+     * @param c
+     * @return
+     */
+    Case detail(Case c);
 }

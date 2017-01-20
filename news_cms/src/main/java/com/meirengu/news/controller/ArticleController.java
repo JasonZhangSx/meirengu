@@ -1,7 +1,7 @@
 package com.meirengu.news.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.meirengu.news.common.StatusCode;
+import com.meirengu.mall.common.StatusCode;
 import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.ArticleService;
@@ -42,7 +42,9 @@ public class ArticleController extends BaseController{
                                     @RequestParam(value = "sortby", required = false) String sortBy,
                                     @RequestParam(value = "order", required = false) String order,
                                     @RequestParam(value = "search_text", required = false) String searchText,
-                                    @RequestParam(value = "is_commend", required = false, defaultValue = "0") int isCommend){
+                                    @RequestParam(value = "is_commend", required = false, defaultValue = "0") int isCommend,
+                                    @RequestParam(value = "create_user", required = false) Integer createUser,
+                                    @RequestParam(value = "create_user_type", required = false) Integer createUserType){
 
         Map paramMap = new HashMap<String, Object>();
         Page<Article> page = super.setPageParams(pageSize,pageNum);
@@ -52,6 +54,9 @@ public class ArticleController extends BaseController{
         paramMap.put("acId", acId);
         paramMap.put("isCommend", isCommend);
         paramMap.put("isPublish", 1);
+        paramMap.put("createUser", createUser);
+        paramMap.put("createUserType", createUserType);
+
         try{
             page = articleService.getPageList(page, paramMap);
             if(page.getList().size() != 0){

@@ -2,4 +2,116 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.mall.dao.CaseDao" >
 
+    <insert id="add" parameterType="case" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `case`
+        (case_id, item_id, doctor_id, hospital_id, ic_id, case_name, case_desc,
+        case_before_pic, case_after_pic, case_time, case_state, case_sort)
+        VALUES
+        (#{id}, #{itemId}, #{doctorId}, #{hospitalId}, #{icId}, #{name}, #{desc},
+        #{beforePic}, #{afterPic}, #{time}, #{state}, #{sort})
+    </insert>
+
+    <update id="update" parameterType="case">
+        update `case`
+        <set>
+            <if test="doctorId != null and doctorId != '' and doctorId != 0">
+                doctor_id=#{doctorId},
+            </if>
+            <if test="itemId != null and itemId != '' and itemId != 0">
+                item_id=#{itemId},
+            </if>
+            <if test="hospitalId != null and hospitalId != '' and hospitalId != 0">
+                hospital_id=#{hospitalId},
+            </if>
+            <if test="icId != null and icId != '' and icId != 0">
+                ic_id=#{icId},
+            </if>
+            <if test="name != null and name != ''">
+                case_name=#{name},
+            </if>
+            <if test="desc != null and desc != ''">
+                case_desc=#{desc},
+            </if>
+            <if test="beforePic != null and beforePic != ''">
+                case_before_pic=#{beforePic},
+            </if>
+            <if test="afterPic != null and afterPic != ''">
+                case_after_pic=#{afterPic},
+            </if>
+            <if test="state != null and state != ''">
+                case_state=#{state},
+            </if>
+            <if test="sort != null and sort != ''">
+                case_sort=#{sort},
+            </if>
+        </set>
+        <where>
+            case_id=#{id}
+        </where>
+    </update>
+
+    <select id="detail" parameterType="case" resultType="case">
+        select case_id as id, item_id as itemId, doctor_id as doctorId, hospital_id as hospitalId,
+        ic_id as icId, case_name as `name`, case_desc as `desc`, case_before_pic as beforePic, case_after_pic as afterPic,
+        case_time as `time`, case_state as state, case_sort as sort FROM `case`
+        <where>
+            1=1
+            <if test="id != null and id != '' and id != 0">
+               AND case_id=#{id}
+            </if>
+            <if test="doctorId != null and doctorId != '' and doctorId != 0">
+                AND doctor_id=#{doctorId}
+            </if>
+            <if test="itemId != null and itemId != '' and itemId != 0">
+                AND item_id=#{itemId}
+            </if>
+            <if test="hospitalId != null and hospitalId != '' and hospitalId != 0">
+                AND hospital_id=#{hospitalId}
+            </if>
+            <if test="icId != null and icId != '' and icId != 0">
+                AND ic_id=#{icId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select case_id as id, item_id as itemId, doctor_id as doctorId, hospital_id as hospitalId,
+        ic_id as icId, case_name as `name`, case_desc as `desc`, case_before_pic as beforePic,
+        case_after_pic as afterPic, case_time as `time`, case_state as state, case_sort as sort
+        FROM `case`
+        WHERE 1=1
+        <if test="itemId != null and itemId != '' and itemId != 0">
+            and item_id=#{itemId}
+        </if>
+        <if test="doctorId != null and doctorId != '' and doctorId != 0">
+            and doctor_id=#{doctorId}
+        </if>
+        <if test="hospitalId != null and hospitalId != '' and hospitalId != 0">
+            and hospital_id=#{hospitalId}
+        </if>
+        <if test="acId != null and acId != '' and acId != 0">
+            and ac_id=#{acId}
+        </if>
+        ORDER BY case_sort DESC;
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        select count(case_id) FROM `case`
+        WHERE 1=1
+        <if test="itemId != null and itemId != '' and itemId != 0">
+            and item_id=#{itemId}
+        </if>
+        <if test="doctorId != null and doctorId != '' and doctorId != 0">
+            and doctor_id=#{doctorId}
+        </if>
+        <if test="hospitalId != null and hospitalId != '' and hospitalId != 0">
+            and hospital_id=#{hospitalId}
+        </if>
+        <if test="acId != null and acId != '' and acId != 0">
+            and ac_id=#{acId}
+        </if>
+        ORDER BY case_sort DESC;
+    </select>
+    <!-- 分页相关结束 -->
 </mapper>

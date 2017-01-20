@@ -52,15 +52,12 @@ public class BaseController {
      */
     public Map<String, Object> setReturnMsg(String code, Object data, String msg){
         Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("code", code);
+        returnMap.put("msg", msg);
         if(StatusCode.STATUS_200.equals(code)){
-            returnMap.put("code", code);
-            returnMap.put("msg", msg);
             if(!StringUtils.isEmpty(data)){
                 returnMap.put("data",JSONObject.toJSON(data));
             }
-        }else{
-            returnMap.put("code", code);
-            returnMap.put("msg", msg);
         }
         LOGGER.info("Request getResponse: {}", JSON.toJSON(returnMap));
         return returnMap;

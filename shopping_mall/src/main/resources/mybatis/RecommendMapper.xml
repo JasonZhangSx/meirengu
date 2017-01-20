@@ -2,4 +2,75 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.mall.dao.RecommendDao" >
 
+    <insert id="add" parameterType="recommend" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommend
+        (recommend_id, rp_id, recommend_title, recommend_content_id, recommend_type, create_time, slide_sort, click_num, is_use)
+        VALUES
+        (#{id}, #{rpId}, #{title}, #{contentId}, #{type}, #{createTime}, #{slideSort}, #{clickNum}, #{isUse})
+    </insert>
+
+    <update id="update" parameterType="recommend">
+        UPDATE recommend
+        <set>
+            <if test="rpId != null and rpId != '' and rpId != 0">
+                rp_id=#{rpId},
+            </if>
+            <if test="title != null and title != ''">
+                recommend_title=#{title},
+            </if>
+            <if test="contentId != null and contentId != ''">
+                recommend_content_id=#{contentId},
+            </if>
+            <if test="type != null and type != ''">
+                recommend_type=#{type},
+            </if>
+            <if test="slideSort != null and slideSort != ''">
+                slide_sort=#{slideSort},
+            </if>
+            <if test="clickNum != null and clickNum != ''">
+                click_num=#{clickNum}
+            </if>
+            <if test="isUse != null and isUse != ''">
+                is_use=#{isUse}
+            </if>
+        </set>
+        <where>
+            recommend_id=#{id}
+        </where>
+    </update>
+
+    <select id="detail" parameterType="Integer" resultType="recommend">
+        select recommend_id as id, rp_id as rpId, recommend_title as title, recommend_content_id as contentId,
+        recommend_type as `type`, create_time as createTime, slide_sort as slideSort, click_num as clickNum,
+        is_use as isUse FROM recommend
+        where recommend_id=#{id}
+    </select>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select recommend_id as id, rp_id as rpId, recommend_title as title, recommend_content_id as contentId,
+        recommend_type as `type`, create_time as createTime, slide_sort as slideSort, click_num as clickNum,
+        is_use as isUse FROM recommend
+        WHERE is_use=1
+        <if test="rpId != null and rpId != ''">
+            and rp_id in (#{rpId})
+        </if>
+        <if test="id != null and id != '' and id != 0">
+            and recommend_id=#{id}
+        </if>
+        ORDER BY slide_sort DESC;
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        select count(recommend_id) FROM recommend
+        WHERE is_use=1
+        <if test="rpId != null and rpId != ''">
+            and rp_id in (#{rpId})
+        </if>
+        <if test="id != null and id != '' and id != 0">
+            and recommend_id=#{id}
+        </if>
+        ORDER BY slide_sort DESC;
+    </select>
+    <!-- 分页相关结束 -->
 </mapper>

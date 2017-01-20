@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.mall.dao.RecommendPositionDao" >
+
+    <insert id="add" parameterType="recommendPosition" useGeneratedKeys="true" keyProperty="id">
+        insert into recommend_position
+        (rp_id, rp_name, rp_intro, rp_class, rp_display, is_use, rp_width,
+        rp_height, recomment_num, click_num, default_content)
+        VALUES
+        (#{id}, #{name}, #{intro}, #{rpClass}, #{display}, #{isUse}, #{width},
+        #{height}, #{recommentNum}, #{clickNum}, #{defaultContent})
+    </insert>
+
+    <update id="update" parameterType="recommendPosition">
+        update recommend_position
+        <set>
+            <if test="name != null and name != ''">
+                rp_name=#{name}
+            </if>
+            <if test="intro != null and intro != ''">
+                rp_intro=#{intro}
+            </if>
+            <if test="display != null and display != ''">
+                rp_display=#{display}
+            </if>
+            <if test="rpClass != null and rpClass != ''">
+                rp_class=#{rpClass}
+            </if>
+            <if test="isUse != null and isUse != ''">
+                is_use=#{isUse}
+            </if>
+            <if test="width != null and width != ''">
+                rp_width=#{width}
+            </if>
+            <if test="height != null and height != ''">
+                rp_height=#{height}
+            </if>
+            <if test="recommentNum != null and recommentNum != ''">
+                recomment_num=#{recommentNum}
+            </if>
+            <if test="clickNum != null and clickNum != ''">
+                click_num=#{clickNum}
+            </if>
+            <if test="defaultContent != null and defaultContent != ''">
+                default_content=#{defaultContent}
+            </if>
+        </set>
+        <where>
+            rp_id=#{id}
+        </where>
+    </update>
+
+    <select id="detail" parameterType="Integer" resultType="recommendPosition">
+        SELECT rp_id as id, rp_name as `name`, rp_intro as intro, rp_class as rpClass, rp_display as display,
+        is_use as isUse, rp_width as width , rp_height as height , recomment_num as recommentNum,
+        click_num as clickNum, default_content as defaultContent
+        FROM  recommend_position WHERE rp_id=#{id}
+    </select>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        SELECT rp_id as id, rp_name as `name`, rp_intro as intro, rp_class as rpClass, rp_display as display,
+        is_use as isUse, rp_width as width , rp_height as height , recomment_num as recommentNum,
+        click_num as clickNum, default_content as defaultContent
+        FROM  recommend_position WHERE is_use=1
+        <if test="id != null and id != ''">
+            and rp_id in
+            <foreach item="item" index="index" collection="id" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        SELECT count(rp_id)
+        FROM  recommend_position WHERE is_use=1
+        <if test="id != null and id != ''">
+            and rp_id in
+            <foreach item="item" index="index" collection="id" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <!--<if test="id != null and id != ''">
+            and rp_id in (#{id})
+        </if>-->
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>
