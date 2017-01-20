@@ -598,11 +598,6 @@
                 <artifactId>commons-meirengu</artifactId>
                 <version>${commons-meirengu.version}</version>
             </dependency>
-            <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>${commons-fileupload.version}</version>
-            </dependency>
 
             <!-- google java library -->
             <dependency>
@@ -915,7 +910,7 @@
                 <!-- jetty插件 -->
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
+                    <artifactId>maven-jetty-plugin</artifactId>
                     <version>${jetty.version}</version>
                 </plugin>
 
