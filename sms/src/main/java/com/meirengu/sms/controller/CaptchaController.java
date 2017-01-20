@@ -1,7 +1,9 @@
 package com.meirengu.sms.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.meirengu.sms.common.StatusCode;
+import com.meirengu.common.StatusCode;
+import com.meirengu.controller.BaseController;
+import com.meirengu.model.Result;
 import com.meirengu.sms.model.Captcha;
 import com.meirengu.sms.service.CaptchaService;
 import org.apache.commons.lang3.StringUtils;
@@ -32,74 +34,74 @@ public class CaptchaController extends BaseController {
 
 
     @RequestMapping(value = "captcha/validate", method = RequestMethod.POST)
-    public Map<String, Object> validate(@RequestParam(required = true) String mobile,
-                                        @RequestParam(required = true) int code,
-                                        @RequestParam(required = true) String uid){
+    public Result validate(@RequestParam(required = true) String mobile,
+                           @RequestParam(required = true) int code,
+                           @RequestParam(required = true) String uid){
         logger.info("CaptchaController.validate params >> mobile:{},code:{},uid:{}", new Object[]{mobile,code,uid});
         Captcha captcha = captchaService.retrieve(mobile,code,uid);
         if (captcha == null){
-            return super.setReturnMsg(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }
         Date expireTime = captcha.getExpireTime();
         Date nowTime = new Date();
         if (expireTime.compareTo(nowTime) < 0){
-            return super.setReturnMsg(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
+            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
         }
         //update status
         captcha.setUse(true);
         captcha.setUsingTime(nowTime);
         int result = captchaService.update(captcha);
         if (result > 0){
-            return super.setReturnMsg(StatusCode.OK, captcha, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, captcha, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.DB_OPERATION_FAIL, captcha, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
+            return super.setResult(StatusCode.DB_OPERATION_FAIL, captcha, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
         }
 
     }
 
     @RequestMapping(value = "captcha", method = RequestMethod.POST)
-    public Map<String, Object> create(@RequestParam(required = true) Captcha captcha){
+    public Result create(@RequestParam(required = true) Captcha captcha){
         logger.info("CaptchaController.create params >> {}", JSONObject.toJSON(captcha));
         if (captcha == null){
-            return super.setReturnMsg(StatusCode.ARGUMENT_MISSING, null, StatusCode.codeMsgMap.get(StatusCode.ARGUMENT_MISSING));
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         int result = captchaService.create(captcha);
         if (result > 0){
-            return super.setReturnMsg(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
+            return super.setResult(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
         }
 
     }
 
     @RequestMapping(value = "captcha", method = RequestMethod.PUT)
-    public Map<String, Object> update(@RequestParam(required = true) Captcha captcha){
+    public Result update(@RequestParam(required = true) Captcha captcha){
         logger.info("CaptchaController.update params >> {}", JSONObject.toJSON(captcha));
         if (captcha == null){
-            return super.setReturnMsg(StatusCode.ARGUMENT_MISSING, null, StatusCode.codeMsgMap.get(StatusCode.ARGUMENT_MISSING));
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         int result = captchaService.update(captcha);
         if (result > 0){
-            return super.setReturnMsg(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
+            return super.setResult(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
         }
 
     }
 
     @RequestMapping(value = "captcha", method = RequestMethod.GET)
-    public Map<String, Object> retrieve(@RequestParam(required = true) String mobile, int code, String uid){
+    public Result retrieve(@RequestParam(required = true) String mobile, int code, String uid){
         logger.info("CaptchaController.retrieve params >> mobile:{}, code:{}, uid:{}", new Object[]{mobile, code, uid});
         if (StringUtils.isBlank(mobile)){
-            return super.setReturnMsg(StatusCode.ARGUMENT_MISSING, null, StatusCode.codeMsgMap.get(StatusCode.ARGUMENT_MISSING));
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Captcha captcha = captchaService.retrieve(mobile, code, uid);
         if (captcha != null){
-            return super.setReturnMsg(StatusCode.OK, captcha, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, captcha, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
+            return super.setResult(StatusCode.DB_OPERATION_FAIL, null, StatusCode.codeMsgMap.get(StatusCode.DB_OPERATION_FAIL));
         }
 
     }

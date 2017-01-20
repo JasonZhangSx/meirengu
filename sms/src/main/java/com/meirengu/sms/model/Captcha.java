@@ -1,5 +1,7 @@
 package com.meirengu.sms.model;
 
+import com.meirengu.model.BaseObject;
+
 import java.util.Date;
 
 /**

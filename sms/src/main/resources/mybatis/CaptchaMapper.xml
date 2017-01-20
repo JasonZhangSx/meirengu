@@ -45,7 +45,18 @@
     <select id="retrieve" parameterType="Map" resultType="Captcha">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
-        WHERE mobile=#{mobile} and code=#{code} and uid=#{uid} and is_use=0
+        <where>
+            is_use=0
+            <if test="mobile!=null and mobile != ''">
+                AND mobile=#{mobile}
+            </if>
+            <if test="code!=null">
+                AND code=#{code}
+            </if>
+            <if test="uid!=null and uid != ''">
+                AND uid=#{uid}
+            </if>
+        </where>
     </select>
 
 </mapper>

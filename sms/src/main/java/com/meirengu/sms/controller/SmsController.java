@@ -1,6 +1,8 @@
 package com.meirengu.sms.controller;
 
-import com.meirengu.sms.common.StatusCode;
+import com.meirengu.common.StatusCode;
+import com.meirengu.controller.BaseController;
+import com.meirengu.model.Result;
 import com.meirengu.sms.model.Captcha;
 import com.meirengu.sms.model.SmsRecord;
 import com.meirengu.sms.service.CaptchaService;
@@ -45,26 +47,26 @@ public class SmsController extends BaseController {
      * @return
      */
     @RequestMapping(value = "singleSend", method = RequestMethod.POST)
-    public Map<String, Object> singleSend(@RequestParam(required = true)String apikey,
-                                          @RequestParam(required = true)String mobile,
-                                          @RequestParam(required = true)String text,
-                                          @RequestParam(required = false) String extend,
-                                          @RequestParam(required = false) Long uid,
-                                          @RequestParam(required = false) String ip,
-                                          @RequestParam(required = false) String callback_url){
+    public Result singleSend(@RequestParam(required = true)String apikey,
+                             @RequestParam(required = true)String mobile,
+                             @RequestParam(required = true)String text,
+                             @RequestParam(required = false) String extend,
+                             @RequestParam(required = false) Long uid,
+                             @RequestParam(required = false) String ip,
+                             @RequestParam(required = false) String callback_url){
 
         logger.info("SmsController.tplSendSms params >> apikey:{},mobile:{},text:{},extend:{},uid:{},ip:{},callback_url:{}", new Object[]{apikey,mobile,text,extend,uid,ip,callback_url});
         //verify params
         if(!ConfigUtil.getConfig("API_KEY_MEIRENGU").equals(apikey)){
-            return super.setReturnMsg(StatusCode.BAD_API_KEY, null, StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+            return super.setResult(StatusCode.BAD_API_KEY, null, StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
         }
         //invoke sms service
         ResultDO<SendSingleSmsInfo> resultDO = smsService.singleSend(mobile, text);
         if (resultDO.isSuccess()){
             //store db
-            return super.setReturnMsg(StatusCode.OK,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.UNKNOWN_EXCEPTION,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
@@ -79,7 +81,7 @@ public class SmsController extends BaseController {
      * @return
      */
     @RequestMapping(value = "tplSingleSend", method = RequestMethod.POST)
-    public Map<String, Object> tplSingleSend(@RequestParam(required = true)String apikey,
+    public Result tplSingleSend(@RequestParam(required = true)String apikey,
                                              @RequestParam(required = true)String mobile,
                                              @RequestParam(required = true)Long tpl_id,
                                              @RequestParam(required = true)String tpl_value,
@@ -90,7 +92,7 @@ public class SmsController extends BaseController {
         logger.info("SmsController.tplSendSms params >> apikey:{},mobile:{},tpl_id:{},tpl_value:{},extend:{},uid:{},ip:{}", new Object[]{apikey,mobile,tpl_id,tpl_value,extend,uid,ip});
         //verify params
         if(!ConfigUtil.getConfig("API_KEY_MEIRENGU").equals(apikey)){
-            return super.setReturnMsg(StatusCode.BAD_API_KEY, null, StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+            return super.setResult(StatusCode.BAD_API_KEY, null, StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
         }
         //invoke sms service
         ResultDO<SendSingleSmsInfo> resultDO = smsService.tplSingleSend(mobile, tpl_id, tpl_value);
@@ -105,9 +107,9 @@ public class SmsController extends BaseController {
             int smsRecordCreateResult = smsRecordService.create(this.wrapSmsRecord(resultDO,tpl_value,uid,ip));
             logger.info("SmsController.tplSendSms result << apikey:{},mobile:{},tpl_id:{}, resultDO:{}, captchaCreateResult:{}, smsRecordCreateResult:{}", new Object[]{apikey,mobile,tpl_id,resultDO,captchaCreateResult,smsRecordCreateResult});
             //store db sms_record
-            return super.setReturnMsg(StatusCode.OK,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK,resultDO.getData(),StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.UNKNOWN_EXCEPTION,null,StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION,null,StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
