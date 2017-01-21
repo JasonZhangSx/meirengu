@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 public class ImageUtil {
 	private static Logger log = Logger.getLogger(ImageUtil.class);
 
-	private static String DEFAULT_PREVFIX = "zoo";
+	private static String DEFAULT_PREVFIX = "";
 	private static Boolean DEFAULT_FORCE = false;
 
 	/**
@@ -41,7 +41,7 @@ public class ImageUtil {
 				// ImageIO 支持的图片类型 : [BMP, bmp, jpg, JPG, wbmp, jpeg, png, PNG,
 				// JPEG, WBMP, GIF, gif]
 				String types = Arrays.toString(ImageIO.getReaderFormatNames());
-				String suffix = null;
+				String suffix  = "_"+w+"_"+h;
 				// 获取图片后缀
 				if (imgFile.getName().indexOf(".") > -1) {
 					suffix = imgFile.getName().substring(imgFile.getName().lastIndexOf(".") + 1);
@@ -70,9 +70,13 @@ public class ImageUtil {
 				g.drawImage(img, 0, 0, w, h, Color.LIGHT_GRAY, null);
 				g.dispose();
 				String p = imgFile.getPath();
+
+				String fileName = imgFile.getName();
+				String fileNameSub = fileName.substring(0,fileName.indexOf("."));
+				fileName = fileNameSub+"_"+w+"_"+h+"."+suffix;
 				// 将图片保存在原目录并加上前缀
 				ImageIO.write(bi, suffix, new File(p.substring(0, p.lastIndexOf(File.separator)) + File.separator
-						+ prevfix + imgFile.getName()));
+						+ prevfix + fileName));
 			} catch (IOException e) {
 				log.error("generate thumbnail image failed.", e);
 			}
