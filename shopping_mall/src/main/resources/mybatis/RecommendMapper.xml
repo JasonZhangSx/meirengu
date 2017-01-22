@@ -4,9 +4,9 @@
 
     <insert id="add" parameterType="recommend" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO recommend
-        (recommend_id, rp_id, recommend_title, recommend_content_id, recommend_type, create_time, slide_sort, click_num, is_use)
+        (recommend_id, rp_id, recommend_title, recommend_content_id, recommend_type, slide_sort, click_num, is_use)
         VALUES
-        (#{id}, #{rpId}, #{title}, #{contentId}, #{type}, #{createTime}, #{slideSort}, #{clickNum}, #{isUse})
+        (#{id}, #{rpId}, #{title}, #{contentId}, #{type}, #{slideSort}, #{clickNum}, #{isUse})
     </insert>
 
     <update id="update" parameterType="recommend">

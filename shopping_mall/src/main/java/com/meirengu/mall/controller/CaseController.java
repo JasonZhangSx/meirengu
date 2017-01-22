@@ -5,6 +5,8 @@ import com.meirengu.mall.common.StatusCode;
 import com.meirengu.mall.model.Case;
 import com.meirengu.mall.model.Page;
 import com.meirengu.mall.service.CaseService;
+import com.meirengu.mall.utils.ConfigUtil;
+import com.meirengu.mall.utils.UploadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +44,6 @@ public class CaseController extends BaseController {
      * @param icId
      * @param name
      * @param desc
-     * @param beforePic
-     * @param afterPic
      * @param sort
      * @return
      */
@@ -54,9 +55,12 @@ public class CaseController extends BaseController {
                                       @RequestParam(value = "ic_id", required = false) Integer icId,
                                       @RequestParam(value = "case_name", required = false) String name,
                                       @RequestParam(value = "case_desc", required = false) String desc,
-                                      @RequestParam(value = "before_pic", required = false) String beforePic,
-                                      @RequestParam(value = "after_pic", required = false) String afterPic,
-                                      @RequestParam(value = "case_sort", required = false) Integer sort){
+                                      /*@RequestParam(value = "before_pic", required = false) String beforePic,
+                                      @RequestParam(value = "after_pic", required = false) String afterPic,*/
+                                      @RequestParam(value = "case_sort", required = false) Integer sort,
+                                      HttpServletRequest request){
+
+
 
         if(null == itemId){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_id"));
@@ -78,17 +82,15 @@ public class CaseController extends BaseController {
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_name"));
         }
 
-        if(StringUtils.isEmpty(beforePic)){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "before_pic"));
-        }
-
-        if(StringUtils.isEmpty(afterPic)){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "after_pic"));
-        }
-
         if(null == sort){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_sort"));
         }
+
+        Map map = UploadUtil.uploadPic(request, "before_pic",  ConfigUtil.getCaseSavePath()+hospitalId+"/"+doctorId+"/", ConfigUtil.getCaseShowPath(), "375x480");
+        Map map2 = UploadUtil.uploadPic(request, "after_pic",  ConfigUtil.getCaseSavePath()+hospitalId+"/"+doctorId+"/", ConfigUtil.getCaseShowPath(), "375x480");
+
+        String beforePic = map.get("path").toString();
+        String afterPic = map2.get("path").toString();
 
         Case c = new Case();
         c.setItemId(itemId);
