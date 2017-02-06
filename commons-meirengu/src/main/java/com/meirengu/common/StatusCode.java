@@ -65,12 +65,12 @@ public class StatusCode {
     public static final int BAD_GATEWAY = 502;
     public static final int SERVICE_UNAVAILABLE = 503;
     public static final int GATEWAY_TIMEOUT = 504;
-    public static final int HTTP_VERSION_NOT_SUPPORTED = 504;
+    public static final int HTTP_VERSION_NOT_SUPPORTED = 505;
     //50000-50100//commons
     public static final int UNKNOWN_EXCEPTION = 50000;
     public static final int DB_OPERATION_FAIL = 50001;
-    public static final int RECORD_ALREADY_EXISTED = 50000;
-    public static final int RECORD_NOT_EXISTED = 50001;
+    public static final int RECORD_ALREADY_EXISTED = 50002;
+    public static final int RECORD_NOT_EXISTED = 50003;
 
 
     //50100-50200//user_center
