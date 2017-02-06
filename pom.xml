@@ -10,7 +10,6 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>user_center</module>
-        <module>shopping_mall</module>
         <module>medical_beauty</module>
         <module>news_cms</module>
         <module>payment</module>
@@ -110,7 +109,7 @@
         <!-- selenium 2.0 -->
         <selenium.version>2.42.2</selenium.version>
         <!-- jetty -->
-        <jetty.version>9.4.0.v20161208</jetty.version>
+        <jetty.version>6.1.12.rc5</jetty.version>
         <!-- redis simulator -->
         <nosqlunit.version>0.7.9</nosqlunit.version>
         <spring.data.redis.version>1.7.0.RELEASE</spring.data.redis.version>
@@ -791,20 +790,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- jetty -->
-            <dependency>
-                <groupId>org.eclipse.jetty.aggregate</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jsp</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <!-- redis simulator -->
             <dependency>
                 <groupId>com.lordofthejars</groupId>
@@ -920,8 +905,8 @@
 
                 <!-- jetty插件 -->
                 <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>maven-jetty-plugin</artifactId>
                     <version>${jetty.version}</version>
                 </plugin>
 
