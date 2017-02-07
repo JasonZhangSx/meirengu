@@ -82,6 +82,10 @@
         <!-- j2ee web spec -->
         <!-- update to servlet 3.0 for spring 4.0 MockHttpServletRequest -->
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>

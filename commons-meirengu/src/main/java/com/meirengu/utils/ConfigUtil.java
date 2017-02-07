@@ -3,6 +3,7 @@ package com.meirengu.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -16,15 +17,13 @@ public class ConfigUtil {
 
     protected static Properties props;
 
-    protected static File configFile;
+    protected static InputStream in;
 
     protected static long lastModified = 0l;
 
     protected static void init() {
-        URL url = ConfigUtil.class.getClassLoader().getResource("commons.properties");
-        String file = url.getFile();
 
-        configFile = new File(file);
+        in = ConfigUtil.class.getClassLoader().getResourceAsStream("commons.properties");
 
         props = new Properties();
 
@@ -33,20 +32,15 @@ public class ConfigUtil {
 
     protected static void load() {
         try {
-            props.load(new FileInputStream(configFile));
-            lastModified = configFile.lastModified();
+            props.load(in);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static String getConfig(String key) {
-        if (props == null || configFile == null) {
+        if (props == null) {
             init();
-        }
-
-        if (lastModified != configFile.lastModified()) {
-            load();
         }
 
         return props.getProperty(key);
