@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.commons.authority.dao.RoleDao" >
+    
+<insert id="saveRole" parameterType="Role">
+    insert into role (name, value, siteIds) values(#{name}, #{value}, #{siteIds})
+</insert>  
+
+<update id="updateRole" parameterType="Role">
+    update role 
+    <set>
+    	<if test="name !=null and name !=''">
+    		name=#{name},
+    	</if>
+    	<if test="value !=null and value !=''">
+    		value=#{value},
+    	</if>
+    	siteIds=#{siteIds}
+    </set>
+    where id=#{id}
+</update>
+
+<select id="selectRole" parameterType="Integer" resultType="Role">
+    select * from role where id=#{id}
+</select>
+
+<delete id="deleteRelatedA" parameterType="List">
+	delete from user_role where role_id in
+	<foreach collection="list" item="item" open="(" close=")" separator=",">
+	    #{item}
+	</foreach> 
+</delete>
+
+<delete id="deleteRelatedP" parameterType="List">
+	delete from role_permission where role_id in
+	<foreach collection="list" item="item" open="(" close=")" separator=",">
+	    #{item}
+	</foreach> 
+</delete>
+
+<delete id="deleteRole" parameterType="List">
+	delete from role where id in
+	<foreach collection="list" item="item" open="(" close=")" separator=",">
+	    #{item}
+	</foreach> 
+</delete>
+
+<insert id="saveRelated" parameterType="User">
+    insert into user_role (user_id, role_id) values
+	<foreach collection="roleList" item="item" separator=",">
+	    (#{id}, #{item.id})
+	</foreach>
+</insert>
+
+<delete id="deleteRelated" parameterType="Integer">
+    delete from user_role where user_id=#{userId}
+</delete>
+
+<select id="getRolesByUsername" parameterType="String" resultType="Role">
+	select r.id as id, r.name as name, r.value as value, r.siteIds as siteIds from user a inner join user_role ar on a.id=ar.user_id and a.name=#{name} inner join role r on ar.role_id=r.id
+</select>
+
+<select id="getUsersByRoleId" parameterType="Integer" resultType="User">
+	select u.id as id, u.name as name, u.password as password, u.nickName as nickName, u.jobNumber as jobNumber 
+	from role r inner join user_role ur on r.id = ur.role_id and r.id=#{id} inner join user u on ur.user_id = u.id
+</select>
+
+<select id="getAllRole" resultType="Role">
+    select * from role
+</select>
+
+<select id="getByPage" resultType="Role">
+    select * from role where 1=1
+    <if test="name != null and name != ''">
+      and name like CONCAT(CONCAT('%', #{name}), '%')
+    </if>
+    <if test="value != null and value != ''">
+      and value like CONCAT(CONCAT('%', #{value}), '%')
+    </if>
+    order by id;
+</select>
+
+<select id="getTotalCount" parameterType="Role" resultType="Integer">
+	select count(*) from role where 1=1
+	<if test="name != null and name !='' ">
+		and name like CONCAT(CONCAT('%', #{name}), '%')	    
+	</if>
+	<if test="value != null and value != ''">
+      and value like CONCAT(CONCAT('%', #{value}), '%')
+    </if>
+    order by id;
+</select>
+
+</mapper>

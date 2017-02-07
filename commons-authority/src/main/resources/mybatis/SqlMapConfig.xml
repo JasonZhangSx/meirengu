@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 实体别名设置 -->
+	<typeAliases>
+		<typeAlias alias="User" type="com.meirengu.commons.authority.model.User" />
+		<typeAlias alias="Role" type="com.meirengu.commons.authority.model.Role" />
+		<typeAlias alias="Permission" type="com.meirengu.commons.authority.model.Permission" />
+	</typeAliases>
+</configuration>

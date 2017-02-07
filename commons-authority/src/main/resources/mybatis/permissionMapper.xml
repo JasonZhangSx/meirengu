@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.commons.authority.commons.authority.dao.PermissionDao" >
+
+<insert id="savePermission" parameterType="Permission">
+    insert into permission (name, type, value) values(#{name}, #{type}, #{value});
+</insert>  
+
+<update id="updatePermission" parameterType="Permission">
+    update permission 
+    <set>
+    	<if test="name !=null and name !=''">
+    		name=#{name},
+    	</if>
+    	<if test="type !=null and type !=''">
+    		type=#{type},
+    	</if>
+    	<if test="value !=null and value !=''">
+    		value=#{value}
+    	</if>
+    </set>
+    where id=#{id}
+</update>
+
+<select id="getById" parameterType="Integer" resultType="Permission">
+    select * from permission where id=#{id}
+</select>
+
+<delete id="deleteRelatedR" parameterType="List">
+	delete from role_permission where permission_id in
+	<foreach collection="list" item="item" open="(" close=")" separator=",">
+	    #{item}
+	</foreach> 
+</delete>
+
+<delete id="deletePermission" parameterType="List">
+	delete from permission where id in
+	<foreach collection="list" item="item" open="(" close=")" separator=",">
+	    #{item}
+	</foreach> 
+</delete>
+
+<insert id="saveRelated" parameterType="Role">
+    insert into role_permission (role_id, permission_id) values
+	<foreach collection="permissionList" item="item" separator=",">
+	    (#{id}, #{item.id})
+	</foreach>
+</insert>
+
+<delete id="deleteRelated" parameterType="Integer">
+    delete from role_permission where role_id=#{roleId}
+</delete>
+
+<select id="getAllPermission" resultType="Permission">
+    select * from permission order by type
+</select>
+
+<select id="getPerStrByRoleId" parameterType="Integer" resultType="String">
+	select p.value from role r inner join role_permission rp on r.id=rp.role_id and r.id=#{roleId} inner join permission p on p.id=rp.permission_id 
+</select>
+
+<select id="getPerByRoleId" parameterType="Integer" resultType="Permission">
+	select p.id, p.name, p.value, p.type from role r inner join role_permission rp on r.id=rp.role_id and r.id=#{roleId} inner join permission p on p.id=rp.permission_id 
+</select>
+
+<select id="getByPage" resultType="Permission">
+    select * from permission where 1=1
+    <if test="name != null and name != ''">
+      and name like CONCAT(CONCAT('%', #{name}), '%')
+    </if>
+    <if test="type != null and type != ''">
+      and type=#{type}
+    </if>
+    order by type, id;
+</select>
+
+<select id="getTotalCount" parameterType="Permission" resultType="Integer">
+	select count(*) from permission where 1=1
+	<if test="name != null and name !='' ">
+		and name like CONCAT(CONCAT('%', #{name}), '%')    
+	</if>
+	<if test="type != null and type != ''">
+        and type=#{type}
+    </if>
+    order by type, id;
+</select>
+
+</mapper>
