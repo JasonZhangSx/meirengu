@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
-import com.meirengu.uc.common.StatusCode;
+import com.meirengu.common.StatusCode;
+import com.meirengu.controller.BaseController;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import org.slf4j.Logger;

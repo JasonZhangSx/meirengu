@@ -1,9 +1,11 @@
 package com.meirengu.uc.model;
 
+import com.meirengu.model.BaseObject;
+
 import java.util.Date;
 
 /**
- * 会员类
+ * 会员实体类
  *
  * @author Marvin
  * @create 2017-01-10 下午2:41

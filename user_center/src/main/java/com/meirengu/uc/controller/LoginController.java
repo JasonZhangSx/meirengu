@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
-import com.meirengu.uc.common.StatusCode;
+import com.meirengu.common.StatusCode;
+import com.meirengu.controller.BaseController;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.service.UserService;
@@ -41,10 +42,10 @@ public class LoginController extends BaseController{
             return super.setReturnMsg(StatusCode.BAD_API_KEY, null, StatusCode.getErrorMsg(StatusCode.BAD_API_KEY));
         }
         if (StringUtils.isEmpty(phone)){
-            return super.setReturnMsg(StatusCode.ARGUMENT_MISSING, null, StatusCode.getErrorMsg(StatusCode.ARGUMENT_MISSING));
+            return super.setReturnMsg(StatusCode.MISSING_ARGUMENT, null, StatusCode.getErrorMsg(StatusCode.MISSING_ARGUMENT));
         }
         if (!StringUtils.isNumeric(phone)){
-            return super.setReturnMsg(StatusCode.BAD_ARGUMENT_FORMAT, null, StatusCode.getErrorMsg(StatusCode.BAD_ARGUMENT_FORMAT));
+            return super.setReturnMsg(StatusCode.INVALID_ARGUMENT, null, StatusCode.getErrorMsg(StatusCode.INVALID_ARGUMENT));
         }
         HttpResult hr = loginService.captchaLoginValidate(apikey,phone,Integer.valueOf(captcha));
         if (hr != null){
