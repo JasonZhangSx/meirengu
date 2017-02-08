@@ -36,6 +36,7 @@ public class StatusCode {
     public static final int DECODE_ERROR = 40011;
     public static final int DECRYPT_ERROR = 40012;
     public static final int CAPTCHA_EXPIRE = 40013;
+    public static final int CAPTCHA_INVALID = 40014;
     //40100-40200//user_center
 
     //40200-40300//news_cms
@@ -142,6 +143,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.DECODE_ERROR, "解码失败");
         codeMsgMap.put(StatusCode.DECRYPT_ERROR, "解密失败");
         codeMsgMap.put(StatusCode.CAPTCHA_EXPIRE, "验证码过期");
+        codeMsgMap.put(StatusCode.CAPTCHA_INVALID, "验证码无效");
         //40100-40200//user_center
 
         //40200-40300//news_cms
