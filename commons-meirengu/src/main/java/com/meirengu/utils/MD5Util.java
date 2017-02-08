@@ -129,6 +129,7 @@ public class MD5Util {
 		try {
 			byte[] strTemp = s.getBytes();
 			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+			mdTemp.update(s.getBytes("UTF-8"));
 			mdTemp.update(strTemp);
 			byte[] md = mdTemp.digest();
 			int j = md.length;
