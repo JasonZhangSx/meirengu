@@ -10,5 +10,4 @@ import com.meirengu.uc.utils.HttpUtil.HttpResult;
  */
 public interface LoginService {
 
-    public HttpResult captchaLoginValidate(String apikey, String mobile, int code);
 }

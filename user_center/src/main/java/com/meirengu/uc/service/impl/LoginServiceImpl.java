@@ -23,18 +23,4 @@ public class LoginServiceImpl implements LoginService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
-    @Override
-    public HttpResult captchaLoginValidate(String apikey, String mobile, int code) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("apikey", apikey);
-        params.put("mobile",mobile);
-        params.put("code",code);
-        HttpResult hr = null;
-        try {
-            hr = HttpUtil.doPost(ConfigUtil.getConfig("URI_CAPTCHA_VALIDATE"), JSONObject.toJSONString(params));
-        } catch (Exception e){
-            logger.error("LoginServiceImpl.captchaLoginValidate error : {}", e);
-        }
-        return hr;
-    }
 }

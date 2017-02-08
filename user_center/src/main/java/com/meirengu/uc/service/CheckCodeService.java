@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 public interface CheckCodeService {
 
     /**
+     * 生成验证码
+     * @return
+     */
+    int generate();
+
+    /**
      * 新增验证码
      *
      * @param checkCode
