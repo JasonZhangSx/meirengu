@@ -20,31 +20,14 @@ public class SignParamsUtils {
      * @param params 通知返回来的参数数组
      * @return 验证结果
      */
-    public static boolean verify(Map<String, String> params) {
+    public static boolean verify(Map<String, String> params, String appSecret) {
 
         String sign = "";
-        if(params.get("signature") != null) {
-            sign = params.get("signature");
+        if(params.get("sign") != null) {
+            sign = params.get("sign");
         }
 
         String appKey = params.get("key") == null ? "": params.get("key").toString();
-
-        String androidAppKey = ConfigUtil.getConfig("api.adroid.appKey");
-        String iosAppKey = ConfigUtil.getConfig("api.ios.appKey");
-        String wxAppKey = ConfigUtil.getConfig("api.wx.appKey");
-        String wapAppKey = ConfigUtil.getConfig("api.wap.appKey");
-        String appSecret = null;
-
-        if(androidAppKey.equals(appKey)){
-            appSecret = ConfigUtil.getConfig("api.adroid.appSecret");
-            //LOGGER.info("");
-        }else if(iosAppKey.equals(appKey)){
-            appSecret = ConfigUtil.getConfig("api.ios.appSecret");
-        }else if(wapAppKey.equals(appKey)){
-            appSecret = ConfigUtil.getConfig("api.wap.appSecret");
-        }else if(wxAppKey.equals(appKey)){
-            appSecret = ConfigUtil.getConfig("api.wx.appSecret");
-        }
 
         boolean isSign = getSignVeryfy(params, sign, appSecret);
 
@@ -72,7 +55,8 @@ public class SignParamsUtils {
      * @return
      */
     public static boolean verifySign(String preSignStr, String sign){
-        String signCurrent = MD5Util.md5Hex(preSignStr).toUpperCase();
+        //指定为UTF-8编码
+        String signCurrent = MD5Util.get32MD5(preSignStr).toUpperCase();
         return sign.equals(signCurrent);
     }
 
@@ -91,7 +75,7 @@ public class SignParamsUtils {
 
         for (String key : sArray.keySet()) {
             String value = sArray.get(key);
-            if (value == null || value.equals("") || key.equalsIgnoreCase("signature")) {
+            if (value == null || value.equals("") || key.equalsIgnoreCase("sign")) {
                 continue;
             }
             result.put(key, value);
