@@ -4,7 +4,6 @@
 <configuration>
 	<!-- 实体别名设置 -->
 	<typeAliases>
-		<typeAlias alias="Captcha" type="com.meirengu.sms.model.Captcha" />
 		<typeAlias alias="SmsRecord" type="com.meirengu.sms.model.SmsRecord" />
 	</typeAliases>
 </configuration>
