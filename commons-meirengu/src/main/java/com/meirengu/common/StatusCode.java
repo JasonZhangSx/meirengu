@@ -42,7 +42,12 @@ public class StatusCode {
     //40200-40300//news_cms
 
     //40300-40400//medical_beauty
-
+    public static final int MB_CORRECT = 40300;
+    public static final int MB_ERROR_SELECT = 40301;
+    public static final int MB_ERROR_INSERT = 40302;
+    public static final int MB_ERROR_UPDATE = 40303;
+    public static final int MB_ERROR_DELETE = 40304;
+    public static final int MB_ERROR = 40305;
     //40400-40500//shopping_mall
 
     //40500-40600//crowd_funding
@@ -149,7 +154,12 @@ public class StatusCode {
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty
-
+        codeMsgMap.put(StatusCode.MB_CORRECT, "操作成功");
+        codeMsgMap.put(StatusCode.MB_ERROR_SELECT, "查询失败,请重试.");
+        codeMsgMap.put(StatusCode.MB_ERROR_INSERT, "添加失败,请重试.");
+        codeMsgMap.put(StatusCode.MB_ERROR_UPDATE, "更新失败,请重试.");
+        codeMsgMap.put(StatusCode.MB_ERROR_DELETE, "删除失败,请重试.");
+        codeMsgMap.put(StatusCode.MB_ERROR, "操作失败");
         //40400-40500//shopping_mall
 
         //40500-40600//crowd_funding
