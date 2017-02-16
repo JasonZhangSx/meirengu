@@ -108,6 +108,13 @@
         </dependency>
         <!-- WEB end -->
 
+        <!-- NOSQL begin -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <!-- NOSQL end -->
+
         <!-- slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
