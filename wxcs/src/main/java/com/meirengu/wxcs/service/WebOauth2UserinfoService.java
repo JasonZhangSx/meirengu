@@ -38,7 +38,7 @@ public class WebOauth2UserinfoService {
      */
     public static void oauth2Authorize(String redirect_uri, String response_type, String scope, String state){
         StringBuffer oauth2AuthorizeUrl = new StringBuffer(ConstUtil.WX_OAUTH2_AUTHORIZE_URL);
-        oauth2AuthorizeUrl.append("?appid=").append(ConstUtil.WX_TAIQIKEFU_APPID)
+        oauth2AuthorizeUrl.append("?appid=").append(ConstUtil.WX_MEIRENGU_APPID)
         .append("&redirect_uri=").append(redirect_uri)
         .append("&response_type=").append(response_type)
         .append("&scope=").append(scope)
@@ -69,8 +69,8 @@ public class WebOauth2UserinfoService {
      */
     public static WebOauth2AccessToken oauth2AccessToken(String code){
         StringBuffer oauth2AccessTokenUrl = new StringBuffer(ConstUtil.WX_OAUTH2_ACCESSTOKEN_URL);
-        oauth2AccessTokenUrl.append("?appid=").append(ConstUtil.WX_TAIQIKEFU_APPID)
-        .append("&secret=").append(ConstUtil.WX_TAIQIKEFU_SECRET)
+        oauth2AccessTokenUrl.append("?appid=").append(ConstUtil.WX_MEIRENGU_APPID)
+        .append("&secret=").append(ConstUtil.WX_MEIRENGU_SECRET)
         .append("&code=").append(code)
         .append("&grant_type=authorization_code");
         
@@ -105,7 +105,7 @@ public class WebOauth2UserinfoService {
      */
     public static WebOauth2AccessToken oauth2RefreshToken(String refreshToken){
         StringBuffer oauth2RefreshTokenUrl = new StringBuffer(ConstUtil.WX_OAUTH2_REFRESHTOKEN_URL);
-        oauth2RefreshTokenUrl.append("?appid=").append(ConstUtil.WX_TAIQIKEFU_APPID)
+        oauth2RefreshTokenUrl.append("?appid=").append(ConstUtil.WX_MEIRENGU_APPID)
         .append("&grant_type=").append("refresh_token")
         .append("&refresh_token=").append(refreshToken);
         

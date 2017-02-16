@@ -45,8 +45,8 @@ public class JsSdkSignatureService {
         }
         StringBuffer accessTokenUrl = new StringBuffer(ConstUtil.WX_ACCESS_TOKEN_URL);
         accessTokenUrl.append("?grant_type=client_credential");
-        accessTokenUrl.append("&appid=").append(ConstUtil.WX_TAIQIKEFU_APPID);
-        accessTokenUrl.append("&secret=").append(ConstUtil.WX_TAIQIKEFU_SECRET);
+        accessTokenUrl.append("&appid=").append(ConstUtil.WX_MEIRENGU_APPID);
+        accessTokenUrl.append("&secret=").append(ConstUtil.WX_MEIRENGU_SECRET);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(accessTokenUrl.toString());
             if (logger.isDebugEnabled()) {

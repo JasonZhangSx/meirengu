@@ -32,7 +32,7 @@ public class TripartiteServerUrlCommand extends Command{
     protected void process() throws Exception {
         String token = "";//公众号基本配置，服务器配置启用的Token令牌
         try {
-            token = PropUtil.getInstance().getProperty("oEsbFBseA5za9ipJBslf1aS1lIXlpxZE");
+            token = PropUtil.getInstance().getProperty("wx.meirengu.token");
         } catch (Exception e) {
             ;
         }
@@ -42,7 +42,7 @@ public class TripartiteServerUrlCommand extends Command{
         }
         // 微信服务器将发送GET请求到填写的URL上,这里需要判定是否为GET请求
         boolean isGet = request.getMethod().toLowerCase().equals("get");
-        logger.info("wx dota url verify, http method is:", request.getMethod());
+        logger.info("wx meirengu url verify, http method is:", request.getMethod());
         if (isGet) {
             // 验证URL真实性
             String signature = request.getParameter("signature");// 微信加密签名
