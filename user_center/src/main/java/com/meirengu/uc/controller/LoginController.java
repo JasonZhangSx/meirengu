@@ -47,11 +47,15 @@ public class LoginController extends BaseController {
         logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{}", new
                 Object[]{mobile, checkCode, password, from, ip});
         //verify params
-        if (!ValidatorUtil.isMobile(mobile)) {
-            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.getErrorMsg(StatusCode
+        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
-        if (checkCode != null && password == null){
+        if (checkCode == null && password == null) {
+            return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get
+                    (StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
+        }
+        if (checkCode != null && password == null) {
             //手机动态密码方式登录
             CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
             if (code == null) {
@@ -64,7 +68,7 @@ public class LoginController extends BaseController {
             }
 
         }
-        if (checkCode == null && checkCode != null){
+        if (checkCode == null && checkCode != null) {
             //手机密码方式登录TO-DO
         }
         User user = userService.retrieveByPhone(mobile);

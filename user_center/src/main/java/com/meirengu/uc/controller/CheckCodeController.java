@@ -39,7 +39,7 @@ public class CheckCodeController extends BaseController {
     public Result create(@RequestParam(required = true) String mobile, String ip) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         //verify params
-        if (!ValidatorUtil.isMobile(mobile)) {
+        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
             return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
@@ -49,8 +49,8 @@ public class CheckCodeController extends BaseController {
             logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
                     .getContent(), hr.getResponse());
             if (hr.getStatusCode() == StatusCode.OK) {
-                JSONObject result = JSON.parseObject(hr.getContent());
-                if ("200".equals(result.get("code"))) {
+                JSONObject resultObj = JSON.parseObject(hr.getContent());
+                if ("200".equals(resultObj.getString("code"))) {
                     //store db
                     CheckCode checkCode = new CheckCode();
                     checkCode.setMobile(mobile);
@@ -61,7 +61,8 @@ public class CheckCodeController extends BaseController {
                     checkCode.setCreateTime(nowTime);
                     checkCode.setExpireTime(expireTime);
                     checkCode.setUse(false);
-                    checkCodeService.create(checkCode);
+                    int createResult = checkCodeService.create(checkCode);
+                    logger.info("checkCodeService.create result <==={}", createResult);
                     return super.setResult(StatusCode.OK, code, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
             }
