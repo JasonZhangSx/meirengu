@@ -50,7 +50,7 @@ public class SmsController extends BaseController {
         logger.info("SmsController.singleSend params >> mobile:{},text:{},extend:{},uid:{},ip:{}",
                 new Object[]{mobile, text, extend, uid, ip});
         //verify params
-        if (!ValidatorUtil.isMobile(mobile)) {
+        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
@@ -95,7 +95,7 @@ public class SmsController extends BaseController {
         logger.info("SmsController.tplSingleSend params >> mobile:{},tpl_id:{},tpl_value:{},extend:{},uid:{}," +
                 "ip:{}", new Object[]{mobile, tpl_id, tpl_value, extend, uid, ip});
         //verify params
-        if (!ValidatorUtil.isMobile(mobile)) {
+        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
