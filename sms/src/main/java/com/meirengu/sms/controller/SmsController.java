@@ -51,12 +51,12 @@ public class SmsController extends BaseController {
                 new Object[]{mobile, text, extend, uid, ip});
         //verify params
         if (!ValidatorUtil.isMobile(mobile)) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, mobile, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .MOBILE_FORMAT_ERROR));
         }
         if (StringUtils.isEmpty(text)) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, text, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+            return super.setResult(StatusCode.SMS_TEXT_IS_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode
+                    .SMS_TEXT_IS_EMPTY));
         }
         //防刷逻辑
         //...
@@ -69,8 +69,8 @@ public class SmsController extends BaseController {
                     Object[]{mobile, text, resultDO});
             return super.setResult(StatusCode.OK, resultDO.getData(), StatusCode.codeMsgMap.get(StatusCode.OK));
         } else {
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, resultDO.getData(), StatusCode.codeMsgMap.get
-                    (StatusCode.UNKNOWN_EXCEPTION));
+            return super.setResult(StatusCode.SUBMIT_SMS_FAILED, resultDO.getData(), StatusCode.codeMsgMap.get
+                    (StatusCode.SUBMIT_SMS_FAILED));
         }
     }
 
@@ -95,17 +95,17 @@ public class SmsController extends BaseController {
         logger.info("SmsController.tplSingleSend params >> mobile:{},tpl_id:{},tpl_value:{},extend:{},uid:{}," +
                 "ip:{}", new Object[]{mobile, tpl_id, tpl_value, extend, uid, ip});
         //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, mobile, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+        if (!ValidatorUtil.isMobile(mobile)) {
+            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .MOBILE_FORMAT_ERROR));
         }
         if (tpl_id == null) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, tpl_id, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+            return super.setResult(StatusCode.TEMPLATE_IS_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode
+                    .TEMPLATE_IS_EMPTY));
         }
         if (StringUtils.isEmpty(tpl_value)) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, tpl_value, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+            return super.setResult(StatusCode.TEMPLATE_IS_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode
+                    .TEMPLATE_IS_EMPTY));
         }
         //防刷逻辑
         //...
@@ -114,13 +114,13 @@ public class SmsController extends BaseController {
         if (resultDO != null && resultDO.isSuccess()) {
             //store db 优化改成异步
             smsRecordService.create(this.wrapSmsRecord(resultDO, tpl_value, uid, ip));
-            logger.info("SmsController.tplSingleSend result << mobile:{},tpl_id:{}, resultDO:{}", new
+            logger.info("SmsController.tplSingleSend result << mobile:{}, tpl_id:{}, resultDO:{}", new
                     Object[]{mobile, tpl_id, resultDO});
             //store db sms_record
             return super.setResult(StatusCode.OK, resultDO.getData(), StatusCode.codeMsgMap.get(StatusCode.OK));
         } else {
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode
-                    .UNKNOWN_EXCEPTION));
+            return super.setResult(StatusCode.SUBMIT_SMS_FAILED, resultDO.getData(), StatusCode.codeMsgMap.get(StatusCode
+                    .SUBMIT_SMS_FAILED));
         }
     }
 
