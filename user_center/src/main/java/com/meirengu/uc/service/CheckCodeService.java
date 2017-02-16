@@ -1,6 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.CheckCode;
+import com.meirengu.utils.HttpUtil.HttpResult;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,7 +20,15 @@ public interface CheckCodeService {
     int generate();
 
     /**
-     * 新增验证码
+     * 发送验证码
+     * @param mobile
+     * @param code
+     * @return
+     */
+    HttpResult send(String mobile, int code, String ip);
+
+    /**
+     * 保存验证码
      *
      * @param checkCode
      * @return

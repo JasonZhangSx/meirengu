@@ -1,6 +1,5 @@
 package com.meirengu.uc.service;
 
-import com.meirengu.uc.utils.HttpUtil.HttpResult;
 
 /**
  * 登录服务接口类
