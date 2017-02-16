@@ -37,6 +37,8 @@ public class StatusCode {
     public static final int DECRYPT_ERROR = 40012;
     public static final int CAPTCHA_EXPIRE = 40013;
     public static final int CAPTCHA_INVALID = 40014;
+    public static final int PARAMETER_FORMAT_ERROR = 40015;
+    public static final int MOBILE_FORMAT_ERROR = 40016;
     //40100-40200//user_center
 
     //40200-40300//news_cms
@@ -63,6 +65,8 @@ public class StatusCode {
     public static final int TOO_MANY_TIME_IN_5 = 40706;
     public static final int BLACK_PHONE_FILTER = 40707;
     public static final int DAY_LIMIT_PER_MOBILE = 40708;
+    public static final int SMS_TEXT_IS_EMPTY = 40709;
+    public static final int TEMPLATE_IS_EMPTY = 40710;
 
     //40800-40900//other
 
@@ -80,6 +84,7 @@ public class StatusCode {
 
 
     //50100-50200//user_center
+    public static final int CHECK_CODE_SEND_ERROR = 50101;
 
     //50200-50300//news_cms
 
@@ -149,6 +154,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.DECRYPT_ERROR, "解密失败");
         codeMsgMap.put(StatusCode.CAPTCHA_EXPIRE, "验证码过期");
         codeMsgMap.put(StatusCode.CAPTCHA_INVALID, "验证码无效");
+        codeMsgMap.put(StatusCode.PARAMETER_FORMAT_ERROR, "参数格式错误");
+        codeMsgMap.put(StatusCode.MOBILE_FORMAT_ERROR, "手机格式错误");
         //40100-40200//user_center
 
         //40200-40300//news_cms
@@ -167,6 +174,8 @@ public class StatusCode {
         //40600-40700//payment
 
         //40700-40700//sms
+        codeMsgMap.put(StatusCode.SMS_TEXT_IS_EMPTY, "短信内容不能为空");
+        codeMsgMap.put(StatusCode.TEMPLATE_IS_EMPTY, "模板ID或模板内容不能为空");
         codeMsgMap.put(StatusCode.ACCOUNT_BALANCE_LESS, "账户余额不足");
         codeMsgMap.put(StatusCode.KEYWORD_MATCHING, "关键词屏蔽");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_MATCH, "模板不匹配");
@@ -190,6 +199,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.RECORD_NOT_EXISTED, "记录不存在");
 
         //50100-50200//user_center
+        codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
 
         //50200-50300//news_cms
 
@@ -202,7 +212,7 @@ public class StatusCode {
         //50600-50700//payment
 
         //50700-50800//sms
-        codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "提交短信失败");
+        codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");
         codeMsgMap.put(StatusCode.MARKET_FORBIDDEN, "营销短信暂停发送");
         //50800-50900//other
