@@ -51,7 +51,6 @@ public class LoginController extends BaseController {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.getErrorMsg(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
-        User user = null;
         if (checkCode != null && password == null){
             //手机动态密码方式登录
             CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
@@ -63,12 +62,12 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                         .CAPTCHA_EXPIRE));
             }
-            user = userService.retrieveByPhone(mobile);
+
         }
         if (checkCode == null && checkCode != null){
             //手机密码方式登录TO-DO
         }
-
+        User user = userService.retrieveByPhone(mobile);
         if (user == null) {
             //auto register
             user = new User();
