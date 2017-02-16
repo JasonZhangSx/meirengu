@@ -37,17 +37,18 @@ public class CheckCodeController extends BaseController {
 
     @RequestMapping(value = "check_code", method = RequestMethod.POST)
     public Result create(@RequestParam(required = true) String mobile, String ip) {
-        logger.info("create params >> mobile:{}", mobile);
+        logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return setResult(StatusCode.INVALID_ARGUMENT, mobile, StatusCode.codeMsgMap.get(StatusCode
-                    .INVALID_ARGUMENT));
+        if (!ValidatorUtil.isMobile(mobile)) {
+            return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .MOBILE_FORMAT_ERROR));
         }
         int code = checkCodeService.generate();
         HttpResult hr = checkCodeService.send(mobile, code, ip);
         if (hr != null) {
-            logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(),hr.getContent(),hr.getResponse());
-            if (hr.getStatusCode() == 200) {
+            logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
+                    .getContent(), hr.getResponse());
+            if (hr.getStatusCode() == StatusCode.OK) {
                 JSONObject result = JSON.parseObject(hr.getContent());
                 if ("200".equals(result.get("code"))) {
                     //store db
@@ -64,12 +65,9 @@ public class CheckCodeController extends BaseController {
                     return super.setResult(StatusCode.OK, code, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
             }
-        } else {
-            logger.info("create failure << HttpResult is null");
+
         }
-        return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode
-                .UNKNOWN_EXCEPTION));
+        return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                .CHECK_CODE_SEND_ERROR));
     }
-
-
 }

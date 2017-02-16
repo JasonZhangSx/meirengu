@@ -48,7 +48,7 @@ public class CheckCodeServiceImpl implements CheckCodeService {
         String url = ConfigUtil.getConfig("URI_CHECKCODE_SEND");
         logger.info("CheckCodeServiceImpl.send post >> uri :{}, params:{}", new Object[]{url, params});
         try {
-            hr = HttpUtil.doPost(url,params);
+            hr = HttpUtil.doPostForm(url,params);
         } catch (Exception e) {
             logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
         }

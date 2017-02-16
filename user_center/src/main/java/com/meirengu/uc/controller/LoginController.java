@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Date;
 
 /**
@@ -38,31 +39,36 @@ public class LoginController extends BaseController {
     CheckCodeService checkCodeService;
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public Result login(@RequestParam(required = true) String mobile,
-                        @RequestParam(required = true) String check_code,
-                        @RequestParam(required = true) int from,
-                        @RequestParam(required = true) String ip) {
-        logger.info("LoginController.login params >> mobile:{},checkCode:{}, from:{}, ip:{}", new Object[]{mobile,
-                check_code, from, ip});
+    public Result login(@RequestParam(value = "mobile", required = true) String mobile,
+                        @RequestParam(value = "check_code", required = false) Integer checkCode,
+                        @RequestParam(value = "password", required = false) String password,
+                        @RequestParam(value = "from", required = true) Integer from,
+                        @RequestParam(value = "ip", required = true) String ip) {
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{}", new
+                Object[]{mobile, checkCode, password, from, ip});
         //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return super.setResult(StatusCode.INVALID_ARGUMENT, mobile, StatusCode.getErrorMsg(StatusCode
-                    .INVALID_ARGUMENT));
+        if (!ValidatorUtil.isMobile(mobile)) {
+            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.getErrorMsg(StatusCode
+                    .MOBILE_FORMAT_ERROR));
         }
-        if (StringUtils.isEmpty(check_code) || !StringUtils.isNumeric(check_code)) {
-            return super.setResult(StatusCode.CAPTCHA_INVALID, check_code, StatusCode.getErrorMsg(StatusCode
-                    .CAPTCHA_INVALID));
+        User user = null;
+        if (checkCode != null && password == null){
+            //手机动态密码方式登录
+            CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+            if (code == null) {
+                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_INVALID));
+            }
+            if (code.getExpireTime().compareTo(new Date()) < 0) {
+                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_EXPIRE));
+            }
+            user = userService.retrieveByPhone(mobile);
         }
-        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(check_code));
-        if (code == null) {
-            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_INVALID));
+        if (checkCode == null && checkCode != null){
+            //手机密码方式登录TO-DO
         }
-        if (code.getExpireTime().compareTo(new Date()) < 0) {
-            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_EXPIRE));
-        }
-        User user = userService.retrieveByPhone(mobile);
+
         if (user == null) {
             //auto register
             user = new User();
@@ -77,9 +83,11 @@ public class LoginController extends BaseController {
                 //try again
                 result = userService.create(user);
             }
-            logger.error("userService.create result << mobile:{}, result:{}", new Object[]{mobile, result});
+            logger.info("userService.create result << mobile:{}, result:{}", new Object[]{mobile, result});
         }
         //login
         return super.setResult(StatusCode.OK, user, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
+
+
 }
