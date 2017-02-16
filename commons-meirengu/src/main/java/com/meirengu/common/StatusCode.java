@@ -85,6 +85,7 @@ public class StatusCode {
 
     //50100-50200//user_center
     public static final int CHECK_CODE_SEND_ERROR = 50101;
+    public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 50102;
 
     //50200-50300//news_cms
 
@@ -200,6 +201,7 @@ public class StatusCode {
 
         //50100-50200//user_center
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
+        codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
 
         //50200-50300//news_cms
 
