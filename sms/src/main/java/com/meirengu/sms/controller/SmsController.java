@@ -34,24 +34,23 @@ public class SmsController extends BaseController {
     /**
      * 单条发送
      *
-     * @param mobile       接收的手机号，仅支持单号码发送
-     * @param text         短信内容
-     * @param extend       下发号码扩展号，纯数字
-     * @param uid          该条短信在您业务系统内的ID，如订单号或者短信发送记录流水号
-     * @param callback_url 短信发送后将向这个地址推送(运营商返回的)发送报告。
+     * @param mobile 接收的手机号，仅支持单号码发送
+     * @param text   短信内容
+     * @param extend 下发号码扩展号，纯数字
+     * @param uid    该条短信在您业务系统内的ID，如订单号或者短信发送记录流水号
+     * @param ip     调用ip
      * @return
      */
     @RequestMapping(value = "single_send", method = RequestMethod.POST)
-    public Result singleSend(@RequestParam(required = true) String mobile,
-                             @RequestParam(required = true) String text,
-                             @RequestParam(required = false) String extend,
-                             @RequestParam(required = false) String uid,
-                             @RequestParam(required = false) String ip,
-                             @RequestParam(required = false) String callback_url) {
-        logger.info("SmsController.tplSendSms params >> mobile:{},text:{},extend:{},uid:{},ip:{},callback_url:{}",
-                new Object[]{mobile, text, extend, uid, ip, callback_url});
+    public Result singleSend(@RequestParam(value = "mobile", required = true) String mobile,
+                             @RequestParam(value = "text", required = true) String text,
+                             @RequestParam(value = "extend", required = false) String extend,
+                             @RequestParam(value = "uid", required = false) String uid,
+                             @RequestParam(value = "ip", required = false) String ip) {
+        logger.info("SmsController.singleSend params >> mobile:{},text:{},extend:{},uid:{},ip:{}",
+                new Object[]{mobile, text, extend, uid, ip});
         //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+        if (!ValidatorUtil.isMobile(mobile)) {
             return super.setResult(StatusCode.INVALID_ARGUMENT, mobile, StatusCode.codeMsgMap.get(StatusCode
                     .INVALID_ARGUMENT));
         }
@@ -81,17 +80,18 @@ public class SmsController extends BaseController {
      * @param mobile    接收的手机号
      * @param tpl_id    模板id
      * @param tpl_value 变量名和变量值对，必须urlencode再传递
-     * @param extend    扩展号
-     * @param uid       用户自定义唯一id
+     * @param extend    下发号码扩展号，纯数字
+     * @param uid       该条短信在您业务系统内的ID，如订单号或者短信发送记录流水号
+     * @param ip        调用ip
      * @return
      */
     @RequestMapping(value = "tpl_single_send", method = RequestMethod.POST)
-    public Result tplSingleSend(@RequestParam(required = true) String mobile,
-                                @RequestParam(required = true) Long tpl_id,
-                                @RequestParam(required = true) String tpl_value,
-                                @RequestParam(required = false) String extend,
-                                @RequestParam(required = false) String uid,
-                                @RequestParam(required = false) String ip) {
+    public Result tplSingleSend(@RequestParam(value = "mobile", required = true) String mobile,
+                                @RequestParam(value = "tpl_id", required = true) Long tpl_id,
+                                @RequestParam(value = "tpl_value", required = true) String tpl_value,
+                                @RequestParam(value = "extend", required = false) String extend,
+                                @RequestParam(value = "uid", required = false) String uid,
+                                @RequestParam(value = "ip", required = false) String ip) {
         logger.info("SmsController.tplSingleSend params >> mobile:{},tpl_id:{},tpl_value:{},extend:{},uid:{}," +
                 "ip:{}", new Object[]{mobile, tpl_id, tpl_value, extend, uid, ip});
         //verify params
