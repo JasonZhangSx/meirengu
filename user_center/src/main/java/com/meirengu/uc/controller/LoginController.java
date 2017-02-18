@@ -93,4 +93,9 @@ public class LoginController extends BaseController {
     }
 
 
+    @RequestMapping(value = "logout", method = RequestMethod.POST)
+    public Result logout(){
+        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
 }
