@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author Marvin
  * @create 2017-01-11 下午6:06
  */
+@CrossOrigin
 public class BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
