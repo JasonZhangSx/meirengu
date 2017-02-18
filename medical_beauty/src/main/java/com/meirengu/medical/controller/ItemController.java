@@ -29,12 +29,31 @@ public class ItemController extends WebMvcConfigurerAdapter {
      * @param itemVo 项目Model
      * @return 将结果以json格式返回
      */
-    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String getBrandData(ItemVo itemVo) {
         return iItemService.getItemData(itemVo);
     }
-
+    /**
+     * 获取服务项目
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    @ResponseBody
+    public String getServiceItem(ItemVo itemVo) {
+        return iItemService.getServiceItem(itemVo);
+    }
+    /**
+     * 获取项目详情
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    @RequestMapping(value = "/detail",method = RequestMethod.GET)
+    @ResponseBody
+    public String getItemDetail(ItemVo itemVo) {
+        return iItemService.getItemDetail(itemVo);
+    }
     /**
      * 添加項目数据
      * @param itemVo 項目对应Model

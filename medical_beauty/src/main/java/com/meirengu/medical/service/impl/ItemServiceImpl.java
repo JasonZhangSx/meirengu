@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.ItemDao;
 import com.meirengu.medical.service.IItemService;
 import com.meirengu.medical.util.CodeUtil;
@@ -44,17 +45,17 @@ public class ItemServiceImpl implements IItemService {
             itemVo.setCreateTime(new Date());
             itemDao.addItemData(itemVo);
             while(iter.hasNext()){
-                map= FileUtil.createFile(map,iter,multipartHttpServletRequest, UtilData.itemImagePath+itemVo.getItemId()+"/");
+                map= FileUtil.createFile(map,iter,multipartHttpServletRequest, UtilData.hospitalImagePath+itemVo.getHospitalId()+"/item/"+itemVo.getItemId()+"/");
                 for (String s : map.keySet()){
                     setImgValue(itemVo,s,map.get(s));
                 }
                 map.clear();
             }
             itemDao.updateItemData(itemVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addItemData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -68,15 +69,19 @@ public class ItemServiceImpl implements IItemService {
         logger.info("Request getItemData parameter:{}", itemVo.toString());
         Map<String,Object> resultMap = new HashMap<>();
         try {
-            List<ItemVo> list = new ArrayList<ItemVo>();
+            List list = new ArrayList<ItemVo>();
+            if (itemVo.getPageSize()<=0){
+                itemVo.setPageSize(3);
+            }
             list = itemDao.getItemData(itemVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getItemData ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
+
     /**
      * 条件更新项目
      * @param itemVo 项目Model
@@ -88,10 +93,10 @@ public class ItemServiceImpl implements IItemService {
         //获取文件需要上传到的路径
         try {
             itemDao.updateItemData(itemVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateItemData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
     /**
@@ -107,11 +112,64 @@ public class ItemServiceImpl implements IItemService {
             itemVo.setItemId(itemId);
             itemVo.setItemCommend(0);
             itemDao.updateItemData(itemVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("deleteItemData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
+    }
+    /**
+     * 获取服务项目
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    @Override
+    public String getServiceItem(ItemVo itemVo) {
+        logger.info("Request getServiceItem parameter:{}", itemVo.toString());
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            List<ItemVo> list = new ArrayList<ItemVo>();
+            if (itemVo.getPageSize()<=0){
+                itemVo.setPageSize(3);
+            }
+            list = itemDao.getServiceItem(itemVo);
+            resultMap.put("list",list);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
+        } catch (Exception e) {
+            logger.error("getServiceItem ErrorMsg:{}",e.getMessage());
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
+        }
+    }
+    /**
+     * 获取项目详情
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    @Override
+    public String getItemDetail(ItemVo itemVo) {
+        logger.info("Request getItemDetail parameter:{}", itemVo.toString());
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            List list = itemDao.getItemDetail(itemVo);
+            ItemVo item = new ItemVo();
+            item.setDoctorId(itemVo.getDoctorId());
+            resultMap.put("itemList",list);
+            resultMap.put("caseList",getRelationCase(item));
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
+        } catch (Exception e) {
+            logger.error("getItemDetail ErrorMsg:{}",e.getMessage());
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
+        }
+    }
+    /**
+     * 获取项目案例
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    @Override
+    public List getRelationCase(ItemVo itemVo) {
+        logger.info("Request getRelationCase parameter:{}", itemVo.toString());
+        return itemDao.getRelationCase(itemVo);
     }
 
     /**
@@ -125,14 +183,12 @@ public class ItemServiceImpl implements IItemService {
             case "itemImageOne" :
                 itemVo.setItemImage(imageValue);
                 break;
-            case "itemImageMoreOne" :
-                itemVo.setItemImageMore(imageValue);
-                break;
-            case "itemImageMoreTwo" :
-                itemVo.setItemImageMore(itemVo.getItemImageMore()+","+imageValue);
-                break;
-            case "itemImageMoreThree" :
-                itemVo.setItemImageMore(itemVo.getItemImageMore()+","+imageValue);
+            default:
+                if (itemVo.getItemImageMore()==null){
+                    itemVo.setItemImageMore(imageValue);
+                }else {
+                    itemVo.setItemImageMore(itemVo.getItemImageMore()+","+imageValue);
+                }
                 break;
         }
     }

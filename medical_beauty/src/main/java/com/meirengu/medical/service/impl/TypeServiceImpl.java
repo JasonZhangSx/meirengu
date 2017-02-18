@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.TypeDao;
 import com.meirengu.medical.service.ITypeService;
 import com.meirengu.medical.util.CodeUtil;
@@ -36,10 +37,10 @@ public class TypeServiceImpl implements ITypeService {
         //获取文件需要上传到的路径
         try {
             areaDao.addTypeData(areaVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addTypeData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -56,10 +57,10 @@ public class TypeServiceImpl implements ITypeService {
             List<TypeVo> list = new ArrayList<TypeVo>();
             list = areaDao.getTypeData(areaVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getTypeData ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -73,10 +74,10 @@ public class TypeServiceImpl implements ITypeService {
         //获取文件需要上传到的路径
         try {
             areaDao.updateTypeData(areaVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateTypeData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -90,10 +91,10 @@ public class TypeServiceImpl implements ITypeService {
         logger.info("Request deleteTypeData parameter:{}", areaId);
         try {
 //            itemClassDao.updateItemClassData(itemClassVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("deleteTypeData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
 }

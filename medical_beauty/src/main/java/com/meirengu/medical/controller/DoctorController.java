@@ -31,6 +31,7 @@ import java.util.List;
  * Create Date: 2016/12/27 19:07.
  * 医生Controller
  */
+@CrossOrigin
 @Controller
 @RequestMapping("/doctor")
 public class DoctorController{
@@ -58,7 +59,16 @@ public class DoctorController{
     public String selectionDoctor(DoctorVo doctorVo) {
         return iDoctorService.selectionDoctor(doctorVo);
     }
-
+    /**
+     * 医生详情页面
+     * @param doctorVo
+     * @return 将查询结果已json格式返回
+     */
+    @RequestMapping(value = "/detail",method = RequestMethod.GET)
+    @ResponseBody
+    public String getDoctorDetail(DoctorVo doctorVo) {
+        return iDoctorService.getDoctorDetails(doctorVo);
+    }
     /**
      * 添加医生数据
      * @param doctorVo 医生对应Model
@@ -100,6 +110,4 @@ public class DoctorController{
     public String deleteDoctor(@PathVariable int doctorId) {
         return iDoctorService.deleteDoctor(doctorId);
     }
-
-
 }

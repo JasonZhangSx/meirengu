@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.BrandDao;
 import com.meirengu.medical.service.IBrandService;
 import com.meirengu.medical.util.CodeUtil;
@@ -40,10 +41,10 @@ public class BrandServiceImpl implements IBrandService {
         try {
             list = brandDao.selectByPrimaryKey(brandVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getBrandData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -66,10 +67,11 @@ public class BrandServiceImpl implements IBrandService {
                 map.clear();
                 continue;
             }
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            brandDao.updateByPrimaryKeySelective(brandVo);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addBrandData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -83,10 +85,10 @@ public class BrandServiceImpl implements IBrandService {
         //获取文件需要上传到的路径
         try {
             brandDao.updateByPrimaryKeySelective(brandVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateBrandData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
 
@@ -104,10 +106,10 @@ public class BrandServiceImpl implements IBrandService {
             BrandVo brandVo = new BrandVo();
             brandVo.setBrandId(brandId);
             brandDao.updateByPrimaryKeySelective(brandVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("deleteBrandData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
     }
 
@@ -119,7 +121,7 @@ public class BrandServiceImpl implements IBrandService {
      */
     private void setImgValue(BrandVo brandVo,String imgName,String imageValue){
         switch (imgName){
-            case "brandPic" :
+            case "brandPicOne" :
                 brandVo.setBrandPic(imageValue);
                 break;
         }

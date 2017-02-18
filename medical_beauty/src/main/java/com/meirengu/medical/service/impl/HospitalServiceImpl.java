@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.HospitalDao;
 import com.meirengu.medical.service.IHospitalService;
 import com.meirengu.medical.util.CodeUtil;
@@ -44,10 +45,10 @@ public class HospitalServiceImpl implements IHospitalService {
             Validator.getInstance().validate(hospitalVo);
             list= hospitalDao.conditionQuery(hospitalVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         }catch (Exception e){
             logger.error("getDoctorData ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
 
@@ -73,11 +74,11 @@ public class HospitalServiceImpl implements IHospitalService {
                 map.clear();
             }
             hospitalDao.conditionUpdate(hospitalVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         }catch (Exception e){
             logger.error("insertSelective ErrorMsg:{}",e.getMessage());
             e.printStackTrace();
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -95,10 +96,10 @@ public class HospitalServiceImpl implements IHospitalService {
             Validator.getInstance().validate(hospitalVo);
             list= hospitalDao.selectionHospital(hospitalVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         }catch (Exception e){
             logger.error("selectionHospital ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -113,10 +114,10 @@ public class HospitalServiceImpl implements IHospitalService {
         try {
             Validator.getInstance().validate(hospitalVo);
             hospitalDao.conditionUpdate(hospitalVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         }catch (Exception e){
             logger.error("conditionUpdate ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_UPDATE.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
 
@@ -135,10 +136,10 @@ public class HospitalServiceImpl implements IHospitalService {
             hospitalVo.setHospitalStatus(UtilData.delete_yes);
             Validator.getInstance().validate(hospitalVo);
             hospitalDao.conditionUpdate(hospitalVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         }catch (Exception e){
             logger.error("conditionDelete ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_DELETE.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
     }
 

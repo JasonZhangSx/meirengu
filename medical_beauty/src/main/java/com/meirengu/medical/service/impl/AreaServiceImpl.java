@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.AreaDao;
 import com.meirengu.medical.service.IAreaService;
 import com.meirengu.medical.util.CodeUtil;
@@ -36,10 +37,10 @@ public class AreaServiceImpl implements IAreaService {
         //获取文件需要上传到的路径
         try {
             areaDao.addAreaData(areaVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addAreaData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -57,10 +58,10 @@ public class AreaServiceImpl implements IAreaService {
             list = areaDao.getAreaData(areaVo);
             List<AreaVo> itemClassVoList = tree(list,0);
             resultMap.put("list",itemClassVoList);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getAreaData ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -74,10 +75,10 @@ public class AreaServiceImpl implements IAreaService {
         //获取文件需要上传到的路径
         try {
             areaDao.updateAreaData(areaVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateAreaData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
 
@@ -92,10 +93,10 @@ public class AreaServiceImpl implements IAreaService {
         logger.info("Request deleteAreaData parameter:{}", areaId);
         try {
 //            itemClassDao.updateItemClassData(itemClassVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("deleteAreaData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
     }
 

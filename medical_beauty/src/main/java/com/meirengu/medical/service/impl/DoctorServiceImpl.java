@@ -1,12 +1,13 @@
 package com.meirengu.medical.service.impl;
 
+import com.google.gson.Gson;
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.DoctorDao;
+import com.meirengu.medical.dao.ItemDao;
 import com.meirengu.medical.service.IDoctorService;
-import com.meirengu.medical.util.CodeUtil;
-import com.meirengu.medical.util.FileUtil;
-import com.meirengu.medical.util.ResultUtil;
-import com.meirengu.medical.util.UtilData;
+import com.meirengu.medical.util.*;
 import com.meirengu.medical.vo.DoctorVo;
+import com.meirengu.medical.vo.ItemVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class DoctorServiceImpl implements IDoctorService {
     private final static Logger logger = LoggerFactory.getLogger(DoctorServiceImpl.class);
     @Autowired
     private DoctorDao doctorDao;
+    @Autowired
+    private ItemDao itemDao;
 
     /**
      * 条件查询医生列表
@@ -40,10 +43,10 @@ public class DoctorServiceImpl implements IDoctorService {
             List<DoctorVo> list = new ArrayList<>();
             list = doctorDao.conditionQuery(doctorVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getDoctorData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -59,12 +62,42 @@ public class DoctorServiceImpl implements IDoctorService {
         try {
             list = doctorDao.selectionDoctor(doctorVo);
             resultMap.put("list",list);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("selectionDoctor ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
+    /**
+     * 医生详情页面
+     * @param doctorVo
+     * @return
+     */
+    @Override
+    public String getDoctorDetails(DoctorVo doctorVo) {
+        logger.info("Request getDoctorDetails parameter:{}", doctorVo.toString());
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            Map map = doctorDao.getDoctorDetails(doctorVo);
+            ItemVo itemVo = new ItemVo();
+            itemVo.setPageSize(3);
+            itemVo.setDoctorId(doctorVo.getDoctorId());
+            List item = itemDao.getServiceItem(itemVo);
+            map.put("itemList",item);
+            String anli=HttpUtil.httpGet("http://120.27.37.54/shopping_mall/case/?per_page=2&page=1&doctor_id="+doctorVo.getDoctorId(),"utf-8");
+            map.put("caseList",ResultUtil.judgeStatus(anli));
+            Map params = new HashMap<String,String>();
+            params.put("create_user", doctorVo.getDoctorId().toString());
+            String article=HttpUtil.httpPostForm("http://120.27.37.54/news_cms/article/list?create_user_type=3",params,"utf-8");
+            map.put("articleList",ResultUtil.judgeStatus(article));
+            resultMap.put("list",map);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
+        } catch (Exception e) {
+            logger.error("getDoctorDetails ErrorMsg{}",e.getMessage());
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
+        }
+    }
+
     /**
      * 插入医生数据
      * @param doctorVo 医生Model
@@ -80,17 +113,17 @@ public class DoctorServiceImpl implements IDoctorService {
             doctorVo.setCreatedate(new Date());
             doctorDao.insertSelective(doctorVo);
             while(iter.hasNext()) {
-                map= FileUtil.createFile(map,iter,multipartHttpServletRequest, UtilData.doctorImagePath+doctorVo.getDoctorId()+"/");
+                map= FileUtil.createFile(map,iter,multipartHttpServletRequest, UtilData.hospitalImagePath+doctorVo.getHospitalId()+"/doctor/"+doctorVo.getDoctorId()+"/");
                 for (String s : map.keySet()){
                     setImgValue(doctorVo,s,map.get(s));
                 }
                 map.clear();
             }
             doctorDao.updateDoctor(doctorVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addDoctorData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -104,10 +137,10 @@ public class DoctorServiceImpl implements IDoctorService {
         //获取文件需要上传到的路径
         try {
             doctorDao.updateDoctor(doctorVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateDoctor ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
     /**
@@ -124,10 +157,10 @@ public class DoctorServiceImpl implements IDoctorService {
             doctorVo.setDoctorId(doctorId);
             doctorVo.setDoctorStatus((byte) 0);
             doctorDao.updateDoctor(doctorVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateDoctor ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
     }
     /**
@@ -142,10 +175,10 @@ public class DoctorServiceImpl implements IDoctorService {
                 doctorVo.setDoctorPic(imageValue);
                 break;
             case "certificatePicOne" :
-                doctorVo.setDoctorProfile(imageValue);
+                doctorVo.setCertificatePic(imageValue);
                 break;
             case "certificatePicTwo" :
-                doctorVo.setDoctorProfile(doctorVo.getDoctorProfile()+","+imageValue);
+                doctorVo.setCertificatePic(doctorVo.getDoctorProfile()+","+imageValue);
                 break;
         }
     }

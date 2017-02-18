@@ -29,7 +29,7 @@ public class BrandController {
      * @param brandVo
      * @return 将查询结果已json格式返回
      */
-    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String getBrandData(BrandVo brandVo) {
         return iBrandService.getBrandData(brandVo);

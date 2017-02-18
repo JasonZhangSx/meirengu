@@ -25,6 +25,13 @@ public interface IDoctorService {
      * @return 将查询结果已json格式返回
      */
     String selectionDoctor(DoctorVo doctorVo);
+
+    /**
+     * 医生详情页面
+     * @param doctorVo
+     * @return
+     */
+    String getDoctorDetails(DoctorVo doctorVo);
     /**
      * 添加医生数据
      * @param doctorVo 医生Model

@@ -1,11 +1,13 @@
 package com.meirengu.medical.model;
 
+import java.io.Serializable;
+
 /**
  * Author: haoyang.Yu
  * Create Date: 2017/1/11 20:05.
  * 商品类型Model
  */
-public class Type {
+public class Type implements Serializable {
     private Integer typeId;
 
     private String typeName;

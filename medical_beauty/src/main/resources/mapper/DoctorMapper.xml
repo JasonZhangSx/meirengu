@@ -49,8 +49,9 @@
     select
     <include refid="Base_Column_List" />
     from doctor
+    where 1=1
     <if test="doctorId != null" >
-      where doctor_id=#{doctorId,jdbcType=INTEGER}
+       and doctor_id=#{doctorId,jdbcType=INTEGER}
     </if>
     <if test="hospitalId != null" >
       and hospital_id=#{hospitalId,jdbcType=INTEGER}
@@ -70,20 +71,40 @@
   </select>
   <select id="selectionDoctor" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.DoctorVo">
     SELECT
+        d.doctor_id 'doctorId',
         d.doctor_pic 'doctorPic',
         d.doctor_name 'doctorName',
         d.cultural_top 'culturalTop',
         d.doctor_title 'doctorTitle',
         d.doctor_vice_title 'doctorViceTitle',
         d.doctor_label 'doctorLabel',
-        h.hospital_name 'hospitalName'
+        h.hospital_name 'hospitalName',
+        h.hospital_id 'hospitalId'
     FROM
         doctor d,
         hospital h
     WHERE
         d.hospital_id = h.hospital_id
-    LIMIT #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
+    LIMIT #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
+  <select id="getDoctorDetails" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.DoctorVo">
+    SELECT
+      d.doctor_id 'doctorId',
+      d.doctor_name 'doctorName',
+	  d.doctor_vice_title 'doctorViceTitle',
+      d.hospital_id 'hospitalId',
+      d.doctor_pic 'doctorPic',
+      (SELECT h.hospital_name FROM hospital h WHERE d.hospital_id = h.hospital_id) 'hospitalName',
+      d.doctor_profile 'doctorProfile',
+      d.cultural_experience 'culturalExperience',
+      d.certificate_pic 'certificatePic',
+      d.academic_achievement 'academic_achievement',
+      d.goodat 'goodat'
+    FROM
+      doctor d
+    WHERE d.doctor_id = #{doctorId,jdbcType=INTEGER}
+  </select>
+
   <insert id="insertSelective" parameterType="com.meirengu.medical.vo.DoctorVo" useGeneratedKeys="true" keyProperty="doctorId" >
     insert into doctor
     <trim prefix="(" suffix=")" suffixOverrides="," >

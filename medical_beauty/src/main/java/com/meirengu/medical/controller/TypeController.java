@@ -22,7 +22,7 @@ public class TypeController {
      * @param typeVo 商品类型Model
      * @return 将添加结果返回
      */
-    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String getBrandData(TypeVo typeVo) {
         return iTypeService.getTypeData(typeVo);

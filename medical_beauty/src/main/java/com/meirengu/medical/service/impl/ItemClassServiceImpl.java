@@ -1,5 +1,6 @@
 package com.meirengu.medical.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.medical.dao.ItemClassDao;
 import com.meirengu.medical.service.IItemClassService;
 import com.meirengu.medical.util.CodeUtil;
@@ -36,10 +37,10 @@ public class ItemClassServiceImpl implements IItemClassService {
         //获取文件需要上传到的路径
         try {
             itemClassDao.addItemClassData(itemClassVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("addItemClassData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_INSERT),null);
         }
     }
     /**
@@ -57,10 +58,10 @@ public class ItemClassServiceImpl implements IItemClassService {
             list = itemClassDao.getItemClassData(itemClassVo);
             List<ItemClassVo> itemClassVoList = tree(list,0);
             resultMap.put("list",itemClassVoList);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),resultMap);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),resultMap);
         } catch (Exception e) {
             logger.error("getItemClassData ErrorMsg:{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_SELECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_SELECT),null);
         }
     }
     /**
@@ -74,10 +75,10 @@ public class ItemClassServiceImpl implements IItemClassService {
         //获取文件需要上传到的路径
         try {
             itemClassDao.updateItemClassData(itemClassVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("updateItemClassData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_UPDATE),null);
         }
     }
     /**
@@ -93,10 +94,10 @@ public class ItemClassServiceImpl implements IItemClassService {
             itemClassVo.setIcId(icId);
             itemClassVo.setIcShow(0);
             itemClassDao.updateItemClassData(itemClassVo);
-            return ResultUtil.getResult(CodeUtil.CORRECT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_CORRECT),null);
         } catch (Exception e) {
             logger.error("deleteItemClassData ErrorMsg{}",e.getMessage());
-            return ResultUtil.getResult(CodeUtil.ERROR_INSERT.getCode(),null);
+            return ResultUtil.getResult(String.valueOf(StatusCode.MB_ERROR_DELETE),null);
         }
     }
 

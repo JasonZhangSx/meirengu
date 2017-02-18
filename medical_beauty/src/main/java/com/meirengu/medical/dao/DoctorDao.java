@@ -5,6 +5,7 @@ import com.meirengu.medical.vo.DoctorVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface DoctorDao {
@@ -15,7 +16,12 @@ public interface DoctorDao {
      * @return
      */
     List selectionDoctor(DoctorVo doctorVo);
-
+    /**
+     * 医生详情页面
+     * @param doctorVo
+     * @return
+     */
+    Map getDoctorDetails(DoctorVo doctorVo);
 
     /**
      * 条件查询医生列表

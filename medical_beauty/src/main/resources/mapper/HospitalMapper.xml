@@ -74,7 +74,7 @@
     (SELECT COUNT(1) FROM doctor d WHERE d.hospital_id=h.hospital_id) 'doctorNum' ,
     (SELECT COUNT(1) FROM `case` c WHERE c.hospital_id=h.hospital_id) 'caseNum'
     FROM hospital h
-    LIMIT  #{pageStart,jdbcType=INTEGER},#{pageEnd,jdbcType=INTEGER}
+       LIMIT #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
   <insert id="insertSelective" parameterType="com.meirengu.medical.vo.HospitalVo" useGeneratedKeys="true" keyProperty="hospitalId" >
     insert into hospital
