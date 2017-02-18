@@ -1,16 +1,18 @@
 package com.meirengu.utils;
 
+import org.springframework.expression.spel.ast.OpLE;
+
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -106,6 +108,34 @@ public class StringUtil {
 		}
 
 		return prestr;
+	}
+
+	/**
+	 * 功能：把数组所有元素排序，并按照“参数=参数值”的模式用“&”字符拼接成字符串
+	 *
+	 * @param t 需要进行排序的对象
+	 * @return 拼接后字符串
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> String CreateLinkString(T t) throws NoSuchMethodException, InvocationTargetException,
+			IllegalAccessException {
+		StringBuilder sb = new StringBuilder();
+		Class<?> c = t.getClass();
+		Field[] fields = c.getDeclaredFields();
+		for(int i = 0; i < fields.length; i++ ){
+			//获取属性的类型
+			String oldName = fields[i].getName();
+			//将属性的首字符大写，方便构造get，set方法
+			String name = oldName.substring(0, 1).toUpperCase() + oldName.substring(1);
+
+			Method m = c.getMethod("get"+name);
+			//调用get方法获取对应的属性值
+			Object value = m.invoke(t);
+			if(!StringUtil.isEmpty(value)){
+				sb.append(oldName).append("=").append(value).append("&");
+			}
+		}
+		return sb.substring(0, sb.length()-1).toString();
 	}
 
 	/**
@@ -412,6 +442,51 @@ public class StringUtil {
 			}
 		}
 		return pstr.toString();
+	}
+
+	/**
+	 * 生成随机数（32位）
+	 * @return
+     */
+	public static String createNonceStr() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
+
+	/**
+	 * 生成指定位数的随机数（32位之内）
+	 * @param i
+	 * @return
+     */
+	public static String createNonceStr(Integer i){
+		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, i);
+	}
+
+	/**
+	 * 判断字符串是否为整数
+	 * @param str
+	 * @return
+     */
+	public static boolean isInteger(String str){
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher isNum = pattern.matcher(str);
+		if( !isNum.matches() ){
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 判断字符串是否为数字
+	 * @param str
+	 * @return
+     */
+	public static boolean isNumeric(String str){
+		Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]+");
+		Matcher isNum = pattern.matcher(str);
+		if( !isNum.matches() ){
+			return false;
+		}
+		return true;
 	}
 
 }

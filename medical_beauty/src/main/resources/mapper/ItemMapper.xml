@@ -46,14 +46,118 @@
   <sql id="Blob_Column_List" >
     item_image_more, item_details
   </sql>
-  <select id="getItemData" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.medical.vo.ItemVo" >
-    select 
+  <select id="getItemData" resultType="java.util.Map" parameterType="com.meirengu.medical.vo.ItemVo" >
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
+    ,
+    (SELECT ic.ic_name FROM item_class ic WHERE item.ic_id = ic.ic_id) 'icName'
     from item
-    where item_id = #{itemId,jdbcType=INTEGER}
+    where 1=1
+    <if test="itemId != null" >
+      and item_id=#{itemId,jdbcType=INTEGER}
+    </if>
+    <if test="icId != null" >
+      and ic_id=#{icId,jdbcType=VARCHAR}
+    </if>
+    <if test="brandId != null" >
+      and brand_id=#{brandId,jdbcType=INTEGER}
+    </if>
+    <if test="typeId != null" >
+      and type_id=#{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="doctorId != null" >
+      and doctor_id=#{doctorId,jdbcType=INTEGER}
+    </if>
+    <if test="hospitalId != null" >
+      and hospital_id=#{hospitalId,jdbcType=INTEGER}
+    </if>
+    LIMIT #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
+  <select id="getServiceItem"  resultType="java.util.Map" parameterType="com.meirengu.medical.vo.ItemVo" >
+    SELECT
+    i.item_id 'itemId',
+    i.ic_id 'icId',
+    i.item_name 'itemName',
+    i.subtitle 'subtitle',
+    i.item_image 'itemImage',
+    i.doctor_id 'doctorId',
+    i.hospital_id 'hospitalId',
+    i.type_id 'typeId',
+    i.original_price 'originalPrice',
+    i.selling_price 'sellingPrice',
+    (SELECT d.doctor_name FROM doctor d WHERE d.doctor_id=i.doctor_id) 'doctorName',
+    (SELECT d.doctor_pic FROM doctor d WHERE d.doctor_id=i.doctor_id) 'doctorPic',
+    (SELECT h.hospital_name FROM hospital h WHERE h.hospital_id=i.hospital_id) 'hospitalName',
+    (SELECT d.doctor_title FROM doctor d WHERE d.doctor_id=i.doctor_id) 'doctorTitle',
+    (SELECT ic.ic_name FROM item_class ic WHERE i.ic_id = ic.ic_id) 'icName'
+    FROM
+    item i
+    WHERE 1=1
+    <if test="hospitalId != null" >
+      and i.hospital_id = #{hospitalId,jdbcType=INTEGER}
+    </if>
+    <if test="icId != null" >
+      and i.ic_id = #{icId,jdbcType=INTEGER}
+    </if>
+    <if test="brandId != null" >
+      and i.brand_id = #{brandId,jdbcType=INTEGER}
+    </if>
+    <if test="typeId != null" >
+      and type_id=#{typeId,jdbcType=INTEGER}
+    </if>
+    <if test="doctorId != null" >
+      and doctor_id=#{doctorId,jdbcType=INTEGER}
+    </if>
+    LIMIT #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  <select id="getRelationCase"  resultType="java.util.Map" parameterType="com.meirengu.medical.vo.ItemVo" >
+    SELECT
+    c.case_id,
+    c.case_name,
+    c.case_desc,
+    c.case_before_pic,
+    c.case_after_pic
+    FROM
+    `case` c
+    WHERE 1=1
+    <if test="itemId != null" >
+      and c.item_id=#{itemId,jdbcType=INTEGER}
+    </if>
+    <if test="hospitalId != null" >
+      and c.hospital_id = #{hospitalId,jdbcType=INTEGER}
+    </if>
+    LIMIT 0,2
+  </select>
+
+  <select id="getItemDetail"  resultType="java.util.Map" parameterType="com.meirengu.medical.vo.ItemVo" >
+    SELECT
+      i.item_id 'itemId',
+      i.item_name 'itemName',
+      CAST(i.selling_price*(i.commission_rate/100) AS DECIMAL(9,2)) AS 'appointmentPrice',
+      i.original_price 'originalPrice',
+      i.selling_price 'sellingPrice',
+      i.subtitle 'subtitle',
+      i.item_image 'itemImage',
+      i.item_image_more 'itemImageMore',
+      i.item_details 'itemDetails',
+      i.doctor_id 'doctorId',
+      d.doctor_name	'doctorName',
+      d.doctor_pic 'doctorPic',
+      d.doctor_title 'doctorTitle',
+      d.mobile 'mobile',
+      d.doctor_profile 'doctorProfile',
+      i.hospital_id 'hospitalId',
+      h.hospital_name 'hospitalName'
+    FROM
+      item i
+    LEFT JOIN doctor d ON i.doctor_id = d.doctor_id
+      ,hospital h
+    WHERE i.hospital_id = h.hospital_id
+    AND i.item_id=#{itemId,jdbcType=INTEGER}
+  </select>
+
   <insert id="addItemData" parameterType="com.meirengu.medical.vo.ItemVo" useGeneratedKeys="true" keyProperty="itemId">
     insert into item
     <trim prefix="(" suffix=")" suffixOverrides="," >

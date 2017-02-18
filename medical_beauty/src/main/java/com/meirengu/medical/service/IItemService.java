@@ -28,6 +28,13 @@ public interface IItemService {
     String getItemData(ItemVo itemVo);
 
     /**
+     * 获取项目案例
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    List getRelationCase(ItemVo itemVo);
+
+    /**
      * 更新项目数据
      * @param itemVo 项目Model
      * @return 更新结果
@@ -41,4 +48,17 @@ public interface IItemService {
      */
     String deleteItemData(Integer itemId);
 
+    /**
+     * 获取服务项目
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    String getServiceItem(ItemVo itemVo);
+
+    /**
+     * 获取项目详情
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    String getItemDetail(ItemVo itemVo);
 }

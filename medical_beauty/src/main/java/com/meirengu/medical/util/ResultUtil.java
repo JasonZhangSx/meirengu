@@ -1,6 +1,7 @@
 package com.meirengu.medical.util;
 
 import com.google.gson.Gson;
+import com.meirengu.common.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +28,33 @@ public class ResultUtil {
         String reslut="";
         try {
             resultMap.put("code",code);
-            resultMap.put("msg",CodeUtil.getMsg(code));
+//            resultMap.put("msg",CodeUtil.getMsg(code));
+            resultMap.put("msg",StatusCode.codeMsgMap.get(Integer.valueOf(code)));
             resultMap.put("data",map);
             reslut=gson.toJson(resultMap);
             logger.info("Return getResult result:{}", reslut.toString());
             return reslut;
         }catch (Exception e){
-            resultMap.put("code", CodeUtil.ERROR.getCode());
-            resultMap.put("msg", CodeUtil.ERROR.getMsg());
+            resultMap.put("code", StatusCode.MB_ERROR);
+            resultMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.MB_ERROR));
             reslut=gson.toJson(resultMap);
             logger.info("Return getResult result:{}", reslut.toString());
             return reslut;
         }
+    }
+
+    /**
+     * 判断其它接口状态并取值
+     * @param json
+     * @return
+     */
+    public static Object judgeStatus(String json){
+        Gson gson = new Gson();
+        Map caseMap =gson.fromJson(json,Map.class);
+        if (caseMap.get("code").equals("200")){
+            caseMap= (Map) caseMap.get("data");
+            return caseMap.get("list");
+        }
+        return null;
     }
 }

@@ -17,7 +17,7 @@
     <include refid="Base_Column_List" />
     from brand
   </select>
-  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.BrandVo" >
+  <insert id="insertSelective" parameterType="com.meirengu.medical.vo.BrandVo" useGeneratedKeys="true" keyProperty="brandId"  >
     insert into brand
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="brandId != null" >

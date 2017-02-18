@@ -1,7 +1,10 @@
 package com.meirengu.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.model.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +17,7 @@ import java.util.Map;
  */
 public class BaseController {
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
     /**
      * 封装返回数据对象
      * @param code 返回状态码
@@ -29,6 +32,7 @@ public class BaseController {
         if (code == 200 && (data != null && !"".equals(data))){
             result.setData(data);
         }
+        LOGGER.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
     }
 
@@ -46,6 +50,7 @@ public class BaseController {
         }
         returnMap.put("code", code);
         returnMap.put("msg", msg);
+        LOGGER.info("Request getResponse: {}", JSON.toJSON(returnMap));
         return returnMap;
     }
 

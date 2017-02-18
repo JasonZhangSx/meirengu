@@ -8,6 +8,26 @@ import java.util.List;
 
 @Repository
 public interface ItemDao {
+    /**
+     * 获取服务项目
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    List getServiceItem(ItemVo itemVo);
+
+    /**
+     * 获取项目详情
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    List getItemDetail(ItemVo itemVo);
+
+    /**
+     * 获取项目案例
+     * @param itemVo 项目Model
+     * @return 查询结果
+     */
+    List getRelationCase(ItemVo itemVo);
 
     /**
      * 添加项目数据
@@ -21,7 +41,7 @@ public interface ItemDao {
      * @param itemVo 项目Model
      * @return 查询结果
      */
-    List<ItemVo> getItemData(ItemVo itemVo);
+    List getItemData(ItemVo itemVo);
 
     /**
      * 更新项目数据
