@@ -344,9 +344,12 @@ public class WebContent1 {
     }
 
     public static void main(final String args[]) throws IOException {
-        String s = "{\"code\":200,\"data\":null,\"msg\":\"成功\"}";
+        /*String s = "{\"code\":200,\"data\":null,\"msg\":\"成功\"}";
         JSONObject json = JSONObject.parseObject(s);
-        System.out.print(json.get("code"));
+        System.out.print(json.get("code"));*/
+
+        int i=234567;
+        System.out.println(i/100f);
     }
 
     public static String get32MD5(String s) {

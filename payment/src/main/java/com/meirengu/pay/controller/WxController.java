@@ -6,7 +6,10 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.pay.common.Constants;
+import com.meirengu.pay.model.Payment;
+import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.ConfigUtil;
+import com.meirengu.pay.utils.PaymentUtils;
 import com.meirengu.pay.utils.XmlAnalysisUtils;
 import com.meirengu.pay.vo.*;
 import com.meirengu.utils.HttpUtil;
@@ -18,12 +21,14 @@ import org.apache.commons.lang3.builder.StandardToStringStyle;
 import org.apache.ibatis.executor.loader.ResultLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.ErrorsMethodArgumentResolver;
+import org.w3c.dom.traversal.NodeIterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +50,9 @@ import java.util.*;
 public class WxController extends BaseController{
 
     private Logger LOGGER = LoggerFactory.getLogger(WxController.class);
+
+    @Autowired
+    private PaymentService paymentService;
 
     /**
      * 微信统一下单接口
@@ -80,8 +88,8 @@ public class WxController extends BaseController{
                                @RequestParam(value = "limit_pay", required = false) String limitPay,
                                HttpServletRequest request){
 
-        //String ip = RequestUtil.getIpAddr(request);
-        String ip = "118.192.104.101";
+        String ip = RequestUtil.getIpAddr(request);
+        //String ip = "118.192.104.101";
         LOGGER.info(">> wx unifiedorder service start...");
 
         if(StringUtil.isEmpty(body) || StringUtil.isEmpty(outTradeNo) ||
@@ -142,6 +150,12 @@ public class WxController extends BaseController{
         sendData.setSign(sign);
 
         String paramsXml = XmlAnalysisUtils.getXMLForObject(sendData);
+        double totalFeeTemp = sendData.getTotal_fee()/100f;
+
+        //微信下单之前先生成我们自己的payment
+        if(!PaymentUtils.insertPayment(outTradeNo, "1", String.valueOf(totalFeeTemp), "1", "", deviceInfo)){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
 
         LOGGER.info("wx unifiedorder send xml is \n {}", paramsXml);
 
@@ -216,14 +230,14 @@ public class WxController extends BaseController{
             if(Constants.SUCCESS.equals(returnCode)){
                 String resultCode = notifyData.getResult_code();
                 LOGGER.debug(">> result code is {}", resultCode);
-                //交易订单号
-                String outTradeNo = notifyData.getOut_trade_no();
+
+                Map<String, String> params = new HashMap<>();
+                params.put("union_sn", notifyData.getOut_trade_no());
+                params.put("transaction_sn", notifyData.getTransaction_id());
+                params.put("bank_type", notifyData.getBank_type());
+                params.put("device_info", notifyData.getDevice_info());
+                params.put("return_msg", notifyXml.toString());
                 if(Constants.SUCCESS.equals(resultCode)){
-                    //订单总金额
-                    //int totalFee = notifyData.getTotal_fee();
-                    //修改支付状态为成功
-                    Map<String, String> params = new HashMap<>();
-                    params.put("union_sn", outTradeNo);
                     HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.success.url"), params);
                     LOGGER.info(">> request mall return msg : {}", result.toString());
                     int statusCode = result.getStatusCode();
@@ -237,15 +251,11 @@ public class WxController extends BaseController{
                             LOGGER.info(">> wx pay success......");
                             //业务完成后给微信通知
                             returnMsg = returnSuccessMsg;
-                        }else if(code == StatusCode.RECORD_NOT_EXISTED){
-                            LOGGER.info(">> don't find the order.... union_sn is {}", outTradeNo);
                         }else {
                             LOGGER.info(">> shopping mall make a error...");
                         }
                     }
                 }else {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("union_sn", outTradeNo);
                     HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.fail.url"), params);
                     LOGGER.info(">> request mall return msg : {}", result.toString());
                     int statusCode = result.getStatusCode();
@@ -257,8 +267,6 @@ public class WxController extends BaseController{
                         //业务状态码判断
                         if(code == 200){
                             LOGGER.info(">> modify order status pay fail......");
-                        }else if(code == StatusCode.RECORD_NOT_EXISTED){
-                            LOGGER.info(">> don't find the order.... union_sn is {}", outTradeNo);
                         }else {
                             LOGGER.info(">> shopping mall make a error...");
                         }
@@ -299,6 +307,8 @@ public class WxController extends BaseController{
                        @RequestParam(value = "total_fee", required = false) String totalFee,
                        @RequestParam(value = "refund_fee", required = false) String refundFee,
                        @RequestParam(value = "refund_fee_type", required = false) String refundFeeType){
+
+        LOGGER.info(">> wx refund apply is starting......");
         if((StringUtil.isEmpty(transactionId) && StringUtil.isEmpty(outTradeNo)) ||
                 StringUtil.isEmpty(outRefundNo) || StringUtil.isEmpty(totalFee) ||
                 StringUtil.isEmpty(refundFee)){
@@ -372,6 +382,8 @@ public class WxController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "closeorder", method = RequestMethod.POST)
     public Result closeOrder(@RequestParam(value = "out_trade_no", required = false) String outTradeNo){
+
+        LOGGER.info(">> wx close order is starting......");
         if(StringUtil.isEmpty(outTradeNo)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
@@ -421,6 +433,7 @@ public class WxController extends BaseController{
                               @RequestParam(value = "out_refund_no", required = false) String outRefundNo,
                               @RequestParam(value = "refund_id", required = false) String refundId){
 
+        LOGGER.info(">> wx refund query is starting......");
 
         if(StringUtil.isEmpty(outTradeNo) && StringUtil.isEmpty(transactionId) &&
                 StringUtil.isEmpty(outRefundNo) && StringUtil.isEmpty(refundId)){
@@ -505,6 +518,7 @@ public class WxController extends BaseController{
     public Result orderquery(@RequestParam(value = "transaction_id", required = false) String transactionId,
                               @RequestParam(value = "out_trade_no", required = false) String outTradeNo){
 
+        LOGGER.info(">> wx order query is starting......");
 
         if(StringUtil.isEmpty(outTradeNo) && StringUtil.isEmpty(transactionId)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -559,6 +573,7 @@ public class WxController extends BaseController{
                              @RequestParam(value = "bill_date", required = false) String billDate,
                              @RequestParam(value = "bill_type", required = false) String billType){
 
+        LOGGER.info(">> wx download bill is starting......");
 
         if(StringUtil.isEmpty(billDate) && StringUtil.isEmpty(billType)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
