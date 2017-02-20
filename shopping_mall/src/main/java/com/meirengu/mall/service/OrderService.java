@@ -15,9 +15,9 @@ public interface OrderService extends PageBaseService<Order>{
     /**
      * 生成订单
      * @param orderList
-     * @return 返回订单号
+     * @return 返回订单号和总金额
      */
-    String genOrders(List<Map<String, Object>> orderList);
+    Map<String, Object> genOrders(List<Map<String, Object>> orderList);
 
     /**
      * 获取订单详情列表
@@ -40,4 +40,32 @@ public interface OrderService extends PageBaseService<Order>{
      */
     Map<String, Object> getDetailById(int orderId);
 
+    /**
+     * 修改订单状态
+     * @param order
+     * @return
+     */
+    int modifyStatus(Order order);
+
+    /**
+     * 支付成功
+     * @param unionSN
+     * @param transactionSN
+     * @param bankType
+     * @param deviceInfo
+     * @param returnMsg
+     * @return
+     */
+    int paySuccess(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg);
+
+    /**
+     * 支付失败
+     * @param unionSN
+     * @param transactionSN
+     * @param bankType
+     * @param deviceInfo
+     * @param returnMsg
+     * @return
+     */
+    int payFail(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg);
 }

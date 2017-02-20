@@ -17,8 +17,8 @@
     <select id="detailList" parameterType="order" resultType="Map">
         SELECT oi.`item_name` as itemName, d.`doctor_name` as doctorName, d.doctor_id as doctorId, d.cultural_top as culturalTop,
         h.`hospital_name` as hospitalName, oi.item_price as itemPrice, oi.item_num as itemNum, oi.item_image as itemImage,
-        '' AS appointCode, IFNULL(o.payment_time,'') as paymentTime, o.add_time as createTime,  d.mobile as doctorMobile,
-        o.union_sn as unionSN, o.order_sn as orderSN, o.order_id as orderId, o.order_state as orderState,
+        '' AS appointCode, IFNULL(o.payment_time,'') as paymentTime, o.add_time as createTime,  d.mobile as doctorMobile,o.user_phone AS userPhone,
+        o.union_sn as unionSN, o.order_sn as orderSN, o.order_id as orderId, o.order_state as orderState, o.hospital_id as hospitalId, o.item_amount as itemAmount,
         (SELECT GROUP_CONCAT(ic_name SEPARATOR '/') FROM item_class WHERE ic_id IN (i.`ic_id`)) AS itemClass FROM `order` o
         LEFT JOIN order_item oi ON oi.`order_id`=o.`order_id`
         LEFT JOIN item i ON i.item_id=oi.`item_id`
@@ -39,20 +39,32 @@
 
     <update id="modifyState" parameterType="order">
         UPDATE `order` SET
-        <if test="orderState != null and orderState != ''">
+        <if test="orderState != null and orderState != '' and orderState != 0">
             order_state=#{orderState},
         </if>
         <if test="refundState != null and refundState != '' and refundState != 0">
             refund_state=#{refundState}
         </if>
-        WHERE flag=1 and order_id=#{id};
+        <if test="paymentTime != null">
+            payment_time=#{paymentTime}
+        </if>
+        <if test="finishedTime != null">
+            finished_time=#{finishedTime}
+        </if>
+        WHERE flag=1
+        <if test="id != null and id != ''">
+            and order_id=#{id};
+        </if>
+        <if test="unionSN != null and unionSN != ''">
+            and union_sn=#{unionSN}
+        </if>
     </update>
 
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
         SELECT o.`order_state` as orderState, oi.`item_name` as itemName, d.`doctor_name` as doctorName, d.`doctor_title` as doctorTitle,
         oi.item_num as itemNum, oi.item_price as itemPrice, o.order_sn as orderSN, d.mobile as doctorMobile, IFNULL(o.payment_time, '') as paymentTime,
-        oi.item_image as itemImage, h.hospital_id as hospitalId, i.item_id as itemId, o.union_sn as unionSN,
+        oi.item_image as itemImage, h.hospital_id as hospitalId, i.item_id as itemId, o.union_sn as unionSN, o.order_id as orderId, h.hospital_name as hospitalName,
         (SELECT GROUP_CONCAT(ic_name SEPARATOR '/') FROM item_class WHERE ic_id IN (i.`ic_id`)) AS itemClass
         FROM `order` o
         LEFT JOIN order_item oi ON o.`order_id`=oi.`order_id`

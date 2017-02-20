@@ -1,22 +1,25 @@
 package com.meirengu.mall.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.mall.common.Constants;
 import com.meirengu.mall.dao.CartDao;
 import com.meirengu.mall.dao.OrderDao;
 import com.meirengu.mall.dao.OrderItemDao;
 import com.meirengu.mall.dao.RefundDao;
-import com.meirengu.mall.model.Order;
-import com.meirengu.mall.model.OrderItem;
-import com.meirengu.mall.model.Page;
-import com.meirengu.mall.model.Refund;
+import com.meirengu.mall.model.*;
 import com.meirengu.mall.service.OrderService;
 import com.meirengu.mall.service.PageService;
+import com.meirengu.mall.service.PaymentService;
+import com.meirengu.mall.utils.ConfigUtil;
 import com.meirengu.mall.utils.OrderSNUtils;
+import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +50,9 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private PageService<Order> pageService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public Page<Order> getPageList(Page<Order> page, Map map) {
         return pageService.getListByPage(page, map, orderDao);
@@ -54,8 +60,10 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional(readOnly = false)
-    public String genOrders(List<Map<String, Object>> orderList) {
+    public Map<String, Object> genOrders(List<Map<String, Object>> orderList) {
         try {
+            double totalPrice = 0;
+            Map<String, Object> returnMap = new HashMap<>();
             String unionSN = OrderSNUtils.getUnionSN();
             for (int i = 0; i < orderList.size(); i++) {
 
@@ -70,6 +78,8 @@ public class OrderServiceImpl implements OrderService{
                 int orderFrom = Integer.parseInt(orderMap.get("orderFrom").toString());
                 String itemName = orderMap.get("itemName").toString();
                 double itemPrice = Double.parseDouble(orderMap.get("itemPrice").toString());
+                //支付总价=项目价格*项目数量
+                totalPrice = totalPrice + itemPrice*itemNum;
                 String userPhone = orderMap.get("userPhone").toString();
                 String itemImage = orderMap.get("itemImage").toString();
                 Date createTime = new Date();
@@ -115,6 +125,7 @@ public class OrderServiceImpl implements OrderService{
                                 //return unionSN;
                             }else {
                                 //失败进行事务回滚
+                                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                                 return null;
                             }
                         }else{
@@ -123,14 +134,18 @@ public class OrderServiceImpl implements OrderService{
                     }
                 } else {
                     //失败进行事务回滚
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return null;
                 }
             }
 
-            return unionSN;
+            returnMap.put("unionSN", unionSN);
+            returnMap.put("totalPrice", totalPrice);
+            return returnMap;
         } catch (Exception e){
             LOGGER.error("genOrder throw exception:", e);
             //失败进行事务回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
     }
@@ -185,5 +200,75 @@ public class OrderServiceImpl implements OrderService{
             LOGGER.error("order getDetailById throw exception: ", e);
             return null;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public int modifyStatus(Order order) {
+        try{
+            int i = orderDao.modifyState(order);
+            if(i > 0){
+                return 1;
+            }else {
+                return 2;
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public int paySuccess(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg) {
+        //先修改订单状态，然后修改支付状态
+        Order order = new Order();
+        order.setUnionSN(unionSN);
+        order.setOrderState(Constants.ORDER_PAID);
+        order.setPaymentTime(new Date());
+        int modifyNum = modifyStatus(order);
+        //修改订单状态成功
+        if(modifyNum > 0){
+            Payment payment = new Payment();
+            payment.setOrderSN(unionSN);
+            payment.setTransactionSN(transactionSN);
+            payment.setBankType(bankType);
+            payment.setDeviceInfo(deviceInfo);
+            payment.setReturnMsg(returnMsg);
+            payment.setStatus(2);
+            int updateNum = paymentService.update(payment);
+            if(updateNum > 0){
+                //付款成功
+                return 1;
+            }
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return 0;
+    }
+
+    @Override
+    public int payFail(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg) {
+        //先修改订单状态，然后修改支付状态
+        Order order = new Order();
+        order.setUnionSN(unionSN);
+        order.setOrderState(Constants.ORDER_PAY_FAIL);
+        order.setPaymentTime(new Date());
+        int modifyNum = modifyStatus(order);
+        //修改订单状态成功
+        if(modifyNum > 0){
+            Payment payment = new Payment();
+            payment.setOrderSN(unionSN);
+            payment.setTransactionSN(transactionSN);
+            payment.setBankType(bankType);
+            payment.setDeviceInfo(deviceInfo);
+            payment.setReturnMsg(returnMsg);
+            payment.setStatus(3);
+            int updateNum = paymentService.update(payment);
+            if(updateNum > 0){
+                //付款失败
+                return 1;
+            }
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return 0;
     }
 }

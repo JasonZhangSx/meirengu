@@ -43,4 +43,9 @@ public class ConfigUtil {
 	public static final String getRecommendSavePath(){
 		return bundle.getString("recommend.picture.save.path");
 	}
+
+
+	public static final String getValue(String key){
+		return bundle.getString(key);
+	}
 }

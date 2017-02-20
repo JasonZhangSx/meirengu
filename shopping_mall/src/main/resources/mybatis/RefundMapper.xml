@@ -4,10 +4,14 @@
 
     <insert id="addRefund" parameterType="refund" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO refund
-        (refund_id, order_id, refund_sn, order_sn, doctor_id, hospital_id, user_id, user_phone, add_time, order_amout, order_refund, refund_paymentname,
+        (refund_id, order_id, refund_sn, order_sn, doctor_id, hospital_id, user_id, user_phone, add_time, order_amount, order_refund, refund_paymentname,
         refund_paymentcode, refund_message, user_message, refund_type, refund_state, user_confirm)
         VALUES
-        (#{id}, #{orderId}, #{refundSN}, #{orderSN}, #{doctorId}, #{hospitalId}, #{userId}, #{userPhone}, #{addTime}, #{orderAmout}, #{orderRefund}, #{refundPaymentname},
+        (#{id}, #{orderId}, #{refundSN}, #{orderSN}, #{doctorId}, #{hospitalId}, #{userId}, #{userPhone}, #{addTime}, #{orderAmount}, #{orderRefund}, #{refundPaymentname},
         #{refundPaymentcode}, #{refundMessage}, #{userMessage}, #{refundType}, #{refundState}, #{userConfirm});
     </insert>
+
+    <!--<update id="modifyStatus" parameterType="refund">
+        UPDATE refund SET
+    </update>-->
 </mapper>

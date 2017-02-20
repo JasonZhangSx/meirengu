@@ -4,7 +4,6 @@ import org.springframework.core.annotation.OrderUtils;
 
 /**
  * 订单相关的编号生成
- *
  * @author 建新
  * @create 2017-01-17 11:40
  */

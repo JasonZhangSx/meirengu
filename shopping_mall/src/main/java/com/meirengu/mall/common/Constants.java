@@ -41,6 +41,9 @@ public class Constants {
     public static final int ORDER_REFUND_REFUSE = 8;
     /** 订单退款成功 **/
     public static final int ORDER_REFUND_SUCCESS = 9;
+
+    /** 订单支付失败 **/
+    public static final int ORDER_PAY_FAIL = 10;
     /** 无退款 **/
     public static final int REFUND_NO = 0;
     /** 部分退款 **/

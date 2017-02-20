@@ -1,12 +1,15 @@
 package com.meirengu.mall.controller;
 
+import com.meirengu.controller.BaseController;
 import com.meirengu.mall.common.Constants;
-import com.meirengu.mall.common.StatusCode;
+import com.meirengu.common.StatusCode;
 import com.meirengu.mall.model.Case;
 import com.meirengu.mall.model.Page;
 import com.meirengu.mall.service.CaseService;
 import com.meirengu.mall.utils.ConfigUtil;
 import com.meirengu.mall.utils.UploadUtil;
+import com.meirengu.model.Result;
+import com.meirengu.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,41 +52,21 @@ public class CaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Map<String, Object> insert(@RequestParam(value = "item_id", required = false) Integer itemId,
-                                      @RequestParam(value = "doctor_id", required = false) Integer doctorId,
-                                      @RequestParam(value = "hospital_id", required = false) Integer hospitalId,
-                                      @RequestParam(value = "ic_id", required = false) Integer icId,
-                                      @RequestParam(value = "case_name", required = false) String name,
-                                      @RequestParam(value = "case_desc", required = false) String desc,
+    public Result insert(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "doctor_id", required = false) Integer doctorId,
+                         @RequestParam(value = "hospital_id", required = false) Integer hospitalId,
+                         @RequestParam(value = "ic_id", required = false) Integer icId,
+                         @RequestParam(value = "case_name", required = false) String name,
+                         @RequestParam(value = "case_desc", required = false) String desc,
                                       /*@RequestParam(value = "before_pic", required = false) String beforePic,
                                       @RequestParam(value = "after_pic", required = false) String afterPic,*/
                                       @RequestParam(value = "case_sort", required = false) Integer sort,
-                                      HttpServletRequest request){
+                         HttpServletRequest request){
 
 
 
-        if(null == itemId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_id"));
-        }
-
-        if(null == doctorId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "doctor_id"));
-        }
-
-        if(null == hospitalId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "hospital_id"));
-        }
-
-        if(null == icId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "ic_id"));
-        }
-
-        if(StringUtils.isEmpty(name)){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_name"));
-        }
-
-        if(null == sort){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_sort"));
+        if(null == itemId || null == doctorId || null == hospitalId || null == icId || null == sort || StringUtil.isEmpty(name)){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         Map map = UploadUtil.uploadPic(request, "before_pic",  ConfigUtil.getCaseSavePath()+hospitalId+"/"+doctorId+"/", ConfigUtil.getCaseShowPath(), "375x480");
@@ -106,9 +89,9 @@ public class CaseController extends BaseController {
         c.setSort(sort);
         boolean b = caseService.add(c);
         if(b){
-            return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -129,7 +112,7 @@ public class CaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
-    public Map<String, Object> update(@RequestParam(value = "case_id", required = false) Integer caseId,
+    public Result update(@RequestParam(value = "case_id", required = false) Integer caseId,
                                       @RequestParam(value = "item_id", required = false) Integer itemId,
                                       @RequestParam(value = "doctor_id", required = false) Integer doctorId,
                                       @RequestParam(value = "hospital_id", required = false) Integer hospitalId,
@@ -140,27 +123,11 @@ public class CaseController extends BaseController {
                                       @RequestParam(value = "after_pic", required = false) String afterPic,
                                       @RequestParam(value = "case_sort", required = false) Integer sort){
 
-        if(null == caseId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_id"));
+        if(null == caseId || null == itemId || null == doctorId || null == hospitalId || null == icId || null == sort){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
-        if(null == itemId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_id"));
-        }
-
-        if(null == doctorId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "doctor_id"));
-        }
-
-        if(null == hospitalId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "hospital_id"));
-        }
-
-        if(null == icId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "ic_id"));
-        }
-
-        if(StringUtils.isEmpty(name)){
+       /* if(StringUtils.isEmpty(name)){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_name"));
         }
 
@@ -171,10 +138,7 @@ public class CaseController extends BaseController {
         if(StringUtils.isEmpty(afterPic)){
             return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "after_pic"));
         }
-
-        if(null == sort){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "case_sort"));
-        }
+        */
 
         Case c = new Case();
         c.setId(caseId);
@@ -190,11 +154,11 @@ public class CaseController extends BaseController {
         c.setSort(sort);
         int caseUpdateNum = caseService.update(c);
         if(caseUpdateNum == 1){
-            return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else if(caseUpdateNum == 2){
-            return super.setReturnMsg(StatusCode.STATUS_4213, null, StatusCode.STATUS_4213);
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -205,14 +169,14 @@ public class CaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "{case_id}", method = RequestMethod.GET)
-    public Map<String, Object> detail(@PathVariable("case_id") Integer caseId){
+    public Result detail(@PathVariable("case_id") Integer caseId){
         Case c = new Case();
         c.setId(caseId);
         Case cas = caseService.detail(c);
         if(cas == null){
-            return super.setReturnMsg(StatusCode.STATUS_501, null, StatusCode.STATUS_501_MSG);
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_200, cas, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, cas, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 
@@ -228,7 +192,7 @@ public class CaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
-    public Map<String, Object> list(@RequestParam(value = "per_page", required = false) Integer pageSize,
+    public Result list(@RequestParam(value = "per_page", required = false) Integer pageSize,
                                     @RequestParam(value = "page", required = false) Integer pageNow,
                                     @RequestParam(value = "hospital_id", required = false, defaultValue = "0") Integer hospitalId,
                                     @RequestParam(value = "doctor_id", required = false, defaultValue = "0") Integer doctorId,
@@ -253,12 +217,10 @@ public class CaseController extends BaseController {
         paramMap.put("acId", acId);
         page = caseService.getPageList(page, paramMap);
         if(page.getList().size() > 0){
-            return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }
-
-
 
     }
 

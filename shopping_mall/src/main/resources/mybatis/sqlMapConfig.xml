@@ -12,5 +12,6 @@
 		<typeAlias alias="refund" type="com.meirengu.mall.model.Refund" />
 		<typeAlias alias="recommend" type="com.meirengu.mall.model.Recommend" />
 		<typeAlias alias="recommendPosition" type="com.meirengu.mall.model.RecommendPosition" />
+		<typeAlias alias="payment" type="com.meirengu.mall.model.Payment" />
 	</typeAliases>
 </configuration>

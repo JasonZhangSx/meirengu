@@ -59,7 +59,7 @@ public class RefundServiceImpl implements RefundService{
             Order order = new Order();
             order.setId(orderId);
             List<Map<String, Object>> orderDetailList = orderDao.detailList(order);
-            if(orderDetailList.size() < 0 ){
+            if(orderDetailList.size() <= 0 ){
                 state = 2;
                 resultMap.put("state", state);
                 return resultMap;

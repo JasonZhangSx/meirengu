@@ -6,7 +6,7 @@
 
     <select id="getCartList" resultType="Map" parameterType="Map">
         SELECT c.cart_id as cartId, c.user_id as userId, i.selling_price as price, c.hospital_id as hospitalId, c.item_id as itemId, c.item_num as itemNum, c.create_time as createTime,
-        i.`item_name` as itemName, d.`doctor_name` as doctorName, d.doctor_title as doctorTitle, h.`hospital_name` as hospitalName, i.item_image as itemImage,
+        i.`item_name` as itemName, d.`doctor_name` as doctorName, d.doctor_title as doctorTitle, h.`hospital_name` as hospitalName, i.item_image as itemImage,d.doctor_id as doctorId,
         (SELECT GROUP_CONCAT(ic_name SEPARATOR '/') FROM item_class WHERE ic_id IN (i.`ic_id`)) AS itemClass
         FROM <include refid="table_name" />
         LEFT JOIN item i ON i.item_id=c.`item_id`

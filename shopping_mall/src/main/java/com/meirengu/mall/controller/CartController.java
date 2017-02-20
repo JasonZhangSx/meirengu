@@ -1,8 +1,9 @@
 package com.meirengu.mall.controller;
 
 import com.meirengu.mall.common.Constants;
-import com.meirengu.mall.common.StatusCode;
+import com.meirengu.common.StatusCode;
 import com.meirengu.mall.service.CartService;
+import com.meirengu.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/cart")
-public class CartController extends BaseController{
+public class CartController extends com.meirengu.controller.BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartController.class);
 
@@ -35,10 +36,10 @@ public class CartController extends BaseController{
      */
     @RequestMapping(value="list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(@RequestParam(value = "user_id", required = false) Integer userId){
+    public Result list(@RequestParam(value = "user_id", required = false) Integer userId){
 
         if(null == userId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "user_id"));
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         //用户验证是否存在
@@ -49,13 +50,13 @@ public class CartController extends BaseController{
         try {
             List<Map<String, Object>> list = cartService.getCartList(map);
             if(list.size() <= 0){
-                return super.setReturnMsg(StatusCode.STATUS_501, null, StatusCode.STATUS_501_MSG);
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }else{
-                return super.setReturnMsg(StatusCode.STATUS_200, list, StatusCode.STATUS_200_MSG);
+                return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
         } catch (Exception e) {
             LOGGER.error("throw exception: ", e);
-            return super.setReturnMsg(StatusCode.STATUS_504, null, StatusCode.STATUS_504_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
@@ -67,25 +68,20 @@ public class CartController extends BaseController{
      */
     @RequestMapping(value="modify-num", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> modifyNum(@RequestParam(value = "cart_id", required = false) Integer cartId,
-                                         @RequestParam(value = "item_num", required = false) Integer itemNum){
+    public Result modifyNum(@RequestParam(value = "cart_id", required = false) Integer cartId,
+                            @RequestParam(value = "item_num", required = false) Integer itemNum){
 
-        if(null == cartId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "cart_id"));
-        }
-
-        if(null == itemNum){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_num"));
+        if(null == cartId || null == itemNum){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         boolean flag = cartService.modifyNum(cartId, itemNum);
 
         if(flag){
-            return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else{
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
     }
 
     /**
@@ -95,20 +91,20 @@ public class CartController extends BaseController{
      */
     @RequestMapping(value="{cart_id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Map<String, Object> delete(@PathVariable("cart_id") Integer cartId){
+    public Result delete(@PathVariable("cart_id") Integer cartId){
 
         if(null == cartId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "cart_id"));
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         int cartDelNum = cartService.delete(cartId);
 
         if(cartDelNum == 1){
-            return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else if(cartDelNum == 2){
-            return super.setReturnMsg(StatusCode.STATUS_4213, null, StatusCode.STATUS_4213_MSG);
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -122,25 +118,13 @@ public class CartController extends BaseController{
      */
     @RequestMapping(value="add", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> add(@RequestParam(value = "user_id", required = false) Integer userId,
+    public Result add(@RequestParam(value = "user_id", required = false) Integer userId,
                                    @RequestParam(value = "hospital_id", required = false) Integer hospitalId,
                                    @RequestParam(value = "item_id", required = false) Integer itemId,
                                    @RequestParam(value = "item_num", required = false) Integer itemNum){
 
-        if(null == userId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "user_id"));
-        }
-
-        if(null == hospitalId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "hospital_id"));
-        }
-
-        if(null == itemId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_id"));
-        }
-
-        if(null == itemNum){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "item_num"));
+        if(null == userId || null == hospitalId || null == itemId || null == itemNum){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //用户是否存在验证
 
@@ -150,9 +134,9 @@ public class CartController extends BaseController{
 
         boolean flag = cartService.addCart(userId, hospitalId, itemId, itemNum);
         if(flag){
-            return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }

@@ -20,7 +20,7 @@ import java.util.Map;
  * @create 2017-01-10 19:35
  */
 @CrossOrigin
-public class BaseController {
+public class BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
