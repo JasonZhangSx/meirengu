@@ -6,8 +6,6 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.pay.common.Constants;
-import com.meirengu.pay.model.Payment;
-import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.ConfigUtil;
 import com.meirengu.pay.utils.PaymentUtils;
 import com.meirengu.pay.utils.XmlAnalysisUtils;
@@ -16,25 +14,20 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.MD5Util;
 import com.meirengu.utils.RequestUtil;
 import com.meirengu.utils.StringUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.StandardToStringStyle;
-import org.apache.ibatis.executor.loader.ResultLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.annotation.ErrorsMethodArgumentResolver;
-import org.w3c.dom.traversal.NodeIterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,9 +43,6 @@ import java.util.*;
 public class WxController extends BaseController{
 
     private Logger LOGGER = LoggerFactory.getLogger(WxController.class);
-
-    @Autowired
-    private PaymentService paymentService;
 
     /**
      * 微信统一下单接口
@@ -86,14 +76,27 @@ public class WxController extends BaseController{
                                @RequestParam(value = "trade_type", required = false) String tradeType,
                                @RequestParam(value = "product_id", required = false) String productId,
                                @RequestParam(value = "limit_pay", required = false) String limitPay,
-                               HttpServletRequest request){
+                               @RequestParam(value = "openid", required = false) String openid,
+                               @RequestParam(value = "item_id", required = false) String itemId,
+                               @RequestParam(value = "user_id", required = false) String userId,
+                               @RequestParam(value = "hospital_id", required = false) String hospitalId,
+                               @RequestParam(value = "doctor_id", required = false) String doctorId,
+                               @RequestParam(value = "item_name", required = false) String itemName,
+                               @RequestParam(value = "user_phone", required = false) String userPhone,
+                               @RequestParam(value = "hospital_name", required = false) String hospitalName,
+                               @RequestParam(value = "doctor_name", required = false) String doctorName,
+                               HttpServletRequest request) throws UnsupportedEncodingException {
 
         String ip = RequestUtil.getIpAddr(request);
         //String ip = "118.192.104.101";
         LOGGER.info(">> wx unifiedorder service start...");
 
         if(StringUtil.isEmpty(body) || StringUtil.isEmpty(outTradeNo) ||
-                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType)){
+                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType) ||
+                StringUtil.isEmpty(itemId) || StringUtil.isEmpty(hospitalId) ||
+                StringUtil.isEmpty(userId) ||
+                StringUtil.isEmpty(itemName) || StringUtil.isEmpty(hospitalName) ||
+                StringUtil.isEmpty(userPhone)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
@@ -136,14 +139,22 @@ public class WxController extends BaseController{
         sendData.setTrade_type(tradeType);
         //扫码支付时，product_id为必填
         if("NATIVE".equals(tradeType)){
-            sendData.setProduct_id(productId);
+            if(!StringUtil.isEmpty(productId)){
+                sendData.setProduct_id(productId);
+            }else {
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
         }
         if(!StringUtil.isEmpty(limitPay)){
             sendData.setLimit_pay(limitPay);
         }
         //公众号支付时，openid为必填
         if("JSAPI".equals(tradeType)){
-            sendData.setOpenid("");
+            if(!StringUtil.isEmpty(openid)){
+                sendData.setOpenid(openid);
+            }else {
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
         }
 
         String sign = genSign(sendData);
@@ -153,7 +164,7 @@ public class WxController extends BaseController{
         double totalFeeTemp = sendData.getTotal_fee()/100f;
 
         //微信下单之前先生成我们自己的payment
-        if(!PaymentUtils.insertPayment(outTradeNo, "1", String.valueOf(totalFeeTemp), "1", "", deviceInfo)){
+        if(!PaymentUtils.insertPayment(outTradeNo, "1", String.valueOf(totalFeeTemp), "1", "", deviceInfo, itemId, itemName, userId, userPhone, hospitalId, hospitalName, doctorId, doctorName )){
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -177,6 +188,17 @@ public class WxController extends BaseController{
                 String codeUrl = returnData.getCode_url();
                 resultMap.put("prepayId", prepayId);
                 resultMap.put("codeUrl", codeUrl);
+                if("JSAPI".equals(tradeType)){
+                    JsPaySendData jsPayParams = new JsPaySendData();
+                    jsPayParams.setAppId(sendData.getAppid());
+                    jsPayParams.setTimeStamp(System.currentTimeMillis()+"");
+                    jsPayParams.setNonceStr(StringUtil.createNonceStr());
+                    jsPayParams.setPackages("prepay_id="+prepayId);
+                    jsPayParams.setSignType("MD5");
+                    String paySign = genSign(jsPayParams);
+                    jsPayParams.setPaySign(paySign);
+                    resultMap.put("jsPayParams", jsPayParams);
+                }
                 return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 String errCode = returnData.getErr_code();
@@ -609,6 +631,53 @@ public class WxController extends BaseController{
         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
+    /**
+     * 获取微信openId
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "getOpenid")
+    public void getOpenid(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        LOGGER.info(">> get openid is starting......");
+        HttpUtil.HttpResult hr = HttpUtil.doGet("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx22ae3075d64a4f81&redirect_uri=http%3a%2f%2fwww.meirenguvip.com%2fwxcs%2fservice%2foauth2_access_token&response_type=code&scope=snsapi_base&state=meirengu#wechat_redirect");
+        LOGGER.info("hr is {}", hr);
+        /*String code = request.getParameter("code");
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", ConfigUtil.getConfig("wx.appid"));
+        params.put("secret", ConfigUtil.getConfig("wx.appsecret"));
+        params.put("code", code);
+        params.put("grant_type", "authorization_code");
+        HttpUtil.HttpResult hr = HttpUtil.doPostForm(ConfigUtil.getConfig("wx.openid.get.url"), params);
+        if(hr.getStatusCode() == 200){
+            String content = hr.getContent();
+            JSONObject resultJson = JSON.parseObject(content);
+            String errCode = resultJson.get("errcode") == null ? "" : resultJson.get("errcode").toString();
+            Map<String, Object> result = new HashMap<>();
+            if(StringUtil.isEmpty(errCode)){
+                String accessToken = resultJson.get("access_token") == null ? "" : resultJson.get("access_token").toString();
+                String expiresIn = resultJson.get("expires_in") == null ? "" : resultJson.get("expires_in").toString();
+                String refreshToken = resultJson.get("refresh_token") == null ? "" : resultJson.get("refresh_token").toString();
+                String openid = resultJson.get("openid") == null ? "" : resultJson.get("openid").toString();
+                String scope = resultJson.get("scope") == null ? "" : resultJson.get("scope").toString();
+
+                result.put("accessToken", accessToken);
+                result.put("expiresIn", expiresIn);
+                result.put("refreshToken", refreshToken);
+                result.put("openid", openid);
+                result.put("scope", scope);
+                return super.setResult(StatusCode.OK, result, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                String errMsg = resultJson.get("errmsg") == null ? "" : resultJson.get("errmsg").toString();
+                return super.setResult(Integer.parseInt(errCode), null, errMsg);
+            }
+        }else {
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }*/
+
+    }
 
     /**
      * 生成签名
