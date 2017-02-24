@@ -42,10 +42,20 @@ public class PaymentController extends BaseController{
                                 @RequestParam(value = "total_fee", required = false) String totalFee,
                                 @RequestParam(value = "payment_type", required = false) String paymentType,
                                 @RequestParam(value = "refund_type", required = false) String refundType,
-                                @RequestParam(value = "device_info", required = false) String deviceInfo){
+                                @RequestParam(value = "device_info", required = false) String deviceInfo,
+                                @RequestParam(value = "item_id", required = false) String itemId,
+                                @RequestParam(value = "user_id", required = false) String userId,
+                                @RequestParam(value = "hospital_id", required = false) String hospitalId,
+                                @RequestParam(value = "doctor_id", required = false) String doctorId,
+                                @RequestParam(value = "item_name", required = false) String itemName,
+                                @RequestParam(value = "user_phone", required = false) String userPhone,
+                                @RequestParam(value = "hospital_name", required = false) String hospitalName,
+                                @RequestParam(value = "doctor_name", required = false) String doctorName){
 
         if(StringUtil.isEmpty(orderSN) || StringUtil.isEmpty(payType) || StringUtil.isEmpty(totalFee) ||
-                StringUtil.isEmpty(paymentType)){
+                StringUtil.isEmpty(paymentType) || StringUtil.isEmpty(itemId) || StringUtil.isEmpty(hospitalId) ||
+                StringUtil.isEmpty(userId) || StringUtil.isEmpty(itemName) || StringUtil.isEmpty(hospitalName) ||
+                StringUtil.isEmpty(userPhone)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
@@ -89,6 +99,27 @@ public class PaymentController extends BaseController{
         if(!StringUtil.isEmpty(deviceInfo)){
             payment.setDeviceInfo(deviceInfo);
         }
+
+        if(StringUtil.isInteger(itemId) && StringUtil.isInteger(userId) && StringUtil.isInteger(hospitalId)){
+            payment.setItemId(Integer.parseInt(itemId));
+            payment.setItemName(itemName);
+            payment.setUserId(Integer.parseInt(userId));
+            payment.setUserPhone(userPhone);
+            payment.setHospitalId(Integer.parseInt(hospitalId));
+            payment.setHospitalName(hospitalName);
+        }else {
+            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+
+        if(!StringUtil.isEmpty(doctorId) && !StringUtil.isEmpty(doctorName)){
+            if(StringUtil.isInteger(doctorId)){
+                payment.setDoctorId(Integer.parseInt(doctorId));
+                payment.setDoctorName(doctorName);
+            }else {
+                return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            }
+        }
+
         payment.setCreateTime(new Date());
 
         int result = paymentService.insert(payment);
@@ -191,7 +222,7 @@ public class PaymentController extends BaseController{
 
         int result = paymentService.update(payment);
         if(result == 0){
-            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else if(result == 1){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else if(result == 2){
@@ -202,4 +233,7 @@ public class PaymentController extends BaseController{
         }
     }
 
+    public static void main(String[] args){
+        System.out.print(StringUtil.isNumeric("1.5"));
+    }
 }

@@ -21,7 +21,14 @@ public class RandomUtil {
      */
     public static String genTimeStamp(int length){
         String currentStamp = String.valueOf(System.currentTimeMillis());
-        return currentStamp.substring(0, length);
+
+        int strLeng = currentStamp.length();
+        if(strLeng > length){
+            return currentStamp.substring(strLeng-length);
+        }else {
+            return currentStamp;
+        }
+
     }
 
     /**
