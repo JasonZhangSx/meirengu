@@ -44,6 +44,7 @@ public class SignParamsUtils {
         Map<String, String> sParaNew = paraFilter(Params);
         //获取待签名字符串
         String preSignStr = createLinkString(sParaNew, appSecret);
+        LOGGER.info(">> sort params is {}", preSignStr);
         //获得签名验证结果
         return verifySign(preSignStr, sign);
     }
@@ -57,6 +58,7 @@ public class SignParamsUtils {
     public static boolean verifySign(String preSignStr, String sign){
         //指定为UTF-8编码
         String signCurrent = MD5Util.get32MD5(preSignStr).toUpperCase();
+        LOGGER.info(">> verifySign signCurrent is {}, sign is {}", new Object[]{signCurrent, sign});
         return sign.equals(signCurrent);
     }
 
