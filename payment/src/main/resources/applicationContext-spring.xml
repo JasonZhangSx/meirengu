@@ -13,6 +13,13 @@
        default-lazy-init="true">
 
     <description>Spring公共配置</description>
+
+    <!-- 允许使用注解配置事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <import resource="classpath:applicationContext-datasource.xml"/>
+    <import resource="classpath:applicationContext-mybatis.xml"/>
+
     <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
     <!-- 加入定制化包路径com.sample -->
     <!-- 主容器中排除controller -->
