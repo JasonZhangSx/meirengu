@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>微信支付测试</title>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+<h1>微信扫码支付：</h1>
+www.meirenguvip.com/payment/wx/unifiedorder?body=保妥适肉毒素（30单位/次）&out_trade_no=0214874107310427&total_fee=1&trade_type=MWEB&device_info=WEB&product_id=12
+<h2>公众号支付：</h2>
+<input type="button" onclick="jsApiCall()" value="支付">
+<script>
+
+    function jsApiCall(){
+        alert("calll wxpay ");
+        //body=保妥适肉毒素（30单位/次）&out_trade_no=0214874107310427&total_fee=1&trade_type=NATIVE&device_info=WEB&product_id=12
+        $.ajax({
+            type:'POST',
+            url:'http://localhost:8080/to/ajaxTest',
+            //url:'http://localhost:8080/wx/unifiedorder',
+            async:false,
+            cache:false,
+            contentType:"application/x-www-form-urlencoded; charset=utf-8",
+            data:{body:'保妥适肉毒素（30单位/次）', out_trade_no:"0214874107313455", total_fee:1,
+                trade_type:'JSAPI', device_info:'WEB', openid:'o4WEWwIpLToYvRGskYG28sUCiPzM',
+                item_id:'12', item_name:'保妥适肉毒素（30单位/次）', hospital_id:'49', hospital_name:'北京润美玉之光医疗美容门诊部',
+                user_id:'1', user_phone:'15011095069', doctor_id:'11', doctor_name:'唐振利'},
+            dataType: "jsonp",
+            jsonp: "jsonpCallback",
+            jsonpCallback:"success_jsonpCallback",
+            success: function (result){
+                alert(result);
+                if (result!=null){
+
+                }else {
+
+                }
+            },
+            error: function(e) {
+                alert(JSON.stringify(e));
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,8 +1,9 @@
-package com.meirengu.mall.controller;
+package com.meirengu.pay.controller;
 
 import com.meirengu.common.StatusCode;
-import com.meirengu.mall.model.Payment;
-import com.meirengu.mall.service.PaymentService;
+import com.meirengu.controller.BaseController;
+import com.meirengu.pay.model.Payment;
+import com.meirengu.pay.service.PaymentService;
 import com.meirengu.model.Result;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.meirengu.controller.BaseController;
 
 import java.util.Date;
 

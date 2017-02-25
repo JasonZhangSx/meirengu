@@ -2,13 +2,20 @@ package com.meirengu.mall.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.StatusCode;
+import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.MD5Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+
+import com.meirengu.controller.BaseController;
 
 /**
  * ${DESCRIPTION}
@@ -66,6 +73,20 @@ public class TestPageController extends BaseController{
                 }
             }
         }
+    }
+
+    @ResponseBody
+    @RequestMapping("ajaxTest")
+    public Result ajaxTest(HttpServletRequest request, HttpServletResponse response){
+
+        Enumeration<String> i = request.getHeaderNames();
+
+        String dateType = request.getParameter("dateType");
+        String contentType = request.getParameter("contentType");
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", 1);
+        map.put("b", 3);
+        return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK) );
     }
 
 

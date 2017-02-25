@@ -1,4 +1,4 @@
-package com.meirengu.mall.model;
+package com.meirengu.pay.model;
 
 import com.meirengu.model.BaseObject;
 

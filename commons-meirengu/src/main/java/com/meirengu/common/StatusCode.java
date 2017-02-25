@@ -51,7 +51,10 @@ public class StatusCode {
     public static final int MB_ERROR_DELETE = 40304;
     public static final int MB_ERROR = 40305;
     //40400-40500//shopping_mall
-
+    public static final int SERVICE_CODE_USED = 40400;
+    public static final int SERVICE_CODE_NOT_EXISTED = 40401;
+    public static final int HOSPITAL_NOT_PERMITTED = 40402;
+    public static final int SERVICE_CODE_EXPIRE = 40403;
     //40500-40600//crowd_funding
 
     //40600-40700//payment
@@ -169,7 +172,10 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.MB_ERROR_DELETE, "删除失败,请重试.");
         codeMsgMap.put(StatusCode.MB_ERROR, "操作失败");
         //40400-40500//shopping_mall
-
+        codeMsgMap.put(StatusCode.SERVICE_CODE_USED, "服务码已使用");
+        codeMsgMap.put(StatusCode.SERVICE_CODE_NOT_EXISTED, "服务码不存在");
+        codeMsgMap.put(StatusCode.HOSPITAL_NOT_PERMITTED, "医院无权限验证服务码");
+        codeMsgMap.put(StatusCode.SERVICE_CODE_EXPIRE, "服务码已过期");
         //40500-40600//crowd_funding
 
         //40600-40700//payment
