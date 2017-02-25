@@ -357,7 +357,7 @@ public class RedisClient {
     
     public static void main(String[] args) {
         JedisPoolConfig config = new JedisPoolConfig();
-        RedisClient redisService = new RedisClient(config, "120.27.37.54:6379");
+        RedisClient redisService = new RedisClient(config, "192.168.0.135:6379");
         
         ShardedJedis jedis = redisService.getShardedJedisPool().getResource();
         String key = "test_incr1";
