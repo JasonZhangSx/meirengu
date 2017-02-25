@@ -46,11 +46,11 @@ public class ServiceCodeController extends BaseController{
         if(StringUtil.isEmpty(code) || StringUtil.isEmpty(hospitalId)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        if(!StringUtil.isInteger(code) || !StringUtil.isInteger(hospitalId)){
+        if(!StringUtil.isInteger(hospitalId)){
             return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
 
-        int result = serviceCodeService.validateCode(Integer.parseInt(code), Integer.parseInt(hospitalId));
+        int result = serviceCodeService.validateCode(code, Integer.parseInt(hospitalId));
         LOGGER.info(">> validate service code return : {}", result);
         // 0抛出异常 1验证通过 2code已使用 3code不存在 4未使用的code不存在 5该医院无权限验证 6服务码过期
         switch (result){
@@ -65,7 +65,7 @@ public class ServiceCodeController extends BaseController{
             case 4:
                 return super.setResult(StatusCode.SERVICE_CODE_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.SERVICE_CODE_NOT_EXISTED));
             case 5:
-                return super.setResult(StatusCode.SERVICE_CODE_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.SERVICE_CODE_NOT_EXISTED));
+                return super.setResult(StatusCode.HOSPITAL_NOT_PERMITTED, null, StatusCode.codeMsgMap.get(StatusCode.HOSPITAL_NOT_PERMITTED));
             case 6:
                 return super.setResult(StatusCode.SERVICE_CODE_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.SERVICE_CODE_EXPIRE));
         }
@@ -77,41 +77,29 @@ public class ServiceCodeController extends BaseController{
      * @param hospitalId
      * @param orderSN
      * @param userPhone
-     * @param itemDesc
-     * @param originalPrice
-     * @param orderPrice
-     * @param restPrice
      * @param itemId
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "create", method = RequestMethod.POST)
-    public Result create(@RequestParam(value = "hospital_id", required = false) String hospitalId,
+    @RequestMapping(value = "generate", method = RequestMethod.POST)
+    public Result generate(@RequestParam(value = "hospital_id", required = false) String hospitalId,
                          @RequestParam(value = "order_sn", required = false) String orderSN,
                          @RequestParam(value = "user_phone", required = false) String userPhone,
-                         @RequestParam(value = "item_desc", required = false) String itemDesc,
-                         @RequestParam(value = "original_price", required = false) String originalPrice,
-                         @RequestParam(value = "order_price", required = false) String orderPrice,
-                         @RequestParam(value = "rest_price", required = false) String restPrice,
                          @RequestParam(value = "item_id", required = false) String itemId){
 
-        if(StringUtil.isEmpty(hospitalId) || StringUtil.isEmpty(orderSN) || StringUtil.isEmpty(userPhone) ||
-                StringUtil.isEmpty(itemDesc) || StringUtil.isEmpty(originalPrice) || StringUtil.isEmpty(orderPrice) ||
-                StringUtil.isEmpty(restPrice) || StringUtil.isEmpty(itemId)){
+        if(StringUtil.isEmpty(hospitalId) || StringUtil.isEmpty(orderSN) || StringUtil.isEmpty(userPhone) || StringUtil.isEmpty(itemId)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
-        if(!StringUtil.isInteger(hospitalId) || !StringUtil.isNumeric(originalPrice) || !StringUtil.isNumeric(orderPrice) || !StringUtil.isNumeric(restPrice) || !StringUtil.isInteger(itemId)){
+        if(!StringUtil.isInteger(hospitalId) || !StringUtil.isInteger(itemId)){
             return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
 
-        String code = serviceCodeService.create(Integer.parseInt(hospitalId), orderSN, userPhone, itemDesc, Double.parseDouble(originalPrice), Double.parseDouble(orderPrice), Double.parseDouble(restPrice), Integer.parseInt(itemId));
-        if(StringUtil.isEmpty(code)){
+        Map<String, Object> resultMap = serviceCodeService.generate(Integer.parseInt(hospitalId), orderSN, userPhone, Integer.parseInt(itemId));
+        if(StringUtil.isEmpty(resultMap)){
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }else {
-            Map<String, Object> result = new HashMap<>();
-            result.put("serviceCode", code);
-            return super.setResult(StatusCode.OK, result, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
 
     }

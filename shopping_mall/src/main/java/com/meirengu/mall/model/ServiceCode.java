@@ -1,5 +1,6 @@
 package com.meirengu.mall.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ public class ServiceCode {
 
     private Integer id;
     /** 服务码 */
-    private Integer code;
+    private String code;
     /** 医院id */
     private Integer hospitalId;
     /** 项目id */
@@ -23,17 +24,17 @@ public class ServiceCode {
     /** 项目描述（标题、简介等） */
     private String itemDesc;
     /** 医院价格 */
-    private Double originalPrice;
+    private BigDecimal originalPrice;
     /** 预约金 */
-    private Double orderPrice;
+    private BigDecimal orderPrice;
     /** 到院再支付 */
-    private Double restPrice;
+    private BigDecimal restPrice;
     /** 创建时间 */
     private Date createTime;
     /** 失效时间 */
     private Date expireTime;
     /** 是否使用 */
-    private Integer is_use;
+    private Integer isUse;
     /** 使用时间 */
     private Date usingTime;
 
@@ -45,11 +46,11 @@ public class ServiceCode {
         this.id = id;
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -93,27 +94,27 @@ public class ServiceCode {
         this.itemDesc = itemDesc;
     }
 
-    public Double getOriginalPrice() {
+    public BigDecimal getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(Double originalPrice) {
+    public void setOriginalPrice(BigDecimal originalPrice) {
         this.originalPrice = originalPrice;
     }
 
-    public Double getOrderPrice() {
+    public BigDecimal getOrderPrice() {
         return orderPrice;
     }
 
-    public void setOrderPrice(Double orderPrice) {
+    public void setOrderPrice(BigDecimal orderPrice) {
         this.orderPrice = orderPrice;
     }
 
-    public Double getRestPrice() {
+    public BigDecimal getRestPrice() {
         return restPrice;
     }
 
-    public void setRestPrice(Double restPrice) {
+    public void setRestPrice(BigDecimal restPrice) {
         this.restPrice = restPrice;
     }
 
@@ -133,12 +134,12 @@ public class ServiceCode {
         this.expireTime = expireTime;
     }
 
-    public Integer getIs_use() {
-        return is_use;
+    public Integer getIsUse() {
+        return isUse;
     }
 
-    public void setIs_use(Integer is_use) {
-        this.is_use = is_use;
+    public void setIsUse(Integer isUse) {
+        this.isUse = isUse;
     }
 
     public Date getUsingTime() {

@@ -15,8 +15,7 @@ public interface ServiceCodeService {
      * 生成服务码
      * @return
      */
-    String create(int hospitalId, String orderSN, String userPhone, String itemDesc,
-                  double originalPrice, double orderPrice, double restPrice, int itemId);
+    Map<String, Object> generate(int hospitalId, String orderSN, String userPhone, int itemId);
 
     /**
      * 查询服务码列表
@@ -29,12 +28,12 @@ public interface ServiceCodeService {
      * @param code
      * @return
      */
-    int validateCode(int code, int hospitalId);
+    int validateCode(String code, int hospitalId);
 
     /**
      * 通过code获取serviceCode详情
      * @param code
      * @return
      */
-    ServiceCode getDetailByCode(int code);
+    ServiceCode getDetailByCode(String code);
 }

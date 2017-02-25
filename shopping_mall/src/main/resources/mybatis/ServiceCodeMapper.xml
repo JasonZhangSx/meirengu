@@ -4,7 +4,7 @@
 
     <sql id="table_name">service_code</sql>
     <sql id="select_columns">
-        id, code, order_sn as orderSN, user_phone as userPhone, item_desc as itemDesc,
+        id, code, hospital_id as hospitalId, item_id as itemId, order_sn as orderSN, user_phone as userPhone, item_desc as itemDesc,
         original_price as originalPrice, order_price as orderPrice, rest_price as restPrice,
         create_time as createTime, expire_time as expireTime, is_use as isUse, using_time as usingTime
     </sql>
@@ -22,7 +22,7 @@
         UPDATE <include refid="table_name" /> SET is_use=#{isUse}, using_time=#{usingTime} WHERE code=#{code} AND is_use=0
     </update>
 
-    <select id="getDetailByCode" parameterType="Integer" resultType="serviceCode" >
+    <select id="getDetailByCode" parameterType="String" resultType="serviceCode" >
         SELECT <include refid="select_columns" /> FROM <include refid="table_name" />
         WHERE code=#{code}
     </select>

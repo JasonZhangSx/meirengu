@@ -37,5 +37,5 @@ public interface ServiceCodeDao {
      * @param code
      * @return
      */
-    ServiceCode getDetailByCode(int code);
+    ServiceCode getDetailByCode(String code);
 }
