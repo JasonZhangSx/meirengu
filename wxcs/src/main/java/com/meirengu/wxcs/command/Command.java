@@ -159,14 +159,18 @@ public abstract class Command {
                 try {
                     commandLogger.debug("result:{}", result);
                     JSONObject jsonResult = JSONObject.parseObject(JSON.toJSONString(result));
-                    commandLogger.debug("write to client({}, {}):\n{}",  new Object[]{request.getRemoteAddr(), request.getRequestURL(), jsonResult});
+                    commandLogger.debug("write to client({}, {}, {}):\n{}",  new Object[]{contentType, request.getRemoteAddr(), request.getRequestURL(), jsonResult});
                     out = response.getWriter();
-                    if ("jsonp".equals(contentType)) {
+                    /*if ("jsonp".equals(contentType)) {
                         String jsonpCallback = request.getParameter("jsonpCallback");
+                        commandLogger.info("jsonpCallback << {}", jsonpCallback+"("+jsonResult.toString()+")");
                         out.write(jsonpCallback+"("+jsonResult.toString()+")");
                     }else {
                         out.print(jsonResult.toString());
-                    }
+                    }*/
+                    String jsonpCallback = request.getParameter("jsonpCallback");
+                    commandLogger.info("jsonpCallback << {}", jsonpCallback+"("+jsonResult.toString()+")");
+                    out.write(jsonpCallback+"("+jsonResult.toString()+")");
                     out.flush();
                 } catch (Exception e) {
                     commandLogger.error("exception occur: {}", e.toString());
@@ -201,6 +205,7 @@ public abstract class Command {
 
     public final void doCommand() {
         contentType = getParameter("contentType");
+        commandLogger.info(">> contentType is {}", contentType);
         if (!responseContentTypes.containsKey(contentType)) {
             contentType = "json";
         }
