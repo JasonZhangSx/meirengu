@@ -18,6 +18,14 @@
         <result column="modify_time" property="modifyTime" javaType="Date" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <sql id="select_columns">
+        payment_id as id, item_id as itemId, item_name as itemName, user_id as userId, user_phone as userPhone,
+        hospital_id as hospitalId, hospital_name as hospitalName, doctor_id as doctorId, doctor_name as doctor_name,
+        order_sn as orderSN, transaction_sn as transactionSN, pay_type as payType, total_fee as totalFee, bank_type as bankType,
+        total_fee as totalFee, bank_type as bankType, payment_type as paymentType, status, refund_type as refundType,
+        device_info as deviceInfo, return_msg as returnMsg, create_time as createTime, modify_time as modifyTime
+    </sql>
+
     <insert id="insert" parameterType="payment" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO payment
         (order_sn, pay_type, total_fee, payment_type,
@@ -83,4 +91,18 @@
             and payment_type=#{paymentType}
         </if>
     </update>
+
+    <select id="detail" parameterType="payment" resultType="payment">
+
+        select <include refid="select_columns"/> from payment where 1=1
+        <if test="transactionSN != null and transactionSN != ''">
+            and transaction_sn=#{transactionSN}
+        </if>
+        <if test="orderSN != null and orderSN != ''">
+            and order_sn=#{orderSN}
+        </if>
+        <if test="id != null and id != '' and id != 0">
+            and payment_id=#{id}
+        </if>
+    </select>
 </mapper>

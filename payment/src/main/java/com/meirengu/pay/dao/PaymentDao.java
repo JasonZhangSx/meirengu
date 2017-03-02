@@ -12,4 +12,6 @@ public interface PaymentDao {
     int insert(Payment payment);
 
     int update(Payment payment);
+
+    Payment detail(Payment payment);
 }

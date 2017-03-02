@@ -27,6 +27,7 @@ import com.meirengu.pay.vo.WxRefundSendData;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.MD5Util;
 import com.meirengu.utils.StringUtil;
+import com.meirengu.utils.ValidatorUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -348,8 +349,10 @@ public class WebContent1 {
         JSONObject json = JSONObject.parseObject(s);
         System.out.print(json.get("code"));*/
 
-        int i=234567;
-        System.out.println(i/100f);
+        /*int i=234567;
+        System.out.println(i/100f);*/
+
+        System.out.println(ValidatorUtil.isMobile("17600025199"));
     }
 
     public static String get32MD5(String s) {
