@@ -60,6 +60,7 @@ public class CheckCodeController extends BaseController {
                             ("EXPIRE_CHECKCODE_LOGIN")));
                     checkCode.setCreateTime(nowTime);
                     checkCode.setExpireTime(expireTime);
+                    checkCode.setIp(StringUtils.defaultString(ip, ""));
                     checkCode.setUse(false);
                     int createResult = checkCodeService.create(checkCode);
                     logger.info("checkCodeService.create result <==={}", createResult);
