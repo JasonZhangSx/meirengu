@@ -141,6 +141,7 @@
       i.subtitle 'subtitle',
       i.item_image 'itemImage',
       i.item_image_more 'itemImageMore',
+      i.validity_periods 'validityPeriods',
       i.item_details 'itemDetails',
       i.doctor_id 'doctorId',
       d.doctor_name	'doctorName',
@@ -149,7 +150,8 @@
       d.mobile 'mobile',
       d.doctor_profile 'doctorProfile',
       i.hospital_id 'hospitalId',
-      h.hospital_name 'hospitalName'
+      h.hospital_name 'hospitalName',
+      h.hospital_tel 'hospitalTel'
     FROM
       item i
     LEFT JOIN doctor d ON i.doctor_id = d.doctor_id

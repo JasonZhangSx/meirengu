@@ -6,6 +6,7 @@
     <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
     <result column="doctor_name" property="doctorName" jdbcType="VARCHAR" />
     <result column="doctor_profile" property="doctorProfile" jdbcType="VARCHAR" />
+    <result column="doctor_detail" property="doctorDetail" jdbcType="VARCHAR" />
     <result column="doctor_pic" property="doctorPic" jdbcType="VARCHAR" />
     <result column="doctor_title" property="doctorTitle" jdbcType="VARCHAR" />
     <result column="doctor_vice_title" property="doctorViceTitle" jdbcType="VARCHAR" />
@@ -39,7 +40,7 @@
     <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    doctor_id, hospital_id, doctor_name, doctor_profile, doctor_pic, doctor_title, doctor_vice_title,
+    doctor_id, hospital_id, doctor_name, doctor_profile,doctor_detail, doctor_pic, doctor_title, doctor_vice_title,
     doctor_label, goodat, cultural_top, cultural_experience, certificate_no, certificate_pic,
     profession_experience, academic_achievement, job_duration, country, province, city,
     nativecity, sex, idcard, mobile, email, qq, weixin, createby, createdate, lasteditby,
@@ -92,6 +93,7 @@
       d.doctor_id 'doctorId',
       d.doctor_name 'doctorName',
 	  d.doctor_vice_title 'doctorViceTitle',
+	  d.doctor_detail 'doctorDetail',
       d.hospital_id 'hospitalId',
       d.doctor_pic 'doctorPic',
       (SELECT h.hospital_name FROM hospital h WHERE d.hospital_id = h.hospital_id) 'hospitalName',

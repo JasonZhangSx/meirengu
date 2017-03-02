@@ -16,6 +16,8 @@ public class Doctor implements AnnotationValidable {
     private String doctorName;
     //医生简介
     private String doctorProfile;
+    //医生详情
+    private String doctorDetail;
     //医生照片
     private String doctorPic;
     //医生职称
@@ -375,6 +377,14 @@ public class Doctor implements AnnotationValidable {
         this.auditTime = auditTime;
     }
 
+    public String getDoctorDetail() {
+        return doctorDetail;
+    }
+
+    public void setDoctorDetail(String doctorDetail) {
+        this.doctorDetail = doctorDetail;
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
@@ -382,6 +392,7 @@ public class Doctor implements AnnotationValidable {
                 ", hospitalId=" + hospitalId +
                 ", doctorName='" + doctorName + '\'' +
                 ", doctorProfile='" + doctorProfile + '\'' +
+                ", doctorDetail='" + doctorDetail + '\'' +
                 ", doctorPic='" + doctorPic + '\'' +
                 ", doctorTitle='" + doctorTitle + '\'' +
                 ", doctorViceTitle='" + doctorViceTitle + '\'' +
