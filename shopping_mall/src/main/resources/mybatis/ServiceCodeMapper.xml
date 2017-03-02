@@ -4,17 +4,17 @@
 
     <sql id="table_name">service_code</sql>
     <sql id="select_columns">
-        id, code, hospital_id as hospitalId, item_id as itemId, order_sn as orderSN, user_phone as userPhone, item_desc as itemDesc,
+        id, code, hospital_id as hospitalId, hospital_tel as hospitalTel, item_id as itemId, order_sn as orderSN, user_phone as userPhone, item_desc as itemDesc,
         original_price as originalPrice, order_price as orderPrice, rest_price as restPrice,
         create_time as createTime, expire_time as expireTime, is_use as isUse, using_time as usingTime
     </sql>
 
     <insert id="insert" parameterType="serviceCode" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO <include refid="table_name" />
-        (code, hospital_id, item_id, order_sn, user_phone, item_desc, original_price, order_price,
+        (code, hospital_id, hospital_tel, item_id, order_sn, user_phone, item_desc, original_price, order_price,
         rest_price, create_time, expire_time, is_use)
         VALUES
-        (#{code}, #{hospitalId}, #{itemId}, #{orderSN}, #{userPhone}, #{itemDesc}, #{originalPrice}, #{orderPrice},
+        (#{code}, #{hospitalId}, #{hospitalTel}, #{itemId}, #{orderSN}, #{userPhone}, #{itemDesc}, #{originalPrice}, #{orderPrice},
         #{restPrice}, #{createTime}, #{expireTime}, #{isUse})
     </insert>
 
@@ -25,5 +25,10 @@
     <select id="getDetailByCode" parameterType="String" resultType="serviceCode" >
         SELECT <include refid="select_columns" /> FROM <include refid="table_name" />
         WHERE code=#{code}
+    </select>
+
+    <select id="getDetailByOrderSN" parameterType="String" resultType="serviceCode" >
+        SELECT <include refid="select_columns" /> FROM <include refid="table_name" />
+        WHERE order_sn=#{orderSN}
     </select>
 </mapper>

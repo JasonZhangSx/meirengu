@@ -21,9 +21,16 @@ public interface RefundDao extends PageDao<Refund>{
 
     /**
      * 退款记录详情
-     * @param refundSN
+     * @param refundId
      * @return
      */
-    Refund detail(String refundSN);
+    Refund detail(Integer refundId);
+
+    /**
+     * 修改退款记录状态
+     * @param refund
+     * @return
+     */
+    int updateStatus(Refund refund);
 
 }

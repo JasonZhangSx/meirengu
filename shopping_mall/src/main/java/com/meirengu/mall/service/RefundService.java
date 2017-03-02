@@ -1,6 +1,7 @@
 package com.meirengu.mall.service;
 
 import com.meirengu.mall.model.Order;
+import com.meirengu.mall.model.Refund;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +22,9 @@ public interface RefundService extends PageBaseService<Order>{
      * @return 返回退款的金额
      */
     Map<String, Object> refundApply(int orderId, int userId, String userMessage, String refundMessage);
+
+    boolean agreeRefund(int refundId);
+
+    boolean refuseRefund(int refundId);
+
 }

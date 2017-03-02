@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.mall.dao.ServiceCodeDao;
+import com.meirengu.mall.model.Order;
 import com.meirengu.mall.model.ServiceCode;
+import com.meirengu.mall.service.OrderService;
 import com.meirengu.mall.service.ServiceCodeService;
 import com.meirengu.mall.utils.ConfigUtil;
 import com.meirengu.mall.utils.OrderSNUtils;
@@ -37,17 +39,29 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
     @Autowired
     private ServiceCodeDao serviceCodeDao;
 
+    @Autowired
+    private OrderService orderService;
+
     @Override
     public Map<String, Object> generate(int hospitalId, String orderSN, String userPhone, int itemId) {
 
-        Map<String, Object> resultMap = new HashMap<>();
-        ServiceCode serviceCode = new ServiceCode();
-        Map<String, String> params = new HashMap<>();
-        params.put("itemId", String.valueOf(itemId));
-        HttpUtil.HttpResult hr = HttpUtil.doGet(ConfigUtil.getValue("item.detail.url")+"?itemId="+itemId, params);
-        int statusCode = hr.getStatusCode();
-
         try {
+            Map<String, Object> resultMap = new HashMap<>();
+            //先查一下该订单号有无服务码，如果有，就直接返回，没有就插入
+            ServiceCode sc =  getDetailByOrderSN(orderSN);
+            if(sc != null){
+                resultMap.put("serviceCode", sc.getCode());
+                resultMap.put("hospitalTel", sc.getHospitalTel());
+                resultMap.put("expireTime", sc.getExpireTime());
+                return resultMap;
+            }
+
+            ServiceCode serviceCode = new ServiceCode();
+            Map<String, String> params = new HashMap<>();
+            params.put("itemId", String.valueOf(itemId));
+            HttpUtil.HttpResult hr = HttpUtil.doGet(ConfigUtil.getValue("item.detail.url")+"?itemId="+itemId, params);
+            int statusCode = hr.getStatusCode();
+
             if(statusCode == 200){
                 String content = hr.getContent();
                 JSONObject resultJson = JSON.parseObject(content);
@@ -71,7 +85,7 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
                     //获取项目的有效期
                     int validityPeriods = item.get("validityPeriods") == null ? 0:(int)item.get("validityPeriods");
                     Date createTime = new Date();
-                    String expireTimeTemp = DateAndTime.dateAdd("dd", createTime.toLocaleString(), validityPeriods);
+                    String expireTimeTemp = DateAndTime.dateAdd("dd", DateAndTime.convertDateToString(createTime, "yyyy-MM-dd HH:mm:ss"), validityPeriods);
                     Date expireTime = DateAndTime.convertStringToDate(expireTimeTemp);
                     serviceCode.setCreateTime(createTime);
                     serviceCode.setExpireTime(expireTime);
@@ -86,8 +100,9 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
                     String itemName = item.get("itemName") == null ? "" : item.get("itemName").toString();
                     serviceCode.setItemDesc(itemName);
                     String hospitalTel = item.get("hospitalTel") == null ? "" : item.get("hospitalTel").toString();
+                    serviceCode.setHospitalTel(hospitalTel);
                     resultMap.put("hospitalTel", hospitalTel);
-                    resultMap.put("expireTime", expireTime);
+                    resultMap.put("expireTime", DateAndTime.convertDateToString(expireTime, "yyyy-MM-dd HH:mm:ss"));
                 }else {
                     LOGGER.info(">> get item detail fail. itemId is {}, return code is {}", new Object[]{itemId, hrCode});
                     return null;
@@ -96,6 +111,7 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
                 LOGGER.info(">> get item detail fail......");
                 return null;
             }
+
             //生成服务码
             String code = OrderSNUtils.getServiceCode();
 
@@ -146,12 +162,12 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
                     //已使用
                     return 2;
                 }
-                if(sc.getHospitalId() != hospitalId){
+                /*if(sc.getHospitalId() != hospitalId){
                     //该医院无权限验证
                     return 5;
-                }
+                }*/
                 Date expireTime = sc.getExpireTime();
-                int dateDiff = DateAndTime.dateDiff("ss", currentTime.toLocaleString(), expireTime.toLocaleString());
+                int dateDiff = DateAndTime.dateDiff("ss", DateAndTime.convertDateToString(currentTime, "yyyy-MM-dd HH:mm:ss"), DateAndTime.convertDateToString(expireTime, "yyyy-MM-dd HH:mm:ss"));
                 if(dateDiff < 0){
                     //服务码过期
                     return 6;
@@ -168,7 +184,19 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
 
             int result = serviceCodeDao.validateCode(serviceCode);
             if(result > 0){
-                return 1;
+                //修改订单状态为已使用
+                String orderSN = sc.getOrderSN();
+                Order order = new Order();
+                order.setUnionSN(orderSN);
+                order.setOrderState(5);
+                order.setFinishedTime(new Date());
+                int i = orderService.modifyStatus(order);
+                if(i == 1){
+                    return 1;
+                }else {
+                    LOGGER.info(">> modify order status fail....");
+                    return 0;
+                }
             }else {
                 //未使用的code不存在
                 return 4;
@@ -183,5 +211,10 @@ public class ServiceCodeServiceImpl implements ServiceCodeService{
     @Override
     public ServiceCode getDetailByCode(String code) {
         return serviceCodeDao.getDetailByCode(code);
+    }
+
+    @Override
+    public ServiceCode getDetailByOrderSN(String orderSN) {
+        return serviceCodeDao.getDetailByOrderSN(orderSN);
     }
 }

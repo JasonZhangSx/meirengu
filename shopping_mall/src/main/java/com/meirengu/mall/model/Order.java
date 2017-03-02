@@ -41,6 +41,8 @@ public class Order extends BaseEntity{
     private String unionSN;
     /** 订单编号，外部支付时使用，有些外部支付系统要求特定的订单编号 **/
     private String outSN;
+    /** 需要在某个时间内支付完成，否则过期 */
+    private Date needPayTime;
     /** 支付（付款）时间 **/
     private Date paymentTime;
     /** 支付留言 **/
@@ -298,5 +300,13 @@ public class Order extends BaseEntity{
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public Date getNeedPayTime() {
+        return needPayTime;
+    }
+
+    public void setNeedPayTime(Date needPayTime) {
+        this.needPayTime = needPayTime;
     }
 }

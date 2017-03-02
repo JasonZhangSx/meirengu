@@ -15,6 +15,8 @@ public class ServiceCode {
     private String code;
     /** 医院id */
     private Integer hospitalId;
+    /** 医院电话 */
+    private String hospitalTel;
     /** 项目id */
     private Integer itemId;
     /** 订单号 */
@@ -60,6 +62,14 @@ public class ServiceCode {
 
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    public String getHospitalTel() {
+        return hospitalTel;
+    }
+
+    public void setHospitalTel(String hospitalTel) {
+        this.hospitalTel = hospitalTel;
     }
 
     public Integer getItemId() {

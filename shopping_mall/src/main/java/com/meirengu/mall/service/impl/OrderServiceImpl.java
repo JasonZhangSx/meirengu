@@ -13,6 +13,7 @@ import com.meirengu.mall.service.PageService;
 import com.meirengu.mall.service.PaymentService;
 import com.meirengu.mall.utils.ConfigUtil;
 import com.meirengu.mall.utils.OrderSNUtils;
+import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +101,11 @@ public class OrderServiceImpl implements OrderService{
                 order.setRefundState(Constants.REFUND_STATE_WAIT);
                 order.setFlag(Constants.DEL_FLAG_FALSE);
                 order.setOrderFrom(orderFrom);
+                Date addTime = new Date();
+                order.setAddTime(addTime);
+                String needPayTimeStr = DateAndTime.dateAdd("HH", DateAndTime.convertDateToString(addTime, "yyyy-MM-dd HH:mm:ss"), Integer.parseInt(ConfigUtil.getValue("order.expire.time")));
+                Date needPayTime = DateAndTime.convertStringToDate(needPayTimeStr);
+                order.setNeedPayTime(needPayTime);
 
                 int orderAddNum = orderDao.addOrder(order);
                 //当订单插入成功后，再进行订单项目关联插入
@@ -213,12 +219,13 @@ public class OrderServiceImpl implements OrderService{
                 return 2;
             }
         }catch (RuntimeException e){
-            e.printStackTrace();
+            LOGGER.error(">> modify order status throw exception: {}", e);
             return 0;
         }
     }
 
     @Override
+    @Transactional(readOnly = false)
     public int paySuccess(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg) {
         //先修改订单状态，然后修改支付状态
         Order order = new Order();
@@ -228,24 +235,14 @@ public class OrderServiceImpl implements OrderService{
         int modifyNum = modifyStatus(order);
         //修改订单状态成功
         if(modifyNum > 0){
-            Payment payment = new Payment();
-            payment.setOrderSN(unionSN);
-            payment.setTransactionSN(transactionSN);
-            payment.setBankType(bankType);
-            payment.setDeviceInfo(deviceInfo);
-            payment.setReturnMsg(returnMsg);
-            payment.setStatus(2);
-            int updateNum = paymentService.update(payment);
-            if(updateNum > 0){
-                //付款成功
-                return 1;
-            }
+            return 1;
         }
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         return 0;
     }
 
     @Override
+    @Transactional(readOnly = false)
     public int payFail(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg) {
         //先修改订单状态，然后修改支付状态
         Order order = new Order();
@@ -255,18 +252,7 @@ public class OrderServiceImpl implements OrderService{
         int modifyNum = modifyStatus(order);
         //修改订单状态成功
         if(modifyNum > 0){
-            Payment payment = new Payment();
-            payment.setOrderSN(unionSN);
-            payment.setTransactionSN(transactionSN);
-            payment.setBankType(bankType);
-            payment.setDeviceInfo(deviceInfo);
-            payment.setReturnMsg(returnMsg);
-            payment.setStatus(3);
-            int updateNum = paymentService.update(payment);
-            if(updateNum > 0){
-                //付款失败
-                return 1;
-            }
+            return 1;
         }
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         return 0;
