@@ -12,6 +12,22 @@ import java.util.Date;
 public class Payment extends BaseObject{
 
     private Integer id;
+    /** 服务项目id */
+    private Integer itemId;
+    /** 服务项目名称 */
+    private String itemName;
+    /** 用户id */
+    private Integer userId;
+    /** 用户手机号 */
+    private String userPhone;
+    /** 医院Id */
+    private Integer hospitalId;
+    /** 医院名称 */
+    private String hospitalName;
+    /** 医生id */
+    private Integer doctorId;
+    /** 医生名称 */
+    private String doctorName;
     /** 商城订单号 */
     private String orderSN;
     /** 第三方订单号 */
@@ -139,5 +155,69 @@ public class Payment extends BaseObject{
 
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+
+    public Integer getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Integer doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 }

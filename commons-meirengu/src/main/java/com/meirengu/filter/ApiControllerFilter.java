@@ -35,7 +35,7 @@ public class ApiControllerFilter extends OncePerRequestFilter{
         String requestURL = httpServletRequest.getRequestURI();
         //获取请求的ip地址
         String ip = RequestUtil.getIpAddr(httpServletRequest);
-        LOGGER.info("request api filter >> ip: {}, url: {}", new Object[]{ip, requestURL});
+        LOGGER.info("request api filter >> ip: {}, url: {}, params: {}", new Object[]{ip, requestURL, JSON.toJSON(httpServletRequest.getParameterMap())});
         //ip过滤
         if(ConfigUtil.getConfig("api.filter.ip").contains(ip)){
             filterChain.doFilter(httpServletRequest, httpServletResponse);

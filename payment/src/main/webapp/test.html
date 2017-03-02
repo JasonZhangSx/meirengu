@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>微信支付测试</title>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+<h1>微信扫码支付：</h1>
+www.meirenguvip.com/payment/wx/unifiedorder?body=保妥适肉毒素（30单位/次）&out_trade_no=0214874107310427&total_fee=1&trade_type=MWEB&device_info=WEB&product_id=12
+<h2>公众号支付：</h2>
+<input type="button" onclick="jsApiCall()" value="支付">
+<script>
+
+    jQuery(document).ready(function() {
+        var url_ = encodeURIComponent(window.location.href);
+        $.ajax({
+            type : "get",
+            async : false,
+            url : "http://www.meirenguvip.com/wxcs/service/config?url="+url_,
+            dataType: "jsonp",
+            jsonp: "jsonpCallback",
+            jsonpCallback:"success_jsonpCallback",
+            success : function(json) {
+                console.log("json: "+JSON.stringify(json));
+                wx.config({
+                    debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId : "wx22ae3075d64a4f81", // 必填，公众号的唯一标识
+                    timestamp : json.timestamp, // 必填，生成签名的时间戳
+                    nonceStr : json.noncestr, // 必填，生成签名的随机串
+                    signature : json.signature,// 必填，签名
+                    jsApiList: ['checkJsApi',
+                        'openLocation',
+                        'getLocation',
+                        'chooseWXPay']
+                    // 必填，需要使用的JS接口列表
+                });
+            }
+
+        });
+    });
+
+    function jsApiCall(){
+        alert("calll wxpay ");
+        //body=保妥适肉毒素（30单位/次）&out_trade_no=0214874107310427&total_fee=1&trade_type=NATIVE&device_info=WEB&product_id=12
+        $.ajax({
+            type:'POST',
+            url:'http://www.meirenguvip.com/payment/wx/unifiedorder',
+            //url:'http://localhost:8080/wx/unifiedorder',
+            async:false,
+            cache:false,
+            contentType:"application/x-www-form-urlencoded; charset=utf-8",
+            data:{body:'保妥适肉毒素（30单位/次）', out_trade_no:"0214874107313455", total_fee:1,
+                trade_type:'JSAPI', device_info:'WEB', openid:'o4WEWwIpLToYvRGskYG28sUCiPzM',
+                item_id:'12', item_name:'保妥适肉毒素（30单位/次）', hospital_id:'49', hospital_name:'北京润美玉之光医疗美容门诊部',
+                user_id:'1', user_phone:'15011095069', doctor_id:'11', doctor_name:'唐振利'},
+            //dataType:'jsonp',
+            success: function (result){
+                if (result!=null){
+                    /*alert(result.data.jsPayParams.appId);
+                    alert(result.data.jsPayParams.timeStamp);
+                    alert(result.data.jsPayParams.nonceStr);
+                    alert(result.data.jsPayParams.packages);
+                    alert(result.data.jsPayParams.signType);
+                    alert(result.data.jsPayParams.paySign);*/
+                    //调起微信支付
+                    wx.chooseWXPay({
+                        timestamp: result.data.jsPayParams.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                        nonceStr: result.data.jsPayParams.nonceStr, // 支付签名随机串，不长于 32 位
+                        package: result.data.jsPayParams.packages, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                        signType: result.data.jsPayParams.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                        paySign: result.data.jsPayParams.paySign, // 支付签名
+                        error:function(){
+                            alert("error");
+                        },
+                        success: function (res) {
+                            // 支付成功后的回调函数
+                            alert(JSON.stringify(res));
+                        }
+                    });
+                }else {
+
+                }
+            },
+            error: function(e) {
+                alert(JSON.stringify(e));
+            }
+        });
+    }
+</script>
+</body>
+</html>

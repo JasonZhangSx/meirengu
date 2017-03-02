@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,9 @@ public class PaymentUtils {
      * @param deviceInfo
      * @return
      */
-    public static boolean insertPayment(String orderSN, String payType, String totalFee, String paymentType, String refundType, String deviceInfo){
+    public static boolean insertPayment(String orderSN, String payType, String totalFee, String paymentType, String refundType, String deviceInfo,
+                                        String itemId, String itemName, String userId, String userPhone, String hospitalId, String hospitalName,
+                                        String doctorId, String doctorName){
 
         Map<String, String> params = new HashMap<>();
         params.put("order_sn", orderSN);
@@ -39,6 +42,14 @@ public class PaymentUtils {
         params.put("payment_type", paymentType);
         params.put("refund_type", refundType);
         params.put("device_info", deviceInfo);
+        params.put("item_id", itemId);
+        params.put("item_name", itemName);
+        params.put("user_id", userId);
+        params.put("user_phone", userPhone);
+        params.put("hospital_id", hospitalId);
+        params.put("hospital_name", hospitalName);
+        params.put("doctor_id", doctorId);
+        params.put("doctor_name", doctorName);
         HttpUtil.HttpResult hr = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.payment.insert.url"), params);
 
         LOGGER.info(">> insert payment return msg : {}", hr.toString());
@@ -50,7 +61,6 @@ public class PaymentUtils {
             int code = (int) resultJson.get("code");
             //业务状态码判断
             if(code == 200){
-
                 LOGGER.info(">> insert payment success......");
                 return true;
             }else {
@@ -59,6 +69,10 @@ public class PaymentUtils {
             }
         }
         return false;
+    }
+
+    public static void main(String[] args){
+        //PaymentUtils.insertPayment("23423545335353", "1", "1", "1", "", "WEB");
     }
 
 }

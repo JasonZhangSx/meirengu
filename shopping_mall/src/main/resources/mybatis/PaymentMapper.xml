@@ -3,31 +3,33 @@
 <mapper namespace="com.meirengu.mall.dao.PaymentDao" >
 
     <resultMap id="paymentMap" type="Payment">
-        <id column="payment_id" property="id" javaType="Integer" jdbcType="int" />
-        <result column="order_sn" property="orderSN" javaType="String" jdbcType="varchar" />
-        <result column="transaction_sn" property="transactionSN" javaType="String" jdbcType="varchar" />
-        <result column="pay_type" property="payType" javaType="Integer" jdbcType="tinyint" />
-        <result column="total_fee" property="totalFee" javaType="Double" jdbcType="double" />
-        <result column="bank_type" property="bankType" javaType="String" jdbcType="varchar" />
-        <result column="payment_type" property="paymentType" javaType="Integer" jdbcType="tinyint" />
-        <result column="status" property="status" javaType="Integer" jdbcType="tinyint" />
-        <result column="refund_type" property="refundType" javaType="Integer" jdbcType="tinyint" />
-        <result column="device_info" property="deviceInfo" javaType="String" jdbcType="varchar" />
-        <result column="return_msg" property="returnMsg" javaType="String" jdbcType="text" />
-        <result column="create_time" property="createTime" javaType="Date" jdbcType="datetime" />
-        <result column="modify_time" property="modifyTime" javaType="Date" jdbcType="timestamp" />
+        <id column="payment_id" property="id" javaType="Integer" jdbcType="INTEGER" />
+        <result column="order_sn" property="orderSN" javaType="String" jdbcType="VARCHAR" />
+        <result column="transaction_sn" property="transactionSN" javaType="String" jdbcType="VARCHAR" />
+        <result column="pay_type" property="payType" javaType="Integer" jdbcType="TINYINT" />
+        <result column="total_fee" property="totalFee" javaType="Double" jdbcType="DOUBLE" />
+        <result column="bank_type" property="bankType" javaType="String" jdbcType="VARCHAR" />
+        <result column="payment_type" property="paymentType" javaType="Integer" jdbcType="TINYINT" />
+        <result column="status" property="status" javaType="Integer" jdbcType="TINYINT" />
+        <result column="refund_type" property="refundType" javaType="Integer" jdbcType="TINYINT" />
+        <result column="device_info" property="deviceInfo" javaType="String" jdbcType="VARCHAR" />
+        <result column="return_msg" property="returnMsg" javaType="String" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" javaType="Date" jdbcType="DATE" />
+        <result column="modify_time" property="modifyTime" javaType="Date" jdbcType="TIMESTAMP" />
     </resultMap>
 
-    <insert id="insert" parameterMap="paymentMap" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="payment" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO payment
-        (payment_id, order_sn, transaction_sn, pay_type, total_fee, bank_type, payment_type,
-        status, refund_type, device_info, return_msg, create_time, modify_time)
+        (order_sn, pay_type, total_fee, payment_type,
+        item_id, item_name, user_id, user_phone, hospital_id, hospital_name, doctor_id, doctor_name,
+        status, refund_type, device_info, create_time)
         VALUES
-        (id, orderSN, transactionSN, payType, totalFee, bankType, paymentType,
-        status, refundType, deviceInfo, returnMsg, createTime, modifyTime)
+        (#{orderSN}, #{payType}, #{totalFee}, #{paymentType},
+        #{itemId}, #{itemName}, #{userId}, #{userPhone}, #{hospitalId}, #{hospitalName},#{doctorId},#{doctorName},
+        #{status}, #{refundType}, #{deviceInfo}, #{createTime})
     </insert>
     
-    <update id="update" parameterMap="paymentMap" >
+    <update id="update" parameterType="payment" >
         update payment
         <set>
             <if test="orderSN != null and orderSN != ''">
@@ -74,9 +76,9 @@
         <if test="orderSN != null and orderSN != ''">
             and order_sn=#{orderSN}
         </if>
-        <if test="transactionSN != null and transactionSN != ''">
+        <!--<if test="transactionSN != null and transactionSN != ''">
             and transaction_sn=#{transactionSN}
-        </if>
+        </if>-->
         <if test="paymentType != null and paymentType != ''">
             and payment_type=#{paymentType}
         </if>

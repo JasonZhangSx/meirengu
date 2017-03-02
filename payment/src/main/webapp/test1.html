@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+    微信授权测试
+    <input type="button" onclick="getOpenid()" value="获取Openid">
+    <script>
+        $.ajax({
+            type:'post',
+            url:'http://localhost:8080/wx/test',
+            async:false,
+            cache:false,
+            contentType:"application/x-www-form-urlencoded; charset=utf-8",
+            dataType:'jsonp',
+            jsonp: 'jsonpCallback',
+            jsonpCallback:'success_jsonpCallback',
+            success:function(result){
+                alert(result);
+                //alert(result.openid);
+                if (result!=null){
+                    //alert(result);
+                    alert(result.openid);
+                    addcookie('wxopenid',result.openid,360000);
+                }else {
+                    alert('微信身份识别失败 \n '+result);
+                    location.href=fromurl;
+                }
+            },
+            error: function(e) {
+                alert("error: "+JSON.stringify(e));
+            },
+        });
+    </script>
+</body>
+</html>

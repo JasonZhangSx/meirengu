@@ -66,6 +66,10 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                         .CAPTCHA_EXPIRE));
             }
+            code.setUse(true);
+            code.setUsingTime(new Date());
+            int updateResult = checkCodeService.update(code);
+            logger.info("LoginController.login update code result:{}", updateResult);
 
         }
         if (checkCode == null && checkCode != null) {

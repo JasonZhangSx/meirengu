@@ -4,21 +4,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.pay.model.Payment;
 import com.meirengu.model.Result;
 import com.meirengu.pay.common.Constants;
-import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.ConfigUtil;
-import com.meirengu.pay.utils.PaymentUtils;
 import com.meirengu.pay.utils.XmlAnalysisUtils;
 import com.meirengu.pay.vo.*;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.MD5Util;
 import com.meirengu.utils.RequestUtil;
 import com.meirengu.utils.StringUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.StandardToStringStyle;
-import org.apache.ibatis.executor.loader.ResultLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.annotation.ErrorsMethodArgumentResolver;
-import org.w3c.dom.traversal.NodeIterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -86,14 +81,27 @@ public class WxController extends BaseController{
                                @RequestParam(value = "trade_type", required = false) String tradeType,
                                @RequestParam(value = "product_id", required = false) String productId,
                                @RequestParam(value = "limit_pay", required = false) String limitPay,
-                               HttpServletRequest request){
+                               @RequestParam(value = "openid", required = false) String openid,
+                               @RequestParam(value = "item_id", required = false) String itemId,
+                               @RequestParam(value = "user_id", required = false) String userId,
+                               @RequestParam(value = "hospital_id", required = false) String hospitalId,
+                               @RequestParam(value = "doctor_id", required = false) String doctorId,
+                               @RequestParam(value = "item_name", required = false) String itemName,
+                               @RequestParam(value = "user_phone", required = false) String userPhone,
+                               @RequestParam(value = "hospital_name", required = false) String hospitalName,
+                               @RequestParam(value = "doctor_name", required = false) String doctorName,
+                               HttpServletRequest request) throws UnsupportedEncodingException {
 
         String ip = RequestUtil.getIpAddr(request);
         //String ip = "118.192.104.101";
         LOGGER.info(">> wx unifiedorder service start...");
 
         if(StringUtil.isEmpty(body) || StringUtil.isEmpty(outTradeNo) ||
-                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType)){
+                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType) ||
+                StringUtil.isEmpty(itemId) || StringUtil.isEmpty(hospitalId) ||
+                StringUtil.isEmpty(userId) || StringUtil.isEmpty(doctorId) ||
+                StringUtil.isEmpty(itemName) || StringUtil.isEmpty(hospitalName) ||
+                StringUtil.isEmpty(userPhone) || StringUtil.isEmpty(doctorName)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
@@ -136,14 +144,22 @@ public class WxController extends BaseController{
         sendData.setTrade_type(tradeType);
         //扫码支付时，product_id为必填
         if("NATIVE".equals(tradeType)){
-            sendData.setProduct_id(productId);
+            if(!StringUtil.isEmpty(productId)){
+                sendData.setProduct_id(productId);
+            }else {
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
         }
         if(!StringUtil.isEmpty(limitPay)){
             sendData.setLimit_pay(limitPay);
         }
         //公众号支付时，openid为必填
         if("JSAPI".equals(tradeType)){
-            sendData.setOpenid("");
+            if(!StringUtil.isEmpty(openid)){
+                sendData.setOpenid(openid);
+            }else {
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
         }
 
         String sign = genSign(sendData);
@@ -153,8 +169,22 @@ public class WxController extends BaseController{
         double totalFeeTemp = sendData.getTotal_fee()/100f;
 
         //微信下单之前先生成我们自己的payment
-        if(!PaymentUtils.insertPayment(outTradeNo, "1", String.valueOf(totalFeeTemp), "1", "", deviceInfo)){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        Payment payment = new Payment();
+        payment.setOrderSN(outTradeNo);
+        payment.setPayType(1);
+        payment.setTotalFee(totalFeeTemp);
+        payment.setPaymentType(1);
+        payment.setDeviceInfo(deviceInfo);
+
+        if(StringUtil.isInteger(userId) && StringUtil.isInteger(hospitalId) && StringUtil.isInteger(itemId) && StringUtil.isInteger(doctorId)){
+            payment.setItemId(Integer.parseInt(itemId));
+            payment.setItemName(itemName);
+            payment.setUserId(Integer.parseInt(userId));
+            payment.setUserPhone(userPhone);
+            payment.setHospitalId(Integer.parseInt(hospitalId));
+            payment.setHospitalName(hospitalName);
+            payment.setDoctorId(Integer.parseInt(doctorId));
+            payment.setDoctorName(doctorName);
         }
 
         LOGGER.info("wx unifiedorder send xml is \n {}", paramsXml);
@@ -172,11 +202,27 @@ public class WxController extends BaseController{
         if(Constants.SUCCESS.equals(returnCode)){
             String resultCode = returnData.getResult_code();
             if(Constants.SUCCESS.equals(resultCode)){
+                //微信那边下单后我们再插入对应的payment记录
+                int result = paymentService.insert(payment);
+                if(result != 1){
+                    return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                }
                 //return_code和result_code都为SUCCESS的时候返回
                 String prepayId = returnData.getPrepay_id();
                 String codeUrl = returnData.getCode_url();
                 resultMap.put("prepayId", prepayId);
                 resultMap.put("codeUrl", codeUrl);
+                if("JSAPI".equals(tradeType)){
+                    JsPaySendData jsPayParams = new JsPaySendData();
+                    jsPayParams.setAppId(sendData.getAppid());
+                    jsPayParams.setTimeStamp(System.currentTimeMillis()+"");
+                    jsPayParams.setNonceStr(StringUtil.createNonceStr());
+                    jsPayParams.setPackages("prepay_id="+prepayId);
+                    jsPayParams.setSignType("MD5");
+                    String paySign = genSign(jsPayParams);
+                    jsPayParams.setPaySign(paySign);
+                    resultMap.put("jsPayParams", jsPayParams);
+                }
                 return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 String errCode = returnData.getErr_code();
@@ -232,14 +278,21 @@ public class WxController extends BaseController{
                 LOGGER.debug(">> result code is {}", resultCode);
 
                 Map<String, String> params = new HashMap<>();
-                params.put("union_sn", notifyData.getOut_trade_no());
-                params.put("transaction_sn", notifyData.getTransaction_id());
-                params.put("bank_type", notifyData.getBank_type());
-                params.put("device_info", notifyData.getDevice_info());
-                params.put("return_msg", notifyXml.toString());
+                Payment payment = new Payment();
+                payment.setOrderSN(notifyData.getOut_trade_no());
+                payment.setTransactionSN(notifyData.getTransaction_id());
+                payment.setBankType(notifyData.getBank_type());
+                payment.setReturnMsg(notifyData.toString());
                 if(Constants.SUCCESS.equals(resultCode)){
+                    /**
+                     * 支付成功需要完成四步
+                     * 1.订单状态改变
+                     * 2.修改payment的流水状态
+                     * 3.生成服务码
+                     * 4.发送服务码短信
+                     */
+                    payment.setStatus(2);
                     HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.success.url"), params);
-                    LOGGER.info(">> request mall return msg : {}", result.toString());
                     int statusCode = result.getStatusCode();
                     //http请求状态码判断
                     if(statusCode == 200){
@@ -257,7 +310,7 @@ public class WxController extends BaseController{
                     }
                 }else {
                     HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.fail.url"), params);
-                    LOGGER.info(">> request mall return msg : {}", result.toString());
+                    payment.setStatus(3);
                     int statusCode = result.getStatusCode();
                     //http请求状态码判断
                     if(statusCode == 200){
@@ -272,10 +325,15 @@ public class WxController extends BaseController{
                         }
                     }
                 }
+
+                int result = paymentService.update(payment);
+                if(result != 1){
+                    returnMsg = returnFailMsg;
+                    LOGGER.info("update payment params is {}, result is {} ", new Object[]{JSON.toJSON(payment), result});
+                }
             }else {
                 LOGGER.info(">> wx pay fail......");
             }
-            //通知参数返回失败
 
             LOGGER.debug("return msg is \n {}", returnMsg);
             PrintWriter out = response.getWriter();
@@ -609,7 +667,6 @@ public class WxController extends BaseController{
         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
-
     /**
      * 生成签名
      * @param t
@@ -669,6 +726,11 @@ public class WxController extends BaseController{
             String key = keys.get(i);
             String value = params.get(key);
 
+            //因为package为关键字，所以统一用packages作为属性名
+            if(key.equals("packages")){
+                key = "package";
+            }
+
             if (i == keys.size() - 1) {//拼接时，不包括最后一个&字符
                 prestr = prestr + key + "=" + value;
             } else {
@@ -697,6 +759,32 @@ public class WxController extends BaseController{
             }
         }
         return null;
+    }
+
+    @RequestMapping("test")
+    public void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String s = "{\"access_token\":\"2igkkr2U4jWYN4X6qJbZytl1APsFJ0iV_8O95NDlxU3opfAon57nB3vDFBYtqe27s" +
+                "-PH0NV6rrDMsMxwry7LGoH22WDqZ8whLncBKsobDow\",\"expires_in\":7200," +
+                "\"openid\":\"o4WEWwIpLToYvRGskYG28sUCiPzM\"," +
+                "\"refresh_token\":\"hAx6OC-Wj4afIA-NswHCH3bYx" +
+                "-lDW9SEvJ3WnoD_Q2u6tk5w2LGBdKIv9OzEiAVZaadSmtpX3eGzGN8W7pKYgXvcXi5my0a88P9_L8qDoMw\"," +
+                "\"scope\":\"snsapi_base\"}";
+        /*JsPaySendData jsPayParams = new JsPaySendData();
+        jsPayParams.setAppId("wx22ae3075d64a4f81");
+        jsPayParams.setTimeStamp(System.currentTimeMillis()+"");
+        jsPayParams.setNonceStr(StringUtil.createNonceStr());
+        jsPayParams.setPackages("prepay_id=wx20170222194138515a7cbfa00012111958");
+        jsPayParams.setSignType("MD5");
+        String paySign = genSign(jsPayParams);
+        jsPayParams.setPaySign(paySign);
+
+        System.out.print(JSON.toJSON(jsPayParams));*/
+        PrintWriter out = response.getWriter();
+        JSONObject jsonResult = JSONObject.parseObject(s);
+        String jsonpCallback = request.getParameter("jsonpCallback");
+        out.write(jsonpCallback+"("+jsonResult.toString()+")");
+
     }
 
 }
