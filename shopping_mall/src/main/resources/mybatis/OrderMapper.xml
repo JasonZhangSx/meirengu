@@ -26,7 +26,7 @@
         LEFT JOIN doctor d ON d.`doctor_id`=i.`doctor_id`
         LEFT JOIN service_code sc ON sc.`order_sn`=o.`union_sn`*/
 
-        SELECT IFNULL(sc.code, '') as serviceCode, add_time as createTime, TIMESTAMPDIFF(HOUR,need_pay_time,NOW()) as countTime , o.`order_state` as orderState, oi.`item_name` as itemName, d.`doctor_name` as doctorName, d.`doctor_title` as doctorTitle, d.doctor_id as doctorId,
+        SELECT IFNULL(sc.code, '') as serviceCode, DATE_FORMAT(add_time, '%Y-%m-%d %H:%i:%s') as createTime, TIMESTAMPDIFF(HOUR,need_pay_time,NOW()) as countTime , o.`order_state` as orderState, oi.`item_name` as itemName, d.`doctor_name` as doctorName, d.`doctor_title` as doctorTitle, d.doctor_id as doctorId,
         oi.item_num as itemNum, oi.item_price as itemPrice, o.order_sn as orderSN, d.mobile as doctorMobile, IFNULL(o.payment_time, '') as paymentTime,
         oi.item_image as itemImage, h.hospital_id as hospitalId, i.item_id as itemId, o.union_sn as unionSN, o.order_id as orderId, h.hospital_name as hospitalName,
         (SELECT GROUP_CONCAT(ic_name SEPARATOR '/') FROM item_class WHERE ic_id IN (i.`ic_id`)) AS itemClass
