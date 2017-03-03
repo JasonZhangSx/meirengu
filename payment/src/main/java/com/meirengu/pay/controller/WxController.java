@@ -8,6 +8,7 @@ import com.meirengu.pay.model.Payment;
 import com.meirengu.model.Result;
 import com.meirengu.pay.common.Constants;
 import com.meirengu.pay.service.PaymentService;
+import com.meirengu.pay.utils.ClientCustomSSL;
 import com.meirengu.pay.utils.ConfigUtil;
 import com.meirengu.pay.utils.XmlAnalysisUtils;
 import com.meirengu.pay.vo.*;
@@ -372,70 +373,48 @@ public class WxController extends BaseController{
         String paramsXml = XmlAnalysisUtils.getXMLForObject(sendData);
         LOGGER.info("wx refund send xml is {}", paramsXml);
 
-        KeyStore keyStore  = KeyStore.getInstance("PKCS12");
-        FileInputStream instream = new FileInputStream(new File("E:\\【美融城】\\【其他资料】\\【微信支付证书】\\cert\\apiclient_cert.p12"));
         try {
-            keyStore.load(instream, "1435603602".toCharArray());
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            instream.close();
-        }
+            String returnStr = new ClientCustomSSL().httpsRequest(ConfigUtil.getConfig("wx.refund"), paramsXml, ConfigUtil.getConfig("wx.apiclient.cert"));
+            LOGGER.info("wx refund return xml is {}", returnStr);
+            WxRefundReturnData returnData = (WxRefundReturnData) XmlAnalysisUtils.getObjectForXMl(returnStr, WxRefundReturnData.class);
 
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom()
-                .loadKeyMaterial(keyStore, "1435603602".toCharArray())
-                .build();
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                sslcontext,
-                new String[] { "TLSv1" },
-                null,
-                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setSSLSocketFactory(sslsf)
-                .build();
+            String returnCode = returnData.getReturn_code();
 
-        String returnStr = HttpUtil.sendPost(ConfigUtil.getConfig("wx.refund"), paramsXml);
-        LOGGER.info("wx refund return xml is {}", returnStr);
-        WxRefundReturnData returnData = (WxRefundReturnData) XmlAnalysisUtils.getObjectForXMl(returnStr, WxRefundReturnData.class);
+            Map<String, Object> resultMap = new HashMap<>();
+            if(Constants.SUCCESS.equals(returnCode)){
+                String resultCode = returnData.getResult_code();
+                if(Constants.SUCCESS.equals(resultCode)){
+                    //return_code和result_code都为SUCCESS的时候返回
+                    //微信退款单号
+                    String refundId = returnData.getRefund_id();
+                    //微信退款渠道 ORIGINAL—原路退款 BALANCE—退回到余额
+                    String refundChannel = returnData.getRefund_channel();
+                    //微信应结退款金额 去掉非充值代金券退款金额后的退款金额，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
+                    /*int settlementRefundFee = returnData.getSettlement_refund_fee();
+                    //微信应结订单金额 去掉非充值代金券金额后的订单总金额，应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
+                    int settlementTotalFee = returnData.getSettlement_total_fee();*/
 
-        String returnCode = returnData.getReturn_code();
-
-        Map<String, Object> resultMap = new HashMap<>();
-        if(Constants.SUCCESS.equals(returnCode)){
-            String resultCode = returnData.getResult_code();
-            if(Constants.SUCCESS.equals(resultCode)){
-                //return_code和result_code都为SUCCESS的时候返回
-                //微信退款单号
-                String refundId = returnData.getRefund_id();
-                //微信退款渠道 ORIGINAL—原路退款 BALANCE—退回到余额
-                String refundChannel = returnData.getRefund_channel();
-                //微信应结退款金额 去掉非充值代金券退款金额后的退款金额，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
-                int settlementRefundFee = returnData.getSettlement_refund_fee();
-                //微信应结订单金额 去掉非充值代金券金额后的订单总金额，应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
-                int settlementTotalFee = returnData.getSettlement_total_fee();
-
-                resultMap.put("refundId", refundId);
-                resultMap.put("refundChannel", refundChannel);
-                resultMap.put("settlementRefundFee", settlementRefundFee);
-                resultMap.put("settlementTotalFee", settlementTotalFee);
-                resultMap.put("returnMsg", returnStr);
-                return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else {
-                String errCode = returnData.getErr_code();
-                String errCodeDes = returnData.getErr_code_des();
-                resultMap.put("errCode", errCode);
-                resultMap.put("errCodeDes", errCodeDes);
+                    resultMap.put("refundId", refundId);
+                    resultMap.put("refundChannel", refundChannel);
+                    /*resultMap.put("settlementRefundFee", settlementRefundFee);
+                    resultMap.put("settlementTotalFee", settlementTotalFee);*/
+                    resultMap.put("returnMsg", returnStr);
+                    return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    String errCode = returnData.getErr_code();
+                    String errCodeDes = returnData.getErr_code_des();
+                    resultMap.put("errCode", errCode);
+                    resultMap.put("errCodeDes", errCodeDes);
+                    return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                }
+            }else{
                 return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
-        }else{
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        } catch (Exception e) {
+            LOGGER.error(">> wx refund throw a exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+
     }
 
     /**
