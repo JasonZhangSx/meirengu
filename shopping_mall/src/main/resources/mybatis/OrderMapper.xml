@@ -55,20 +55,34 @@
             order_state=#{orderState},
         </if>
         <if test="refundState != null and refundState != '' and refundState != 0">
-            refund_state=#{refundState}
+            refund_state=#{refundState},
         </if>
-        <if test="paymentTime != null">
-            payment_time=#{paymentTime}
+        <if test="paymentTime != null and paymentTime != ''">
+            payment_time=#{paymentTime},
         </if>
-        <if test="finishedTime != null">
+        <if test="finishedTime != null and finishedTime != ''">
             finished_time=#{finishedTime}
         </if>
-        WHERE flag=1
-        <if test="id != null and id != ''">
+        WHERE 1=1
+        <if test="id != null and id != '' and id != 0">
             and order_id=#{id};
         </if>
         <if test="unionSN != null and unionSN != ''">
             and union_sn=#{unionSN}
+        </if>
+    </update>
+
+    <update id="updateStateById" parameterType="order">
+        UPDATE `order` SET
+        <if test="orderState != null and orderState != '' and orderState != 0">
+            order_state=#{orderState},
+        </if>
+        <if test="refundState != null and refundState != '' and refundState != 0">
+            refund_state=#{refundState}
+        </if>
+        WHERE 1=1
+        <if test="id != null and id != '' and id != 0">
+            and order_id=#{id};
         </if>
     </update>
 

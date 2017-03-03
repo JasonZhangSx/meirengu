@@ -1,10 +1,8 @@
 package com.meirengu.mall.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.mall.common.Constants;
 import com.meirengu.mall.dao.OrderDao;
-import com.meirengu.mall.dao.OrderItemDao;
 import com.meirengu.mall.dao.RefundDao;
 import com.meirengu.mall.model.Order;
 import com.meirengu.mall.model.Page;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -182,21 +179,11 @@ public class RefundServiceImpl implements RefundService{
                 return false;
             }
 
-            Refund refundParams = new Refund();
-            refundParams.setId(refundId);
-            refundParams.setRefundState(2);
-            int updateNum = refundDao.updateStatus(refundParams);
-            if(updateNum != 1){
-                LOGGER.warn(">> update refund status return {}", updateNum);
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
-            }
-
             Map<String, String> params = new HashMap<>();
             params.put("order_sn", refund.getOrderSN());
             HttpUtil.HttpResult detailResult = HttpUtil.doPostForm(ConfigUtil.getValue("payment.detail.url"), params);
             if(detailResult.getStatusCode() != 200){
-                LOGGER.warn(">> get payment detail return {}", updateNum);
+                LOGGER.warn(">> get payment detail return {}", detailResult);
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             }
@@ -205,7 +192,7 @@ public class RefundServiceImpl implements RefundService{
             JSONObject contentJson = JSONObject.parseObject(content);
             int code = contentJson.get("code") == null ? 0 : Integer.parseInt(contentJson.get("code").toString());
             if(code != 200){
-                LOGGER.warn(">> update refund status return {}", updateNum);
+                LOGGER.warn(">> get payment detail return {}", content);
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             }
@@ -238,6 +225,7 @@ public class RefundServiceImpl implements RefundService{
             Map<String, String> paymentMap = new HashMap<>();
             paymentMap.put("order_sn", refund.getRefundSN());
             paymentMap.put("transaction_sn", refundSN);
+
             paymentMap.put("pay_type", "1");
             paymentMap.put("total_fee", refund.getOrderRefund()+"");
             paymentMap.put("refund_type", "1");
@@ -254,8 +242,22 @@ public class RefundServiceImpl implements RefundService{
                 return false;
             }
 
+            //修改refund状态
+            Refund refundParams = new Refund();
+            refundParams.setId(refundId);
+            refundParams.setRefundState(2);
+            int updateNum = refundDao.updateStatus(refundParams);
+            if(updateNum != 1){
+                LOGGER.warn(">> update refund status return {}", updateNum);
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+
             Order order = new Order();
-            int orderStatus = orderDao.modifyState(order);
+            order.setId(refund.getOrderId());
+            order.setOrderState(Constants.ORDER_REFUND_SUCCESS);
+            order.setRefundState(Constants.REFUND_ALL);
+            int orderStatus = orderDao.updateStateById(order);
             if(orderStatus != 1){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;

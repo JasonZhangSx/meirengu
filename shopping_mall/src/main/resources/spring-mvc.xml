@@ -43,7 +43,7 @@
 	</bean>
 
 	<!-- redis配置 -->
-	<context:property-placeholder location="classpath:redis.properties"/>
+	<!--<context:property-placeholder location="classpath:redis.properties"/>
 
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxTotal" value="${redis.pool.maxTotal}" />
@@ -77,6 +77,6 @@
 				</bean>
 			</list>
 		</constructor-arg>
-	</bean>
+	</bean>-->
 
 </beans>
