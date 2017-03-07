@@ -2,22 +2,46 @@ package com.meirengu.commons.authority.model;
 
 import java.util.List;
 
-
-public class Permission extends BaseObject {
-
-    private static final long serialVersionUID = 1L;
-    private Integer id;
+public class Permission {
+    /**
+     * 权限id
+     */
+    private Long id;
+    /**
+     *父权限id
+     */
+    private Integer parentId;
+    /**
+     * 权限名称
+     */
     private String name;
-    private String type;
+    /**
+     *权限值
+     */
     private String value;
-    private List<Role> roleList;
+    /**
+     * 权限描述
+     */
+    private String description;
+    /**
+     * 权限集合
+     */
+    private List<Permission> list;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     public String getName() {
@@ -25,23 +49,7 @@ public class Permission extends BaseObject {
     }
 
     public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getValue() {
@@ -49,25 +57,34 @@ public class Permission extends BaseObject {
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.value = value == null ? null : value.trim();
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public List<Permission> getList() {
+        return list;
+    }
+
+    public void setList(List<Permission> list) {
+        this.list = list;
     }
 
     @Override
-    public int hashCode() {
-        return id;
+    public String toString() {
+        return "Permission{" +
+                "id=" + id +
+                ", parentId=" + parentId +
+                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", description='" + description + '\'' +
+                ", list=" + list +
+                '}';
     }
-
-    public Permission(Integer id) {
-        super();
-        this.id = id;
-    }
-
-    public Permission() {
-        super();
-    }
-
 }

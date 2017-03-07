@@ -1,6 +1,6 @@
 package com.meirengu.commons.authority.controller;
 
-import com.uqsoft.common.util.JsonUtil;
+import com.yunpian.sdk.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;

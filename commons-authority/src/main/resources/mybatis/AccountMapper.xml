@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meirengu.commons.authority.dao.AccountMapper">
+  <resultMap id="BaseResultMap" type="com.meirengu.commons.authority.model.Account">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_name, password
+  </sql>
+  <select id="findUser" parameterType="com.meirengu.commons.authority.model.Account" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from account a
+    where 1=1
+    <if test="id != null">
+      AND a.id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="userName != null">
+      AND a.user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="password != null">
+      AND a.`password` = #{password,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

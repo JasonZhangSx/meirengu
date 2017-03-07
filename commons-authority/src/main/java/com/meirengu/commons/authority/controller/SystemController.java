@@ -4,8 +4,8 @@
  */
 package com.meirengu.commons.authority.controller;
 
-import com.uqsoft.common.exception.BusinessException;
-import com.uqsoft.common.util.ResultPage;
+import com.meirengu.exception.BusinessException;
+import com.meirengu.utils.ResultPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;

@@ -15,8 +15,6 @@
 
 	<description>Spring公共配置 </description>
 	
-	<import resource="classpath:applicationContext-shiro.xml" />
-	<import resource="classpath:applicationContext-datasource.xml" />
 	<import resource="classpath:applicationContext-mybatis.xml" />
 	
 	

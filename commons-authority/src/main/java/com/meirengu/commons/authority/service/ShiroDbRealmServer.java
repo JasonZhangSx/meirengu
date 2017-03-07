@@ -4,7 +4,9 @@
  */
 package com.meirengu.commons.authority.service;
 
-/**  
+import org.apache.shiro.authz.AuthorizationInfo;
+
+/**
  * @Title:  
  * @Description:  
  * @Author:Administrator  
@@ -12,5 +14,6 @@ package com.meirengu.commons.authority.service;
  * @Version:1.1.0  
  */
 public interface ShiroDbRealmServer {
+    AuthorizationInfo getRoleAndPerm(String loginName);
 
 }
