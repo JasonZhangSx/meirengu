@@ -43,14 +43,18 @@ public class ServiceCodeController extends BaseController{
     public Result validate(@RequestParam(value = "code", required = false) String code,
                            @RequestParam(value = "hospital_id", required = false) String hospitalId){
 
-        if(StringUtil.isEmpty(code) || StringUtil.isEmpty(hospitalId)){
+        if(StringUtil.isEmpty(code)){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        /*if(StringUtil.isEmpty(code) || StringUtil.isEmpty(hospitalId)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         if(!StringUtil.isInteger(hospitalId)){
             return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
-        }
+        }*/
 
-        int result = serviceCodeService.validateCode(code, Integer.parseInt(hospitalId));
+        //int result = serviceCodeService.validateCode(code, Integer.parseInt(hospitalId));
+        int result = serviceCodeService.validateCode(code, 0);
         LOGGER.info(">> validate service code return : {}", result);
         // 0抛出异常 1验证通过 2code已使用 3code不存在 4未使用的code不存在 5该医院无权限验证 6服务码过期
         switch (result){

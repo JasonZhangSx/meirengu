@@ -1,10 +1,13 @@
 package com.meirengu.pay.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.model.Result;
+import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 支付模块相关接口
@@ -233,7 +238,32 @@ public class PaymentController extends BaseController{
         }
     }
 
-    public static void main(String[] args){
-        System.out.print(StringUtil.isNumeric("1.5"));
+    @ResponseBody
+    @RequestMapping(value = "detail", method = RequestMethod.POST)
+    public Result detail(@RequestParam(value = "transaction_sn", required = false) String transactionSN,
+                         @RequestParam(value = "payment_id", required = false) String paymentId,
+                         @RequestParam(value = "order_sn", required = false) String orderSN){
+
+        if(StringUtil.isEmpty(transactionSN) && StringUtil.isEmpty(orderSN) && StringUtil.isEmpty(paymentId)){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        Payment payment = new Payment();
+        payment.setTransactionSN(transactionSN);
+        payment.setOrderSN(orderSN);
+
+        if(!StringUtil.isEmpty(paymentId)){
+            if(StringUtil.isInteger(paymentId)){
+                payment.setId(Integer.parseInt(paymentId));
+            }
+        }
+
+        Payment p = paymentService.detail(payment);
+        if(StringUtil.isEmpty(p)){
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+        }
+
+        return super.setResult(StatusCode.OK, p, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
+
 }

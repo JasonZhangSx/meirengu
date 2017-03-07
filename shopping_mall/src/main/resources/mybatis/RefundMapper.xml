@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.mall.dao.RefundDao" >
 
+    <sql id="select_columns">
+        refund_id as id, order_id as orderId, refund_sn as refundSN, order_sn as orderSN, doctor_id as doctorId, hospital_id as hospitalId,
+        user_id as userId, user_name as userName, user_phone as userPhone, add_time as addTime, order_amount as orderAmount,
+        order_refund as orderRefund, refund_paymentname as refundPaymentname, refund_paymentcode as refundPaymentcode, refund_message as refundMessage,
+        user_message as userMessage, admin_message as adminMessage, hospital_time as hospitalTime, admin_time as adminTime, confirm_time as confirmTime,
+        refund_type as refundType, refund_state as refundState, user_confirm as userConfirm
+    </sql>
+
     <insert id="addRefund" parameterType="refund" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO refund
         (refund_id, order_id, refund_sn, order_sn, doctor_id, hospital_id, user_id, user_phone, add_time, order_amount, order_refund, refund_paymentname,
@@ -11,7 +19,13 @@
         #{refundPaymentcode}, #{refundMessage}, #{userMessage}, #{refundType}, #{refundState}, #{userConfirm});
     </insert>
 
-    <!--<update id="modifyStatus" parameterType="refund">
-        UPDATE refund SET
-    </update>-->
+    <update id="updateStatus" parameterType="refund">
+        UPDATE refund SET refund_state=#{refundState} WHERE refund_id=#{id}
+    </update>
+
+    <select id="detail" resultType="refund" parameterType="Integer">
+        select <include refid="select_columns" /> from refund where refund_id=#{id}
+    </select>
+
+
 </mapper>

@@ -38,4 +38,11 @@ public interface ServiceCodeDao {
      * @return
      */
     ServiceCode getDetailByCode(String code);
+
+    /**
+     * 通过orderSN获取serviceCode详情
+     * @param orderSN
+     * @return
+     */
+    ServiceCode getDetailByOrderSN(String orderSN);
 }

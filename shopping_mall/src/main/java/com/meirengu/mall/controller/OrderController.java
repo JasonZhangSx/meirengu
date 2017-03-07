@@ -232,7 +232,7 @@ public class OrderController extends  BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="refund-apply", method = RequestMethod.POST)
+    @RequestMapping(value="refund_apply", method = RequestMethod.POST)
     public Result refundApply(@RequestParam(value = "order_id", required = false) Integer orderId,
                               @RequestParam(value = "user_id", required = false) Integer userId,
                               @RequestParam(value = "user_message", required = false) String userMessage,
@@ -285,7 +285,7 @@ public class OrderController extends  BaseController{
     public Result paySuccess(@RequestParam(value = "union_sn", required = false) String unionSN,
                              @RequestParam(value = "transaction_sn", required = false) String transactionSN,
                              @RequestParam(value = "bank_type", required = false) String bankType,
-                             @RequestParam(value = "deviceInfo", required = false) String deviceInfo,
+                             @RequestParam(value = "device_info", required = false) String deviceInfo,
                              @RequestParam(value = "return_msg", required = false) String returnMsg){
 
         if(StringUtil.isEmpty(unionSN) || StringUtil.isEmpty(transactionSN) || StringUtil.isEmpty(bankType) || StringUtil.isEmpty(returnMsg) || StringUtil.isEmpty(deviceInfo)){
@@ -334,14 +334,32 @@ public class OrderController extends  BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="refund-operate", method = RequestMethod.POST)
-    public Result refundOperate(@RequestParam(value = "refund_id", required = false) Integer refundId,
-                                @RequestParam(value = "operate", required = false) Integer operate){
+    @RequestMapping(value="refund_operate", method = RequestMethod.POST)
+    public Result refundOperate(@RequestParam(value = "refund_id", required = false) String refundId,
+                                @RequestParam(value = "operate", required = false) String operate){
         if(null == refundId || null == operate){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        LOGGER.info("refund_id="+refundId+" | operate="+operate);
-        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+
+        if(!StringUtil.isInteger(refundId) || !StringUtil.isInteger(operate)){
+            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+        boolean flag = false;
+        if(operate.equals("1")){
+            //通过操作
+            flag = refundService.agreeRefund(Integer.parseInt(refundId));
+        }else if(operate.equals("2")){
+            //拒绝操作
+            flag = refundService.refuseRefund(Integer.parseInt(refundId));
+        }else {
+            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+
+        if(flag){
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
     }
 
     @ResponseBody

@@ -8,6 +8,7 @@ import com.meirengu.pay.model.Payment;
 import com.meirengu.model.Result;
 import com.meirengu.pay.common.Constants;
 import com.meirengu.pay.service.PaymentService;
+import com.meirengu.pay.utils.ClientCustomSSL;
 import com.meirengu.pay.utils.ConfigUtil;
 import com.meirengu.pay.utils.XmlAnalysisUtils;
 import com.meirengu.pay.vo.*;
@@ -15,6 +16,10 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.MD5Util;
 import com.meirengu.utils.RequestUtil;
 import com.meirengu.utils.StringUtil;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +29,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.*;
 
 /**
@@ -82,26 +87,23 @@ public class WxController extends BaseController{
                                @RequestParam(value = "product_id", required = false) String productId,
                                @RequestParam(value = "limit_pay", required = false) String limitPay,
                                @RequestParam(value = "openid", required = false) String openid,
-                               @RequestParam(value = "item_id", required = false) String itemId,
+                               /*@RequestParam(value = "item_id", required = false) String itemId,
                                @RequestParam(value = "user_id", required = false) String userId,
                                @RequestParam(value = "hospital_id", required = false) String hospitalId,
                                @RequestParam(value = "doctor_id", required = false) String doctorId,
                                @RequestParam(value = "item_name", required = false) String itemName,
                                @RequestParam(value = "user_phone", required = false) String userPhone,
                                @RequestParam(value = "hospital_name", required = false) String hospitalName,
-                               @RequestParam(value = "doctor_name", required = false) String doctorName,
-                               HttpServletRequest request) throws UnsupportedEncodingException {
+                               @RequestParam(value = "doctor_name", required = false) String doctorName,*/
+                               HttpServletRequest request) {
 
+        //LOGGER.info(">> unifiedorder is starting.... params is {}", JSON.toJSON(request));
         String ip = RequestUtil.getIpAddr(request);
         //String ip = "118.192.104.101";
         LOGGER.info(">> wx unifiedorder service start...");
 
         if(StringUtil.isEmpty(body) || StringUtil.isEmpty(outTradeNo) ||
-                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType) ||
-                StringUtil.isEmpty(itemId) || StringUtil.isEmpty(hospitalId) ||
-                StringUtil.isEmpty(userId) || StringUtil.isEmpty(doctorId) ||
-                StringUtil.isEmpty(itemName) || StringUtil.isEmpty(hospitalName) ||
-                StringUtil.isEmpty(userPhone) || StringUtil.isEmpty(doctorName)){
+                StringUtil.isEmpty(totalFee) || StringUtil.isEmpty(tradeType)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
@@ -119,9 +121,6 @@ public class WxController extends BaseController{
         sendData.setBody(body);
         if(!StringUtil.isEmpty(detail)){
             sendData.setDetail(detail);
-        }
-        if(!StringUtil.isEmpty(attach)){
-            sendData.setAttach(attach);
         }
         sendData.setOut_trade_no(outTradeNo);
         //币种类型，目前只支持人民币（CNY），为以后扩展留入口
@@ -161,11 +160,6 @@ public class WxController extends BaseController{
                 return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
-
-        String sign = genSign(sendData);
-        sendData.setSign(sign);
-
-        String paramsXml = XmlAnalysisUtils.getXMLForObject(sendData);
         double totalFeeTemp = sendData.getTotal_fee()/100f;
 
         //微信下单之前先生成我们自己的payment
@@ -174,18 +168,38 @@ public class WxController extends BaseController{
         payment.setPayType(1);
         payment.setTotalFee(totalFeeTemp);
         payment.setPaymentType(1);
+        payment.setStatus(1);
         payment.setDeviceInfo(deviceInfo);
+        payment.setCreateTime(new Date());
 
-        if(StringUtil.isInteger(userId) && StringUtil.isInteger(hospitalId) && StringUtil.isInteger(itemId) && StringUtil.isInteger(doctorId)){
-            payment.setItemId(Integer.parseInt(itemId));
-            payment.setItemName(itemName);
-            payment.setUserId(Integer.parseInt(userId));
-            payment.setUserPhone(userPhone);
-            payment.setHospitalId(Integer.parseInt(hospitalId));
-            payment.setHospitalName(hospitalName);
-            payment.setDoctorId(Integer.parseInt(doctorId));
-            payment.setDoctorName(doctorName);
+        if(!StringUtil.isEmpty(attach)){
+            JSONObject attachJson = JSONObject.parseObject(attach);
+            String hospitalId = attachJson.get("hospital_id") == null? "" : attachJson.get("hospital_id").toString();
+            String userPhone = attachJson.get("user_phone") == null? "" : attachJson.get("user_phone").toString();
+            String itemId = attachJson.get("item_id") == null? "" : attachJson.get("item_id").toString();
+            //String itemName = attachJson.get("item_name") == null? "" : attachJson.get("item_name").toString();
+            String userId = attachJson.get("user_id") == null? "" : attachJson.get("user_id").toString();
+            //String hospitalName = attachJson.get("hospital_name") == null? "" : attachJson.get("hospital_name").toString();
+            String doctorId = attachJson.get("doctor_id") == null? "" : attachJson.get("doctor_id").toString();
+            //String doctorName = attachJson.get("doctor_name") == null? "" : attachJson.get("doctor_name").toString();
+            if(StringUtil.isInteger(userId) && StringUtil.isInteger(hospitalId) && StringUtil.isInteger(itemId) && StringUtil.isInteger(doctorId)){
+                payment.setItemId(Integer.parseInt(itemId));
+                payment.setItemName(body);
+                payment.setUserId(Integer.parseInt(userId));
+                payment.setUserPhone(userPhone);
+                payment.setHospitalId(Integer.parseInt(hospitalId));
+                //payment.setHospitalName(hospitalName);
+                payment.setDoctorId(Integer.parseInt(doctorId));
+                //payment.setDoctorName(doctorName);
+            }
+            sendData.setAttach(attach);
         }
+
+
+        String sign = genSign(sendData);
+        sendData.setSign(sign);
+
+        String paramsXml = XmlAnalysisUtils.getXMLForObject(sendData);
 
         LOGGER.info("wx unifiedorder send xml is \n {}", paramsXml);
 
@@ -211,7 +225,9 @@ public class WxController extends BaseController{
                 String prepayId = returnData.getPrepay_id();
                 String codeUrl = returnData.getCode_url();
                 resultMap.put("prepayId", prepayId);
-                resultMap.put("codeUrl", codeUrl);
+                if("NATIVE".equals(tradeType)){
+                    resultMap.put("codeUrl", codeUrl);
+                }
                 if("JSAPI".equals(tradeType)){
                     JsPaySendData jsPayParams = new JsPaySendData();
                     jsPayParams.setAppId(sendData.getAppid());
@@ -276,60 +292,21 @@ public class WxController extends BaseController{
             if(Constants.SUCCESS.equals(returnCode)){
                 String resultCode = notifyData.getResult_code();
                 LOGGER.debug(">> result code is {}", resultCode);
-
-                Map<String, String> params = new HashMap<>();
-                Payment payment = new Payment();
-                payment.setOrderSN(notifyData.getOut_trade_no());
-                payment.setTransactionSN(notifyData.getTransaction_id());
-                payment.setBankType(notifyData.getBank_type());
-                payment.setReturnMsg(notifyData.toString());
                 if(Constants.SUCCESS.equals(resultCode)){
-                    /**
-                     * 支付成功需要完成四步
-                     * 1.订单状态改变
-                     * 2.修改payment的流水状态
-                     * 3.生成服务码
-                     * 4.发送服务码短信
-                     */
-                    payment.setStatus(2);
-                    HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.success.url"), params);
-                    int statusCode = result.getStatusCode();
-                    //http请求状态码判断
-                    if(statusCode == 200){
-                        String content = result.getContent();
-                        JSONObject resultJson = (JSONObject) JSON.parseObject(content);
-                        int code = (int) resultJson.get("code");
-                        //业务状态码判断
-                        if(code == 200){
-                            LOGGER.info(">> wx pay success......");
-                            //业务完成后给微信通知
-                            returnMsg = returnSuccessMsg;
-                        }else {
-                            LOGGER.info(">> shopping mall make a error...");
-                        }
+
+                    if(paymentService.paySuccess(notifyData, request, notifyXml.toString())){
+                        LOGGER.info(">> wx pay success......");
+                        //业务完成后给微信通知
+                        returnMsg = returnSuccessMsg;
+                    }else {
+                        LOGGER.info(">> paySuccess fail...");
                     }
                 }else {
-                    HttpUtil.HttpResult result = HttpUtil.doPostForm(ConfigUtil.getConfig("mall.pay.fail.url"), params);
-                    payment.setStatus(3);
-                    int statusCode = result.getStatusCode();
-                    //http请求状态码判断
-                    if(statusCode == 200){
-                        String content = result.getContent();
-                        JSONObject resultJson = (JSONObject) JSON.parseObject(content);
-                        int code = (int) resultJson.get("code");
-                        //业务状态码判断
-                        if(code == 200){
-                            LOGGER.info(">> modify order status pay fail......");
-                        }else {
-                            LOGGER.info(">> shopping mall make a error...");
-                        }
+                    if(paymentService.payFail(notifyData, request, notifyXml.toString())){
+                        LOGGER.info(">> payFail success......");
+                    }else {
+                        LOGGER.info(">> payFail fail......");
                     }
-                }
-
-                int result = paymentService.update(payment);
-                if(result != 1){
-                    returnMsg = returnFailMsg;
-                    LOGGER.info("update payment params is {}, result is {} ", new Object[]{JSON.toJSON(payment), result});
                 }
             }else {
                 LOGGER.info(">> wx pay fail......");
@@ -364,7 +341,7 @@ public class WxController extends BaseController{
                        @RequestParam(value = "out_refund_no", required = false) String outRefundNo,
                        @RequestParam(value = "total_fee", required = false) String totalFee,
                        @RequestParam(value = "refund_fee", required = false) String refundFee,
-                       @RequestParam(value = "refund_fee_type", required = false) String refundFeeType){
+                       @RequestParam(value = "refund_fee_type", required = false) String refundFeeType) throws KeyStoreException, IOException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
 
         LOGGER.info(">> wx refund apply is starting......");
         if((StringUtil.isEmpty(transactionId) && StringUtil.isEmpty(outTradeNo)) ||
@@ -378,9 +355,9 @@ public class WxController extends BaseController{
         }
 
         WxRefundSendData sendData = new WxRefundSendData();
-        sendData.setAppid(ConfigUtil.getConfig("wx.apid"));
+        sendData.setAppid(ConfigUtil.getConfig("wx.appid"));
         sendData.setMch_id(ConfigUtil.getConfig("wx.mch_id"));
-        if(StringUtil.isEmpty(deviceInfo)){
+        if(!StringUtil.isEmpty(deviceInfo)){
             sendData.setDevice_info(deviceInfo);
         }
         sendData.setNonce_str(StringUtil.createNonceStr());
@@ -395,41 +372,49 @@ public class WxController extends BaseController{
 
         String paramsXml = XmlAnalysisUtils.getXMLForObject(sendData);
         LOGGER.info("wx refund send xml is {}", paramsXml);
-        String returnStr = HttpUtil.sendPost(ConfigUtil.getConfig("wx.refund"), paramsXml);
-        LOGGER.info("wx refund return xml is {}", returnStr);
-        WxRefundReturnData returnData = (WxRefundReturnData) XmlAnalysisUtils.getObjectForXMl(returnStr, WxRefundReturnData.class);
 
-        String returnCode = returnData.getReturn_code();
+        try {
+            String returnStr = new ClientCustomSSL().httpsRequest(ConfigUtil.getConfig("wx.refund"), paramsXml, ConfigUtil.getConfig("wx.apiclient.cert"));
+            LOGGER.info("wx refund return xml is {}", returnStr);
+            WxRefundReturnData returnData = (WxRefundReturnData) XmlAnalysisUtils.getObjectForXMl(returnStr, WxRefundReturnData.class);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        if(Constants.SUCCESS.equals(returnCode)){
-            String resultCode = returnData.getResult_code();
-            if(Constants.SUCCESS.equals(resultCode)){
-                //return_code和result_code都为SUCCESS的时候返回
-                //微信退款单号
-                String refundId = returnData.getRefund_id();
-                //微信退款渠道 ORIGINAL—原路退款 BALANCE—退回到余额
-                String refundChannel = returnData.getRefund_channel();
-                //微信应结退款金额 去掉非充值代金券退款金额后的退款金额，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
-                int settlementRefundFee = returnData.getSettlement_refund_fee();
-                //微信应结订单金额 去掉非充值代金券金额后的订单总金额，应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
-                int settlementTotalFee = returnData.getSettlement_total_fee();
+            String returnCode = returnData.getReturn_code();
 
-                resultMap.put("refundId", refundId);
-                resultMap.put("refundChannel", refundChannel);
-                resultMap.put("settlementRefundFee", settlementRefundFee);
-                resultMap.put("settlementTotalFee", settlementTotalFee);
-                return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else {
-                String errCode = returnData.getErr_code();
-                String errCodeDes = returnData.getErr_code_des();
-                resultMap.put("errCode", errCode);
-                resultMap.put("errCodeDes", errCodeDes);
+            Map<String, Object> resultMap = new HashMap<>();
+            if(Constants.SUCCESS.equals(returnCode)){
+                String resultCode = returnData.getResult_code();
+                if(Constants.SUCCESS.equals(resultCode)){
+                    //return_code和result_code都为SUCCESS的时候返回
+                    //微信退款单号
+                    String refundId = returnData.getRefund_id();
+                    //微信退款渠道 ORIGINAL—原路退款 BALANCE—退回到余额
+                    String refundChannel = returnData.getRefund_channel();
+                    //微信应结退款金额 去掉非充值代金券退款金额后的退款金额，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
+                    /*int settlementRefundFee = returnData.getSettlement_refund_fee();
+                    //微信应结订单金额 去掉非充值代金券金额后的订单总金额，应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
+                    int settlementTotalFee = returnData.getSettlement_total_fee();*/
+
+                    resultMap.put("refundId", refundId);
+                    resultMap.put("refundChannel", refundChannel);
+                    /*resultMap.put("settlementRefundFee", settlementRefundFee);
+                    resultMap.put("settlementTotalFee", settlementTotalFee);*/
+                    resultMap.put("returnMsg", returnStr);
+                    return super.setResult(StatusCode.OK, resultMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    String errCode = returnData.getErr_code();
+                    String errCodeDes = returnData.getErr_code_des();
+                    resultMap.put("errCode", errCode);
+                    resultMap.put("errCodeDes", errCodeDes);
+                    return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                }
+            }else{
                 return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
-        }else{
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, resultMap, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        } catch (Exception e) {
+            LOGGER.error(">> wx refund throw a exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+
     }
 
     /**
@@ -762,28 +747,22 @@ public class WxController extends BaseController{
     }
 
     @RequestMapping("test")
+    @ResponseBody
     public void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String s = "{\"access_token\":\"2igkkr2U4jWYN4X6qJbZytl1APsFJ0iV_8O95NDlxU3opfAon57nB3vDFBYtqe27s" +
-                "-PH0NV6rrDMsMxwry7LGoH22WDqZ8whLncBKsobDow\",\"expires_in\":7200," +
-                "\"openid\":\"o4WEWwIpLToYvRGskYG28sUCiPzM\"," +
-                "\"refresh_token\":\"hAx6OC-Wj4afIA-NswHCH3bYx" +
-                "-lDW9SEvJ3WnoD_Q2u6tk5w2LGBdKIv9OzEiAVZaadSmtpX3eGzGN8W7pKYgXvcXi5my0a88P9_L8qDoMw\"," +
-                "\"scope\":\"snsapi_base\"}";
-        /*JsPaySendData jsPayParams = new JsPaySendData();
-        jsPayParams.setAppId("wx22ae3075d64a4f81");
-        jsPayParams.setTimeStamp(System.currentTimeMillis()+"");
-        jsPayParams.setNonceStr(StringUtil.createNonceStr());
-        jsPayParams.setPackages("prepay_id=wx20170222194138515a7cbfa00012111958");
-        jsPayParams.setSignType("MD5");
-        String paySign = genSign(jsPayParams);
-        jsPayParams.setPaySign(paySign);
-
-        System.out.print(JSON.toJSON(jsPayParams));*/
-        PrintWriter out = response.getWriter();
-        JSONObject jsonResult = JSONObject.parseObject(s);
-        String jsonpCallback = request.getParameter("jsonpCallback");
-        out.write(jsonpCallback+"("+jsonResult.toString()+")");
+        Map<String, String> smsParams = new HashMap<>();
+        request.setCharacterEncoding("utf-8");
+        String text = "【美人谷】您的“#product#”服务码#service_sn#，有效期至#expire_time#，需提前7天预约。联系医院#hospital_tel#，如有疑问请拨打客服电话400-866-8382";
+        text = text.replace("#product#", "玻尿酸").replace("#service_sn#", "72343288992")
+                .replace("#expire_time#", "2017-02-29 11:24:30").replace("#hospital_tel#", "010-8884332");
+        //拼装参数
+        smsParams.put("mobile", "15011095069");
+        smsParams.put("text", text);
+        //smsParams.put("extend", mobile);
+        smsParams.put("uid", "42342323423423");
+        smsParams.put("ip", RequestUtil.getIpAddr(request));
+        HttpUtil.HttpResult smsResult = HttpUtil.doPostForm(ConfigUtil.getConfig("sms.send.url"), smsParams);
+        int smsCode = smsResult.getStatusCode();
 
     }
 

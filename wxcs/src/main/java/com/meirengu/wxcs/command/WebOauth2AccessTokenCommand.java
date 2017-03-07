@@ -39,7 +39,7 @@ public class WebOauth2AccessTokenCommand extends Command{
         //invoke accesstoke service
         WebOauth2AccessToken accessToken = WebOauth2UserinfoService.oauth2AccessToken(code);
         if (accessToken != null) {
-            result.put("access_token ", accessToken.getAccess_token());
+            result.put("access_token", accessToken.getAccess_token());
             result.put("expires_in", accessToken.getExpires_in());
             result.put("refresh_token", accessToken.getRefresh_token());
             result.put("openid", accessToken.getOpenid());

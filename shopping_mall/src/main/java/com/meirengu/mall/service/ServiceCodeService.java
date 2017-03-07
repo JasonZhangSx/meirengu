@@ -1,6 +1,7 @@
 package com.meirengu.mall.service;
 
 import com.meirengu.mall.model.ServiceCode;
+import com.meirengu.utils.StringUtil;
 
 import java.util.Map;
 
@@ -36,4 +37,11 @@ public interface ServiceCodeService {
      * @return
      */
     ServiceCode getDetailByCode(String code);
+
+    /**
+     * 通过orderSN获取serviceCode详情
+     * @param orderSN
+     * @return
+     */
+    ServiceCode getDetailByOrderSN(String orderSN);
 }

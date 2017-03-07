@@ -40,4 +40,11 @@ public interface OrderDao extends PageDao<Order>{
      */
     int delete(int orderId);
 
+    /**
+     * 修改订单状态，通过id
+     * @param order
+     * @return
+     */
+    int updateStateById(Order order);
+
 }
