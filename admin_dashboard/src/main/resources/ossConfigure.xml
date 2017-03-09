@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RESULT>
+    <VALUE>　　
+        <endpoint>${endpoint}</endpoint>　　
+        <accessKeyId>${accessKeyId}</accessKeyId>
+        <accessKeySecret>${accessKeySecret}</accessKeySecret>
+        <bucketName>${bucketName}</bucketName>
+    </VALUE>
+</RESULT>

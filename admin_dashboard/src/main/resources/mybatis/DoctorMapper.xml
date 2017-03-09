@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.admin.dao.DoctorDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.admin.vo.DoctorVo" >
+    <id column="doctor_id" property="doctorId" jdbcType="INTEGER" />
+    <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+    <result column="doctor_name" property="doctorName" jdbcType="VARCHAR" />
+    <result column="doctor_profile" property="doctorProfile" jdbcType="VARCHAR" />
+    <result column="doctor_detail" property="doctorDetail" jdbcType="VARCHAR" />
+    <result column="doctor_pic" property="doctorPic" jdbcType="VARCHAR" />
+    <result column="doctor_title" property="doctorTitle" jdbcType="VARCHAR" />
+    <result column="doctor_vice_title" property="doctorViceTitle" jdbcType="VARCHAR" />
+    <result column="doctor_label" property="doctorLabel" jdbcType="VARCHAR" />
+    <result column="goodat" property="goodat" jdbcType="VARCHAR" />
+    <result column="cultural_top" property="culturalTop" jdbcType="VARCHAR" />
+    <result column="cultural_experience" property="culturalExperience" jdbcType="VARCHAR" />
+    <result column="certificate_no" property="certificateNo" jdbcType="VARCHAR" />
+    <result column="certificate_pic" property="certificatePic" jdbcType="VARCHAR" />
+    <result column="profession_experience" property="professionExperience" jdbcType="VARCHAR" />
+    <result column="academic_achievement" property="academicAchievement" jdbcType="VARCHAR" />
+    <result column="job_duration" property="jobDuration" jdbcType="INTEGER" />
+    <result column="country" property="country" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="nativecity" property="nativecity" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="weixin" property="weixin" jdbcType="VARCHAR" />
+    <result column="createby" property="createby" jdbcType="VARCHAR" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="lasteditby" property="lasteditby" jdbcType="VARCHAR" />
+    <result column="lasteditdate" property="lasteditdate" jdbcType="TIMESTAMP" />
+    <result column="doctor_status" property="doctorStatus" jdbcType="TINYINT" />
+    <result column="doctor_sort" property="doctorSort" jdbcType="TINYINT" />
+    <result column="is_audit" property="isAudit" jdbcType="BIT" />
+    <result column="audit_account" property="auditAccount" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    doctor_id, hospital_id, doctor_name, doctor_profile, doctor_detail, doctor_pic, doctor_title, doctor_vice_title,
+    doctor_label, goodat, cultural_top, cultural_experience, certificate_no, certificate_pic,
+    profession_experience, academic_achievement, job_duration, country, province, city,
+    nativecity, sex, idcard, mobile, email, qq, weixin, createby, createdate, lasteditby,
+    lasteditdate, doctor_status, doctor_sort, is_audit, audit_account, audit_time
+  </sql>
+  <select id="conditionQuery" resultMap="BaseResultMap" parameterType="com.meirengu.admin.vo.DoctorVo">
+    select
+    <include refid="Base_Column_List" />
+    from doctor
+    where 1=1
+    <if test="doctorId != null" >
+      and doctor_id=#{doctorId,jdbcType=INTEGER}
+    </if>
+    <if test="hospitalId != null" >
+      and hospital_id=#{hospitalId,jdbcType=INTEGER}
+    </if>
+    <if test="doctorName != null" >
+      and doctor_name=#{doctorName,jdbcType=VARCHAR}
+    </if>
+    <if test="sex != null" >
+      and sex=#{sex,jdbcType=INTEGER}
+    </if>
+    <if test="doctorStatus != null" >
+      and doctor_status = #{doctorStatus,jdbcType=TINYINT}
+    </if>
+    <if test="isAudit != null" >
+      and is_audit = #{isAudit,jdbcType=BIT}
+    </if>
+  </select>
+  <select id="selectionDoctor" resultType="java.util.Map" parameterType="com.meirengu.admin.vo.DoctorVo">
+    SELECT
+        d.doctor_id 'doctorId',
+        d.doctor_pic 'doctorPic',
+        d.doctor_name 'doctorName',
+        d.cultural_top 'culturalTop',
+        d.doctor_title 'doctorTitle',
+        d.doctor_vice_title 'doctorViceTitle',
+        d.doctor_label 'doctorLabel',
+        h.hospital_name 'hospitalName',
+        h.hospital_id 'hospitalId'
+    FROM
+        doctor d,
+        hospital h
+    WHERE
+        d.hospital_id = h.hospital_id
+    LIMIT #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  <select id="getDoctorDetails" resultType="java.util.Map" parameterType="com.meirengu.admin.vo.DoctorVo">
+    SELECT
+      d.doctor_id 'doctorId',
+      d.doctor_name 'doctorName',
+	  d.doctor_vice_title 'doctorViceTitle',
+      d.hospital_id 'hospitalId',
+      d.doctor_pic 'doctorPic',
+      (SELECT h.hospital_name FROM hospital h WHERE d.hospital_id = h.hospital_id) 'hospitalName',
+      d.doctor_profile 'doctorProfile',
+      d.cultural_experience 'culturalExperience',
+      d.certificate_pic 'certificatePic',
+      d.academic_achievement 'academic_achievement',
+      d.goodat 'goodat'
+    FROM
+      doctor d
+    WHERE d.doctor_id = #{doctorId,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.meirengu.admin.vo.DoctorVo" useGeneratedKeys="true" keyProperty="doctorId" >
+    insert into doctor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="doctorId != null" >
+        doctor_id,
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id,
+      </if>
+      <if test="doctorName != null" >
+        doctor_name,
+      </if>
+      <if test="doctorProfile != null" >
+        doctor_profile,
+      </if>
+      <if test="doctorDetail != null" >
+        doctor_detail,
+      </if>
+      <if test="doctorPic != null" >
+        doctor_pic,
+      </if>
+      <if test="doctorTitle != null" >
+        doctor_title,
+      </if>
+      <if test="doctorViceTitle != null">
+        doctor_vice_title,
+      </if>
+      <if test="doctorLabel != null">
+        doctor_label,
+      </if>
+      <if test="goodat != null" >
+        goodat,
+      </if>
+      <if test="culturalTop != null" >
+        cultural_top,
+      </if>
+      <if test="culturalExperience != null" >
+        cultural_experience,
+      </if>
+      <if test="certificateNo != null" >
+        certificate_no,
+      </if>
+      <if test="certificatePic != null" >
+        certificate_pic,
+      </if>
+      <if test="professionExperience != null" >
+        profession_experience,
+      </if>
+      <if test="academicAchievement != null" >
+        academic_achievement,
+      </if>
+      <if test="jobDuration != null" >
+        job_duration,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="nativecity != null" >
+        nativecity,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="weixin != null" >
+        weixin,
+      </if>
+      <if test="createby != null" >
+        createby,
+      </if>
+      <if test="createdate != null" >
+        createdate,
+      </if>
+      <if test="lasteditby != null" >
+        lasteditby,
+      </if>
+      <if test="lasteditdate != null" >
+        lasteditdate,
+      </if>
+      <if test="doctorStatus != null" >
+        doctor_status,
+      </if>
+      <if test="doctorSort != null" >
+        doctor_sort,
+      </if>
+      <if test="isAudit != null" >
+        is_audit,
+      </if>
+      <if test="auditAccount != null" >
+        audit_account,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="doctorId != null" >
+        #{doctorId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="doctorName != null" >
+        #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorProfile != null" >
+        #{doctorProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorDetail != null" >
+        #{doctorDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorViceTitle != null">
+        #{doctorViceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLabel != null">
+        #{doctorLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorPic != null" >
+        #{doctorPic,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorTitle != null" >
+        #{doctorTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="goodat != null" >
+        #{goodat,jdbcType=VARCHAR},
+      </if>
+      <if test="culturalTop != null" >
+        #{culturalTop,jdbcType=VARCHAR},
+      </if>
+      <if test="culturalExperience != null" >
+        #{culturalExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateNo != null" >
+        #{certificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certificatePic != null" >
+        #{certificatePic,jdbcType=VARCHAR},
+      </if>
+      <if test="professionExperience != null" >
+        #{professionExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="academicAchievement != null" >
+        #{academicAchievement,jdbcType=VARCHAR},
+      </if>
+      <if test="jobDuration != null" >
+        #{jobDuration,jdbcType=INTEGER},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="nativecity != null" >
+        #{nativecity,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null" >
+        #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="createby != null" >
+        #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditby != null" >
+        #{lasteditby,jdbcType=VARCHAR},
+      </if>
+      <if test="lasteditdate != null" >
+        #{lasteditdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doctorStatus != null" >
+        #{doctorStatus,jdbcType=TINYINT},
+      </if>
+      <if test="doctorSort != null" >
+        #{doctorSort,jdbcType=TINYINT},
+      </if>
+      <if test="isAudit != null" >
+        #{isAudit,jdbcType=BIT},
+      </if>
+      <if test="auditAccount != null" >
+        #{auditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateDoctor" parameterType="com.meirengu.admin.vo.DoctorVo" >
+    update doctor
+    <set >
+      <if test="hospitalId != null" >
+        hospital_id = #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="doctorName != null" >
+        doctor_name = #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorProfile != null" >
+        doctor_profile = #{doctorProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorPic != null" >
+        doctor_pic = #{doctorPic,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorTitle != null" >
+        doctor_title = #{doctorTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorViceTitle != null">
+        doctor_vice_title = #{doctorViceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLabel != null">
+        doctor_label = #{doctorLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="goodat != null" >
+        goodat = #{goodat,jdbcType=VARCHAR},
+      </if>
+      <if test="culturalTop != null" >
+        cultural_top = #{culturalTop,jdbcType=VARCHAR},
+      </if>
+      <if test="culturalExperience != null" >
+        cultural_experience = #{culturalExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateNo != null" >
+        certificate_no = #{certificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certificatePic != null" >
+        certificate_pic = #{certificatePic,jdbcType=VARCHAR},
+      </if>
+      <if test="professionExperience != null" >
+        profession_experience = #{professionExperience,jdbcType=VARCHAR},
+      </if>
+      <if test="academicAchievement != null" >
+        academic_achievement = #{academicAchievement,jdbcType=VARCHAR},
+      </if>
+      <if test="jobDuration != null" >
+        job_duration = #{jobDuration,jdbcType=INTEGER},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="nativecity != null" >
+        nativecity = #{nativecity,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=BIT},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null" >
+        weixin = #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="createby != null" >
+        createby = #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        createdate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lasteditby != null" >
+        lasteditby = #{lasteditby,jdbcType=VARCHAR},
+      </if>
+      <if test="lasteditdate != null" >
+        lasteditdate = #{lasteditdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doctorStatus != null" >
+        doctor_status = #{doctorStatus,jdbcType=TINYINT},
+      </if>
+      <if test="doctorSort != null" >
+        doctor_sort = #{doctorSort,jdbcType=TINYINT},
+      </if>
+      <if test="isAudit != null" >
+        is_audit = #{isAudit,jdbcType=BIT},
+      </if>
+      <if test="auditAccount != null" >
+        audit_account = #{auditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where doctor_id = #{doctorId,jdbcType=INTEGER}
+  </update>
+</mapper>
