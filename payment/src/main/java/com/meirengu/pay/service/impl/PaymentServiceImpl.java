@@ -167,7 +167,7 @@ public class PaymentServiceImpl implements PaymentService{
             payment.setOrderSN(notifyData.getOut_trade_no());
             payment.setTransactionSN(notifyData.getTransaction_id());
             payment.setBankType(notifyData.getBank_type());
-            payment.setReturnMsg(notifyData.toString());
+            payment.setReturnMsg(returnMsg);
             payment.setStatus(2);
 
             LOGGER.info(">> update payment params is {}", JSON.toJSON(payment));
@@ -272,7 +272,7 @@ public class PaymentServiceImpl implements PaymentService{
         payment.setOrderSN(notifyData.getOut_trade_no());
         payment.setTransactionSN(notifyData.getTransaction_id());
         payment.setBankType(notifyData.getBank_type());
-        payment.setReturnMsg(notifyData.toString());
+        payment.setReturnMsg(returnMsg);
         payment.setStatus(3);
 
         LOGGER.info(">> update payment params is {}", JSON.toJSON(payment));
