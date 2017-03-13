@@ -72,8 +72,8 @@ public class LoginController extends BaseController {
             logger.info("LoginController.login update code result:{}", updateResult);
 
         }
-        if (checkCode == null && checkCode != null) {
-            //手机密码方式登录TO-DO
+        if (checkCode == null && password != null) {
+            //todo 手机密码方式登录TO-DO
         }
         User user = userService.retrieveByPhone(mobile);
         if (user == null) {
