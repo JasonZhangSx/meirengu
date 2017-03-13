@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="medical_beauty:war">
-    <output-path>$PROJECT_DIR$/medical_beauty/target</output-path>
-    <root id="archive" name="medical_beauty.war">
-      <element id="artifact" artifact-name="medical_beauty:war exploded" />
-    </root>
-  </artifact>
-</component>

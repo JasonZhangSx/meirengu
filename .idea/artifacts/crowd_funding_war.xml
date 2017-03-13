@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="crowd_funding:war">
-    <output-path>$PROJECT_DIR$/crowd_funding/target</output-path>
-    <root id="archive" name="crowd_funding.war">
-      <element id="artifact" artifact-name="crowd_funding:war exploded" />
-    </root>
-  </artifact>
-</component>

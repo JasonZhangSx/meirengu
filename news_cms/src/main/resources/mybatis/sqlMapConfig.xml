@@ -4,7 +4,11 @@
 <configuration>
 	<!-- 实体别名设置 -->
 	<typeAliases>
+		<typeAlias alias="faq" type="com.meirengu.news.model.Faq" />
+		<typeAlias alias="faqClass" type="com.meirengu.news.model.FaqClass" />
 		<typeAlias alias="article" type="com.meirengu.news.model.Article" />
 		<typeAlias alias="articleClass" type="com.meirengu.news.model.ArticleClass" />
+		<typeAlias alias="bulletin" type="com.meirengu.news.model.Bulletin" />
+		<typeAlias alias="feedback" type="com.meirengu.news.model.Feedback" />
 	</typeAliases>
 </configuration>

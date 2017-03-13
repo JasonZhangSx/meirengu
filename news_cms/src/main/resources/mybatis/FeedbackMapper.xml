@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.FeedbackDao" >
+
+    <resultMap id="Feedback" type="feedback">
+        <id column="feedback_id" property="feedbackId" jdbcType="INTEGER" javaType="int"/>
+        <result column="feedback_content" property="feedbackContent" jdbcType="VARCHAR" javaType="string"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER" javaType="int"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR" javaType="string"/>
+        <result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="string"/>
+        <result column="status" property="status" jdbcType="TINYINT" javaType="int"/>
+        <result column="create_time" property="time" jdbcType="DATE" javaType="Date"/>
+    </resultMap>
+
+    <sql id='table_name'>feedback</sql>
+    <sql id="select_columns">
+        feedback_id as feedbackId, feedback_content as feedbackContent, user_id as userId, user_name as userName,
+        user_phone as userPhone, status as status, create_time as createTime
+    </sql>
+
+    <insert id="insert" parameterType="Feedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        INSERT INTO <include refid="table_name" />
+        (feedback_id, feedback_content, user_id, user_name, user_phone, status)
+        VALUES
+        (#{feedbackId}, #{feedbackContent}, #{userId}, #{userName}, #{userPhone}, #{status});
+    </insert>
+    <update id="update" parameterType="Feedback">
+        update <include refid="table_name" />
+        <set>
+            <if test="feedbackContent != null and feedbackContent != ''">
+                feedback_content=#{feedbackContent},
+            </if>
+            <if test="userId != null and userId != '' userId!=0">
+                user_id=#{userId},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name=#{userName},
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                user_phone=#{userPhone},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+        </set>
+        <where>
+            feedback_id = #{feedbackId}
+        </where>
+    </update>
+
+    <update id="updateStatus" parameterType="INTEGER">
+        update <include refid="table_name" /> set status=1 WHERE feedback_id=#{feedbackId}
+    </update>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select <include refid="select_columns" />
+        from
+        <include refid="table_name" />
+        <where>
+        <if test="feedbackId != null and feedbackId != '' and feedbackId != 0">
+            AND feedback_id=#{id}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND user_id=#{userId}
+        </if>
+        <if test="userPhone != null and userPhone != ''">
+            AND user_phone=#{userPhone}
+        </if>
+        <if test="userName != null and userName != ''">
+            AND user_name=#{userName}
+        </if>
+        <if test="status != null and status != ''">
+            AND status=#{status}
+        </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+        <if test="offset != null and offset != 0 and limit != null and limit != 0">
+            limit ${offset},${limit}
+        </if>
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        select count(1)
+        from
+        <include refid="table_name" />
+        <where>
+            <if test="feedbackId != null and feedbackId != '' and feedbackId != 0">
+                AND feedback_id=#{id}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id=#{userId}
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                AND user_phone=#{userPhone}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name=#{userName}
+            </if>
+            <if test="status != null and status != ''">
+                AND status=#{status}
+            </if>
+        </where>
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>
