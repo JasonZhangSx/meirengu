@@ -24,73 +24,11 @@
         <processorPath useClasspath="true" />
         <module name="mall" />
       </profile>
-      <profile default="false" name="Annotation profile for crowd_funding" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="crowd_funding" />
-      </profile>
-      <profile default="false" name="Annotation profile for advertisement" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="advertisement" />
-      </profile>
-      <profile default="false" name="Annotation profile for medical_beauty" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="medical_beauty" />
-      </profile>
-      <profile default="false" name="Annotation profile for data_operation" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="data_operation" />
-      </profile>
-      <profile default="false" name="Annotation profile for payment" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="payment" />
-      </profile>
-      <profile default="false" name="Annotation profile for news_cms" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="news_cms" />
-      </profile>
-      <profile default="false" name="Annotation profile for user_center" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="user_center" />
-      </profile>
-      <profile default="false" name="Annotation profile for shopping_mall" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="shopping_mall" />
-      </profile>
-      <profile default="false" name="Annotation profile for sms" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="sms" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="adsense" target="1.5" />
       <module name="advertisement" target="1.8" />
+      <module name="commons-meirengu" target="1.8" />
       <module name="crowd_funding" target="1.8" />
       <module name="data_operation" target="1.8" />
       <module name="mall" target="1.5" />
@@ -101,6 +39,7 @@
       <module name="shopping_mall" target="1.8" />
       <module name="sms" target="1.8" />
       <module name="user_center" target="1.8" />
+      <module name="wxcs" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
