@@ -13,6 +13,7 @@
     <file type="web" url="file://$PROJECT_DIR$/shopping_mall" />
     <file type="web" url="file://$PROJECT_DIR$/sms" />
     <file type="web" url="file://$PROJECT_DIR$/user_center" />
+    <file type="web" url="file://$PROJECT_DIR$/wxcs" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

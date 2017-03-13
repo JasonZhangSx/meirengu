@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.yunpian.sdk:yunpian-java-sdk:1.2.1">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1.jar!/" />
+      <root url="jar://D:/Repository/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1-javadoc.jar!/" />
+      <root url="jar://D:/Repository/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1-sources.jar!/" />
+      <root url="jar://D:/Repository/com/yunpian/sdk/yunpian-java-sdk/1.2.1/yunpian-java-sdk-1.2.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

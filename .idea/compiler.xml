@@ -22,7 +22,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="advertisement" />
+        <module name="commons-meirengu" />
+        <module name="crowd_funding" />
+        <module name="data_operation" />
         <module name="mall" />
+        <module name="medical_beauty" />
+        <module name="news_cms" />
+        <module name="payment" />
+        <module name="sms" />
+        <module name="user_center" />
+        <module name="wxcs" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

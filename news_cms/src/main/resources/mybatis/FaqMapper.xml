@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.FaqDao" >
+
+    <resultMap id="faq" type="faq">
+        <id column="faq_id" property="faqId" jdbcType="INTEGER" javaType="int"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
+        <result column="status" property="status" jdbcType="TINYINT" javaType="byte"/>
+        <result column="class_name" property="className" jdbcType="VARCHAR" javaType="string"/>
+        <result column="faq_question" property="faqQuestion" jdbcType="VARCHAR" javaType="string"/>
+        <result column="faq_answer" property="faqAnswer" jdbcType="VARCHAR" javaType="string"/>
+        <result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="string"/>
+        <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+        <result column="update_time" property="updateTime" jdbcType="DATE" javaType="Date"/>
+    </resultMap>
+
+    <sql id='table_name'>faq</sql>
+    <sql id="select_columns">
+        faq_id as faqId, class_id as classId, status as status, class_name as `className`,
+        faq_question as faqQuestion, faq_answer as faqAnswer,create_time as createTime, update_time as updateTime,
+        operate_account as operateAccount
+    </sql>
+
+    <insert id="insert" parameterType="faq" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO <include refid="table_name" />
+        (faq_id,
+        faq_question,
+        faq_answer,
+        class_id,
+        class_name,
+        status,
+        create_time,
+        update_time,
+        operate_account)
+        VALUES
+        (
+        #{faqId},
+        #{faqQuestion},
+        #{faqAnswer},
+        #{classId},
+        #{className},
+        #{status},
+        #{createTime},
+        #{updateTime},
+        #{operateAccount}
+        );
+    </insert>
+    <update id="update" parameterType="faq">
+        update <include refid="table_name" />
+        <set>
+            <if test="faqQuestion != null and faqQuestion != ''">
+                faq_question=#{faqQuestion},
+            </if>
+            <if test="faqAnswer != null and faqAnswer != ''">
+                faq_answer=#{faqAnswer},
+            </if>
+            <if test="classId != null and classId != ''">
+                class_id=#{classId},
+            </if>
+            <if test="className != null and className != ''">
+                class_name=#{className},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time=#{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="operateAccount != null and operateAccount != ''">
+            operate_account=#{operateAccount},
+            </if>
+                faq_id=#{faqId}
+        </set>
+        <where>
+            faq_id = #{faqId}
+        </where>
+    </update>
+
+   <!-- <update id="delete" parameterType="INTEGER">
+        update <include refid="table_name" /> set flag=0 WHERE faq_id=#{faqId}
+    </update>-->
+
+    <select id="detail" parameterType="INTEGER" resultType="Map">
+        SELECT <include refid="select_columns" />
+        FROM faq WHERE faq_id=#{faqId}
+    </select>
+    <select id="getFaq" parameterType="faq" resultType="faq">
+        SELECT <include refid="select_columns" />
+        FROM faq WHERE 1 = 1
+        <if test="faqId != null and faqId != ''">
+            AND faq_id=#{faqId}
+        </if>
+        <if test="faqQuestion != null and faqQuestion != ''">
+            AND faq_question=#{faqQuestion}
+        </if>
+    </select>
+
+   <!-- <update id="publish" parameterType="Map" >
+        update <include refid="table_name" /> set article_is_publish=#{isPublish},
+        article_time=now()
+        WHERE article_id=#{id} and flag=1
+    </update>-->
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select <include refid="select_columns" />,
+        0 AS readNum, 0 AS commentNum, 0 AS collectNum,
+        (SELECT class_name FROM faq_class fc WHERE fc.class_id=a.class_id) AS className
+        from
+        <include refid="table_name" /> a
+        where 1=1
+        <if test="faqQuestion != null and faqQuestion != ''">
+            AND  faq_question=#{faqQuestion}
+        </if>
+        <if test="faqAnswer != null and faqAnswer != ''">
+            AND faq_answer=#{faqAnswer}
+        </if>
+        <if test="classId != null and classId != ''">
+            AND class_id=#{classId}
+        </if>
+        <if test="className != null and className != ''">
+            class_name=#{className}
+        </if>
+        <if test="status != null and status != ''">
+            AND status=#{status}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            AND create_time=#{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            AND update_time=#{updateTime}
+        </if>
+        <if test="operateAccount != null and operateAccount != ''">
+            AND operate_account=#{operateAccount}
+        </if>
+            order by create_time DESC
+    </select>
+
+    <select id="getTotalCount" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        where 1=1
+        <if test="faqQuestion != null and faqQuestion != ''">
+            AND  faq_question=#{faqQuestion}
+        </if>
+        <if test="faqAnswer != null and faqAnswer != ''">
+            AND faq_answer=#{faqAnswer}
+        </if>
+        <if test="classId != null and classId != ''">
+            AND class_id=#{classId}
+        </if>
+        <if test="className != null and className != ''">
+            class_name=#{className}
+        </if>
+        <if test="status != null and status != ''">
+            AND status=#{status}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            AND create_time=#{createTime}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            AND update_time=#{updateTime}
+        </if>
+        <if test="operateAccount != null and operateAccount != ''">
+            AND operate_account=#{operateAccount}
+        </if>
+        order by create_time DESC
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>
