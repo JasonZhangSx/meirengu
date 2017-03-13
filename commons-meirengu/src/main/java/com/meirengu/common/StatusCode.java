@@ -41,12 +41,8 @@ public class StatusCode {
     public static final int MOBILE_FORMAT_ERROR = 40016;
     //40100-40200//user_center
 
-    //50200-50300//news_cms
-    public static final int FEEDBACK_ERROR_INSERT = 50200;
-    public static final int BULLETIN_ERROR_INSERT = 50201;
-    public static final int FEEDBACK_CONTENT_OUTOF = 50202;
-    public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
-    public static final int BULLETIN_ERROR_LIST = 50204;
+    //40200-40300//news_cms
+
     //40300-40400//medical_beauty
     public static final int MB_CORRECT = 40300;
     public static final int MB_ERROR_SELECT = 40301;
@@ -97,6 +93,12 @@ public class StatusCode {
     //50200-50300//admin_dashboard
     public static final int AD_LONGIN_SUCCESS = 50200;
     public static final int AD_LONGIN_FIAL = 50201;
+    //50200-50300//news_cms
+    public static final int FEEDBACK_ERROR_INSERT = 50200;
+    public static final int BULLETIN_ERROR_INSERT = 50201;
+    public static final int FEEDBACK_CONTENT_OUTOF = 50202;
+    public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
+    public static final int BULLETIN_ERROR_LIST = 50204;
 
     //50300-50400//medical_beauty
 
@@ -215,9 +217,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
 
-        //50200-50300//admin_dashboard
-        codeMsgMap.put(StatusCode.AD_LONGIN_SUCCESS,"登录成功");
-        codeMsgMap.put(StatusCode.AD_LONGIN_FIAL,"登录失败");
+        //50200-50300//news_cms
+
         //50300-50400//medical_beauty
 
         //50400-50500//shopping_mall
