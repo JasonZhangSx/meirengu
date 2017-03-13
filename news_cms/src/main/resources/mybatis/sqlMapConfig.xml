@@ -6,5 +6,7 @@
 	<typeAliases>
 		<typeAlias alias="article" type="com.meirengu.news.model.Article" />
 		<typeAlias alias="articleClass" type="com.meirengu.news.model.ArticleClass" />
+		<typeAlias alias="bulletin" type="com.meirengu.news.model.Bulletin" />
+		<typeAlias alias="feedback" type="com.meirengu.news.model.Feedback" />
 	</typeAliases>
 </configuration>
