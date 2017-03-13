@@ -1,0 +1,23 @@
+# IntelliJ
+/target
+/.idea
+*.iml
+*.ipr
+*.iws
+.idea
+*/*.log
+*/target/
+*/.idea/
+*.DS_Store
+*.classpath
+*.settings
+*.project
+
+# IDEA Files
+.idea/
+/.gradle
+/.idea
+/FuruiApplication.iml
+
+/.idea/workspace.xml
+/.idea/libraries
