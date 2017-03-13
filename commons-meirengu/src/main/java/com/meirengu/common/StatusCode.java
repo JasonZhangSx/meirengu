@@ -90,7 +90,9 @@ public class StatusCode {
     public static final int CHECK_CODE_SEND_ERROR = 50101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 50102;
 
-    //50200-50300//news_cms
+    //50200-50300//admin_dashboard
+    public static final int AD_LONGIN_SUCCESS = 50200;
+    public static final int AD_LONGIN_FIAL = 50201;
 
     //50300-50400//medical_beauty
 
@@ -209,8 +211,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
 
-        //50200-50300//news_cms
-
+        //50200-50300//admin_dashboard
+        codeMsgMap.put(StatusCode.AD_LONGIN_SUCCESS,"登录成功");
+        codeMsgMap.put(StatusCode.AD_LONGIN_FIAL,"登录失败");
         //50300-50400//medical_beauty
 
         //50400-50500//shopping_mall

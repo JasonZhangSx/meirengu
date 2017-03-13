@@ -14,14 +14,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class test {
     public static void main(String[] args) {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-spring.xml");//读取bean.xml中的内容
-//        AccountServiceImpl userService = ctx.getBean(AccountServiceImpl.class);//创建bean的引用对象
+        AccountServiceImpl userService = ctx.getBean(AccountServiceImpl.class);//创建bean的引用对象
 //        Account account = new Account();
 //        account.setUserName("admin");
 //        account.setPassword("123456");
 //        account = userService.findAccount(account);
 //        System.out.println(account.toString());
-        AccountServiceImpl accountService = new AccountServiceImpl();
-        System.out.println(accountService.findRolePermission(null));
+//        AccountServiceImpl accountService = new AccountServiceImpl();
+        System.out.println(userService.findRolePermission(null));
 
         }
     }
