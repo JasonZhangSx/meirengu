@@ -1242,7 +1242,7 @@
       <workItem from="1483584131390" duration="23928000" />
       <workItem from="1483670488101" duration="5790000" />
       <workItem from="1489385026495" duration="78000" />
-      <workItem from="1489385312962" duration="402000" />
+      <workItem from="1489385312962" duration="453000" />
     </task>
     <task id="LOCAL-00001" summary="init meirengu project">
       <created>1482743223561</created>
@@ -1335,7 +1335,14 @@
       <option name="project" value="LOCAL" />
       <updated>1489385696800</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="idea配置文件提交">
+      <created>1489385757032</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1489385757032</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1371,7 +1378,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="210545000" />
+    <option name="totallyTimeSpent" value="210596000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1477,7 +1484,8 @@
     <MESSAGE value="pom.xml" />
     <MESSAGE value="医院医生初版" />
     <MESSAGE value="news_cm常见问题接口提交提交" />
-    <option name="LAST_COMMIT_MESSAGE" value="news_cm常见问题接口提交提交" />
+    <MESSAGE value="idea配置文件提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="idea配置文件提交" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
