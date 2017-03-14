@@ -5,9 +5,18 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="organization_id" jdbcType="INTEGER" property="organizationId" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+    <result column="operate_account" jdbcType="VARCHAR" property="operateAccount" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_name, password
+    id, user_name, password, real_name, user_phone, user_email, organization_id, status,
+    create_time, expire_time, operate_account
   </sql>
   <select id="findUser" parameterType="com.meirengu.commons.authority.model.Account" resultMap="BaseResultMap">
     select 

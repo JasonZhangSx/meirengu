@@ -96,6 +96,9 @@ public class StatusCode {
     public static final int CHECK_CODE_SEND_ERROR = 50101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 50102;
 
+    //50200-50300//admin_dashboard
+    public static final int AD_LONGIN_SUCCESS = 50200;
+    public static final int AD_LONGIN_FIAL = 50201;
     //50200-50300//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
     public static final int BULLETIN_ERROR_INSERT = 50201;
@@ -225,13 +228,6 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
 
         //50200-50300//news_cms
-        codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
-        codeMsgMap.put(StatusCode.BULLETIN_ERROR_INSERT, "公告列表获取失败，请重试");
-        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
-        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
-        codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
-
-
 
         //50300-50400//medical_beauty
 

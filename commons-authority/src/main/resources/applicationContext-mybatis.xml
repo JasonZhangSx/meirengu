@@ -6,9 +6,9 @@
 		 >
 		<!-- Connection Info -->
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://120.27.37.54:3306/admin?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8" />
-		<property name="username" value="utest" />
-		<property name="password" value="Test?#12" />
+		<property name="url" value="jdbc:mysql://192.168.0.135:3306/admin?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8" />
+		<property name="username" value="dev" />
+		<property name="password" value="dev@1qa" />
 
 		<!-- Connection Pooling Info -->
 		<property name="maxActive" value="20" />
