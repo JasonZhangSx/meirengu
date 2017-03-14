@@ -13,10 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +22,8 @@ import java.util.Map;
 /**
  * Created by huoyan403 on 3/14/2017.
  */
+@RestController
+@RequestMapping("address")
 public class UserAddressController extends BaseController{
 
 
@@ -33,7 +32,7 @@ public class UserAddressController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserAddressController.class);
 
-    @RequestMapping(value = "address/insert", method = RequestMethod.POST)
+    @RequestMapping(value = "insert", method = RequestMethod.POST)
     public Result insertAddress(@RequestParam(value = "mobile", required = false) String mobile,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
@@ -75,7 +74,7 @@ public class UserAddressController extends BaseController{
 
 
 
-    @RequestMapping(value = "address/update", method = RequestMethod.POST)
+    @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
@@ -110,7 +109,7 @@ public class UserAddressController extends BaseController{
      * @param addressId
      * @return
      */
-    @RequestMapping(value = "address/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result deleteAddress(@RequestParam(value = "address_id", required = true) Integer addressId){
         UserAddress userAddress = new UserAddress();
         userAddress.setAddressId(addressId);

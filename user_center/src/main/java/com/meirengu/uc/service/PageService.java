@@ -1,4 +1,4 @@
-package com.meirengu.service;
+package com.meirengu.uc.service;
 
 
 import com.meirengu.dao.PageDao;

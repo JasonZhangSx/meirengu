@@ -1,7 +1,7 @@
 package com.meirengu.uc.service.impl;
 
 import com.meirengu.model.Page;
-import com.meirengu.service.PageService;
+import com.meirengu.uc.service.PageService;
 import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.service.UserAddressService;
