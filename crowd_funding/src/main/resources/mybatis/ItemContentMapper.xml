@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.ItemContentDao" >
+
+	<resultMap id="itemContentMap" type="ItemContent">
+		<id column="content_id" property="contentId" jdbcType="INTEGER" javaType="int"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
+		<result column="content_type" property="contentType" jdbcType="TINYINT" javaType="byte"/>
+		<result column="content_title" property="contentTitle" jdbcType="VARCHAR" javaType="String"/>
+		<result column="content_subtitle" property="contentSubtitle" jdbcType="VARCHAR" javaType="String"/>
+		<result column="content_info" property="contentInfo" jdbcType="INTEGER" javaType="int"/>
+		<result column="content_sort" property="contentSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">item_content</sql>
+	<sql id="select_columns">
+		content_id as contentId, item_id as itemId, content_type as contentType, content_title as contentTitle, content_subtitle as contentSubtitle, content_info as contentInfo, content_sort as contentSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="itemContent" useGeneratedKeys="true" keyProperty="contentId" >
+		INSERT INTO <include refid="table_name" />
+			(content_id, item_id, content_type, content_title, content_subtitle, content_info, content_sort, create_time, update_time, operate_account)
+		VALUES
+			(#{contentId}, #{itemId}, #{contentType}, #{contentTitle}, #{contentSubtitle}, #{contentInfo}, #{contentSort}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="itemContent">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="contentId != null and contentId != ''">
+				content_id=#{contentId},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="contentType != null and contentType != ''">
+				content_type=#{contentType},
+			</if>
+			<if test="contentTitle != null and contentTitle != ''">
+				content_title=#{contentTitle},
+			</if>
+			<if test="contentSubtitle != null and contentSubtitle != ''">
+				content_subtitle=#{contentSubtitle},
+			</if>
+			<if test="contentInfo != null and contentInfo != ''">
+				content_info=#{contentInfo},
+			</if>
+			<if test="contentSort != null and contentSort != ''">
+				content_sort=#{contentSort},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			content_id = #{contentId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="itemContent">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where content_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.ItemLevelDao" >
+
+	<resultMap id="itemLevelMap" type="ItemLevel">
+		<id column="level_id" property="levelId" jdbcType="INTEGER" javaType="int"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
+		<result column="level_name" property="levelName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="level_amount" property="levelAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="level_desc" property="levelDesc" jdbcType="LONGVARCHAR" javaType="String"/>
+		<result column="total_number" property="totalNumber" jdbcType="INTEGER" javaType="int"/>
+		<result column="single_limit_number" property="singleLimitNumber" jdbcType="INTEGER" javaType="int"/>
+		<result column="book_number" property="bookNumber" jdbcType="INTEGER" javaType="int"/>
+		<result column="completed_number" property="completedNumber" jdbcType="INTEGER" javaType="int"/>
+		<result column="payback_days" property="paybackDays" jdbcType="INTEGER" javaType="int"/>
+		<result column="payback_time" property="paybackTime" jdbcType="DATE" javaType="Date"/>
+		<result column="is_share_bonus" property="isShareBonus" jdbcType="TINYINT" javaType="byte"/>
+		<result column="year_rate" property="yearRate" jdbcType="INTEGER" javaType="int"/>
+		<result column="investment_period" property="investmentPeriod" jdbcType="INTEGER" javaType="int"/>
+		<result column="revenue_model" property="revenueModel" jdbcType="INTEGER" javaType="int"/>
+		<result column="share_bonus_period" property="shareBonusPeriod" jdbcType="INTEGER" javaType="int"/>
+		<result column="is_need_address" property="isNeedAddress" jdbcType="TINYINT" javaType="byte"/>
+		<result column="is_need_agreement" property="isNeedAgreement" jdbcType="TINYINT" javaType="byte"/>
+		<result column="level_status" property="levelStatus" jdbcType="TINYINT" javaType="byte"/>
+		<result column="level_sort" property="levelSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">item_level</sql>
+	<sql id="select_columns">
+		level_id as levelId, item_id as itemId, level_name as levelName, level_amount as levelAmount, level_desc as levelDesc, total_number as totalNumber, single_limit_number as singleLimitNumber, book_number as bookNumber, completed_number as completedNumber, payback_days as paybackDays, payback_time as paybackTime, is_share_bonus as isShareBonus, year_rate as yearRate, investment_period as investmentPeriod, revenue_model as revenueModel, share_bonus_period as shareBonusPeriod, is_need_address as isNeedAddress, is_need_agreement as isNeedAgreement, level_status as levelStatus, level_sort as levelSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="itemLevel" useGeneratedKeys="true" keyProperty="levelId" >
+		INSERT INTO <include refid="table_name" />
+			(level_id, item_id, level_name, level_amount, level_desc, total_number, single_limit_number, book_number, completed_number, payback_days, payback_time, is_share_bonus, year_rate, investment_period, revenue_model, share_bonus_period, is_need_address, is_need_agreement, level_status, level_sort, create_time, update_time, operate_account)
+		VALUES
+			(#{levelId}, #{itemId}, #{levelName}, #{levelAmount}, #{levelDesc}, #{totalNumber}, #{singleLimitNumber}, #{bookNumber}, #{completedNumber}, #{paybackDays}, #{paybackTime}, #{isShareBonus}, #{yearRate}, #{investmentPeriod}, #{revenueModel}, #{shareBonusPeriod}, #{isNeedAddress}, #{isNeedAgreement}, #{levelStatus}, #{levelSort}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="itemLevel">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="levelId != null and levelId != ''">
+				level_id=#{levelId},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="levelName != null and levelName != ''">
+				level_name=#{levelName},
+			</if>
+			<if test="levelAmount != null and levelAmount != ''">
+				level_amount=#{levelAmount},
+			</if>
+			<if test="levelDesc != null and levelDesc != ''">
+				level_desc=#{levelDesc},
+			</if>
+			<if test="totalNumber != null and totalNumber != ''">
+				total_number=#{totalNumber},
+			</if>
+			<if test="singleLimitNumber != null and singleLimitNumber != ''">
+				single_limit_number=#{singleLimitNumber},
+			</if>
+			<if test="bookNumber != null and bookNumber != ''">
+				book_number=#{bookNumber},
+			</if>
+			<if test="completedNumber != null and completedNumber != ''">
+				completed_number=#{completedNumber},
+			</if>
+			<if test="paybackDays != null and paybackDays != ''">
+				payback_days=#{paybackDays},
+			</if>
+			<if test="paybackTime != null and paybackTime != ''">
+				payback_time=#{paybackTime},
+			</if>
+			<if test="isShareBonus != null and isShareBonus != ''">
+				is_share_bonus=#{isShareBonus},
+			</if>
+			<if test="yearRate != null and yearRate != ''">
+				year_rate=#{yearRate},
+			</if>
+			<if test="investmentPeriod != null and investmentPeriod != ''">
+				investment_period=#{investmentPeriod},
+			</if>
+			<if test="revenueModel != null and revenueModel != ''">
+				revenue_model=#{revenueModel},
+			</if>
+			<if test="shareBonusPeriod != null and shareBonusPeriod != ''">
+				share_bonus_period=#{shareBonusPeriod},
+			</if>
+			<if test="isNeedAddress != null and isNeedAddress != ''">
+				is_need_address=#{isNeedAddress},
+			</if>
+			<if test="isNeedAgreement != null and isNeedAgreement != ''">
+				is_need_agreement=#{isNeedAgreement},
+			</if>
+			<if test="levelStatus != null and levelStatus != ''">
+				level_status=#{levelStatus},
+			</if>
+			<if test="levelSort != null and levelSort != ''">
+				level_sort=#{levelSort},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			level_id = #{levelId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="itemLevel">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where level_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

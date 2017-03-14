@@ -1,4 +1,4 @@
-package com.meirengu.utils;
+package com.meirengu.cf.utils;
 
 import com.meirengu.utils.StringUtil;
 
@@ -328,8 +328,8 @@ public class GenEntityMysql {
     }
 
     public void initParams(String basePath, String projectName, String packageFather, String packageModel, String packageDao, String packageService,
-                           String packageServiceImpl, String packageController, String mapperPath, String authorName, String url,
-                           String username, String password, String driver, String databaseName){
+                            String packageServiceImpl, String packageController, String mapperPath, String authorName, String url,
+                            String username, String password, String driver, String databaseName){
 
         this.basePath = basePath;
         this.projectName = projectName;
@@ -390,9 +390,9 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：生成所有属性
-     * @param sb
-     */
+    * 功能：生成所有属性
+    * @param sb
+    */
     private void processAllAttrs(StringBuffer sb, List<Column> columnList) {
         for (int i = 0; i < columnList.size(); i++) {
             sb.append("\t/** ").append(columnList.get(i).getColumnComment()).append(" */\n");
@@ -403,9 +403,9 @@ public class GenEntityMysql {
 
 
     /**
-     * 功能：生成所有方法
-     * @param sb
-     */
+    * 功能：生成所有方法
+    * @param sb
+    */
     private void processAllMethod(StringBuffer sb, List<Column> columnList) {
         sb.append("\n");
 
@@ -425,10 +425,10 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：将输入字符串的首字母改成大写
-     * @param str
-     * @return
-     */
+    * 功能：将输入字符串的首字母改成大写
+    * @param str
+    * @return
+    */
     private String initcap(String str) {
 
         char[] ch = str.toCharArray();
@@ -458,11 +458,11 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：获得列的数据类型
-     *
-     * @param sqlType
-     * @return
-     */
+    * 功能：获得列的数据类型
+    *
+    * @param sqlType
+    * @return
+    */
     private String sqlType2JavaType(String sqlType) {
 
         if (sqlType.equalsIgnoreCase("bit")) {

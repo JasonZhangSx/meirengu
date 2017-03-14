@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.TypeDao" >
+
+	<resultMap id="typeMap" type="Type">
+		<id column="type_id" property="typeId" jdbcType="INTEGER" javaType="int"/>
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="type_sort" property="typeSort" jdbcType="TINYINT" javaType="byte"/>
+	</resultMap>
+
+	<sql id="table_name">type</sql>
+	<sql id="select_columns">
+		type_id as typeId, type_name as typeName, type_sort as typeSort
+	</sql>
+
+	<insert id="insert" parameterType="type" useGeneratedKeys="true" keyProperty="typeId" >
+		INSERT INTO <include refid="table_name" />
+			(type_id, type_name, type_sort)
+		VALUES
+			(#{typeId}, #{typeName}, #{typeSort})
+	</insert>
+
+	<update id="update" parameterType="type">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="typeId != null and typeId != ''">
+				type_id=#{typeId},
+			</if>
+			<if test="typeName != null and typeName != ''">
+				type_name=#{typeName},
+			</if>
+			<if test="typeSort != null and typeSort != ''">
+				type_sort=#{typeSort},
+			</if>
+		</set>
+		<where>
+			type_id = #{typeId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="type">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where type_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>
