@@ -39,7 +39,13 @@ public class StatusCode {
     public static final int CAPTCHA_INVALID = 40014;
     public static final int PARAMETER_FORMAT_ERROR = 40015;
     public static final int MOBILE_FORMAT_ERROR = 40016;
+    public static final int MOBILE_IS_NOT_EXITS = 40017;
+    public static final int PASSWORD_IS_ERROR = 40018;
+    public static final int MOBILE_IS_EXITS = 40019;
     //40100-40200//user_center
+    public static final int TOKEN_IS_TIMEOUT = 40101;
+
+
 
     //40200-40300//news_cms
 
@@ -90,6 +96,9 @@ public class StatusCode {
     public static final int CHECK_CODE_SEND_ERROR = 50101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 50102;
 
+    //50200-50300//admin_dashboard
+    public static final int AD_LONGIN_SUCCESS = 50200;
+    public static final int AD_LONGIN_FIAL = 50201;
     //50200-50300//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
     public static final int BULLETIN_ERROR_INSERT = 50201;
@@ -165,7 +174,11 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CAPTCHA_INVALID, "验证码无效");
         codeMsgMap.put(StatusCode.PARAMETER_FORMAT_ERROR, "参数格式错误");
         codeMsgMap.put(StatusCode.MOBILE_FORMAT_ERROR, "手机格式错误");
+        codeMsgMap.put(StatusCode.MOBILE_IS_NOT_EXITS, "手机号码不存在");
+        codeMsgMap.put(StatusCode.MOBILE_IS_EXITS, "手机号码已注册");
+        codeMsgMap.put(StatusCode.PASSWORD_IS_ERROR, "手机密码错误");
         //40100-40200//user_center
+        codeMsgMap.put(StatusCode.TOKEN_IS_TIMEOUT, "token已失效 ");
 
         //40200-40300//news_cms
 
@@ -215,13 +228,6 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
 
         //50200-50300//news_cms
-        codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
-        codeMsgMap.put(StatusCode.BULLETIN_ERROR_INSERT, "公告列表获取失败，请重试");
-        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
-        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
-        codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
-
-
 
         //50300-50400//medical_beauty
 

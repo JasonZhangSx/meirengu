@@ -1,14 +1,13 @@
 package com.meirengu.commons.authority.service.impl;
 
 import com.meirengu.commons.authority.dao.AccountMapper;
+import com.meirengu.commons.authority.dao.OrganizationMapper;
 import com.meirengu.commons.authority.dao.PermissionMapper;
 import com.meirengu.commons.authority.dao.RoleMapper;
 import com.meirengu.commons.authority.model.Account;
 import com.meirengu.commons.authority.model.Permission;
 import com.meirengu.commons.authority.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +25,8 @@ public class AccountServiceImpl implements IAccountService {
     private RoleMapper roleMapper;
     @Autowired
     private PermissionMapper permissionMapper;
-
+    @Autowired
+    private OrganizationMapper organizationMapper;
     @Override
     public Account findAccount(Account account) {
         return accountMapper.findUser(account);
@@ -37,6 +37,7 @@ public class AccountServiceImpl implements IAccountService {
         account=accountMapper.findUser(account);
         account.setRoleList(roleMapper.findRoleList(account.getId()));
         account.setPermissionsList(tree(permissionMapper.findPermission(account.getRoleList()),0));
+        account.setOrganization(organizationMapper.getOrganization(account.getOrganizationId()));
         return account;
     }
     /**

@@ -1,6 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.vo.UserVO;
 
 /**
  * 会员服务接口类
@@ -37,4 +38,13 @@ public interface UserService {
      * @return
      */
     User retrieveByPhone(String phone);
+
+    /**
+     * 根据手机号和密码用户是否存在
+     * @param phone
+     * @return
+     */
+    int verifyByPasswordAndPhone(String mobile,String password);
+
+    int updateUserInfo(UserVO userVO);
 }

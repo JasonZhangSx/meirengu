@@ -224,11 +224,6 @@
             <artifactId>yunpian-java-sdk</artifactId>
             <version>1.2.1</version>
         </dependency>
-        <dependency>
-            <groupId>spy</groupId>
-            <artifactId>memcached</artifactId>
-            <version>2.5</version>
-        </dependency>
 
     </dependencies>
     <build>
@@ -345,12 +340,12 @@
         <repository>
             <id>nexus-releases</id>
             <name>user release repository</name>
-            <url>http://120.27.37.54:8081/nexus/content/repositories/releases/</url>
+            <url>http://192.168.0.135:8081/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>user snapshots repository</name>
-            <url>http://120.27.37.54:8081/nexus/content/repositories/snapshots/</url>
+            <url>http://192.168.0.135:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>

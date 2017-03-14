@@ -2,6 +2,8 @@ package com.meirengu.uc.dao;
 
 import com.meirengu.uc.model.User;
 
+import java.util.Map;
+
 /**
  * 会员数据访问对象类
  *
@@ -39,4 +41,10 @@ public interface UserDao {
      */
     User retrieveByPhone(String phone);
 
+    /**
+     * 根据手机号验证密码是否正确
+     * @param map
+     * @return
+     */
+    int verifyByPasswordAndPhone(Map map);
 }

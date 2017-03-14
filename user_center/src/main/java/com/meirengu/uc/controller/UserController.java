@@ -4,6 +4,9 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.utils.RedisUtil;
+import com.meirengu.uc.vo.UserVO;
+import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,40 +27,18 @@ public class UserController extends BaseController{
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public Map<String, Object> create(@RequestParam(required = true) String apikey, @RequestParam(required = true) String phone, int from, String ip) {
-        logger.info("UserController.create params >> apikey:{}, phone:{}, from:{}, ip;{}", new Object[]{apikey, phone, from, ip});
-        User user = userService.retrieveByPhone(phone);
-        if (user == null){
-            //auto register
-            user = new User();
-            user.setPhone(phone);
-            user.setRegisterFrom(from);
-            user.setLoginIp(ip);
-            user.setLastLoginIp(ip);
-            user.setLoginFrom(from);
-            user.setLoginNum(1);
-            int result = userService.create(user);
-            logger.error("userService.create result << phone:{}, result:{}", new Object[]{phone, result});
-            if (result > 0){
-                return super.setReturnMsg(StatusCode.OK, user, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                logger.error("userService.create error, try create again >> phone:{}, result:{}", new Object[]{phone, result});
-                userService.create(user);
+    @RequestMapping(value = "/user/update", method = RequestMethod.POST)
+    public Map<String, Object> updateUserInfo(@RequestBody UserVO userVO) {
+
+        if(!StringUtil.isEmpty(userVO.getToken())){
+            RedisUtil redisUtil = new RedisUtil();
+            boolean b = redisUtil.existsObject(userVO.getToken());
+            if(b){
+                    int result = userService.updateUserInfo(userVO);
+                    logger.error("UserController.updateUserInfo result << {}, result:{}", result);
+                    return super.setReturnMsg(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
         }
-        return super.setReturnMsg(StatusCode.OK, user, StatusCode.codeMsgMap.get(StatusCode.OK));
-
-    }
-
-    @RequestMapping(value = "user/{phone}", method = RequestMethod.GET)
-    public Map<String, Object> retrieve(@PathVariable(required = true) String phone){
-        logger.info("UserController.retrieve params >> phone:{}", phone);
-        User user = userService.retrieveByPhone(phone);
-        if (user != null){
-            return super.setReturnMsg(StatusCode.OK, user, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else {
-            return super.setReturnMsg(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-        }
+        return super.setReturnMsg(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
     }
 }
