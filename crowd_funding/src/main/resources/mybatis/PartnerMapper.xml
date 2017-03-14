@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.PartnerDao" >
+
+	<resultMap id="partnerMap" type="Partner">
+		<id column="partner_id" property="partnerId" jdbcType="INTEGER" javaType="int"/>
+		<result column="type_id" property="typeId" jdbcType="INTEGER" javaType="int"/>
+		<result column="partner_name" property="partnerName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="account_id" property="accountId" jdbcType="INTEGER" javaType="int"/>
+		<result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="id_number" property="idNumber" jdbcType="INTEGER" javaType="int"/>
+		<result column="enterprise_address" property="enterpriseAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_name" property="principalName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_idcard" property="principalIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_telephone" property="principalTelephone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_fax" property="principalFax" jdbcType="INTEGER" javaType="int"/>
+		<result column="principal_address" property="principalAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contacts_name" property="contactsName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contacts_idcard" property="contactsIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contacts_telephone" property="contactsTelephone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contacts_fax" property="contactsFax" jdbcType="INTEGER" javaType="int"/>
+		<result column="contacts_address" property="contactsAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="bank_name" property="bankName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="bank_account" property="bankAccount" jdbcType="VARCHAR" javaType="String"/>
+		<result column="bank_card" property="bankCard" jdbcType="INTEGER" javaType="int"/>
+		<result column="image_principal" property="imagePrincipal" jdbcType="VARCHAR" javaType="String"/>
+		<result column="image_business_licence" property="imageBusinessLicence" jdbcType="VARCHAR" javaType="String"/>
+		<result column="image_bank" property="imageBank" jdbcType="VARCHAR" javaType="String"/>
+		<result column="image_professional_license" property="imageProfessionalLicense" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">partner</sql>
+	<sql id="select_columns">
+		partner_id as partnerId, type_id as typeId, partner_name as partnerName, account_id as accountId, enterprise_name as enterpriseName, id_number as idNumber, enterprise_address as enterpriseAddress, principal_name as principalName, principal_idcard as principalIdcard, principal_telephone as principalTelephone, principal_fax as principalFax, principal_address as principalAddress, contacts_name as contactsName, contacts_idcard as contactsIdcard, contacts_telephone as contactsTelephone, contacts_fax as contactsFax, contacts_address as contactsAddress, bank_name as bankName, bank_account as bankAccount, bank_card as bankCard, image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank, image_professional_license as imageProfessionalLicense, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="partner" useGeneratedKeys="true" keyProperty="partnerId" >
+		INSERT INTO <include refid="table_name" />
+			(partner_id, type_id, partner_name, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, create_time, update_time, operate_account)
+		VALUES
+			(#{partnerId}, #{typeId}, #{partnerName}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="partner">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="partnerId != null and partnerId != ''">
+				partner_id=#{partnerId},
+			</if>
+			<if test="typeId != null and typeId != ''">
+				type_id=#{typeId},
+			</if>
+			<if test="partnerName != null and partnerName != ''">
+				partner_name=#{partnerName},
+			</if>
+			<if test="accountId != null and accountId != ''">
+				account_id=#{accountId},
+			</if>
+			<if test="enterpriseName != null and enterpriseName != ''">
+				enterprise_name=#{enterpriseName},
+			</if>
+			<if test="idNumber != null and idNumber != ''">
+				id_number=#{idNumber},
+			</if>
+			<if test="enterpriseAddress != null and enterpriseAddress != ''">
+				enterprise_address=#{enterpriseAddress},
+			</if>
+			<if test="principalName != null and principalName != ''">
+				principal_name=#{principalName},
+			</if>
+			<if test="principalIdcard != null and principalIdcard != ''">
+				principal_idcard=#{principalIdcard},
+			</if>
+			<if test="principalTelephone != null and principalTelephone != ''">
+				principal_telephone=#{principalTelephone},
+			</if>
+			<if test="principalFax != null and principalFax != ''">
+				principal_fax=#{principalFax},
+			</if>
+			<if test="principalAddress != null and principalAddress != ''">
+				principal_address=#{principalAddress},
+			</if>
+			<if test="contactsName != null and contactsName != ''">
+				contacts_name=#{contactsName},
+			</if>
+			<if test="contactsIdcard != null and contactsIdcard != ''">
+				contacts_idcard=#{contactsIdcard},
+			</if>
+			<if test="contactsTelephone != null and contactsTelephone != ''">
+				contacts_telephone=#{contactsTelephone},
+			</if>
+			<if test="contactsFax != null and contactsFax != ''">
+				contacts_fax=#{contactsFax},
+			</if>
+			<if test="contactsAddress != null and contactsAddress != ''">
+				contacts_address=#{contactsAddress},
+			</if>
+			<if test="bankName != null and bankName != ''">
+				bank_name=#{bankName},
+			</if>
+			<if test="bankAccount != null and bankAccount != ''">
+				bank_account=#{bankAccount},
+			</if>
+			<if test="bankCard != null and bankCard != ''">
+				bank_card=#{bankCard},
+			</if>
+			<if test="imagePrincipal != null and imagePrincipal != ''">
+				image_principal=#{imagePrincipal},
+			</if>
+			<if test="imageBusinessLicence != null and imageBusinessLicence != ''">
+				image_business_licence=#{imageBusinessLicence},
+			</if>
+			<if test="imageBank != null and imageBank != ''">
+				image_bank=#{imageBank},
+			</if>
+			<if test="imageProfessionalLicense != null and imageProfessionalLicense != ''">
+				image_professional_license=#{imageProfessionalLicense},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			partner_id = #{partnerId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="partner">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where partner_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

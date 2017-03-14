@@ -1,11 +1,11 @@
 package com.meirengu.cf.service;
-import com.meirengu.cf.model.ItemClass;
+import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.service.BaseService;
 
 /**
- * ItemClass服务接口 
+ * ItemLevel服务接口 
  * @author 建新
  * @create Tue Mar 14 16:55:44 CST 2017
  */
-public interface ItemClassService extends BaseService<ItemClass>{
+public interface ItemLevelService extends BaseService<ItemLevel>{
 }

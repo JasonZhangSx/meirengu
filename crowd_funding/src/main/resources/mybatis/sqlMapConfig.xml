@@ -4,6 +4,15 @@
 <configuration>
 	<!-- 实体别名设置 -->
 	<typeAliases>
+		<typeAlias alias="item" type="com.meirengu.cf.model.Item" />
 		<typeAlias alias="itemClass" type="com.meirengu.cf.model.ItemClass" />
+		<typeAlias alias="itemContent" type="com.meirengu.cf.model.ItemContent" />
+		<typeAlias alias="itemCooperation" type="com.meirengu.cf.model.ItemCooperation" />
+		<typeAlias alias="itemInterested" type="com.meirengu.cf.model.ItemInterested" />
+		<typeAlias alias="itemLevel" type="com.meirengu.cf.model.ItemLevel" />
+		<typeAlias alias="itemOperateRecord" type="com.meirengu.cf.model.ItemOperateRecord" />
+		<typeAlias alias="partner" type="com.meirengu.cf.model.Partner" />
+		<typeAlias alias="partnerClass" type="com.meirengu.cf.model.PartnerClass" />
+		<typeAlias alias="type" type="com.meirengu.cf.model.Type" />
 	</typeAliases>
 </configuration>
