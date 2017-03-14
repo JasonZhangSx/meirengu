@@ -1,4 +1,4 @@
-package com.meirengu.mall.common;
+package com.meirengu.news.common;
 
 /**
  * 状态码集
