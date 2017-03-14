@@ -1,12 +1,13 @@
 package com.meirengu.uc.service;
 
+import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.UserAddress;
 
 /**
  * 地址增删改查
  * Created by huoyan403 on 3/14/2017.
  */
-public interface UserAddressService extends PageBaseService<UserAddress>{
+public interface UserAddressService extends BaseService<UserAddress> {
     /**
      * 插入用户地址  不可缺少数据
      * @param userAddress

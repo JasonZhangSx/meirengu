@@ -132,7 +132,7 @@ public class UserAddressController extends BaseController{
         Map paramMap = new HashMap<String, Object>();
         Page<UserAddress> page = super.setPageParams(pageSize,pageNum);
         try{
-            page = userAddressService.getPageList(page,paramMap);
+            page = userAddressService.getListByPage(page,paramMap);
             if(page.getList().size() != 0){
                 return super.setReturnMsg(StatusCode.OK, page, StatusCode.OK+"");
             }else{
