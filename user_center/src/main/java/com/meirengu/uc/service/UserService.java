@@ -1,6 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.vo.UserVO;
 
 /**
  * 会员服务接口类
@@ -44,4 +45,6 @@ public interface UserService {
      * @return
      */
     int verifyByPasswordAndPhone(String mobile,String password);
+
+    int updateUserInfo(UserVO userVO);
 }
