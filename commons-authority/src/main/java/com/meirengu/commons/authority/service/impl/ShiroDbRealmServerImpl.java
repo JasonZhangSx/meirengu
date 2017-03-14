@@ -6,7 +6,6 @@ package com.meirengu.commons.authority.service.impl;
 
 import com.meirengu.commons.authority.dao.RoleMapper;
 import com.meirengu.commons.authority.service.ShiroDbRealmServer;
-import net.spy.memcached.MemcachedClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authc.*;
