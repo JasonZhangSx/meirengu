@@ -1,5 +1,7 @@
 package com.meirengu.utils;
 
+import com.meirengu.utils.StringUtil;
+
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class GenEntityMysql {
     private String password;
     private String driver;
     private String databaseName;
+
+    private List classList = new ArrayList(); //用于存放需要导入的类
 
     //JDBC连接字段
     private  Connection conn;
@@ -129,14 +133,23 @@ public class GenEntityMysql {
 
         sb.append("package " + packageName + ";\r\n");
         sb.append("\r\n");
-        sb.append("import java.util.Date;\r\n");
-        sb.append("import java.sql.*;\r\n");
+        sb.append("import com.meirengu.model.BaseObject;\r\n");
+        if(classList.contains("decimal") || classList.contains("decimal".toUpperCase())){
+            sb.append("import java.math.BigDecimal;\r\n");
+        }
+        if(classList.contains("date") || classList.contains("date".toUpperCase())){
+            sb.append("import java.util.Date;\r\n");
+        }
+        if(classList.contains("sql") || classList.contains("sql".toUpperCase())){
+            sb.append("import java.sql.*;\r\n");
+        }
+
         //注释部分
         sb.append(" /*\r\n");
         sb.append("  * " + initcap(toHump(tableName)) + " 实体类\r\n");
         sb.append("  * " + new Date() + " " + this.authorName + "\n  */");
         //实体部分
-        sb.append("\r\npublic class ").append(initcap(toHump(tableName))).append("{\r\n");
+        sb.append("\r\npublic class ").append(initcap(toHump(tableName))).append("  extends BaseObject {\r\n");
         processAllAttrs(sb, columnList);//属性
         processAllMethod(sb, columnList);//get set方法
         sb.append("}\r\n");
@@ -215,12 +228,10 @@ public class GenEntityMysql {
         StringBuffer sb = new StringBuffer();
         //mapper头
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "         <!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis" +
+                "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis" +
                 ".org/dtd/mybatis-3-mapper.dtd\" >\n" +
-                "         <mapper namespace=\""+packageName+"."+initcap(toHump(tableName))+"Dao\" >\n");
-        //sql table and columns
-        sb.append("\t<sql id=\"table_name\">"+tableName+"</sql>\n");
-        sb.append("\t<sql id=\"select_columns\">");
+                "<mapper namespace=\""+packageName+"."+initcap(toHump(tableName))+"Dao\" >\n\n");
+        StringBuffer resultMapStr = new StringBuffer();
         StringBuffer columnsAs = new StringBuffer();
         StringBuffer cls = new StringBuffer();
         StringBuffer clsAsJava = new StringBuffer();
@@ -239,12 +250,25 @@ public class GenEntityMysql {
 
             if(i == 0){
                 majorKey = c.getColumnName();
+                resultMapStr.append("\t\t<id column=\""+c.getColumnName()+"\" property=\""+toHump(c.getColumnName())+"\" jdbcType=\""+sqlTypeFormat(c.getDataType())+"\" " +
+                        "javaType=\""+sqlType2JavaType(c.getDataType())+"\"/>\n");
+            }else {
+                resultMapStr.append("\t\t<result column=\""+c.getColumnName()+"\" property=\""+toHump(c.getColumnName())+"\" jdbcType=\""+sqlTypeFormat(c.getDataType().toUpperCase())+"\" " +
+                        "javaType=\""+sqlType2JavaType(c.getDataType())+"\"/>\n");
             }
         }
-        sb.append(columnsAs);
+
+        sb.append("\t<resultMap id=\""+toHump(tableName)+"Map\" type=\""+initcap(toHump(tableName))+"\">\n");
+        sb.append(resultMapStr);
+        sb.append("\t</resultMap>\n\n");
+
+        //sql table and columns
+        sb.append("\t<sql id=\"table_name\">"+tableName+"</sql>\n");
+        sb.append("\t<sql id=\"select_columns\">\n");
+        sb.append("\t\t").append(columnsAs);
         sb.append("\n\t</sql>\n");
         //insert
-        sb.append("\t<insert id=\"insert\" parameterType=\""+toHump(tableName)+"\" useGeneratedKeys=\"true\" " +
+        sb.append("\n\t<insert id=\"insert\" parameterType=\""+toHump(tableName)+"\" useGeneratedKeys=\"true\" " +
                 "keyProperty=\""+toHump(majorKey)+"\" >\n" +
                 "\t\tINSERT INTO <include refid=\"table_name\" />\n" +
                 "\t\t\t("+cls.toString()+")\n" +
@@ -252,7 +276,7 @@ public class GenEntityMysql {
                 "\t\t\t("+clsAsJava.toString()+")\n" +
                 "\t</insert>\n");
         //update
-        sb.append("\t<update id=\"update\" parameterType=\""+toHump(tableName)+"\">\n" +
+        sb.append("\n\t<update id=\"update\" parameterType=\""+toHump(tableName)+"\">\n" +
                 "\t\tUPDATE <include refid=\"table_name\" />\n" +
                 "\t\t<set>\n");
         for (int i = 0 ; i < columnList.size() ; i++ ){
@@ -267,13 +291,13 @@ public class GenEntityMysql {
                 "\t\t</where>\n" +
                 "\t</update>\n");
         //detail
-        sb.append("\t<select id=\"detail\" parameterType=\"integer\" resultType=\""+toHump(tableName)+"\">\n" +
+        sb.append("\n\t<select id=\"detail\" parameterType=\"integer\" resultType=\""+toHump(tableName)+"\">\n" +
                 "\t\tselect <include refid=\"select_columns\" /> from <include refid=\"table_name\"/>\n" +
                 "\t\twhere "+majorKey+"=#{id}\n" +
                 "\t</select>\n");
 
         //分页相关查询
-        sb.append("\t<!-- 分页相关开始 -->\n" +
+        sb.append("\n\t<!-- 分页相关开始 -->\n" +
                 "\t<select id=\"getByPage\" resultType=\"Map\" parameterType=\"Map\">\n" +
                 "\t\tselect <include refid=\"select_columns\" />  FROM <include refid=\"table_name\" />\n" +
                 "\t</select>\n" +
@@ -287,8 +311,8 @@ public class GenEntityMysql {
     }
 
     private void  generateFile(String content, String fileName){
-        System.out.println(fileName);
-        System.out.println(content);
+        //System.out.println(fileName);
+        //System.out.println(content);
         try{
             File file = new File(fileName);
             if(!file.exists()){
@@ -341,8 +365,6 @@ public class GenEntityMysql {
         for (String tableName : tableArray){
             List<Column> cList = getColumns(tableName);
 
-            String model = generateModel(tableName, cList);
-            generateFile(model, javaPath+packageModel+"\\"+initcap(toHump(tableName))+".java");
             String dao = generateDao(tableName);
             generateFile(dao, javaPath+packageDao+"\\"+initcap(toHump(tableName))+"Dao.java");
             String service = generateService(tableName);
@@ -351,8 +373,15 @@ public class GenEntityMysql {
             generateFile(serviceImpl, javaPath+packageService+"\\"+packageServiceImpl+"\\"+initcap(toHump(tableName))+"ServiceImpl.java");
             String mapper = generateMybatisMapper(tableName, cList);
             generateFile(mapper, mapperPath+initcap(toHump(tableName))+"Mapper.xml");
-        }
+            String model = generateModel(tableName, cList);
+            classList.clear();
+            generateFile(model, javaPath+packageModel+"\\"+initcap(toHump(tableName))+".java");
 
+            StringBuffer sb = new StringBuffer();
+            sb.append("<typeAlias alias=\""+toHump(tableName)+"\" type=\"com.meirengu.cf.model."+initcap(toHump(tableName))+"\" />");
+            System.out.println(sb.toString());
+        }
+        System.out.println("将以上内容加入sqlMapConfig.xml中");
     }
 
     /* 构造函数 */
@@ -450,7 +479,7 @@ public class GenEntityMysql {
             return "long";
         } else if (sqlType.equalsIgnoreCase("float")) {
             return "float";
-        } else if (sqlType.equalsIgnoreCase("decimal") || sqlType.equalsIgnoreCase("numeric")
+        } else if (sqlType.equalsIgnoreCase("numeric")
                 || sqlType.equalsIgnoreCase("real") || sqlType.equalsIgnoreCase("money")
                 || sqlType.equalsIgnoreCase("smallmoney")) {
             return "double";
@@ -459,12 +488,31 @@ public class GenEntityMysql {
                 || sqlType.equalsIgnoreCase("text")) {
             return "String";
         } else if (sqlType.equalsIgnoreCase("datetime") || sqlType.equalsIgnoreCase("timestamp")) {
+            classList.add("date");
             return "Date";
         } else if (sqlType.equalsIgnoreCase("image")) {
-            return "Blod";
+            return "Blob";
+        } else if (sqlType.equalsIgnoreCase("decimal")){
+            classList.add(sqlType);
+            return "BigDecimal";
         }
 
         return null;
+    }
+
+
+    private String sqlTypeFormat(String sqlType){
+        if (sqlType.equalsIgnoreCase("int") || sqlType.equalsIgnoreCase("mediumint")) {
+            return "INTEGER";
+        } else if (sqlType.equalsIgnoreCase("decimal")){
+            return "DECIMAL";
+        } else if (sqlType.equalsIgnoreCase("datetime")){
+            return "DATE";
+        } else if(sqlType.equalsIgnoreCase("text")){
+            return "LONGVARCHAR";
+        }
+
+        return sqlType.toUpperCase();
     }
 
     class Column{
