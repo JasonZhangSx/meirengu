@@ -1,9 +1,6 @@
 package com.meirengu.commons.authority.test;
 
-import com.meirengu.commons.authority.dao.AccountMapper;
-import com.meirengu.commons.authority.model.Account;
 import com.meirengu.commons.authority.service.impl.AccountServiceImpl;
-import com.meirengu.commons.authority.service.impl.RoleServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

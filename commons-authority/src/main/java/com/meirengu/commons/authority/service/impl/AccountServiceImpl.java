@@ -8,8 +8,6 @@ import com.meirengu.commons.authority.model.Account;
 import com.meirengu.commons.authority.model.Permission;
 import com.meirengu.commons.authority.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
