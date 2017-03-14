@@ -1,7 +1,5 @@
 package com.meirengu.utils;
 
-import com.meirengu.utils.StringUtil;
-
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -468,9 +466,9 @@ public class GenEntityMysql {
         if (sqlType.equalsIgnoreCase("bit")) {
             return "boolean";
         } else if (sqlType.equalsIgnoreCase("tinyint")) {
-            return "byte";
+            return "int";
         } else if (sqlType.equalsIgnoreCase("smallint")) {
-            return "short";
+            return "int";
         } else if (sqlType.equalsIgnoreCase("int") || sqlType.equalsIgnoreCase("bigint")
                 || sqlType.equalsIgnoreCase("mediumint") || sqlType.equalsIgnoreCase("smallint")
                 || sqlType.equalsIgnoreCase("tinyint")) {
@@ -495,6 +493,8 @@ public class GenEntityMysql {
         } else if (sqlType.equalsIgnoreCase("decimal")){
             classList.add(sqlType);
             return "BigDecimal";
+        } else if (sqlType.equalsIgnoreCase("enum")) {
+            return "int";
         }
 
         return null;
