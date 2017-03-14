@@ -19,7 +19,7 @@
     select 
     <include refid="Base_Column_List" />
     from user_address
-    where 1 = 1
+    where 1 = 1  AND  delflag = 0
     <if test="addressId != null">
       address_id = #{addressId,jdbcType=INTEGER},
     </if>
@@ -48,10 +48,10 @@
   <insert id="insert" parameterType="com.meirengu.uc.model.UserAddress">
     insert into user_address (address_id, user_id, user_name, 
       user_phone, user_address, is_default, 
-      create_time, update_time)
+      create_time, update_time,delflag)
     values (#{addressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
       #{userPhone,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{isDefault,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},0)
   </insert>
   <update id="updateByAdressId" parameterType="com.meirengu.uc.model.UserAddress">
     update user_address
@@ -103,5 +103,74 @@
     <if test="updateTime != null">
       update_time = #{updateTime,jdbcType=TIMESTAMP},
     </if>
+    <if test="delFlag != null">
+      delflag = #{delFlag,jdbcType=INTEGER},
+    </if>
   </update>
+  <update id="updateClearDefaultAddress" parameterType="java.lang.Integer">
+    update user_address
+       SET is_default = 0 where  user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <!-- 分页相关开始 -->
+  <select id="getByPage" resultType="Map" parameterType="Map">
+    select <include refid="select_columns" />,
+    0 AS readNum, 0 AS commentNum, 0 AS collectNum
+    from
+    <include refid="table_name" /> a
+    where 1=1
+    <if test="userId != null">
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="userName != null">
+      AND user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="userPhone != null">
+      AND user_phone = #{userPhone,jdbcType=VARCHAR}
+    </if>
+    <if test="userAddress != null">
+      AND  user_address = #{userAddress,jdbcType=VARCHAR}
+    </if>
+    <if test="isDefault != null">
+      AND is_default = #{isDefault,jdbcType=BIT}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    order by create_time DESC
+  </select>
+
+  <select id="getTotalCount" parameterType="Map" resultType="Integer">
+    select count(*)
+    from
+    <include refid="table_name" />
+    where 1=1
+    <if test="userId != null">
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="userName != null">
+      AND user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="userPhone != null">
+      AND user_phone = #{userPhone,jdbcType=VARCHAR}
+    </if>
+    <if test="userAddress != null">
+      AND  user_address = #{userAddress,jdbcType=VARCHAR}
+    </if>
+    <if test="isDefault != null">
+      AND is_default = #{isDefault,jdbcType=BIT}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    order by create_time DESC
+  </select>
+  <!-- 分页相关结束 -->
+
 </mapper>
