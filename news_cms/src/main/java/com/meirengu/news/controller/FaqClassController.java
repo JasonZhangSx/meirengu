@@ -1,6 +1,6 @@
 package com.meirengu.news.controller;
 
-import com.meirengu.mall.common.StatusCode;
+import com.meirengu.news.common.StatusCode;
 import com.meirengu.news.model.FaqClass;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.po.ListAllFaqClassPo;

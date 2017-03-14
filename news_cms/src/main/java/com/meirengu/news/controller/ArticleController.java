@@ -1,22 +1,17 @@
 package com.meirengu.news.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.meirengu.mall.common.StatusCode;
+import com.meirengu.news.common.StatusCode;
 import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.ArticleService;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
 
 /**
  * Created by 建新 on 2016/12/27.
