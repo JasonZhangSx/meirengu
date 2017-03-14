@@ -37,4 +37,11 @@ public interface UserService {
      * @return
      */
     User retrieveByPhone(String phone);
+
+    /**
+     * 根据手机号和密码用户是否存在
+     * @param phone
+     * @return
+     */
+    int verifyByPasswordAndPhone(String mobile,String password);
 }

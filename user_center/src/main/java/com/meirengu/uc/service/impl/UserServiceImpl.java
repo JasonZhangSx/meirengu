@@ -6,6 +6,9 @@ import com.meirengu.uc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 会员服务实现类
  *
@@ -36,5 +39,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User retrieveByPhone(String phone) {
         return userDao.retrieveByPhone(phone);
+    }
+
+    @Override
+    public int verifyByPasswordAndPhone(String mobile, String password) {
+        Map<String,String> map = new HashMap<>();
+        map.put("phone",mobile);
+        map.put("password",password);
+        return userDao.verifyByPasswordAndPhone(map);
     }
 }

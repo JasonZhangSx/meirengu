@@ -35,6 +35,12 @@ public class CheckCodeController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckCodeController.class);
 
+    /**
+     * 获取验证码
+     * @param mobile
+     * @param ip
+     * @return
+     */
     @RequestMapping(value = "check_code", method = RequestMethod.POST)
     public Result create(@RequestParam(required = true) String mobile, String ip) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);

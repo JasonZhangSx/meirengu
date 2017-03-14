@@ -4,6 +4,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,14 @@ public class UserController extends BaseController{
     UserService userService;
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public Map<String, Object> create(@RequestParam(required = true) String apikey, @RequestParam(required = true) String phone, int from, String ip) {
+    public Map<String, Object> create(@RequestParam(required = true) String apikey,
+                                      @RequestParam(required = true) String phone, int from, String ip) {
         logger.info("UserController.create params >> apikey:{}, phone:{}, from:{}, ip;{}", new Object[]{apikey, phone, from, ip});
         User user = userService.retrieveByPhone(phone);
         if (user == null){
             //auto register
             user = new User();
+            user.setUserId(UuidUtils.getShortUuid());
             user.setPhone(phone);
             user.setRegisterFrom(from);
             user.setLoginIp(ip);

@@ -180,5 +180,11 @@
         WHERE phone=#{phone}
     </select>
 
+    <select id="verifyByPasswordAndPhone" parameterType="java.util.Map" resultType="int">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE phone=#{phone} AND password = #{password}
+    </select>
+
 
 </mapper>
