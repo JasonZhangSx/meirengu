@@ -39,6 +39,11 @@ public class BaseServiceImpl<E> implements BaseService<E>{
     }
 
     @Override
+    public List<Map<String, Object>> getList(Map<String, Object> map) {
+        return baseDao.getByPage(map);
+    }
+
+    @Override
     public int insert(E e) {
         return baseDao.insert(e);
     }

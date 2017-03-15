@@ -111,6 +111,11 @@ public class StatusCode {
     //50500-50600//crowd_funding
     public static final int ITEM_ERROR_INSERT = 50500;
     public static final int ITEM_ERROR_UPDATE = 50501;
+    public static final int ITEM_ERROR_DELETE = 50502;
+    public static final int PARTNER_CLASS_ERROR_INSERT = 50503;
+    public static final int PARTNER_CLASS_ERROR_UPDATE = 50504;
+    public static final int PARTNER_CLASS_ALREADY_DELETE = 50505;
+
     //50600-50700//payment
 
     //50700-50800//sms
@@ -237,8 +242,12 @@ public class StatusCode {
         //50400-50500//shopping_mall
 
         //50500-50600//crowd_funding
-        codeMsgMap.put(StatusCode.ITEM_ERROR_INSERT, "项目插入失败");
-        codeMsgMap.put(StatusCode.ITEM_ERROR_UPDATE, "项目修改失败");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_INSERT, "项目保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_UPDATE, "项目修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_DELETE, "项目删除失败， 请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
         //50600-50700//payment
 
         //50700-50800//sms

@@ -2,6 +2,7 @@ package com.meirengu.service;
 
 import com.meirengu.model.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +20,13 @@ public interface BaseService<E> {
      * @return
      */
     Page<E> getListByPage(Page<E> page, Map map);
+
+    /**
+     * 不分页获取列表
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> getList(Map<String, Object> map);
 
     /**
      * 新增实体
