@@ -64,7 +64,12 @@ public class StatusCode {
     //40500-40600//crowd_funding
 
     //40600-40700//payment
-    public static final int PAYMENT_RECORD_ERROR_INSERT = 40600;
+    public static final int PAYMENT_ACCOUNT_ERROR_INSERT = 40600;
+    public static final int PAYMENT_ACCOUNT_SUCCESS_INSERT = 40601;
+    public static final int PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT = 40602;
+    public static final int PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL = 40603;
+    public static final int PAYMENT_ACCOUNT_SUCCESS_SELECT = 40604;
+    public static final int PAYMENT_ACCOUNT_ERROR_SELECT = 40605;
 
     //40700-40700//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
@@ -262,7 +267,13 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
-        //50600-50700//payment
+        //40600-40700//payment
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT, "用户资金账户创建失败");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL, "该用户资金账户不存在");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT, "该用户资金账户查询成功");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询成功");
 
         //50700-50800//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
