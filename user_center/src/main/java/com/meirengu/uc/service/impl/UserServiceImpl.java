@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int verifyByPasswordAndPhone(String mobile, String password) {
+    public User verifyByPasswordAndPhone(String mobile, String password) {
         Map<String,String> map = new HashMap<>();
         map.put("phone",mobile);
         map.put("password",password);
@@ -60,17 +60,11 @@ public class UserServiceImpl implements UserService {
         if(!StringUtil.isEmpty(userVO.getNickname())){
             user.setNickname(userVO.getNickname());
         }
-        if(!StringUtil.isEmpty(userVO.getBank_id_card())){
-            user.setBankIdCard(userVO.getBank_id_card());
-        }
         if(!StringUtil.isEmpty(userVO.getAvatar())){
             user.setAvatar(userVO.getAvatar());
         }
         if(!StringUtil.isEmpty(userVO.getPassword())){
             user.setPassword(userVO.getPassword());
-        }
-        if(!StringUtil.isEmpty(userVO.getId_card())){
-            user.setIdCard(userVO.getId_card());
         }
         if(!StringUtil.isEmpty(userVO.getPhone())){
             user.setPhone(userVO.getPhone());
@@ -90,13 +84,27 @@ public class UserServiceImpl implements UserService {
         if(!StringUtil.isEmpty(userVO.getQq())){
             user.setQq(userVO.getQq());
         }
+        if(!StringUtil.isEmpty(userVO.getQq_openid())){
+            user.setQqOpenid(userVO.getQq_openid());
+        }
         if(!StringUtil.isEmpty(userVO.getWx())){
             user.setWx(userVO.getWx());
+        }
+        if(!StringUtil.isEmpty(userVO.getWx_openid())){
+            user.setWxOpenid(userVO.getWx_openid());
+        }
+        if(!StringUtil.isEmpty(userVO.getSina_openid())){
+            user.setSinaOpenid(userVO.getSina_openid());
         }
         if(!StringUtil.isEmpty(userVO.getArea_id())){
             user.setAreaId(userVO.getArea_id());
         }
         return userDao.update(user);
 
+    }
+
+    @Override
+    public int updatePasswordByPhone(User user) {
+        return userDao.updatePasswordByPhone(user);
     }
 }

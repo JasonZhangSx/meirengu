@@ -41,10 +41,13 @@ public interface UserService {
 
     /**
      * 根据手机号和密码用户是否存在
-     * @param phone
+     * @param mobile
+     * @param password
      * @return
      */
-    int verifyByPasswordAndPhone(String mobile,String password);
+    User verifyByPasswordAndPhone(String mobile,String password);
 
     int updateUserInfo(UserVO userVO);
+
+    int updatePasswordByPhone(User usr);
 }

@@ -44,8 +44,8 @@ public class StatusCode {
     public static final int MOBILE_IS_EXITS = 40019;
     //40100-40200//user_center
     public static final int TOKEN_IS_TIMEOUT = 40101;
-
-
+    public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 40102;
+    public static final int EMAIL_FORMAT_ERROR = 40103;
 
     //40200-40300//news_cms
 
@@ -94,7 +94,13 @@ public class StatusCode {
 
     //50100-50200//user_center
     public static final int CHECK_CODE_SEND_ERROR = 50101;
-    public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 50102;
+    public static final int ADDRESS_ID_NOT_EMPTY = 50102;
+    public static final int ADDRESS_ID_AND_USER_ID_MISMATCH = 50103;
+    public static final int USER_NOT_EXITS = 50104;
+    public static final int ADDREAA_IS_NOT_ALLOWED_DELETE = 50105;
+    public static final int OLD_PASSWORD_IS_ERROR = 50106;
+    public static final int USER_IS_EXITS = 50107;
+
 
     //50200-50300//admin_dashboard
     public static final int AD_LONGIN_SUCCESS = 50200;
@@ -179,7 +185,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PASSWORD_IS_ERROR, "手机密码错误");
         //40100-40200//user_center
         codeMsgMap.put(StatusCode.TOKEN_IS_TIMEOUT, "token已失效 ");
-
+        codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
+        codeMsgMap.put(StatusCode.EMAIL_FORMAT_ERROR, "邮箱格式错误");
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty
@@ -225,7 +232,12 @@ public class StatusCode {
 
         //50100-50200//user_center
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
-        codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
+        codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
+        codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
+        codeMsgMap.put(StatusCode.ADDRESS_ID_NOT_EMPTY, "用户地址id不存在");
+        codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
+        codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
+        codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
 
         //50200-50300//news_cms
 

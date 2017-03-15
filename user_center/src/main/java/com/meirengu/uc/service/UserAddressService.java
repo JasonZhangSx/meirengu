@@ -34,6 +34,6 @@ public interface UserAddressService extends BaseService<UserAddress> {
      * @param userId
      * @return
      */
-    UserAddress selectDefaultAddressByPhone(Integer userId);
+    UserAddress selectDefaultAddressByUserId(Integer userId);
 
 }

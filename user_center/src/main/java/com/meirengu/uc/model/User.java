@@ -29,6 +29,10 @@ public class User extends BaseObject {
      **/
     private String phone;
     /**
+     * 邀请人手机号
+     **/
+    private String mobileInviter;
+    /**
      * 会员身份证号
      **/
     private String idCard;
@@ -179,6 +183,14 @@ public class User extends BaseObject {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getMobileInviter() {
+        return mobileInviter;
+    }
+
+    public void setMobileInviter(String mobileInviter) {
+        this.mobileInviter = mobileInviter;
     }
 
     public String getIdCard() {

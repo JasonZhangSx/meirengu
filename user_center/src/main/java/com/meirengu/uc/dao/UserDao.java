@@ -28,6 +28,13 @@ public interface UserDao {
     int update(User user);
 
     /**
+     * 修改用户五种状态
+     * @param user
+     * @return
+     */
+    int updateState(User user);
+
+    /**
      * 根据会员Id查询会员信息
      * @param userId
      * @return
@@ -40,11 +47,19 @@ public interface UserDao {
      * @return
      */
     User retrieveByPhone(String phone);
+    /**
+     * 根据邀请人手机号查询会员信息
+     * @param phone
+     * @return
+     */
+    User selectByInviterPhone(String phone);
 
     /**
      * 根据手机号验证密码是否正确
      * @param map
      * @return
      */
-    int verifyByPasswordAndPhone(Map map);
+    User verifyByPasswordAndPhone(Map map);
+
+    int updatePasswordByPhone(User user);
 }
