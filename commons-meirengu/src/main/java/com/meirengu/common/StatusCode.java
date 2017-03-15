@@ -65,7 +65,7 @@ public class StatusCode {
 
     //40600-40700//payment
 
-    //40700-40700//sms
+    //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
     public static final int KEYWORD_MATCHING = 40702;
     public static final int TEMPLATE_NOT_MATCH = 40703;
@@ -76,6 +76,8 @@ public class StatusCode {
     public static final int DAY_LIMIT_PER_MOBILE = 40708;
     public static final int SMS_TEXT_IS_EMPTY = 40709;
     public static final int TEMPLATE_IS_EMPTY = 40710;
+    //40751-40800//trade
+
 
     //40800-40900//other
 
@@ -114,10 +116,11 @@ public class StatusCode {
 
     //50600-50700//payment
 
-    //50700-50800//sms
+    //50700-50750//sms
     public static final int SUBMIT_SMS_FAILED = 50700;
     public static final int TEMPLATE_NOT_VALID = 50701;
     public static final int MARKET_FORBIDDEN = 50702;
+    //50751-50800//trade
 
 
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+         <mapper namespace="com.meirengu.trade.dao.OrderDao" >
+	<sql id="table_name">order</sql>
+	<sql id="select_columns">order_id as orderId, order_sn as orderSn, item_id as itemId, item_name as itemName, item_level_id as itemLevelId, item_level_name as itemLevelName, item_level_amount as itemLevelAmount, item_num as itemNum, order_amount as orderAmount, cost_amount as costAmount, rebate_amount as rebateAmount, user_id as userId, user_name as userName, user_phone as userPhone, user_email as userEmail, user_address_id as userAddressId, create_time as createTime, order_type as orderType, out_sn as outSn, finished_time as finishedTime, receipt as receipt, order_message as orderMessage, order_state as orderState, flag as flag, order_from as orderFrom, update_time as updateTime, operate_account as operateAccount, user_weixin as userWeixin
+	</sql>
+	<insert id="insert" parameterType="order" useGeneratedKeys="true" keyProperty="orderId" >
+		INSERT INTO <include refid="table_name" />
+			(order_id, order_sn, item_id, item_name, item_level_id, item_level_name, item_level_amount, item_num, order_amount, cost_amount, rebate_amount, user_id, user_name, user_phone, user_email, user_address_id, create_time, order_type, out_sn, finished_time, receipt, order_message, order_state, flag, order_from, update_time, operate_account, user_weixin)
+		VALUES
+			(#{orderId}, #{orderSn}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemLevelAmount}, #{itemNum}, #{orderAmount}, #{costAmount}, #{rebateAmount}, #{userId}, #{userName}, #{userPhone}, #{userEmail}, #{userAddressId}, #{createTime}, #{orderType}, #{outSn}, #{finishedTime}, #{receipt}, #{orderMessage}, #{orderState}, #{flag}, #{orderFrom}, #{updateTime}, #{operateAccount}, #{userWeixin})
+	</insert>
+	<update id="update" parameterType="order">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="orderId != null and orderId != ''">
+				order_id=#{orderId},
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				order_sn=#{orderSn},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="itemName != null and itemName != ''">
+				item_name=#{itemName},
+			</if>
+			<if test="itemLevelId != null and itemLevelId != ''">
+				item_level_id=#{itemLevelId},
+			</if>
+			<if test="itemLevelName != null and itemLevelName != ''">
+				item_level_name=#{itemLevelName},
+			</if>
+			<if test="itemLevelAmount != null and itemLevelAmount != ''">
+				item_level_amount=#{itemLevelAmount},
+			</if>
+			<if test="itemNum != null and itemNum != ''">
+				item_num=#{itemNum},
+			</if>
+			<if test="orderAmount != null and orderAmount != ''">
+				order_amount=#{orderAmount},
+			</if>
+			<if test="costAmount != null and costAmount != ''">
+				cost_amount=#{costAmount},
+			</if>
+			<if test="rebateAmount != null and rebateAmount != ''">
+				rebate_amount=#{rebateAmount},
+			</if>
+			<if test="userId != null and userId != ''">
+				user_id=#{userId},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name=#{userName},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="userEmail != null and userEmail != ''">
+				user_email=#{userEmail},
+			</if>
+			<if test="userAddressId != null and userAddressId != ''">
+				user_address_id=#{userAddressId},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="orderType != null and orderType != ''">
+				order_type=#{orderType},
+			</if>
+			<if test="outSn != null and outSn != ''">
+				out_sn=#{outSn},
+			</if>
+			<if test="finishedTime != null and finishedTime != ''">
+				finished_time=#{finishedTime},
+			</if>
+			<if test="receipt != null and receipt != ''">
+				receipt=#{receipt},
+			</if>
+			<if test="orderMessage != null and orderMessage != ''">
+				order_message=#{orderMessage},
+			</if>
+			<if test="orderState != null and orderState != ''">
+				order_state=#{orderState},
+			</if>
+			<if test="flag != null and flag != ''">
+				flag=#{flag},
+			</if>
+			<if test="orderFrom != null and orderFrom != ''">
+				order_from=#{orderFrom},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+			<if test="userWeixin != null and userWeixin != ''">
+				user_weixin=#{userWeixin},
+			</if>
+		</set>
+		<where>
+			order_id = #{orderId}
+		</where>
+	</update>
+	<select id="detail" parameterType="integer" resultType="order">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where order_id=#{id}
+	</select>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

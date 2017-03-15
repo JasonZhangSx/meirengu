@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+         <mapper namespace="com.meirengu.trade.dao.OrderCandidateDao" >
+	<sql id="table_name">order_candidate</sql>
+	<sql id="select_columns">id as id, user_id as userId, user_name as userName, user_phone as userPhone, user_weixin as userWeixin, item_id as itemId, item_name as itemName, item_level_id as itemLevelId, item_level_name as itemLevelName, item_num as itemNum, order_amount as orderAmount, status as status, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+	<insert id="insert" parameterType="orderCandidate" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO <include refid="table_name" />
+			(id, user_id, user_name, user_phone, user_weixin, item_id, item_name, item_level_id, item_level_name, item_num, order_amount, status, create_time, update_time, operate_account)
+		VALUES
+			(#{id}, #{userId}, #{userName}, #{userPhone}, #{userWeixin}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemNum}, #{orderAmount}, #{status}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+	<update id="update" parameterType="orderCandidate">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="userId != null and userId != ''">
+				user_id=#{userId},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name=#{userName},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="userWeixin != null and userWeixin != ''">
+				user_weixin=#{userWeixin},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="itemName != null and itemName != ''">
+				item_name=#{itemName},
+			</if>
+			<if test="itemLevelId != null and itemLevelId != ''">
+				item_level_id=#{itemLevelId},
+			</if>
+			<if test="itemLevelName != null and itemLevelName != ''">
+				item_level_name=#{itemLevelName},
+			</if>
+			<if test="itemNum != null and itemNum != ''">
+				item_num=#{itemNum},
+			</if>
+			<if test="orderAmount != null and orderAmount != ''">
+				order_amount=#{orderAmount},
+			</if>
+			<if test="status != null and status != ''">
+				status=#{status},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+	<select id="detail" parameterType="integer" resultType="orderCandidate">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where id=#{id}
+	</select>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

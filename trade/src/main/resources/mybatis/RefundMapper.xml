@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+         <mapper namespace="com.meirengu.trade.dao.RefundDao" >
+	<sql id="table_name">refund</sql>
+	<sql id="select_columns">refund_id as refundId, refund_sn as refundSn, order_id as orderId, order_sn as orderSn, third_order_sn as thirdOrderSn, third_refund_sn as thirdRefundSn, item_id as itemId, partner_id as partnerId, user_id as userId, user_name as userName, user_phone as userPhone, add_time as addTime, order_amount as orderAmount, order_refund as orderRefund, refund_paymentname as refundPaymentname, refund_paymentcode as refundPaymentcode, refund_message as refundMessage, user_message as userMessage, admin_message as adminMessage, partner_time as partnerTime, admin_time as adminTime, confirm_time as confirmTime, refund_type as refundType, refund_state as refundState, user_confirm as userConfirm
+	</sql>
+	<insert id="insert" parameterType="refund" useGeneratedKeys="true" keyProperty="refundId" >
+		INSERT INTO <include refid="table_name" />
+			(refund_id, refund_sn, order_id, order_sn, third_order_sn, third_refund_sn, item_id, partner_id, user_id, user_name, user_phone, add_time, order_amount, order_refund, refund_paymentname, refund_paymentcode, refund_message, user_message, admin_message, partner_time, admin_time, confirm_time, refund_type, refund_state, user_confirm)
+		VALUES
+			(#{refundId}, #{refundSn}, #{orderId}, #{orderSn}, #{thirdOrderSn}, #{thirdRefundSn}, #{itemId}, #{partnerId}, #{userId}, #{userName}, #{userPhone}, #{addTime}, #{orderAmount}, #{orderRefund}, #{refundPaymentname}, #{refundPaymentcode}, #{refundMessage}, #{userMessage}, #{adminMessage}, #{partnerTime}, #{adminTime}, #{confirmTime}, #{refundType}, #{refundState}, #{userConfirm})
+	</insert>
+	<update id="update" parameterType="refund">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="refundId != null and refundId != ''">
+				refund_id=#{refundId},
+			</if>
+			<if test="refundSn != null and refundSn != ''">
+				refund_sn=#{refundSn},
+			</if>
+			<if test="orderId != null and orderId != ''">
+				order_id=#{orderId},
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				order_sn=#{orderSn},
+			</if>
+			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+				third_order_sn=#{thirdOrderSn},
+			</if>
+			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+				third_refund_sn=#{thirdRefundSn},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="partnerId != null and partnerId != ''">
+				partner_id=#{partnerId},
+			</if>
+			<if test="userId != null and userId != ''">
+				user_id=#{userId},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name=#{userName},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="addTime != null and addTime != ''">
+				add_time=#{addTime},
+			</if>
+			<if test="orderAmount != null and orderAmount != ''">
+				order_amount=#{orderAmount},
+			</if>
+			<if test="orderRefund != null and orderRefund != ''">
+				order_refund=#{orderRefund},
+			</if>
+			<if test="refundPaymentname != null and refundPaymentname != ''">
+				refund_paymentname=#{refundPaymentname},
+			</if>
+			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+				refund_paymentcode=#{refundPaymentcode},
+			</if>
+			<if test="refundMessage != null and refundMessage != ''">
+				refund_message=#{refundMessage},
+			</if>
+			<if test="userMessage != null and userMessage != ''">
+				user_message=#{userMessage},
+			</if>
+			<if test="adminMessage != null and adminMessage != ''">
+				admin_message=#{adminMessage},
+			</if>
+			<if test="partnerTime != null and partnerTime != ''">
+				partner_time=#{partnerTime},
+			</if>
+			<if test="adminTime != null and adminTime != ''">
+				admin_time=#{adminTime},
+			</if>
+			<if test="confirmTime != null and confirmTime != ''">
+				confirm_time=#{confirmTime},
+			</if>
+			<if test="refundType != null and refundType != ''">
+				refund_type=#{refundType},
+			</if>
+			<if test="refundState != null and refundState != ''">
+				refund_state=#{refundState},
+			</if>
+			<if test="userConfirm != null and userConfirm != ''">
+				user_confirm=#{userConfirm},
+			</if>
+		</set>
+		<where>
+			refund_id = #{refundId}
+		</where>
+	</update>
+	<select id="detail" parameterType="integer" resultType="refund">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where refund_id=#{id}
+	</select>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>
