@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
  /*
   * ItemCooperation 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class ItemCooperation  extends BaseObject {
 	/** 众筹项目索引id */

@@ -5,32 +5,45 @@
 	<resultMap id="partnerClassMap" type="PartnerClass">
 		<id column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
 		<result column="class_name" property="className" jdbcType="VARCHAR" javaType="String"/>
-		<result column="class_sort" property="classSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="class_description" property="classDescription" jdbcType="VARCHAR" javaType="String"/>
+		<result column="class_sort" property="classSort" jdbcType="TINYINT" javaType="int"/>
+		<result column="partner_num" property="partnerNum" jdbcType="INTEGER" javaType="int"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 	</resultMap>
 
 	<sql id="table_name">partner_class</sql>
 	<sql id="select_columns">
-		class_id as classId, class_name as className, class_sort as classSort
+		class_id as classId, class_name as className, class_description as classDescription, class_sort as classSort, partner_num as partnerNum, flag as flag, create_time as createTime
 	</sql>
 
 	<insert id="insert" parameterType="partnerClass" useGeneratedKeys="true" keyProperty="classId" >
 		INSERT INTO <include refid="table_name" />
-			(class_id, class_name, class_sort)
+			(class_id, class_name, class_description, class_sort, partner_num, flag, create_time)
 		VALUES
-			(#{classId}, #{className}, #{classSort})
+			(#{classId}, #{className}, #{classDescription}, #{classSort}, #{partnerNum}, #{flag}, #{createTime})
 	</insert>
 
 	<update id="update" parameterType="partnerClass">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="classId != null and classId != ''">
-				class_id=#{classId},
-			</if>
 			<if test="className != null and className != ''">
 				class_name=#{className},
 			</if>
-			<if test="classSort != null and classSort != ''">
+			<if test="classDescription != null and classDescription != ''">
+				class_description=#{classDescription},
+			</if>
+			<if test="classSort != null">
 				class_sort=#{classSort},
+			</if>
+			<if test="partnerNum != null">
+				partner_num=#{partnerNum},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+			<if test="createTime != null">
+				create_time=#{createTime},
 			</if>
 		</set>
 		<where>
@@ -43,13 +56,37 @@
 		where class_id=#{id}
 	</select>
 
+	<update id="delete" parameterType="integer">
+		update <include refid="table_name" /> SET flag=0 WHERE class_id=#{id} AND flag=1
+	</update>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="className != null and className != ''">
+			and class_name like '%${className}%'
+		</if>
+		<if test="flag != null">
+			and flag=#{flag}
+		</if>
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			order by #{sortBy} #{order}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="className != null and className != ''">
+			and class_name like '%${className}%'
+		</if>
+		<if test="flag != null">
+			and flag=#{flag}
+		</if>
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			order by #{sortBy} #{order}
+		</if>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

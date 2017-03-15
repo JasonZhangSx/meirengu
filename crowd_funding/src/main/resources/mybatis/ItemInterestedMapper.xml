@@ -8,7 +8,7 @@
 		<result column="user_id" property="userId" jdbcType="INTEGER" javaType="int"/>
 		<result column="user_name" property="userName" jdbcType="VARCHAR" javaType="String"/>
 		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="String"/>
-		<result column="status" property="status" jdbcType="TINYINT" javaType="byte"/>
+		<result column="status" property="status" jdbcType="TINYINT" javaType="int"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 	</resultMap>

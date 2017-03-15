@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
  /*
   * Item 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class Item  extends BaseObject {
 	/** 众筹项目索引id */
@@ -23,13 +23,13 @@ public class Item  extends BaseObject {
 	/** 已筹金额 */
 	private BigDecimal completedAmount;
 	/** 预热天数 */
-	private short preheatingDays;
+	private int preheatingDays;
 	/** 预热开始时间 */
 	private Date preheatingStartTime;
 	/** 预热结束时间 */
 	private Date preheatingEndTime;
 	/** 众筹天数 */
-	private short crowdDays;
+	private int crowdDays;
 	/** 众筹开始时间 */
 	private Date crowdStartTime;
 	/** 众筹结束时间 */
@@ -41,9 +41,11 @@ public class Item  extends BaseObject {
 	/** 项目头图 */
 	private String headerImage;
 	/** 状态：1:新建中；2:初审中；3初审通过；4初审未通过；5:设置合作中；6:复审中；7复审通过；8复审未通过；9待发布；10:预热中；11认筹中；12 已完成；13已下架 */
-	private byte itemStatus;
+	private int itemStatus;
+	/** 删除标识： 1 未删除  0 删除 */
+	private int flag;
 	/** 排序，数字越小权重越大 */
-	private byte itemSort;
+	private int itemSort;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -109,11 +111,11 @@ public class Item  extends BaseObject {
 		return completedAmount;
 	}
 
-	public void setPreheatingDays(short preheatingDays){
+	public void setPreheatingDays(int preheatingDays){
 		this.preheatingDays = preheatingDays;
 	}
 
-	public short getPreheatingDays(){
+	public int getPreheatingDays(){
 		return preheatingDays;
 	}
 
@@ -133,11 +135,11 @@ public class Item  extends BaseObject {
 		return preheatingEndTime;
 	}
 
-	public void setCrowdDays(short crowdDays){
+	public void setCrowdDays(int crowdDays){
 		this.crowdDays = crowdDays;
 	}
 
-	public short getCrowdDays(){
+	public int getCrowdDays(){
 		return crowdDays;
 	}
 
@@ -181,19 +183,27 @@ public class Item  extends BaseObject {
 		return headerImage;
 	}
 
-	public void setItemStatus(byte itemStatus){
+	public void setItemStatus(int itemStatus){
 		this.itemStatus = itemStatus;
 	}
 
-	public byte getItemStatus(){
+	public int getItemStatus(){
 		return itemStatus;
 	}
 
-	public void setItemSort(byte itemSort){
+	public void setFlag(int flag){
+		this.flag = flag;
+	}
+
+	public int getFlag(){
+		return flag;
+	}
+
+	public void setItemSort(int itemSort){
 		this.itemSort = itemSort;
 	}
 
-	public byte getItemSort(){
+	public int getItemSort(){
 		return itemSort;
 	}
 

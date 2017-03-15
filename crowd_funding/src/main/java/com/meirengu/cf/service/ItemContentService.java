@@ -5,7 +5,7 @@ import com.meirengu.service.BaseService;
 /**
  * ItemContent服务接口 
  * @author 建新
- * @create Tue Mar 14 16:55:44 CST 2017
+ * @create Wed Mar 15 10:41:25 CST 2017
  */
 public interface ItemContentService extends BaseService<ItemContent>{
 }

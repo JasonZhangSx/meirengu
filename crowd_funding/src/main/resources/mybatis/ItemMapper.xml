@@ -10,17 +10,18 @@
 		<result column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
 		<result column="target_amount" property="targetAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
 		<result column="completed_amount" property="completedAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
-		<result column="preheating_days" property="preheatingDays" jdbcType="SMALLINT" javaType="short"/>
+		<result column="preheating_days" property="preheatingDays" jdbcType="SMALLINT" javaType="int"/>
 		<result column="preheating_start_time" property="preheatingStartTime" jdbcType="DATE" javaType="Date"/>
 		<result column="preheating_end_time" property="preheatingEndTime" jdbcType="DATE" javaType="Date"/>
-		<result column="crowd_days" property="crowdDays" jdbcType="SMALLINT" javaType="short"/>
+		<result column="crowd_days" property="crowdDays" jdbcType="SMALLINT" javaType="int"/>
 		<result column="crowd_start_time" property="crowdStartTime" jdbcType="DATE" javaType="Date"/>
 		<result column="crowd_end_time" property="crowdEndTime" jdbcType="DATE" javaType="Date"/>
 		<result column="partner_id" property="partnerId" jdbcType="INTEGER" javaType="int"/>
 		<result column="area_id" property="areaId" jdbcType="INTEGER" javaType="int"/>
 		<result column="header_image" property="headerImage" jdbcType="VARCHAR" javaType="String"/>
-		<result column="item_status" property="itemStatus" jdbcType="TINYINT" javaType="byte"/>
-		<result column="item_sort" property="itemSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="item_status" property="itemStatus" jdbcType="TINYINT" javaType="int"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
+		<result column="item_sort" property="itemSort" jdbcType="TINYINT" javaType="int"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
@@ -29,14 +30,14 @@
 
 	<sql id="table_name">item</sql>
 	<sql id="select_columns">
-		item_id as itemId, item_name as itemName, item_profile as itemProfile, type_id as typeId, class_id as classId, target_amount as targetAmount, completed_amount as completedAmount, preheating_days as preheatingDays, preheating_start_time as preheatingStartTime, preheating_end_time as preheatingEndTime, crowd_days as crowdDays, crowd_start_time as crowdStartTime, crowd_end_time as crowdEndTime, partner_id as partnerId, area_id as areaId, header_image as headerImage, item_status as itemStatus, item_sort as itemSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount, sponsor_name as sponsorName
+		item_id as itemId, item_name as itemName, item_profile as itemProfile, type_id as typeId, class_id as classId, target_amount as targetAmount, completed_amount as completedAmount, preheating_days as preheatingDays, preheating_start_time as preheatingStartTime, preheating_end_time as preheatingEndTime, crowd_days as crowdDays, crowd_start_time as crowdStartTime, crowd_end_time as crowdEndTime, partner_id as partnerId, area_id as areaId, header_image as headerImage, item_status as itemStatus, flag as flag, item_sort as itemSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount, sponsor_name as sponsorName
 	</sql>
 
 	<insert id="insert" parameterType="item" useGeneratedKeys="true" keyProperty="itemId" >
 		INSERT INTO <include refid="table_name" />
-			(item_id, item_name, item_profile, type_id, class_id, target_amount, completed_amount, preheating_days, preheating_start_time, preheating_end_time, crowd_days, crowd_start_time, crowd_end_time, partner_id, area_id, header_image, item_status, item_sort, create_time, update_time, operate_account, sponsor_name)
+			(item_id, item_name, item_profile, type_id, class_id, target_amount, completed_amount, preheating_days, preheating_start_time, preheating_end_time, crowd_days, crowd_start_time, crowd_end_time, partner_id, area_id, header_image, item_status, flag, item_sort, create_time, update_time, operate_account, sponsor_name)
 		VALUES
-			(#{itemId}, #{itemName}, #{itemProfile}, #{typeId}, #{classId}, #{targetAmount}, #{completedAmount}, #{preheatingDays}, #{preheatingStartTime}, #{preheatingEndTime}, #{crowdDays}, #{crowdStartTime}, #{crowdEndTime}, #{partnerId}, #{areaId}, #{headerImage}, #{itemStatus}, #{itemSort}, #{createTime}, #{updateTime}, #{operateAccount}, #{sponsorName})
+			(#{itemId}, #{itemName}, #{itemProfile}, #{typeId}, #{classId}, #{targetAmount}, #{completedAmount}, #{preheatingDays}, #{preheatingStartTime}, #{preheatingEndTime}, #{crowdDays}, #{crowdStartTime}, #{crowdEndTime}, #{partnerId}, #{areaId}, #{headerImage}, #{itemStatus}, #{flag}, #{itemSort}, #{createTime}, #{updateTime}, #{operateAccount}, #{sponsorName})
 	</insert>
 
 	<update id="update" parameterType="item">
@@ -93,6 +94,9 @@
 			<if test="itemStatus != null and itemStatus != ''">
 				item_status=#{itemStatus},
 			</if>
+			<if test="flag != null and flag != ''">
+				flag=#{flag},
+			</if>
 			<if test="itemSort != null and itemSort != ''">
 				item_sort=#{itemSort},
 			</if>
@@ -122,10 +126,40 @@
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemName != null and itemName != ''">
+			and item_name like '%${itemName}%'
+		</if>
+		<if test="itemStatus != null and itemStatus != ''">
+			and item_status in (#{itemStatus})
+		</if>
+		<if test="flag != null">
+			and flag=#{flag}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		create_time desc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemName != null and itemName != ''">
+			and item_name like '%${itemName}%'
+		</if>
+		<if test="itemStatus != null and itemStatus != ''">
+			and item_status in (#{itemStatus})
+		</if>
+		<if test="flag != null">
+			and flag=#{flag}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

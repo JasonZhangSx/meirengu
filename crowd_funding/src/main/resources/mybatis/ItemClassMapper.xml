@@ -6,19 +6,20 @@
 		<id column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
 		<result column="class_name" property="className" jdbcType="VARCHAR" javaType="String"/>
 		<result column="class_parent_id" property="classParentId" jdbcType="INTEGER" javaType="int"/>
-		<result column="class_sort" property="classSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="class_sort" property="classSort" jdbcType="TINYINT" javaType="int"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
 	</resultMap>
 
 	<sql id="table_name">item_class</sql>
 	<sql id="select_columns">
-		class_id as classId, class_name as className, class_parent_id as classParentId, class_sort as classSort
+		class_id as classId, class_name as className, class_parent_id as classParentId, class_sort as classSort, flag as flag
 	</sql>
 
 	<insert id="insert" parameterType="itemClass" useGeneratedKeys="true" keyProperty="classId" >
 		INSERT INTO <include refid="table_name" />
-			(class_id, class_name, class_parent_id, class_sort)
+			(class_id, class_name, class_parent_id, class_sort, flag)
 		VALUES
-			(#{classId}, #{className}, #{classParentId}, #{classSort})
+			(#{classId}, #{className}, #{classParentId}, #{classSort}, #{flag})
 	</insert>
 
 	<update id="update" parameterType="itemClass">
@@ -35,6 +36,9 @@
 			</if>
 			<if test="classSort != null and classSort != ''">
 				class_sort=#{classSort},
+			</if>
+			<if test="flag != null and flag != ''">
+				flag=#{flag},
 			</if>
 		</set>
 		<where>
