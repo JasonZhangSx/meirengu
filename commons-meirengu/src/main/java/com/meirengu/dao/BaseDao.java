@@ -22,6 +22,13 @@ public interface BaseDao<E> {
     public List<Map<String, Object>> getByPage(Map map, RowBounds rowBounds);
 
     /**
+     * 根据条件进行分页
+     * @param map
+     * @return
+     */
+    public List<Map<String, Object>> getByPage(Map map);
+
+    /**
      * 根据条件获取总条数
      * @param map
      * @return
@@ -54,5 +61,5 @@ public interface BaseDao<E> {
      * @param id
      * @return
      */
-    int detail(int id);
+    E detail(int id);
 }

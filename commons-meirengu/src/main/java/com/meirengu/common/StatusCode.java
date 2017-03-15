@@ -64,6 +64,7 @@ public class StatusCode {
     //40500-40600//crowd_funding
 
     //40600-40700//payment
+    public static final int PAYMENT_RECORD_ERROR_INSERT = 40600;
 
     //40700-40700//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
@@ -102,9 +103,6 @@ public class StatusCode {
     public static final int USER_IS_EXITS = 50107;
 
 
-    //50200-50300//admin_dashboard
-    public static final int AD_LONGIN_SUCCESS = 50200;
-    public static final int AD_LONGIN_FIAL = 50201;
     //50200-50300//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
     public static final int BULLETIN_ERROR_INSERT = 50201;
@@ -117,6 +115,12 @@ public class StatusCode {
     //50400-50500//shopping_mall
 
     //50500-50600//crowd_funding
+    public static final int ITEM_ERROR_INSERT = 50500;
+    public static final int ITEM_ERROR_UPDATE = 50501;
+    public static final int ITEM_ERROR_DELETE = 50502;
+    public static final int PARTNER_CLASS_ERROR_INSERT = 50503;
+    public static final int PARTNER_CLASS_ERROR_UPDATE = 50504;
+    public static final int PARTNER_CLASS_ALREADY_DELETE = 50505;
 
     //50600-50700//payment
 
@@ -240,13 +244,24 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
 
         //50200-50300//news_cms
+        codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
+        codeMsgMap.put(StatusCode.BULLETIN_ERROR_INSERT, "公告列表获取失败，请重试");
+        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
+        codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
+        codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
+
 
         //50300-50400//medical_beauty
 
         //50400-50500//shopping_mall
 
         //50500-50600//crowd_funding
-
+        codeMsgMap.put(StatusCode.ITEM_ERROR_INSERT, "项目保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_UPDATE, "项目修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_DELETE, "项目删除失败， 请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
+        codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
         //50600-50700//payment
 
         //50700-50800//sms
