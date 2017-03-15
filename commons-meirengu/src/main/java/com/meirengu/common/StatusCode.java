@@ -111,7 +111,8 @@ public class StatusCode {
     //50400-50500//shopping_mall
 
     //50500-50600//crowd_funding
-
+    public static final int ITEM_ERROR_INSERT = 50500;
+    public static final int ITEM_ERROR_UPDATE = 50501;
     //50600-50700//payment
 
     //50700-50800//sms
@@ -234,7 +235,8 @@ public class StatusCode {
         //50400-50500//shopping_mall
 
         //50500-50600//crowd_funding
-
+        codeMsgMap.put(StatusCode.ITEM_ERROR_INSERT, "项目插入失败");
+        codeMsgMap.put(StatusCode.ITEM_ERROR_UPDATE, "项目修改失败");
         //50600-50700//payment
 
         //50700-50800//sms

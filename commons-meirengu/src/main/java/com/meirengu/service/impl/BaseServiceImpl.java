@@ -54,7 +54,7 @@ public class BaseServiceImpl<E> implements BaseService<E>{
     }
 
     @Override
-    public int detail(int id) {
+    public E detail(int id) {
         return baseDao.detail(id);
     }
 }

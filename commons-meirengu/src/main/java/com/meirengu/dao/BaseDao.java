@@ -54,5 +54,5 @@ public interface BaseDao<E> {
      * @param id
      * @return
      */
-    int detail(int id);
+    E detail(int id);
 }

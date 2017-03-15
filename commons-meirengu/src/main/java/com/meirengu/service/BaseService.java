@@ -43,8 +43,8 @@ public interface BaseService<E> {
 
     /**
      * 获取详情实体
-     * @param e
+     * @param id
      * @return
      */
-    int detail(int id);
+    E detail(int id);
 }
