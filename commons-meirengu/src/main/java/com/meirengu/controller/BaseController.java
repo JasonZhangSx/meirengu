@@ -2,6 +2,8 @@ package com.meirengu.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.Constants;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * 基础控制器类
  *
@@ -20,6 +21,25 @@ import java.util.Map;
 public class BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+    /**
+     * 封装分页参数
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public Page setPageParams(int pageNum, int pageSize){
+        Page page = new Page();
+        if(pageNum == 0){
+            pageNum = Constants.PAGE_NUM_DEFAULT;
+        }
+        if(pageSize == 0){
+            pageSize = Constants.PAGE_SIZE_DEFAULT;
+        }
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        return page;
+    }
+
     /**
      * 封装返回数据对象
      * @param code 返回状态码

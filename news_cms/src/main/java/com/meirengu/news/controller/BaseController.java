@@ -2,7 +2,6 @@ package com.meirengu.news.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.meirengu.mall.common.StatusCode;
 import com.meirengu.model.Result;
 import com.meirengu.news.common.Constants;
 import com.meirengu.news.model.Page;
@@ -49,7 +48,7 @@ public class BaseController {
      */
     public Map<String, Object> setReturnMsg(String code, Object data, String msg){
         Map<String, Object> returnMap = new HashMap<String, Object>();
-        if(StatusCode.STATUS_200.equals(code)){
+        if(com.meirengu.news.common.StatusCode.STATUS_200.equals(code)){
             returnMap.put("code", code);
             returnMap.put("msg", msg);
             if(!StringUtils.isEmpty(data)){

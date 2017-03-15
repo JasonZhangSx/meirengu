@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ${DESCRIPTION}
- *
+ * 项目分类
  * @author 建新
  * @create 2017-03-13 11:32
  */

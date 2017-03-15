@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.meirengu.cf.dao.ItemClassDao" >
+<mapper namespace="com.meirengu.cf.dao.PartnerClassDao" >
 
-	<resultMap id="itemClassMap" type="ItemClass">
+	<resultMap id="partnerClassMap" type="PartnerClass">
 		<id column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
 		<result column="class_name" property="className" jdbcType="VARCHAR" javaType="String"/>
-		<result column="class_parent_id" property="classParentId" jdbcType="INTEGER" javaType="int"/>
 		<result column="class_sort" property="classSort" jdbcType="TINYINT" javaType="byte"/>
 	</resultMap>
 
-	<sql id="table_name">item_class</sql>
+	<sql id="table_name">partner_class</sql>
 	<sql id="select_columns">
-		class_id as classId, class_name as className, class_parent_id as classParentId, class_sort as classSort
+		class_id as classId, class_name as className, class_sort as classSort
 	</sql>
 
-	<insert id="insert" parameterType="itemClass" useGeneratedKeys="true" keyProperty="classId" >
+	<insert id="insert" parameterType="partnerClass" useGeneratedKeys="true" keyProperty="classId" >
 		INSERT INTO <include refid="table_name" />
-			(class_id, class_name, class_parent_id, class_sort)
+			(class_id, class_name, class_sort)
 		VALUES
-			(#{classId}, #{className}, #{classParentId}, #{classSort})
+			(#{classId}, #{className}, #{classSort})
 	</insert>
 
-	<update id="update" parameterType="itemClass">
+	<update id="update" parameterType="partnerClass">
 		UPDATE <include refid="table_name" />
 		<set>
 			<if test="classId != null and classId != ''">
@@ -29,9 +28,6 @@
 			</if>
 			<if test="className != null and className != ''">
 				class_name=#{className},
-			</if>
-			<if test="classParentId != null and classParentId != ''">
-				class_parent_id=#{classParentId},
 			</if>
 			<if test="classSort != null and classSort != ''">
 				class_sort=#{classSort},
@@ -42,7 +38,7 @@
 		</where>
 	</update>
 
-	<select id="detail" parameterType="integer" resultType="itemClass">
+	<select id="detail" parameterType="integer" resultType="partnerClass">
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where class_id=#{id}
 	</select>

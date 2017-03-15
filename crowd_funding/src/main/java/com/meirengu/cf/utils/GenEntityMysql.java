@@ -1,4 +1,6 @@
-package com.meirengu.utils;
+package com.meirengu.cf.utils;
+
+import com.meirengu.utils.StringUtil;
 
 import java.io.*;
 import java.sql.*;
@@ -326,8 +328,8 @@ public class GenEntityMysql {
     }
 
     public void initParams(String basePath, String projectName, String packageFather, String packageModel, String packageDao, String packageService,
-                           String packageServiceImpl, String packageController, String mapperPath, String authorName, String url,
-                           String username, String password, String driver, String databaseName){
+                            String packageServiceImpl, String packageController, String mapperPath, String authorName, String url,
+                            String username, String password, String driver, String databaseName){
 
         this.basePath = basePath;
         this.projectName = projectName;
@@ -388,9 +390,9 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：生成所有属性
-     * @param sb
-     */
+    * 功能：生成所有属性
+    * @param sb
+    */
     private void processAllAttrs(StringBuffer sb, List<Column> columnList) {
         for (int i = 0; i < columnList.size(); i++) {
             sb.append("\t/** ").append(columnList.get(i).getColumnComment()).append(" */\n");
@@ -401,9 +403,9 @@ public class GenEntityMysql {
 
 
     /**
-     * 功能：生成所有方法
-     * @param sb
-     */
+    * 功能：生成所有方法
+    * @param sb
+    */
     private void processAllMethod(StringBuffer sb, List<Column> columnList) {
         sb.append("\n");
 
@@ -423,10 +425,10 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：将输入字符串的首字母改成大写
-     * @param str
-     * @return
-     */
+    * 功能：将输入字符串的首字母改成大写
+    * @param str
+    * @return
+    */
     private String initcap(String str) {
 
         char[] ch = str.toCharArray();
@@ -456,19 +458,19 @@ public class GenEntityMysql {
     }
 
     /**
-     * 功能：获得列的数据类型
-     *
-     * @param sqlType
-     * @return
-     */
+    * 功能：获得列的数据类型
+    *
+    * @param sqlType
+    * @return
+    */
     private String sqlType2JavaType(String sqlType) {
 
         if (sqlType.equalsIgnoreCase("bit")) {
             return "boolean";
         } else if (sqlType.equalsIgnoreCase("tinyint")) {
-            return "int";
+            return "byte";
         } else if (sqlType.equalsIgnoreCase("smallint")) {
-            return "int";
+            return "short";
         } else if (sqlType.equalsIgnoreCase("int") || sqlType.equalsIgnoreCase("bigint")
                 || sqlType.equalsIgnoreCase("mediumint") || sqlType.equalsIgnoreCase("smallint")
                 || sqlType.equalsIgnoreCase("tinyint")) {
@@ -493,8 +495,6 @@ public class GenEntityMysql {
         } else if (sqlType.equalsIgnoreCase("decimal")){
             classList.add(sqlType);
             return "BigDecimal";
-        } else if (sqlType.equalsIgnoreCase("enum")) {
-            return "int";
         }
 
         return null;
@@ -560,8 +560,8 @@ public class GenEntityMysql {
 
         GenEntityMysql gm = new GenEntityMysql();
         String basePath = System.getProperty("user.dir");
-        String projectName = "trade";
-        String packageFather = "com.meirengu.trade";
+        String projectName = "crowd_funding";
+        String packageFather = "com.meirengu.cf";
         String packageModel = "model";
         String packageDao = "dao";
         String packageService = "service";
@@ -571,11 +571,11 @@ public class GenEntityMysql {
 
         String authorName = "建新";//作者名字
         //数据库连接
-        String url = "jdbc:mysql://192.168.0.135:3306/trade";
+        String url = "jdbc:mysql://192.168.0.135:3306/crowd_funding";
         String username = "dev";
         String password = "dev@1qa";
         String driver = "com.mysql.jdbc.Driver";
-        String databaseName = "trade";
+        String databaseName = "crowd_funding";
         gm.initParams(basePath, projectName, packageFather, packageModel, packageDao, packageService,
                 packageServiceImpl, packageController, mapperPath, authorName, url,
                 username, password, driver, databaseName);

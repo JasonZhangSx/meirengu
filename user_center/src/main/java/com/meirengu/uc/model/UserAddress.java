@@ -2,7 +2,7 @@ package com.meirengu.uc.model;
 
 import java.util.Date;
 
-public class UserAddress {
+public class UserAddress extends BaseEntity{
     private Integer addressId;
 
     private Integer userId;
@@ -18,6 +18,8 @@ public class UserAddress {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer delFlag;
 
     public Integer getAddressId() {
         return addressId;
@@ -40,7 +42,7 @@ public class UserAddress {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
     public String getUserPhone() {
@@ -48,7 +50,7 @@ public class UserAddress {
     }
 
     public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone == null ? null : userPhone.trim();
+        this.userPhone = userPhone;
     }
 
     public String getUserAddress() {
@@ -56,15 +58,15 @@ public class UserAddress {
     }
 
     public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress == null ? null : userAddress.trim();
+        this.userAddress = userAddress;
     }
 
-    public Boolean getIsDefault() {
+    public Boolean getDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(Boolean isDefault) {
-        this.isDefault = isDefault;
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
     }
 
     public Date getCreateTime() {
@@ -81,5 +83,13 @@ public class UserAddress {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 }

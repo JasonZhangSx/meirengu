@@ -2,17 +2,15 @@ package com.meirengu.cf.model;
 
 import com.meirengu.model.BaseObject;
  /*
-  * ItemClass 实体类
+  * PartnerClass 实体类
   * Tue Mar 14 16:55:44 CST 2017 建新
   */
-public class ItemClass  extends BaseObject {
-	/** 众筹项目分类索引ID */
+public class PartnerClass  extends BaseObject {
+	/** 行业分类索引id */
 	private int classId;
-	/** 众筹分类名称 */
+	/** 行业类型名称 */
 	private String className;
-	/** 父ID */
-	private int classParentId;
-	/** 排序，数字越小权重越大 */
+	/** 排序：数字越小权重越大 */
 	private byte classSort;
 
 	public void setClassId(int classId){
@@ -29,14 +27,6 @@ public class ItemClass  extends BaseObject {
 
 	public String getClassName(){
 		return className;
-	}
-
-	public void setClassParentId(int classParentId){
-		this.classParentId = classParentId;
-	}
-
-	public int getClassParentId(){
-		return classParentId;
 	}
 
 	public void setClassSort(byte classSort){

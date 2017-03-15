@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.ItemCooperationDao" >
+
+	<resultMap id="itemCooperationMap" type="ItemCooperation">
+		<id column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
+		<result column="commission_rate" property="commissionRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="guarantee_rate" property="guaranteeRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="prepaid_bonus" property="prepaidBonus" jdbcType="INTEGER" javaType="int"/>
+		<result column="loan_mode" property="loanMode" jdbcType="INTEGER" javaType="int"/>
+		<result column="first_ratio" property="firstRatio" jdbcType="INTEGER" javaType="int"/>
+		<result column="sponsor_idcard" property="sponsorIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="sponsor_credit" property="sponsorCredit" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_idcard" property="principalIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="principal_credit" property="principalCredit" jdbcType="VARCHAR" javaType="String"/>
+		<result column="business_licence" property="businessLicence" jdbcType="VARCHAR" javaType="String"/>
+		<result column="venue_rental_agreement" property="venueRentalAgreement" jdbcType="VARCHAR" javaType="String"/>
+		<result column="store_renderings" property="storeRenderings" jdbcType="VARCHAR" javaType="String"/>
+		<result column="corporate_articles" property="corporateArticles" jdbcType="VARCHAR" javaType="String"/>
+		<result column="asset_water_liabilities" property="assetWaterLiabilities" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">item_cooperation</sql>
+	<sql id="select_columns">
+		item_id as itemId, commission_rate as commissionRate, guarantee_rate as guaranteeRate, prepaid_bonus as prepaidBonus, loan_mode as loanMode, first_ratio as firstRatio, sponsor_idcard as sponsorIdcard, sponsor_credit as sponsorCredit, principal_idcard as principalIdcard, principal_credit as principalCredit, business_licence as businessLicence, venue_rental_agreement as venueRentalAgreement, store_renderings as storeRenderings, corporate_articles as corporateArticles, asset_water_liabilities as assetWaterLiabilities, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="itemCooperation" useGeneratedKeys="true" keyProperty="itemId" >
+		INSERT INTO <include refid="table_name" />
+			(item_id, commission_rate, guarantee_rate, prepaid_bonus, loan_mode, first_ratio, sponsor_idcard, sponsor_credit, principal_idcard, principal_credit, business_licence, venue_rental_agreement, store_renderings, corporate_articles, asset_water_liabilities, create_time, update_time, operate_account)
+		VALUES
+			(#{itemId}, #{commissionRate}, #{guaranteeRate}, #{prepaidBonus}, #{loanMode}, #{firstRatio}, #{sponsorIdcard}, #{sponsorCredit}, #{principalIdcard}, #{principalCredit}, #{businessLicence}, #{venueRentalAgreement}, #{storeRenderings}, #{corporateArticles}, #{assetWaterLiabilities}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="itemCooperation">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="commissionRate != null and commissionRate != ''">
+				commission_rate=#{commissionRate},
+			</if>
+			<if test="guaranteeRate != null and guaranteeRate != ''">
+				guarantee_rate=#{guaranteeRate},
+			</if>
+			<if test="prepaidBonus != null and prepaidBonus != ''">
+				prepaid_bonus=#{prepaidBonus},
+			</if>
+			<if test="loanMode != null and loanMode != ''">
+				loan_mode=#{loanMode},
+			</if>
+			<if test="firstRatio != null and firstRatio != ''">
+				first_ratio=#{firstRatio},
+			</if>
+			<if test="sponsorIdcard != null and sponsorIdcard != ''">
+				sponsor_idcard=#{sponsorIdcard},
+			</if>
+			<if test="sponsorCredit != null and sponsorCredit != ''">
+				sponsor_credit=#{sponsorCredit},
+			</if>
+			<if test="principalIdcard != null and principalIdcard != ''">
+				principal_idcard=#{principalIdcard},
+			</if>
+			<if test="principalCredit != null and principalCredit != ''">
+				principal_credit=#{principalCredit},
+			</if>
+			<if test="businessLicence != null and businessLicence != ''">
+				business_licence=#{businessLicence},
+			</if>
+			<if test="venueRentalAgreement != null and venueRentalAgreement != ''">
+				venue_rental_agreement=#{venueRentalAgreement},
+			</if>
+			<if test="storeRenderings != null and storeRenderings != ''">
+				store_renderings=#{storeRenderings},
+			</if>
+			<if test="corporateArticles != null and corporateArticles != ''">
+				corporate_articles=#{corporateArticles},
+			</if>
+			<if test="assetWaterLiabilities != null and assetWaterLiabilities != ''">
+				asset_water_liabilities=#{assetWaterLiabilities},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			item_id = #{itemId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="itemCooperation">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where item_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>
