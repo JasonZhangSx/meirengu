@@ -3,10 +3,16 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.UserVO;
+import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +26,33 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     UserDao userDao;
 
     @Override
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user) {
-        return userDao.create(user);
+
+        HttpResult hr = null;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("mobile", user.getPhone());
+        params.put("userId", user.getUserId()+"");
+        String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
+        logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
+        try {
+            hr = HttpUtil.doPostForm(url,params);
+        } catch (Exception e) {
+            logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+        }
+        if(hr.getStatusCode() == 200){
+            int result = userDao.create(user);
+            if(result == 1){
+                return result;
+            }
+        }
+        return 0;
     }
 
     @Override
