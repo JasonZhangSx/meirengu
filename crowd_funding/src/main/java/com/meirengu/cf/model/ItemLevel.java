@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
  /*
   * ItemLevel 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class ItemLevel  extends BaseObject {
 	/** 众筹档位索引id */
@@ -31,7 +31,7 @@ public class ItemLevel  extends BaseObject {
 	/** 回报时间 */
 	private Date paybackTime;
 	/** 是否分红 */
-	private byte isShareBonus;
+	private int isShareBonus;
 	/** 年化利率 */
 	private int yearRate;
 	/** 投资期限，以月为单位 */
@@ -41,13 +41,13 @@ public class ItemLevel  extends BaseObject {
 	/** 分红周期（多少月回款一次）1、1月；3、3月；6、6月；12、12月 */
 	private int shareBonusPeriod;
 	/** 是否需要地址 */
-	private byte isNeedAddress;
+	private int isNeedAddress;
 	/** 是否需要协议 */
-	private byte isNeedAgreement;
+	private int isNeedAgreement;
 	/** 档位状态：1：预约中；2已预约满；3候补中；4认购中；5已完成 */
-	private byte levelStatus;
+	private int levelStatus;
 	/** 排序：数字越小权重越大 */
-	private byte levelSort;
+	private int levelSort;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -143,11 +143,11 @@ public class ItemLevel  extends BaseObject {
 		return paybackTime;
 	}
 
-	public void setIsShareBonus(byte isShareBonus){
+	public void setIsShareBonus(int isShareBonus){
 		this.isShareBonus = isShareBonus;
 	}
 
-	public byte getIsShareBonus(){
+	public int getIsShareBonus(){
 		return isShareBonus;
 	}
 
@@ -183,35 +183,35 @@ public class ItemLevel  extends BaseObject {
 		return shareBonusPeriod;
 	}
 
-	public void setIsNeedAddress(byte isNeedAddress){
+	public void setIsNeedAddress(int isNeedAddress){
 		this.isNeedAddress = isNeedAddress;
 	}
 
-	public byte getIsNeedAddress(){
+	public int getIsNeedAddress(){
 		return isNeedAddress;
 	}
 
-	public void setIsNeedAgreement(byte isNeedAgreement){
+	public void setIsNeedAgreement(int isNeedAgreement){
 		this.isNeedAgreement = isNeedAgreement;
 	}
 
-	public byte getIsNeedAgreement(){
+	public int getIsNeedAgreement(){
 		return isNeedAgreement;
 	}
 
-	public void setLevelStatus(byte levelStatus){
+	public void setLevelStatus(int levelStatus){
 		this.levelStatus = levelStatus;
 	}
 
-	public byte getLevelStatus(){
+	public int getLevelStatus(){
 		return levelStatus;
 	}
 
-	public void setLevelSort(byte levelSort){
+	public void setLevelSort(int levelSort){
 		this.levelSort = levelSort;
 	}
 
-	public byte getLevelSort(){
+	public int getLevelSort(){
 		return levelSort;
 	}
 

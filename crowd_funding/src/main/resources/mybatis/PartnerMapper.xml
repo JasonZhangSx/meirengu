@@ -27,6 +27,7 @@
 		<result column="image_business_licence" property="imageBusinessLicence" jdbcType="VARCHAR" javaType="String"/>
 		<result column="image_bank" property="imageBank" jdbcType="VARCHAR" javaType="String"/>
 		<result column="image_professional_license" property="imageProfessionalLicense" jdbcType="VARCHAR" javaType="String"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
@@ -34,14 +35,14 @@
 
 	<sql id="table_name">partner</sql>
 	<sql id="select_columns">
-		partner_id as partnerId, type_id as typeId, partner_name as partnerName, account_id as accountId, enterprise_name as enterpriseName, id_number as idNumber, enterprise_address as enterpriseAddress, principal_name as principalName, principal_idcard as principalIdcard, principal_telephone as principalTelephone, principal_fax as principalFax, principal_address as principalAddress, contacts_name as contactsName, contacts_idcard as contactsIdcard, contacts_telephone as contactsTelephone, contacts_fax as contactsFax, contacts_address as contactsAddress, bank_name as bankName, bank_account as bankAccount, bank_card as bankCard, image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank, image_professional_license as imageProfessionalLicense, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		partner_id as partnerId, type_id as typeId, partner_name as partnerName, account_id as accountId, enterprise_name as enterpriseName, id_number as idNumber, enterprise_address as enterpriseAddress, principal_name as principalName, principal_idcard as principalIdcard, principal_telephone as principalTelephone, principal_fax as principalFax, principal_address as principalAddress, contacts_name as contactsName, contacts_idcard as contactsIdcard, contacts_telephone as contactsTelephone, contacts_fax as contactsFax, contacts_address as contactsAddress, bank_name as bankName, bank_account as bankAccount, bank_card as bankCard, image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank, image_professional_license as imageProfessionalLicense, flag as flag, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="partner" useGeneratedKeys="true" keyProperty="partnerId" >
 		INSERT INTO <include refid="table_name" />
-			(partner_id, type_id, partner_name, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, create_time, update_time, operate_account)
+			(partner_id, type_id, partner_name, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, flag, create_time, update_time, operate_account)
 		VALUES
-			(#{partnerId}, #{typeId}, #{partnerName}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{partnerId}, #{typeId}, #{partnerName}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{flag}, #{createTime}, #{updateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="partner">
@@ -118,6 +119,9 @@
 			</if>
 			<if test="imageProfessionalLicense != null and imageProfessionalLicense != ''">
 				image_professional_license=#{imageProfessionalLicense},
+			</if>
+			<if test="flag != null and flag != ''">
+				flag=#{flag},
 			</if>
 			<if test="createTime != null and createTime != ''">
 				create_time=#{createTime},

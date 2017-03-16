@@ -35,16 +35,18 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     @Override
     public int updateByAdressId(UserAddress userAddress) {
 
-        if(userAddress.getDefault()){
-            userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
-        }else{
+        if(userAddress.getDefault() !=null){
+            if(userAddress.getDefault()){
+                userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
+            }else{
 
+            }
         }
         return userAddressDao.updateByAdressId(userAddress);
     }
 
     @Override
-    public UserAddress selectDefaultAddressByPhone(Integer userId) {
+    public UserAddress selectDefaultAddressByUserId(Integer userId) {
         UserAddress userAddress = new UserAddress();
         userAddress.setUserId(userId);
         userAddress.setDefault(true);

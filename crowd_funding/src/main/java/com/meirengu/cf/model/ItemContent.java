@@ -4,7 +4,7 @@ import com.meirengu.model.BaseObject;
 import java.util.Date;
  /*
   * ItemContent 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class ItemContent  extends BaseObject {
 	/** 众筹项目内容索引id */
@@ -12,7 +12,7 @@ public class ItemContent  extends BaseObject {
 	/** 内容对应众筹项目id */
 	private int itemId;
 	/** 1、项目内容   2、 融资方案 */
-	private byte contentType;
+	private int contentType;
 	/** 主标题 */
 	private String contentTitle;
 	/** 副标题 */
@@ -20,7 +20,7 @@ public class ItemContent  extends BaseObject {
 	/** 内容详情 */
 	private int contentInfo;
 	/** 排序，数字越小权重越大 */
-	private byte contentSort;
+	private int contentSort;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -44,11 +44,11 @@ public class ItemContent  extends BaseObject {
 		return itemId;
 	}
 
-	public void setContentType(byte contentType){
+	public void setContentType(int contentType){
 		this.contentType = contentType;
 	}
 
-	public byte getContentType(){
+	public int getContentType(){
 		return contentType;
 	}
 
@@ -76,11 +76,11 @@ public class ItemContent  extends BaseObject {
 		return contentInfo;
 	}
 
-	public void setContentSort(byte contentSort){
+	public void setContentSort(int contentSort){
 		this.contentSort = contentSort;
 	}
 
-	public byte getContentSort(){
+	public int getContentSort(){
 		return contentSort;
 	}
 

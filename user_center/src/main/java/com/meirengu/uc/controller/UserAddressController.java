@@ -54,14 +54,16 @@ public class UserAddressController extends BaseController{
         userAddressBean.setUserPhone(mobile);
         userAddressBean.setDelFlag(1);
 
-        UserAddress userAddres = userAddressService.selectDefaultAddressByPhone(userId);
+        UserAddress userAddres = userAddressService.selectDefaultAddressByUserId(userId);
 
         if(!isDefault){
-            if(!StringUtil.isEmpty(userAddres.getAddressId())){
+            if(userAddres==null || StringUtil.isEmpty(userAddres.getAddressId())){
                 userAddressBean.setDefault(true);
             }else{
                 userAddressBean.setDefault(false);
             }
+        }else{
+                userAddressBean.setDefault(false);
         }
         int res = userAddressService.insert(userAddressBean);
         if(res == 0){
@@ -76,6 +78,7 @@ public class UserAddressController extends BaseController{
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
+                                @RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
@@ -86,9 +89,21 @@ public class UserAddressController extends BaseController{
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
+        UserAddress address = new UserAddress();
+        address.setAddressId(addressId);
+        UserAddress userAddress1 = userAddressService.selectByUserAddress(address);
+        if(StringUtil.isEmpty(userAddress1.getUserId())){
+            return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode
+                    .ADDRESS_ID_NOT_EMPTY));
+        }
+        if(!userAddress1.getUserId().equals(userId)){
+            return super.setResult(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, null, StatusCode.codeMsgMap.get(StatusCode
+                    .ADDRESS_ID_AND_USER_ID_MISMATCH));
+        }
         UserAddress userAddressBean = new UserAddress();
         userAddressBean.setUpdateTime(new Date());
         userAddressBean.setUserAddress(userAddress);
+        userAddressBean.setAddressId(addressId);
         userAddressBean.setUserId(userId);
         userAddressBean.setUserPhone(mobile);
         userAddressBean.setUserName(userName);
@@ -98,7 +113,7 @@ public class UserAddressController extends BaseController{
         int res = userAddressService.updateByAdressId(userAddressBean);
         if(res == 0){
             userAddressBean.setAddressId(UuidUtils.getShortUuid());
-            userAddressService.insert(userAddressBean);
+            userAddressService.updateByAdressId(userAddressBean);
         }
         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
                 .OK));
@@ -111,12 +126,20 @@ public class UserAddressController extends BaseController{
      */
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result deleteAddress(@RequestParam(value = "address_id", required = true) Integer addressId){
+
+        //默认地址不允许删除
         UserAddress userAddress = new UserAddress();
         userAddress.setAddressId(addressId);
+        userAddressService.selectByUserAddress(userAddress);
+        if(userAddress.getDefault()!=null){
+            if(userAddress.getDefault()){
+                return super.setResult(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, null, StatusCode.codeMsgMap.get(StatusCode
+                        .ADDREAA_IS_NOT_ALLOWED_DELETE));
+            }
+        }
         userAddress.setDelFlag(1);
         userAddressService.updateByAdressId(userAddress);
-        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                .OK));
+        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     /**
@@ -127,20 +150,22 @@ public class UserAddressController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "list", method = {RequestMethod.POST})
-    public Map<String, Object> list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
-                                    @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize){
+    public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
+                                    @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
+                                    @RequestParam(value="user_id", required = true) int userId){
         Map paramMap = new HashMap<String, Object>();
-        Page<UserAddress> page = super.setPageParams(pageSize,pageNum);
+        paramMap.put("userId",userId);
+        Page<UserAddress> page = super.setPageParams(pageNum,pageSize);
         try{
             page = userAddressService.getListByPage(page,paramMap);
             if(page.getList().size() != 0){
-                return super.setReturnMsg(StatusCode.OK, page, StatusCode.OK+"");
+                return super.setResult(StatusCode.OK, page,StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                return super.setReturnMsg(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.RECORD_NOT_EXISTED+"");
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
             logger.info("throw exception:", e);
-            return super.setReturnMsg(StatusCode.INTERNAL_SERVER_ERROR, null, e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
     }
 }

@@ -105,6 +105,11 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get
                         (StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
+            User user = userService.retrieveByPhone(mobile);
+            if(user==null || StringUtil.isEmpty(user.getUserId())){
+                return super.setResult(StatusCode.MOBILE_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_IS_NOT_EXITS));
+            }
             if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
                 //手机动态密码方式登录
                 CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
@@ -120,7 +125,6 @@ public class LoginController extends BaseController {
                 code.setUsingTime(new Date());
                 int updateResult = checkCodeService.update(code);
                 logger.info("LoginController.login update code result:{}", updateResult);
-                User user = userService.retrieveByPhone(mobile);
                 this.updateUserInfo(user,mobile,ip,from);
                 String tokenLogin = this.getToken(user);
                 RegisterPO registerPO = new RegisterPO();
@@ -130,13 +134,8 @@ public class LoginController extends BaseController {
             }
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
                 //todo 手机密码方式登录TO-DO
-                User user = userService.retrieveByPhone(mobile);
-                if(StringUtil.isEmpty(user.getUserId())){
-                    return super.setResult(StatusCode.MOBILE_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_IS_NOT_EXITS));
-                }
-                int result = userService.verifyByPasswordAndPhone(mobile,password);
-                if(result != 0){
+                User usr = userService.verifyByPasswordAndPhone(mobile,password);
+                if(usr != null){
                     this.updateUserInfo(user, mobile, ip, from);
                     String tokenLogin = this.getToken(user);
                     RegisterPO registerPO = new RegisterPO();
@@ -173,9 +172,13 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "check_code", required = true) Integer checkCode,
                         @RequestParam(value = "from", required = true) Integer from,
                         @RequestParam(value = "ip", required = true) String ip,
-                        @RequestParam(value = "mobile_inviter", required = false) String mobileInviter){
+                        @RequestParam(value = "mobile_inviter", required = false) String mobileInviter){//inviter_phone
         //verify params
         if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .MOBILE_FORMAT_ERROR));
+        }
+        if (StringUtils.isEmpty(mobileInviter) || !ValidatorUtil.isMobile(mobileInviter)) {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
@@ -190,7 +193,7 @@ public class LoginController extends BaseController {
         //验证手机号是否注册
         User user = userService.retrieveByPhone(mobile);
         if(!StringUtil.isEmpty(user)){
-            return super.setResult(404, null, StatusCode.codeMsgMap.get("用户已存在"));
+            return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
         }
         //验证验证码是否有效
         CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
@@ -203,7 +206,7 @@ public class LoginController extends BaseController {
                     .CAPTCHA_EXPIRE));
         }
         try {
-            User usr = this.createUserInfo(mobile,password,from,ip);
+            User usr = this.createUserInfo(mobile,password,from,ip,mobileInviter);
             RegisterPO registerPO = new RegisterPO();
             registerPO.setUser(usr);
             String token = UuidUtils.getUuid();
@@ -238,7 +241,7 @@ public class LoginController extends BaseController {
         return userService.update(user);
     }
 
-    public User createUserInfo(String mobile,String password,int from,String ip){
+    public User createUserInfo(String mobile,String password,int from,String ip,String mobileInviter){
         //创建用户
         User user = new User();
         user.setUserId(UuidUtils.getShortUuid());
@@ -248,6 +251,7 @@ public class LoginController extends BaseController {
         user.setLastLoginIp(ip);
         user.setPassword(password);
         user.setPhone(mobile);
+        user.setMobileInviter(mobileInviter);
         user.setLoginNum(1);
         user.setAuth(true);
         user.setAllowInform(true);

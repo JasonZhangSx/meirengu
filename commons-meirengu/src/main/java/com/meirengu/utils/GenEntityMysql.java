@@ -261,7 +261,7 @@ public class GenEntityMysql {
         sb.append("\t</resultMap>\n\n");
 
         //sql table and columns
-        sb.append("\t<sql id=\"table_name\">"+tableName+"</sql>\n");
+        sb.append("\t<sql id=\"table_name\">`"+tableName+"`</sql>\n");
         sb.append("\t<sql id=\"select_columns\">\n");
         sb.append("\t\t").append(columnsAs);
         sb.append("\n\t</sql>\n");

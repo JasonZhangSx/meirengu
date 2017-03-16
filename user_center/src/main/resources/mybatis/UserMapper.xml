@@ -7,6 +7,7 @@
         <result column="nickname" property="nickname" jdbcType="VARCHAR" javaType="string"/>
         <result column="realname" property="realname" jdbcType="VARCHAR" javaType="string"/>
         <result column="phone" property="phone" jdbcType="VARCHAR" javaType="string"/>
+        <result column="inviter_phone" property="mobileInviter" jdbcType="VARCHAR" javaType="string"/>
         <result column="idcard" property="idCard" jdbcType="VARCHAR" javaType="string"/>
         <result column="password" property="password" jdbcType="VARCHAR" javaType="string"/>
         <result column="bank_idcard" property="bankIdCard" jdbcType="VARCHAR" javaType="string"/>
@@ -41,7 +42,7 @@
 
     <sql id='table_name'>user</sql>
     <sql id="select_columns">
-        user_id as userId, nickname, realname, phone, idcard as idCard, password, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
+        user_id as userId, nickname, realname, phone,inviter_phone AS mobileInviter, idcard as idCard, password, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
         birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
         is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state
@@ -50,11 +51,11 @@
     <insert id="create" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO
         <include refid="table_name"/>
-        (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
+        (user_id, nickname, realname, phone,inviter_phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
         birthday,email,qq,wx,area_id,register_from,register_time,login_time,last_login_time,
         login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
         VALUES
-        (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
+        (#{userId}, #{nickname}, #{realname}, #{phone}, #{mobileInviter}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
         #{birthday}, #{email}, #{qq}, #{wx}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
         #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
         #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
@@ -147,6 +148,23 @@
             <if test="sinaInfo != null and sinaInfo != ''">
                 sina_info=#{sinaInfo,jdbcType=VARCHAR},
             </if>
+        </set>
+        <where>
+            user_id=#{userId} and state=1
+        </where>
+    </update>
+    <update id="updatePasswordByPhone" parameterType="User">
+        update <include refid="table_name"/>
+        <set>
+            password=#{password,jdbcType=VARCHAR},
+        </set>
+        <where>
+            phone=#{phone} and state=1
+        </where>
+    </update>
+    <update id="updateState" parameterType="User">
+        update <include refid="table_name"/>
+        <set>
             <if test="isAuth != null">
                 is_auth=#{isAuth,jdbcType=TINYINT},
             </if>
@@ -179,8 +197,13 @@
         FROM <include refid="table_name"/>
         WHERE phone=#{phone}
     </select>
+    <select id="selectByInviterPhone" parameterType="String" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE inviter_phone=#{mobileInviter}
+    </select>
 
-    <select id="verifyByPasswordAndPhone" parameterType="java.util.Map" resultType="int">
+    <select id="verifyByPasswordAndPhone" parameterType="java.util.Map" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
         WHERE phone=#{phone} AND password = #{password}

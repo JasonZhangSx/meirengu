@@ -12,7 +12,7 @@ public class UserVO extends BaseObject implements Serializable{
     /**
      * 会员id
      **/
-    private int user_id;
+    private Integer user_id;
     /**
      * 会员昵称
      **/
@@ -26,21 +26,9 @@ public class UserVO extends BaseObject implements Serializable{
      **/
     private String phone;
     /**
-     * 会员身份证号
-     **/
-    private String id_card;
-    /**
      * 会员密码
      **/
     private String password;
-    /**
-     * 会员绑定银行卡号
-     **/
-    private String bank_id_card;
-    /**
-     * 会员银行预留手机号
-     **/
-    private String bank_phone;
     /**
      * 会员头像
      **/
@@ -62,13 +50,25 @@ public class UserVO extends BaseObject implements Serializable{
      **/
     private String qq;
     /**
+     * 会员qq互联id
+     **/
+    private String qq_openid;
+    /**
      * 会员微信
      **/
     private String wx;
     /**
+     * 会员微信互联id
+     **/
+    private String wx_openid;
+    /**
+     * 会员微博互联id
+     **/
+    private String sina_openid;
+    /**
      * 会员区域id
      **/
-    private int area_id;
+    private Integer area_id;
     /**
      * 会员注册来源
      **/
@@ -87,14 +87,6 @@ public class UserVO extends BaseObject implements Serializable{
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
     }
 
     public String getNickname() {
@@ -121,36 +113,12 @@ public class UserVO extends BaseObject implements Serializable{
         this.phone = phone;
     }
 
-    public String getId_card() {
-        return id_card;
-    }
-
-    public void setId_card(String id_card) {
-        this.id_card = id_card;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getBank_id_card() {
-        return bank_id_card;
-    }
-
-    public void setBank_id_card(String bank_id_card) {
-        this.bank_id_card = bank_id_card;
-    }
-
-    public String getBank_phone() {
-        return bank_phone;
-    }
-
-    public void setBank_phone(String bank_phone) {
-        this.bank_phone = bank_phone;
     }
 
     public String getAvatar() {
@@ -201,11 +169,43 @@ public class UserVO extends BaseObject implements Serializable{
         this.wx = wx;
     }
 
-    public int getArea_id() {
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
+    }
+
+    public Integer getArea_id() {
         return area_id;
     }
 
-    public void setArea_id(int area_id) {
+    public void setArea_id(Integer area_id) {
         this.area_id = area_id;
+    }
+
+    public String getQq_openid() {
+        return qq_openid;
+    }
+
+    public void setQq_openid(String qq_openid) {
+        this.qq_openid = qq_openid;
+    }
+
+    public String getWx_openid() {
+        return wx_openid;
+    }
+
+    public void setWx_openid(String wx_openid) {
+        this.wx_openid = wx_openid;
+    }
+
+    public String getSina_openid() {
+        return sina_openid;
+    }
+
+    public void setSina_openid(String sina_openid) {
+        this.sina_openid = sina_openid;
     }
 }

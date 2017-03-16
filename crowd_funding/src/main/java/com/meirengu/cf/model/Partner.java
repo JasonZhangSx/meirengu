@@ -4,7 +4,7 @@ import com.meirengu.model.BaseObject;
 import java.util.Date;
  /*
   * Partner 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class Partner  extends BaseObject {
 	/** 合作方索引id */
@@ -55,6 +55,8 @@ public class Partner  extends BaseObject {
 	private String imageBank;
 	/** 医疗机构执业许可证 */
 	private String imageProfessionalLicense;
+	/** 删除标识： 1 未删除  0 删除 */
+	private int flag;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -252,6 +254,14 @@ public class Partner  extends BaseObject {
 
 	public String getImageProfessionalLicense(){
 		return imageProfessionalLicense;
+	}
+
+	public void setFlag(int flag){
+		this.flag = flag;
+	}
+
+	public int getFlag(){
+		return flag;
 	}
 
 	public void setCreateTime(Date createTime){
