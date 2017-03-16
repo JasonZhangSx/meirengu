@@ -9,12 +9,14 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
+import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -135,5 +137,54 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updatePasswordByPhone(User user) {
         return userDao.updatePasswordByPhone(user);
+    }
+
+    @Override
+    public int updateUserInfo(User user, String mobile, String ip, Integer from) {
+        if(StringUtil.isEmpty(user.getLastLoginIp())){
+            user.setLastLoginIp(ip);
+            user.setLoginIp(ip);
+        }else{
+            user.setLastLoginIp(user.getLoginIp());
+            user.setLoginIp(ip);
+        }
+        if(StringUtil.isEmpty(user.getLastLoginTime())){
+            user.setLastLoginTime(new Date());
+            user.setLoginTime(new Date());
+        }else{
+            user.setLastLoginTime(user.getLoginTime());
+            user.setLoginTime(new Date());
+        }
+        user.setLoginTime(new Date());
+        user.setLoginFrom(from);
+        user.setLoginNum(user.getLoginNum()+1);
+        return userDao.update(user);
+    }
+
+    @Override
+    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter) {
+
+        //创建用户
+        User user = new User();
+        user.setUserId(UuidUtils.getShortUuid());
+        user.setLoginFrom(from);
+        user.setLastLoginTime(new Date());
+        user.setLoginIp(ip);
+        user.setLastLoginIp(ip);
+        user.setPassword(password);
+        user.setPhone(mobile);
+        user.setMobileInviter(mobileInviter);
+        user.setLoginNum(1);
+        user.setAuth(true);
+        user.setAllowInform(true);
+        user.setAllowTalk(true);
+        user.setState(true);
+        user.setBuy(true);
+        int result = userDao.create(user);
+        if(result ==0){
+            user.setUserId(UuidUtils.getShortUuid());
+            userDao.create(user);
+        }
+        return user;
     }
 }
