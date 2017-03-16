@@ -75,8 +75,9 @@ public class LoginController extends BaseController {
                 RedisUtil redisUtil = new RedisUtil();
                 Object userRedis =   redisUtil.getObject(token);
                 if(!StringUtil.isEmpty(userRedis)){
-                    //有效的token直接登陆
-                    return super.setResult(StatusCode.OK, userRedis, StatusCode.codeMsgMap.get(StatusCode.OK));
+                    //获取新的token
+                    RegisterPO registerPO = loginService.getNewToken(token,userRedis);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     //无效token返回登陆
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
@@ -107,8 +108,16 @@ public class LoginController extends BaseController {
             }
             User user = userService.retrieveByPhone(mobile);
             if(user==null || StringUtil.isEmpty(user.getUserId())){
-                return super.setResult(StatusCode.MOBILE_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
-                        .MOBILE_IS_NOT_EXITS));
+                try {
+                    //用户为空则注册一个
+                    String mobileInviter = "";
+                    User usr = this.createUserInfo(mobile,password,from,ip,mobileInviter);
+                    RegisterPO registerPO = loginService.setUserToRedis(usr);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }catch (Exception e){
+                    logger.info(e.getMessage());
+                    return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                }
             }
             if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
                 //手机动态密码方式登录
@@ -126,10 +135,7 @@ public class LoginController extends BaseController {
                 int updateResult = checkCodeService.update(code);
                 logger.info("LoginController.login update code result:{}", updateResult);
                 this.updateUserInfo(user,mobile,ip,from);
-                String tokenLogin = this.getToken(user);
-                RegisterPO registerPO = new RegisterPO();
-                registerPO.setToken(tokenLogin);
-                registerPO.setUser(user);
+                RegisterPO registerPO = loginService.setUserToRedis(user);
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
@@ -137,10 +143,7 @@ public class LoginController extends BaseController {
                 User usr = userService.verifyByPasswordAndPhone(mobile,password);
                 if(usr != null){
                     this.updateUserInfo(user, mobile, ip, from);
-                    String tokenLogin = this.getToken(user);
-                    RegisterPO registerPO = new RegisterPO();
-                    registerPO.setToken(tokenLogin);
-                    registerPO.setUser(user);
+                    RegisterPO registerPO = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode                            .PASSWORD_IS_ERROR));
