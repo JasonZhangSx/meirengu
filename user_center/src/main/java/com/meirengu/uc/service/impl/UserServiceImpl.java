@@ -7,6 +7,7 @@ import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         Map<String, String> params = new HashMap<String, String>();
         params.put("mobile", user.getPhone());
         params.put("userId", user.getUserId()+"");
+        params.put("content", JacksonUtil.toJSon(user));
         String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
         logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
         try {

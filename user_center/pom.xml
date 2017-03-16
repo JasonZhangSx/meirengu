@@ -366,7 +366,13 @@
             </plugin>
         </plugins>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>releases</name>
+            <url>http://192.168.0.135:8081/nexus/#welcome</url>
+        </repository>
+    </distributionManagement>
     <profiles>
         <profile>
             <id>dev</id>
