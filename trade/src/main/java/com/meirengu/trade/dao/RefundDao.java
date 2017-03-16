@@ -1,6 +1,8 @@
 package com.meirengu.trade.dao;
 import com.meirengu.trade.model.Refund;
 import com.meirengu.dao.BaseDao;
+import org.springframework.stereotype.Repository;
+
 /**
  * RefundDao 
  * @author 建新

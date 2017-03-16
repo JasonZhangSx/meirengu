@@ -30,7 +30,7 @@ public class OrderCandidate{
 	/** 订单总额 */
 	private double orderAmount;
 	/** 状态：0未处理；1已处理 */
-	private byte status;
+	private int status;
 	/** 预约时间 */
 	private Date createTime;
 	/** 处理时间 */
@@ -126,11 +126,11 @@ public class OrderCandidate{
 		return orderAmount;
 	}
 
-	public void setStatus(byte status){
+	public void setStatus(int status){
 		this.status = status;
 	}
 
-	public byte getStatus(){
+	public int getStatus(){
 		return status;
 	}
 

@@ -1,7 +1,6 @@
 package com.meirengu.trade.model;
 
 import java.util.Date;
-import java.sql.*;
  /*
   * Order 实体类
   * Tue Mar 14 17:15:51 CST 2017 建新
@@ -22,7 +21,7 @@ public class Order{
 	/** 档位价格 */
 	private double itemLevelAmount;
 	/** 众筹份数 */
-	private short itemNum;
+	private int itemNum;
 	/** 订单总价格 */
 	private double orderAmount;
 	/** 本金（本金=订单总价格-抵扣券金额） */
@@ -42,7 +41,7 @@ public class Order{
 	/** 订单生成时间 */
 	private Date createTime;
 	/** 订单类型 1.普通 2.其他 */
-	private byte orderType;
+	private int orderType;
 	/** 订单编号，外部支付时使用，有些外部支付系统要求特定的订单编号 */
 	private String outSn;
 	/** 订单完成时间 */
@@ -54,9 +53,9 @@ public class Order{
 	/** 订单状态：1预约待审核；2预约审核通过（前端显示未付款状态）3预约审核未通过（前端显示已关闭状态） 4未付款；5已失效（前端显示已关闭状态） 6已付款 7未消费失效 8已消费  9申请退款  10确认退款  11拒绝退款 12退款成功 13支付失败 */
 	private int orderState;
 	/** 逻辑删除状态 0为删除，1为未删除 */
-	private byte flag;
+	private int flag;
 	/** 1:pc，2:h5，3:ios，4:android，5：三方 */
-	private int orderFrom;
+	private String orderFrom;
 	/** 修改时间 */
 	private Date updateTime;
 	/** 审核操作人账号 */
@@ -120,11 +119,11 @@ public class Order{
 		return itemLevelAmount;
 	}
 
-	public void setItemNum(short itemNum){
+	public void setItemNum(int itemNum){
 		this.itemNum = itemNum;
 	}
 
-	public short getItemNum(){
+	public int getItemNum(){
 		return itemNum;
 	}
 
@@ -200,11 +199,11 @@ public class Order{
 		return createTime;
 	}
 
-	public void setOrderType(byte orderType){
+	public void setOrderType(int orderType){
 		this.orderType = orderType;
 	}
 
-	public byte getOrderType(){
+	public int getOrderType(){
 		return orderType;
 	}
 
@@ -248,19 +247,19 @@ public class Order{
 		return orderState;
 	}
 
-	public void setFlag(byte flag){
+	public void setFlag(int flag){
 		this.flag = flag;
 	}
 
-	public byte getFlag(){
+	public int getFlag(){
 		return flag;
 	}
 
-	public void setOrderFrom(int orderFrom){
+	public void setOrderFrom(String orderFrom){
 		this.orderFrom = orderFrom;
 	}
 
-	public int getOrderFrom(){
+	public String getOrderFrom(){
 		return orderFrom;
 	}
 

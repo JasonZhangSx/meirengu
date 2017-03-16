@@ -22,7 +22,7 @@
 
     <!-- 通过扫描指定目录下所有Mapper，所有的Mapper都继承了SqlMapper接口 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.meirengu.news.dao"/>
+        <property name="basePackage" value="com.meirengu.trade.dao"/>
         <property name="sqlSessionFactory" ref="dataSessionFactory"/>
     </bean>
 

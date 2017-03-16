@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
          <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
          <mapper namespace="com.meirengu.trade.dao.OrderDao" >
-	<sql id="table_name">order</sql>
+	<sql id="table_name">`order`</sql>
 	<sql id="select_columns">order_id as orderId, order_sn as orderSn, item_id as itemId, item_name as itemName, item_level_id as itemLevelId, item_level_name as itemLevelName, item_level_amount as itemLevelAmount, item_num as itemNum, order_amount as orderAmount, cost_amount as costAmount, rebate_amount as rebateAmount, user_id as userId, user_name as userName, user_phone as userPhone, user_email as userEmail, user_address_id as userAddressId, create_time as createTime, order_type as orderType, out_sn as outSn, finished_time as finishedTime, receipt as receipt, order_message as orderMessage, order_state as orderState, flag as flag, order_from as orderFrom, update_time as updateTime, operate_account as operateAccount, user_weixin as userWeixin
 	</sql>
 	<insert id="insert" parameterType="order" useGeneratedKeys="true" keyProperty="orderId" >
 		INSERT INTO <include refid="table_name" />
-			(order_id, order_sn, item_id, item_name, item_level_id, item_level_name, item_level_amount, item_num, order_amount, cost_amount, rebate_amount, user_id, user_name, user_phone, user_email, user_address_id, create_time, order_type, out_sn, finished_time, receipt, order_message, order_state, flag, order_from, update_time, operate_account, user_weixin)
+			(order_id, order_sn, item_id, item_name, item_level_id, item_level_name, item_level_amount, item_num, order_amount, cost_amount, rebate_amount, user_id, user_name, user_phone, user_email, user_address_id, order_type, out_sn, finished_time, receipt, order_message, order_state, order_from, operate_account, user_weixin)
 		VALUES
-			(#{orderId}, #{orderSn}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemLevelAmount}, #{itemNum}, #{orderAmount}, #{costAmount}, #{rebateAmount}, #{userId}, #{userName}, #{userPhone}, #{userEmail}, #{userAddressId}, #{createTime}, #{orderType}, #{outSn}, #{finishedTime}, #{receipt}, #{orderMessage}, #{orderState}, #{flag}, #{orderFrom}, #{updateTime}, #{operateAccount}, #{userWeixin})
+			(#{orderId}, #{orderSn}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemLevelAmount}, #{itemNum}, #{orderAmount}, #{costAmount}, #{rebateAmount}, #{userId}, #{userName}, #{userPhone}, #{userEmail}, #{userAddressId}, #{orderType}, #{outSn}, #{finishedTime}, #{receipt}, #{orderMessage}, #{orderState}, #{orderFrom}, #{operateAccount}, #{userWeixin})
 	</insert>
 	<update id="update" parameterType="order">
 		UPDATE <include refid="table_name" />

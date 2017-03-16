@@ -1,6 +1,8 @@
 package com.meirengu.trade.dao;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.dao.BaseDao;
+import org.springframework.stereotype.Repository;
+
 /**
  * OrderCandidateDao 
  * @author 建新

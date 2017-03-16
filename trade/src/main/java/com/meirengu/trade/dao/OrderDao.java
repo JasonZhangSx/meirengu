@@ -1,6 +1,8 @@
 package com.meirengu.trade.dao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.dao.BaseDao;
+import org.springframework.stereotype.Repository;
+
 /**
  * OrderDao 
  * @author 建新

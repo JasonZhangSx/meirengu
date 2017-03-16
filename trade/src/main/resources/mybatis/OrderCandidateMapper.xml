@@ -6,9 +6,9 @@
 	</sql>
 	<insert id="insert" parameterType="orderCandidate" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, user_id, user_name, user_phone, user_weixin, item_id, item_name, item_level_id, item_level_name, item_num, order_amount, status, create_time, update_time, operate_account)
+			(id, user_id, user_name, user_phone, user_weixin, item_id, item_name, item_level_id, item_level_name, item_num, order_amount, status, operate_account)
 		VALUES
-			(#{id}, #{userId}, #{userName}, #{userPhone}, #{userWeixin}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemNum}, #{orderAmount}, #{status}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{id}, #{userId}, #{userName}, #{userPhone}, #{userWeixin}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemNum}, #{orderAmount}, #{status}, #{operateAccount})
 	</insert>
 	<update id="update" parameterType="orderCandidate">
 		UPDATE <include refid="table_name" />
