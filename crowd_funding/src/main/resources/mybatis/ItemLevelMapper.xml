@@ -14,15 +14,15 @@
 		<result column="completed_number" property="completedNumber" jdbcType="INTEGER" javaType="int"/>
 		<result column="payback_days" property="paybackDays" jdbcType="INTEGER" javaType="int"/>
 		<result column="payback_time" property="paybackTime" jdbcType="DATE" javaType="Date"/>
-		<result column="is_share_bonus" property="isShareBonus" jdbcType="TINYINT" javaType="byte"/>
+		<result column="is_share_bonus" property="isShareBonus" jdbcType="TINYINT" javaType="int"/>
 		<result column="year_rate" property="yearRate" jdbcType="INTEGER" javaType="int"/>
 		<result column="investment_period" property="investmentPeriod" jdbcType="INTEGER" javaType="int"/>
 		<result column="revenue_model" property="revenueModel" jdbcType="INTEGER" javaType="int"/>
 		<result column="share_bonus_period" property="shareBonusPeriod" jdbcType="INTEGER" javaType="int"/>
-		<result column="is_need_address" property="isNeedAddress" jdbcType="TINYINT" javaType="byte"/>
-		<result column="is_need_agreement" property="isNeedAgreement" jdbcType="TINYINT" javaType="byte"/>
-		<result column="level_status" property="levelStatus" jdbcType="TINYINT" javaType="byte"/>
-		<result column="level_sort" property="levelSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="is_need_address" property="isNeedAddress" jdbcType="TINYINT" javaType="int"/>
+		<result column="is_need_agreement" property="isNeedAgreement" jdbcType="TINYINT" javaType="int"/>
+		<result column="level_status" property="levelStatus" jdbcType="TINYINT" javaType="int"/>
+		<result column="level_sort" property="levelSort" jdbcType="TINYINT" javaType="int"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>

@@ -3,7 +3,7 @@ package com.meirengu.cf.model;
 import com.meirengu.model.BaseObject;
  /*
   * Type 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class Type  extends BaseObject {
 	/** 众筹类型id */
@@ -11,7 +11,9 @@ public class Type  extends BaseObject {
 	/** 众筹类型名称 */
 	private String typeName;
 	/** 排序：数字越小权重越大 */
-	private byte typeSort;
+	private int typeSort;
+	/** 删除标识： 1 未删除  0 删除 */
+	private int flag;
 
 	public void setTypeId(int typeId){
 		this.typeId = typeId;
@@ -29,12 +31,20 @@ public class Type  extends BaseObject {
 		return typeName;
 	}
 
-	public void setTypeSort(byte typeSort){
+	public void setTypeSort(int typeSort){
 		this.typeSort = typeSort;
 	}
 
-	public byte getTypeSort(){
+	public int getTypeSort(){
 		return typeSort;
+	}
+
+	public void setFlag(int flag){
+		this.flag = flag;
+	}
+
+	public int getFlag(){
+		return flag;
 	}
 
 }

@@ -4,7 +4,7 @@ import com.meirengu.model.BaseObject;
 import java.util.Date;
  /*
   * ItemInterested 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class ItemInterested  extends BaseObject {
 	/** 感兴趣项目索引id */
@@ -18,7 +18,7 @@ public class ItemInterested  extends BaseObject {
 	/** 用户手机号 */
 	private String userPhone;
 	/** 状态：1、感兴趣；0、取消感兴趣 */
-	private byte status;
+	private int status;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -64,11 +64,11 @@ public class ItemInterested  extends BaseObject {
 		return userPhone;
 	}
 
-	public void setStatus(byte status){
+	public void setStatus(int status){
 		this.status = status;
 	}
 
-	public byte getStatus(){
+	public int getStatus(){
 		return status;
 	}
 

@@ -5,11 +5,11 @@
 	<resultMap id="itemContentMap" type="ItemContent">
 		<id column="content_id" property="contentId" jdbcType="INTEGER" javaType="int"/>
 		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
-		<result column="content_type" property="contentType" jdbcType="TINYINT" javaType="byte"/>
+		<result column="content_type" property="contentType" jdbcType="TINYINT" javaType="int"/>
 		<result column="content_title" property="contentTitle" jdbcType="VARCHAR" javaType="String"/>
 		<result column="content_subtitle" property="contentSubtitle" jdbcType="VARCHAR" javaType="String"/>
 		<result column="content_info" property="contentInfo" jdbcType="INTEGER" javaType="int"/>
-		<result column="content_sort" property="contentSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="content_sort" property="contentSort" jdbcType="TINYINT" javaType="int"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>

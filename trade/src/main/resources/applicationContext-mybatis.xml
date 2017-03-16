@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <!-- 配置SqlSessionFactoryBean -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 参数：数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 参数：配置实体 -->
+        <property name="configLocation" value="classpath:/mybatis/sqlMapConfig.xml"/>
+        <!-- 参数：mapper文件集合 -->
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:/mybatis/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 通过扫描指定目录下所有Mapper，所有的Mapper都继承了SqlMapper接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.meirengu.trade.dao"/>
+        <property name="sqlSessionFactory" ref="dataSessionFactory"/>
+    </bean>
+
+</beans>  
