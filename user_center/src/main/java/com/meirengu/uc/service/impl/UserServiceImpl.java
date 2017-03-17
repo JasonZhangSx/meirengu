@@ -3,11 +3,20 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.UserVO;
+import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
+import com.meirengu.utils.UuidUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,12 +29,34 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     UserDao userDao;
 
     @Override
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user) {
-        return userDao.create(user);
+
+        HttpResult hr = null;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("mobile", user.getPhone());
+        params.put("userId", user.getUserId()+"");
+        params.put("content", JacksonUtil.toJSon(user));
+        String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
+        logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
+        try {
+            hr = HttpUtil.doPostForm(url,params);
+        } catch (Exception e) {
+            logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+        }
+        if(hr.getStatusCode() == 200){
+            int result = userDao.create(user);
+            if(result == 1){
+                return result;
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -106,5 +137,54 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updatePasswordByPhone(User user) {
         return userDao.updatePasswordByPhone(user);
+    }
+
+    @Override
+    public int updateUserInfo(User user, String mobile, String ip, Integer from) {
+        if(StringUtil.isEmpty(user.getLastLoginIp())){
+            user.setLastLoginIp(ip);
+            user.setLoginIp(ip);
+        }else{
+            user.setLastLoginIp(user.getLoginIp());
+            user.setLoginIp(ip);
+        }
+        if(StringUtil.isEmpty(user.getLastLoginTime())){
+            user.setLastLoginTime(new Date());
+            user.setLoginTime(new Date());
+        }else{
+            user.setLastLoginTime(user.getLoginTime());
+            user.setLoginTime(new Date());
+        }
+        user.setLoginTime(new Date());
+        user.setLoginFrom(from);
+        user.setLoginNum(user.getLoginNum()+1);
+        return userDao.update(user);
+    }
+
+    @Override
+    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter) {
+
+        //创建用户
+        User user = new User();
+        user.setUserId(UuidUtils.getShortUuid());
+        user.setLoginFrom(from);
+        user.setLastLoginTime(new Date());
+        user.setLoginIp(ip);
+        user.setLastLoginIp(ip);
+        user.setPassword(password);
+        user.setPhone(mobile);
+        user.setMobileInviter(mobileInviter);
+        user.setLoginNum(1);
+        user.setAuth(true);
+        user.setAllowInform(true);
+        user.setAllowTalk(true);
+        user.setState(true);
+        user.setBuy(true);
+        int result = userDao.create(user);
+        if(result ==0){
+            user.setUserId(UuidUtils.getShortUuid());
+            userDao.create(user);
+        }
+        return user;
     }
 }

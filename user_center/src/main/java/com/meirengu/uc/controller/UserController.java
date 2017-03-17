@@ -64,20 +64,22 @@ public class UserController extends BaseController{
                 .INTERNAL_SERVER_ERROR));
     }
 
+    /**
+     * 密码找回
+     * @param mobile
+     * @param checkCode
+     * @param newPassword
+     * @return
+     */
     @RequestMapping(value = "password/retrieve",method = RequestMethod.POST)
     public Result retrievePassword(@RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "check_code", required = true) String checkCode,
-                                   @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword
                                    ) {
         //verify params
         if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
-        }
-        if (oldPassword == null) {
-            return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                    (StatusCode.PASSWORD_IS_ERROR));
         }
          if (newPassword == null) {
             return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
@@ -98,11 +100,8 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                     .CAPTCHA_EXPIRE));
         }
-        User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
-        if(usr == null || StringUtil.isEmpty(usr.getUserId())){
-            return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .OLD_PASSWORD_IS_ERROR));
-        }
+        User usr = new User();
+        usr.setPhone(mobile);
         usr.setPassword(newPassword);
         int result = userService.update(usr);
         if(result != 0){
@@ -113,9 +112,18 @@ public class UserController extends BaseController{
                 .INTERNAL_SERVER_ERROR));
     }
 
+    /**
+     * 修改密码
+     * @param mobile
+     * @param checkCode
+     * @param newPassword
+     * @param token
+     * @return
+     */
     @RequestMapping(value = "password/modify",method = RequestMethod.POST)
     public Result modifyPassword(@RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "check_code", required = true) String checkCode,
+                                   @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
@@ -128,7 +136,7 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .MOBILE_FORMAT_ERROR));
                 }
-                if (newPassword == null) {
+                if (newPassword == null || oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_ERROR));
                 }
@@ -147,8 +155,15 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                             .CAPTCHA_EXPIRE));
                 }
-                User usr = new User();
-                usr.setPhone(mobile);
+                if (oldPassword == null) {
+                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_ERROR));
+                }
+                User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
+                if(usr == null || StringUtil.isEmpty(usr.getUserId())){
+                    return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                            .OLD_PASSWORD_IS_ERROR));
+                }
                 usr.setPassword(newPassword);
                 int result = userService.updatePasswordByPhone(usr);
                 if(result != 0){

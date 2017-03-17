@@ -142,6 +142,12 @@ public class StatusCode {
     public static final int TEMPLATE_NOT_VALID = 50701;
     public static final int MARKET_FORBIDDEN = 50702;
     //50751-50800//trade
+    public static final int SUBSCRIPTIONS_ORDER_ERROR_INSERT = 50751;
+    public static final int APPOINTMENT_ORDER_ERROR_INSERT = 50752;
+    public static final int CANDIDATE_ORDER_ERROR_INSERT = 50753;
+    public static final int REFUND_AMOUNT_IS_ZERO = 50754;
+
+
 
 
 
@@ -223,7 +229,7 @@ public class StatusCode {
 
         //40600-40700//payment
 
-        //40700-40700//sms
+        //40700-40750//sms
         codeMsgMap.put(StatusCode.SMS_TEXT_IS_EMPTY, "短信内容不能为空");
         codeMsgMap.put(StatusCode.TEMPLATE_IS_EMPTY, "模板ID或模板内容不能为空");
         codeMsgMap.put(StatusCode.ACCOUNT_BALANCE_LESS, "账户余额不足");
@@ -234,6 +240,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.TOO_MANY_TIME_IN_5, "同一手机号5分钟内重复提交相同的内容超过3次");
         codeMsgMap.put(StatusCode.BLACK_PHONE_FILTER, "手机号黑名单过滤");
         codeMsgMap.put(StatusCode.DAY_LIMIT_PER_MOBILE, "24小时内同一手机号发送次数超过限制");
+        //40751-40800//trade
+
+
         //40800-40900//other
 
         //服务器错误(5字头)
@@ -291,10 +300,15 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT, "该用户资金账户查询成功");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询成功");
 
-        //50700-50800//sms
+        //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");
         codeMsgMap.put(StatusCode.MARKET_FORBIDDEN, "营销短信暂停发送");
+        //50751-50800//trade
+        codeMsgMap.put(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, "认购订单保存失败，请重试");
+        codeMsgMap.put(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, "预约订单保存失败，请重试");
+        codeMsgMap.put(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, "候补预约保存失败，请重试");
+        codeMsgMap.put(StatusCode.REFUND_AMOUNT_IS_ZERO, "退款金额为0，无法退款");
         //50800-50900//other
 
     }

@@ -188,8 +188,7 @@ public final class RedisUtil {
     }
     public static void main(String are[]){
         RedisUtil redisUtil = new RedisUtil();
-        redisUtil.setObject("a717e8d77ce14c97904a198babc14990",new User());
-        System.err.print(redisUtil.getObject("user"));
-        System.err.print(redisUtil.getObject("a717e8d77ce14c97904a198babc14990"));
+        redisUtil.setObject("cfc1882e5def48e8b9ab0aed8da1a530",new User());
+        System.err.print(redisUtil.getObject("cfc1882e5def48e8b9ab0aed8da1a530"));
     }
 }

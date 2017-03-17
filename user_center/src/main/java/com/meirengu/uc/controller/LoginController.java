@@ -75,8 +75,9 @@ public class LoginController extends BaseController {
                 RedisUtil redisUtil = new RedisUtil();
                 Object userRedis =   redisUtil.getObject(token);
                 if(!StringUtil.isEmpty(userRedis)){
-                    //有效的token直接登陆
-                    return super.setResult(StatusCode.OK, userRedis, StatusCode.codeMsgMap.get(StatusCode.OK));
+                    //获取新的token
+                    RegisterPO registerPO = loginService.getNewToken(token,userRedis);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     //无效token返回登陆
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
@@ -107,8 +108,16 @@ public class LoginController extends BaseController {
             }
             User user = userService.retrieveByPhone(mobile);
             if(user==null || StringUtil.isEmpty(user.getUserId())){
-                return super.setResult(StatusCode.MOBILE_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
-                        .MOBILE_IS_NOT_EXITS));
+                try {
+                    //用户为空则注册一个
+                    String mobileInviter = "";
+                    User usr = userService.createUserInfo(mobile,password,from,ip,mobileInviter);
+                    RegisterPO registerPO = loginService.setUserToRedis(usr);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }catch (Exception e){
+                    logger.info(e.getMessage());
+                    return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                }
             }
             if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
                 //手机动态密码方式登录
@@ -125,22 +134,16 @@ public class LoginController extends BaseController {
                 code.setUsingTime(new Date());
                 int updateResult = checkCodeService.update(code);
                 logger.info("LoginController.login update code result:{}", updateResult);
-                this.updateUserInfo(user,mobile,ip,from);
-                String tokenLogin = this.getToken(user);
-                RegisterPO registerPO = new RegisterPO();
-                registerPO.setToken(tokenLogin);
-                registerPO.setUser(user);
+                userService.updateUserInfo(user,mobile,ip,from);
+                RegisterPO registerPO = loginService.setUserToRedis(user);
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
                 //todo 手机密码方式登录TO-DO
                 User usr = userService.verifyByPasswordAndPhone(mobile,password);
                 if(usr != null){
-                    this.updateUserInfo(user, mobile, ip, from);
-                    String tokenLogin = this.getToken(user);
-                    RegisterPO registerPO = new RegisterPO();
-                    registerPO.setToken(tokenLogin);
-                    registerPO.setUser(user);
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterPO registerPO = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode                            .PASSWORD_IS_ERROR));
@@ -206,7 +209,7 @@ public class LoginController extends BaseController {
                     .CAPTCHA_EXPIRE));
         }
         try {
-            User usr = this.createUserInfo(mobile,password,from,ip,mobileInviter);
+            User usr = userService.createUserInfo(mobile,password,from,ip,mobileInviter);
             RegisterPO registerPO = new RegisterPO();
             registerPO.setUser(usr);
             String token = UuidUtils.getUuid();
@@ -217,64 +220,6 @@ public class LoginController extends BaseController {
         }catch (Exception e){
             logger.info(e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }
-    }
-    public int updateUserInfo(User user,String mobile,String ip,int from){
-
-        if(StringUtil.isEmpty(user.getLastLoginIp())){
-            user.setLastLoginIp(ip);
-            user.setLoginIp(ip);
-        }else{
-            user.setLastLoginIp(user.getLoginIp());
-            user.setLoginIp(ip);
-        }
-        if(StringUtil.isEmpty(user.getLastLoginTime())){
-            user.setLastLoginTime(new Date());
-            user.setLoginTime(new Date());
-        }else{
-            user.setLastLoginTime(user.getLoginTime());
-            user.setLoginTime(new Date());
-        }
-        user.setLoginTime(new Date());
-        user.setLoginFrom(from);
-        user.setLoginNum(user.getLoginNum()+1);
-        return userService.update(user);
-    }
-
-    public User createUserInfo(String mobile,String password,int from,String ip,String mobileInviter){
-        //创建用户
-        User user = new User();
-        user.setUserId(UuidUtils.getShortUuid());
-        user.setLoginFrom(from);
-        user.setLastLoginTime(new Date());
-        user.setLoginIp(ip);
-        user.setLastLoginIp(ip);
-        user.setPassword(password);
-        user.setPhone(mobile);
-        user.setMobileInviter(mobileInviter);
-        user.setLoginNum(1);
-        user.setAuth(true);
-        user.setAllowInform(true);
-        user.setAllowTalk(true);
-        user.setState(true);
-        user.setBuy(true);
-        int result = userService.create(user);
-        if(result ==0){
-            user.setUserId(UuidUtils.getShortUuid());
-            userService.create(user);
-        }
-        return user;
-    }
-
-    public String getToken(User user){
-        try {
-            String token = UuidUtils.getUuid();
-            RedisUtil redisUtil = new RedisUtil();
-            redisUtil.setObject(token,user);
-            return token;
-        }catch (Exception e){
-            logger.info("LoginController.login getToken failed:{}",e.getMessage());
-            return "";
         }
     }
 }

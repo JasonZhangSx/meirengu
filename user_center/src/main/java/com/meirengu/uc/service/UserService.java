@@ -50,4 +50,8 @@ public interface UserService {
     int updateUserInfo(UserVO userVO);
 
     int updatePasswordByPhone(User usr);
+
+    int updateUserInfo(User user, String mobile, String ip, Integer from);
+
+    User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter);
 }
