@@ -206,12 +206,13 @@ public class LoginController extends BaseController {
                     (StatusCode.PASSWORD_IS_ERROR));
         }
         //查看邀请人手机号是否注册
-        User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
-        if(StringUtil.isEmpty(userInviter)){
-            RegisterPO registerPO = new RegisterPO();
-            return super.setResult(StatusCode.USER_INVITER_IS_EXITS, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.USER_INVITER_IS_EXITS));
+        if(!"".equals(registerVO.getMobile_inviter())){
+            User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
+            if(StringUtil.isEmpty(userInviter)){
+                RegisterPO registerPO = new RegisterPO();
+                return super.setResult(StatusCode.USER_INVITER_IS_EXITS, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.USER_INVITER_IS_EXITS));
+            }
         }
-
         //验证手机号是否注册
         User user = userService.retrieveByPhone(registerVO.getMobile());
         if(!StringUtil.isEmpty(user)){

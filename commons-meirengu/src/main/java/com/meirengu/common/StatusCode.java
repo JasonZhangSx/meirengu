@@ -108,8 +108,8 @@ public class StatusCode {
     public static final int ADDREAA_IS_NOT_ALLOWED_DELETE = 50105;
     public static final int OLD_PASSWORD_IS_ERROR = 50106;
     public static final int USER_IS_EXITS = 50107;
-    public static final int USER_PASSWORD_IS_EXITS = 50107;
-    public static final int USER_INVITER_IS_EXITS = 50108;
+    public static final int USER_PASSWORD_IS_EXITS = 50108;
+    public static final int USER_INVITER_IS_EXITS = 50109;
 
 
     //50200-50300//news_cms
