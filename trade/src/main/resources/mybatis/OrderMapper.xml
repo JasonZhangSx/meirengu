@@ -87,8 +87,29 @@
 	</select>
 	<sql id="findPage_where">
 		<where>
+			<if test="orderId != null">
+				AND order_id=#{orderId}
+			</if>
 			<if test="orderSn != null and orderSn != ''">
 				AND order_sn=#{orderSn}
+			</if>
+			<if test="itemId != null">
+				AND item_id=#{itemId}
+			</if>
+			<if test="itemName != null and itemName != ''">
+				AND item_name=#{itemName}
+			</if>
+			<if test="itemLevelId != null">
+				AND item_level_id=#{itemLevelId}
+			</if>
+			<if test="itemLevelName != null and itemLevelName != ''">
+				AND item_level_name=#{itemLevelName}
+			</if>
+			<if test="itemLevelAmount != null">
+				AND item_level_amount=#{itemLevelAmount}
+			</if>
+			<if test="itemNum != null">
+				AND item_num=#{itemNum}
 			</if>
 			<if test="orderAmount != null">
 				AND order_amount=#{orderAmount}

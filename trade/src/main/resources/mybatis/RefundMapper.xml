@@ -16,10 +16,10 @@
 			<if test="refundSn != null and refundSn != ''">
 				refund_sn=#{refundSn},
 			</if>
-			<if test="orderId != null and orderId != ''">
+			<if test="orderId != null">
 				order_id=#{orderId},
 			</if>
-			<if test="orderSn != null and orderSn != 0">
+			<if test="orderSn != null and orderSn != ''">
 				order_sn=#{orderSn},
 			</if>
 			<if test="thirdOrderSn != null and thirdOrderSn != ''">
@@ -28,13 +28,13 @@
 			<if test="thirdRefundSn != null and thirdRefundSn != ''">
 				third_refund_sn=#{thirdRefundSn},
 			</if>
-			<if test="itemId != null and itemId != 0">
+			<if test="itemId != null">
 				item_id=#{itemId},
 			</if>
-			<if test="partnerId != null and partnerId != 0">
+			<if test="partnerId != null">
 				partner_id=#{partnerId},
 			</if>
-			<if test="userId != null and userId != 0">
+			<if test="userId != null">
 				user_id=#{userId},
 			</if>
 			<if test="userName != null and userName != ''">
@@ -46,10 +46,10 @@
 			<if test="addTime != null ">
 				add_time=#{addTime},
 			</if>
-			<if test="orderAmount != null and orderAmount != ''">
+			<if test="orderAmount != null">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="orderRefund != null and orderRefund != ''">
+			<if test="orderRefund != null">
 				order_refund=#{orderRefund},
 			</if>
 			<if test="refundPaymentname != null and refundPaymentname != ''">
@@ -94,13 +94,104 @@
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where refund_id=#{id}
 	</select>
+	<sql id="findPage_where">
+		<where>
+			<if test="refundSn != null and refundSn != ''">
+				AND tb.refund_sn=#{refundSn}
+			</if>
+			<if test="orderId != null">
+				AND tb.order_id=#{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND tb.order_sn=#{orderSn}
+			</if>
+			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+				AND tb.third_order_sn=#{thirdOrderSn}
+			</if>
+			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+				AND tb.third_refund_sn=#{thirdRefundSn}
+			</if>
+			<if test="itemId != null">
+				AND tb.item_id=#{itemId}
+			</if>
+			<if test="partnerId != null">
+				AND tb.partner_id=#{partnerId}
+			</if>
+			<if test="userId != null">
+				AND tb.user_id=#{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND tb.user_name=#{userName}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND tb.user_phone=#{userPhone}
+			</if>
+			<if test="addTimeBegin != null">
+				AND tb.add_time >= #{addTimeBegin}
+			</if>
+			<if test="addTimeEnd != null">
+				AND tb.add_time &lt;= #{addTimeEnd}
+			</if>
+			<if test="orderAmount != null">
+				AND tb.order_amount=#{orderAmount}
+			</if>
+			<if test="orderRefund != null">
+				AND tb.order_refund=#{orderRefund}
+			</if>
+			<if test="refundPaymentname != null and refundPaymentname != ''">
+				AND tb.refund_paymentname=#{refundPaymentname}
+			</if>
+			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+				AND tb.refund_paymentcode=#{refundPaymentcode}
+			</if>
+			<if test="refundMessage != null and refundMessage != ''">
+				AND tb.refund_message=#{refundMessage}
+			</if>
+			<if test="userMessage != null and userMessage != ''">
+				AND tb.user_message=#{userMessage}
+			</if>
+			<if test="adminMessage != null and adminMessage != ''">
+				AND tb.admin_message=#{adminMessage}
+			</if>
+			<if test="partnerTime != null ">
+				AND tb.partner_time=#{partnerTime}
+			</if>
+			<if test="adminTime != null ">
+				AND tb.admin_time=#{adminTime}
+			</if>
+			<if test="confirmTimeBegin != null">
+				AND tb.confirm_time >= #{confirmTimeBegin}
+			</if>
+			<if test="confirmTimeEnd != null">
+				AND tb.confirm_time &lt;= #{confirmTimeBegin}
+			</if>
+			<if test="refundType != null and refundType != ''">
+				AND tb.refund_type=#{refundType}
+			</if>
+			<if test="refundState != null and refundState != ''">
+				AND tb.refund_state=#{refundState}
+			</if>
+			<if test="userConfirm != null and userConfirm != ''">
+				AND tb.user_confirm=#{userConfirm}
+			</if>
+		</where>
+	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select <include refid="select_columns" />
+		FROM
+		<include refid="table_name" /> tb
+		<include refid="findPage_where"/>
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			order by #{sortBy} #{order}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1)
+		FROM
+		<include refid="table_name" /> tb
+		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

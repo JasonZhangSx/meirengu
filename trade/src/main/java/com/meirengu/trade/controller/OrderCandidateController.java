@@ -2,13 +2,10 @@ package com.meirengu.trade.controller;
 
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
-import com.meirengu.trade.common.OrderStateEnum;
-import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.trade.service.OrderService;
-import com.meirengu.trade.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 候补订单控制类
@@ -95,6 +93,33 @@ public class OrderCandidateController extends BaseController{
 
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                          @RequestParam(value = "sort_by", required = false) String sortBy,
+                          @RequestParam(value = "order", required = false) String order,
+                          @RequestParam(value = "user_id", required = false) String userId,
+                          @RequestParam(value = "user_phone", required = false) String userPhone,
+                          @RequestParam(value = "item_name", required = false) String itemName,
+                          @RequestParam(value = "state", required = false) String state){
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("userPhone", userPhone);
+        map.put("itemName", itemName);
+        map.put("state", state);
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        Page<OrderCandidate> page = new Page<OrderCandidate>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = orderCandidateService.getListByPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
 
 }
