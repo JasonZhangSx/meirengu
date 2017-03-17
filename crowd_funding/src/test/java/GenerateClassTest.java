@@ -31,6 +31,6 @@ public class GenerateClassTest {
         gm.initParams(basePath, projectName, packageFather, packageModel, packageDao, packageService,
                 packageServiceImpl, packageController, mapperPath, authorName, url,
                 username, password, driver, databaseName);
-        gm.start("partner_class");
+        gm.start("item_content");
     }
 }

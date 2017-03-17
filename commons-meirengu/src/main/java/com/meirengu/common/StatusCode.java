@@ -108,6 +108,7 @@ public class StatusCode {
     public static final int ADDREAA_IS_NOT_ALLOWED_DELETE = 50105;
     public static final int OLD_PASSWORD_IS_ERROR = 50106;
     public static final int USER_IS_EXITS = 50107;
+    public static final int USER_PASSWORD_IS_EXITS = 50107;
 
 
     //50200-50300//news_cms
@@ -128,6 +129,12 @@ public class StatusCode {
     public static final int PARTNER_CLASS_ERROR_INSERT = 50503;
     public static final int PARTNER_CLASS_ERROR_UPDATE = 50504;
     public static final int PARTNER_CLASS_ALREADY_DELETE = 50505;
+    public static final int ITEM_LEVEL_ERROR_INSERT = 50506;
+    public static final int ITEM_LEVEL_ERROR_UPDATE = 50507;
+    public static final int ITEM_LEVEL_ERROR_DELETE = 50508;
+    public static final int ITEM_CONTENT_ERROR_INSERT = 50509;
+    public static final int ITEM_CONTENT_ERROR_UPDATE = 50510;
+    public static final int ITEM_CONTENT_ERROR_DELETE = 50511;
 
     //50600-50700//payment
 
@@ -255,6 +262,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
         codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
         codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
+        codeMsgMap.put(StatusCode.USER_PASSWORD_IS_EXITS, "用户密码已存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_NOT_EMPTY, "用户地址id不存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
@@ -279,6 +287,13 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_INSERT, "项目回报档位保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_UPDATE, "项目回报档位修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_DELETE, "项目回报档位删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_INSERT, "项目内容保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_UPDATE, "项目内容修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_DELETE, "项目内容删除失败， 请重试");
+
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");

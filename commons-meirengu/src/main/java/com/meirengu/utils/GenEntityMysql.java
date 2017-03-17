@@ -466,13 +466,13 @@ public class GenEntityMysql {
         if (sqlType.equalsIgnoreCase("bit")) {
             return "boolean";
         } else if (sqlType.equalsIgnoreCase("tinyint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("smallint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("int") || sqlType.equalsIgnoreCase("bigint")
                 || sqlType.equalsIgnoreCase("mediumint") || sqlType.equalsIgnoreCase("smallint")
                 || sqlType.equalsIgnoreCase("tinyint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("bigint")) {
             return "long";
         } else if (sqlType.equalsIgnoreCase("float")) {
@@ -494,7 +494,7 @@ public class GenEntityMysql {
             classList.add(sqlType);
             return "BigDecimal";
         } else if (sqlType.equalsIgnoreCase("enum")) {
-            return "int";
+            return "Integer";
         }
 
         return null;

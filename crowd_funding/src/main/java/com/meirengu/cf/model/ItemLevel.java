@@ -9,9 +9,9 @@ import java.util.Date;
   */
 public class ItemLevel  extends BaseObject {
 	/** 众筹档位索引id */
-	private int levelId;
+	private Integer levelId;
 	/** 档位对应众筹项目id */
-	private int itemId;
+	private Integer itemId;
 	/** 档位名称 */
 	private String levelName;
 	/** 档位支持金额 */
@@ -19,35 +19,35 @@ public class ItemLevel  extends BaseObject {
 	/** 档位回报描述 */
 	private String levelDesc;
 	/** 总份数，0即为无限制 */
-	private int totalNumber;
+	private Integer totalNumber;
 	/** 单人限额 */
-	private int singleLimitNumber;
+	private Integer singleLimitNumber;
 	/** 预约份数 */
-	private int bookNumber;
+	private Integer bookNumber;
 	/** 完成份数 */
-	private int completedNumber;
+	private Integer completedNumber;
 	/** 回报天数 */
-	private int paybackDays;
+	private Integer paybackDays;
 	/** 回报时间 */
 	private Date paybackTime;
 	/** 是否分红 */
-	private int isShareBonus;
+	private Integer isShareBonus;
 	/** 年化利率 */
-	private int yearRate;
+	private double yearRate;
 	/** 投资期限，以月为单位 */
-	private int investmentPeriod;
+	private Integer investmentPeriod;
 	/** 收益方式：1、一次性还款（到期本息到账）；2、按月还息到期还本（每月计息，一月30天，一年360天计算） */
-	private int revenueModel;
+	private Integer revenueModel;
 	/** 分红周期（多少月回款一次）1、1月；3、3月；6、6月；12、12月 */
-	private int shareBonusPeriod;
+	private Integer shareBonusPeriod;
 	/** 是否需要地址 */
-	private int isNeedAddress;
+	private Integer isNeedAddress;
 	/** 是否需要协议 */
-	private int isNeedAgreement;
+	private Integer isNeedAgreement;
 	/** 档位状态：1：预约中；2已预约满；3候补中；4认购中；5已完成 */
-	private int levelStatus;
+	private Integer levelStatus;
 	/** 排序：数字越小权重越大 */
-	private int levelSort;
+	private Integer levelSort;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -55,19 +55,19 @@ public class ItemLevel  extends BaseObject {
 	/** 操作人账号 */
 	private String operateAccount;
 
-	public void setLevelId(int levelId){
+	public void setLevelId(Integer levelId){
 		this.levelId = levelId;
 	}
 
-	public int getLevelId(){
+	public Integer getLevelId(){
 		return levelId;
 	}
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
@@ -95,43 +95,43 @@ public class ItemLevel  extends BaseObject {
 		return levelDesc;
 	}
 
-	public void setTotalNumber(int totalNumber){
+	public void setTotalNumber(Integer totalNumber){
 		this.totalNumber = totalNumber;
 	}
 
-	public int getTotalNumber(){
+	public Integer getTotalNumber(){
 		return totalNumber;
 	}
 
-	public void setSingleLimitNumber(int singleLimitNumber){
+	public void setSingleLimitNumber(Integer singleLimitNumber){
 		this.singleLimitNumber = singleLimitNumber;
 	}
 
-	public int getSingleLimitNumber(){
+	public Integer getSingleLimitNumber(){
 		return singleLimitNumber;
 	}
 
-	public void setBookNumber(int bookNumber){
+	public void setBookNumber(Integer bookNumber){
 		this.bookNumber = bookNumber;
 	}
 
-	public int getBookNumber(){
+	public Integer getBookNumber(){
 		return bookNumber;
 	}
 
-	public void setCompletedNumber(int completedNumber){
+	public void setCompletedNumber(Integer completedNumber){
 		this.completedNumber = completedNumber;
 	}
 
-	public int getCompletedNumber(){
+	public Integer getCompletedNumber(){
 		return completedNumber;
 	}
 
-	public void setPaybackDays(int paybackDays){
+	public void setPaybackDays(Integer paybackDays){
 		this.paybackDays = paybackDays;
 	}
 
-	public int getPaybackDays(){
+	public Integer getPaybackDays(){
 		return paybackDays;
 	}
 
@@ -143,75 +143,75 @@ public class ItemLevel  extends BaseObject {
 		return paybackTime;
 	}
 
-	public void setIsShareBonus(int isShareBonus){
+	public void setIsShareBonus(Integer isShareBonus){
 		this.isShareBonus = isShareBonus;
 	}
 
-	public int getIsShareBonus(){
+	public Integer getIsShareBonus(){
 		return isShareBonus;
 	}
 
-	public void setYearRate(int yearRate){
+	public void setYearRate(double yearRate){
 		this.yearRate = yearRate;
 	}
 
-	public int getYearRate(){
+	public double getYearRate(){
 		return yearRate;
 	}
 
-	public void setInvestmentPeriod(int investmentPeriod){
+	public void setInvestmentPeriod(Integer investmentPeriod){
 		this.investmentPeriod = investmentPeriod;
 	}
 
-	public int getInvestmentPeriod(){
+	public Integer getInvestmentPeriod(){
 		return investmentPeriod;
 	}
 
-	public void setRevenueModel(int revenueModel){
+	public void setRevenueModel(Integer revenueModel){
 		this.revenueModel = revenueModel;
 	}
 
-	public int getRevenueModel(){
+	public Integer getRevenueModel(){
 		return revenueModel;
 	}
 
-	public void setShareBonusPeriod(int shareBonusPeriod){
+	public void setShareBonusPeriod(Integer shareBonusPeriod){
 		this.shareBonusPeriod = shareBonusPeriod;
 	}
 
-	public int getShareBonusPeriod(){
+	public Integer getShareBonusPeriod(){
 		return shareBonusPeriod;
 	}
 
-	public void setIsNeedAddress(int isNeedAddress){
+	public void setIsNeedAddress(Integer isNeedAddress){
 		this.isNeedAddress = isNeedAddress;
 	}
 
-	public int getIsNeedAddress(){
+	public Integer getIsNeedAddress(){
 		return isNeedAddress;
 	}
 
-	public void setIsNeedAgreement(int isNeedAgreement){
+	public void setIsNeedAgreement(Integer isNeedAgreement){
 		this.isNeedAgreement = isNeedAgreement;
 	}
 
-	public int getIsNeedAgreement(){
+	public Integer getIsNeedAgreement(){
 		return isNeedAgreement;
 	}
 
-	public void setLevelStatus(int levelStatus){
+	public void setLevelStatus(Integer levelStatus){
 		this.levelStatus = levelStatus;
 	}
 
-	public int getLevelStatus(){
+	public Integer getLevelStatus(){
 		return levelStatus;
 	}
 
-	public void setLevelSort(int levelSort){
+	public void setLevelSort(Integer levelSort){
 		this.levelSort = levelSort;
 	}
 
-	public int getLevelSort(){
+	public Integer getLevelSort(){
 		return levelSort;
 	}
 

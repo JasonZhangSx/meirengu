@@ -1,6 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 
 /**
@@ -50,4 +51,10 @@ public interface UserService {
     int updateUserInfo(UserVO userVO);
 
     int updatePasswordByPhone(User usr);
+
+    int updateUserInfo(User user, String mobile, String ip, Integer from);
+
+    User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar);
+
+    User createUserInfo(RegisterVO registerVO);
 }
