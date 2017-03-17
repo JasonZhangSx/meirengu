@@ -181,15 +181,17 @@ public class UserController extends BaseController{
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
+    /**
+     * 验证用户是否存在
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "verifyUser" ,method = RequestMethod.POST)
     public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
-
         User user = userService.retrieveByUserId(userId);
         if(user != null){
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
-
-
 }

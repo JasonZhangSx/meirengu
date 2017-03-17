@@ -179,9 +179,11 @@ public class LoginController extends BaseController {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
-        if (StringUtils.isEmpty(registerVO.getMobile_inviter()) || !ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
-            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .MOBILE_FORMAT_ERROR));
+        if(!"".equals(registerVO.getMobile_inviter())){
+            if (StringUtils.isEmpty(registerVO.getMobile_inviter()) || !ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
+            }
         }
         if (registerVO.getCheck_code() == null) {
             return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
