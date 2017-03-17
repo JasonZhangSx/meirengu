@@ -1,18 +1,18 @@
 package com.meirengu.trade.model;
 
 import java.util.Date;
-import java.sql.*;
+import java.math.BigDecimal;
  /*
   * Refund 实体类
   * Tue Mar 14 17:15:51 CST 2017 建新
   */
 public class Refund{
 	/** 退款记录ID */
-	private int refundId;
+	private Integer refundId;
 	/** 退款编号 */
 	private String refundSn;
 	/** 订单ID */
-	private int orderId;
+	private Integer orderId;
 	/** 订单编号 */
 	private String orderSn;
 	/** 第三方订单号 */
@@ -20,11 +20,11 @@ public class Refund{
 	/** 第三方退单号 */
 	private String thirdRefundSn;
 	/** 项目ID */
-	private int itemId;
+	private Integer itemId;
 	/** 关联合作方ID */
-	private int partnerId;
+	private Integer partnerId;
 	/** 买家ID */
-	private int userId;
+	private Integer userId;
 	/** 买家会员名 */
 	private String userName;
 	/** 买家手机号 */
@@ -32,9 +32,9 @@ public class Refund{
 	/** 添加时间 */
 	private Date addTime;
 	/** 订单金额 */
-	private double orderAmount;
+	private BigDecimal orderAmount;
 	/** 退款金额 */
-	private double orderRefund;
+	private BigDecimal orderRefund;
 	/** 支付方式名称 */
 	private String refundPaymentname;
 	/** 支付方式代码 */
@@ -52,17 +52,17 @@ public class Refund{
 	/** 买家确认收款时间 */
 	private Date confirmTime;
 	/** 类型:1为买家,2为卖家,默认为2 */
-	private byte refundType;
+	private Integer refundType;
 	/** 状态:1为待处理,2为同意,3为拒绝,默认为2 */
-	private byte refundState;
+	private Integer refundState;
 	/** 确认收款状态:1为待确认,2为已确认,默认为2 */
-	private byte userConfirm;
+	private Integer userConfirm;
 
-	public void setRefundId(int refundId){
+	public void setRefundId(Integer refundId){
 		this.refundId = refundId;
 	}
 
-	public int getRefundId(){
+	public Integer getRefundId(){
 		return refundId;
 	}
 
@@ -74,11 +74,11 @@ public class Refund{
 		return refundSn;
 	}
 
-	public void setOrderId(int orderId){
+	public void setOrderId(Integer orderId){
 		this.orderId = orderId;
 	}
 
-	public int getOrderId(){
+	public Integer getOrderId(){
 		return orderId;
 	}
 
@@ -106,27 +106,27 @@ public class Refund{
 		return thirdRefundSn;
 	}
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
-	public void setPartnerId(int partnerId){
+	public void setPartnerId(Integer partnerId){
 		this.partnerId = partnerId;
 	}
 
-	public int getPartnerId(){
+	public Integer getPartnerId(){
 		return partnerId;
 	}
 
-	public void setUserId(int userId){
+	public void setUserId(Integer userId){
 		this.userId = userId;
 	}
 
-	public int getUserId(){
+	public Integer getUserId(){
 		return userId;
 	}
 
@@ -154,19 +154,19 @@ public class Refund{
 		return addTime;
 	}
 
-	public void setOrderAmount(double orderAmount){
+	public void setOrderAmount(BigDecimal orderAmount){
 		this.orderAmount = orderAmount;
 	}
 
-	public double getOrderAmount(){
+	public BigDecimal getOrderAmount(){
 		return orderAmount;
 	}
 
-	public void setOrderRefund(double orderRefund){
+	public void setOrderRefund(BigDecimal orderRefund){
 		this.orderRefund = orderRefund;
 	}
 
-	public double getOrderRefund(){
+	public BigDecimal getOrderRefund(){
 		return orderRefund;
 	}
 
@@ -234,27 +234,27 @@ public class Refund{
 		return confirmTime;
 	}
 
-	public void setRefundType(byte refundType){
+	public void setRefundType(Integer refundType){
 		this.refundType = refundType;
 	}
 
-	public byte getRefundType(){
+	public Integer getRefundType(){
 		return refundType;
 	}
 
-	public void setRefundState(byte refundState){
+	public void setRefundState(Integer refundState){
 		this.refundState = refundState;
 	}
 
-	public byte getRefundState(){
+	public Integer getRefundState(){
 		return refundState;
 	}
 
-	public void setUserConfirm(byte userConfirm){
+	public void setUserConfirm(Integer userConfirm){
 		this.userConfirm = userConfirm;
 	}
 
-	public byte getUserConfirm(){
+	public Integer getUserConfirm(){
 		return userConfirm;
 	}
 

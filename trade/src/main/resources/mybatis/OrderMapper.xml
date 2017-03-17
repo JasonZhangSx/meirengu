@@ -13,29 +13,8 @@
 	<update id="update" parameterType="order">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="orderId != null and orderId != ''">
-				order_id=#{orderId},
-			</if>
 			<if test="orderSn != null and orderSn != ''">
 				order_sn=#{orderSn},
-			</if>
-			<if test="itemId != null and itemId != ''">
-				item_id=#{itemId},
-			</if>
-			<if test="itemName != null and itemName != ''">
-				item_name=#{itemName},
-			</if>
-			<if test="itemLevelId != null and itemLevelId != ''">
-				item_level_id=#{itemLevelId},
-			</if>
-			<if test="itemLevelName != null and itemLevelName != ''">
-				item_level_name=#{itemLevelName},
-			</if>
-			<if test="itemLevelAmount != null and itemLevelAmount != ''">
-				item_level_amount=#{itemLevelAmount},
-			</if>
-			<if test="itemNum != null and itemNum != ''">
-				item_num=#{itemNum},
 			</if>
 			<if test="orderAmount != null and orderAmount != ''">
 				order_amount=#{orderAmount},
@@ -79,10 +58,10 @@
 			<if test="orderMessage != null and orderMessage != ''">
 				order_message=#{orderMessage},
 			</if>
-			<if test="orderState != null and orderState != ''">
+			<if test="orderState != null">
 				order_state=#{orderState},
 			</if>
-			<if test="flag != null and flag != ''">
+			<if test="flag != null">
 				flag=#{flag},
 			</if>
 			<if test="orderFrom != null and orderFrom != ''">
@@ -106,13 +85,95 @@
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where order_id=#{id}
 	</select>
+	<sql id="findPage_where">
+		<where>
+			<if test="orderSn != null and orderSn != ''">
+				AND order_sn=#{orderSn}
+			</if>
+			<if test="orderAmount != null">
+				AND order_amount=#{orderAmount}
+			</if>
+			<if test="costAmount != null">
+				AND cost_amount=#{costAmount}
+			</if>
+			<if test="rebateAmount != null">
+				AND rebate_amount=#{rebateAmount}
+			</if>
+			<if test="userId != null">
+				AND user_id=#{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND user_phone=#{userPhone}
+			</if>
+			<if test="userEmail != null and userEmail != ''">
+				AND user_email=#{userEmail}
+			</if>
+			<if test="userAddressId != null">
+				AND user_address_id=#{userAddressId}
+			</if>
+			<if test="createTimeBegin != null">
+				AND create_time >= #{createTimeBegin}
+			</if>
+			<if test="createTimeEnd != null">
+				AND create_time &lt;= #{createTimeEnd}
+			</if>
+			<if test="updateTimeBegin != null">
+				AND update_time >= #{updateTimeBegin}
+			</if>
+			<if test="updateTimeEnd != null">
+				AND update_time &lt;= #{updateTimeEnd}
+			</if>
+			<if test="orderType != null">
+				AND order_type=#{orderType}
+			</if>
+			<if test="outSn != null and outSn != ''">
+				AND out_sn=#{outSn}
+			</if>
+			<if test="finishedTime != null">
+				AND finished_time=#{finishedTime}
+			</if>
+			<if test="receipt != null and receipt != ''">
+				AND receipt=#{receipt}
+			</if>
+			<if test="orderMessage != null and orderMessage != ''">
+				AND order_message=#{orderMessage}
+			</if>
+			<if test="orderState != null">
+				AND order_state=#{orderState}
+			</if>
+			<if test="flag != null">
+				AND flag=#{flag}
+			</if>
+			<if test="orderFrom != null">
+				AND order_from=#{orderFrom}
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				AND operate_account=#{operateAccount}
+			</if>
+			<if test="userWeixin != null and userWeixin != ''">
+				AND user_weixin=#{userWeixin}
+			</if>
+		</where>
+	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select <include refid="select_columns" />
+		FROM
+		<include refid="table_name" />
+		<include refid="findPage_where"/>
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			order by #{sortBy} #{order}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1)
+		FROM
+		<include refid="table_name" />
+		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

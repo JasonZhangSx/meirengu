@@ -1,16 +1,16 @@
 package com.meirengu.trade.model;
 
 import java.util.Date;
-import java.sql.*;
+import java.math.BigDecimal;
  /*
   * OrderCandidate 实体类
   * Tue Mar 14 17:15:51 CST 2017 建新
   */
 public class OrderCandidate{
 	/** 候补预约索引id */
-	private int id;
+	private Integer id;
 	/** 用户id */
-	private int userId;
+	private Integer userId;
 	/** 用户名称 */
 	private String userName;
 	/** 用户手机号 */
@@ -18,19 +18,19 @@ public class OrderCandidate{
 	/** 用户微信号 */
 	private String userWeixin;
 	/** 预约项目id */
-	private int itemId;
+	private Integer itemId;
 	/** 预约项目名称 */
 	private String itemName;
 	/** 项目回报档位id */
-	private int itemLevelId;
+	private Integer itemLevelId;
 	/** 项目汇报档位名称 */
 	private String itemLevelName;
 	/** 预约份数 */
-	private int itemNum;
+	private Integer itemNum;
 	/** 订单总额 */
-	private double orderAmount;
+	private BigDecimal orderAmount;
 	/** 状态：0未处理；1已处理 */
-	private int status;
+	private Integer status;
 	/** 预约时间 */
 	private Date createTime;
 	/** 处理时间 */
@@ -38,19 +38,19 @@ public class OrderCandidate{
 	/** 操作人账号 */
 	private String operateAccount;
 
-	public void setId(int id){
+	public void setId(Integer id){
 		this.id = id;
 	}
 
-	public int getId(){
+	public Integer getId(){
 		return id;
 	}
 
-	public void setUserId(int userId){
+	public void setUserId(Integer userId){
 		this.userId = userId;
 	}
 
-	public int getUserId(){
+	public Integer getUserId(){
 		return userId;
 	}
 
@@ -78,11 +78,11 @@ public class OrderCandidate{
 		return userWeixin;
 	}
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
@@ -94,11 +94,11 @@ public class OrderCandidate{
 		return itemName;
 	}
 
-	public void setItemLevelId(int itemLevelId){
+	public void setItemLevelId(Integer itemLevelId){
 		this.itemLevelId = itemLevelId;
 	}
 
-	public int getItemLevelId(){
+	public Integer getItemLevelId(){
 		return itemLevelId;
 	}
 
@@ -110,27 +110,27 @@ public class OrderCandidate{
 		return itemLevelName;
 	}
 
-	public void setItemNum(int itemNum){
+	public void setItemNum(Integer itemNum){
 		this.itemNum = itemNum;
 	}
 
-	public int getItemNum(){
+	public Integer getItemNum(){
 		return itemNum;
 	}
 
-	public void setOrderAmount(double orderAmount){
+	public void setOrderAmount(BigDecimal orderAmount){
 		this.orderAmount = orderAmount;
 	}
 
-	public double getOrderAmount(){
+	public BigDecimal getOrderAmount(){
 		return orderAmount;
 	}
 
-	public void setStatus(int status){
+	public void setStatus(Integer status){
 		this.status = status;
 	}
 
-	public int getStatus(){
+	public Integer getStatus(){
 		return status;
 	}
 

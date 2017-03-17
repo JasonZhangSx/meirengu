@@ -13,16 +13,13 @@
 	<update id="update" parameterType="refund">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="refundId != null and refundId != ''">
-				refund_id=#{refundId},
-			</if>
 			<if test="refundSn != null and refundSn != ''">
 				refund_sn=#{refundSn},
 			</if>
 			<if test="orderId != null and orderId != ''">
 				order_id=#{orderId},
 			</if>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="orderSn != null and orderSn != 0">
 				order_sn=#{orderSn},
 			</if>
 			<if test="thirdOrderSn != null and thirdOrderSn != ''">
@@ -31,13 +28,13 @@
 			<if test="thirdRefundSn != null and thirdRefundSn != ''">
 				third_refund_sn=#{thirdRefundSn},
 			</if>
-			<if test="itemId != null and itemId != ''">
+			<if test="itemId != null and itemId != 0">
 				item_id=#{itemId},
 			</if>
-			<if test="partnerId != null and partnerId != ''">
+			<if test="partnerId != null and partnerId != 0">
 				partner_id=#{partnerId},
 			</if>
-			<if test="userId != null and userId != ''">
+			<if test="userId != null and userId != 0">
 				user_id=#{userId},
 			</if>
 			<if test="userName != null and userName != ''">
@@ -46,7 +43,7 @@
 			<if test="userPhone != null and userPhone != ''">
 				user_phone=#{userPhone},
 			</if>
-			<if test="addTime != null and addTime != ''">
+			<if test="addTime != null ">
 				add_time=#{addTime},
 			</if>
 			<if test="orderAmount != null and orderAmount != ''">
@@ -70,13 +67,13 @@
 			<if test="adminMessage != null and adminMessage != ''">
 				admin_message=#{adminMessage},
 			</if>
-			<if test="partnerTime != null and partnerTime != ''">
+			<if test="partnerTime != null ">
 				partner_time=#{partnerTime},
 			</if>
-			<if test="adminTime != null and adminTime != ''">
+			<if test="adminTime != null ">
 				admin_time=#{adminTime},
 			</if>
-			<if test="confirmTime != null and confirmTime != ''">
+			<if test="confirmTime != null ">
 				confirm_time=#{confirmTime},
 			</if>
 			<if test="refundType != null and refundType != ''">

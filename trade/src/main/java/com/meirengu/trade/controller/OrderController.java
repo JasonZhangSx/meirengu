@@ -2,6 +2,7 @@ package com.meirengu.trade.controller;
 
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
@@ -11,13 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 订单控制类
@@ -70,13 +71,12 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "order_from", required = false) String orderFrom,
                                     @RequestParam(value = "user_weixin", required = false) String userWeixin){
 
-        if(itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
+        if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
                 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
                 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)){
             //备注和微信号选填
-            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
@@ -85,11 +85,11 @@ public class OrderController extends BaseController{
         order.setItemName(itemName);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
-        order.setItemLevelAmount(itemLevelAmount.doubleValue());
+        order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
-        order.setOrderAmount(orderAmount.doubleValue());
-        order.setCostAmount(costAmount.doubleValue());
-        order.setRebateAmount(rebateAmount.doubleValue());
+        order.setOrderAmount(orderAmount);
+        order.setCostAmount(costAmount);
+        order.setRebateAmount(rebateAmount);
         order.setUserId(userId);
         order.setUserName(userName);
         order.setUserPhone(userPhone);
@@ -106,14 +106,14 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             int i = orderService.insert(order);
-            if(i > 0){
+            if (i == 1) {
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return setResult(StatusCode.BULLETIN_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_INSERT));
+            } else {
+                return setResult(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
             }
         }catch (Exception e){
             logger.error("throw exception:", e);
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
@@ -158,13 +158,12 @@ public class OrderController extends BaseController{
                                     ){
 
 
-        if(itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
+        if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
                 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
-                || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)){
+                || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)) {
             //备注和微信号选填
-            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
@@ -173,11 +172,11 @@ public class OrderController extends BaseController{
         order.setItemName(itemName);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
-        order.setItemLevelAmount(itemLevelAmount.doubleValue());
+        order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
-        order.setOrderAmount(orderAmount.doubleValue());
-        order.setCostAmount(costAmount.doubleValue());
-        order.setRebateAmount(rebateAmount.doubleValue());
+        order.setOrderAmount(orderAmount);
+        order.setCostAmount(costAmount);
+        order.setRebateAmount(rebateAmount);
         order.setUserId(userId);
         order.setUserName(userName);
         order.setUserPhone(userPhone);
@@ -194,18 +193,101 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             int i = orderService.insert(order);
-            if(i > 0){
+            if (i > 0) {
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return setResult(StatusCode.BULLETIN_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_INSERT));
+            } else {
+                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
             }
         }catch (Exception e){
             logger.error("throw exception:", e);
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
 
+    /**
+     * 预约审核
+     * @param orderId
+     * @param orderStatus
+     * @return
+     */
+    @RequestMapping(value = "/appointment/audit/{order_id}",  method = RequestMethod.POST)
+    public Result appointmentAudit(@PathVariable("order_id") int orderId ,
+                                    @RequestParam(value = "status") int orderStatus){
+        if (orderId == 0 || !(orderStatus == 2 || orderStatus == 3)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setOrderState(orderStatus);
+        try{
+            int i = orderService.update(order);
+            if (i == 1) {
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
+            }
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
+
+    /**
+     * 删除订单
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(value = "/{order_id}",  method = RequestMethod.DELETE)
+    public Result delete(@PathVariable("order_id") int orderId){
+        if (orderId == 0 ) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setFlag(0);//逻辑删除状态 0为删除，1为未删除
+        try{
+            int i = orderService.update(order);
+            if (i == 1) {
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
+            }
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                          @RequestParam(value = "sort_by", required = false) String sortBy,
+                          @RequestParam(value = "order", required = false) String order,
+                          @RequestParam(value = "order_sn", required = false) String orderSn,
+                          @RequestParam(value = "user_phone", required = false) String userPhone,
+                          @RequestParam(value = "item_name", required = false) String itemName,
+                          @RequestParam(value = "user_id", required = false) String userId,
+                          @RequestParam(value = "order_state", required = false) String orderState){
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderSn", orderSn);
+        map.put("userPhone", userPhone);
+        map.put("itemName", itemName);
+        map.put("userId", userId);
+        map.put("orderState", orderState);
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        Page<Order> page = new Page<Order>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = orderService.getListByPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
 }
