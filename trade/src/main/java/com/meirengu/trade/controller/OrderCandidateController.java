@@ -61,13 +61,12 @@ public class OrderCandidateController extends BaseController{
                                     @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount
                                     ){
 
-        if(userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(userWeixin)
+        if (userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(userWeixin)
                 || itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemNum == 0 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) ){
-            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        //根据项目信息请求项目服务查询地址是否必填，校验地址
+
         OrderCandidate orderCandidate = new OrderCandidate();
         orderCandidate.setUserId(userId);
         orderCandidate.setUserName(userName);
@@ -78,20 +77,20 @@ public class OrderCandidateController extends BaseController{
         orderCandidate.setItemLevelId(itemLevelId);
         orderCandidate.setItemLevelName(itemLevelName);
         orderCandidate.setItemNum(itemNum);
-        orderCandidate.setOrderAmount(orderAmount.doubleValue());
+        orderCandidate.setOrderAmount(orderAmount);
         orderCandidate.setStatus(0);//新增为未处理状态
         orderCandidate.setOperateAccount("");//新增默认为空
 
         try{
             int i = orderCandidateService.insert(orderCandidate);
-            if(i > 0){
+            if (i > 0) {
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return setResult(StatusCode.BULLETIN_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_INSERT));
+            } else {
+                return setResult(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.CANDIDATE_ORDER_ERROR_INSERT));
             }
         }catch (Exception e){
             logger.error("throw exception:", e);
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
