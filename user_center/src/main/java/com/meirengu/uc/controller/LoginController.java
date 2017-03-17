@@ -216,13 +216,13 @@ public class LoginController extends BaseController {
         //验证手机号是否注册
         User user = userService.retrieveByPhone(registerVO.getMobile());
         if(!StringUtil.isEmpty(user)){
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.USER_IS_EXITS, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
         }
         //验证验证码是否有效
         CheckCode code = checkCodeService.retrieve(registerVO.getMobile(), Integer.valueOf(registerVO.getCheck_code()));
         if (code == null) {
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.CAPTCHA_INVALID, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                     .CAPTCHA_INVALID));
         }
