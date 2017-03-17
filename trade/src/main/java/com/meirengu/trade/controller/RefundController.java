@@ -3,6 +3,7 @@ package com.meirengu.trade.controller;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -150,7 +152,33 @@ public class RefundController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
+    @RequestMapping(method = RequestMethod.GET)
+    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                          @RequestParam(value = "sort_by", required = false) String sortBy,
+                          @RequestParam(value = "order", required = false) String order,
+                          @RequestParam(value = "order_sn", required = false) String orderSn,
+                          @RequestParam(value = "user_id", required = false) String userId,
+                          @RequestParam(value = "user_phone", required = false) String userPhone,
+                          @RequestParam(value = "refund_state", required = false) String refundState){
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderSn", orderSn);
+        map.put("userId", userId);
+        map.put("userPhone", userPhone);
+        map.put("refundState", refundState);
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        Page<Refund> page = new Page<Refund>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = refundService.getListByPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
 
 }

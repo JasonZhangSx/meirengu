@@ -260,6 +260,19 @@ public class OrderController extends BaseController{
         }
     }
 
+    /**
+     * 根据条件查询订单
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param orderSn
+     * @param userPhone
+     * @param itemName
+     * @param userId
+     * @param orderState
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
