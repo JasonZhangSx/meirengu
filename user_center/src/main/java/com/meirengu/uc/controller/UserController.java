@@ -116,14 +116,12 @@ public class UserController extends BaseController{
     /**
      * 修改密码
      * @param mobile
-     * @param checkCode
      * @param newPassword
      * @param token
      * @return
      */
     @RequestMapping(value = "password/modify",method = RequestMethod.POST)
-    public Result modifyPassword(@RequestParam(value = "mobile", required = true) String mobile,
-                                   @RequestParam(value = "check_code", required = true) String checkCode,
+    public Result modifyPassword(  @RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
                                    @RequestParam(value = "token", required = true) String token) {
@@ -132,11 +130,6 @@ public class UserController extends BaseController{
             RedisUtil redisUtil = new RedisUtil();
             Object userRedis =   redisUtil.getObject(token);
             if(!StringUtil.isEmpty(userRedis)){
-                //verify params
-                if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
-                }
                 if (newPassword == null || oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_ERROR));
@@ -145,16 +138,6 @@ public class UserController extends BaseController{
                 User user = userService.retrieveByPhone(mobile);
                 if(StringUtil.isEmpty(user)){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-                }
-                //验证验证码是否有效
-                CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-                if (code == null) {
-                    return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                            .CAPTCHA_INVALID));
-                }
-                if (code.getExpireTime().compareTo(new Date()) < 0) {
-                    return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                            .CAPTCHA_EXPIRE));
                 }
                 if (oldPassword == null) {
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
