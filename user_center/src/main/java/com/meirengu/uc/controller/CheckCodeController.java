@@ -83,7 +83,7 @@ public class CheckCodeController extends BaseController {
 
 
 
-    @RequestMapping(value = "vitify_code", method = RequestMethod.POST)
+    @RequestMapping(value = "vitifyCode", method = RequestMethod.POST)
     public Result vitifyCode(@RequestParam(value = "mobile", required = true) String mobile,
                          @RequestParam(value = "check_code", required = true) String checkCode) {
         logger.info("CheckCodeController.vitifyCode params >> mobile:{}", mobile ,checkCode);

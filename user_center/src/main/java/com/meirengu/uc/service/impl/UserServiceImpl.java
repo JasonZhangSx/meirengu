@@ -44,6 +44,9 @@ public class UserServiceImpl extends Thread implements UserService {
         if(result == 1){
             this.run(user);
             return result;
+        }else{
+            userDao.create(user);
+            this.run(user);
         }
         return 0;
     }
@@ -98,8 +101,8 @@ public class UserServiceImpl extends Thread implements UserService {
         if(!StringUtil.isEmpty(userVO.getBirthday())){
             user.setBirthday(userVO.getBirthday());
         }
-        if(!StringUtil.isEmpty(userVO.isSex())){
-            user.setSex(userVO.isSex());
+        if(!StringUtil.isEmpty(userVO.getSex())){
+            user.setSex(userVO.getSex());
         }
         if(!StringUtil.isEmpty(userVO.getQq())){
             user.setQq(userVO.getQq());

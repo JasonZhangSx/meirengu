@@ -55,7 +55,7 @@ public class User extends BaseObject {
     /**
      * 会员性别
      **/
-    private boolean sex;
+    private Integer sex;
     /**
      * 会员生日
      **/
@@ -257,11 +257,11 @@ public class User extends BaseObject {
         this.avatar = avatar;
     }
 
-    public boolean isSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

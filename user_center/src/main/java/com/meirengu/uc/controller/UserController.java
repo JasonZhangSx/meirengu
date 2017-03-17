@@ -104,7 +104,7 @@ public class UserController extends BaseController{
         User usr = new User();
         usr.setPhone(mobile);
         usr.setPassword(newPassword);
-        int result = userService.update(usr);
+        int result = userService.updatePasswordByPhone(usr);
         if(result != 0){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
                     .OK));
