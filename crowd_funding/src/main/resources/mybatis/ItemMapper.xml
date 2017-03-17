@@ -123,10 +123,17 @@
 		where item_id=#{id}
 	</select>
 
+	<update id="delete" parameterType="integer" >
+		UPDATE <include refid="table_name" /> SET flag=0 WHERE item_id=#{id}
+	</update>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select <include refid="select_columns" />, completed_amount/target_amount as percent FROM <include refid="table_name" />
 		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
 		<if test="itemName != null and itemName != ''">
 			and item_name like '%${itemName}%'
 		</if>
@@ -146,6 +153,9 @@
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
 		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
 		<if test="itemName != null and itemName != ''">
 			and item_name like '%${itemName}%'
 		</if>

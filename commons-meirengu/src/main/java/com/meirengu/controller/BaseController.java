@@ -53,6 +53,8 @@ public class BaseController {
         result.setMsg(msg);
         if (code == 200 && (data != null && !"".equals(data))){
             result.setData(data);
+        }else {
+            result.setData("");
         }
         LOGGER.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
@@ -69,6 +71,8 @@ public class BaseController {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         if(code == 200 && (data != null && !"".equals(data))){
             returnMap.put("data",JSONObject.toJSON(data));
+        }else {
+            returnMap.put("data", "");
         }
         returnMap.put("code", code);
         returnMap.put("msg", msg);

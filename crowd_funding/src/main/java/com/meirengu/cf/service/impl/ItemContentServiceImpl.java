@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * ItemContent服务实现层 
  * @author 建新
- * @create Wed Mar 15 10:41:25 CST 2017
+ * @create Thu Mar 16 18:14:42 CST 2017
  */
 @Service
 public class ItemContentServiceImpl extends BaseServiceImpl<ItemContent> implements ItemContentService{

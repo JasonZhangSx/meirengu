@@ -3,19 +3,19 @@
 <mapper namespace="com.meirengu.cf.dao.ItemContentDao" >
 
 	<resultMap id="itemContentMap" type="ItemContent">
-		<id column="content_id" property="contentId" jdbcType="INTEGER" javaType="int"/>
-		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
-		<result column="content_type" property="contentType" jdbcType="TINYINT" javaType="int"/>
+		<id column="content_id" property="contentId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="content_type" property="contentType" jdbcType="TINYINT" javaType="Integer"/>
 		<result column="content_title" property="contentTitle" jdbcType="VARCHAR" javaType="String"/>
 		<result column="content_subtitle" property="contentSubtitle" jdbcType="VARCHAR" javaType="String"/>
-		<result column="content_info" property="contentInfo" jdbcType="INTEGER" javaType="int"/>
-		<result column="content_sort" property="contentSort" jdbcType="TINYINT" javaType="int"/>
+		<result column="content_info" property="contentInfo" jdbcType="VARCHAR" javaType="String"/>
+		<result column="content_sort" property="contentSort" jdbcType="TINYINT" javaType="Integer"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
 	</resultMap>
 
-	<sql id="table_name">item_content</sql>
+	<sql id="table_name">`item_content`</sql>
 	<sql id="select_columns">
 		content_id as contentId, item_id as itemId, content_type as contentType, content_title as contentTitle, content_subtitle as contentSubtitle, content_info as contentInfo, content_sort as contentSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
