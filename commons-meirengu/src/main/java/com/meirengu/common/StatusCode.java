@@ -128,6 +128,12 @@ public class StatusCode {
     public static final int PARTNER_CLASS_ERROR_INSERT = 50503;
     public static final int PARTNER_CLASS_ERROR_UPDATE = 50504;
     public static final int PARTNER_CLASS_ALREADY_DELETE = 50505;
+    public static final int ITEM_LEVEL_ERROR_INSERT = 50506;
+    public static final int ITEM_LEVEL_ERROR_UPDATE = 50507;
+    public static final int ITEM_LEVEL_ERROR_DELETE = 50508;
+    public static final int ITEM_CONTENT_ERROR_INSERT = 50509;
+    public static final int ITEM_CONTENT_ERROR_UPDATE = 50510;
+    public static final int ITEM_CONTENT_ERROR_DELETE = 50511;
 
     //50600-50700//payment
 
@@ -270,6 +276,13 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_INSERT, "项目回报档位保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_UPDATE, "项目回报档位修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_DELETE, "项目回报档位删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_INSERT, "项目内容保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_UPDATE, "项目内容修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_DELETE, "项目内容删除失败， 请重试");
+
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");
