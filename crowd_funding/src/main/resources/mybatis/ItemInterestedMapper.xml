@@ -63,13 +63,58 @@
 		where id=#{id}
 	</select>
 
+	<update id="cancle" parameterType="itemInterested">
+		UPDATE <include refid="table_name" /> SET status=0 WHERE item_id=#{itemId} and user_id=#{userId}
+	</update>
+
+	<select id="detailByUserAndItem" parameterType="itemInterested" resultType="itemInterested">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where item_id=#{itemId} and user_id=#{userId}
+	</select>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
+		<if test="userId != null">
+			and user_id=#{userId}
+		</if>
+		<if test="userPhone != null and userPhone != ''">
+			and user_phone=#{userPhone}
+		</if>
+		<if test="status != null">
+			and status=#{status}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		create_time desc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
+		<if test="userId != null">
+			and user_id=#{userId}
+		</if>
+		<if test="userPhone != null and userPhone != ''">
+			and user_phone=#{userPhone}
+		</if>
+		<if test="status != null">
+			and status=#{status}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>
