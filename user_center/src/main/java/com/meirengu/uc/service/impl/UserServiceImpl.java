@@ -4,6 +4,7 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -162,10 +163,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter) {
+    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar) {
 
         //创建用户
         User user = new User();
+        user.setAvatar(avatar);
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(from);
         user.setLastLoginTime(new Date());
@@ -175,6 +177,52 @@ public class UserServiceImpl implements UserService {
         user.setPhone(mobile);
         user.setMobileInviter(mobileInviter);
         user.setLoginNum(1);
+        user.setAuth(true);
+        user.setAllowInform(true);
+        user.setAllowTalk(true);
+        user.setState(true);
+        user.setBuy(true);
+        int result = userDao.create(user);
+        if(result ==0){
+            user.setUserId(UuidUtils.getShortUuid());
+            userDao.create(user);
+        }
+        return user;
+    }
+
+    @Override
+    public User createUserInfo(RegisterVO registerVO) {
+        //创建用户
+        User user = new User();
+        user.setAvatar(registerVO.getAvatar());
+        user.setUserId(UuidUtils.getShortUuid());
+        user.setLoginFrom(registerVO.getFrom());
+        user.setLastLoginTime(new Date());
+        user.setLoginIp(registerVO.getIp());
+        user.setLastLoginIp(registerVO.getIp());
+        user.setPassword(registerVO.getPassword());
+        user.setPhone(registerVO.getMobile());
+        user.setMobileInviter(registerVO.getMobile_inviter());
+        user.setNickname("MRG_"+registerVO.getMobile().substring(7,11));
+        if(!"".equals(registerVO.getWx_openid())){
+            user.setWxOpenid(registerVO.getWx_openid());
+            user.setWxInfo(registerVO.getWx_info());
+            user.setWx(registerVO.getWx());
+            user.setNickname(registerVO.getWxNickName());
+        }
+        if(!"".equals(registerVO.getQq_openid())) {
+            user.setQqOpenid(registerVO.getQq_openid());
+            user.setQqInfo(registerVO.getQq_info());
+            user.setQq(registerVO.getQq());
+            user.setNickname(registerVO.getQqNickName());
+        }
+        if(!"".equals(registerVO.getSina_openid())) {
+            user.setSinaOpenid(registerVO.getSina_openid());
+            user.setSinaInfo(registerVO.getSina_info());
+        }
+        user.setLoginNum(1);
+        user.setRegisterFrom(registerVO.getFrom());
+        user.setRegisterTime(new Date());
         user.setAuth(true);
         user.setAllowInform(true);
         user.setAllowTalk(true);
