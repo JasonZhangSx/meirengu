@@ -50,11 +50,12 @@ public class ItemController extends BaseController {
     public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value = "is_page", required = false) boolean isPage,
+                       @RequestParam(value = "item_id", required = false) Integer itemId,
                        @RequestParam(value = "item_name", required = false) String itemName,
                        @RequestParam(value = "flag", required = false) Integer flag,
                        @RequestParam(value = "item_status", required = false) String itemStatus,
-                       @RequestParam(value = "sortby", required = false, defaultValue = "create_time") String sortBy,
-                       @RequestParam(value = "order", required = false, defaultValue = "desc") String order){
+                       @RequestParam(value = "sortby", required = false) String sortBy,
+                       @RequestParam(value = "order", required = false) String order){
 
         //默认不分页
         if(StringUtil.isEmpty(isPage)){
@@ -63,6 +64,7 @@ public class ItemController extends BaseController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("itemName", itemName);
+        map.put("itemId", itemId);
         map.put("itemStatus", itemStatus);
         map.put("flag", flag);
         map.put("sortBy", sortBy);
@@ -135,6 +137,22 @@ public class ItemController extends BaseController {
             }
         }catch (Exception e){
             LOGGER.error(">> update item throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/{item_id}", method = RequestMethod.DELETE)
+    public Result delete(@PathVariable(value = "item_id") int itemId){
+        try {
+            int deleteNum = itemService.delete(itemId);
+            if(deleteNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.ITEM_ERROR_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_DELETE));
+            }
+        }catch (Exception e){
+            LOGGER.error(">> delete item throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
