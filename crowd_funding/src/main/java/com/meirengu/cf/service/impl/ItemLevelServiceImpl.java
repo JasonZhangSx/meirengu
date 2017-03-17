@@ -1,7 +1,9 @@
 package com.meirengu.cf.service.impl;
 import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.cf.service.ItemLevelService;
+import com.meirengu.cf.service.ItemService;
 import com.meirengu.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,4 +13,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ItemLevelServiceImpl extends BaseServiceImpl<ItemLevel> implements ItemLevelService{
+
+    @Autowired
+    ItemService itemService;
+
+
 }

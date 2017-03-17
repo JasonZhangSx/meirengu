@@ -98,6 +98,26 @@ public class ItemInterestedController extends BaseController{
     }
 
     @ResponseBody
+    @RequestMapping(value = "is_interested", method = RequestMethod.POST)
+    public Result insert(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "user_id", required = false) Integer userId){
+        if(itemId == null || itemId == 0 || userId == null || userId == 0){
+            return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+        try {
+            boolean isInterested = itemInterestedService.isBeInterested(itemId, userId);
+            if(isInterested){
+                return super.setResult(StatusCode.ITEM_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_BE_INTERESTED));
+            }else {
+                return super.setResult(StatusCode.ITEM_NOT_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_NOT_BE_INTERESTED));
+            }
+        }catch (Exception e){
+            LOGGER.error(">> is item interested throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public Result detail(@PathVariable(value = "id")Integer id){
         try {

@@ -131,7 +131,7 @@ public class ItemContentController extends BaseController{
         ItemContent itemContent = this.setEntity(contentId, null, contentType, contentTitle,
                 contentSubtitle, contentInfo, contentSort, operateAccount, new Date());
         try {
-            int updateNum = itemContentService.insert(itemContent);
+            int updateNum = itemContentService.update(itemContent);
             if(updateNum == 1){
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {

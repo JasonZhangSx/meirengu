@@ -22,20 +22,14 @@
 
 	<insert id="insert" parameterType="itemContent" useGeneratedKeys="true" keyProperty="contentId" >
 		INSERT INTO <include refid="table_name" />
-			(content_id, item_id, content_type, content_title, content_subtitle, content_info, content_sort, create_time, update_time, operate_account)
+			(content_id, item_id, content_type, content_title, content_subtitle, content_info, content_sort, create_time, operate_account)
 		VALUES
-			(#{contentId}, #{itemId}, #{contentType}, #{contentTitle}, #{contentSubtitle}, #{contentInfo}, #{contentSort}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{contentId}, #{itemId}, #{contentType}, #{contentTitle}, #{contentSubtitle}, #{contentInfo}, #{contentSort}, #{createTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="itemContent">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="contentId != null and contentId != ''">
-				content_id=#{contentId},
-			</if>
-			<if test="itemId != null and itemId != ''">
-				item_id=#{itemId},
-			</if>
 			<if test="contentType != null and contentType != ''">
 				content_type=#{contentType},
 			</if>
@@ -50,12 +44,6 @@
 			</if>
 			<if test="contentSort != null and contentSort != ''">
 				content_sort=#{contentSort},
-			</if>
-			<if test="createTime != null and createTime != ''">
-				create_time=#{createTime},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},

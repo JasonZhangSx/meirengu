@@ -134,7 +134,14 @@ public class StatusCode {
     public static final int ITEM_CONTENT_ERROR_INSERT = 50509;
     public static final int ITEM_CONTENT_ERROR_UPDATE = 50510;
     public static final int ITEM_CONTENT_ERROR_DELETE = 50511;
-
+    public static final int ITEM_COOPERATION_ERROR_INSERT = 50512;
+    public static final int ITEM_COOPERATION_ERROR_UPDATE = 50513;
+    public static final int ITEM_COOPERATION_ERROR_DELETE = 50514;
+    public static final int ITEM_INTERESTED_ERROR_INSERT = 50515;
+    public static final int ITEM_INTERESTED_ERROR_UPDATE = 50516;
+    public static final int ITEM_INTERESTED_ERROR_DELETE = 50517;
+    public static final int ITEM_BE_INTERESTED = 50518;
+    public static final int ITEM_NOT_BE_INTERESTED = 50519;
     //50600-50700//payment
 
     //50700-50750//sms
@@ -285,12 +292,20 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
-        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_INSERT, "项目回报档位保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_INSERT, "项目回报档位保存失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_UPDATE, "项目回报档位修改失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_DELETE, "项目回报档位删除失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_INSERT, "项目内容保存失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_INSERT, "项目内容保存失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_UPDATE, "项目内容修改失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_DELETE, "项目内容删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_INSERT, "项目合作设置保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_UPDATE, "项目合作设置修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "项目合作设置删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "感兴趣项目保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_UPDATE, "感兴趣项目修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "感兴趣项目删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "已设置对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "已取消对该项目感兴趣");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");

@@ -9,17 +9,17 @@ import java.util.Date;
   */
 public class ItemCooperation  extends BaseObject {
 	/** 众筹项目索引id */
-	private int itemId;
+	private Integer itemId;
 	/** 合作佣金比例 */
 	private BigDecimal commissionRate;
 	/** 保证金比例 */
 	private BigDecimal guaranteeRate;
 	/** 预付分红金 */
-	private int prepaidBonus;
+	private Integer prepaidBonus;
 	/** 放款方式：1、一次性；2、两次放款 */
-	private int loanMode;
+	private Integer loanMode;
 	/** 收款比例，默认30% */
-	private int firstRatio;
+	private Integer firstRatio;
 	/** 发起人身份证正反面 */
 	private String sponsorIdcard;
 	/** 发起人征信报告 */
@@ -45,11 +45,11 @@ public class ItemCooperation  extends BaseObject {
 	/** 操作人账号 */
 	private String operateAccount;
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
@@ -69,27 +69,27 @@ public class ItemCooperation  extends BaseObject {
 		return guaranteeRate;
 	}
 
-	public void setPrepaidBonus(int prepaidBonus){
+	public void setPrepaidBonus(Integer prepaidBonus){
 		this.prepaidBonus = prepaidBonus;
 	}
 
-	public int getPrepaidBonus(){
+	public Integer getPrepaidBonus(){
 		return prepaidBonus;
 	}
 
-	public void setLoanMode(int loanMode){
+	public void setLoanMode(Integer loanMode){
 		this.loanMode = loanMode;
 	}
 
-	public int getLoanMode(){
+	public Integer getLoanMode(){
 		return loanMode;
 	}
 
-	public void setFirstRatio(int firstRatio){
+	public void setFirstRatio(Integer firstRatio){
 		this.firstRatio = firstRatio;
 	}
 
-	public int getFirstRatio(){
+	public Integer getFirstRatio(){
 		return firstRatio;
 	}
 
