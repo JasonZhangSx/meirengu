@@ -1,10 +1,7 @@
 package com.meirengu.cf.controller;
 
-import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemContent;
-import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.cf.service.ItemContentService;
-import com.meirengu.cf.service.ItemLevelService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -16,15 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * ${DESCRIPTION}
- *
+ * 项目内容controller
  * @author 建新
  * @create 2017-03-16 17:54
  */
@@ -125,7 +120,7 @@ public class ItemContentController extends BaseController{
 
     @ResponseBody
     @RequestMapping(value = "/{content_id}", method = RequestMethod.PUT)
-    public Result update(@RequestParam(value = "content_id", required = false) Integer contentId,
+    public Result update(@PathVariable(value = "content_id", required = false) Integer contentId,
                          @RequestParam(value = "content_type", required = false) Integer contentType,
                          @RequestParam(value = "content_title", required = false) String contentTitle,
                          @RequestParam(value = "content_subtitle", required = false) String contentSubtitle,
