@@ -25,4 +25,12 @@ public class RegisterPO {
     public void setToken(String token) {
         this.token = token;
     }
+
+//    public RegisterPO() {
+//    }
+
+    public RegisterPO(User user, String token) {
+        this.user = user;
+        this.token = token;
+    }
 }

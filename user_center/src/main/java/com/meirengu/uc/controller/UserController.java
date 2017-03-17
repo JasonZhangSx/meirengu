@@ -7,6 +7,7 @@ import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
@@ -103,7 +104,7 @@ public class UserController extends BaseController{
         User usr = new User();
         usr.setPhone(mobile);
         usr.setPassword(newPassword);
-        int result = userService.update(usr);
+        int result = userService.updatePasswordByPhone(usr);
         if(result != 0){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
                     .OK));
@@ -115,14 +116,12 @@ public class UserController extends BaseController{
     /**
      * 修改密码
      * @param mobile
-     * @param checkCode
      * @param newPassword
      * @param token
      * @return
      */
     @RequestMapping(value = "password/modify",method = RequestMethod.POST)
-    public Result modifyPassword(@RequestParam(value = "mobile", required = true) String mobile,
-                                   @RequestParam(value = "check_code", required = true) String checkCode,
+    public Result modifyPassword(  @RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
                                    @RequestParam(value = "token", required = true) String token) {
@@ -131,11 +130,6 @@ public class UserController extends BaseController{
             RedisUtil redisUtil = new RedisUtil();
             Object userRedis =   redisUtil.getObject(token);
             if(!StringUtil.isEmpty(userRedis)){
-                //verify params
-                if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
-                }
                 if (newPassword == null || oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_ERROR));
@@ -144,16 +138,6 @@ public class UserController extends BaseController{
                 User user = userService.retrieveByPhone(mobile);
                 if(StringUtil.isEmpty(user)){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-                }
-                //验证验证码是否有效
-                CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-                if (code == null) {
-                    return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                            .CAPTCHA_INVALID));
-                }
-                if (code.getExpireTime().compareTo(new Date()) < 0) {
-                    return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                            .CAPTCHA_EXPIRE));
                 }
                 if (oldPassword == null) {
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
@@ -180,4 +164,50 @@ public class UserController extends BaseController{
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
+    /**
+     * 验证用户是否存在
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "verifyUser" ,method = RequestMethod.POST)
+    public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
+        User user = userService.retrieveByUserId(userId);
+        if(user != null){
+            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
+        return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+    }
+
+    @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
+    public Result setPassword (@RequestParam(value = "token", required = true) String token,
+                               @RequestParam(value = "user_id", required = true) Integer userId,
+                               @RequestParam(value = "password", required = true) String password){
+        if(!StringUtil.isEmpty(token)){
+            //判断token是否有效
+            try{
+                RedisUtil redisUtil = new RedisUtil();
+                Object userRedis =   redisUtil.getObject(token);
+                if(!StringUtil.isEmpty(userRedis)){
+
+                    User user = userService.retrieveByUserId(userId);
+                    if(user != null){
+                        if("".equals(user.getPassword())){
+                            user.setPassword(password);
+                            userService.update(user);
+                            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                        }else{
+                            return super.setResult(StatusCode.USER_PASSWORD_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_PASSWORD_IS_EXITS));
+                        }
+                    }
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }else{
+                    //无效token返回登陆
+                    return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+                }
+            }catch (Exception e){
+                logger.info("LoginController.redis get token result:{}",e.getMessage());
+            }
+        }
+        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+    }
 }

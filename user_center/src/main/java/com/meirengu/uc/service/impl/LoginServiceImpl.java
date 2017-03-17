@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
         redisUtil.delkeyObject(token);
         String newToken = UUID.randomUUID().toString().replace("-", "");
         redisUtil.setObject(newToken,userRedis);
-        RegisterPO registerPO = new RegisterPO();
+        RegisterPO registerPO = new RegisterPO(new User(),"");
         registerPO.setToken(newToken);
         registerPO.setUser((User) userRedis);
         return registerPO;
@@ -39,7 +39,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public RegisterPO setUserToRedis(User usr) {
 
-        RegisterPO registerPO = new RegisterPO();
+        RegisterPO registerPO = new RegisterPO(new User(),"");
         registerPO.setUser(usr);
         String token1 = UuidUtils.getUuid();
         RedisUtil redisUtil = new RedisUtil();

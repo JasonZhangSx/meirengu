@@ -108,6 +108,8 @@ public class StatusCode {
     public static final int ADDREAA_IS_NOT_ALLOWED_DELETE = 50105;
     public static final int OLD_PASSWORD_IS_ERROR = 50106;
     public static final int USER_IS_EXITS = 50107;
+    public static final int USER_PASSWORD_IS_EXITS = 50108;
+    public static final int USER_INVITER_IS_EXITS = 50109;
 
 
     //50200-50300//news_cms
@@ -268,6 +270,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
         codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
         codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
+        codeMsgMap.put(StatusCode.USER_PASSWORD_IS_EXITS, "用户密码已存在");
+        codeMsgMap.put(StatusCode.USER_INVITER_IS_EXITS, "邀请人不存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_NOT_EMPTY, "用户地址id不存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");

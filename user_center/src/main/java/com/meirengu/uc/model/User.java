@@ -15,7 +15,7 @@ public class User extends BaseObject {
     /**
      * 会员id
      **/
-    private int userId;
+    private Integer userId;
     /**
      * 会员昵称
      **/
@@ -55,7 +55,7 @@ public class User extends BaseObject {
     /**
      * 会员性别
      **/
-    private boolean sex;
+    private Integer sex;
     /**
      * 会员生日
      **/
@@ -75,11 +75,11 @@ public class User extends BaseObject {
     /**
      * 会员区域id
      **/
-    private int areaId;
+    private Integer areaId;
     /**
      * 会员注册来源
      **/
-    private int registerFrom;
+    private Integer registerFrom;
     /**
      * 会员注册时间
      **/
@@ -87,27 +87,35 @@ public class User extends BaseObject {
     /**
      * 会员登录来源
      **/
-    private int loginFrom;
+    private Integer loginFrom;
     /**
      * 会员登录时间
      **/
-    private Date loginTime;
+    private Date logIntegerime;
     /**
      * 会员上一次登录时间
      **/
-    private Date lastLoginTime;
+    private Date lastLogIntegerime;
     /**
      * 会员登录ip
      **/
     private String loginIp;
     /**
+     * 会员登录时间
+     **/
+    private Date loginTime;
+    /**
      * 会员上一次登录ip
      **/
     private String lastLoginIp;
     /**
+     * 会员上一次登录时间
+     **/
+    private Date lastLoginTime;
+    /**
      * 会员登录次数
      **/
-    private int loginNum;
+    private Integer loginNum;
     /**
      * 会员微信互联id
      **/
@@ -153,11 +161,27 @@ public class User extends BaseObject {
      **/
     private boolean state;
 
-    public int getUserId() {
+    public Date getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -233,11 +257,11 @@ public class User extends BaseObject {
         this.avatar = avatar;
     }
 
-    public boolean isSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -273,19 +297,19 @@ public class User extends BaseObject {
         this.wx = wx;
     }
 
-    public int getAreaId() {
+    public Integer getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(int areaId) {
+    public void setAreaId(Integer areaId) {
         this.areaId = areaId;
     }
 
-    public int getRegisterFrom() {
+    public Integer getRegisterFrom() {
         return registerFrom;
     }
 
-    public void setRegisterFrom(int registerFrom) {
+    public void setRegisterFrom(Integer registerFrom) {
         this.registerFrom = registerFrom;
     }
 
@@ -297,28 +321,28 @@ public class User extends BaseObject {
         this.registerTime = registerTime;
     }
 
-    public int getLoginFrom() {
+    public Integer getLoginFrom() {
         return loginFrom;
     }
 
-    public void setLoginFrom(int loginFrom) {
+    public void setLoginFrom(Integer loginFrom) {
         this.loginFrom = loginFrom;
     }
 
-    public Date getLoginTime() {
-        return loginTime;
+    public Date getLogIntegerime() {
+        return logIntegerime;
     }
 
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
+    public void setLogIntegerime(Date logIntegerime) {
+        this.logIntegerime = logIntegerime;
     }
 
-    public Date getLastLoginTime() {
-        return lastLoginTime;
+    public Date getLastLogIntegerime() {
+        return lastLogIntegerime;
     }
 
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
+    public void setLastLogIntegerime(Date lastLogIntegerime) {
+        this.lastLogIntegerime = lastLogIntegerime;
     }
 
     public String getLoginIp() {
@@ -337,11 +361,11 @@ public class User extends BaseObject {
         this.lastLoginIp = lastLoginIp;
     }
 
-    public int getLoginNum() {
+    public Integer getLoginNum() {
         return loginNum;
     }
 
-    public void setLoginNum(int loginNum) {
+    public void setLoginNum(Integer loginNum) {
         this.loginNum = loginNum;
     }
 
