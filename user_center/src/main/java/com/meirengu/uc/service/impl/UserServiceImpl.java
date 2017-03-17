@@ -14,6 +14,7 @@ import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ import java.util.Map;
  * @create 2017-01-12 下午8:24
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends Thread implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -37,25 +38,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
-    public int create(User user) {
+    public int create(User user){
 
-        HttpResult hr = null;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mobile", user.getPhone());
-        params.put("userId", user.getUserId()+"");
-        params.put("content", JacksonUtil.toJSon(user));
-        String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
-        logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
-        try {
-            hr = HttpUtil.doPostForm(url,params);
-        } catch (Exception e) {
-            logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
-        }
-        if(hr.getStatusCode() == 200){
-            int result = userDao.create(user);
-            if(result == 1){
-                return result;
-            }
+        int result = userDao.create(user);
+        if(result == 1){
+            this.run(user);
+            return result;
         }
         return 0;
     }
@@ -185,7 +173,7 @@ public class UserServiceImpl implements UserService {
         int result = userDao.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
-            userDao.create(user);
+            this.create(user);
         }
         return user;
     }
@@ -228,11 +216,34 @@ public class UserServiceImpl implements UserService {
         user.setAllowTalk(true);
         user.setState(true);
         user.setBuy(true);
-        int result = userDao.create(user);
+        int result = this.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
-            userDao.create(user);
+            this.create(user);
         }
         return user;
+    }
+    @Async
+    public void run(User user){
+
+        for(int i = 0; i < 3 ; i++ ){
+            HttpResult hr = null;
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mobile", user.getPhone());
+            params.put("userId", user.getUserId()+"");
+            params.put("content", JacksonUtil.toJSon(user));
+            String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
+            logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
+            try {
+                hr = HttpUtil.doPostForm(url,params);
+            } catch (Exception e) {
+                logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+            }
+            if(hr.getStatusCode() == 200){
+                return;
+            }
+
+        }
+
     }
 }

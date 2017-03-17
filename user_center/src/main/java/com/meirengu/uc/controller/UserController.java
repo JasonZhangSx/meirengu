@@ -7,6 +7,7 @@ import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
@@ -179,5 +180,16 @@ public class UserController extends BaseController{
         }
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
+
+    @RequestMapping(value = "verifyUser" ,method = RequestMethod.POST)
+    public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
+
+        User user = userService.retrieveByUserId(userId);
+        if(user != null){
+            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
+        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+    }
+
 
 }
