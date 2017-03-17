@@ -192,6 +192,39 @@ public class UserController extends BaseController{
         if(user != null){
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }
+        return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+    }
+
+    @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
+    public Result setPassword (@RequestParam(value = "token", required = true) String token,
+                               @RequestParam(value = "user_id", required = true) Integer userId,
+                               @RequestParam(value = "password", required = true) String password){
+        if(!StringUtil.isEmpty(token)){
+            //判断token是否有效
+            try{
+                RedisUtil redisUtil = new RedisUtil();
+                Object userRedis =   redisUtil.getObject(token);
+                if(!StringUtil.isEmpty(userRedis)){
+
+                    User user = userService.retrieveByUserId(userId);
+                    if(user != null){
+                        if("".equals(user.getPassword())){
+                            user.setPassword(password);
+                            userService.update(user);
+                            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                        }else{
+                            return super.setResult(StatusCode.USER_PASSWORD_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_PASSWORD_IS_EXITS));
+                        }
+                    }
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }else{
+                    //无效token返回登陆
+                    return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+                }
+            }catch (Exception e){
+                logger.info("LoginController.redis get token result:{}",e.getMessage());
+            }
+        }
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 }

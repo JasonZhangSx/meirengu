@@ -170,6 +170,8 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setAllowTalk(true);
         user.setState(true);
         user.setBuy(true);
+        user.setRegisterFrom(from);
+        user.setRegisterTime(new Date());
         int result = userDao.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
