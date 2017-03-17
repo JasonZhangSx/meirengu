@@ -26,8 +26,8 @@ public class RegisterPO {
         this.token = token;
     }
 
-    public RegisterPO() {
-    }
+//    public RegisterPO() {
+//    }
 
     public RegisterPO(User user, String token) {
         this.user = user;

@@ -85,13 +85,13 @@ public class LoginController extends BaseController {
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     //无效token返回登陆
-                    RegisterPO registerPO = new RegisterPO();
+                    RegisterPO registerPO = new RegisterPO(new User(),"");
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }catch (Exception e){
                 logger.info("LoginController.redis get token result:{}",e.getMessage());
             }
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.INVALID_ARGUMENT, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }else{
             //没有token 判断是否有openId
@@ -108,12 +108,12 @@ public class LoginController extends BaseController {
             }
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                RegisterPO registerPO = new RegisterPO();
+                RegisterPO registerPO = new RegisterPO(new User(),"");
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                         .MOBILE_FORMAT_ERROR));
             }
             if (checkCode == null && password == null) {
-                RegisterPO registerPO = new RegisterPO();
+                RegisterPO registerPO = new RegisterPO(new User(),"");
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get
                         (StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
@@ -125,7 +125,7 @@ public class LoginController extends BaseController {
                     RegisterPO registerPO = loginService.setUserToRedis(usr);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
-                    RegisterPO registerPO = new RegisterPO();
+                    RegisterPO registerPO = new RegisterPO(new User(),"");
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode                            .PASSWORD_IS_ERROR));
                 }
             }
@@ -140,19 +140,19 @@ public class LoginController extends BaseController {
                         return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                     }catch (Exception e){
                         logger.info(e.getMessage());
-                        RegisterPO registerPO = new RegisterPO();
+                        RegisterPO registerPO = new RegisterPO(new User(),"");
                         return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
                     }
                 }
                 //手机动态密码方式登录
                 CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
                 if (code == null) {
-                    RegisterPO registerPO = new RegisterPO();
+                    RegisterPO registerPO = new RegisterPO(new User(),"");
                     return super.setResult(StatusCode.CAPTCHA_INVALID, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                             .CAPTCHA_INVALID));
                 }
                 if (code.getExpireTime().compareTo(new Date()) < 0) {
-                    RegisterPO registerPO = new RegisterPO();
+                    RegisterPO registerPO = new RegisterPO(new User(),"");
                     return super.setResult(StatusCode.CAPTCHA_EXPIRE, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                             .CAPTCHA_EXPIRE));
                 }
@@ -164,7 +164,7 @@ public class LoginController extends BaseController {
                 RegisterPO registerPO = loginService.setUserToRedis(user);
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.INVALID_ARGUMENT, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
     }
@@ -184,24 +184,24 @@ public class LoginController extends BaseController {
     public Result register(RegisterVO registerVO){//inviter_phone
         //verify params
         if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
         if(!"".equals(registerVO.getMobile_inviter())){
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             if (StringUtils.isEmpty(registerVO.getMobile_inviter()) || !ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                         .MOBILE_FORMAT_ERROR));
             }
         }
         if (registerVO.getCheck_code() == null) {
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.CAPTCHA_INVALID, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                     .CAPTCHA_INVALID));
         }
         if (registerVO.getPassword() == null) {
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.PASSWORD_IS_ERROR, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get
                     (StatusCode.PASSWORD_IS_ERROR));
         }
@@ -209,7 +209,7 @@ public class LoginController extends BaseController {
         if(!"".equals(registerVO.getMobile_inviter())){
             User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
             if(StringUtil.isEmpty(userInviter)){
-                RegisterPO registerPO = new RegisterPO();
+                RegisterPO registerPO = new RegisterPO(new User(),"");
                 return super.setResult(StatusCode.USER_INVITER_IS_EXITS, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.USER_INVITER_IS_EXITS));
             }
         }
@@ -227,13 +227,13 @@ public class LoginController extends BaseController {
                     .CAPTCHA_INVALID));
         }
         if (code.getExpireTime().compareTo(new Date()) < 0) {
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.CAPTCHA_EXPIRE, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode
                     .CAPTCHA_EXPIRE));
         }
         try {
             User usr = userService.createUserInfo(registerVO);
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             registerPO.setUser(usr);
             String token = UuidUtils.getUuid();
             RedisUtil redisUtil = new RedisUtil();
@@ -242,7 +242,7 @@ public class LoginController extends BaseController {
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info(e.getMessage());
-            RegisterPO registerPO = new RegisterPO();
+            RegisterPO registerPO = new RegisterPO(new User(),"");
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

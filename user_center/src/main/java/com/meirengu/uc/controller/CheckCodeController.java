@@ -78,4 +78,33 @@ public class CheckCodeController extends BaseController {
         return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                 .CHECK_CODE_SEND_ERROR));
     }
+
+
+
+
+
+    @RequestMapping(value = "vitify_code", method = RequestMethod.POST)
+    public Result vitifyCode(@RequestParam(value = "mobile", required = true) String mobile,
+                         @RequestParam(value = "check_code", required = true) String checkCode) {
+        logger.info("CheckCodeController.vitifyCode params >> mobile:{}", mobile ,checkCode);
+        //verify params
+        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+            return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .MOBILE_FORMAT_ERROR));
+        }
+        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+        if (code == null) {
+            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                    .CAPTCHA_INVALID));
+        }
+        if (code.getExpireTime().compareTo(new Date()) < 0) {
+            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                    .CAPTCHA_EXPIRE));
+        }
+        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
+
+
+
 }
