@@ -115,7 +115,7 @@ public class ItemController extends BaseController {
             Item item = itemService.detail(itemId);
             return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            LOGGER.error(">> get item detail throw exception: {}", e);
+            LOGGER.error(">> get item cooperation detail throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -136,7 +136,7 @@ public class ItemController extends BaseController {
                 return super.setResult(StatusCode.ITEM_ERROR_UPDATE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_UPDATE));
             }
         }catch (Exception e){
-            LOGGER.error(">> update item throw exception: {}", e);
+            LOGGER.error(">> update item cooperation throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -152,7 +152,7 @@ public class ItemController extends BaseController {
                 return super.setResult(StatusCode.ITEM_ERROR_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_DELETE));
             }
         }catch (Exception e){
-            LOGGER.error(">> delete item throw exception: {}", e);
+            LOGGER.error(">> delete item cooperation throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

@@ -127,6 +127,10 @@
 		UPDATE <include refid="table_name" /> SET flag=0 WHERE item_id=#{id}
 	</update>
 
+	<update id="updateStatus" parameterType="item">
+		UPDATE <include refid="table_name" /> SET item_status=#{itemStatus} WHERE item_id=#{itemId}
+	</update>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />, completed_amount/target_amount as percent FROM <include refid="table_name" />
