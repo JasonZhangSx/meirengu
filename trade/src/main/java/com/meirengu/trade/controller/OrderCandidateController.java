@@ -7,6 +7,13 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.service.OrderCandidateService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 
 /**
  * 候补订单控制类
@@ -119,6 +126,18 @@ public class OrderCandidateController extends BaseController{
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    public static void main(String[] args) throws Exception{
+        Set<Integer> set = new HashSet<Integer>();
+        set.add(33);
+        set.add(66);
+        set.add(88);
+        System.out.println("转换前："+set.toString());
+        String str = StringUtils.join(set.toArray(), ";");
+        System.out.println("特殊数组转换："+str);
+
+
     }
 
 
