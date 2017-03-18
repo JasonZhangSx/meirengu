@@ -40,6 +40,7 @@ public class ItemLevelController extends BaseController{
                        @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value = "is_page", required = false) boolean isPage,
                        @RequestParam(value = "item_id", required = false) Integer itemId,
+                       @RequestParam(value = "level_id", required = false) String levelId,
                        @RequestParam(value = "sortby", required = false) String sortBy,
                        @RequestParam(value = "order", required = false) String order){
 
@@ -49,6 +50,7 @@ public class ItemLevelController extends BaseController{
         }
 
         Map<String, Object> map = new HashMap<>();
+        map.put("levelId", levelId);
         map.put("itemId", itemId);
         map.put("sortBy", sortBy);
         map.put("order", order);
