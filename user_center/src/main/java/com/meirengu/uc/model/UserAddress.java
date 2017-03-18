@@ -21,6 +21,63 @@ public class UserAddress extends BaseEntity{
 
     private Integer delFlag;
 
+    private Integer provinceId;
+    private Integer cityId;
+    private Integer areaId;
+
+    private String province;
+    private String city;
+    private String areas;
+
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
+    }
+
     public Integer getAddressId() {
         return addressId;
     }

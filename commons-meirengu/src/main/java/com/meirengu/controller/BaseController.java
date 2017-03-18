@@ -54,7 +54,7 @@ public class BaseController {
         if (code == 200 && (data != null && !"".equals(data))){
             result.setData(data);
         }else {
-            result.setData("");
+            //result.setData("");
         }
         LOGGER.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
