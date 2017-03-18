@@ -257,7 +257,7 @@ public class UserAddressController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "listAddress", method = {RequestMethod.POST})
+    @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
         List<UserAddress> userAddressPO = userAddressService.selectByAddIdArray(addressId);
         if(userAddressPO != null){
