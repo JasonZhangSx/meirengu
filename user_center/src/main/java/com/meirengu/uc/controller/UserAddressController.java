@@ -6,6 +6,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.service.UserAddressService;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.UuidUtils;
@@ -39,6 +40,9 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
+                                @RequestParam(value = "pid", required = true) Integer pid,
+                                @RequestParam(value = "city_id", required = true) Integer cityId,
+                                @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
         try{
@@ -59,6 +63,9 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserName(userName);
                 userAddressBean.setUserPhone(mobile);
                 userAddressBean.setDelFlag(1);
+                userAddressBean.setProvinceId(pid);
+                userAddressBean.setCityId(cityId);
+                userAddressBean.setAreaId(areaId);
                 userAddressBean.setDefault(isDefault);
                 int res = userAddressService.insert(userAddressBean);
                 if(res == 0){
@@ -86,6 +93,9 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
+                                @RequestParam(value = "pid", required = true) Integer pid,
+                                @RequestParam(value = "city_id", required = true) Integer cityId,
+                                @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
         try{
@@ -117,7 +127,9 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserName(userName);
                 userAddressBean.setDelFlag(1);
                 userAddressBean.setDefault(isDefault);
-
+                userAddressBean.setProvinceId(pid);
+                userAddressBean.setCityId(cityId);
+                userAddressBean.setAreaId(areaId);
                 int res = userAddressService.updateByAdressId(userAddressBean);
                 if(res == 0){
                     userAddressBean.setAddressId(UuidUtils.getShortUuid());
@@ -194,6 +206,38 @@ public class UserAddressController extends BaseController{
                     return super.setResult(StatusCode.OK, page,StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+                }
+            }else{
+                //无效token返回登陆
+                Page<UserAddress> page = new Page<>();
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, page, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            Page<UserAddress> page = new Page<>();
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "get", method = {RequestMethod.POST})
+    public Result list(@RequestParam(value="address_id", required = true) int addressId,
+                       @RequestParam(value="user_id", required = true) int userId,
+                       @RequestParam(value = "token", required = true) String token){
+
+        try{
+            RedisUtil redisUtil = new RedisUtil();
+            Object userRedis =   redisUtil.getObject(token);
+            if(!StringUtil.isEmpty(userRedis)){
+                UserAddress userAddress = new UserAddress();
+                userAddress.setUserId(userId);
+                userAddress.setAddressId(addressId);
+                UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
+                if(userAddressPO != null){
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
                 }
             }else{
                 //无效token返回登陆
