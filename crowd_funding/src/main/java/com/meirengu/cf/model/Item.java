@@ -20,6 +20,8 @@ public class Item  extends BaseObject {
 	private int classId;
 	/** 目标金额 */
 	private BigDecimal targetAmount;
+	 /** 预约金额 */
+	 private BigDecimal appointAmount;
 	/** 已筹金额 */
 	private BigDecimal completedAmount;
 	/** 预热天数 */
@@ -239,4 +241,11 @@ public class Item  extends BaseObject {
 		return sponsorName;
 	}
 
-}
+	 public BigDecimal getAppointAmount() {
+		 return appointAmount;
+	 }
+
+	 public void setAppointAmount(BigDecimal appointAmount) {
+		 this.appointAmount = appointAmount;
+	 }
+ }

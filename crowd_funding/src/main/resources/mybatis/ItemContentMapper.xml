@@ -22,20 +22,14 @@
 
 	<insert id="insert" parameterType="itemContent" useGeneratedKeys="true" keyProperty="contentId" >
 		INSERT INTO <include refid="table_name" />
-			(content_id, item_id, content_type, content_title, content_subtitle, content_info, content_sort, create_time, update_time, operate_account)
+			(content_id, item_id, content_type, content_title, content_subtitle, content_info, content_sort, create_time, operate_account)
 		VALUES
-			(#{contentId}, #{itemId}, #{contentType}, #{contentTitle}, #{contentSubtitle}, #{contentInfo}, #{contentSort}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{contentId}, #{itemId}, #{contentType}, #{contentTitle}, #{contentSubtitle}, #{contentInfo}, #{contentSort}, #{createTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="itemContent">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="contentId != null and contentId != ''">
-				content_id=#{contentId},
-			</if>
-			<if test="itemId != null and itemId != ''">
-				item_id=#{itemId},
-			</if>
 			<if test="contentType != null and contentType != ''">
 				content_type=#{contentType},
 			</if>
@@ -51,12 +45,6 @@
 			<if test="contentSort != null and contentSort != ''">
 				content_sort=#{contentSort},
 			</if>
-			<if test="createTime != null and createTime != ''">
-				create_time=#{createTime},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time=#{updateTime},
-			</if>
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},
 			</if>
@@ -71,13 +59,41 @@
 		where content_id=#{id}
 	</select>
 
+	<delete id="delete" parameterType="integer">
+		DELETE FROM <include refid="table_name" /> WHERE content_id=#{id}
+	</delete>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
+		<if test="contentType != null">
+			and content_type=#{contentType}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		content_sort asc, create_time desc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null">
+			and item_id=#{itemId}
+		</if>
+		<if test="contentType != null">
+			and content_type=#{contentType}
+		</if>
+		order by
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			#{sortBy} #{order},
+		</if>
+		content_sort asc, create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

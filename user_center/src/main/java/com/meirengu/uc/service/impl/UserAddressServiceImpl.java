@@ -7,6 +7,9 @@ import com.meirengu.uc.service.UserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by huoyan403 on 3/14/2017.
  */
@@ -52,6 +55,17 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
         userAddress.setDefault(true);
         userAddress.setDelFlag(0);
         return userAddressDao.selectByUserAddress(userAddress);
+    }
+
+    @Override
+    public List<UserAddress> selectByAddIdArray(String addressIds) {
+
+        List<String> list = new ArrayList<>();
+        String[] arr = addressIds.split(",");
+        for(String arr1 :arr){
+            list.add(arr1);
+        }
+        return userAddressDao.selectByAddIdList(list);
     }
 
 }

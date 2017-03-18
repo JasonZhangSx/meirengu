@@ -1,8 +1,6 @@
 package com.meirengu.cf.controller;
 
 import com.meirengu.cf.model.Item;
-import com.meirengu.cf.model.ItemClass;
-import com.meirengu.cf.service.ItemClassService;
 import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -15,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +113,7 @@ public class ItemController extends BaseController {
             Item item = itemService.detail(itemId);
             return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            LOGGER.error(">> get item detail throw exception: {}", e);
+            LOGGER.error(">> get item cooperation detail throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -136,7 +134,7 @@ public class ItemController extends BaseController {
                 return super.setResult(StatusCode.ITEM_ERROR_UPDATE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_UPDATE));
             }
         }catch (Exception e){
-            LOGGER.error(">> update item throw exception: {}", e);
+            LOGGER.error(">> update item cooperation throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -152,8 +150,49 @@ public class ItemController extends BaseController {
                 return super.setResult(StatusCode.ITEM_ERROR_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_DELETE));
             }
         }catch (Exception e){
-            LOGGER.error(">> delete item throw exception: {}", e);
+            LOGGER.error(">> delete item cooperation throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    /**
+     * 修改已筹总金额/预约总金额
+     * @param type  1已筹 2预约
+     * @param itemId
+     * @param levelId
+     * @param levelAmount
+     * @param itemNum
+     * @param totalAmount
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "change_amount", method = RequestMethod.POST)
+    public Result changeAmount(@RequestParam(value = "type", required = false) Integer type,
+                    @RequestParam(value = "item_id", required = false) Integer itemId,
+                    @RequestParam(value = "level_id", required = false) Integer levelId,
+                    @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
+                    @RequestParam(value = "item_num", required = false) Integer itemNum,
+                    @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount){
+
+        boolean flag = false;
+        try {
+
+            if(type == 1){
+                flag = itemService.changeAmount(itemId, levelAmount, levelId, itemNum, null, totalAmount);
+            }else if(type == 2){
+                flag = itemService.changeAmount(itemId, levelAmount, levelId, itemNum, totalAmount, null);
+            }else {
+                return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            }
+
+            if(flag){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 }
