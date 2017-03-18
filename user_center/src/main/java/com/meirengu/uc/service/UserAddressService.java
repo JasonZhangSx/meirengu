@@ -3,6 +3,8 @@ package com.meirengu.uc.service;
 import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.UserAddress;
 
+import java.util.List;
+
 /**
  * 地址增删改查
  * Created by huoyan403 on 3/14/2017.
@@ -36,4 +38,5 @@ public interface UserAddressService extends BaseService<UserAddress> {
      */
     UserAddress selectDefaultAddressByUserId(Integer userId);
 
+    List<UserAddress> selectByAddIdArray(String addressIds);
 }

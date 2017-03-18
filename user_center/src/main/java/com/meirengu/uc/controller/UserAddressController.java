@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -248,6 +249,21 @@ public class UserAddressController extends BaseController{
             logger.info("LoginController.redis get token result:{}",e.getMessage());
             Page<UserAddress> page = new Page<>();
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 提供给订单系统查询地址接口
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "listAddress", method = {RequestMethod.POST})
+    public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
+        List<UserAddress> userAddressPO = userAddressService.selectByAddIdArray(addressId);
+        if(userAddressPO != null){
+            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else{
+            return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
         }
     }
 }

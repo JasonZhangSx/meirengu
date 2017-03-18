@@ -53,6 +53,19 @@
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
     </if>
   </select>
+  <select id="selectByAddIdList" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />,p.province AS province,c.city AS city,area.area AS areas
+    from user_address  a
+    LEFT  JOIN  province p ON  a.province_id = p.provinceID
+    LEFT  JOIN  city c ON  a.city_id = c.cityID
+    LEFT  JOIN  area area ON  a.area_id = area.areaID
+    where 1 = 1  AND  delflag = 0
+    AND  address_id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
   <insert id="insert" parameterType="com.meirengu.uc.model.UserAddress">
     insert into user_address (address_id, user_id, user_name, 
       user_phone, user_address, is_default, 
