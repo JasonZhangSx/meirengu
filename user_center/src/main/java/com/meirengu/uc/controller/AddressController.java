@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,15 +26,15 @@ public class AddressController extends BaseController {
 
     @Autowired
     AddressService service;// 调用业务层方法
-    @RequestMapping("/showProvinceList")
+    @RequestMapping(value = "/showProvinceList" ,method = RequestMethod.GET)
     public Result showProvinceList(HttpServletRequest request, HttpServletResponse response) {
         return setResult(StatusCode.OK, service.showProvinceList(), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
-    @RequestMapping("/showCityListByPid")
+    @RequestMapping(value = "/showCityListByPid",method = RequestMethod.GET)
     public Result showCityListByPid(HttpServletRequest request, HttpServletResponse response, int pid) throws IOException {
         return setResult(StatusCode.OK, service.showCityListByPid(pid), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
-    @RequestMapping("/showAreasByCityId")
+    @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
     public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
         return setResult(StatusCode.OK, service.showAreaListBycid(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
     }

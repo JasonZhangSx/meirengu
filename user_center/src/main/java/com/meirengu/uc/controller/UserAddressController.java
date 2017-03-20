@@ -88,7 +88,7 @@ public class UserAddressController extends BaseController{
 
 
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequestMapping(value = "update", method = RequestMethod.PUT)
     public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "address_id", required = true) Integer addressId,
@@ -153,7 +153,7 @@ public class UserAddressController extends BaseController{
      * @param addressId
      * @return
      */
-    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public Result deleteAddress(@RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "token", required = true) String token){
 
