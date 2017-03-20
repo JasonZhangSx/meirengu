@@ -3,6 +3,7 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.RegisterPO;
 import com.meirengu.uc.service.LoginService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
@@ -29,7 +30,8 @@ public class LoginServiceImpl implements LoginService {
         //删除本次token  建立一个新的有效token
         redisUtil.delkeyObject(token);
         String newToken = UUID.randomUUID().toString().replace("-", "");
-        redisUtil.setObject(newToken,userRedis);
+        Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
+        redisUtil.setObject(newToken,userRedis,tokenTime);
         RegisterPO registerPO = new RegisterPO();
         registerPO.setToken(newToken);
         registerPO.setUser((User) userRedis);
@@ -43,7 +45,8 @@ public class LoginServiceImpl implements LoginService {
         registerPO.setUser(usr);
         String token1 = UuidUtils.getUuid();
         RedisUtil redisUtil = new RedisUtil();
-        redisUtil.setObject(token1,usr);
+        Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
+        redisUtil.setObject(token1,usr,tokenTime);
         registerPO.setToken(token1);
         return registerPO;
     }

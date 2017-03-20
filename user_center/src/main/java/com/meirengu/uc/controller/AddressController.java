@@ -38,10 +38,12 @@ public class AddressController extends BaseController {
         return setResult(StatusCode.OK, service.showAreaListBycid(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
-
-
-
-
-
-
+    /*@RequestMapping("/showProByCityId")
+    public Result showProByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
+        return setResult(StatusCode.OK, service.showProByCityId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+    @RequestMapping("/showProCityByAreaId")
+    public Result showProCityByAreaId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
+        return setResult(StatusCode.OK, service.showProCityByAreaId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }*/
 }

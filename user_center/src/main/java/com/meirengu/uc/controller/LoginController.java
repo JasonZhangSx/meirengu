@@ -219,9 +219,7 @@ public class LoginController extends BaseController {
             RegisterPO registerPO = new RegisterPO();
             registerPO.setUser(usr);
             String token = UuidUtils.getUuid();
-            RedisUtil redisUtil = new RedisUtil();
-            redisUtil.setObject(token,usr);
-            registerPO.setToken(token);
+            loginService.getNewToken(token,usr);
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info(e.getMessage());
