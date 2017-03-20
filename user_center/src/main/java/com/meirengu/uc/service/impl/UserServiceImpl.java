@@ -2,8 +2,8 @@ package com.meirengu.uc.service.impl;
 
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.service.AsyncService;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
@@ -31,8 +31,6 @@ public class UserServiceImpl extends Thread implements UserService {
 
     @Autowired
     UserDao userDao;
-    @Autowired
-    AsyncService asyncService;
 
     @Override
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -41,15 +39,14 @@ public class UserServiceImpl extends Thread implements UserService {
         int result = userDao.create(user);
         Thread t = Thread.currentThread();
         String name = t.getName();
-        logger.info("UserServiceImpl create Thread.name start :{}",name);
         if(result == 1){
-            asyncService.initPayAccount(user);
+            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user);
+            initPayAccountThread.run();
             return result;
         }else{
-            asyncService.initPayAccount(user);
+            logger.info("UserServiceImpl createUser failed :{}",user);
+            return 0;
         }
-        logger.info("UserServiceImpl create Thread.name end :{}",name);
-        return 0;
     }
 
     @Override
