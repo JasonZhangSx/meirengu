@@ -1,11 +1,11 @@
 package com.meirengu.uc.service.impl;
 
+import com.meirengu.common.TokenProccessor;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.RegisterPO;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.RedisUtil;
-import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
 
         RegisterPO registerPO = new RegisterPO();
         registerPO.setUser(usr);
-        String token1 = UuidUtils.getUuid();
+        String token1 = TokenProccessor.getInstance().makeToken();
         RedisUtil redisUtil = new RedisUtil();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
         redisUtil.setObject(token1,usr,tokenTime);

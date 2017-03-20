@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
 import com.meirengu.common.StatusCode;
+import com.meirengu.common.TokenProccessor;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
@@ -13,7 +14,6 @@ import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.utils.StringUtil;
-import com.meirengu.utils.UuidUtils;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -163,6 +163,11 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     public Result logout(){
+        //清空token
+        //清空redis
+        //清空推送别名
+
+
         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
@@ -218,7 +223,7 @@ public class LoginController extends BaseController {
             User usr = userService.createUserInfo(registerVO);
             RegisterPO registerPO = new RegisterPO();
             registerPO.setUser(usr);
-            String token = UuidUtils.getUuid();
+            String token = TokenProccessor.getInstance().makeToken();
             loginService.getNewToken(token,usr);
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){

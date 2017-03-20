@@ -35,8 +35,8 @@ public class AddressController extends BaseController {
         return setResult(StatusCode.OK, service.showCityListByPid(pid), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
     @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
-    public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
-        return setResult(StatusCode.OK, service.showAreaListBycid(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citys_id) throws IOException {
+        return setResult(StatusCode.OK, service.showAreaListBycid(citys_id), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     /*@RequestMapping("/showProByCityId")

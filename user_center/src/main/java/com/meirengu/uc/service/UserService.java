@@ -12,12 +12,6 @@ import com.meirengu.uc.vo.UserVO;
  */
 public interface UserService {
 
-    /**
-     * 新增会员
-     * @param user
-     * @return
-     */
-    int create(User user);
 
     /**
      * 修改会员

@@ -9,6 +9,7 @@ import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
+import com.meirengu.uc.vo.LegalizeVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -34,7 +35,8 @@ import java.util.Date;
 public class UserController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    @Autowired    UserService userService;
+    @Autowired
+    UserService userService;
     @Autowired
     CheckCodeService checkCodeService;
 
@@ -49,16 +51,15 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .MOBILE_FORMAT_ERROR));
                 }
-                if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
-                    return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .EMAIL_FORMAT_ERROR));
+                if(userVO.getEmail() != null&&!"".equals(userVO.getEmail())){
+                    if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
+                        return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                                .EMAIL_FORMAT_ERROR));
+                    }
                 }
                 int result = userService.updateUserInfo(userVO);
                 logger.error("UserController.updateUserInfo result << {}, result:{}", result);
-
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OK));
-
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
         }
         return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -72,7 +73,7 @@ public class UserController extends BaseController{
      * @param newPassword
      * @return
      */
-    @RequestMapping(value = "password/retrieve",method = RequestMethod.PUT)
+    @RequestMapping(value = "password/retrieve",method = RequestMethod.POST)
     public Result retrievePassword(@RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "check_code", required = true) String checkCode,
                                    @RequestParam(value = "new_password", required = true) String newPassword
@@ -120,7 +121,7 @@ public class UserController extends BaseController{
      * @param token
      * @return
      */
-    @RequestMapping(value = "password/modify",method = RequestMethod.PUT)
+    @RequestMapping(value = "password/modify",method = RequestMethod.POST)
     public Result modifyPassword(  @RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
@@ -169,7 +170,7 @@ public class UserController extends BaseController{
      * @param userId
      * @return
      */
-    @RequestMapping(value = "verifyUser" ,method = RequestMethod.POST)
+    @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
     public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
         User user = userService.retrieveByUserId(userId);
         if(user != null){
@@ -210,4 +211,14 @@ public class UserController extends BaseController{
         }
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
-}
+
+    @RequestMapping(value = "legalize", method = RequestMethod.POST)
+    public Result legalize(LegalizeVO legalizeVO) {
+
+
+
+        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+    }
+
+
+    }

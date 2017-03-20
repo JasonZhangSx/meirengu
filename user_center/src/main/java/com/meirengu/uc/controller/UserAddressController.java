@@ -153,7 +153,7 @@ public class UserAddressController extends BaseController{
      * @param addressId
      * @return
      */
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result deleteAddress(@RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "token", required = true) String token){
 
@@ -220,7 +220,6 @@ public class UserAddressController extends BaseController{
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
 
     @ResponseBody
     @RequestMapping(value = "get", method = {RequestMethod.POST})

@@ -4,6 +4,7 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
@@ -32,7 +33,6 @@ public class UserServiceImpl extends Thread implements UserService {
     @Autowired
     UserDao userDao;
 
-    @Override
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user){
 
@@ -156,7 +156,13 @@ public class UserServiceImpl extends Thread implements UserService {
 
         //创建用户
         User user = new User();
-        user.setAvatar(avatar);
+        if("".equals(avatar)){
+            String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
+            Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
+            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+        }else{
+            user.setAvatar(avatar);
+        }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(from);
         user.setLastLoginTime(new Date());
@@ -185,7 +191,13 @@ public class UserServiceImpl extends Thread implements UserService {
     public User createUserInfo(RegisterVO registerVO) {
         //创建用户
         User user = new User();
-        user.setAvatar(registerVO.getAvatar());
+        if("".equals(registerVO.getAvatar())) {
+            String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
+            Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
+            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+        }else{
+            user.setAvatar(registerVO.getAvatar());
+        }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(registerVO.getFrom());
         user.setLastLoginTime(new Date());

@@ -30,9 +30,9 @@ private static AtomicInteger InitId = new AtomicInteger();
         return Integer.valueOf(stringBuffer.toString());
     }
 
-    public static String getUuid(){
-        return UUID.randomUUID().toString().replace("-", "");
-    }
+//    public static String getUuid(){
+//        return UUID.randomUUID().toString().replace("-", "");
+//    }
     public static void main(String args[]){
         List<Integer> test01 = new ArrayList<Integer>();
         for(int i = 1; i<1000000; i++){
