@@ -5,6 +5,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ObjectUtils;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 会员控制类
@@ -220,5 +223,22 @@ public class UserController extends BaseController{
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
-
+    /**
+     * 获取头像
+     * @param userIds
+     * @return
+     */
+    @RequestMapping(value = "listUserAvatar", method = RequestMethod.GET)
+    public Result listUserAvatar(@RequestParam(value = "user_ids", required = true) String userIds) {
+        List<String> listUserIds = new ArrayList<>();
+        String[]  userId = userIds.split(",");
+        for (String id :userId){
+            listUserIds.add(id);
+        }
+        List<AvatarPO> user = userService.listUserAvatar(listUserIds);
+       return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
+
+
+
+}

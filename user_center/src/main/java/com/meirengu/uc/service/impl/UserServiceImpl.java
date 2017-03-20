@@ -2,6 +2,7 @@ package com.meirengu.uc.service.impl;
 
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.utils.ConfigUtil;
@@ -15,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 会员服务实现类
@@ -237,5 +236,19 @@ public class UserServiceImpl extends Thread implements UserService {
             this.create(user);
         }
         return user;
+    }
+
+    @Override
+    public List<AvatarPO> listUserAvatar(List<String> listUserIds) {
+
+        List<User> list =  userDao.listUserAvatar(listUserIds);
+        List<AvatarPO> avatarPOs = new ArrayList<>();
+        for(User user :list){
+            AvatarPO avatarPO = new AvatarPO();
+            avatarPO.setUserId(user.getUserId());
+            avatarPO.setAvatar(user.getAvatar());
+            avatarPOs.add(avatarPO);
+        }
+        return avatarPOs;
     }
 }

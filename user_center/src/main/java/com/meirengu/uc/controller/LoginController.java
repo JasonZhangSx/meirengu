@@ -96,7 +96,6 @@ public class LoginController extends BaseController {
             if(!StringUtil.isEmpty(wxOpenId)){
                 //如果有该用户直接登陆  没有的话返回code 去注册页面
 
-                //获取第三方用户昵称
             }
             if(!StringUtil.isEmpty(qqOpenId)){
 
