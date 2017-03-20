@@ -46,6 +46,8 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
+        logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,pid,cityId,areaId,isDefault);
+
         try{
             RedisUtil redisUtil = new RedisUtil();
             Object userRedis =   redisUtil.getObject(token);
