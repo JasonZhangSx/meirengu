@@ -72,7 +72,7 @@ public class UserController extends BaseController{
      * @param newPassword
      * @return
      */
-    @RequestMapping(value = "password/retrieve",method = RequestMethod.POST)
+    @RequestMapping(value = "password/retrieve",method = RequestMethod.PUT)
     public Result retrievePassword(@RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "check_code", required = true) String checkCode,
                                    @RequestParam(value = "new_password", required = true) String newPassword
@@ -120,7 +120,7 @@ public class UserController extends BaseController{
      * @param token
      * @return
      */
-    @RequestMapping(value = "password/modify",method = RequestMethod.POST)
+    @RequestMapping(value = "password/modify",method = RequestMethod.PUT)
     public Result modifyPassword(  @RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "old_password", required = true) String oldPassword,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
