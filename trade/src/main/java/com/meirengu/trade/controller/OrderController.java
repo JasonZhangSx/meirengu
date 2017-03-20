@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 订单控制类
@@ -301,6 +299,57 @@ public class OrderController extends BaseController{
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    /**
+     * 后台订单列表
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param orderSn
+     * @param userPhone
+     * @param itemName
+     * @param orderState
+     * @return
+     */
+    @RequestMapping(value = "/system", method = RequestMethod.GET)
+    public Result getSystemPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                                @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                                @RequestParam(value = "sort_by", required = false) String sortBy,
+                                @RequestParam(value = "order", required = false) String order,
+                                @RequestParam(value = "order_sn", required = false) String orderSn,
+                                @RequestParam(value = "user_phone", required = false) String userPhone,
+                                @RequestParam(value = "item_name", required = false) String itemName,
+                                @RequestParam(value = "order_state", required = false) String orderState){
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderSn", orderSn);
+        map.put("userPhone", userPhone);
+        map.put("itemName", itemName);
+        map.put("orderState", orderState);
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+
+        Page page = new Page();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = orderService.getSystemPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+
+    }
+
+    public static void main(String[] args){
+        Set<Integer> sets = new HashSet<Integer>();
+        sets.add(1);
+        sets.add(2);
+        String a = sets.toString();
+        System.out.print(a.substring(a.indexOf("[")+1,a.indexOf("]")));
     }
 
 }

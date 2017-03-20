@@ -9,6 +9,7 @@
 		<result column="type_id" property="typeId" jdbcType="INTEGER" javaType="int"/>
 		<result column="class_id" property="classId" jdbcType="INTEGER" javaType="int"/>
 		<result column="target_amount" property="targetAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="appoint_amount" property="appointAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
 		<result column="completed_amount" property="completedAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
 		<result column="preheating_days" property="preheatingDays" jdbcType="SMALLINT" javaType="int"/>
 		<result column="preheating_start_time" property="preheatingStartTime" jdbcType="DATE" javaType="Date"/>
@@ -30,7 +31,7 @@
 
 	<sql id="table_name">item</sql>
 	<sql id="select_columns">
-		item_id as itemId, item_name as itemName, item_profile as itemProfile, type_id as typeId, class_id as classId, target_amount as targetAmount, completed_amount as completedAmount, preheating_days as preheatingDays, preheating_start_time as preheatingStartTime, preheating_end_time as preheatingEndTime, crowd_days as crowdDays, crowd_start_time as crowdStartTime, crowd_end_time as crowdEndTime, partner_id as partnerId, area_id as areaId, header_image as headerImage, item_status as itemStatus, flag as flag, item_sort as itemSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount, sponsor_name as sponsorName
+		item_id as itemId, item_name as itemName, item_profile as itemProfile, type_id as typeId, class_id as classId, target_amount as targetAmount, appoint_amount as appointAmount, completed_amount as completedAmount, preheating_days as preheatingDays, preheating_start_time as preheatingStartTime, preheating_end_time as preheatingEndTime, crowd_days as crowdDays, crowd_start_time as crowdStartTime, crowd_end_time as crowdEndTime, partner_id as partnerId, area_id as areaId, header_image as headerImage, item_status as itemStatus, flag as flag, item_sort as itemSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount, sponsor_name as sponsorName
 	</sql>
 
 	<insert id="insert" parameterType="item" useGeneratedKeys="true" keyProperty="itemId" >
@@ -131,9 +132,22 @@
 		UPDATE <include refid="table_name" /> SET item_status=#{itemStatus} WHERE item_id=#{itemId}
 	</update>
 
+	<update id="changeAmount" parameterType="item">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="completedAmount != null">
+				completed_amount=completed_amount+#{completedAmount},
+			</if>
+			<if test="appointAmount != null">
+				appoint_amount=appoint_amount+#{appointAmount},
+			</if>
+		</set>
+		WHERE item_id=#{itemId}
+	</update>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />, completed_amount/target_amount as percent FROM <include refid="table_name" />
+		select <include refid="select_columns" />, completed_amount/target_amount as completedPercent, appoint_amount/target_amount as appointPercent FROM <include refid="table_name" />
 		where 1=1
 		<if test="itemId != null">
 			and item_id=#{itemId}
@@ -142,7 +156,7 @@
 			and item_name like '%${itemName}%'
 		</if>
 		<if test="itemStatus != null and itemStatus != ''">
-			and item_status in (#{itemStatus})
+			and item_status in (${itemStatus})
 		</if>
 		<if test="flag != null">
 			and flag=#{flag}
@@ -164,7 +178,7 @@
 			and item_name like '%${itemName}%'
 		</if>
 		<if test="itemStatus != null and itemStatus != ''">
-			and item_status in (#{itemStatus})
+			and item_status in (${itemStatus})
 		</if>
 		<if test="flag != null">
 			and flag=#{flag}

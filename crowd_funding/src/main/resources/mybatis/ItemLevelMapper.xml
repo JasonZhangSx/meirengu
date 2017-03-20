@@ -125,6 +125,9 @@
 		<if test="itemId != null">
 			and item_id=#{itemId}
 		</if>
+		<if test="levelId != null and levelId != ''">
+			and level_id in (${levelId})
+		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
 			#{sortBy} #{order},
@@ -137,6 +140,9 @@
 		where 1=1
 		<if test="itemId != null">
 			and item_id=#{itemId}
+		</if>
+		<if test="levelId != null and levelId != ''">
+			and level_id in (${levelId})
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">

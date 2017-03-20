@@ -239,9 +239,9 @@
             </properties>
         </profile>
         <profile>
-            <id>pre-product</id>
+            <id>pre</id>
             <properties>
-                <env>pre-product</env>
+                <env>pre</env>
             </properties>
         </profile>
         <profile>

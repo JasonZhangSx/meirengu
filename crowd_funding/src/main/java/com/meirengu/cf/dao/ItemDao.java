@@ -9,4 +9,6 @@ import com.meirengu.dao.BaseDao;
 public interface ItemDao extends BaseDao<Item>{
 
     int updateStatus(Item item);
+
+    int changeAmount(Item item);
 }
