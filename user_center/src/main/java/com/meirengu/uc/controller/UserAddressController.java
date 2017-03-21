@@ -46,6 +46,7 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
+        logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,pid,cityId,areaId,isDefault);
         try{
             RedisUtil redisUtil = new RedisUtil();
             Object userRedis =   redisUtil.getObject(token);
@@ -87,7 +88,7 @@ public class UserAddressController extends BaseController{
 
 
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequestMapping(value = "update", method = RequestMethod.PUT)
     public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "address_id", required = true) Integer addressId,
@@ -219,7 +220,6 @@ public class UserAddressController extends BaseController{
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
 
     @ResponseBody
     @RequestMapping(value = "get", method = {RequestMethod.POST})

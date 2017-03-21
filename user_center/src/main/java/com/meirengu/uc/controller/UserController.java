@@ -5,10 +5,12 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
+import com.meirengu.uc.vo.LegalizeVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -21,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 会员控制类
@@ -34,7 +38,8 @@ import java.util.Date;
 public class UserController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    @Autowired    UserService userService;
+    @Autowired
+    UserService userService;
     @Autowired
     CheckCodeService checkCodeService;
 
@@ -49,16 +54,15 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .MOBILE_FORMAT_ERROR));
                 }
-                if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
-                    return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .EMAIL_FORMAT_ERROR));
+                if(userVO.getEmail() != null&&!"".equals(userVO.getEmail())){
+                    if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
+                        return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                                .EMAIL_FORMAT_ERROR));
+                    }
                 }
                 int result = userService.updateUserInfo(userVO);
                 logger.error("UserController.updateUserInfo result << {}, result:{}", result);
-
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OK));
-
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
         }
         return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -83,8 +87,8 @@ public class UserController extends BaseController{
                     .MOBILE_FORMAT_ERROR));
         }
          if (newPassword == null) {
-            return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                    (StatusCode.PASSWORD_IS_ERROR));
+            return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                    (StatusCode.PASSWORD_IS_MALFORMED));
         }
         //验证手机号是否注册
         User user = userService.retrieveByPhone(mobile);
@@ -131,8 +135,8 @@ public class UserController extends BaseController{
             Object userRedis =   redisUtil.getObject(token);
             if(!StringUtil.isEmpty(userRedis)){
                 if (newPassword == null || oldPassword ==null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_ERROR));
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
                 }
                 //验证手机号是否注册
                 User user = userService.retrieveByPhone(mobile);
@@ -140,11 +144,16 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }
                 if (oldPassword == null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_ERROR));
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
                 }
-                User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
-                if(usr == null || StringUtil.isEmpty(usr.getUserId())){
+                User usr = userService.retrieveByPhone(mobile);
+                //User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
+                if(usr == null){
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
+                            .USER_NOT_EXITS));
+                }
+                if(!oldPassword.equals(usr.getPassword())){
                     return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .OLD_PASSWORD_IS_ERROR));
                 }
@@ -169,7 +178,7 @@ public class UserController extends BaseController{
      * @param userId
      * @return
      */
-    @RequestMapping(value = "verifyUser" ,method = RequestMethod.POST)
+    @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
     public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
         User user = userService.retrieveByUserId(userId);
         if(user != null){
@@ -210,4 +219,31 @@ public class UserController extends BaseController{
         }
         return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
+
+    @RequestMapping(value = "legalize", method = RequestMethod.POST)
+    public Result legalize(LegalizeVO legalizeVO) {
+
+
+
+        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+    }
+
+    /**
+     * 获取头像
+     * @param userIds
+     * @return
+     */
+    @RequestMapping(value = "listUserAvatar", method = RequestMethod.GET)
+    public Result listUserAvatar(@RequestParam(value = "user_ids", required = true) String userIds) {
+        List<String> listUserIds = new ArrayList<>();
+        String[]  userId = userIds.split(",");
+        for (String id :userId){
+            listUserIds.add(id);
+        }
+        List<AvatarPO> user = userService.listUserAvatar(listUserIds);
+       return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
+
+
 }

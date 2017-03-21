@@ -118,6 +118,28 @@
 		DELETE FROM <include refid="table_name" /> WHERE level_id=#{id}
 	</delete>
 
+	<update id="updateNumber" parameterType="itemLevel">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="bookNumber != null">
+				book_number=#{bookNumber},
+			</if>
+			<if test="completedNumber != null">
+				completed_number=#{completedNumber},
+			</if>
+			<if test="levelStatus != null">
+				level_status=#{levelStatus}
+			</if>
+		</set>
+		WHERE level_id=#{levelId}
+		<if test="bookNumber != null">
+			and total_number-book_number>0
+		</if>
+		<if test="completedNumber != null">
+			and total_number-completed_number>0
+		</if>
+	</update>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
