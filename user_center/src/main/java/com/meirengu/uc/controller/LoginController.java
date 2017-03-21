@@ -112,19 +112,19 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get
                         (StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
+            User user = userService.retrieveByPhone(mobile);
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
-                //todo 手机密码方式登录TO-DO
-                User usr = userService.verifyByPasswordAndPhone(mobile,password);
-                if(usr != null){
-                    userService.updateUserInfo(usr, mobile, ip, from);
-                    RegisterPO registerPO = loginService.setUserToRedis(usr);
+                //todo 手机密码方式登录TO-DO   对用户输入密码加密后
+                //User usr = userService.verifyByPasswordAndPhone(mobile,password);
+                if(user != null && password.equals(user.getPassword())){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterPO registerPO = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
-                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode                            .PASSWORD_IS_ERROR));
+                    return super.setResult(StatusCode.INVALID_USERNAME_OR_PASSWORD, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_USERNAME_OR_PASSWORD));
                 }
             }
             if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
-                User user = userService.retrieveByPhone(mobile);
                 if(user==null || StringUtil.isEmpty(user.getUserId())){
                     try {
                         //用户为空则注册一个
@@ -182,22 +182,22 @@ public class LoginController extends BaseController {
             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .MOBILE_FORMAT_ERROR));
         }
-        if(!"".equals(registerVO.getMobile_inviter())){
-            if (StringUtils.isEmpty(registerVO.getMobile_inviter()) || !ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
+        if(!StringUtils.isEmpty(registerVO.getMobile_inviter())){
+            if (ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                         .MOBILE_FORMAT_ERROR));
             }
         }
-        if (registerVO.getCheck_code() == null) {
+        if (StringUtil.isEmpty(registerVO.getCheck_code())) {
             return super.setResult(StatusCode.CAPTCHA_INVALID,null, StatusCode.codeMsgMap.get(StatusCode
                     .CAPTCHA_INVALID));
         }
-        if (registerVO.getPassword() == null) {
-            return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                    (StatusCode.PASSWORD_IS_ERROR));
+        if (StringUtil.isEmpty(registerVO.getPassword()) && ValidatorUtil.isPassword(registerVO.getPassword())) {
+            return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                    (StatusCode.PASSWORD_IS_MALFORMED));
         }
         //查看邀请人手机号是否注册
-        if(!"".equals(registerVO.getMobile_inviter())){
+        if(!StringUtil.isEmpty(registerVO.getMobile_inviter())){
             User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
             if(StringUtil.isEmpty(userInviter)){
                 return super.setResult(StatusCode.USER_INVITER_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_INVITER_IS_NOT_EXITS));

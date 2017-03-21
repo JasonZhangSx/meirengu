@@ -46,7 +46,8 @@ public class StatusCode {
     public static final int TOKEN_IS_TIMEOUT = 40101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 40102;
     public static final int EMAIL_FORMAT_ERROR = 40103;
-
+    public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
+    public static final int PASSWORD_IS_MALFORMED = 40105;
     //40200-40300//news_cms
 
     //40300-40400//medical_beauty
@@ -221,6 +222,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.TOKEN_IS_TIMEOUT, "token已失效 ");
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
         codeMsgMap.put(StatusCode.EMAIL_FORMAT_ERROR, "邮箱格式错误");
+        codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
+        codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty

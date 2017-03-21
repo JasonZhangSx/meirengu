@@ -87,8 +87,8 @@ public class UserController extends BaseController{
                     .MOBILE_FORMAT_ERROR));
         }
          if (newPassword == null) {
-            return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                    (StatusCode.PASSWORD_IS_ERROR));
+            return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                    (StatusCode.PASSWORD_IS_MALFORMED));
         }
         //验证手机号是否注册
         User user = userService.retrieveByPhone(mobile);
@@ -135,8 +135,8 @@ public class UserController extends BaseController{
             Object userRedis =   redisUtil.getObject(token);
             if(!StringUtil.isEmpty(userRedis)){
                 if (newPassword == null || oldPassword ==null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_ERROR));
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
                 }
                 //验证手机号是否注册
                 User user = userService.retrieveByPhone(mobile);
@@ -144,8 +144,8 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }
                 if (oldPassword == null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_ERROR));
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
                 }
                 User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
                 if(usr == null || StringUtil.isEmpty(usr.getUserId())){
