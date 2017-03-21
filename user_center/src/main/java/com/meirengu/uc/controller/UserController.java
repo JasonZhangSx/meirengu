@@ -147,8 +147,13 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_MALFORMED));
                 }
-                User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
-                if(usr == null || StringUtil.isEmpty(usr.getUserId())){
+                User usr = userService.retrieveByPhone(mobile);
+                //User usr = userService.verifyByPasswordAndPhone(mobile,oldPassword);
+                if(usr == null){
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
+                            .USER_NOT_EXITS));
+                }
+                if(!oldPassword.equals(usr.getPassword())){
                     return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .OLD_PASSWORD_IS_ERROR));
                 }

@@ -63,13 +63,13 @@ public class UserServiceImpl extends Thread implements UserService {
         return userDao.retrieveByPhone(phone);
     }
 
-    @Override
-    public User verifyByPasswordAndPhone(String mobile, String password) {
-        Map<String,String> map = new HashMap<>();
-        map.put("phone",mobile);
-        map.put("password",password);
-        return userDao.verifyByPasswordAndPhone(map);
-    }
+//    @Override
+//    public User verifyByPasswordAndPhone(String mobile, String password) {
+//        Map<String,String> map = new HashMap<>();
+//        map.put("phone",mobile);
+//        map.put("password",password);
+//        return userDao.verifyByPasswordAndPhone(map);
+//    }
 
     @Override
     public int updateUserInfo(UserVO userVO) {

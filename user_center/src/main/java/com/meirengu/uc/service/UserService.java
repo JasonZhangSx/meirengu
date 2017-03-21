@@ -39,11 +39,9 @@ public interface UserService {
 
     /**
      * 根据手机号和密码用户是否存在
-     * @param mobile
-     * @param password
      * @return
      */
-    User verifyByPasswordAndPhone(String mobile,String password);
+//    User verifyByPasswordAndPhone(String mobile,String password);
 
     int updateUserInfo(UserVO userVO);
 
