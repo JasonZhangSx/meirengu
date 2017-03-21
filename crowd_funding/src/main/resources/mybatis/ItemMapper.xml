@@ -126,11 +126,8 @@
 	</update>
 
 	<select id="detail" parameterType="integer" resultType="item">
-		select <include refid="select_columns" />,
-		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
-		t1.type_name as typeName
+		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),crowd_end_time) as leavelDay
 		FROM <include refid="table_name" />
-		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where item_id=#{id}
 	</select>
 
@@ -157,7 +154,7 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />,
+		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),crowd_end_time) as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
 		t1.type_name as typeName
 		FROM <include refid="table_name" />
