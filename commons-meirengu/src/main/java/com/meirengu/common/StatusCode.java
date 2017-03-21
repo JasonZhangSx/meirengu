@@ -146,6 +146,14 @@ public class StatusCode {
     public static final int ITEM_INTERESTED_ERROR_DELETE = 50517;
     public static final int ITEM_BE_INTERESTED = 50518;
     public static final int ITEM_NOT_BE_INTERESTED = 50519;
+    public static final int ITEM_LEVEL_APPOINT_FULL = 50520;
+    public static final int ITEM_LEVEL_COMPLETED = 50521;
+    public static final int ITEM_LEVEL_NULL = 50522;
+    public static final int ITEM_LEVEL_AMOUNT_NOT_MATCH = 50523;
+    public static final int ITEM_APPOINT_NUM_NOT_ENOUGH = 50524;
+    public static final int ITEM_BUY_NUM_NOT_ENOUGH = 50525;
+    public static final int ITEM_LEVEL_TOTAL_AMOUNT_ERROR = 50526;
+
     //50600-50700//payment
 
     //50700-50750//sms
@@ -315,6 +323,13 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "感兴趣项目删除失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "已设置对该项目感兴趣");
         codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "已取消对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_COMPLETED, "该档位已完成");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NULL, "档位信息为空");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH, "参数档位金额与该档位金额不一致");
+        codeMsgMap.put(StatusCode.ITEM_APPOINT_NUM_NOT_ENOUGH, "档位可预约数量不足");
+        codeMsgMap.put(StatusCode.ITEM_BUY_NUM_NOT_ENOUGH, "档位可购买数量不足");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
