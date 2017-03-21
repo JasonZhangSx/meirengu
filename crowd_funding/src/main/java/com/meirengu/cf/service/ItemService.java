@@ -14,7 +14,7 @@ public interface ItemService extends BaseService<Item>{
 
     int updateStatus(Item item);
 
-    boolean changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
+    int changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
 
     Map<String, Object> moreDetail(int id);
 }
