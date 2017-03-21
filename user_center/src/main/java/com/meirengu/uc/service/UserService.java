@@ -1,8 +1,11 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
+
+import java.util.List;
 
 /**
  * 会员服务接口类
@@ -12,12 +15,6 @@ import com.meirengu.uc.vo.UserVO;
  */
 public interface UserService {
 
-    /**
-     * 新增会员
-     * @param user
-     * @return
-     */
-    int create(User user);
 
     /**
      * 修改会员
@@ -57,4 +54,6 @@ public interface UserService {
     User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar);
 
     User createUserInfo(RegisterVO registerVO);
+
+    List<AvatarPO> listUserAvatar(List<String> listUserIds);
 }

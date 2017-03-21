@@ -4,15 +4,18 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.service.AddressService;
+import com.meirengu.uc.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by huoyan403 on 3/18/2017.
@@ -25,23 +28,25 @@ public class AddressController extends BaseController {
 
     @Autowired
     AddressService service;// 调用业务层方法
-    @RequestMapping("/showProvinceList")
-    public Result showProvinceList(HttpServletRequest request, HttpServletResponse response) {
-        return setResult(StatusCode.OK, service.showProvinceList(), StatusCode.codeMsgMap.get(StatusCode.OK));
+    @RequestMapping(value = "/showProvinceList" ,method = RequestMethod.GET)
+    public Result showProvinceList(HttpServletRequest request, HttpServletResponse respons) {
+        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
-    @RequestMapping("/showCityListByPid")
+    @RequestMapping(value = "/showCityListByPid",method = RequestMethod.GET)
     public Result showCityListByPid(HttpServletRequest request, HttpServletResponse response, int pid) throws IOException {
-        return setResult(StatusCode.OK, service.showCityListByPid(pid), StatusCode.codeMsgMap.get(StatusCode.OK));
+        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
-    @RequestMapping("/showAreasByCityId")
-    public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
-        return setResult(StatusCode.OK, service.showAreaListBycid(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
+    public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citys_id) throws IOException {
+        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
-
-
-
-
-
-
+    /*@RequestMapping("/showProByCityId")
+    public Result showProByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
+        return setResult(StatusCode.OK, service.showProByCityId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+    @RequestMapping("/showProCityByAreaId")
+    public Result showProCityByAreaId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
+        return setResult(StatusCode.OK, service.showProCityByAreaId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }*/
 }

@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
 import com.meirengu.common.StatusCode;
+import com.meirengu.common.TokenProccessor;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
@@ -13,7 +14,6 @@ import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.utils.StringUtil;
-import com.meirengu.utils.UuidUtils;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -96,7 +96,6 @@ public class LoginController extends BaseController {
             if(!StringUtil.isEmpty(wxOpenId)){
                 //如果有该用户直接登陆  没有的话返回code 去注册页面
 
-                //获取第三方用户昵称
             }
             if(!StringUtil.isEmpty(qqOpenId)){
 
@@ -163,6 +162,11 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     public Result logout(){
+        //清空token
+        //清空redis
+        //清空推送别名
+
+
         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
@@ -218,10 +222,8 @@ public class LoginController extends BaseController {
             User usr = userService.createUserInfo(registerVO);
             RegisterPO registerPO = new RegisterPO();
             registerPO.setUser(usr);
-            String token = UuidUtils.getUuid();
-            RedisUtil redisUtil = new RedisUtil();
-            redisUtil.setObject(token,usr);
-            registerPO.setToken(token);
+            String token = TokenProccessor.getInstance().makeToken();
+            loginService.getNewToken(token,usr);
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info(e.getMessage());

@@ -2,25 +2,21 @@ package com.meirengu.uc.service.impl;
 
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
-import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.HttpUtil.HttpResult;
-import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.UuidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 会员服务实现类
@@ -36,19 +32,20 @@ public class UserServiceImpl extends Thread implements UserService {
     @Autowired
     UserDao userDao;
 
-    @Override
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user){
 
         int result = userDao.create(user);
+        Thread t = Thread.currentThread();
+        String name = t.getName();
         if(result == 1){
-            this.run(user);
+            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user);
+            initPayAccountThread.run();
             return result;
         }else{
-            userDao.create(user);
-            this.run(user);
+            logger.info("UserServiceImpl createUser failed :{}",user);
+            return 0;
         }
-        return 0;
     }
 
     @Override
@@ -158,7 +155,13 @@ public class UserServiceImpl extends Thread implements UserService {
 
         //创建用户
         User user = new User();
-        user.setAvatar(avatar);
+        if("".equals(avatar)){
+            String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
+            Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
+            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+        }else{
+            user.setAvatar(avatar);
+        }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(from);
         user.setLastLoginTime(new Date());
@@ -187,7 +190,13 @@ public class UserServiceImpl extends Thread implements UserService {
     public User createUserInfo(RegisterVO registerVO) {
         //创建用户
         User user = new User();
-        user.setAvatar(registerVO.getAvatar());
+        if("".equals(registerVO.getAvatar())) {
+            String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
+            Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
+            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+        }else{
+            user.setAvatar(registerVO.getAvatar());
+        }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(registerVO.getFrom());
         user.setLastLoginTime(new Date());
@@ -228,27 +237,18 @@ public class UserServiceImpl extends Thread implements UserService {
         }
         return user;
     }
-    @Async
-    public void run(User user){
 
-        for(int i = 0; i < 3 ; i++ ){
-            HttpResult hr = null;
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mobile", user.getPhone());
-            params.put("userId", user.getUserId()+"");
-            params.put("content", JacksonUtil.toJSon(user));
-            String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
-            logger.info("UserServiceImpl.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
-            try {
-                hr = HttpUtil.doPostForm(url,params);
-            } catch (Exception e) {
-                logger.error("CheckCodeServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
-            }
-            if(hr.getStatusCode() == 200){
-                return;
-            }
+    @Override
+    public List<AvatarPO> listUserAvatar(List<String> listUserIds) {
 
+        List<User> list =  userDao.listUserAvatar(listUserIds);
+        List<AvatarPO> avatarPOs = new ArrayList<>();
+        for(User user :list){
+            AvatarPO avatarPO = new AvatarPO();
+            avatarPO.setUserId(user.getUserId());
+            avatarPO.setAvatar(user.getAvatar());
+            avatarPOs.add(avatarPO);
         }
-
+        return avatarPOs;
     }
 }
