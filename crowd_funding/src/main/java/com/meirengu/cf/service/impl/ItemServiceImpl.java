@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Item服务实现层 
@@ -86,6 +87,11 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             LOGGER.error(errorMsg, e);
             throw new BusinessException(errorMsg, e);
         }
+    }
+
+    @Override
+    public Map<String, Object> moreDetail(int id) {
+        return itemDao.moreDetail(id);
     }
 
 }

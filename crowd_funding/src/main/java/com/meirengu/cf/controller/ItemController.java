@@ -3,6 +3,7 @@ package com.meirengu.cf.controller;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.service.ItemInterestedService;
 import com.meirengu.cf.service.ItemService;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +80,14 @@ public class ItemController extends BaseController {
             page.setPageNow(pageNum);
             page.setPageSize(pageSize);
             page = itemService.getListByPage(page, map);
+            List<Map<String, Object>> list = page.getList();
+            List<Map<String, Object>> resultList = new ArrayList<>();
+            for (Map<String, Object> resultMap : list){
+                resultMap.put("privince", "北京市");
+                resultMap.put("city", "朝阳区");
+                resultList.add(resultMap);
+            }
+            page.setList(resultList);
             return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
             List<Map<String, Object>> list = itemService.getList(map);
@@ -116,21 +126,20 @@ public class ItemController extends BaseController {
     public Result detail(@PathVariable(value = "item_id", required = false)int itemId,
                          @RequestParam(value = "user_id", required = false)int userId){
         try {
-            Item item = itemService.detail(itemId);
-            Map<String, Object> beanMap = ObjectUtils.bean2Map(item);
-            if(userId != 0 && item != null){
+            Map<String, Object> beanMap = itemService.moreDetail(itemId);
+            if(userId != 0 && beanMap != null){
                 //是否感兴趣
                 boolean b = itemInterestedService.isBeInterested(itemId, userId);
                 beanMap.put("isInterested", b);
             }else {
                 beanMap.put("isInterested", null);
             }
-            if(item != null){
+            if(beanMap != null){
                 beanMap.put("privince", "北京市");
                 beanMap.put("city", "朝阳区");
             }
 
-            return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, beanMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             LOGGER.error(">> get item cooperation detail throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
