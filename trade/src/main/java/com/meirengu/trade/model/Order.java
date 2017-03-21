@@ -43,6 +43,8 @@ public class Order{
 	private Date createTime;
 	/** 订单类型 1.普通 2.其他 */
 	private Integer orderType;
+	/** 支付方式,0:余额，1：第三方 */
+	private Integer paymentMethod;
 	/** 订单编号，外部支付时使用，有些外部支付系统要求特定的订单编号 */
 	private String outSn;
 	/** 订单完成时间 */
@@ -207,6 +209,10 @@ public class Order{
 	public Integer getOrderType(){
 		return orderType;
 	}
+
+	public void setPaymentMethod(Integer paymentMethod){  this.paymentMethod = paymentMethod; }
+
+	public Integer getPaymentMethod(){ return paymentMethod; }
 
 	public void setOutSn(String outSn){
 		this.outSn = outSn;

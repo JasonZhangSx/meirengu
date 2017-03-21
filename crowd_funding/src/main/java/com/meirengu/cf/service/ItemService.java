@@ -3,6 +3,7 @@ import com.meirengu.cf.model.Item;
 import com.meirengu.service.BaseService;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Item服务接口 
@@ -13,5 +14,7 @@ public interface ItemService extends BaseService<Item>{
 
     int updateStatus(Item item);
 
-    boolean changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
+    int changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
+
+    Map<String, Object> moreDetail(int id);
 }

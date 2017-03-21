@@ -8,4 +8,6 @@ import com.meirengu.service.BaseService;
  * @create Wed Mar 15 10:41:25 CST 2017
  */
 public interface ItemLevelService extends BaseService<ItemLevel>{
+
+    int updateNumber(ItemLevel itemLevel);
 }

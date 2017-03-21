@@ -7,4 +7,6 @@ import com.meirengu.dao.BaseDao;
  * @create Wed Mar 15 10:41:25 CST 2017
  */
 public interface ItemLevelDao extends BaseDao<ItemLevel>{
+
+    int updateNumber(ItemLevel itemLevel);
 }

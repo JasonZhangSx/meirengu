@@ -1,4 +1,6 @@
 package com.meirengu.cf.service.impl;
+import com.meirengu.cf.dao.ItemDao;
+import com.meirengu.cf.dao.ItemLevelDao;
 import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.cf.service.ItemLevelService;
 import com.meirengu.cf.service.ItemService;
@@ -15,7 +17,11 @@ import org.springframework.stereotype.Service;
 public class ItemLevelServiceImpl extends BaseServiceImpl<ItemLevel> implements ItemLevelService{
 
     @Autowired
-    ItemService itemService;
+    ItemLevelDao itemLevelDao;
 
 
+    @Override
+    public int updateNumber(ItemLevel itemLevel) {
+        return itemLevelDao.updateNumber(itemLevel);
+    }
 }

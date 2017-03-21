@@ -1,6 +1,9 @@
 package com.meirengu.cf.dao;
 import com.meirengu.cf.model.Item;
 import com.meirengu.dao.BaseDao;
+
+import java.util.Map;
+
 /**
  * ItemDao 
  * @author 建新
@@ -11,4 +14,6 @@ public interface ItemDao extends BaseDao<Item>{
     int updateStatus(Item item);
 
     int changeAmount(Item item);
+
+    Map<String, Object> moreDetail(int id);
 }
