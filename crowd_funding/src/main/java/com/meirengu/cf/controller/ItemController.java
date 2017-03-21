@@ -1,12 +1,15 @@
 package com.meirengu.cf.controller;
 
 import com.meirengu.cf.model.Item;
+import com.meirengu.cf.service.ItemInterestedService;
 import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
+import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,8 @@ public class ItemController extends BaseController {
 
     @Autowired
     ItemService itemService;
+    @Autowired
+    ItemInterestedService itemInterestedService;
 
     /**
      * 获取项目列表
@@ -108,9 +113,23 @@ public class ItemController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "{item_id}", method = RequestMethod.GET)
-    public Result detail(@PathVariable(value = "item_id", required = false)int itemId){
+    public Result detail(@PathVariable(value = "item_id", required = false)int itemId,
+                         @RequestParam(value = "user_id", required = false)int userId){
         try {
             Item item = itemService.detail(itemId);
+            Map<String, Object> beanMap = ObjectUtils.bean2Map(item);
+            if(userId != 0 && item != null){
+                //是否感兴趣
+                boolean b = itemInterestedService.isBeInterested(itemId, userId);
+                beanMap.put("isInterested", b);
+            }else {
+                beanMap.put("isInterested", null);
+            }
+            if(item != null){
+                beanMap.put("privince", "北京市");
+                beanMap.put("city", "朝阳区");
+            }
+
             return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             LOGGER.error(">> get item cooperation detail throw exception: {}", e);
