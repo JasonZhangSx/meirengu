@@ -29,9 +29,15 @@
 		<result column="sponsor_name" property="sponsorName" jdbcType="VARCHAR" javaType="String"/>
 	</resultMap>
 
-	<sql id="table_name">item</sql>
+	<sql id="table_name">item t</sql>
 	<sql id="select_columns">
-		item_id as itemId, item_name as itemName, item_profile as itemProfile, type_id as typeId, class_id as classId, target_amount as targetAmount, appoint_amount as appointAmount, completed_amount as completedAmount, preheating_days as preheatingDays, preheating_start_time as preheatingStartTime, preheating_end_time as preheatingEndTime, crowd_days as crowdDays, crowd_start_time as crowdStartTime, crowd_end_time as crowdEndTime, partner_id as partnerId, area_id as areaId, header_image as headerImage, item_status as itemStatus, flag as flag, item_sort as itemSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount, sponsor_name as sponsorName
+		t.item_id as itemId, t.item_name as itemName, t.item_profile as itemProfile, t.type_id as typeId, t.class_id as classId,
+		t.target_amount as targetAmount, t.appoint_amount as appointAmount, t.completed_amount as completedAmount,
+		t.preheating_days as preheatingDays, t.preheating_start_time as preheatingStartTime, t.preheating_end_time as preheatingEndTime,
+		t.crowd_days as crowdDays, t.crowd_start_time as crowdStartTime, t.crowd_end_time as crowdEndTime,
+		t.partner_id as partnerId, t.area_id as areaId, t.header_image as headerImage, t.item_status as itemStatus,
+		t.flag as flag, t.item_sort as itemSort, t.create_time as createTime, t.update_time as updateTime,
+		t.operate_account as operateAccount, t.sponsor_name as sponsorName
 	</sql>
 
 	<insert id="insert" parameterType="item" useGeneratedKeys="true" keyProperty="itemId" >
@@ -120,7 +126,11 @@
 	</update>
 
 	<select id="detail" parameterType="integer" resultType="item">
-		select <include refid="select_columns" /> from <include refid="table_name"/>
+		select <include refid="select_columns" />,
+		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
+		t1.type_name as typeName
+		FROM <include refid="table_name" />
+		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where item_id=#{id}
 	</select>
 
@@ -147,47 +157,53 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />, completed_amount/target_amount as completedPercent, appoint_amount/target_amount as appointPercent FROM <include refid="table_name" />
+		select <include refid="select_columns" />,
+		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
+		t1.type_name as typeName
+		FROM <include refid="table_name" />
+		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where 1=1
 		<if test="itemId != null">
-			and item_id=#{itemId}
+			and t.item_id=#{itemId}
 		</if>
 		<if test="itemName != null and itemName != ''">
-			and item_name like '%${itemName}%'
+			and t.item_name like '%${itemName}%'
 		</if>
 		<if test="itemStatus != null and itemStatus != ''">
-			and item_status in (${itemStatus})
+			and t.item_status in (${itemStatus})
 		</if>
 		<if test="flag != null">
-			and flag=#{flag}
+			and t.flag=#{flag}
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
 			#{sortBy} #{order},
 		</if>
-		create_time desc
+		t.create_time desc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		FROM <include refid="table_name" />
+		LEFT JOIN `type` t1 ON  t1.type_id=t.type_id
 		where 1=1
 		<if test="itemId != null">
-			and item_id=#{itemId}
+			and t.item_id=#{itemId}
 		</if>
 		<if test="itemName != null and itemName != ''">
-			and item_name like '%${itemName}%'
+			and t.item_name like '%${itemName}%'
 		</if>
 		<if test="itemStatus != null and itemStatus != ''">
-			and item_status in (${itemStatus})
+			and t.item_status in (${itemStatus})
 		</if>
 		<if test="flag != null">
-			and flag=#{flag}
+			and t.flag=#{flag}
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
 			#{sortBy} #{order},
 		</if>
-		create_time desc
+		t.create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>
