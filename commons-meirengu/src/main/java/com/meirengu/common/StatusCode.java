@@ -156,6 +156,20 @@ public class StatusCode {
     public static final int APPOINTMENT_ORDER_ERROR_INSERT = 50752;
     public static final int CANDIDATE_ORDER_ERROR_INSERT = 50753;
     public static final int REFUND_AMOUNT_IS_ZERO = 50754;
+    public static final int REMAIN_NUM_NOT_ENOUGH = 50755;
+    public static final int ORDER_ERROR_UPDATE = 50756;
+    public static final int ITEM_LEVEL_NOT_MATCH = 50757;
+    public static final int ITEM_LEVEL_HAVE_ENOUGH = 50758;
+    public static final int ITEM_LEVEL_NUM_ERROR = 50759;
+    public static final int APPOINTMENT_CANCEL_ERROR = 50760;
+    public static final int APPOINTMENT_HAVE_AUDIT = 50761;
+    public static final int DELETE_ORDER_ERROR = 50761;
+    public static final int ORDER_STATUS_NOT_DELETE = 50761;
+
+
+
+
+
 
 
 
@@ -330,6 +344,18 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, "预约订单保存失败，请重试");
         codeMsgMap.put(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, "候补预约保存失败，请重试");
         codeMsgMap.put(StatusCode.REFUND_AMOUNT_IS_ZERO, "退款金额为0，无法退款");
+        codeMsgMap.put(StatusCode.REMAIN_NUM_NOT_ENOUGH, "剩余份数不足");
+        codeMsgMap.put(StatusCode.ORDER_ERROR_UPDATE, "订单跟新失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NOT_MATCH, "档位当前状态不能进行该操作，请刷新档位信息");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_HAVE_ENOUGH, "该档位已被预约满，请您进入候补预约");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NUM_ERROR, "该档位剩余份数不足，请您重新操作");
+        codeMsgMap.put(StatusCode.APPOINTMENT_CANCEL_ERROR, "取消预约订单失败，请重试");
+        codeMsgMap.put(StatusCode.APPOINTMENT_HAVE_AUDIT, "预约订单已通过审核，不可取消");
+        codeMsgMap.put(StatusCode.DELETE_ORDER_ERROR, "删除订单失败，请重试");
+        codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_DELETE, "只有已失效和已退款的订单可以删除");
+
+
+
         //50800-50900//other
 
     }
