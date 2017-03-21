@@ -19,4 +19,10 @@
             area_parent_id AS areaParentId, area_sort AS areaSort ,area_deep AS areaDeep
            from area where area_parent_id = #{cid}
     </select>
+    <select id="getArea" parameterType="java.lang.Integer" resultType="com.meirengu.uc.model.Area">
+         select
+            area_id AS areaId , area_name AS  areaName ,
+            area_parent_id AS areaParentId, area_sort AS areaSort ,area_deep AS areaDeep
+           from area where area_id = #{areaId}
+    </select>
 </mapper>

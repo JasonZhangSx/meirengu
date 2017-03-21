@@ -3,6 +3,7 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.uc.po.AddressPO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.utils.ObjectUtils;
 import org.slf4j.Logger;
@@ -33,19 +34,25 @@ public class AddressController extends BaseController {
         return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
     @RequestMapping(value = "/showCityListByPid",method = RequestMethod.GET)
-    public Result showCityListByPid(HttpServletRequest request, HttpServletResponse response, int pid) throws IOException {
+    public Result showCityListByPid(int pid) throws IOException {
         return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
     @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
-    public Result showAreasByCityId(HttpServletRequest request, HttpServletResponse response, Integer citys_id) throws IOException {
+    public Result showAreasByCityId(Integer citys_id) throws IOException {
         return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
-    /*@RequestMapping("/showProByCityId")
-    public Result showProByCityId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
-        return setResult(StatusCode.OK, service.showProByCityId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
+   @RequestMapping("/showAddress")
+    public Result showProByCityId(Integer area_id) throws IOException {
+        AddressPO addressPO = service.showAddress(area_id);
+       if(addressPO !=null){
+        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(addressPO,AddressPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+       }else{
+           return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+       }
     }
-    @RequestMapping("/showProCityByAreaId")
+
+     /*@RequestMapping("/showProCityByAreaId")
     public Result showProCityByAreaId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
         return setResult(StatusCode.OK, service.showProCityByAreaId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
     }*/
