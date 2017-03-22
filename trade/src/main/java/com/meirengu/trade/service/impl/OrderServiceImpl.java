@@ -8,7 +8,6 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
-import com.meirengu.trade.controller.OrderController;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
@@ -16,17 +15,7 @@ import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
-import com.meirengu.utils.JacksonUtil;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -341,13 +330,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     return result;
                 }
             } else {
-                logger.error("businesscode: " + code);
-                throw new OrderRpcException("查询项目档位信息错误");
+                logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
+                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
-            logger.error("httpcode: " + itemLevelInfoResult.getStatusCode());
-            logger.error("httpcontent: " + itemLevelInfoResult.getContent());
-            throw new OrderRpcException("查询项目档位信息错误");
+            logger.error("httpcode: " + itemLevelInfoResult.getStatusCode() + "--httpcontent: " + itemLevelInfoResult.getContent());
+            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
         }
         return result;
     }
@@ -380,13 +368,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (code == StatusCode.OK) {
                 return true;
             } else {
-                logger.error("businesscode: " + code);
-                throw new OrderRpcException("档位项目信息修改错误");
+                logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
+                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
-            logger.error("httpcode: " + httpResult.getStatusCode());
-            logger.error("httpcontent: " + httpResult.getContent());
-            throw new OrderRpcException("档位项目信息修改错误");
+            logger.error("httpcode: " + httpResult.getStatusCode() + "--httpcontent: " + httpResult.getContent());
+            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
         }
     }
 
