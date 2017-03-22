@@ -66,56 +66,61 @@ public class ApiControllerFilter extends OncePerRequestFilter{
                 params.put(key, paramsMap.get(key)[0]);
             }
 
-            Long timestamp = Long.valueOf(tsp);
-            Long interval = (System.currentTimeMillis() - timestamp)/1000;
-            Long apiInterval = Long.parseLong(ConfigUtil.getConfig("api.interval.time"));
+            //是否开启防重放
+            if(ConfigUtil.getConfig("api.repeat.action").equalsIgnoreCase("true")){
+                Long timestamp = Long.valueOf(tsp);
+                Long interval = (System.currentTimeMillis() - timestamp)/1000;
+                Long apiInterval = Long.parseLong(ConfigUtil.getConfig("api.interval.time"));
 
-            //当前请求时间大于api限制的请求时间
-            if(interval > apiInterval){
-                PrintWriter out = httpServletResponse.getWriter();
-                map.put("code", StatusCode.REQUEST_TIMEOUT);
-                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.REQUEST_TIMEOUT));
-                out.print(JSON.toJSON(map));
-                out.flush();
-                out.close();
-            }else {
-                String androidAppKey = ConfigUtil.getConfig("api.adroid.appKey");
-                String iosAppKey = ConfigUtil.getConfig("api.ios.appKey");
-                String wxAppKey = ConfigUtil.getConfig("api.wx.appKey");
-                String wapAppKey = ConfigUtil.getConfig("api.wap.appKey");
-                String appSecret = null;
-
-                if(androidAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.adroid.appSecret");
-                    LOGGER.info("requet api platform is android.");
-                }else if(iosAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.ios.appSecret");
-                    LOGGER.info("requet api platform is ios.");
-                }else if(wapAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.wap.appSecret");
-                    LOGGER.info("requet api platform is wap.");
-                }else if(wxAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.wx.appSecret");
-                    LOGGER.info("requet api platform is weixin.");
-                }else {
+                //当前请求时间大于api限制的请求时间
+                if(interval > apiInterval){
                     PrintWriter out = httpServletResponse.getWriter();
-                    map.put("code", StatusCode.BAD_API_KEY);
-                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+                    map.put("code", StatusCode.REQUEST_TIMEOUT);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.REQUEST_TIMEOUT));
                     out.print(JSON.toJSON(map));
                     out.flush();
                     out.close();
                     return;
                 }
-
-                if(SignParamsUtils.verify(params, appSecret)){
-                    filterChain.doFilter(httpServletRequest, httpServletResponse);
-                }else{
-                    PrintWriter out = httpServletResponse.getWriter();
-                    out.print(JSON.toJSON(map));
-                    out.flush();
-                    out.close();
-                }
             }
+
+            String androidAppKey = ConfigUtil.getConfig("api.adroid.appKey");
+            String iosAppKey = ConfigUtil.getConfig("api.ios.appKey");
+            String wxAppKey = ConfigUtil.getConfig("api.wx.appKey");
+            String wapAppKey = ConfigUtil.getConfig("api.wap.appKey");
+            String appSecret = null;
+
+            if(androidAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.adroid.appSecret");
+                LOGGER.info("requet api platform is android.");
+            }else if(iosAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.ios.appSecret");
+                LOGGER.info("requet api platform is ios.");
+            }else if(wapAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.wap.appSecret");
+                LOGGER.info("requet api platform is wap.");
+            }else if(wxAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.wx.appSecret");
+                LOGGER.info("requet api platform is weixin.");
+            }else {
+                PrintWriter out = httpServletResponse.getWriter();
+                map.put("code", StatusCode.BAD_API_KEY);
+                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+                out.print(JSON.toJSON(map));
+                out.flush();
+                out.close();
+                return;
+            }
+
+            if(SignParamsUtils.verify(params, appSecret)){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+            }else{
+                PrintWriter out = httpServletResponse.getWriter();
+                out.print(JSON.toJSON(map));
+                out.flush();
+                out.close();
+            }
+
         }
 
     }
