@@ -5,6 +5,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
+import com.meirengu.uc.po.AddressNamePO;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
@@ -41,12 +42,10 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
-                                @RequestParam(value = "pid", required = true) Integer pid,
-                                @RequestParam(value = "city_id", required = true) Integer cityId,
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
-        logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,pid,cityId,areaId,isDefault);
+        logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
             RedisUtil redisUtil = new RedisUtil();
             Object userRedis =   redisUtil.getObject(token);
@@ -65,8 +64,6 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserName(userName);
                 userAddressBean.setUserPhone(mobile);
                 userAddressBean.setDelFlag(1);
-                userAddressBean.setProvinceId(pid);
-                userAddressBean.setCityId(cityId);
                 userAddressBean.setAreaId(areaId);
                 userAddressBean.setDefault(isDefault);
                 int res = userAddressService.insert(userAddressBean);
@@ -95,8 +92,6 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
-                                @RequestParam(value = "pid", required = true) Integer pid,
-                                @RequestParam(value = "city_id", required = true) Integer cityId,
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Boolean isDefault){
 
@@ -129,8 +124,6 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserName(userName);
                 userAddressBean.setDelFlag(1);
                 userAddressBean.setDefault(isDefault);
-                userAddressBean.setProvinceId(pid);
-                userAddressBean.setCityId(cityId);
                 userAddressBean.setAreaId(areaId);
                 int res = userAddressService.updateByAdressId(userAddressBean);
                 if(res == 0){
@@ -259,9 +252,9 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
-        List<UserAddress> userAddressPO = userAddressService.selectByAddIdArray(addressId);
-        if(userAddressPO != null){
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+        List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
+        if(userAddressList != null && userAddressList.size() > 0){
+            return super.setResult(StatusCode.OK, userAddressList,StatusCode.codeMsgMap.get(StatusCode.OK));
         }else{
             return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
         }

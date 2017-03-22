@@ -3,11 +3,21 @@ package com.meirengu.pay.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.StatusCode;
 import com.meirengu.pay.common.SmsTemplate;
+import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.dao.PaymentDao;
+import com.meirengu.pay.dao.PaymentRecordDao;
 import com.meirengu.pay.model.Payment;
+import com.meirengu.pay.model.PaymentAccount;
+import com.meirengu.pay.model.PaymentRecord;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.ConfigUtil;
+import com.meirengu.pay.utils.PaymentException;
+import com.meirengu.pay.utils.PaymentTypeUtil;
+import com.meirengu.pay.utils.ResultUtil;
+import com.meirengu.pay.utils.check.ValidateException;
+import com.meirengu.pay.utils.check.Validator;
 import com.meirengu.pay.vo.WxNotifyData;
 import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
@@ -30,13 +40,16 @@ import java.util.Map;
  */
 @Service
 @Transactional(readOnly = true)
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Autowired
     private PaymentDao paymentDao;
-
+    @Autowired
+    private PaymentAccountDao paymentAccountDao;
+    @Autowired
+    private PaymentRecordDao paymentRecordDao;
     @Override
     @Transactional(readOnly = false)
     public int insert(Payment payment) {
@@ -307,5 +320,89 @@ public class PaymentServiceImpl implements PaymentService{
         }
 
         return true;
+    }
+
+
+    /**
+     * 退款申请-yhy
+     * @param content
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public String refund(String content) {
+        PaymentRecord paymentRecord = new PaymentRecord();
+        try {
+            paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Refund);
+            paymentRecordDao.insertPaymentRecord(paymentRecord);
+            LOGGER.info("refund prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_APPLY));
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_APPLY,null);
+        } catch (Exception e) {
+            LOGGER.error("Capture refund ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_REFUND_APPLY), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_REFUND_APPLY, null);
+        }
+    }
+
+    /**
+     * 提现申请-yhy
+     * @param content
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public String withdrawals(String content) {
+        PaymentRecord paymentRecord = new PaymentRecord();
+        try {
+            paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Withdrawals);
+            paymentRecordDao.insertPaymentRecord(paymentRecord);
+            LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY,null);
+        } catch (Exception e) {
+            LOGGER.error("Capture withdrawals ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY, null);
+        }
+    }
+
+    /**
+     * 充值申请-yhy
+     * @param content
+     * @return
+     */
+    @Override
+    public String recharge(String content) {
+        PaymentRecord paymentRecord = new PaymentRecord();
+        try {
+            paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Recharge);
+            paymentRecordDao.insertPaymentRecord(paymentRecord);
+            LOGGER.info("recharge prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY));
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY,null);
+        } catch (Exception e) {
+            LOGGER.error("Capture recharge ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY, null);
+        }
+    }
+
+    /**
+     * 支付申请-yhy
+     * @param content
+     * @return
+     */
+    @Override
+    public String payment(String content) {
+        PaymentRecord paymentRecord = new PaymentRecord();
+        try {
+            paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Payment);
+            paymentRecordDao.insertPaymentRecord(paymentRecord);
+            if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
+                paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
+            }else{
+
+            }
+            LOGGER.info("payment prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY));
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY,null);
+        } catch (Exception e) {
+            LOGGER.error("Capture payment ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY, null);
+        }
     }
 }

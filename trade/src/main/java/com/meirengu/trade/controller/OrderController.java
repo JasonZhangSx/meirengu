@@ -4,18 +4,23 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.utils.OrderSNUtils;
+import com.meirengu.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -94,6 +99,7 @@ public class OrderController extends BaseController{
         order.setUserEmail("");//目前没有邮箱，设为空字符
         order.setUserAddressId(userAddressId);
         order.setOrderType(1);//订单类型目前都是普通
+        order.setPaymentMethod(0);//支付类型默认为余额支付
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
         order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
         order.setReceipt("");//目前没有发票
@@ -103,12 +109,8 @@ public class OrderController extends BaseController{
         order.setOperateAccount("");//目前后台不生成订单
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
-            int i = orderService.insert(order);
-            if (i == 1) {
-                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            } else {
-                return setResult(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
-            }
+            Result result = orderService.appointment(order);
+            return result;
         }catch (Exception e){
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -181,6 +183,7 @@ public class OrderController extends BaseController{
         order.setUserEmail("");//目前没有邮箱，设为空字符
         order.setUserAddressId(userAddressId);
         order.setOrderType(1);//订单类型目前都是普通
+        order.setPaymentMethod(0);//支付类型默认为余额支付
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
         order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
         order.setReceipt("");//目前没有发票
@@ -190,11 +193,14 @@ public class OrderController extends BaseController{
         order.setOperateAccount("");//目前后台不生成订单
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
-            int i = orderService.insert(order);
-            if (i > 0) {
-                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            Result result = orderService.insertSubscriptions(order);
+            return result;
+        } catch (OrderRpcException oe) {
+            logger.error("throw OrderRpcException:", oe);
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
-                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }catch (Exception e){
             logger.error("throw exception:", e);
@@ -212,18 +218,21 @@ public class OrderController extends BaseController{
     @RequestMapping(value = "/appointment/audit/{order_id}",  method = RequestMethod.POST)
     public Result appointmentAudit(@PathVariable("order_id") int orderId ,
                                     @RequestParam(value = "status") int orderStatus){
-        if (orderId == 0 || !(orderStatus == 2 || orderStatus == 3)) {
+        if (orderId == 0 || !(orderStatus == OrderStateEnum.BOOK_ADUIT_FAIL.getValue() || orderStatus == OrderStateEnum.BOOK_ADUIT_PASS.getValue())) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
         order.setOrderId(orderId);
         order.setOrderState(orderStatus);
         try{
-            int i = orderService.update(order);
-            if (i == 1) {
-                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            Result result = orderService.appointmentAudit(order);
+            return  result;
+        }catch (OrderRpcException oe){
+            logger.error("throw OrderRpcException:", oe);
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
-                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }catch (Exception e){
             logger.error("throw exception:", e);
@@ -246,12 +255,8 @@ public class OrderController extends BaseController{
         order.setOrderId(orderId);
         order.setFlag(0);//逻辑删除状态 0为删除，1为未删除
         try{
-            int i = orderService.update(order);
-            if (i == 1) {
-                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            } else {
-                return setResult(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
-            }
+            Result result = orderService.deleteOrder(order);
+            return result;
         }catch (Exception e){
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -280,20 +285,28 @@ public class OrderController extends BaseController{
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
                           @RequestParam(value = "user_id", required = false) String userId,
-                          @RequestParam(value = "order_state", required = false) String orderState){
+                          @RequestParam(value = "order_state", required = false) String orderState,
+                          @RequestParam(value = "need_avatar", required = false, defaultValue = "0") int needAvatar,
+                          @RequestParam(value = "item_id", required = false, defaultValue = "0") int itemId){
         Map<String, Object> map = new HashMap<>();
+        //前台不展示删除订单
+        map.put("flag", 1);//逻辑删除状态 0为删除，1为未删除
         map.put("orderSn", orderSn);
         map.put("userPhone", userPhone);
         map.put("itemName", itemName);
         map.put("userId", userId);
         map.put("orderState", orderState);
+        map.put("needAvatar", needAvatar);
+        if (itemId != 0) {
+            map.put("itemId", itemId);
+        }
         map.put("sortBy", sortBy);
         map.put("order", order);
         Page<Order> page = new Page<Order>();
         page.setPageNow(pageNum);
         page.setPageSize(pageSize);
         try{
-            page = orderService.getListByPage(page, map);
+            page = orderService.getPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception:", e);
@@ -343,13 +356,61 @@ public class OrderController extends BaseController{
 
 
     }
+    /**
+     * 取消预约订单
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(value = "appointment/cancel/{order_id}",  method = RequestMethod.POST)
+    public Result appointmentCancel(@PathVariable("order_id") int orderId){
+        if (orderId == 0 ) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setOrderState(OrderStateEnum.LOSS_EFFICACY.getValue());
+        try{
+            Result result = orderService.appointmentCancel(order);
+            return result;
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
-    public static void main(String[] args){
+    /**
+     * 订单详情
+     * @return
+     */
+    @RequestMapping(value = "detail/{order_id}",  method = RequestMethod.GET)
+    public Result detail(@PathVariable("order_id") int orderId){
+        if (orderId == 0 ) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try{
+            Map<String, Object> orderDetailMap = orderService.orderDetail(orderId);
+            return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
+    public static void main(String[] args) throws Exception {
         Set<Integer> sets = new HashSet<Integer>();
-        sets.add(1);
-        sets.add(2);
-        String a = sets.toString();
-        System.out.print(a.substring(a.indexOf("[")+1,a.indexOf("]")));
+        sets.add(514802872);
+        sets.add(514802873);
+        String addressIdsStr = sets.toString();
+        String addressIds = addressIdsStr.substring(addressIdsStr.indexOf("[")+1,addressIdsStr.indexOf("]"));
+
+        String url = "http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?" + URLEncoder.encode("address_id="+addressIds, "UTF-8");;
+        HttpUriRequest request = new HttpGet(url);
+        System.out.println(request.getURI());
+        HttpGet get = new HttpGet("http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?address_id=" + addressIds);
+        System.out.println(get.getURI());
+        HttpUtil.HttpResult httpResult = HttpUtil.doGet("http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?address_id=" + addressIds);
+
     }
 
 }

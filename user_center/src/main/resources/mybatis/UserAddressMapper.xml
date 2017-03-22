@@ -11,22 +11,17 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="delflag" jdbcType="INTEGER" property="delFlag" />
-    <result column="province_id" jdbcType="INTEGER" property="provinceId" />
-    <result column="city_id" jdbcType="INTEGER" property="cityId" />
     <result column="area_id" jdbcType="INTEGER" property="areaId" />
   </resultMap>
   <sql id="Base_Column_List">
     address_id AS addressId, user_id AS userId, user_name AS  userName, user_phone AS userPhone, user_address
     AS userAddress, is_default AS isDefault, create_time AS createTime, update_time AS updateTime,delflag,
-    province_id AS provinceId,  city_id  AS cityId, area_id AS  areaId
+    area_id AS  areaId
   </sql>
   <select id="selectByUserAddress" parameterType="com.meirengu.uc.model.UserAddress" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />,p.province AS province,c.city AS city,area.area AS areas
+    <include refid="Base_Column_List" />
     from user_address  a
-    LEFT  JOIN  province p ON  a.province_id = p.provinceID
-    LEFT  JOIN  city c ON  a.city_id = c.cityID
-    LEFT  JOIN  area area ON  a.area_id = area.areaID
     where 1 = 1  AND  delflag = 0
     <if test="addressId != null">
       AND address_id = #{addressId,jdbcType=INTEGER}
@@ -53,13 +48,10 @@
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
     </if>
   </select>
-  <select id="selectByAddIdList" parameterType="String" resultMap="BaseResultMap">
+  <select id="selectByAddIdList" parameterType="String" resultType="Map">
     select
-    <include refid="Base_Column_List" />,p.province AS province,c.city AS city,area.area AS areas
+    <include refid="Base_Column_List" />
     from user_address  a
-    LEFT  JOIN  province p ON  a.province_id = p.provinceID
-    LEFT  JOIN  city c ON  a.city_id = c.cityID
-    LEFT  JOIN  area area ON  a.area_id = area.areaID
     where 1 = 1  AND  delflag = 0
     AND  address_id in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
@@ -69,11 +61,10 @@
   <insert id="insert" parameterType="com.meirengu.uc.model.UserAddress">
     insert into user_address (address_id, user_id, user_name, 
       user_phone, user_address, is_default, 
-      create_time, update_time,delflag,province_id,city_id,area_id)
+      create_time, update_time,delflag,area_id)
     values (#{addressId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
       #{userPhone,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{isDefault,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},0,#{provinceId,jdbcType=INTEGER},
-      #{cityId,jdbcType=INTEGER} ,#{areaId,jdbcType=INTEGER})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},0,#{areaId,jdbcType=INTEGER})
   </insert>
   <update id="updateByAdressId" parameterType="com.meirengu.uc.model.UserAddress">
     update user_address
@@ -99,12 +90,6 @@
       <if test="delFlag != null">
         delflag = #{delFlag,jdbcType=INTEGER},
       </if>
-      <if test="provinceId != null">
-        province_id = #{provinceId,jdbcType=INTEGER},
-      </if>
-      <if test="cityId != null">
-        city_id = #{cityId,jdbcType=INTEGER},
-      </if>
       <if test="areaId != null">
         area_id = #{areaId,jdbcType=INTEGER},
       </if>
@@ -121,12 +106,9 @@
 
   <!-- 分页相关开始 -->
   <select id="getByPage" resultType="Map" parameterType="Map">
-    select <include refid="Base_Column_List" />,p.province AS province,c.city AS city,area.area AS areas
+    select <include refid="Base_Column_List" />
     from
     user_address a
-    LEFT  JOIN  province p ON  a.province_id = p.provinceID
-    LEFT  JOIN  city c ON  a.city_id = c.cityID
-    LEFT  JOIN  area area ON  a.area_id = area.areaID
     where 1=1
     <if test="userId != null">
       AND user_id = #{userId,jdbcType=INTEGER}

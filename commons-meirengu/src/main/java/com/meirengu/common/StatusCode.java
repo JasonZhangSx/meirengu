@@ -71,6 +71,29 @@ public class StatusCode {
     public static final int PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL = 40603;
     public static final int PAYMENT_ACCOUNT_SUCCESS_SELECT = 40604;
     public static final int PAYMENT_ACCOUNT_ERROR_SELECT = 40605;
+    public static final int PAYMENT_ACCOUNT_ERROR_PARAMETER = 40606;
+    public static final int PAYMENT_ACCOUNT_ERROR_UPDATE = 40607;
+    public static final int PAYMENT_ACCOUNT_SUCCESS_UPDATE = 40608;
+    public static final int PAYMENT_RECORD_ERROR_INSERT = 40609;
+    public static final int PAYMENT_RECORD_ERROR_INSERT_REPEAT = 40610;
+    public static final int PAYMENT_RECORD_ERROR_INSERT_NO_EXISTENT = 40611;
+    public static final int PAYMENT_RECORD_ERROR_INSERT_ORDER_AMOUNT_NO_CONFORM = 40612;
+    public static final int PAYMENT_RECORD_ERROR_INSERT_PAYMENT_AMOUNT_NO_CONFORM = 40613;
+    public static final int PAYMENT_RECORD_ERROR_INSERT_PAYMENT_BALANCE_NO_INSUFFICIENT = 40614;
+    public static final int PAYMENT_RECORD_SUCCESS_REFUND_APPLY = 40615;
+    public static final int PAYMENT_RECORD_ERROR_REFUND_APPLY = 40616;
+    public static final int PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY = 40617;
+    public static final int PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY = 40618;
+    public static final int PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY = 40619;
+    public static final int PAYMENT_RECORD_ERROR_RECHARGE_APPLY = 40620;
+    public static final int PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY = 40621;
+    public static final int PAYMENT_RECORD_ERROR_PAYMENT_APPLY = 40622;
+    public static final int PAYMENT_RECORD_ERROR_REFUND_CONFIRM = 40623;
+    public static final int PAYMENT_RECORD_SUCCESS_REFUND_CONFIRM = 40624;
+    public static final int PAYMENT_RECORD_ERROR_REFUND_CONFIRM_ISNULL = 40625;
+    public static final int PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL = 40626;
+    public static final int PAYMENT_RECORD_ERROR_STATUS = 40627;
+
 
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
@@ -165,6 +188,20 @@ public class StatusCode {
     public static final int APPOINTMENT_ORDER_ERROR_INSERT = 50752;
     public static final int CANDIDATE_ORDER_ERROR_INSERT = 50753;
     public static final int REFUND_AMOUNT_IS_ZERO = 50754;
+    public static final int REMAIN_NUM_NOT_ENOUGH = 50755;
+    public static final int ORDER_ERROR_UPDATE = 50756;
+    public static final int ITEM_LEVEL_NOT_MATCH = 50757;
+    public static final int ITEM_LEVEL_HAVE_ENOUGH = 50758;
+    public static final int ITEM_LEVEL_NUM_ERROR = 50759;
+    public static final int APPOINTMENT_CANCEL_ERROR = 50760;
+    public static final int APPOINTMENT_HAVE_AUDIT = 50761;
+    public static final int DELETE_ORDER_ERROR = 50761;
+    public static final int ORDER_STATUS_NOT_DELETE = 50761;
+
+
+
+
+
 
 
 
@@ -332,12 +369,29 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
 
         //40600-40700//payment
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT, "用户资金账户创建失败");
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL, "该用户资金账户不存在");
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT, "该用户资金账户查询成功");
-        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询成功");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询失败");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_PARAMETER, "参数有误");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_UPDATE, "该用户资金账户更新失败");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_UPDATE, "该用户资金账户更新成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT, "账户流水记录失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT_REPEAT, "该订单号已存在");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT_NO_EXISTENT, "该订单号不存在");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT_ORDER_AMOUNT_NO_CONFORM, "订单金额不符");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT_PAYMENT_AMOUNT_NO_CONFORM, "支付金额不符");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_INSERT_PAYMENT_BALANCE_NO_INSUFFICIENT, "余额不足");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_APPLY, "退款申请成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_REFUND_APPLY, "退款申请失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY, "提现申请成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY, "提现申请失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY, "充值申请成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY, "充值申请失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY, "支付申请成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY, "支付申请失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM, "退款确认失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_CONFIRM, "退款确认成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM_ISNULL, "该退款记录不存在");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL, "该提现记录不存在");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_STATUS, "流水记录有误");
 
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
@@ -348,6 +402,18 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, "预约订单保存失败，请重试");
         codeMsgMap.put(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, "候补预约保存失败，请重试");
         codeMsgMap.put(StatusCode.REFUND_AMOUNT_IS_ZERO, "退款金额为0，无法退款");
+        codeMsgMap.put(StatusCode.REMAIN_NUM_NOT_ENOUGH, "剩余份数不足");
+        codeMsgMap.put(StatusCode.ORDER_ERROR_UPDATE, "订单跟新失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NOT_MATCH, "档位当前状态不能进行该操作，请刷新档位信息");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_HAVE_ENOUGH, "该档位已被预约满，请您进入候补预约");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NUM_ERROR, "该档位剩余份数不足，请您重新操作");
+        codeMsgMap.put(StatusCode.APPOINTMENT_CANCEL_ERROR, "取消预约订单失败，请重试");
+        codeMsgMap.put(StatusCode.APPOINTMENT_HAVE_AUDIT, "预约订单已通过审核，不可取消");
+        codeMsgMap.put(StatusCode.DELETE_ORDER_ERROR, "删除订单失败，请重试");
+        codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_DELETE, "只有已失效和已退款的订单可以删除");
+
+
+
         //50800-50900//other
 
     }

@@ -4,6 +4,7 @@ import com.meirengu.dao.BaseDao;
 import com.meirengu.uc.model.UserAddress;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserAddressDao  extends BaseDao<UserAddress> {
     /**
@@ -33,5 +34,5 @@ public interface UserAddressDao  extends BaseDao<UserAddress> {
      */
     void updateClearDefaultAddress(Integer userId);
 
-    List<UserAddress> selectByAddIdList(List<String> list);
+    List<Map<String, Object>> selectByAddIdList(List<String> list);
 }
