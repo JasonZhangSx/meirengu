@@ -6,6 +6,8 @@ import com.meirengu.model.Result;
 import com.meirengu.sms.model.SmsRecord;
 import com.meirengu.sms.service.SmsRecordService;
 import com.meirengu.sms.service.SmsService;
+import com.meirengu.sms.utils.TemplateConfigUtil;
+import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import com.yunpian.sdk.model.ResultDO;
 import com.yunpian.sdk.model.SendSingleSmsInfo;
@@ -14,6 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 短信接口类
@@ -71,6 +81,75 @@ public class SmsController extends BaseController {
         } else {
             return super.setResult(StatusCode.SUBMIT_SMS_FAILED, resultDO.getData(), StatusCode.codeMsgMap.get
                     (StatusCode.SUBMIT_SMS_FAILED));
+        }
+    }
+
+    /**
+     * 按我们自己的模板发送单条短信
+     * @param mobile  手机号
+     * @param tpl_id  sms-template.properties 中指定的模板的key
+     * @param extend 扩展字段
+     * @param uid 业务对象
+     * @param ip 请求ip
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "single_send_tpl", method = RequestMethod.POST)
+    @ResponseBody
+    public Result singleSendTpl(@RequestParam(value = "mobile", required = true) String mobile,
+                             @RequestParam(value = "tpl_id", required = true) Long tpl_id,
+                             @RequestParam(value = "extend", required = false) String extend,
+                             @RequestParam(value = "uid", required = false) String uid,
+                             @RequestParam(value = "ip", required = false) String ip,
+                             HttpServletRequest request) {
+
+        try {
+            String templateStr = TemplateConfigUtil.getConfig(String.valueOf(tpl_id));
+
+            if(StringUtil.isEmpty(templateStr)){
+                return super.setResult(StatusCode.TEMPLATE_NOT_VALID, "", StatusCode.codeMsgMap.get(StatusCode.TEMPLATE_NOT_VALID));
+            }
+
+            List<String> list = extractMessageByRegular(templateStr);
+            Map<String, String> map = new HashMap<>();
+            for (int i = 0; i < list.size(); i++) {
+                String key = list.get(i);
+                String value = request.getParameter(list.get(i));
+                if (StringUtil.isEmpty(value)) {
+                    return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                }
+                if (!map.containsKey(key)) {
+                    map.put(key, value);
+                }
+            }
+
+            for (String key : map.keySet()) {
+                String value = map.get(key);
+                templateStr = templateStr.replace("#" + key + "#", value);
+            }
+
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
+            }
+            //防刷逻辑
+            //...
+            //invoke sms service
+            ResultDO<SendSingleSmsInfo> resultDO = smsService.singleSend(mobile, templateStr);
+            if (resultDO != null && resultDO.isSuccess()) {
+                //store db 优化改成异步
+                smsRecordService.create(this.wrapSmsRecord(resultDO, templateStr, uid, ip));
+                logger.info("SmsController.singleSend result << mobile:{},text:{}, resultDO:{}", new
+                        Object[]{mobile, templateStr, resultDO});
+                return super.setResult(StatusCode.OK, resultDO.getData(), StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                return super.setResult(StatusCode.SUBMIT_SMS_FAILED, resultDO.getData(), StatusCode.codeMsgMap.get
+                        (StatusCode.SUBMIT_SMS_FAILED));
+            }
+        }catch (Exception e){
+            logger.error("SmsController.singleSend throw exception: ", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -151,6 +230,16 @@ public class SmsController extends BaseController {
             return null;
         }
 
+    }
+
+    public static List<String> extractMessageByRegular(String msg){
+        List<String> list=new ArrayList<String>();
+        Pattern p = Pattern.compile("(\\#[^\\#]*\\#)");
+        Matcher m = p.matcher(msg);
+        while(m.find()){
+            list.add(m.group().substring(1, m.group().length()-1));
+        }
+        return list;
     }
 
 }
