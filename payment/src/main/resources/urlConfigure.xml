@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RESULT>
+    <VALUE>　　
+        <projectUrl>${projectUrl}</projectUrl>　　
+    </VALUE>
+    <BaoFu>
+        <charSet>${char.set}</charSet>
+        <pfxName>${pfx.name}</pfxName>
+        <pfxPwd>${pfx.pwd}</pfxPwd>
+        <cerName>${cer.name}</cerName>
+        <terminalId>${terminal.id}</terminalId>
+        <memberId>${member.id}</memberId>
+        <dataType>${data.type}</dataType>
+    </BaoFu>
+</RESULT>

@@ -21,4 +21,32 @@ public interface PaymentService {
     boolean payFail(WxNotifyData notifyData, HttpServletRequest request, String returnMsg);
 
     Payment detail(Payment payment);
+
+    /**
+     * 退款申请
+     * @param content
+     * @return
+     */
+    String refund(String content);
+
+    /**
+     * 提现申请
+     * @param content
+     * @return
+     */
+    String withdrawals(String content);
+
+    /**
+     * 充值申请
+     * @param content
+     * @return
+     */
+    String recharge(String content);
+
+    /**
+     * 支付申请
+     * @param content
+     * @return
+     */
+    String payment(String content);
 }

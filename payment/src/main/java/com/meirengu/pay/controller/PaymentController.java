@@ -266,4 +266,47 @@ public class PaymentController extends BaseController{
         return super.setResult(StatusCode.OK, p, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
+    /**
+     * 退款申请
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "refund",method = RequestMethod.POST)
+    @ResponseBody
+    public String refund(@RequestParam(value = "content", required = true) String content){
+        return paymentService.refund(content);
+    }
+
+    /**
+     * 提现申请
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "withdrawals",method = RequestMethod.POST)
+    @ResponseBody
+    public String withdrawals(@RequestParam(value = "content", required = true) String content){
+        return paymentService.withdrawals(content);
+    }
+
+    /**
+     * 充值申请
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "recharge",method = RequestMethod.POST)
+    @ResponseBody
+    public String recharge(@RequestParam(value = "content", required = true) String content){
+        return paymentService.recharge(content);
+    }
+
+    /**
+     * 支付申请
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "payment",method = RequestMethod.POST)
+    @ResponseBody
+    public String payment(@RequestParam(value = "content", required = true) String content){
+        return paymentService.payment(content);
+    }
 }
