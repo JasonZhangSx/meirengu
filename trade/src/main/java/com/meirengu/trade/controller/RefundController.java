@@ -152,6 +152,19 @@ public class RefundController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    /**
+     * 退款列表
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param orderSn
+     * @param userId
+     * @param userPhone
+     * @param refundState
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
