@@ -1,13 +1,15 @@
 package com.meirengu.uc.utils;
 
 
-import com.meirengu.uc.model.User;
+import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.List;
 
 /**
  * Created by huoyan403 on 3/14/2017.
@@ -186,9 +188,46 @@ public final class RedisUtil {
             }
         }
     }
+    /**
+     * 设置List集合
+     * @param key
+     * @param list
+     */
+    public static void setList(String key ,List<?> list,int expiretime) {
+        try {
+
+            if (StringUtil.isEmpty(list)) {
+                String result = getJedis().set(key.getBytes(), SerializableUtil.serializeList(list));
+                if(result.equals("OK")) {
+                    getJedis().expire(key.getBytes(), expiretime);
+                }
+            }else{//如果list为空,则设置一个空
+                getJedis().set(key.getBytes(), "".getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取List集合
+     * @param key
+     * @return
+     */
+    public static List<?> getList(String key){
+        if(getJedis() == null || !getJedis().exists(key)){
+            return null;
+        }
+        byte[] data = getJedis().get(key.getBytes());
+        return SerializableUtil.unserializeList(data);
+    }
+
     public static void main(String are[]){
         RedisUtil redisUtil = new RedisUtil();
-        redisUtil.setObject("cfc1882e5def48e8b9ab0aed8da1a530",new User());
-        System.err.print(redisUtil.getObject("cfc1882e5def48e8b9ab0aed8da1a530"));
+//        redisUtil.setObject("cfc1882e5def48e8b9ab0aed8da1a530",new User());
+//        System.err.print(redisUtil.getObject("cfc1882e5def48e8b9ab0aed8da1a530"));
+        for(int i = 110000; i<990000;i++){
+            redisUtil.delkeyObject("area_"+i);
+        }
     }
 }

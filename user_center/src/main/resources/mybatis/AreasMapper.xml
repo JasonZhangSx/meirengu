@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.uc.dao.AreasMapper" >
   <!-- 根据city的id来查询所有的区、县 -->
+    <resultMap id="BaseResultMap" type="com.meirengu.uc.model.Area" >
+        <id column="area_id" property="areaId" jdbcType="INTEGER" />
+        <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+        <result column="area_parent_id" property="areaParentId" jdbcType="INTEGER" />
+        <result column="area_sort" property="areaSort" jdbcType="BIT" />
+        <result column="area_deep" property="areaDeep" jdbcType="BIT" />
+    </resultMap>
    <select id="showProvinceList" resultType="com.meirengu.uc.model.Area">
        select area_id AS areaId , area_name AS  areaName ,
        area_parent_id AS areaParentId, area_sort AS areaSort ,area_deep AS areaDeep
@@ -24,5 +31,11 @@
             area_id AS areaId , area_name AS  areaName ,
             area_parent_id AS areaParentId, area_sort AS areaSort ,area_deep AS areaDeep
            from area where area_id = #{areaId}
+    </select>
+    <select id="getAreaData" resultMap="BaseResultMap">
+        select
+            area_id AS areaId , area_name AS  areaName ,
+            area_parent_id AS areaParentId, area_sort AS areaSort ,area_deep AS areaDeep
+        from area WHERE  area_deep != 0
     </select>
 </mapper>
