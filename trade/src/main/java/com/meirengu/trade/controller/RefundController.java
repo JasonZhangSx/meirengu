@@ -10,7 +10,6 @@ import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RefundService;
-import com.meirengu.trade.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +151,19 @@ public class RefundController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    /**
+     * 退款列表
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param orderSn
+     * @param userId
+     * @param userPhone
+     * @param refundState
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,

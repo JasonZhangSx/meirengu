@@ -59,13 +59,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         JSONArray addressArray = resultJson.getJSONArray("data");
                         for (int i = 0; i < addressArray.size(); i++) {
                             JSONObject addressJson = addressArray.getJSONObject(i);
-                            System.out.print(addressJson.getIntValue("addressId"));
-                            System.out.print(addressJson.getString("userName"));
-                            System.out.print(addressJson.getString("userPhone"));
-                            System.out.print(addressJson.getString("province"));
-                            System.out.print(addressJson.getString("city"));
-                            System.out.print(addressJson.getString("areas"));
-                            System.out.print(addressJson.getString("userAddress"));
                             int addressId = addressJson.getIntValue("addressId");
                             Map<String, Object> addressMap = new HashMap<String, Object>();
                             addressMap.put("userName", addressJson.getString("userName"));
@@ -120,13 +113,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     JSONArray addressArray = resultJson.getJSONArray("data");
                     for (int i = 0; i < addressArray.size(); i++) {
                         JSONObject addressJson = addressArray.getJSONObject(i);
-                        System.out.print(addressJson.getIntValue("addressId"));
-                        System.out.print(addressJson.getString("userName"));
-                        System.out.print(addressJson.getString("userPhone"));
-                        System.out.print(addressJson.getString("province"));
-                        System.out.print(addressJson.getString("city"));
-                        System.out.print(addressJson.getString("areas"));
-                        System.out.print(addressJson.getString("userAddress"));
                         int addressId = addressJson.getIntValue("addressId");
                         addressMap = new HashMap<String, Object>();
                         addressMap.put("userName", addressJson.getString("userName"));
@@ -153,10 +139,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     JSONArray itemLevelArray = resultJson.getJSONArray("data");
                     for (int i = 0; i < itemLevelArray.size(); i++) {
                         JSONObject itemLevelJson = itemLevelArray.getJSONObject(i);
-                        System.out.print(itemLevelJson.getIntValue("isShareBonus"));
-                        System.out.print(itemLevelJson.getBigDecimal("yearRate"));
-                        System.out.print(itemLevelJson.getIntValue("investmentPeriod"));
-                        System.out.print(itemLevelJson.getIntValue("shareBonusPeriod"));
                         int levelId = itemLevelJson.getIntValue("levelId");
                         itemLevelMap = new HashMap<String, Object>();
                         itemLevelMap.put("isShareBonus", itemLevelJson.getIntValue("isShareBonus"));
@@ -433,11 +415,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         Map<String, Object> avatarMap = null;
                         for (int i = 0; i < avatarArray.size(); i++) {
                             JSONObject avatarJson = avatarArray.getJSONObject(i);
-                            System.out.print(avatarJson.getIntValue("userId"));
-                            System.out.print(avatarJson.getString("avatar"));
                             int userId = avatarJson.getIntValue("userId");
                             avatarMap = new HashMap<String, Object>();
-                            avatarMap.put("userId", avatarJson.getIntValue("isShareBonus"));
+                            avatarMap.put("userId", avatarJson.getIntValue("userId"));
                             avatarMap.put("avatar", avatarJson.getString("avatar"));
                             userListTemp.put(userId, avatarMap);
                         }

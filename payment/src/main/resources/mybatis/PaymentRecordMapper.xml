@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentRecordDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentRecord" >
+    <id column="payment_id" property="paymentId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="payment_method" property="paymentMethod" jdbcType="INTEGER" />
+    <result column="payment_channel" property="paymentChannel" jdbcType="INTEGER" />
+    <result column="payment_bank_type" property="paymentBankType" jdbcType="VARCHAR" />
+    <result column="payment_type" property="paymentType" jdbcType="INTEGER" />
+    <result column="channel_request_time" property="channelRequestTime" jdbcType="TIMESTAMP" />
+    <result column="channel_response_time" property="channelResponseTime" jdbcType="TIMESTAMP" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="transaction_sn" property="transactionSn" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="item_level_id" property="itemLevelId" jdbcType="INTEGER" />
+    <result column="item_level_name" property="itemLevelName" jdbcType="VARCHAR" />
+    <result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL" />
+    <result column="rebate_amount" property="rebateAmount" jdbcType="DECIMAL" />
+    <result column="payment_front_balance" property="paymentFrontBalance" jdbcType="DECIMAL" />
+    <result column="payment_back_balance" property="paymentBackBalance" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="device_info" property="deviceInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.pay.model.PaymentRecord" extends="BaseResultMap" >
+    <result column="return_msg" property="returnMsg" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    payment_id, user_id, user_name, user_phone, account_id, partner_id, payment_method, 
+    payment_channel, payment_bank_type, payment_type, channel_request_time, channel_response_time, 
+    order_sn, transaction_sn, item_id, item_name, item_level_id, item_level_name, order_amount, 
+    payment_amount, rebate_amount, payment_front_balance, payment_back_balance, status,
+    device_info, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    return_msg
+  </sql>
+  <select id="selectPaymentRecord" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.pay.model.PaymentRecord" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from payment_record
+    where 1=1
+    <if test="paymentId != null" >
+      AND payment_id = #{paymentId,jdbcType=INTEGER}
+    </if>
+    <if test="orderSn != null" >
+      AND order_sn = #{orderSn,jdbcType=INTEGER}
+    </if>
+  </select>
+  <insert id="insertPaymentRecord" parameterType="com.meirengu.pay.model.PaymentRecord" >
+    insert into payment_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="partnerId != null" >
+        partner_id,
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method,
+      </if>
+      <if test="paymentChannel != null" >
+        payment_channel,
+      </if>
+      <if test="paymentBankType != null" >
+        payment_bank_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="channelRequestTime != null" >
+        channel_request_time,
+      </if>
+      <if test="channelResponseTime != null" >
+        channel_response_time,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="transactionSn != null" >
+        transaction_sn,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="itemLevelId != null" >
+        item_level_id,
+      </if>
+      <if test="itemLevelName != null" >
+        item_level_name,
+      </if>
+      <if test="orderAmount != null" >
+        order_amount,
+      </if>
+      <if test="paymentAmount != null" >
+        payment_amount,
+      </if>
+      <if test="rebateAmount != null" >
+        rebate_amount,
+      </if>
+      <if test="paymentFrontBalance != null" >
+        payment_front_balance,
+      </if>
+      <if test="paymentBackBalance != null" >
+        payment_back_balance,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="deviceInfo != null" >
+        device_info,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="returnMsg != null" >
+        return_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentMethod != null" >
+        #{paymentMethod,jdbcType=INTEGER},
+      </if>
+      <if test="paymentChannel != null" >
+        #{paymentChannel,jdbcType=INTEGER},
+      </if>
+      <if test="paymentBankType != null" >
+        #{paymentBankType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="channelRequestTime != null" >
+        #{channelRequestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="channelResponseTime != null" >
+        #{channelResponseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionSn != null" >
+        #{transactionSn,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemLevelId != null" >
+        #{itemLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="itemLevelName != null" >
+        #{itemLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null" >
+        #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentAmount != null" >
+        #{paymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="rebateAmount != null" >
+        #{rebateAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentFrontBalance != null" >
+        #{paymentFrontBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentBackBalance != null" >
+        #{paymentBackBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deviceInfo != null" >
+        #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnMsg != null" >
+        #{returnMsg,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updatePaymentRecord" parameterType="com.meirengu.pay.model.PaymentRecord" >
+    update payment_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        partner_id = #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentMethod != null" >
+        payment_method = #{paymentMethod,jdbcType=INTEGER},
+      </if>
+      <if test="paymentChannel != null" >
+        payment_channel = #{paymentChannel,jdbcType=INTEGER},
+      </if>
+      <if test="paymentBankType != null" >
+        payment_bank_type = #{paymentBankType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        payment_type = #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="channelRequestTime != null" >
+        channel_request_time = #{channelRequestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="channelResponseTime != null" >
+        channel_response_time = #{channelResponseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionSn != null" >
+        transaction_sn = #{transactionSn,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemLevelId != null" >
+        item_level_id = #{itemLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="itemLevelName != null" >
+        item_level_name = #{itemLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null" >
+        order_amount = #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentAmount != null" >
+        payment_amount = #{paymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="rebateAmount != null" >
+        rebate_amount = #{rebateAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentFrontBalance != null" >
+        payment_front_balance = #{paymentFrontBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentBackBalance != null" >
+        payment_back_balance = #{paymentBackBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deviceInfo != null" >
+        device_info = #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnMsg != null" >
+        return_msg = #{returnMsg,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where payment_id = #{paymentId,jdbcType=INTEGER}
+  </update>
+</mapper>

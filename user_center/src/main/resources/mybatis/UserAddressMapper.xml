@@ -48,7 +48,7 @@
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
     </if>
   </select>
-  <select id="selectByAddIdList" parameterType="String" resultMap="BaseResultMap">
+  <select id="selectByAddIdList" parameterType="String" resultType="Map">
     select
     <include refid="Base_Column_List" />
     from user_address  a

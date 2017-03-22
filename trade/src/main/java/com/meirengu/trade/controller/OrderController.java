@@ -9,8 +9,8 @@ import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
-import com.meirengu.trade.utils.OrderSNUtils;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -165,6 +165,7 @@ public class OrderController extends BaseController{
             //备注和微信号选填
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
+
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
         order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_ORDER_SN_PREFIX));

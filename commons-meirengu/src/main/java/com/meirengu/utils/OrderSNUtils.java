@@ -1,4 +1,4 @@
-package com.meirengu.trade.utils;
+package com.meirengu.utils;
 
 /**
  * 订单相关的编号生成
