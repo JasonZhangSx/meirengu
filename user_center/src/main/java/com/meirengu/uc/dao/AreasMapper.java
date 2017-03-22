@@ -21,4 +21,6 @@ public interface AreasMapper {
 	List<Area> showAreaListBycid(Integer cid);
 
 	Area getArea(Integer areaId);
+
+	List<Area> getAreaData();
 }
