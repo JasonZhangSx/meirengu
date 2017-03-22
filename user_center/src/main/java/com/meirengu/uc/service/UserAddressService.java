@@ -2,9 +2,8 @@ package com.meirengu.uc.service;
 
 import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressNamePO;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * 地址增删改查
@@ -39,5 +38,5 @@ public interface UserAddressService extends BaseService<UserAddress> {
      */
     UserAddress selectDefaultAddressByUserId(Integer userId);
 
-    List<AddressNamePO> selectByAddIdArray(String addressIds);
+    List<Map<String, Object>> selectByAddIdArray(String addressIds);
 }

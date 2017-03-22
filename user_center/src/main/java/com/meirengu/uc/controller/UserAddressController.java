@@ -252,9 +252,9 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
-        List<AddressNamePO> userAddressPO = userAddressService.selectByAddIdArray(addressId);
-        if(userAddressPO != null){
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+        List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
+        if(userAddressList != null && userAddressList.size() > 0){
+            return super.setResult(StatusCode.OK, userAddressList,StatusCode.codeMsgMap.get(StatusCode.OK));
         }else{
             return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
         }

@@ -11,8 +11,10 @@ import com.meirengu.uc.service.UserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by huoyan403 on 3/14/2017.
@@ -63,50 +65,37 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     }
 
     @Override
-    public List<AddressNamePO> selectByAddIdArray(String addressIds) {
-
+    public List<Map<String, Object>> selectByAddIdArray(String addressIds) {
         List<String> list = new ArrayList<>();
         String[] arr = addressIds.split(",");
         for(String arr1 :arr){
             list.add(arr1);
         }
-        List<AddressNamePO> addressNamePOs = new ArrayList<>();
-        List<UserAddress> addressList = userAddressDao.selectByAddIdList(list);
+        List<Map<String, Object>> addressList = userAddressDao.selectByAddIdList(list);
 
-        for(UserAddress address:addressList){
-            AddressNamePO addressNamePO = new AddressNamePO();
-            addressNamePO.setAddressId(address.getAddressId());
-            addressNamePO.setUserAddress(address.getUserAddress());
-            AddressPO addressPO = new AddressPO();
-            Area area = areasMapper.getArea(address.getAreaId());
-            if(area!=null && area.getAreaDeep() == 3){
-                addressPO.setAreaId(address.getAreaId());
-                addressPO.setArea(area.getAreaName());
+        if (addressList != null && addressList.size() > 0) {
+            for(Map<String, Object> addressMap:addressList){
+                Area area = areasMapper.getArea((int)addressMap.get("areaId"));
+                if(area!=null && area.getAreaDeep() == 3){
+                    addressMap.put("area", area.getAreaName());
 
-                Area city = areasMapper.getArea(area.getAreaParentId());
-                addressPO.setCityId(city.getAreaId());
-                addressPO.setCity(city.getAreaName());
+                    Area city = areasMapper.getArea(area.getAreaParentId());
+                    addressMap.put("city", city.getAreaName());
 
-                Area province = areasMapper.getArea(city.getAreaParentId());
-                addressPO.setProvinceId(city.getAreaParentId());
-                addressPO.setProvince(province.getAreaName());
-            }else if(area!=null && area.getAreaDeep()== 2){
+                    Area province = areasMapper.getArea(city.getAreaParentId());
+                    addressMap.put("province", province.getAreaName());
+                }else if(area!=null && area.getAreaDeep()== 2){
+                    addressMap.put("city", area.getAreaName());
 
-                addressPO.setCityId(address.getAreaId());
-                addressPO.setCity(area.getAreaName());
-
-                Area province = areasMapper.getArea(area.getAreaParentId());
-                addressPO.setProvinceId(area.getAreaParentId());
-                addressPO.setProvince(province.getAreaName());
-            }else if(area!=null && area.getAreaDeep()==1){
-                addressPO.setProvinceId(address.getAreaId());
-                addressPO.setProvince(area.getAreaName());
+                    Area province = areasMapper.getArea(area.getAreaParentId());
+                    addressMap.put("province", province.getAreaName());
+                }else if(area!=null && area.getAreaDeep()==1){
+                    addressMap.put("province", area.getAreaName());
+                }
             }
-            addressNamePO.setAddressPO(addressPO);
-            addressNamePOs.add(addressNamePO);
         }
+        return addressList;
 
-        return addressNamePOs;
     }
 
 }
