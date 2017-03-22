@@ -232,7 +232,7 @@ public class SmsController extends BaseController {
 
     }
 
-    public static List<String> extractMessageByRegular(String msg){
+    public List<String> extractMessageByRegular(String msg){
         List<String> list=new ArrayList<String>();
         Pattern p = Pattern.compile("(\\#[^\\#]*\\#)");
         Matcher m = p.matcher(msg);
