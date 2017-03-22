@@ -1,4 +1,4 @@
-package com.meirengu.trade.utils;
+package com.meirengu.utils;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
