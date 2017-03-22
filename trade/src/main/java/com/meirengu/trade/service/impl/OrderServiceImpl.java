@@ -417,7 +417,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             JSONObject avatarJson = avatarArray.getJSONObject(i);
                             int userId = avatarJson.getIntValue("userId");
                             avatarMap = new HashMap<String, Object>();
-                            avatarMap.put("userId", avatarJson.getIntValue("isShareBonus"));
+                            avatarMap.put("userId", avatarJson.getIntValue("userId"));
                             avatarMap.put("avatar", avatarJson.getString("avatar"));
                             userListTemp.put(userId, avatarMap);
                         }

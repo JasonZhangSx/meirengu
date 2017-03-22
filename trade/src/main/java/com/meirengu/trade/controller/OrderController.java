@@ -165,6 +165,7 @@ public class OrderController extends BaseController{
             //备注和微信号选填
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
+
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
         order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_ORDER_SN_PREFIX));
