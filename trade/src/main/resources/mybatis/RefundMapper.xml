@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+         <mapper namespace="com.meirengu.trade.dao.RefundDao" >
+	<sql id="table_name">refund</sql>
+	<sql id="select_columns">refund_id as refundId, refund_sn as refundSn, order_id as orderId, order_sn as orderSn, third_order_sn as thirdOrderSn, third_refund_sn as thirdRefundSn, item_id as itemId, partner_id as partnerId, user_id as userId, user_name as userName, user_phone as userPhone, add_time as addTime, order_amount as orderAmount, order_refund as orderRefund, refund_paymentname as refundPaymentname, refund_paymentcode as refundPaymentcode, refund_message as refundMessage, user_message as userMessage, admin_message as adminMessage, partner_time as partnerTime, admin_time as adminTime, confirm_time as confirmTime, refund_type as refundType, refund_state as refundState, user_confirm as userConfirm
+	</sql>
+	<insert id="insert" parameterType="refund" useGeneratedKeys="true" keyProperty="refundId" >
+		INSERT INTO <include refid="table_name" />
+			(refund_id, refund_sn, order_id, order_sn, third_order_sn, third_refund_sn, item_id, partner_id, user_id, user_name, user_phone, add_time, order_amount, order_refund, refund_paymentname, refund_paymentcode, refund_message, user_message, admin_message, partner_time, admin_time, confirm_time, refund_type, refund_state, user_confirm)
+		VALUES
+			(#{refundId}, #{refundSn}, #{orderId}, #{orderSn}, #{thirdOrderSn}, #{thirdRefundSn}, #{itemId}, #{partnerId}, #{userId}, #{userName}, #{userPhone}, #{addTime}, #{orderAmount}, #{orderRefund}, #{refundPaymentname}, #{refundPaymentcode}, #{refundMessage}, #{userMessage}, #{adminMessage}, #{partnerTime}, #{adminTime}, #{confirmTime}, #{refundType}, #{refundState}, #{userConfirm})
+	</insert>
+	<update id="update" parameterType="refund">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="refundSn != null and refundSn != ''">
+				refund_sn=#{refundSn},
+			</if>
+			<if test="orderId != null">
+				order_id=#{orderId},
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				order_sn=#{orderSn},
+			</if>
+			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+				third_order_sn=#{thirdOrderSn},
+			</if>
+			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+				third_refund_sn=#{thirdRefundSn},
+			</if>
+			<if test="itemId != null">
+				item_id=#{itemId},
+			</if>
+			<if test="partnerId != null">
+				partner_id=#{partnerId},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name=#{userName},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="addTime != null ">
+				add_time=#{addTime},
+			</if>
+			<if test="orderAmount != null">
+				order_amount=#{orderAmount},
+			</if>
+			<if test="orderRefund != null">
+				order_refund=#{orderRefund},
+			</if>
+			<if test="refundPaymentname != null and refundPaymentname != ''">
+				refund_paymentname=#{refundPaymentname},
+			</if>
+			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+				refund_paymentcode=#{refundPaymentcode},
+			</if>
+			<if test="refundMessage != null and refundMessage != ''">
+				refund_message=#{refundMessage},
+			</if>
+			<if test="userMessage != null and userMessage != ''">
+				user_message=#{userMessage},
+			</if>
+			<if test="adminMessage != null and adminMessage != ''">
+				admin_message=#{adminMessage},
+			</if>
+			<if test="partnerTime != null ">
+				partner_time=#{partnerTime},
+			</if>
+			<if test="adminTime != null ">
+				admin_time=#{adminTime},
+			</if>
+			<if test="confirmTime != null ">
+				confirm_time=#{confirmTime},
+			</if>
+			<if test="refundType != null and refundType != ''">
+				refund_type=#{refundType},
+			</if>
+			<if test="refundState != null and refundState != ''">
+				refund_state=#{refundState},
+			</if>
+			<if test="userConfirm != null and userConfirm != ''">
+				user_confirm=#{userConfirm},
+			</if>
+		</set>
+		<where>
+			refund_id = #{refundId}
+		</where>
+	</update>
+	<select id="detail" parameterType="integer" resultType="refund">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where refund_id=#{id}
+	</select>
+	<sql id="findPage_where">
+		<where>
+			<if test="refundSn != null and refundSn != ''">
+				AND tb.refund_sn=#{refundSn}
+			</if>
+			<if test="orderId != null">
+				AND tb.order_id=#{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND tb.order_sn=#{orderSn}
+			</if>
+			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+				AND tb.third_order_sn=#{thirdOrderSn}
+			</if>
+			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+				AND tb.third_refund_sn=#{thirdRefundSn}
+			</if>
+			<if test="itemId != null">
+				AND tb.item_id=#{itemId}
+			</if>
+			<if test="partnerId != null">
+				AND tb.partner_id=#{partnerId}
+			</if>
+			<if test="userId != null">
+				AND tb.user_id=#{userId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND tb.user_name=#{userName}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND tb.user_phone=#{userPhone}
+			</if>
+			<if test="addTimeBegin != null">
+				AND tb.add_time >= #{addTimeBegin}
+			</if>
+			<if test="addTimeEnd != null">
+				AND tb.add_time &lt;= #{addTimeEnd}
+			</if>
+			<if test="orderAmount != null">
+				AND tb.order_amount=#{orderAmount}
+			</if>
+			<if test="orderRefund != null">
+				AND tb.order_refund=#{orderRefund}
+			</if>
+			<if test="refundPaymentname != null and refundPaymentname != ''">
+				AND tb.refund_paymentname=#{refundPaymentname}
+			</if>
+			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+				AND tb.refund_paymentcode=#{refundPaymentcode}
+			</if>
+			<if test="refundMessage != null and refundMessage != ''">
+				AND tb.refund_message=#{refundMessage}
+			</if>
+			<if test="userMessage != null and userMessage != ''">
+				AND tb.user_message=#{userMessage}
+			</if>
+			<if test="adminMessage != null and adminMessage != ''">
+				AND tb.admin_message=#{adminMessage}
+			</if>
+			<if test="partnerTime != null ">
+				AND tb.partner_time=#{partnerTime}
+			</if>
+			<if test="adminTime != null ">
+				AND tb.admin_time=#{adminTime}
+			</if>
+			<if test="confirmTimeBegin != null">
+				AND tb.confirm_time >= #{confirmTimeBegin}
+			</if>
+			<if test="confirmTimeEnd != null">
+				AND tb.confirm_time &lt;= #{confirmTimeBegin}
+			</if>
+			<if test="refundType != null and refundType != ''">
+				AND tb.refund_type=#{refundType}
+			</if>
+			<if test="refundState != null and refundState != ''">
+				AND tb.refund_state=#{refundState}
+			</if>
+			<if test="userConfirm != null and userConfirm != ''">
+				AND tb.user_confirm=#{userConfirm}
+			</if>
+		</where>
+	</sql>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />
+		FROM
+		<include refid="table_name" /> tb
+		<include refid="findPage_where"/>
+		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+			order by #{sortBy} #{order}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1)
+		FROM
+		<include refid="table_name" /> tb
+		<include refid="findPage_where"/>
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

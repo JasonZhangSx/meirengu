@@ -30,30 +30,27 @@
 
 	<insert id="insert" parameterType="itemCooperation" useGeneratedKeys="true" keyProperty="itemId" >
 		INSERT INTO <include refid="table_name" />
-			(item_id, commission_rate, guarantee_rate, prepaid_bonus, loan_mode, first_ratio, sponsor_idcard, sponsor_credit, principal_idcard, principal_credit, business_licence, venue_rental_agreement, store_renderings, corporate_articles, asset_water_liabilities, create_time, update_time, operate_account)
+			(item_id, commission_rate, guarantee_rate, prepaid_bonus, loan_mode, first_ratio, sponsor_idcard, sponsor_credit, principal_idcard, principal_credit, business_licence, venue_rental_agreement, store_renderings, corporate_articles, asset_water_liabilities, create_time, operate_account)
 		VALUES
-			(#{itemId}, #{commissionRate}, #{guaranteeRate}, #{prepaidBonus}, #{loanMode}, #{firstRatio}, #{sponsorIdcard}, #{sponsorCredit}, #{principalIdcard}, #{principalCredit}, #{businessLicence}, #{venueRentalAgreement}, #{storeRenderings}, #{corporateArticles}, #{assetWaterLiabilities}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{itemId}, #{commissionRate}, #{guaranteeRate}, #{prepaidBonus}, #{loanMode}, #{firstRatio}, #{sponsorIdcard}, #{sponsorCredit}, #{principalIdcard}, #{principalCredit}, #{businessLicence}, #{venueRentalAgreement}, #{storeRenderings}, #{corporateArticles}, #{assetWaterLiabilities}, #{createTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="itemCooperation">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="itemId != null and itemId != ''">
-				item_id=#{itemId},
-			</if>
-			<if test="commissionRate != null and commissionRate != ''">
+			<if test="commissionRate != null">
 				commission_rate=#{commissionRate},
 			</if>
-			<if test="guaranteeRate != null and guaranteeRate != ''">
+			<if test="guaranteeRate != null">
 				guarantee_rate=#{guaranteeRate},
 			</if>
-			<if test="prepaidBonus != null and prepaidBonus != ''">
+			<if test="prepaidBonus != null">
 				prepaid_bonus=#{prepaidBonus},
 			</if>
-			<if test="loanMode != null and loanMode != ''">
+			<if test="loanMode != null">
 				loan_mode=#{loanMode},
 			</if>
-			<if test="firstRatio != null and firstRatio != ''">
+			<if test="firstRatio != null">
 				first_ratio=#{firstRatio},
 			</if>
 			<if test="sponsorIdcard != null and sponsorIdcard != ''">
@@ -82,12 +79,6 @@
 			</if>
 			<if test="assetWaterLiabilities != null and assetWaterLiabilities != ''">
 				asset_water_liabilities=#{assetWaterLiabilities},
-			</if>
-			<if test="createTime != null and createTime != ''">
-				create_time=#{createTime},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
-				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},

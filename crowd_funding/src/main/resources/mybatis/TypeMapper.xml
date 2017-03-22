@@ -5,19 +5,20 @@
 	<resultMap id="typeMap" type="Type">
 		<id column="type_id" property="typeId" jdbcType="INTEGER" javaType="int"/>
 		<result column="type_name" property="typeName" jdbcType="VARCHAR" javaType="String"/>
-		<result column="type_sort" property="typeSort" jdbcType="TINYINT" javaType="byte"/>
+		<result column="type_sort" property="typeSort" jdbcType="TINYINT" javaType="int"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
 	</resultMap>
 
 	<sql id="table_name">type</sql>
 	<sql id="select_columns">
-		type_id as typeId, type_name as typeName, type_sort as typeSort
+		type_id as typeId, type_name as typeName, type_sort as typeSort, flag as flag
 	</sql>
 
 	<insert id="insert" parameterType="type" useGeneratedKeys="true" keyProperty="typeId" >
 		INSERT INTO <include refid="table_name" />
-			(type_id, type_name, type_sort)
+			(type_id, type_name, type_sort, flag)
 		VALUES
-			(#{typeId}, #{typeName}, #{typeSort})
+			(#{typeId}, #{typeName}, #{typeSort}, #{flag})
 	</insert>
 
 	<update id="update" parameterType="type">
@@ -31,6 +32,9 @@
 			</if>
 			<if test="typeSort != null and typeSort != ''">
 				type_sort=#{typeSort},
+			</if>
+			<if test="flag != null and flag != ''">
+				flag=#{flag},
 			</if>
 		</set>
 		<where>

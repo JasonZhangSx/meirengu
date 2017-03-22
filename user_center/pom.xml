@@ -396,4 +396,17 @@
             </properties>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>user release repository</name>
+            <url>http://192.168.0.135:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>user snapshots repository</name>
+            <url>http://192.168.0.135:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

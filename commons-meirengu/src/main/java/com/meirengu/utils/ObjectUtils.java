@@ -1,5 +1,6 @@
 package com.meirengu.utils;
 
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.*;
@@ -365,6 +366,25 @@ public class ObjectUtils {
 
     private static boolean isEmpty(Collection<?> collection) {
         return (collection == null || collection.isEmpty());
+    }
+
+    public static <T> Map<String, Object> bean2Map(T bean) throws IllegalAccessException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(bean == null){
+            return null;
+        }
+        Field[] declaredFields = bean.getClass().getDeclaredFields();
+        for (Field field : declaredFields){
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(bean));
+        }
+        return map;
+    }
+
+    public static <T> T map2Bean(Map<String, Object> map,T bean) {
+        BeanMap beanMap = new BeanMap(bean);
+        beanMap.putAll(map);
+        return bean;
     }
 
 }

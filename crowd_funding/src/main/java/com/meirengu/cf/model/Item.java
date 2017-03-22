@@ -5,53 +5,57 @@ import java.math.BigDecimal;
 import java.util.Date;
  /*
   * Item 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class Item  extends BaseObject {
 	/** 众筹项目索引id */
-	private int itemId;
+	int itemId;
 	/** 项目名称(不超过30字) */
-	private String itemName;
+	String itemName;
 	/** 项目简介 */
-	private String itemProfile;
+	String itemProfile;
 	/** 众筹类型id */
-	private int typeId;
+	int typeId;
 	/** 项目分类id */
-	private int classId;
+	int classId;
 	/** 目标金额 */
-	private BigDecimal targetAmount;
+	BigDecimal targetAmount;
+	 /** 预约金额 */
+	BigDecimal appointAmount;
 	/** 已筹金额 */
-	private BigDecimal completedAmount;
+	BigDecimal completedAmount;
 	/** 预热天数 */
-	private short preheatingDays;
+	int preheatingDays;
 	/** 预热开始时间 */
-	private Date preheatingStartTime;
+	Date preheatingStartTime;
 	/** 预热结束时间 */
-	private Date preheatingEndTime;
+	Date preheatingEndTime;
 	/** 众筹天数 */
-	private short crowdDays;
+	int crowdDays;
 	/** 众筹开始时间 */
-	private Date crowdStartTime;
+	Date crowdStartTime;
 	/** 众筹结束时间 */
-	private Date crowdEndTime;
+	Date crowdEndTime;
 	/** 合作方id */
-	private int partnerId;
+	int partnerId;
 	/** 项目区域id */
-	private int areaId;
+	int areaId;
 	/** 项目头图 */
-	private String headerImage;
+	String headerImage;
 	/** 状态：1:新建中；2:初审中；3初审通过；4初审未通过；5:设置合作中；6:复审中；7复审通过；8复审未通过；9待发布；10:预热中；11认筹中；12 已完成；13已下架 */
-	private byte itemStatus;
+	int itemStatus;
+	/** 删除标识： 1 未删除  0 删除 */
+	int flag;
 	/** 排序，数字越小权重越大 */
-	private byte itemSort;
+	int itemSort;
 	/** 创建时间 */
-	private Date createTime;
+	Date createTime;
 	/** 修改时间 */
-	private Date updateTime;
+	Date updateTime;
 	/** 操作人账号 */
-	private String operateAccount;
+	String operateAccount;
 	/** 项目发起人名称 */
-	private String sponsorName;
+	String sponsorName;
 
 	public void setItemId(int itemId){
 		this.itemId = itemId;
@@ -109,11 +113,11 @@ public class Item  extends BaseObject {
 		return completedAmount;
 	}
 
-	public void setPreheatingDays(short preheatingDays){
+	public void setPreheatingDays(int preheatingDays){
 		this.preheatingDays = preheatingDays;
 	}
 
-	public short getPreheatingDays(){
+	public int getPreheatingDays(){
 		return preheatingDays;
 	}
 
@@ -133,11 +137,11 @@ public class Item  extends BaseObject {
 		return preheatingEndTime;
 	}
 
-	public void setCrowdDays(short crowdDays){
+	public void setCrowdDays(int crowdDays){
 		this.crowdDays = crowdDays;
 	}
 
-	public short getCrowdDays(){
+	public int getCrowdDays(){
 		return crowdDays;
 	}
 
@@ -181,19 +185,27 @@ public class Item  extends BaseObject {
 		return headerImage;
 	}
 
-	public void setItemStatus(byte itemStatus){
+	public void setItemStatus(int itemStatus){
 		this.itemStatus = itemStatus;
 	}
 
-	public byte getItemStatus(){
+	public int getItemStatus(){
 		return itemStatus;
 	}
 
-	public void setItemSort(byte itemSort){
+	public void setFlag(int flag){
+		this.flag = flag;
+	}
+
+	public int getFlag(){
+		return flag;
+	}
+
+	public void setItemSort(int itemSort){
 		this.itemSort = itemSort;
 	}
 
-	public byte getItemSort(){
+	public int getItemSort(){
 		return itemSort;
 	}
 
@@ -229,4 +241,11 @@ public class Item  extends BaseObject {
 		return sponsorName;
 	}
 
-}
+	 public BigDecimal getAppointAmount() {
+		 return appointAmount;
+	 }
+
+	 public void setAppointAmount(BigDecimal appointAmount) {
+		 this.appointAmount = appointAmount;
+	 }
+ }

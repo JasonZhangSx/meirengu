@@ -4,22 +4,23 @@
 
 	<resultMap id="itemOperateRecordMap" type="ItemOperateRecord">
 		<id column="id" property="id" jdbcType="INTEGER" javaType="int"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
 		<result column="operate_type" property="operateType" jdbcType="INTEGER" javaType="int"/>
-		<result column="operate_status" property="operateStatus" jdbcType="TINYINT" javaType="byte"/>
+		<result column="operate_status" property="operateStatus" jdbcType="TINYINT" javaType="int"/>
 		<result column="operate_time" property="operateTime" jdbcType="DATE" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
 	</resultMap>
 
 	<sql id="table_name">item_operate_record</sql>
 	<sql id="select_columns">
-		id as id, operate_type as operateType, operate_status as operateStatus, operate_time as operateTime, operate_account as operateAccount
+		id as id, item_id as itemId, operate_type as operateType, operate_status as operateStatus, operate_time as operateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="itemOperateRecord" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, operate_type, operate_status, operate_time, operate_account)
+			(id, item_id, operate_type, operate_status, operate_time, operate_account)
 		VALUES
-			(#{id}, #{operateType}, #{operateStatus}, #{operateTime}, #{operateAccount})
+			(#{id}, #{itemId}, #{operateType}, #{operateStatus}, #{operateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="itemOperateRecord">
@@ -27,6 +28,9 @@
 		<set>
 			<if test="id != null and id != ''">
 				id=#{id},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
 			</if>
 			<if test="operateType != null and operateType != ''">
 				operate_type=#{operateType},

@@ -3,6 +3,9 @@ package com.meirengu.uc.dao;
 import com.meirengu.dao.BaseDao;
 import com.meirengu.uc.model.UserAddress;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserAddressDao  extends BaseDao<UserAddress> {
     /**
      * 插入用户地址  不可缺少数据
@@ -30,4 +33,6 @@ public interface UserAddressDao  extends BaseDao<UserAddress> {
      * @param userId
      */
     void updateClearDefaultAddress(Integer userId);
+
+    List<Map<String, Object>> selectByAddIdList(List<String> list);
 }

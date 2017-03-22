@@ -4,47 +4,47 @@ import com.meirengu.model.BaseObject;
 import java.util.Date;
  /*
   * ItemInterested 实体类
-  * Tue Mar 14 16:55:44 CST 2017 建新
+  * Wed Mar 15 10:41:25 CST 2017 建新
   */
 public class ItemInterested  extends BaseObject {
 	/** 感兴趣项目索引id */
-	private int id;
+	private Integer id;
 	/** 众筹项目id */
-	private int itemId;
+	private Integer itemId;
 	/** 用户id */
-	private int userId;
+	private Integer userId;
 	/** 用户姓名 */
 	private String userName;
 	/** 用户手机号 */
 	private String userPhone;
 	/** 状态：1、感兴趣；0、取消感兴趣 */
-	private byte status;
+	private Integer status;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
 	private Date updateTime;
 
-	public void setId(int id){
+	public void setId(Integer id){
 		this.id = id;
 	}
 
-	public int getId(){
+	public Integer getId(){
 		return id;
 	}
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
-	public void setUserId(int userId){
+	public void setUserId(Integer userId){
 		this.userId = userId;
 	}
 
-	public int getUserId(){
+	public Integer getUserId(){
 		return userId;
 	}
 
@@ -64,11 +64,11 @@ public class ItemInterested  extends BaseObject {
 		return userPhone;
 	}
 
-	public void setStatus(byte status){
+	public void setStatus(Integer status){
 		this.status = status;
 	}
 
-	public byte getStatus(){
+	public Integer getStatus(){
 		return status;
 	}
 

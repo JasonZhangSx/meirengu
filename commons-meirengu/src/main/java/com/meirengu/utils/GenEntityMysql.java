@@ -466,13 +466,13 @@ public class GenEntityMysql {
         if (sqlType.equalsIgnoreCase("bit")) {
             return "boolean";
         } else if (sqlType.equalsIgnoreCase("tinyint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("smallint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("int") || sqlType.equalsIgnoreCase("bigint")
                 || sqlType.equalsIgnoreCase("mediumint") || sqlType.equalsIgnoreCase("smallint")
                 || sqlType.equalsIgnoreCase("tinyint")) {
-            return "int";
+            return "Integer";
         } else if (sqlType.equalsIgnoreCase("bigint")) {
             return "long";
         } else if (sqlType.equalsIgnoreCase("float")) {
@@ -494,7 +494,7 @@ public class GenEntityMysql {
             classList.add(sqlType);
             return "BigDecimal";
         } else if (sqlType.equalsIgnoreCase("enum")) {
-            return "int";
+            return "Integer";
         }
 
         return null;
@@ -560,8 +560,8 @@ public class GenEntityMysql {
 
         GenEntityMysql gm = new GenEntityMysql();
         String basePath = System.getProperty("user.dir");
-        String projectName = "crowd_funding";
-        String packageFather = "com.meirengu.cf";
+        String projectName = "trade";
+        String packageFather = "com.meirengu.trade";
         String packageModel = "model";
         String packageDao = "dao";
         String packageService = "service";
@@ -571,11 +571,11 @@ public class GenEntityMysql {
 
         String authorName = "建新";//作者名字
         //数据库连接
-        String url = "jdbc:mysql://192.168.0.135:3306/crowd_funding";
+        String url = "jdbc:mysql://192.168.0.135:3306/trade";
         String username = "dev";
         String password = "dev@1qa";
         String driver = "com.mysql.jdbc.Driver";
-        String databaseName = "crowd_funding";
+        String databaseName = "trade";
         gm.initParams(basePath, projectName, packageFather, packageModel, packageDao, packageService,
                 packageServiceImpl, packageController, mapperPath, authorName, url,
                 username, password, driver, databaseName);

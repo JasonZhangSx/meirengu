@@ -202,6 +202,14 @@
         FROM <include refid="table_name"/>
         WHERE inviter_phone=#{mobileInviter}
     </select>
+    <select id="listUserAvatar" parameterType="List" resultType="User">
+        SELECT user_id as userId,avatar
+        FROM <include refid="table_name"/>
+        WHERE state = 1 AND user_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
     <select id="verifyByPasswordAndPhone" parameterType="java.util.Map" resultType="User">
         SELECT <include refid="select_columns" />

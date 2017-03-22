@@ -46,7 +46,8 @@ public class StatusCode {
     public static final int TOKEN_IS_TIMEOUT = 40101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 40102;
     public static final int EMAIL_FORMAT_ERROR = 40103;
-
+    public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
+    public static final int PASSWORD_IS_MALFORMED = 40105;
     //40200-40300//news_cms
 
     //40300-40400//medical_beauty
@@ -71,7 +72,7 @@ public class StatusCode {
     public static final int PAYMENT_ACCOUNT_SUCCESS_SELECT = 40604;
     public static final int PAYMENT_ACCOUNT_ERROR_SELECT = 40605;
 
-    //40700-40700//sms
+    //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
     public static final int KEYWORD_MATCHING = 40702;
     public static final int TEMPLATE_NOT_MATCH = 40703;
@@ -82,6 +83,8 @@ public class StatusCode {
     public static final int DAY_LIMIT_PER_MOBILE = 40708;
     public static final int SMS_TEXT_IS_EMPTY = 40709;
     public static final int TEMPLATE_IS_EMPTY = 40710;
+    //40751-40800//trade
+
 
     //40800-40900//other
 
@@ -106,6 +109,9 @@ public class StatusCode {
     public static final int ADDREAA_IS_NOT_ALLOWED_DELETE = 50105;
     public static final int OLD_PASSWORD_IS_ERROR = 50106;
     public static final int USER_IS_EXITS = 50107;
+    public static final int USER_PASSWORD_IS_EXITS = 50108;
+    public static final int USER_INVITER_IS_NOT_EXITS = 50109;
+    public static final int ADDRESS_IS_NOT_EXITS = 50110;
 
 
     //50200-50300//news_cms
@@ -126,13 +132,55 @@ public class StatusCode {
     public static final int PARTNER_CLASS_ERROR_INSERT = 50503;
     public static final int PARTNER_CLASS_ERROR_UPDATE = 50504;
     public static final int PARTNER_CLASS_ALREADY_DELETE = 50505;
+    public static final int ITEM_LEVEL_ERROR_INSERT = 50506;
+    public static final int ITEM_LEVEL_ERROR_UPDATE = 50507;
+    public static final int ITEM_LEVEL_ERROR_DELETE = 50508;
+    public static final int ITEM_CONTENT_ERROR_INSERT = 50509;
+    public static final int ITEM_CONTENT_ERROR_UPDATE = 50510;
+    public static final int ITEM_CONTENT_ERROR_DELETE = 50511;
+    public static final int ITEM_COOPERATION_ERROR_INSERT = 50512;
+    public static final int ITEM_COOPERATION_ERROR_UPDATE = 50513;
+    public static final int ITEM_COOPERATION_ERROR_DELETE = 50514;
+    public static final int ITEM_INTERESTED_ERROR_INSERT = 50515;
+    public static final int ITEM_INTERESTED_ERROR_UPDATE = 50516;
+    public static final int ITEM_INTERESTED_ERROR_DELETE = 50517;
+    public static final int ITEM_BE_INTERESTED = 50518;
+    public static final int ITEM_NOT_BE_INTERESTED = 50519;
+    public static final int ITEM_LEVEL_APPOINT_FULL = 50520;
+    public static final int ITEM_LEVEL_COMPLETED = 50521;
+    public static final int ITEM_LEVEL_NULL = 50522;
+    public static final int ITEM_LEVEL_AMOUNT_NOT_MATCH = 50523;
+    public static final int ITEM_APPOINT_NUM_NOT_ENOUGH = 50524;
+    public static final int ITEM_BUY_NUM_NOT_ENOUGH = 50525;
+    public static final int ITEM_LEVEL_TOTAL_AMOUNT_ERROR = 50526;
 
     //50600-50700//payment
 
-    //50700-50800//sms
+    //50700-50750//sms
     public static final int SUBMIT_SMS_FAILED = 50700;
     public static final int TEMPLATE_NOT_VALID = 50701;
     public static final int MARKET_FORBIDDEN = 50702;
+    //50751-50800//trade
+    public static final int SUBSCRIPTIONS_ORDER_ERROR_INSERT = 50751;
+    public static final int APPOINTMENT_ORDER_ERROR_INSERT = 50752;
+    public static final int CANDIDATE_ORDER_ERROR_INSERT = 50753;
+    public static final int REFUND_AMOUNT_IS_ZERO = 50754;
+    public static final int REMAIN_NUM_NOT_ENOUGH = 50755;
+    public static final int ORDER_ERROR_UPDATE = 50756;
+    public static final int ITEM_LEVEL_NOT_MATCH = 50757;
+    public static final int ITEM_LEVEL_HAVE_ENOUGH = 50758;
+    public static final int ITEM_LEVEL_NUM_ERROR = 50759;
+    public static final int APPOINTMENT_CANCEL_ERROR = 50760;
+    public static final int APPOINTMENT_HAVE_AUDIT = 50761;
+    public static final int DELETE_ORDER_ERROR = 50761;
+    public static final int ORDER_STATUS_NOT_DELETE = 50761;
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +244,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.TOKEN_IS_TIMEOUT, "token已失效 ");
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");
         codeMsgMap.put(StatusCode.EMAIL_FORMAT_ERROR, "邮箱格式错误");
+        codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
+        codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty
@@ -214,7 +264,7 @@ public class StatusCode {
 
         //40600-40700//payment
 
-        //40700-40700//sms
+        //40700-40750//sms
         codeMsgMap.put(StatusCode.SMS_TEXT_IS_EMPTY, "短信内容不能为空");
         codeMsgMap.put(StatusCode.TEMPLATE_IS_EMPTY, "模板ID或模板内容不能为空");
         codeMsgMap.put(StatusCode.ACCOUNT_BALANCE_LESS, "账户余额不足");
@@ -225,6 +275,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.TOO_MANY_TIME_IN_5, "同一手机号5分钟内重复提交相同的内容超过3次");
         codeMsgMap.put(StatusCode.BLACK_PHONE_FILTER, "手机号黑名单过滤");
         codeMsgMap.put(StatusCode.DAY_LIMIT_PER_MOBILE, "24小时内同一手机号发送次数超过限制");
+        //40751-40800//trade
+
+
         //40800-40900//other
 
         //服务器错误(5字头)
@@ -243,7 +296,10 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
         codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
         codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
+        codeMsgMap.put(StatusCode.USER_PASSWORD_IS_EXITS, "用户密码已存在");
+        codeMsgMap.put(StatusCode.USER_INVITER_IS_NOT_EXITS, "邀请人不存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_NOT_EMPTY, "用户地址id不存在");
+        codeMsgMap.put(StatusCode.ADDRESS_IS_NOT_EXITS, "用户地址不存在");
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
@@ -267,6 +323,28 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_INSERT, "行业分类保存失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "行业分类修改失败，请重试");
         codeMsgMap.put(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "行业分类已删除");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_INSERT, "项目回报档位保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_UPDATE, "项目回报档位修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_ERROR_DELETE, "项目回报档位删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_INSERT, "项目内容保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_UPDATE, "项目内容修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_CONTENT_ERROR_DELETE, "项目内容删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_INSERT, "项目合作设置保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_UPDATE, "项目合作设置修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "项目合作设置删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "感兴趣项目保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_UPDATE, "感兴趣项目修改失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "感兴趣项目删除失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "已设置对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "已取消对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_COMPLETED, "该档位已完成");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NULL, "档位信息为空");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH, "参数档位金额与该档位金额不一致");
+        codeMsgMap.put(StatusCode.ITEM_APPOINT_NUM_NOT_ENOUGH, "档位可预约数量不足");
+        codeMsgMap.put(StatusCode.ITEM_BUY_NUM_NOT_ENOUGH, "档位可购买数量不足");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
+
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");
@@ -275,10 +353,27 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT, "该用户资金账户查询成功");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询成功");
 
-        //50700-50800//sms
+        //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");
         codeMsgMap.put(StatusCode.MARKET_FORBIDDEN, "营销短信暂停发送");
+        //50751-50800//trade
+        codeMsgMap.put(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, "认购订单保存失败，请重试");
+        codeMsgMap.put(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, "预约订单保存失败，请重试");
+        codeMsgMap.put(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, "候补预约保存失败，请重试");
+        codeMsgMap.put(StatusCode.REFUND_AMOUNT_IS_ZERO, "退款金额为0，无法退款");
+        codeMsgMap.put(StatusCode.REMAIN_NUM_NOT_ENOUGH, "剩余份数不足");
+        codeMsgMap.put(StatusCode.ORDER_ERROR_UPDATE, "订单跟新失败，请重试");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NOT_MATCH, "档位当前状态不能进行该操作，请刷新档位信息");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_HAVE_ENOUGH, "该档位已被预约满，请您进入候补预约");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_NUM_ERROR, "该档位剩余份数不足，请您重新操作");
+        codeMsgMap.put(StatusCode.APPOINTMENT_CANCEL_ERROR, "取消预约订单失败，请重试");
+        codeMsgMap.put(StatusCode.APPOINTMENT_HAVE_AUDIT, "预约订单已通过审核，不可取消");
+        codeMsgMap.put(StatusCode.DELETE_ORDER_ERROR, "删除订单失败，请重试");
+        codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_DELETE, "只有已失效和已退款的订单可以删除");
+
+
+
         //50800-50900//other
 
     }

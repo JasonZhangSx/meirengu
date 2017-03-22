@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * PartnerClass服务实现层 
  * @author 建新
- * @create Tue Mar 14 16:55:44 CST 2017
+ * @create Wed Mar 15 15:13:35 CST 2017
  */
 @Service
 public class PartnerClassServiceImpl extends BaseServiceImpl<PartnerClass> implements PartnerClassService{

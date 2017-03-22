@@ -2,6 +2,7 @@ package com.meirengu.uc.dao;
 
 import com.meirengu.uc.model.User;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,4 +63,6 @@ public interface UserDao {
     User verifyByPasswordAndPhone(Map map);
 
     int updatePasswordByPhone(User user);
+
+    List<User> listUserAvatar(List<String> list);
 }
