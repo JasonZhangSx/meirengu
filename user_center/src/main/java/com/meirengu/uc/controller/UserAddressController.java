@@ -5,7 +5,6 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressNamePO;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
@@ -254,7 +253,7 @@ public class UserAddressController extends BaseController{
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
         List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
         if(userAddressList != null && userAddressList.size() > 0){
-            return super.setResult(StatusCode.OK, userAddressList,StatusCode.codeMsgMap.get(StatusCode.OK));
+           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
         }else{
             return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
         }

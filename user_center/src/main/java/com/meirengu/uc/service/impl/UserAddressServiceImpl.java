@@ -5,13 +5,10 @@ import com.meirengu.uc.dao.AreasMapper;
 import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.model.Area;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressNamePO;
-import com.meirengu.uc.po.AddressPO;
 import com.meirengu.uc.service.UserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
