@@ -143,23 +143,23 @@ public class User extends BaseObject {
     /**
      * 会员是否认证
      **/
-    private boolean isAuth;
+    private Integer isAuth;
     /**
      * 会员是否允许购买商品
      **/
-    private boolean isBuy;
+    private Integer isBuy;
     /**
-     * 会员是否允许举报(1可以/2不可以)
+     * 会员是否允许举报(1可以/0不可以)
      **/
-    private boolean isAllowInform;
+    private Integer isAllowInform;
     /**
      * 会员是否有咨询和发送站内信的权限 1为开启 0为关闭
      **/
-    private boolean isAllowTalk;
+    private Integer isAllowTalk;
     /**
      * 会员的开启状态 1为开启 0为关闭
      **/
-    private boolean state;
+    private Integer state;
 
     public Date getLoginTime() {
         return loginTime;
@@ -417,43 +417,43 @@ public class User extends BaseObject {
         this.sinaInfo = sinaInfo;
     }
 
-    public boolean isAuth() {
+    public Integer getIsAuth() {
         return isAuth;
     }
 
-    public void setAuth(boolean auth) {
-        isAuth = auth;
+    public void setIsAuth(Integer isAuth) {
+        this.isAuth = isAuth;
     }
 
-    public boolean isBuy() {
+    public Integer getIsBuy() {
         return isBuy;
     }
 
-    public void setBuy(boolean buy) {
-        isBuy = buy;
+    public void setIsBuy(Integer isBuy) {
+        this.isBuy = isBuy;
     }
 
-    public boolean isAllowInform() {
+    public Integer getIsAllowInform() {
         return isAllowInform;
     }
 
-    public void setAllowInform(boolean allowInform) {
-        isAllowInform = allowInform;
+    public void setIsAllowInform(Integer isAllowInform) {
+        this.isAllowInform = isAllowInform;
     }
 
-    public boolean isAllowTalk() {
+    public Integer getIsAllowTalk() {
         return isAllowTalk;
     }
 
-    public void setAllowTalk(boolean allowTalk) {
-        isAllowTalk = allowTalk;
+    public void setIsAllowTalk(Integer isAllowTalk) {
+        this.isAllowTalk = isAllowTalk;
     }
 
-    public boolean isState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(boolean state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 }
