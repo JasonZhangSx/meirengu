@@ -195,6 +195,13 @@ public class OrderController extends BaseController{
         try{
             Result result = orderService.insertSubscriptions(order);
             return result;
+        } catch (OrderRpcException oe) {
+            logger.error("throw OrderRpcException:", oe);
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
         }catch (Exception e){
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -222,8 +229,11 @@ public class OrderController extends BaseController{
             return  result;
         }catch (OrderRpcException oe){
             logger.error("throw OrderRpcException:", oe);
-            oe.printStackTrace();
-            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
         }catch (Exception e){
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
