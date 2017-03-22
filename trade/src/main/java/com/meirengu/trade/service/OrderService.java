@@ -71,4 +71,11 @@ public interface OrderService extends BaseService<Order>{
      */
     Result deleteOrder(Order order);
 
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    public Integer getCount(Map map);
+
 }

@@ -289,6 +289,12 @@ public class OrderController extends BaseController{
                           @RequestParam(value = "order_state", required = false) String orderState,
                           @RequestParam(value = "need_avatar", required = false, defaultValue = "0") int needAvatar,
                           @RequestParam(value = "item_id", required = false, defaultValue = "0") int itemId){
+        //如果需要头像，则必传项目ID，因为此时需要去获取项目的最新状态，查出该项目的订单
+        if (needAvatar != 0 ) {
+            if (itemId == 0) {
+                return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+        }
         Map<String, Object> map = new HashMap<>();
         //前台不展示删除订单
         map.put("flag", 1);//逻辑删除状态 0为删除，1为未删除
@@ -398,19 +404,35 @@ public class OrderController extends BaseController{
     }
 
 
-    public static void main(String[] args) throws Exception {
-        Set<Integer> sets = new HashSet<Integer>();
-        sets.add(514802872);
-        sets.add(514802873);
-        String addressIdsStr = sets.toString();
-        String addressIds = addressIdsStr.substring(addressIdsStr.indexOf("[")+1,addressIdsStr.indexOf("]"));
-
-        String url = "http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?" + URLEncoder.encode("address_id="+addressIds, "UTF-8");;
-        HttpUriRequest request = new HttpGet(url);
-        System.out.println(request.getURI());
-        HttpGet get = new HttpGet("http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?address_id=" + addressIds);
-        System.out.println(get.getURI());
-        HttpUtil.HttpResult httpResult = HttpUtil.doGet("http://192.168.0.135:8084/uc" + Constant.ADDRESS_URL + "?address_id=" + addressIds);
+    /**
+     * 查询用户某个档位已够次数
+     * @param itemLevelId
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "user",  method = RequestMethod.GET)
+    public Result user(@RequestParam(value = "item_level_id", required = false) Integer itemLevelId,
+                       @RequestParam(value = "user_id", required = false) Integer userId){
+        if (itemLevelId == null || itemLevelId == 0 || userId == null || userId == 0) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("itemLevelId", itemLevelId);
+        paramMap.put("userId", userId);
+        //预约、审核通过，待支付，已支付
+        List<Integer> orderStateList = new ArrayList<Integer>();
+        orderStateList.add(OrderStateEnum.BOOK.getValue());
+        orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+        orderStateList.add(OrderStateEnum.UNPAID.getValue());
+        orderStateList.add(OrderStateEnum.PAID.getValue());
+        paramMap.put("orderStateList", orderStateList);
+        try {
+            int count = orderService.getCount(paramMap);
+            return setResult(StatusCode.OK, count, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
 
     }
 
