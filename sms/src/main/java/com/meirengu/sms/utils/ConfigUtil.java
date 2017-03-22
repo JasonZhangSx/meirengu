@@ -51,5 +51,4 @@ public class ConfigUtil {
 
         return props.getProperty(key);
     }
-
 }
