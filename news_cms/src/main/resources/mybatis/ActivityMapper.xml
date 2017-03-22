@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.ActivityDao" >
+
+    <resultMap id="activityMap" type="activity">
+        <id column="activity_id" property="activityId" jdbcType="INTEGER" javaType="int"/>
+        <result column="activity_type" property="activityType" jdbcType="INTEGER" javaType="int"/>
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR" javaType="string"/>
+        <result column="activity_image" property="activityImage" jdbcType="VARCHAR" javaType="string"/>
+        <result column="activity_link" property="activityLink" jdbcType="VARCHAR" javaType="string"/>
+        <result column="activity_sort" property="activitySort" jdbcType="TINYINT" javaType="int"/>
+        <result column="status" property="status" jdbcType="TINYINT" javaType="Date"/>
+        <result column="start_time" property="startTime" jdbcType="DATE" javaType="Date"/>
+        <result column="end_time" property="endTime" jdbcType="DATE" javaType="Date"/>
+        <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+        <result column="update_time" property="updateTime" jdbcType="DATE" javaType="Date"/>
+        <result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="string"/>
+    </resultMap>
+    <sql id="select_columns">
+        activity_id AS activityId,
+        activity_type AS activityType,
+        activity_name AS activityName,
+        activity_image AS activityImage,
+        activity_link AS activityLink,
+        activity_sort AS activitySort,
+        status AS status,
+        start_time AS startTime,
+        end_time AS endTime,
+        create_time AS createTime,
+        update_time AS updateTime,
+        operate_account AS operateAccount
+    </sql>
+    <sql id='table_name'>activity</sql>
+
+    <insert id="insert" parameterType="activity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO <include refid="table_name" />
+        (
+        activity_id,
+        activity_type,
+        activity_name,
+        activity_image,
+        activity_link,
+        activity_sort,
+        status,
+        start_time,
+        end_time,
+        create_time,
+        update_time,
+        operate_account
+        )
+        VALUES
+        (
+        #{activityId},
+        #{activityType},
+        #{activityName},
+        #{activityImage},
+        #{activityLink},
+        #{activitySort},
+        #{status},
+        #{startTime},
+        #{endTime},
+        #{createTime},
+        #{updateTime},
+        #{operateAccount}
+
+        );
+    </insert>
+    <update id="update" parameterType="activity">
+        update <include refid="table_name" />
+        <set>
+            activity_id=#{activityId},
+            <if test="activityType != null and activityType != ''">
+                activity_type=#{activityType},
+            </if>
+            <if test="activityName != null and activityName != ''">
+                activity_name=#{activityName},
+            </if>
+            <if test="activityImage != null and activityImage != ''">
+                activity_image=#{activityImage},
+            </if>
+            <if test="activityLink != null and activityLink != ''">
+                activity_link=#{activityLink},
+            </if>
+            <if test="activitySort != null and activitySort != ''">
+                activity_sort=#{activitySort},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+            <if test="status != null and status != ''">
+                status=#{status},
+            </if>
+            <if test="operateAccount != null and operateAccount != ''">
+                operate_account=#{operateAccount},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime}
+            </if>
+        </set>
+        <where>
+            activity_id = #{activityId}
+        </where>
+    </update>
+
+    <update id="delete" parameterType="INTEGER">
+        update <include refid="table_name" /> set status = 4 WHERE activity_id=#{id}
+    </update>
+
+    <select id="detail" parameterType="INTEGER" resultType="activity">
+        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE activity_id=#{activityId}
+    </select>
+
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select <include refid="select_columns" />
+        from
+        <include refid="table_name" />
+        <where> 1=1
+            <if test="activityId != null and activityId != ''">
+               AND activity_id=#{activityId}
+            </if>
+            <if test="activityName != null and activityName != ''">
+               AND activity_name=#{activityName}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        <where> 1 = 1
+            <if test="activityId != null and activityId != ''">
+                AND activity_id=#{activityId}
+            </if>
+            <if test="activityName != null and activityName != ''">
+                AND activity_name=#{activityName}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+    <!-- 分页相关结束 -->
+</mapper>

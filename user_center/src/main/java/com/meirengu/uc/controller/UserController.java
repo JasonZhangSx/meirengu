@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 会员控制类
@@ -242,6 +240,25 @@ public class UserController extends BaseController{
         }
         List<AvatarPO> user = userService.listUserAvatar(listUserIds);
        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+    /**
+     * 获取用户权限
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "auth", method = RequestMethod.GET)
+    public Result UserAuth(@RequestParam(value = "user_id", required = true) Integer userId) {
+
+        User user = userService.retrieveByUserId(userId);
+        if(user ==null){
+            return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_ID_NOT_EMPTY));
+        }
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("isAuth",user.getIsAuth());
+        map.put("isBuy",user.getIsBuy());
+        map.put("isAllowInform",user.getIsAllowInform());
+        map.put("isAllowTalk",user.getIsAllowTalk());
+        return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
 

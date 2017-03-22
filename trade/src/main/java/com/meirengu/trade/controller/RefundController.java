@@ -10,6 +10,7 @@ import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RefundService;
+import com.meirengu.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

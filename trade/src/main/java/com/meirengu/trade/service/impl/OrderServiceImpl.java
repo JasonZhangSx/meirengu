@@ -508,4 +508,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
         return result;
     }
+
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    public Integer getCount(Map map){
+        return orderDao.getCount(map);
+    }
 }

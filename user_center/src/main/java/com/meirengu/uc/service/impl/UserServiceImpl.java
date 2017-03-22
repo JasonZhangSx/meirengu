@@ -171,11 +171,11 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setPhone(mobile);
         user.setMobileInviter(mobileInviter);
         user.setLoginNum(1);
-        user.setAuth(true);
-        user.setAllowInform(true);
-        user.setAllowTalk(true);
-        user.setState(true);
-        user.setBuy(true);
+        user.setIsAuth(0);
+        user.setIsAllowInform(1);
+        user.setIsAllowTalk(1);
+        user.setState(1);
+        user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
         int result = this.create(user);
@@ -225,11 +225,11 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setLoginNum(1);
         user.setRegisterFrom(registerVO.getFrom());
         user.setRegisterTime(new Date());
-        user.setAuth(true);
-        user.setAllowInform(true);
-        user.setAllowTalk(true);
-        user.setState(true);
-        user.setBuy(true);
+        user.setIsAuth(0);
+        user.setIsAllowInform(1);
+        user.setIsAllowTalk(1);
+        user.setState(1);
+        user.setIsBuy(1);
         int result = this.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
