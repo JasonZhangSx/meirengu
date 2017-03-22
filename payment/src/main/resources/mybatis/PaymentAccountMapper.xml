@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentAccountDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentAccount" >
+    <id column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="INTEGER" />
+    <result column="currency_type" property="currencyType" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="account_balance" property="accountBalance" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    account_id, account_name, account_type, currency_type, user_id, password, mobile, 
+    email, status, account_balance, create_time, update_time
+  </sql>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from payment_account
+    where user_id=#{userId,jdbcType=INTEGER}
+    <!--<if test="accountId != null" >-->
+     <!--AND account_id = #{accountId,jdbcType=INTEGER}-->
+    <!--</if>-->
+    <!--<if test="userId != null" >-->
+     <!--AND user_id = #{userId,jdbcType=INTEGER}-->
+    <!--</if>-->
+  </select>
+  <insert id="insertAccount" parameterType="com.meirengu.pay.model.PaymentAccount" >
+    insert into payment_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="accountName != null" >
+        account_name,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="currencyType != null" >
+        currency_type,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=INTEGER},
+      </if>
+      <if test="currencyType != null" >
+        #{currencyType,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateAccount" parameterType="com.meirengu.pay.model.PaymentAccount" >
+    update payment_account
+    <set >
+      <if test="accountName != null" >
+        account_name = #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=INTEGER},
+      </if>
+      <if test="currencyType != null" >
+        currency_type = #{currencyType,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateBalance" parameterType="com.meirengu.pay.model.PaymentAccount" >
+    update payment_account
+    <set >
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL}
+      </if>
+    </set>
+    where account_id = #{accountId,jdbcType=INTEGER}
+  </update>
+</mapper>
