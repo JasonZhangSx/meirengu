@@ -187,6 +187,12 @@
 			<if test="userWeixin != null and userWeixin != ''">
 				AND user_weixin=#{userWeixin}
 			</if>
+			<if test="orderStateList != null">
+				AND order_state in
+				<foreach collection="orderStateList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 		</where>
 	</sql>
 	<!-- 分页相关开始 -->
