@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -43,8 +45,8 @@ public class OSSFileUtils {
         }
     }
 
-    public void upload(HttpServletRequest request, String fileName, String folderName) throws IOException {
-
+    public Map<String, String> upload(HttpServletRequest request, String fileName, String folderName) throws IOException {
+        Map<String, String> map = new HashMap<>();
         if (request instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
             MultipartFile file = req.getFile(fileName);
@@ -54,8 +56,11 @@ public class OSSFileUtils {
                 String suffix  = originalFilename.substring(originalFilename.lastIndexOf("."));
                 String pictureName = alias + suffix;
                 ossClient.putObject(bucketName, folderName+"/"+pictureName, file.getInputStream());
+                map.put("pictureName", pictureName);
             }
         }
+
+        return map;
     }
 
 }
