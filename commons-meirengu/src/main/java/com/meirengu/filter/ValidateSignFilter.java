@@ -24,9 +24,9 @@ import java.util.Map;
  * @author 建新
  * @create 2017-02-07 13:59
  */
-public class ApiControllerFilter extends OncePerRequestFilter{
+public class ValidateSignFilter extends OncePerRequestFilter{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiControllerFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidateSignFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
@@ -49,7 +49,7 @@ public class ApiControllerFilter extends OncePerRequestFilter{
             String sign = httpServletRequest.getParameter("sign");
 
             //timestamp, key, sign 为验签必传参数
-            if(StringUtil.isEmpty(tsp) || StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
+            if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
                 PrintWriter out = httpServletResponse.getWriter();
                 map.put("code", StatusCode.MISSING_ARGUMENT);
                 map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -68,6 +68,17 @@ public class ApiControllerFilter extends OncePerRequestFilter{
 
             //是否开启防重放
             if(ConfigUtil.getConfig("api.repeat.action").equalsIgnoreCase("true")){
+
+                if(StringUtil.isEmpty(tsp)){
+                    PrintWriter out = httpServletResponse.getWriter();
+                    map.put("code", StatusCode.MISSING_ARGUMENT);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                    out.print(JSON.toJSON(map));
+                    out.flush();
+                    out.close();
+                    return;
+                }
+
                 Long timestamp = Long.valueOf(tsp);
                 Long interval = (System.currentTimeMillis() - timestamp)/1000;
                 Long apiInterval = Long.parseLong(ConfigUtil.getConfig("api.interval.time"));

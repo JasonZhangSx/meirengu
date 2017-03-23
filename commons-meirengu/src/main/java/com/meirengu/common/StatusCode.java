@@ -355,11 +355,11 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_INSERT, "项目合作设置保存失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_UPDATE, "项目合作设置修改失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "项目合作设置删除失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "感兴趣项目保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "设置感兴趣项目失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_UPDATE, "感兴趣项目修改失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "感兴趣项目删除失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "已设置对该项目感兴趣");
-        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "已取消对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "取消感兴趣项目失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "该用户对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "该用户对该项目不感兴趣");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_COMPLETED, "该档位已完成");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_NULL, "档位信息为空");
