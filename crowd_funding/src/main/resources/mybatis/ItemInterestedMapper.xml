@@ -74,7 +74,7 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />, i.item_name, i.header_image, i.item_status  FROM <include refid="table_name" /> t
+		select <include refid="select_columns" />, i.item_name as itemName, i.header_image as headerImage, i.item_status as itemStatus  FROM <include refid="table_name" /> t
 		LEFT JOIN item i ON i.item_id=t.item_id
 		where 1=1
 		<if test="itemId != null">
