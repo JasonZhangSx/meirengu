@@ -76,7 +76,7 @@ public class ItemInterestedController extends BaseController{
                          @RequestParam(value = "user_id", required = false) Integer userId,
                          @RequestParam(value = "user_name", required = false) String userName,
                          @RequestParam(value = "user_phone", required = false) String userPhone){
-        if(itemId == null || itemId == 0 || userId == null || userId == 0 || StringUtil.isEmpty(userName) || StringUtil.isEmpty(userPhone)){
+        if(itemId == null || itemId == 0 || userId == null || userId == 0){
             return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
         try {
