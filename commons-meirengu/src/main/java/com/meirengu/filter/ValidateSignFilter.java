@@ -24,9 +24,9 @@ import java.util.Map;
  * @author 建新
  * @create 2017-02-07 13:59
  */
-public class ApiControllerFilter extends OncePerRequestFilter{
+public class ValidateSignFilter extends OncePerRequestFilter{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiControllerFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidateSignFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
@@ -49,7 +49,7 @@ public class ApiControllerFilter extends OncePerRequestFilter{
             String sign = httpServletRequest.getParameter("sign");
 
             //timestamp, key, sign 为验签必传参数
-            if(StringUtil.isEmpty(tsp) || StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
+            if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
                 PrintWriter out = httpServletResponse.getWriter();
                 map.put("code", StatusCode.MISSING_ARGUMENT);
                 map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -66,56 +66,72 @@ public class ApiControllerFilter extends OncePerRequestFilter{
                 params.put(key, paramsMap.get(key)[0]);
             }
 
-            Long timestamp = Long.valueOf(tsp);
-            Long interval = (System.currentTimeMillis() - timestamp)/1000;
-            Long apiInterval = Long.parseLong(ConfigUtil.getConfig("api.interval.time"));
+            //是否开启防重放
+            if(ConfigUtil.getConfig("api.repeat.action").equalsIgnoreCase("true")){
 
-            //当前请求时间大于api限制的请求时间
-            if(interval > apiInterval){
-                PrintWriter out = httpServletResponse.getWriter();
-                map.put("code", StatusCode.REQUEST_TIMEOUT);
-                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.REQUEST_TIMEOUT));
-                out.print(JSON.toJSON(map));
-                out.flush();
-                out.close();
-            }else {
-                String androidAppKey = ConfigUtil.getConfig("api.adroid.appKey");
-                String iosAppKey = ConfigUtil.getConfig("api.ios.appKey");
-                String wxAppKey = ConfigUtil.getConfig("api.wx.appKey");
-                String wapAppKey = ConfigUtil.getConfig("api.wap.appKey");
-                String appSecret = null;
-
-                if(androidAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.adroid.appSecret");
-                    LOGGER.info("requet api platform is android.");
-                }else if(iosAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.ios.appSecret");
-                    LOGGER.info("requet api platform is ios.");
-                }else if(wapAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.wap.appSecret");
-                    LOGGER.info("requet api platform is wap.");
-                }else if(wxAppKey.equals(appKey)){
-                    appSecret = ConfigUtil.getConfig("api.wx.appSecret");
-                    LOGGER.info("requet api platform is weixin.");
-                }else {
+                if(StringUtil.isEmpty(tsp)){
                     PrintWriter out = httpServletResponse.getWriter();
-                    map.put("code", StatusCode.BAD_API_KEY);
-                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+                    map.put("code", StatusCode.MISSING_ARGUMENT);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
                     out.print(JSON.toJSON(map));
                     out.flush();
                     out.close();
                     return;
                 }
 
-                if(SignParamsUtils.verify(params, appSecret)){
-                    filterChain.doFilter(httpServletRequest, httpServletResponse);
-                }else{
+                Long timestamp = Long.valueOf(tsp);
+                Long interval = (System.currentTimeMillis() - timestamp)/1000;
+                Long apiInterval = Long.parseLong(ConfigUtil.getConfig("api.interval.time"));
+
+                //当前请求时间大于api限制的请求时间
+                if(interval > apiInterval){
                     PrintWriter out = httpServletResponse.getWriter();
+                    map.put("code", StatusCode.REQUEST_TIMEOUT);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.REQUEST_TIMEOUT));
                     out.print(JSON.toJSON(map));
                     out.flush();
                     out.close();
+                    return;
                 }
             }
+
+            String androidAppKey = ConfigUtil.getConfig("api.adroid.appKey");
+            String iosAppKey = ConfigUtil.getConfig("api.ios.appKey");
+            String wxAppKey = ConfigUtil.getConfig("api.wx.appKey");
+            String wapAppKey = ConfigUtil.getConfig("api.wap.appKey");
+            String appSecret = null;
+
+            if(androidAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.adroid.appSecret");
+                LOGGER.info("requet api platform is android.");
+            }else if(iosAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.ios.appSecret");
+                LOGGER.info("requet api platform is ios.");
+            }else if(wapAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.wap.appSecret");
+                LOGGER.info("requet api platform is wap.");
+            }else if(wxAppKey.equals(appKey)){
+                appSecret = ConfigUtil.getConfig("api.wx.appSecret");
+                LOGGER.info("requet api platform is weixin.");
+            }else {
+                PrintWriter out = httpServletResponse.getWriter();
+                map.put("code", StatusCode.BAD_API_KEY);
+                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
+                out.print(JSON.toJSON(map));
+                out.flush();
+                out.close();
+                return;
+            }
+
+            if(SignParamsUtils.verify(params, appSecret)){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+            }else{
+                PrintWriter out = httpServletResponse.getWriter();
+                out.print(JSON.toJSON(map));
+                out.flush();
+                out.close();
+            }
+
         }
 
     }

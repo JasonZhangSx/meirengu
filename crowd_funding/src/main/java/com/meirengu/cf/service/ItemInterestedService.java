@@ -9,7 +9,10 @@ import com.meirengu.service.BaseService;
  */
 public interface ItemInterestedService extends BaseService<ItemInterested>{
 
-    int cancle(ItemInterested itemInterested);
+    int updateStatus(ItemInterested itemInterested);
 
     boolean isBeInterested(Integer itemId, Integer userId);
+
+    ItemInterested detailByUserAndItem(ItemInterested itemInterested);
+
 }

@@ -1,7 +1,6 @@
 package com.meirengu.cf.controller;
 
 import com.meirengu.cf.utils.ConfigUtil;
-import com.meirengu.cf.utils.FileUtils;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;

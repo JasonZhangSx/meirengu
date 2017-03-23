@@ -29,7 +29,7 @@
 		<result column="sponsor_name" property="sponsorName" jdbcType="VARCHAR" javaType="String"/>
 	</resultMap>
 
-	<sql id="table_name">item t</sql>
+	<sql id="table_name">item</sql>
 	<sql id="select_columns">
 		t.item_id as itemId, t.item_name as itemName, t.item_profile as itemProfile, t.type_id as typeId, t.class_id as classId,
 		t.target_amount as targetAmount, t.appoint_amount as appointAmount, t.completed_amount as completedAmount,
@@ -127,7 +127,7 @@
 
 	<select id="detail" parameterType="integer" resultType="item">
 		select <include refid="select_columns" />
-		FROM <include refid="table_name" />
+		FROM <include refid="table_name" /> t
 		where item_id=#{id}
 	</select>
 
@@ -143,7 +143,7 @@
 		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
 		t1.type_name as typeName
-		FROM <include refid="table_name" />
+		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where item_id=#{id}
 	</select>
@@ -166,7 +166,7 @@
 		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
 		t1.type_name as typeName
-		FROM <include refid="table_name" />
+		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where 1=1
 		<if test="itemId != null">
@@ -189,7 +189,7 @@
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1) FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.type_id=t.type_id
 		where 1=1
 		<if test="itemId != null">
