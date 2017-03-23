@@ -1,5 +1,6 @@
 package com.meirengu.uc.controller;
 
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.StatusCode;
 import com.meirengu.common.TokenProccessor;
 import com.meirengu.controller.BaseController;
@@ -116,7 +117,8 @@ public class LoginController extends BaseController {
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
                 //todo 手机密码方式登录TO-DO   对用户输入密码加密后
                 //User usr = userService.verifyByPasswordAndPhone(mobile,password);
-                if(user != null && password.equals(user.getPassword())){
+
+                if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterPO registerPO = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -183,7 +185,7 @@ public class LoginController extends BaseController {
                     .MOBILE_FORMAT_ERROR));
         }
         if(!StringUtils.isEmpty(registerVO.getMobile_inviter())){
-            if (ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
+            if (!ValidatorUtil.isMobile(registerVO.getMobile_inviter())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                         .MOBILE_FORMAT_ERROR));
             }
@@ -228,6 +230,16 @@ public class LoginController extends BaseController {
         }catch (Exception e){
             logger.info(e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    private Boolean validatePassword(String password,User user){
+        try {
+            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
+            return  result;
+        }catch (Exception e){
+            logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
+            return  false;
         }
     }
 }

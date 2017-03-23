@@ -6,5 +6,6 @@
 	<typeAliases>
 		<typeAlias alias="User" type="com.meirengu.uc.model.User" />
 		<typeAlias alias="CheckCode" type="com.meirengu.uc.model.CheckCode" />
+		<typeAlias alias="Inviter" type="com.meirengu.uc.model.Inviter" />
 	</typeAliases>
 </configuration>

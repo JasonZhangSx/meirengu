@@ -14,7 +14,8 @@ public class UuidUtils {
 //            };
     private static AtomicInteger InitId = new AtomicInteger();
     public static Integer getShortUuid() {
-        return (int) (System.currentTimeMillis() - 1000000000000L / 1000) << 16L | (InitId.addAndGet(1));
+        Integer i = ((int) (System.currentTimeMillis() - 1000000000000L) / 1000) << 16L | (InitId.addAndGet(1));
+        return Integer.parseInt((i+"").substring(1,10));
     }
 //        StringBuffer stringBuffer = new StringBuffer();
 //        String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -31,22 +32,22 @@ public class UuidUtils {
 //    }
     public static void main(String args[]){
         List<Integer> test01 = new ArrayList<Integer>();
-        for(int i = 1; i<1000000; i++){
+        for(int i = 1; i<2; i++){
             test01.add(getShortUuid());
-//            System.err.println(getShortUuid());
+            System.err.println(getShortUuid());
         }
 
-        for(int i = 1; i<999999; i++){
-            for(int j = 1; j<999999; j++) {
-                if(i == j){
-                    break;
-                }
-                if(test01.get(i).equals(test01.get(j))){
-                    System.err.println(test01.get(j));
-                    System.out.print("i == "+i+"+j == +"+j);
-                }
-            }
-
-        }
+//        for(int i = 1; i<999999; i++){
+//            for(int j = 1; j<999999; j++) {
+//                if(i == j){
+//                    break;
+//                }
+//                if(test01.get(i).equals(test01.get(j))){
+//                    System.err.println(test01.get(j));
+//                    System.out.print("i == "+i+"+j == +"+j);
+//                }
+//            }
+//
+//        }
     }
 }
