@@ -57,7 +57,7 @@ public class SignParamsUtils {
      */
     public static boolean verifySign(String preSignStr, String sign){
         //指定为UTF-8编码
-        String signCurrent = MD5Util.md5Hex(preSignStr).toUpperCase();
+        String signCurrent = MD5Util.MD5(preSignStr, "UTF-8").toUpperCase();
         LOGGER.info(">> verifySign signCurrent is {}, sign is {}", new Object[]{signCurrent, sign});
         return sign.equals(signCurrent);
     }

@@ -166,7 +166,7 @@ public class StatusCode {
     public static final int ITEM_COOPERATION_ERROR_DELETE = 50514;
     public static final int ITEM_INTERESTED_ERROR_INSERT = 50515;
     public static final int ITEM_INTERESTED_ERROR_UPDATE = 50516;
-    public static final int ITEM_INTERESTED_ERROR_DELETE = 50517;
+    public static final int ITEM_INTERESTED_ERROR_CANCLE = 50517;
     public static final int ITEM_BE_INTERESTED = 50518;
     public static final int ITEM_NOT_BE_INTERESTED = 50519;
     public static final int ITEM_LEVEL_APPOINT_FULL = 50520;
@@ -357,7 +357,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "项目合作设置删除失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "设置感兴趣项目失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_UPDATE, "感兴趣项目修改失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "取消感兴趣项目失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_CANCLE, "取消感兴趣项目失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "该用户对该项目感兴趣");
         codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "该用户对该项目不感兴趣");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
