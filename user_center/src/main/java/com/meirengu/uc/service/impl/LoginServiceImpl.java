@@ -35,6 +35,7 @@ public class LoginServiceImpl implements LoginService {
         RegisterPO registerPO = new RegisterPO();
         registerPO.setToken(newToken);
         registerPO.setUser((User) userRedis);
+        registerPO.getUser().setPassword("");
         return registerPO;
     }
 
@@ -48,6 +49,7 @@ public class LoginServiceImpl implements LoginService {
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
         redisUtil.setObject(token1,usr,tokenTime);
         registerPO.setToken(token1);
+        registerPO.getUser().setPassword("");
         return registerPO;
     }
 }

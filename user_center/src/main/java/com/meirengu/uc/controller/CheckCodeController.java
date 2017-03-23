@@ -42,7 +42,8 @@ public class CheckCodeController extends BaseController {
      * @return
      */
     @RequestMapping(value = "check_code", method = RequestMethod.POST)
-    public Result create(@RequestParam(required = true) String mobile, String ip,String type) {
+    public Result create(@RequestParam(required = true) String mobile, String ip,
+                         @RequestParam(required = true) String type) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         //verify params
         if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
