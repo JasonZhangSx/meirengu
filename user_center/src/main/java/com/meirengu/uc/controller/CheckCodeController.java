@@ -42,7 +42,7 @@ public class CheckCodeController extends BaseController {
      * @return
      */
     @RequestMapping(value = "check_code", method = RequestMethod.POST)
-    public Result create(@RequestParam(required = true) String mobile, String ip) {
+    public Result create(@RequestParam(required = true) String mobile, String ip,String type) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         //verify params
         if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
@@ -50,7 +50,7 @@ public class CheckCodeController extends BaseController {
                     .MOBILE_FORMAT_ERROR));
         }
         int code = checkCodeService.generate();
-        HttpResult hr = checkCodeService.send(mobile, code, ip);
+        HttpResult hr = checkCodeService.send(mobile, code, ip,type);
         if (hr != null) {
             logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
                     .getContent(), hr.getResponse());
