@@ -66,7 +66,7 @@ public class ActivityController extends BaseController{
         }
     }
     @RequestMapping(method = {RequestMethod.GET})
-    public Result get(@RequestParam(value="activity_id", required = true) Integer activityId){
+    public Result detail(@RequestParam(value="activity_id", required = true) Integer activityId){
 
         Activity activity  = activityService.detail(activityId);
         try {

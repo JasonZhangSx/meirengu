@@ -1,7 +1,6 @@
 package com.meirengu.news.service.impl;
 
 import com.meirengu.news.dao.FaqDao;
-import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Faq;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.FaqService;
@@ -62,12 +61,7 @@ public class FaqServiceImpl implements FaqService{
     }
 
     @Override
-    public Integer updateStatus(Integer faqId,Byte status,String operateAccount) {
-        Faq faq = new Faq();
-        faq.setFaqId(faqId);
-        faq.setStatus(status);
-        faq.setUpdateTime(new Date());
-        faq.setOperateAccount(operateAccount);
+    public int update(Faq faq) {
         return faqDao.update(faq);
     }
 }

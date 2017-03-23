@@ -63,9 +63,6 @@
             <if test="status != null and status != ''">
                 status=#{status},
             </if>
-            <if test="createTime != null and createTime != ''">
-                create_time=#{createTime},
-            </if>
             <if test="updateTime != null">
                 update_time=#{updateTime},
             </if>

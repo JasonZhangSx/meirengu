@@ -8,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by huoyan403 on 3/13/2017.
  */
 public class UuidUtils {
-    public static String[] chars = new String[]
-            {
-                    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
-            };
-private static AtomicInteger InitId = new AtomicInteger();
+//    public static String[] chars = new String[]
+//            {
+//                    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+//            };
+    private static AtomicInteger InitId = new AtomicInteger();
     public static Integer getShortUuid() {
         return (int) (System.currentTimeMillis() - 1000000000000L / 1000) << 16L | (InitId.addAndGet(1));
     }

@@ -143,6 +143,8 @@ public class StatusCode {
     public static final int FEEDBACK_CONTENT_OUTOF = 50202;
     public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
     public static final int BULLETIN_ERROR_LIST = 50204;
+    public static final int CLASS_IS_REPEATED = 50205;
+    public static final int QUESTION_IS_REPEATED = 50206;
 
     //50300-50400//medical_beauty
 
@@ -333,6 +335,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
+        codeMsgMap.put(StatusCode.CLASS_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "分类不能重复");
 
 
         //50300-50400//medical_beauty

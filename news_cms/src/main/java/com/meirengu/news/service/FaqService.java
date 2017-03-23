@@ -26,12 +26,5 @@ public interface FaqService extends PageBaseService<Faq>{
      */
     Faq getFaqById(Integer classId);
 
-
-    /**
-     * 问题上下架状态修改
-     * @param status
-     * @return
-     */
-    Integer updateStatus(Integer faqId, Byte status,String operateAccount);
-
+    int update(Faq faq);
 }
