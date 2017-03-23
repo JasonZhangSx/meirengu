@@ -63,8 +63,8 @@
 		where id=#{id}
 	</select>
 
-	<update id="cancle" parameterType="itemInterested">
-		UPDATE <include refid="table_name" /> SET status=0 WHERE item_id=#{itemId} and user_id=#{userId}
+	<update id="updateStatus" parameterType="itemInterested">
+		UPDATE <include refid="table_name" /> SET status=#{status} WHERE item_id=#{itemId} and user_id=#{userId}
 	</update>
 
 	<select id="detailByUserAndItem" parameterType="itemInterested" resultType="itemInterested">

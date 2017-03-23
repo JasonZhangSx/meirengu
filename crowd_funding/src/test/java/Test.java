@@ -1,3 +1,4 @@
+import com.meirengu.utils.MD5Util;
 import com.meirengu.utils.ObjectUtils;
 
 import java.util.HashMap;
@@ -13,8 +14,16 @@ public class Test {
 
     public static void main(String[] args){
 
-        Map<String, Object> map = new HashMap<>();
+        /*Map<String, Object> map = new HashMap<>();
         map.put("flag", new Integer(0));
-        System.out.println(map.get("flag"));
+        System.out.println(map.get("flag"));*/
+        String sm = "is_page=true&item_status=你好&key=ca26e68b388b4ffcad4942fa648695f&page=1&per_page=10&timestamp=1490255543665&secret=09721ab88e0a552087391be1ef0c6826";
+        String s = MD5Util.MD5(sm, "UTF-8").toUpperCase();
+        System.out.println(s);
+
+        String sm1 = "is_page=true&item_status=10,11&key=ca26e68b388b4ffcad4942fa648695f&page=1&per_page=10&timestamp=1490255543665&secret=09721ab88e0a552087391be1ef0c6826";
+        String s1 = MD5Util.MD5(sm1, "UTF-8").toUpperCase();
+        System.out.println(s1);
+
     }
 }

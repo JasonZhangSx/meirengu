@@ -80,10 +80,26 @@ public class ItemInterestedController extends BaseController{
             return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
         try {
-            boolean isInterested = itemInterestedService.isBeInterested(itemId, userId);
-            if(isInterested){
-                return super.setResult(StatusCode.ITEM_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_BE_INTERESTED));
+            ItemInterested params = new ItemInterested();
+            params.setItemId(itemId);
+            params.setUserId(userId);
+            ItemInterested obj = itemInterestedService.detailByUserAndItem(params);
+            //obj不为空时修改状态，obj为空则新增
+            if(obj != null){
+                int status = obj.getStatus();
+                if(status == Constants.BE_INTERESTED){
+                    return super.setResult(StatusCode.ITEM_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_BE_INTERESTED));
+                }else {
+                    params.setStatus(Constants.BE_INTERESTED);
+                    int updateNum = itemInterestedService.updateStatus(params);
+                    if(updateNum == 1){
+                        return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+                    }else {
+                        return super.setResult(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_INTERESTED_ERROR_INSERT));
+                    }
+                }
             }
+
             ItemInterested itemInterested = this.setEntity(null, itemId, userId, userName, userPhone, Constants.BE_INTERESTED, new Date());
             int insertNum = itemInterestedService.insert(itemInterested);
             if(insertNum == 1){
@@ -137,17 +153,28 @@ public class ItemInterestedController extends BaseController{
             return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
         try {
-            boolean isInterested = itemInterestedService.isBeInterested(itemId, userId);
-            if(!isInterested){
-                return super.setResult(StatusCode.ITEM_NOT_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_NOT_BE_INTERESTED));
+
+            ItemInterested params = new ItemInterested();
+            params.setItemId(itemId);
+            params.setUserId(userId);
+            ItemInterested obj = itemInterestedService.detailByUserAndItem(params);
+
+            if(obj != null){
+                int status = obj.getStatus();
+                if(status == Constants.NOT_BE_INTERESTED){
+                    return super.setResult(StatusCode.ITEM_NOT_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_NOT_BE_INTERESTED));
+                }else {
+                    params.setStatus(Constants.NOT_BE_INTERESTED);
+                    int updateNum = itemInterestedService.updateStatus(params);
+                    if(updateNum == 1){
+                        return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+                    }else {
+                        return super.setResult(StatusCode.ITEM_INTERESTED_ERROR_CANCLE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_INTERESTED_ERROR_CANCLE));
+                    }
+                }
             }
-            ItemInterested itemInterested = this.setEntity(null, itemId, userId, null, null, null, null);
-            int deleteNum = itemInterestedService.cancle(itemInterested);
-            if(deleteNum == 1){
-                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else {
-                return super.setResult(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_INTERESTED_ERROR_DELETE));
-            }
+
+            return super.setResult(StatusCode.ITEM_NOT_BE_INTERESTED, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_NOT_BE_INTERESTED));
         }catch (Exception e){
             LOGGER.error(">> set item not interested throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

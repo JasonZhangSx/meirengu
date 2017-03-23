@@ -19,8 +19,8 @@ public class ItemInterestedServiceImpl extends BaseServiceImpl<ItemInterested> i
     ItemInterestedDao itemInterestedDao;
 
     @Override
-    public int cancle(ItemInterested itemInterested) {
-        return itemInterestedDao.cancle(itemInterested);
+    public int updateStatus(ItemInterested itemInterested) {
+        return itemInterestedDao.updateStatus(itemInterested);
     }
 
     @Override
@@ -38,5 +38,10 @@ public class ItemInterestedServiceImpl extends BaseServiceImpl<ItemInterested> i
                 return false;
             }
         }
+    }
+
+    @Override
+    public ItemInterested detailByUserAndItem(ItemInterested itemInterested) {
+        return itemInterestedDao.detailByUserAndItem(itemInterested);
     }
 }
