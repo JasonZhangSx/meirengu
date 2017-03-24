@@ -14,6 +14,7 @@ import com.meirengu.uc.vo.LegalizeVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,8 +180,15 @@ public class UserController extends BaseController{
     @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
     public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
         User user = userService.retrieveByUserId(userId);
+        Map<String,Object> map = new HashedMap();
+        map.put("mobile",user.getPhone()+"");//加上空字符串 防止为空 json转换异常
+        map.put("realname",user.getRealname()+"");
+        map.put("idCard",user.getIdCard()+"");
+        map.put("bankIdCard",user.getBankIdCard()+"");
+        map.put("bankPhone",user.getBankPhone()+"");
+        map.put("bankCode",user.getBankCode()+"");
         if(user != null){
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }
         return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
     }
