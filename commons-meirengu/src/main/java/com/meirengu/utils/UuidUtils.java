@@ -15,7 +15,7 @@ public class UuidUtils {
     private static AtomicInteger InitId = new AtomicInteger();
     public static Integer getShortUuid() {
         Integer i = ((int) (System.currentTimeMillis() - 1000000000000L) / 1000) << 16L | (InitId.addAndGet(1));
-        return Integer.parseInt((i+"").substring(1,10));
+        return Integer.parseInt((i+"").substring(0,9));
     }
 //        StringBuffer stringBuffer = new StringBuffer();
 //        String uuid = UUID.randomUUID().toString().replace("-", "");

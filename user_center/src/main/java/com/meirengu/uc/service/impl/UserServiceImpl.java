@@ -166,7 +166,7 @@ public class UserServiceImpl extends Thread implements UserService {
 
         //创建用户
         User user = new User();
-        if("".equals(avatar)){
+        if(StringUtil.isEmpty(avatar)){
             String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
             user.setAvatar(avatarDefault[(int) Math.random()*number]);
