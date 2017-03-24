@@ -13,7 +13,7 @@ public class UserAddress extends BaseEntity{
 
     private String userAddress;
 
-    private Boolean isDefault;
+    private Integer isDefault;
 
     private Date createTime;
 
@@ -21,8 +21,6 @@ public class UserAddress extends BaseEntity{
 
     private Integer delFlag;
 
-    private Integer provinceId;
-    private Integer cityId;
     private Integer areaId;
 
     private String province;
@@ -52,22 +50,6 @@ public class UserAddress extends BaseEntity{
 
     public void setAreas(String areas) {
         this.areas = areas;
-    }
-
-    public Integer getProvinceId() {
-        return provinceId;
-    }
-
-    public void setProvinceId(Integer provinceId) {
-        this.provinceId = provinceId;
-    }
-
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
     }
 
     public Integer getAreaId() {
@@ -118,12 +100,12 @@ public class UserAddress extends BaseEntity{
         this.userAddress = userAddress;
     }
 
-    public Boolean getDefault() {
+    public Integer getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(Boolean aDefault) {
-        isDefault = aDefault;
+    public void setIsDefault(Integer isDefault) {
+        this.isDefault = isDefault;
     }
 
     public Date getCreateTime() {

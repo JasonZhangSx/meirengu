@@ -7,7 +7,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
     <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
-    <result column="is_default" jdbcType="BIT" property="isDefault" />
+    <result column="is_default" jdbcType="INTEGER" property="isDefault" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="delflag" jdbcType="INTEGER" property="delFlag" />
