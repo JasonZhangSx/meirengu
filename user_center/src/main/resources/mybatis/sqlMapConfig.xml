@@ -7,5 +7,7 @@
 		<typeAlias alias="User" type="com.meirengu.uc.model.User" />
 		<typeAlias alias="CheckCode" type="com.meirengu.uc.model.CheckCode" />
 		<typeAlias alias="Inviter" type="com.meirengu.uc.model.Inviter" />
+		<typeAlias alias="notify" type="com.meirengu.uc.model.Notify" />
+		<typeAlias alias="userNotify" type="com.meirengu.uc.model.UserNotify" />
 	</typeAliases>
 </configuration>

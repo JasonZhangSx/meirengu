@@ -376,7 +376,7 @@ public class GenEntityMysql {
             generateFile(model, javaPath+packageModel+"\\"+initcap(toHump(tableName))+".java");
 
             StringBuffer sb = new StringBuffer();
-            sb.append("<typeAlias alias=\""+toHump(tableName)+"\" type=\"com.meirengu.cf.model."+initcap(toHump(tableName))+"\" />");
+            sb.append("<typeAlias alias=\""+toHump(tableName)+"\" type=\""+packageFather+"."+packageModel+"."+initcap(toHump(tableName))+"\" />");
             System.out.println(sb.toString());
         }
         System.out.println("将以上内容加入sqlMapConfig.xml中");

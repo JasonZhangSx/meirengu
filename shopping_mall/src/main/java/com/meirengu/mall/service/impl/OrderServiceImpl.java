@@ -227,7 +227,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional(readOnly = false)
     public int paySuccess(String unionSN, String transactionSN, String bankType, String deviceInfo, String returnMsg) {
-        //先修改订单状态，然后修改支付状态
+        //先修改订单状态
         Order order = new Order();
         order.setUnionSN(unionSN);
         order.setOrderState(Constants.ORDER_PAID);

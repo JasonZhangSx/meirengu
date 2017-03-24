@@ -13,14 +13,19 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>完整demo</title>
+    <title>推荐位新增</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="../resource/js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../resource/UEditor1.4.3.3/ueditor.config.js"></script>
     <script type="text/javascript" charset="utf-8" src="../resource/UEditor1.4.3.3/ueditor.all.min.js"> </script>
     <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
     <script type="text/javascript" charset="utf-8" src="../resource/UEditor1.4.3.3/lang/zh-cn/zh-cn.js"></script>
-
     <style type="text/css">
         div{
             width:100%;
@@ -28,11 +33,96 @@
     </style>
 </head>
 <body>
+<h2>文章新增</h2>
 <div>
-    <h1>完整demo</h1>
-    <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form class="form-horizontal" id="recommendAdd" method="post">
+                    <div class="control-group">
+                        <label class="control-label">推荐位名称</label>
+                        <div class="controls">
+                            <input name="name" type="text" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">推荐位简介</label>
+                        <div class="controls">
+                            <input name="intro" type="text" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">推荐位类别</label>
+                        <div class="controls">
+                            <input name="class" type="radio" value="0"/>图片
+                            <input name="class" type="radio" value="1"/>文字
+                            <input name="class" type="radio" value="2"/>幻灯片
+                            <input name="class" type="radio" value="3"/>Flash
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">展示方式</label>
+                        <div class="controls">
+                            <input name="display" type="radio" value="0"/>幻灯片
+                            <input name="display" type="radio" value="1"/>多条推荐展示
+                            <input name="display" type="radio" value="2"/>单条推荐展示
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否启用</label>
+                        <div class="controls">
+                            <input name="is_use" type="radio" value="0"/>不启用
+                            <input name="is_use" type="radio" value="1"/>启用
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">宽度</label>
+                        <div class="controls">
+                            <input name="width" type="text"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">高度</label>
+                        <div class="controls">
+                            <input name="height" type="text"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">推荐位点击率</label>
+                        <div class="controls">
+                            <input name="recomment_num" type="text"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">推荐位点击率</label>
+                        <div class="controls">
+                            <input name="click_num" type="text"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">默认内容</label>
+                        <div class="controls">
+                            <input type="hidden" name="default_content" id="default_content">
+                            <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="button" id="add" class="btn">新增</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <form action="/upload/images" method="post" enctype="multipart/form-data">
+        <input type="file" name="upfile">
+        <input type="submit" value="上传">
+    </form>
 </div>
-<div id="btns">
+<%--<div id="btns">
     <div>
         <button onclick="getAllHtml()">获得整个html的内容</button>
         <button onclick="getContent()">获得内容</button>
@@ -67,16 +157,51 @@
         创建编辑器</button>
     <button onclick="deleteEditor()">
         删除编辑器</button>
-</div>
+</div>--%>
 
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#add").click(function(){
+            var default_content = UE.getEditor('editor').getContent();
+            $("#default_content").val(default_content);
+            console.log($("#default_content").val());
+
+            $.ajax({
+                type: "POST",
+                url:"../rp",
+                data:$('#recommendAdd').serialize(),// 你的formid
+                async: false,
+                error: function(request) {
+                    alert("Connection error");
+                },
+                success: function(data) {
+                    alert("success");
+                    console.log(data)
+                    /*var json = JSON.parse(data);
+                    alert(json);*/
+                    //$("#commonLayout_appcreshi").parent().html(data);
+                }
+            });
+        });
+    });
 
     //实例化编辑器
     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
     var ue = UE.getEditor('editor');
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+            return '/upload/image';
+        } else if (action == 'uploadvideo') {
+            return '/upload/video';
+        } else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
 
 
-    function isFocus(e){
+    /*function isFocus(e){
         alert(UE.getEditor('editor').isFocus());
         UE.dom.domUtils.preventDefault(e)
     }
@@ -180,7 +305,7 @@
     function clearLocalData () {
         UE.getEditor('editor').execCommand( "clearlocaldata" );
         alert("已清空草稿箱")
-    }
+    }*/
 </script>
 </body>
 </html>
