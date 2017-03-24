@@ -74,13 +74,13 @@ public class VerityServiceImpl implements VerityService{
 
         HttpResult hr = null;
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("userId",userId);
-        map.put("bankCode",bankCode);
-        map.put("bankIdcard",bankIdcard);
-        map.put("bankPhone",bankPhone);
-        map.put("idcard",idcard);
-        map.put("realname",realname);
-        map.put("password",password);
+//        map.put("userId",userId);
+//        map.put("bankCode",bankCode);
+        map.put("bankNo",bankIdcard);
+        map.put("mobile",bankPhone);
+        map.put("identityNumber",idcard);
+        map.put("realName",URLEncoder.encode(realname));
+//        map.put("password",password);
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", JacksonUtil.toJSon(map));
         String url = ConfigUtil.getConfig("URI_VETIFY_USER_PAYACCOUNT");

@@ -6,6 +6,7 @@ import com.meirengu.model.Result;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -94,6 +95,14 @@ public class VerifyController extends BaseController {
             }
             if(ValidatorUtil.isUsername(realname)){
 
+            }
+            RedisUtil redisUtil = new RedisUtil();
+            if(redisUtil.existsObject("verify_"+userId)){
+                String times = (String) redisUtil.getObject("verify_"+userId);
+                if(Integer.parseInt(times)>Integer.parseInt(ConfigUtil.getConfig("verify_times"))){
+//                    return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
+                }
+                redisUtil.setObject("verify_"+userId,times+1);
             }
             Integer result = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
             return  null;

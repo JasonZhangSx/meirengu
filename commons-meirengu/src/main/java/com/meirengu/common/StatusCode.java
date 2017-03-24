@@ -135,6 +135,7 @@ public class StatusCode {
     public static final int USER_PASSWORD_IS_EXITS = 50108;
     public static final int USER_INVITER_IS_NOT_EXITS = 50109;
     public static final int ADDRESS_IS_NOT_EXITS = 50110;
+    public static final int VETIFY_IS_NOT_ALLOWED = 50111;
 
 
     //50200-50300//news_cms
@@ -328,6 +329,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
+        codeMsgMap.put(StatusCode.VETIFY_IS_NOT_ALLOWED, "用户超过允许认证次数");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
