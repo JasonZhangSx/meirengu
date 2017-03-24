@@ -39,13 +39,13 @@ public class UserAddressController extends BaseController{
     private static final Logger logger = LoggerFactory.getLogger(UserAddressController.class);
 
     @RequestMapping(value = "insert", method = RequestMethod.POST)
-    public Result insertAddress(@RequestParam(value = "mobile", required = false) String mobile,
+    public Result insertAddress(@RequestParam(value = "mobile", required = true) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
-                                @RequestParam(value = "user_name", required = false) String userName,
-                                @RequestParam(value = "user_address", required = false) String userAddress,
+                                @RequestParam(value = "user_name", required = true) String userName,
+                                @RequestParam(value = "user_address", required = true) String userAddress,
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
-                                @RequestParam(value = "is_default", required = false) Integer isDefault){
+                                @RequestParam(value = "is_default", defaultValue = "0",required = false) Integer isDefault){
 
         logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
@@ -88,13 +88,13 @@ public class UserAddressController extends BaseController{
 
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
-    public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
+    public Result updateAddress(@RequestParam(value = "mobile", required = true) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
-                                @RequestParam(value = "area_id", required = true) Integer areaId,
+                                @RequestParam(value = "area_id", required = false) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Integer isDefault){
 
         try{
@@ -124,7 +124,6 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserId(userId);
                 userAddressBean.setUserPhone(mobile);
                 userAddressBean.setUserName(userName);
-                userAddressBean.setDelFlag(1);
                 userAddressBean.setIsDefault(isDefault);
                 userAddressBean.setAreaId(areaId);
                 int res = userAddressService.updateByAdressId(userAddressBean);

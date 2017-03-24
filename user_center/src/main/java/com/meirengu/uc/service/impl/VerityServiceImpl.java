@@ -96,6 +96,11 @@ public class VerityServiceImpl implements VerityService{
             if("".equals(map.get(4000))){
                 User user = new User();
                 user.setUserId(userId);
+                user.setRealname(realname);
+                user.setIdCard(idcard);
+                user.setBankIdCard(bankIdcard);
+                user.setBankCode(bankCode);
+                user.setBankPhone(bankPhone);
                 user.setIsAuth(1);
                 userDao.update(user);
             }

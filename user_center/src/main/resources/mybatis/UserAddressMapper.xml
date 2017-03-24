@@ -22,7 +22,7 @@
     select 
     <include refid="Base_Column_List" />
     from user_address  a
-    where 1 = 1  AND  delflag = 0
+    where delflag = 0
     <if test="addressId != null">
       AND address_id = #{addressId,jdbcType=INTEGER}
     </if>
@@ -52,7 +52,7 @@
     select
     <include refid="Base_Column_List" />
     from user_address  a
-    where 1 = 1  AND  delflag = 0
+    where delflag = 0
     AND  address_id in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
       #{item}
@@ -109,7 +109,7 @@
     select <include refid="Base_Column_List" />
     from
     user_address a
-    where 1=1
+    where delflag = 0
     <if test="userId != null">
       AND user_id = #{userId,jdbcType=INTEGER}
     </if>
@@ -138,7 +138,7 @@
     select count(*)
     from
     user_address
-    where 1=1
+    where delflag = 0
     <if test="userId != null">
       AND user_id = #{userId,jdbcType=INTEGER}
     </if>

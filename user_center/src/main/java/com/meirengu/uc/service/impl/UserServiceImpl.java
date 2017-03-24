@@ -162,7 +162,7 @@ public class UserServiceImpl extends Thread implements UserService {
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar) {
+    public User createUserInfo(String mobile, String password, Integer from, String ip,String avatar) {
 
         //创建用户
         User user = new User();
@@ -180,7 +180,6 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setLastLoginIp(ip);
         user.setPassword(password);
         user.setPhone(mobile);
-        user.setMobileInviter(mobileInviter);
         user.setLoginNum(1);
         user.setIsAuth(0);
         user.setIsAllowInform(1);

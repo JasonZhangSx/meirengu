@@ -42,7 +42,7 @@
 
     <sql id='table_name'>user</sql>
     <sql id="select_columns">
-        user_id as userId, nickname, realname, phone,inviter_phone AS mobileInviter, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
+        user_id as userId, nickname, realname, phone, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
         birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
         is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state
@@ -81,6 +81,9 @@
             </if>
             <if test="bankIdCard != null and bankIdCard != ''">
                 bank_idcard=#{bankIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCode != null and bankCode != ''">
+                bank_code=#{bankCode,jdbcType=VARCHAR},
             </if>
             <if test="bankPhone != null and bankPhone != ''">
                 bank_phone=#{bankPhone,jdbcType=VARCHAR},

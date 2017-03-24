@@ -126,8 +126,7 @@ public class LoginController extends BaseController {
                     if(user==null || StringUtil.isEmpty(user.getUserId())){
                         try {
                             //用户为空则注册一个
-                            String mobileInviter = "";
-                            User usr = userService.createUserInfo(mobile,password,from,ip,mobileInviter,avatar);
+                            User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
                             RegisterPO registerPO = loginService.setUserToRedis(usr);
                             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                         }catch (Exception e){
