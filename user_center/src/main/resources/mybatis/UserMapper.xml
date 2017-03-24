@@ -7,7 +7,6 @@
         <result column="nickname" property="nickname" jdbcType="VARCHAR" javaType="string"/>
         <result column="realname" property="realname" jdbcType="VARCHAR" javaType="string"/>
         <result column="phone" property="phone" jdbcType="VARCHAR" javaType="string"/>
-        <result column="inviter_phone" property="mobileInviter" jdbcType="VARCHAR" javaType="string"/>
         <result column="idcard" property="idCard" jdbcType="VARCHAR" javaType="string"/>
         <result column="password" property="password" jdbcType="VARCHAR" javaType="string"/>
         <result column="bank_idcard" property="bankIdCard" jdbcType="VARCHAR" javaType="string"/>
@@ -51,11 +50,12 @@
     <insert id="create" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO
         <include refid="table_name"/>
-        (user_id, nickname, realname, phone,inviter_phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
+        (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
         birthday,email,qq,wx,area_id,register_from,register_time,login_time,last_login_time,
-        login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
+        login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,
+        sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
         VALUES
-        (#{userId}, #{nickname}, #{realname}, #{phone}, #{mobileInviter}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
+        (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
         #{birthday}, #{email}, #{qq}, #{wx}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
         #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
         #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
@@ -207,7 +207,7 @@
     <select id="selectByInviterPhone" parameterType="String" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
-        WHERE inviter_phone=#{mobileInviter}
+        WHERE phone=#{mobileInviter}
     </select>
     <select id="listUserAvatar" parameterType="List" resultType="User">
         SELECT user_id as userId,avatar
