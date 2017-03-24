@@ -48,6 +48,8 @@ public class StatusCode {
     public static final int EMAIL_FORMAT_ERROR = 40103;
     public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
     public static final int PASSWORD_IS_MALFORMED = 40105;
+    public static final int MSG_TEMPLATE_INVALID = 40106;
+
     //40200-40300//news_cms
 
     //40300-40400//medical_beauty
@@ -135,7 +137,8 @@ public class StatusCode {
     public static final int USER_PASSWORD_IS_EXITS = 50108;
     public static final int USER_INVITER_IS_NOT_EXITS = 50109;
     public static final int ADDRESS_IS_NOT_EXITS = 50110;
-
+    public static final int NOTIFY_GENERATE_FAIL = 50111;
+    public static final int NOTIFY_READ_FAIL = 50112;
 
     //50200-50300//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -269,6 +272,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.EMAIL_FORMAT_ERROR, "邮箱格式错误");
         codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
         codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
+        codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
+
+
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty
@@ -326,6 +332,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
+        codeMsgMap.put(StatusCode.NOTIFY_GENERATE_FAIL, "消息生成失败");
+        codeMsgMap.put(StatusCode.NOTIFY_READ_FAIL, "消息设置已读失败");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

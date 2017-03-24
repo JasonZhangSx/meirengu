@@ -1,5 +1,7 @@
 package com.meirengu.model;
 
+import com.meirengu.common.StatusCode;
+
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +35,18 @@ public class Page<T> {
 		return pageNow;
 	}
 	public void setPageNow(int pageNow) {
+		if(pageNow < 0){
+			pageNow = 0;
+		}
 		this.pageNow = pageNow;
 	}
 	public int getPageSize() {
 		return pageSize;
 	}
 	public void setPageSize(int pageSize) {
+		if(pageSize < 0){
+			pageSize = 10;
+		}
 		this.pageSize = pageSize;
 	}
 	public int getTotalCount() {
@@ -55,7 +63,11 @@ public class Page<T> {
 		this.totalPageCount = totalPageCount;
 	}
 	public int getStartPos() {
-		return (pageNow - 1) * pageSize;
+		startPos = (pageNow - 1) * pageSize;
+		if(startPos < 0){
+			startPos = 0;
+		}
+		return startPos;
 	}
 	public void setStartPos(int startPos) {
 		this.startPos = startPos;
