@@ -42,11 +42,11 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.retry/spring-retry -->
         <!--spring-retry&#45;&#45;started-->
-        <dependency>
+       <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.retry/spring-retry -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.retry/spring-retry &ndash;&gt;
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
@@ -56,7 +56,7 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.6</version>
-        </dependency>
+        </dependency>-->
         <!--spring-retry&#45;&#45;end-->
         <!-- email/scheduler/freemarker -->
         <dependency>
