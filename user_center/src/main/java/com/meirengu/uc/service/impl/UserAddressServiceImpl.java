@@ -6,6 +6,7 @@ import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.model.Area;
 import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.service.UserAddressService;
+import com.meirengu.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     @Override
     public int insert(UserAddress userAddress) {
 
-        if(userAddress.getDefault()){
+        if(!StringUtil.isEmpty(userAddress.getIsDefault())){
             userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
         }else{
 
@@ -42,12 +43,8 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     @Override
     public int updateByAdressId(UserAddress userAddress) {
 
-        if(userAddress.getDefault() !=null){
-            if(userAddress.getDefault()){
-                userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
-            }else{
-
-            }
+        if(!StringUtil.isEmpty(userAddress.getIsDefault())){
+            userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
         }
         return userAddressDao.updateByAdressId(userAddress);
     }
@@ -56,7 +53,7 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     public UserAddress selectDefaultAddressByUserId(Integer userId) {
         UserAddress userAddress = new UserAddress();
         userAddress.setUserId(userId);
-        userAddress.setDefault(true);
+        userAddress.setIsDefault(1);
         userAddress.setDelFlag(0);
         return userAddressDao.selectByUserAddress(userAddress);
     }

@@ -137,8 +137,9 @@ public class StatusCode {
     public static final int USER_PASSWORD_IS_EXITS = 50108;
     public static final int USER_INVITER_IS_NOT_EXITS = 50109;
     public static final int ADDRESS_IS_NOT_EXITS = 50110;
-    public static final int NOTIFY_GENERATE_FAIL = 50111;
-    public static final int NOTIFY_READ_FAIL = 50112;
+    public static final int VETIFY_IS_NOT_ALLOWED = 50111;
+    public static final int NOTIFY_GENERATE_FAIL = 50112;
+    public static final int NOTIFY_READ_FAIL = 50113;
 
     //50200-50300//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -146,6 +147,8 @@ public class StatusCode {
     public static final int FEEDBACK_CONTENT_OUTOF = 50202;
     public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
     public static final int BULLETIN_ERROR_LIST = 50204;
+    public static final int CLASS_IS_REPEATED = 50205;
+    public static final int QUESTION_IS_REPEATED = 50206;
 
     //50300-50400//medical_beauty
 
@@ -334,6 +337,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
         codeMsgMap.put(StatusCode.NOTIFY_GENERATE_FAIL, "消息生成失败");
         codeMsgMap.put(StatusCode.NOTIFY_READ_FAIL, "消息设置已读失败");
+        codeMsgMap.put(StatusCode.VETIFY_IS_NOT_ALLOWED, "用户超过允许认证次数");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
@@ -341,6 +345,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
+        codeMsgMap.put(StatusCode.CLASS_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "分类不能重复");
 
 
         //50300-50400//medical_beauty

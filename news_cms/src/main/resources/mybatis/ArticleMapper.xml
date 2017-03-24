@@ -19,8 +19,9 @@
         article_id as id, ac_id as acId, article_url as url, article_show as `show`,
         article_sort as sort, article_img as img, article_title as title, article_content as content,
         article_is_banner as isBanner, article_is_commend as isCommend, article_time as `time`,
-        article_is_publish as isPublish, flag , create_time as createTime, create_user as createUser,
-        create_user_type as createUserType, IFNULL(create_user_name, '') as createUserName, IFNULL(create_user_img, '') as createUserImg
+        article_is_publish as isPublish, flag , DATE_FORMAT(create_time, "%Y-%c-%d %h:%m:%s") as createTime, create_user as createUser,
+        create_user_type as createUserType, IFNULL(create_user_name, '') as createUserName, IFNULL(create_user_img, '') as createUserImg,
+        article_label as labe
     </sql>
 
     <insert id="insert" parameterType="article" useGeneratedKeys="true" keyProperty="id">
@@ -78,77 +79,86 @@
 
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
-        select <include refid="select_columns" />,
+        select a.article_id as id, a.ac_id as acId, a.article_url as url, a.article_show as `show`,
+        a.article_sort as sort, a.article_img as img, a.article_title as title, a.article_content as content,
+        a.article_is_banner as isBanner, a.article_is_commend as isCommend, a.article_time as `time`,
+        a.article_is_publish as isPublish, a.flag , DATE_FORMAT(a.create_time, "%Y-%c-%d %h:%m:%s") as createTime, a.create_user as createUser,
+        a.create_user_type as createUserType, IFNULL(a.create_user_name, '') as createUserName, IFNULL(a.create_user_img, '') as createUserImg,
+        a.article_label as labe, ac.ac_name,
         0 AS readNum, 0 AS commentNum, 0 AS collectNum,
         (SELECT ac_name FROM article_class ac WHERE ac.ac_id=a.ac_id) AS className
         from
         <include refid="table_name" /> a
-        where flag=1
+        left JOIN article_class ac ON a.ac_id=ac.ac_id
+        where a.flag=1
         <if test="id != null and id != '' and id != 0">
-            AND article_id=#{id}
+            AND a.article_id=#{id}
         </if>
         <if test="acId != null and acId != '' and acId != 0">
-            AND ac_id=#{acId}
+            AND a.ac_id=#{acId}
         </if>
         <if test="isBanner != null and isBanner != ''">
-            AND article_is_banner=#{isBanner}
+            AND a.article_is_banner=#{isBanner}
         </if>
         <if test="show != null and show != ''">
-            AND article_show=#{show}
+            AND a.article_show=#{show}
         </if>
         <if test="isCommend != null and isCommend != ''">
-            AND article_is_commend=#{isCommend}
+            AND a.article_is_commend=#{isCommend}
         </if>
         <if test="isPublish != null and isPublish != ''">
-            AND article_is_publish=#{isPublish}
+            AND a.article_is_publish=#{isPublish}
         </if>
         <if test="createUser != null and createUser != '' and createUser != 0 and
                   createUserType != null and createUserType != '' and createUserType != 0">
-            AND create_user=#{createUser}
-            AND create_user_type=#{createUserType}
+            AND a.create_user=#{createUser}
+            AND a.create_user_type=#{createUserType}
         </if>
 
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+        order by a.article_is_banner desc,a.create_time desc
+        <!--<if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}
-        </if>
+        </if>-->
     </select>
 
     <select id="getTotalCount" parameterType="Map" resultType="Integer">
         select count(*)
         from
-        <include refid="table_name" />
-        where flag=1
+        <include refid="table_name" /> a
+        left JOIN article_class ac ON a.ac_id=ac.ac_id
+        where a.flag=1
         <if test="id != null and id != '' and id != 0">
-            AND article_id=#{id}
+            AND a.article_id=#{id}
         </if>
         <if test="acId != null and acId != '' and acId != 0">
-            AND ac_id=#{acId}
+            AND a.ac_id=#{acId}
         </if>
         <if test="isBanner != null and isBanner != ''">
-            AND article_is_banner=#{isBanner}
+            AND a.article_is_banner=#{isBanner}
         </if>
         <if test="show != null and show != ''">
-            AND article_show=#{show}
+            AND a.article_show=#{show}
         </if>
         <if test="isCommend != null and isCommend != ''">
-            AND article_is_commend=#{isCommend}
+            AND a.article_is_commend=#{isCommend}
         </if>
         <if test="isPublish != null and isPublish != ''">
-            AND article_is_publish=#{isPublish}
+            AND a.article_is_publish=#{isPublish}
         </if>
         <if test="createUser != null and createUser != '' and createUser != 0 and
                   createUserType != null and createUserType != '' and createUserType != 0">
-            AND create_user=#{createUser}
-            AND create_user_type=#{createUserType}
+            AND a.create_user=#{createUser}
+            AND a.create_user_type=#{createUserType}
         </if>
 
         <if test="createUser != null and createUser != ''">
-            AND create_user=#{createUser}
+            AND a.create_user=#{createUser}
         </if>
 
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+        order by a.article_is_banner desc,a.create_time desc
+        <!--<if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}
-        </if>
+        </if>-->
     </select>
     <!-- 分页相关结束 -->
 </mapper>

@@ -8,12 +8,14 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.LegalizeVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,31 +42,39 @@ public class UserController extends BaseController{
     UserService userService;
     @Autowired
     CheckCodeService checkCodeService;
+    @Autowired
+    VerityService verityService;
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result updateUserInfo(UserVO userVO) {
-
-        if(!StringUtil.isEmpty(userVO.getToken())){
-            RedisUtil redisUtil = new RedisUtil();
-            boolean b = redisUtil.existsObject(userVO.getToken());
-            if(b){
-                if (StringUtils.isEmpty(userVO.getPhone()) || !ValidatorUtil.isMobile(userVO.getPhone())) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
-                }
-                if(userVO.getEmail() != null&&!"".equals(userVO.getEmail())){
-                    if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
-                        return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                                .EMAIL_FORMAT_ERROR));
+        try {
+            if(!StringUtil.isEmpty(userVO.getToken())){
+                RedisUtil redisUtil = new RedisUtil();
+                boolean b = redisUtil.existsObject(userVO.getToken());
+                if(b){
+                    if (StringUtils.isEmpty(userVO.getPhone()) || !ValidatorUtil.isMobile(userVO.getPhone())) {
+                        return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                                .MOBILE_FORMAT_ERROR));
                     }
+                    if(userVO.getEmail() != null&&!"".equals(userVO.getEmail())){
+                        if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
+                            return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                                    .EMAIL_FORMAT_ERROR));
+                        }
+                    }
+                    int result = userService.updateUserInfo(userVO);
+                    logger.error("UserController.updateUserInfo result << {}, result:{}", result);
+                    return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }
-                int result = userService.updateUserInfo(userVO);
-                logger.error("UserController.updateUserInfo result << {}, result:{}", result);
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }
-        }
-        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                 .INTERNAL_SERVER_ERROR));
+        }
     }
 
     /**
@@ -79,37 +89,42 @@ public class UserController extends BaseController{
                                    @RequestParam(value = "check_code", required = true) String checkCode,
                                    @RequestParam(value = "new_password", required = true) String newPassword
                                    ) {
-        //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .MOBILE_FORMAT_ERROR));
-        }
-         if (newPassword == null) {
-            return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                    (StatusCode.PASSWORD_IS_MALFORMED));
-        }
-        //验证手机号是否注册
-        User user = userService.retrieveByPhone(mobile);
-        if(StringUtil.isEmpty(user)){
-            return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-        }
-        //验证验证码是否有效
-        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-        if (code == null) {
-            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_INVALID));
-        }
-        if (code.getExpireTime().compareTo(new Date()) < 0) {
-            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_EXPIRE));
-        }
-        User usr = new User();
-        usr.setPhone(mobile);
-        usr.setPassword(newPassword);
-        int result = userService.updatePasswordByPhone(usr);
-        if(result != 0){
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                    .OK));
+        try {
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
+            }
+            if (newPassword == null) {
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                        (StatusCode.PASSWORD_IS_MALFORMED));
+            }
+            //验证手机号是否注册
+            User user = userService.retrieveByPhone(mobile);
+            if(StringUtil.isEmpty(user)){
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            //验证验证码是否有效
+            CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+            if (code == null) {
+                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_INVALID));
+            }
+            if (code.getExpireTime().compareTo(new Date()) < 0) {
+                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_EXPIRE));
+            }
+            User usr = new User();
+            usr.setPhone(mobile);
+            usr.setPassword(newPassword);
+            int result = userService.updatePasswordByPhone(usr);
+            if(result != 0){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
+                        .OK));
+            }
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .INTERNAL_SERVER_ERROR));
         }
         return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                 .INTERNAL_SERVER_ERROR));
@@ -178,11 +193,23 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
     public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
-        User user = userService.retrieveByUserId(userId);
-        if(user != null){
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user.getPhone(),String.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        try {
+            User user = userService.retrieveByUserId(userId);
+            if(user != null){
+                Map<String,Object> map = new HashedMap();
+                map.put("mobile",user.getPhone()+"");//加上空字符串 防止为空 json转换异常
+                map.put("realname",user.getRealname()+"");
+                map.put("idCard",user.getIdCard()+"");
+                map.put("bankIdCard",user.getBankIdCard()+"");
+                map.put("bankPhone",user.getBankPhone()+"");
+                map.put("bankCode",user.getBankCode()+"");
+                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            }
+            return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .INTERNAL_SERVER_ERROR));
         }
-        return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
     }
 
     @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
@@ -233,13 +260,18 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "listUserAvatar", method = RequestMethod.GET)
     public Result listUserAvatar(@RequestParam(value = "user_ids", required = true) String userIds) {
-        List<String> listUserIds = new ArrayList<>();
-        String[]  userId = userIds.split(",");
-        for (String id :userId){
-            listUserIds.add(id);
+        try {
+            List<String> listUserIds = new ArrayList<>();
+            String[]  userId = userIds.split(",");
+            for (String id :userId){
+                listUserIds.add(id);
+            }
+            List<AvatarPO> user = userService.listUserAvatar(listUserIds);
+           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .INTERNAL_SERVER_ERROR));
         }
-        List<AvatarPO> user = userService.listUserAvatar(listUserIds);
-       return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
     /**
      * 获取用户权限
@@ -249,18 +281,26 @@ public class UserController extends BaseController{
     @RequestMapping(value = "auth", method = RequestMethod.GET)
     public Result UserAuth(@RequestParam(value = "user_id", required = true) Integer userId) {
 
-        User user = userService.retrieveByUserId(userId);
-        if(user ==null){
-            return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_ID_NOT_EMPTY));
+        try {
+            User user = userService.retrieveByUserId(userId);
+            if(user ==null){
+                return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_ID_NOT_EMPTY));
+            }
+            Boolean flag  = verityService.selectPayAccountByUserId(userId);
+            Map<String,Object> map = new HashMap<String,Object>();
+            if(flag){
+                map.put("payPassword","1");
+            }else{
+                map.put("payPassword","0");
+            }
+            map.put("isAuth",user.getIsAuth());
+            map.put("isBuy",user.getIsBuy());
+            map.put("isAllowInform",user.getIsAllowInform());
+            map.put("isAllowTalk",user.getIsAllowTalk());
+            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .INTERNAL_SERVER_ERROR));
         }
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("isAuth",user.getIsAuth());
-        map.put("isBuy",user.getIsBuy());
-        map.put("isAllowInform",user.getIsAllowInform());
-        map.put("isAllowTalk",user.getIsAllowTalk());
-        return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
-
-
-
 }

@@ -1,6 +1,5 @@
 package com.meirengu.pay.utils;
 
-import com.meirengu.pay.vo.WxPayReturnData;
 import com.meirengu.pay.vo.WxPaySendData;
 import com.meirengu.utils.StringUtil;
 import com.thoughtworks.xstream.XStream;
@@ -12,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * ${DESCRIPTION}

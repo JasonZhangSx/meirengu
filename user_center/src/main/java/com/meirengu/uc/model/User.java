@@ -40,6 +40,8 @@ public class User extends BaseObject {
      * 会员密码
      **/
     private String password;
+
+    private String bankCode;
     /**
      * 会员绑定银行卡号
      **/
@@ -455,5 +457,13 @@ public class User extends BaseObject {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 }

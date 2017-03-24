@@ -66,9 +66,9 @@
         </where>
     </update>
 
-  <!--  <update id="delete" parameterType="INTEGER">
-        update <include refid="table_name" /> set flag=0 WHERE article_id=#{id}
-    </update>-->
+    <update id="delete" parameterType="INTEGER">
+        update <include refid="table_name" /> set status =0 WHERE class_id = #{id}
+    </update>
 
     <select id="detail" parameterType="INTEGER" resultType="Map">
         SELECT <include refid="select_columns" />
@@ -112,6 +112,9 @@
         </if>
         <if test="operateAccount != null and operateAccount != ''">
             AND operate_account=#{operateAccount}
+        </if>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
         </if>
     </select>
 

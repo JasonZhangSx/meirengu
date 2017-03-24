@@ -1,6 +1,7 @@
 package com.meirengu.news.controller;
 
-import com.meirengu.news.common.StatusCode;
+import com.meirengu.model.Result;
+import com.meirengu.common.StatusCode;
 import com.meirengu.news.model.Faq;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.FaqService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/faq")
 public class FaqController extends BaseController{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FaqController.class);
 
     @Autowired
     FaqService faqService;
@@ -39,11 +41,11 @@ public class FaqController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "save", method = {RequestMethod.POST})
-    public Map<String, Object> save(@RequestParam(value="class_id", required = true) Integer classId,
-                                    @RequestParam(value="class_name", required = true) String className,
-                                    @RequestParam(value="faq_question", required = true) String faqQuestion,
-                                    @RequestParam(value="faq_answer", required = true) String faqAnswer,
-                                    @RequestParam(value="operate_account", required = true) String operateAccount){
+    public Result save(@RequestParam(value="class_id", required = true) Integer classId,
+                       @RequestParam(value="class_name", required = true) String className,
+                       @RequestParam(value="faq_question", required = true) String faqQuestion,
+                       @RequestParam(value="faq_answer", required = true) String faqAnswer,
+                       @RequestParam(value="operate_account", required = true) String operateAccount){
         Faq faq = new Faq();
         faq.setClassId(classId);
         faq.setClassName(className);
@@ -56,16 +58,16 @@ public class FaqController extends BaseController{
             if(count == 0){
                 int result = faqService.insert(faq);
                 if(result == 1){
-                    return super.setReturnMsg(StatusCode.STATUS_200, null, "ok");
+                    return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
-                    return super.setReturnMsg(StatusCode.STATUS_500, null, "服务器添加失败");
+                    return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
                 }
             }else{
-                return super.setReturnMsg(StatusCode.STATUS_400, null, "问题不能重复");
+                return super.setResult(StatusCode.QUESTION_IS_REPEATED, null, StatusCode.codeMsgMap.get(StatusCode.QUESTION_IS_REPEATED));
             }
         }catch (Exception e){
             LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_500, null, e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
@@ -76,12 +78,12 @@ public class FaqController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "get", method = {RequestMethod.POST})
-    public Map<String, Object> get(@RequestParam(value="faq_id", required = true) Integer faqId){
+    public Result get(@RequestParam(value="faq_id", required = true) Integer faqId){
         Faq faq = faqService.getFaqById(faqId);
         if(StringUtil.isEmpty(faq)){
-            return super.setReturnMsg(StatusCode.STATUS_501, null, "数据为空");
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else{
-            return super.setReturnMsg(StatusCode.STATUS_200, faq, "ok");
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 
@@ -93,33 +95,47 @@ public class FaqController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "list", method = {RequestMethod.POST})
-    public Map<String, Object> list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
+    public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize){
         Map paramMap = new HashMap<String, Object>();
         Page<Faq> page = super.setPageParams(pageSize,pageNum);
         try{
             page = faqService.getPageList(page, paramMap);
             if(page.getList().size() != 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
+                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
             LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
     @ResponseBody
     @RequestMapping(value = "status/update", method = {RequestMethod.PUT})
-    public Map<String, Object> updateStatus(@RequestParam(value="faq_id", required = true) Integer faqId,
+    public Result updateStatus(@RequestParam(value="faq_id", required = true) Integer faqId,
                                             @RequestParam(value="status", required = true) Byte status,
+                                            @RequestParam(value="faq_question", required = true) String faqQuestion,
+                                            @RequestParam(value="faq_answer", required = true) String faqAnswer,
+                                            @RequestParam(value="class_id", required = true) Integer classId,
+                                            @RequestParam(value="class_name", required = true) String className,
                                             @RequestParam(value="operate_account", required = true) String operateAccount){
-        Integer count = faqService.updateStatus(faqId,status,operateAccount);
-        if(count == 0){
-            return super.setReturnMsg(StatusCode.STATUS_501, null, "数据为空");
+        Faq faq = new Faq();
+        faq.setFaqId(faqId);
+        faq.setOperateAccount(operateAccount);
+        faq.setUpdateTime(new Date());
+        faq.setStatus(status);
+        faq.setFaqQuestion(faqQuestion);
+        faq.setFaqAnswer(faqAnswer);
+        faq.setClassId(classId);
+        faq.setClassName(className);
+
+        int result = faqService.update(faq);
+        if(result == 0){
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else{
-            return super.setReturnMsg(StatusCode.STATUS_200, null, "ok");
+            return super.setResult(StatusCode.OK,null , StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 }

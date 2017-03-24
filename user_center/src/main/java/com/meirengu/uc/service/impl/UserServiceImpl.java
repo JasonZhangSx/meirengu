@@ -1,6 +1,9 @@
 package com.meirengu.uc.service.impl;
 
+import com.meirengu.common.PasswordEncryption;
+import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
+import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.UserService;
@@ -16,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 会员服务实现类
@@ -31,15 +37,28 @@ public class UserServiceImpl extends Thread implements UserService {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    InviterDao inviterDao;
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user){
 
         int result = userDao.create(user);
+        if(!StringUtil.isEmpty(user.getMobileInviter())){
+            User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
+            Inviter inviter = new Inviter();
+            inviter.setUserId(userInviter.getUserId());
+            inviter.setInvitedUserId(user.getUserId());
+            inviter.setInvitedUserPhone(user.getPhone());
+            inviter.setInvestTime(new Date());
+            inviter.setRegisterTime(new Date());
+            inviter.setReward(new BigDecimal("0"));
+            inviterDao.insert(inviter);
+        }
         Thread t = Thread.currentThread();
         String name = t.getName();
         if(result == 1){
-            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user);
+            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
             initPayAccountThread.run();
             return result;
         }else{
@@ -62,14 +81,6 @@ public class UserServiceImpl extends Thread implements UserService {
     public User retrieveByPhone(String phone) {
         return userDao.retrieveByPhone(phone);
     }
-
-//    @Override
-//    public User verifyByPasswordAndPhone(String mobile, String password) {
-//        Map<String,String> map = new HashMap<>();
-//        map.put("phone",mobile);
-//        map.put("password",password);
-//        return userDao.verifyByPasswordAndPhone(map);
-//    }
 
     @Override
     public int updateUserInfo(UserVO userVO) {
@@ -151,11 +162,11 @@ public class UserServiceImpl extends Thread implements UserService {
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar) {
+    public User createUserInfo(String mobile, String password, Integer from, String ip,String avatar) {
 
         //创建用户
         User user = new User();
-        if("".equals(avatar)){
+        if(StringUtil.isEmpty(avatar)){
             String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
             user.setAvatar(avatarDefault[(int) Math.random()*number]);
@@ -169,7 +180,6 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setLastLoginIp(ip);
         user.setPassword(password);
         user.setPhone(mobile);
-        user.setMobileInviter(mobileInviter);
         user.setLoginNum(1);
         user.setIsAuth(0);
         user.setIsAllowInform(1);
@@ -186,6 +196,11 @@ public class UserServiceImpl extends Thread implements UserService {
         return user;
     }
 
+    /**
+     * 注册用户创建用户
+     * @param registerVO
+     * @return
+     */
     @Override
     public User createUserInfo(RegisterVO registerVO) {
         //创建用户
@@ -202,7 +217,6 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setLastLoginTime(new Date());
         user.setLoginIp(registerVO.getIp());
         user.setLastLoginIp(registerVO.getIp());
-        user.setPassword(registerVO.getPassword());
         user.setPhone(registerVO.getMobile());
         user.setMobileInviter(registerVO.getMobile_inviter());
         user.setNickname("MRG_"+registerVO.getMobile().substring(7,11));
@@ -230,6 +244,12 @@ public class UserServiceImpl extends Thread implements UserService {
         user.setIsAllowTalk(1);
         user.setState(1);
         user.setIsBuy(1);
+        try {
+            String password = PasswordEncryption.createHash(registerVO.getPassword());
+            user.setPassword(password);
+        }catch (Exception e){
+            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
+        }
         int result = this.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
