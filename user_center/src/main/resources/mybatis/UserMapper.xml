@@ -148,6 +148,10 @@
             <if test="sinaInfo != null and sinaInfo != ''">
                 sina_info=#{sinaInfo,jdbcType=VARCHAR},
             </if>
+            <if test="isAuth != null and isAuth != ''">
+                is_auth=#{isAuth,jdbcType=INTEGER},
+            </if>
+            user_id=#{userId}
         </set>
         <where>
             user_id=#{userId} and state=1

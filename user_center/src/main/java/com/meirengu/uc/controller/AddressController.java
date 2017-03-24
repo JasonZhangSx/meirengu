@@ -31,25 +31,47 @@ public class AddressController extends BaseController {
     AddressService service;// 调用业务层方法
     @RequestMapping(value = "/showProvinceList" ,method = RequestMethod.GET)
     public Result showProvinceList(HttpServletRequest request, HttpServletResponse respons) {
-        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        try {
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
     }
     @RequestMapping(value = "/showCityListByPid",method = RequestMethod.GET)
     public Result showCityListByPid(int pid) throws IOException {
-        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            try {
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
     }
     @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
     public Result showAreasByCityId(Integer citys_id) throws IOException {
-        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        try {
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
    @RequestMapping("/showAddress")
     public Result showProByCityId(Integer area_id) throws IOException {
-        AddressPO addressPO = service.showAddress(area_id);
-       if(addressPO !=null){
-        return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(addressPO,AddressPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-       }else{
-           return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+       try {
+            AddressPO addressPO = service.showAddress(area_id);
+           if(addressPO !=null){
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(addressPO,AddressPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+           }else{
+               return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+           }
+       }catch (Exception e){
+           logger.info("LoginController.redis get token result:{}",e.getMessage());
+           return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
        }
+
     }
 
      /*@RequestMapping("/showProCityByAreaId")

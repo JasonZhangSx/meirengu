@@ -45,39 +45,46 @@ public class CheckCodeController extends BaseController {
     public Result create(@RequestParam(required = true) String mobile, String ip,
                          @RequestParam(required = true) String type) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
-        //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .MOBILE_FORMAT_ERROR));
-        }
-        int code = checkCodeService.generate();
-        HttpResult hr = checkCodeService.send(mobile, code, ip,type);
-        if (hr != null) {
-            logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
-                    .getContent(), hr.getResponse());
-            if (hr.getStatusCode() == StatusCode.OK) {
-                JSONObject resultObj = JSON.parseObject(hr.getContent());
-                if ("200".equals(resultObj.getString("code"))) {
-                    //store db
-                    CheckCode checkCode = new CheckCode();
-                    checkCode.setMobile(mobile);
-                    checkCode.setCode(code);
-                    Date nowTime = new Date();
-                    Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig
-                            ("EXPIRE_CHECKCODE_LOGIN")));
-                    checkCode.setCreateTime(nowTime);
-                    checkCode.setExpireTime(expireTime);
-                    checkCode.setIp(StringUtils.defaultString(ip, ""));
-                    checkCode.setUse(false);
-                    int createResult = checkCodeService.create(checkCode);
-                    logger.info("checkCodeService.create result <==={}", createResult);
-                    return super.setResult(StatusCode.OK, code, StatusCode.codeMsgMap.get(StatusCode.OK));
-                }
+        try {
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
             }
+            int code = checkCodeService.generate();
+            HttpResult hr = checkCodeService.send(mobile, code, ip,type);
+            if (hr != null) {
+                logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
+                        .getContent(), hr.getResponse());
+                if (hr.getStatusCode() == StatusCode.OK) {
+                    JSONObject resultObj = JSON.parseObject(hr.getContent());
+                    if ("200".equals(resultObj.getString("code"))) {
+                        //store db
+                        CheckCode checkCode = new CheckCode();
+                        checkCode.setMobile(mobile);
+                        checkCode.setCode(code);
+                        Date nowTime = new Date();
+                        Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig
+                                ("EXPIRE_CHECKCODE_LOGIN")));
+                        checkCode.setCreateTime(nowTime);
+                        checkCode.setExpireTime(expireTime);
+                        checkCode.setIp(StringUtils.defaultString(ip, ""));
+                        checkCode.setUse(false);
+                        int createResult = checkCodeService.create(checkCode);
+                        logger.info("checkCodeService.create result <==={}", createResult);
+                        return super.setResult(StatusCode.OK, code, StatusCode.codeMsgMap.get(StatusCode.OK));
+                    }
+                }
 
+            }
+            return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .CHECK_CODE_SEND_ERROR));
+
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                .CHECK_CODE_SEND_ERROR));
+
     }
 
 
@@ -88,24 +95,26 @@ public class CheckCodeController extends BaseController {
     public Result vitifyCode(@RequestParam(value = "mobile", required = true) String mobile,
                          @RequestParam(value = "check_code", required = true) String checkCode) {
         logger.info("CheckCodeController.vitifyCode params >> mobile:{}", mobile ,checkCode);
-        //verify params
-        if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-            return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .MOBILE_FORMAT_ERROR));
+        try{
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
+            }
+            CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+            if (code == null) {
+                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_INVALID));
+            }
+            if (code.getExpireTime().compareTo(new Date()) < 0) {
+                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CAPTCHA_EXPIRE));
+            }
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-        if (code == null) {
-            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_INVALID));
-        }
-        if (code.getExpireTime().compareTo(new Date()) < 0) {
-            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                    .CAPTCHA_EXPIRE));
-        }
-        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+
     }
-
-
-
-
 }

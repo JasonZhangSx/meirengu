@@ -41,19 +41,19 @@ public class InviterController extends BaseController{
                        @RequestParam(value="invited_user_id", required = false) Integer invitedUserId,
                        @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="order", required = false) String order){
-        Map paramMap = new HashMap<String, Object>();
-        Page<Inviter> page = super.setPageParams(pageNum,pageSize);
-        if(!StringUtil.isEmpty(userId)){
-            paramMap.put("userId", userId);
-        }
-        if(!StringUtil.isEmpty(invitedUserId)){
-            paramMap.put("invitedUserId", invitedUserId);
-        }
-        paramMap.put("sortBy", sortBy);
-        paramMap.put("order", order);
-
-        page = inviterService.getListByPage(page, paramMap);
         try {
+            Map paramMap = new HashMap<String, Object>();
+            Page<Inviter> page = super.setPageParams(pageNum,pageSize);
+            if(!StringUtil.isEmpty(userId)){
+                paramMap.put("userId", userId);
+            }
+            if(!StringUtil.isEmpty(invitedUserId)){
+                paramMap.put("invitedUserId", invitedUserId);
+            }
+            paramMap.put("sortBy", sortBy);
+            paramMap.put("order", order);
+
+            page = inviterService.getListByPage(page, paramMap);
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -67,8 +67,8 @@ public class InviterController extends BaseController{
     @RequestMapping(method = {RequestMethod.GET})
     public Result detail(@RequestParam(value="id", required = true) Integer id){
 
-        Inviter inviter  = inviterService.detail(id);
         try {
+            Inviter inviter  = inviterService.detail(id);
             if(!StringUtil.isEmpty(inviter)){
                 return super.setResult(StatusCode.OK, inviter, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -89,16 +89,16 @@ public class InviterController extends BaseController{
                          @RequestParam(value = "register_time", required = false)Date registerTime,
                          @RequestParam(value = "invest_time", required = false)Date investTime,
                          @RequestParam(value = "reward", required = false)BigDecimal reward){
-        Inviter inviter = new Inviter();
-        inviter.setId(id);
-        inviter.setUserId(userId);
-        inviter.setInvitedUserId(invitedUserId);
-        inviter.setInvitedUserPhone(invitedUserPhone);
-        inviter.setRegisterTime(registerTime);
-        inviter.setInvestTime(investTime);
-        inviter.setReward(reward);
-        int result  = inviterService.update(inviter);
         try {
+            Inviter inviter = new Inviter();
+            inviter.setId(id);
+            inviter.setUserId(userId);
+            inviter.setInvitedUserId(invitedUserId);
+            inviter.setInvitedUserPhone(invitedUserPhone);
+            inviter.setRegisterTime(registerTime);
+            inviter.setInvestTime(investTime);
+            inviter.setReward(reward);
+            int result  = inviterService.update(inviter);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -112,8 +112,8 @@ public class InviterController extends BaseController{
 
     @RequestMapping(value = "/{id}",method = {RequestMethod.DELETE})
     public Result delete(@PathVariable Integer id){
-        int result  = inviterService.delete(id);
         try {
+            int result  = inviterService.delete(id);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

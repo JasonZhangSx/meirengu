@@ -201,9 +201,9 @@ public class UserAddressController extends BaseController{
                 for (Map<String, Object> list1:list){
                     if(!StringUtil.isEmpty(list1.get("areaId"))){
                         AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
-                        list1.put("province",addressPO.getProvince());
-                        list1.put("city",addressPO.getCity());
-                        list1.put("area",addressPO.getArea());
+                        list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
+                        list1.put("city",addressPO.getCity()+"");
+                        list1.put("area",addressPO.getArea()+"");
                     }
                 }
                 if(page.getList().size() != 0){
@@ -261,11 +261,16 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
-        List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
-        if(userAddressList != null && userAddressList.size() > 0){
-           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else{
-            return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+        try {
+            List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
+            if(userAddressList != null && userAddressList.size() > 0){
+               return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+            }
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 }
