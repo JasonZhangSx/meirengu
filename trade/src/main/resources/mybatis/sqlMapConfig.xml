@@ -7,5 +7,9 @@
 		<typeAlias alias="orderCandidate" type="com.meirengu.trade.model.OrderCandidate" />
 		<typeAlias alias="order" type="com.meirengu.trade.model.Order" />
 		<typeAlias alias="refund" type="com.meirengu.trade.model.Refund" />
+		<typeAlias alias="Rebate" type="com.meirengu.trade.model.Rebate" />
+		<typeAlias alias="RebateBatch" type="com.meirengu.trade.model.RebateBatch" />
+		<typeAlias alias="RebateReceive" type="com.meirengu.trade.model.RebateReceive" />
+		<typeAlias alias="RebateUsed" type="com.meirengu.trade.model.RebateUsed" />
 	</typeAliases>
 </configuration>

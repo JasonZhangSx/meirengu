@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.trade.dao.RebateDao" >
+
+	<resultMap id="rebateMap" type="Rebate">
+		<id column="rebate_id" property="rebateId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="rebate_sn" property="rebateSn" jdbcType="VARCHAR" javaType="String"/>
+		<result column="rebate_batch" property="rebateBatch" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="channel" property="channel" jdbcType="VARCHAR" javaType="String"/>
+		<result column="valid_start_time" property="validStartTime" jdbcType="DATE" javaType="Date"/>
+		<result column="valid_end_time" property="validEndTime" jdbcType="DATE" javaType="Date"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">`rebate`</sql>
+	<sql id="select_columns">
+		rebate_id as rebateId, rebate_sn as rebateSn, rebate_batch as rebateBatch, channel as channel, valid_start_time as validStartTime, valid_end_time as validEndTime, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="rebate" useGeneratedKeys="true" keyProperty="rebateId" >
+		INSERT INTO <include refid="table_name" />
+			(rebate_id, rebate_sn, rebate_batch, channel, valid_start_time, valid_end_time, create_time, operate_account)
+		VALUES
+			(#{rebateId}, #{rebateSn}, #{rebateBatch}, #{channel}, #{validStartTime}, #{validEndTime}, #{createTime}, #{operateAccount})
+	</insert>
+	<insert id="batchSave" parameterType="java.util.List" useGeneratedKeys="true"  >
+		<selectKey resultType="long" keyProperty="rebateId" order="AFTER">
+		SELECT
+		LAST_INSERT_ID()
+	</selectKey>
+
+		INSERT INTO <include refid="table_name" />
+		(rebate_id, rebate_sn, rebate_batch, channel, operate_account)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.rebateId}, #{item.rebateSn}, #{item.rebateBatch}, #{item.channel}, #{item.operateAccount})
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="rebate">
+	UPDATE <include refid="table_name" />
+	<set>
+		<if test="rebateSn != null and rebateSn != ''">
+			rebate_sn=#{rebateSn},
+		</if>
+		<if test="rebateBatch != null and rebateBatch != ''">
+			rebate_batch=#{rebateBatch},
+		</if>
+		<if test="channel != null and channel != ''">
+			channel=#{channel},
+		</if>
+		<if test="validStartTime != null and validStartTime != ''">
+			valid_start_time=#{validStartTime},
+		</if>
+		<if test="validEndTime != null and validEndTime != ''">
+			valid_end_time=#{validEndTime},
+		</if>
+		<if test="createTime != null and createTime != ''">
+			create_time=#{createTime},
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			update_time=#{updateTime},
+		</if>
+		<if test="operateAccount != null and operateAccount != ''">
+			operate_account=#{operateAccount},
+		</if>
+	</set>
+	<where>
+		rebate_id = #{rebateId}
+	</where>
+</update>
+
+	<!--根据优惠券号跟新-->
+	<update id="updateBySn" parameterType="rebate">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="rebateId != null">
+				rebate_id=#{rebateId},
+			</if>
+			<if test="rebateBatch != null">
+				rebate_batch=#{rebateBatch},
+			</if>
+			<if test="channel != null and channel != ''">
+				channel=#{channel},
+			</if>
+			<if test="validStartTime != null">
+				valid_start_time=#{validStartTime},
+			</if>
+			<if test="validEndTime != null">
+				valid_end_time=#{validEndTime},
+			</if>
+			<if test="createTime != null">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			rebate_sn = #{rebateSn}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="rebate">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where rebate_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

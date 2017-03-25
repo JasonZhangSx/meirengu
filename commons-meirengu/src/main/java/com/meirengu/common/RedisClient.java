@@ -354,6 +354,32 @@ public class RedisClient {
         getShardedJedisPool().returnResource(jedis);
         return jedis.zcard(key);
     }
+
+    public long lpush(String key, String[] valueArr) {
+        StopWatch watch = new StopWatch();
+        watch.start();
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.lpush(key, valueArr);
+        } finally {
+            watch.stop();
+            logger.debug("remove:" + key + ":time" + watch.getTotalTimeMillis());
+            getShardedJedisPool().returnResource(jedis);
+        }
+    }
+
+    public List<String> blpop(int timout, String key) {
+        StopWatch watch = new StopWatch();
+        watch.start();
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.blpop(1, key);
+        } finally {
+            watch.stop();
+            logger.debug("remove:" + key + ":time" + watch.getTotalTimeMillis());
+            getShardedJedisPool().returnResource(jedis);
+        }
+    }
     
     public static void main(String[] args) {
         JedisPoolConfig config = new JedisPoolConfig();
@@ -361,7 +387,7 @@ public class RedisClient {
         
         ShardedJedis jedis = redisService.getShardedJedisPool().getResource();
         String key = "test_incr1";
-        
+
         long a = jedis.incr(key);
        
         System.out.println(a);

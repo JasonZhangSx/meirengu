@@ -137,12 +137,23 @@ public class StatusCode {
     public static final int ADDRESS_IS_NOT_EXITS = 50110;
 
 
-    //50200-50300//news_cms
+    //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
     public static final int BULLETIN_ERROR_INSERT = 50201;
     public static final int FEEDBACK_CONTENT_OUTOF = 50202;
     public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
     public static final int BULLETIN_ERROR_LIST = 50204;
+
+    //50251-50300//rebate
+    public static final int REBATE_BATCH_ERROR_INSERT = 50251;
+    public static final int REBATE_SN_REPEAT = 50252;
+    public static final int HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE = 50253;
+    public static final int REBATE_BATCH_INVALIDITY = 50254;
+    public static final int REBATE_RECEIVE_INVALIDITY = 50255;
+    public static final int NOT_MATCH_REBATE_BATCH_RULE = 50256;
+
+
+
 
     //50300-50400//medical_beauty
 
@@ -333,6 +344,15 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
+
+        //50200-50300//rebate
+        codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");
+        codeMsgMap.put(StatusCode.REBATE_SN_REPEAT, "券号生成器重复数量过多，请联系技术部处理");
+        codeMsgMap.put(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE, "该券您已经达到领取上限，不可再次领取");
+        codeMsgMap.put(StatusCode.REBATE_BATCH_INVALIDITY, "该批次抵扣券不可用");
+        codeMsgMap.put(StatusCode.REBATE_RECEIVE_INVALIDITY, "该优惠券已无效，请更换其他优惠券");
+        codeMsgMap.put(StatusCode.NOT_MATCH_REBATE_BATCH_RULE, "订单不符合该优惠券使用规则，请更换其他优惠券");
+
 
 
         //50300-50400//medical_beauty

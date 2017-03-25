@@ -40,7 +40,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertSubscriptions(Order order)  throws IOException, OrderRpcException;
+    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IOException, OrderRpcException;
 
     /**
      * 获取客户端订单列表
@@ -51,11 +51,11 @@ public interface OrderService extends BaseService<Order>{
      */
     Page getPage(Page page, Map map)  throws IOException;
     /**
-     * 新增认购订单
+     * 新增预约订单
      * @param order
      * @return
      */
-    Result appointment(Order order)  throws IOException, OrderRpcException;
+    Result insertAppointment(Order order, int rebateReceiveId)  throws IOException, OrderRpcException;
 
     /**
      * 取消预约
