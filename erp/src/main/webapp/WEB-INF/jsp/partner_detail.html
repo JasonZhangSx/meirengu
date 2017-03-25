@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=renderer content=webkit|ie-comp|ie-stand>
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta http-equiv=Cache-Control content=no-siteapp/>
+    <link rel=Bookmark href=favicon.ico>
+    <link rel="Shortcut Icon" href=favicon.ico/>
+    <meta name=keywords content=xxxxx>
+    <meta name=description content=xxxxx>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
+    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+</html>
+<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<div class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+        <style>
+            .select-box1 {
+                padding-left: 0;
+            }
+
+            .select-box1 select {
+                font-size: 14px;
+                height: 31px;
+                line-height: 31px;
+                padding: 0 4px;
+                border: 1px #ddd solid;
+            }
+
+            .edit_h31 {
+                border-bottom: 1px #ddd solid;
+                overflow: hidden;
+            }
+        </style>
+
+        <!-- 合作方分类》添加 -->
+        合作方分类》添加
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">分类名称：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">描述：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100" dragonfly="true"
+                          nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-8 text-c">
+                <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="button">添加
+                </button>
+            </div>
+        </div>
+        <!-- 合作方 添加 -->
+        合作方 添加
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">合作方名称：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
+            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+				<select name="" class="select">
+					<option value="0">公司</option>
+					<option value="1">个人</option>
+				</select>
+				</span>
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">服务专员：</label>
+            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+				<select name="" class="select">
+					<option value="0">专员a</option>
+					<option value="1">专员b</option>
+				</select>
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">企业信息</h3>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">企业名称：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">证件号：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2" style="line-height:30px;">企业地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <label data-toggle="distpicker" style="display:block;width:100%">
+					<span class="select-box select-box1" style="border:none;">
+						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
+						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+					</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">法人信息</h3>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">负责人姓名：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">传 真：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2" style="line-height:30px;">联系地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <label data-toggle="distpicker" style="display:block;width:100%">
+					<span class="select-box select-box1" style="border:none;">
+						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
+						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+					</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">联系人信息</h3>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">联系人姓名：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">传 真：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2" style="line-height:30px;">联系地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <label data-toggle="distpicker" style="display:block;width:100%">
+					<span class="select-box select-box1" style="border:none;">
+						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
+						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
+						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+					</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">收款账户信息</h3>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">开户行名称：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">账户名：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">银行账号：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
+                       placeholder="项目标题最多30字" id="" name="">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">资质文件</h3>
+        </div>
+        <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th width="240">资料类型</th>
+                    <th>合同文件</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-c">
+                    <td>发起人身份证正反面
+                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    </td>
+                    <td class="text-l">北京玉之光众筹
+                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                    </td>
+                </tr>
+                <tr class="text-c">
+                    <td>营业执照
+                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    </td>
+                    <td class="text-l">北京玉之光众筹
+                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                    </td>
+                </tr>
+                <tr class="text-c">
+                    <td>开户行
+                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    </td>
+                    <td class="text-l">北京玉之光众筹
+                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                    </td>
+                </tr>
+                <tr class="text-c">
+                    <td>医疗机构执业许可证
+                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    </td>
+                    <td class="text-l">北京玉之光众筹
+                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script src=lib/jquery/1.9.1/jquery.min.js></script>
+<script src=lib/layer/2.4/layer.js></script>
+<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
+<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
+<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
+<script src=static/h-ui/js/H-ui.js></script>
+<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
+<script>$(function () {
+    $(".Hui-aside ul a").on("click", function () {
+        console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
+    })
+})</script>
+<!-- 省市区 -->
+<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
+<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>
+<script>
+
+
+</script>
+</body>
+</html>
