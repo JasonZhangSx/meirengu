@@ -57,10 +57,10 @@
         <if test="refundState != null and refundState != '' and refundState != 0">
             refund_state=#{refundState},
         </if>
-        <if test="paymentTime != null and paymentTime != ''">
+        <if test="paymentTime != null">
             payment_time=#{paymentTime},
         </if>
-        <if test="finishedTime != null and finishedTime != ''">
+        <if test="finishedTime != null">
             finished_time=#{finishedTime}
         </if>
         WHERE 1=1

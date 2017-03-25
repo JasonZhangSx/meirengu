@@ -61,7 +61,6 @@ public class ItemController extends BaseController {
                        @RequestParam(value = "item_status", required = false) String itemStatus,
                        @RequestParam(value = "sortby", required = false) String sortBy,
                        @RequestParam(value = "order", required = false) String order){
-
         //默认不分页
         if(StringUtil.isEmpty(isPage)){
             isPage = false;

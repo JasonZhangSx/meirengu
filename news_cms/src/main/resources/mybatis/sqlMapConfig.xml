@@ -10,5 +10,6 @@
 		<typeAlias alias="articleClass" type="com.meirengu.news.model.ArticleClass" />
 		<typeAlias alias="bulletin" type="com.meirengu.news.model.Bulletin" />
 		<typeAlias alias="feedback" type="com.meirengu.news.model.Feedback" />
+		<typeAlias alias="activity" type="com.meirengu.news.model.Activity" />
 	</typeAliases>
 </configuration>

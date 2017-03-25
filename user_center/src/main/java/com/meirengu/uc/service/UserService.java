@@ -49,7 +49,7 @@ public interface UserService {
 
     int updateUserInfo(User user, String mobile, String ip, Integer from);
 
-    User createUserInfo(String mobile, String password, Integer from, String ip, String mobileInviter,String avatar);
+    User createUserInfo(String mobile, String password, Integer from, String ip,String avatar);
 
     User createUserInfo(RegisterVO registerVO);
 

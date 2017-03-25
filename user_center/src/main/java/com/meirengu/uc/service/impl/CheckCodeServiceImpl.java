@@ -1,7 +1,5 @@
 package com.meirengu.uc.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.dao.CheckCodeDao;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.service.CheckCodeService;
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,13 +35,13 @@ public class CheckCodeServiceImpl implements CheckCodeService {
     }
 
     @Override
-    public HttpResult send(String mobile, int code, String ip) {
+    public HttpResult send(String mobile, int code, String ip,String type) {
         HttpResult hr = null;
         Map<String, String> params = new HashMap<String, String>();
+        params.put("tpl_id", type);
         params.put("mobile", mobile);
-        params.put("text", Constants.SMS_TEMPLATE_CHECKCODE.replace("#code#", String.valueOf(code)));
-        params.put("uid", String.valueOf(code));
         params.put("ip", ip);
+        params.put("code", code+"");
         String url = ConfigUtil.getConfig("URI_CHECKCODE_SEND");
         logger.info("CheckCodeServiceImpl.send post >> uri :{}, params:{}", new Object[]{url, params});
         try {

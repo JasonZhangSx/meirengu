@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.ChannelBankDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.ChannelBank" >
+    <id column="bank_id" property="bankId" jdbcType="INTEGER" />
+    <result column="channel_id" property="channelId" jdbcType="INTEGER" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="single_limit_amout" property="singleLimitAmout" jdbcType="DECIMAL" />
+    <result column="day_limit_amount" property="dayLimitAmount" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operate_account" property="operateAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bank_id, channel_id, bank_code, bank_name, single_limit_amout, day_limit_amount, 
+    create_time, update_time, operate_account
+  </sql>
+  <select id="getChannelBank" resultMap="BaseResultMap" parameterType="com.meirengu.pay.model.ChannelBank" >
+    select 
+    <include refid="Base_Column_List" />
+    from channel_bank
+    where 1=1
+    <if test="bankId != null" >
+      AND bank_id = #{bankId,jdbcType=INTEGER}
+    </if>
+    <if test="channelId != null" >
+      AND channel_id = #{channelId,jdbcType=INTEGER}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from channel_bank
+    where bank_id = #{bankId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.meirengu.pay.model.ChannelBank" >
+    insert into channel_bank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="singleLimitAmout != null" >
+        single_limit_amout,
+      </if>
+      <if test="dayLimitAmount != null" >
+        day_limit_amount,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="operateAccount != null" >
+        operate_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        #{bankId,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="singleLimitAmout != null" >
+        #{singleLimitAmout,jdbcType=DECIMAL},
+      </if>
+      <if test="dayLimitAmount != null" >
+        #{dayLimitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateAccount != null" >
+        #{operateAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.model.ChannelBank" >
+    update channel_bank
+    <set >
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="singleLimitAmout != null" >
+        single_limit_amout = #{singleLimitAmout,jdbcType=DECIMAL},
+      </if>
+      <if test="dayLimitAmount != null" >
+        day_limit_amount = #{dayLimitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateAccount != null" >
+        operate_account = #{operateAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bank_id = #{bankId,jdbcType=INTEGER}
+  </update>
+</mapper>

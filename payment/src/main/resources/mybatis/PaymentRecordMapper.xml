@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.pay.dao.PaymentRecordDao" >
-  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentRecord" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.vo.PaymentRecordVo" >
     <id column="payment_id" property="paymentId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.pay.model.PaymentRecord" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.meirengu.pay.vo.PaymentRecordVo" extends="BaseResultMap" >
     <result column="return_msg" property="returnMsg" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -43,7 +43,7 @@
   <sql id="Blob_Column_List" >
     return_msg
   </sql>
-  <select id="selectPaymentRecord" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.pay.model.PaymentRecord" >
+  <select id="selectPaymentRecord" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
     select 
     <include refid="Base_Column_List" />
     ,
@@ -57,7 +57,7 @@
       AND order_sn = #{orderSn,jdbcType=INTEGER}
     </if>
   </select>
-  <insert id="insertPaymentRecord" parameterType="com.meirengu.pay.model.PaymentRecord" >
+  <insert id="insertPaymentRecord" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
     insert into payment_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="paymentId != null" >
@@ -232,7 +232,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updatePaymentRecord" parameterType="com.meirengu.pay.model.PaymentRecord" >
+  <update id="updatePaymentRecord" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
     update payment_record
     <set >
       <if test="userId != null" >

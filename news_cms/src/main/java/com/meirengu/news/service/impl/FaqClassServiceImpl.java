@@ -6,7 +6,6 @@ import com.meirengu.news.model.Page;
 import com.meirengu.news.po.ListAllFaqClassPo;
 import com.meirengu.news.service.FaqClassService;
 import com.meirengu.news.service.PageService;
-import com.meirengu.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,12 +51,12 @@ public class FaqClassServiceImpl implements FaqClassService {
 
     @Override
     public int delete(int id) throws Exception {
-        return 0;
+        return faqClassDao.delete(id);
     }
 
     @Override
     public Map<String, Object> detail(int id) throws Exception {
-        return null;
+        return faqClassDao.detail(id);
     }
 
     @Override

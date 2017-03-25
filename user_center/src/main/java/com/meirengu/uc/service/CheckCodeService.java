@@ -25,7 +25,7 @@ public interface CheckCodeService {
      * @param code
      * @return
      */
-    HttpResult send(String mobile, int code, String ip);
+    HttpResult send(String mobile, int code, String ip,String type);
 
     /**
      * 保存验证码

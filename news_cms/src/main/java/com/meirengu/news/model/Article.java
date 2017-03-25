@@ -15,6 +15,8 @@ public class Article  extends BaseEntity {
     private int acId;
     /** 文章URL **/
     private String url;
+    /** 文章标签 **/
+    private String label;
     /** 文章是否展示 0为否，1为是 **/
     private int show;
     /** 文章排序 **/
@@ -168,5 +170,13 @@ public class Article  extends BaseEntity {
 
     public void setCreateUserType(int createUserType) {
         this.createUserType = createUserType;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

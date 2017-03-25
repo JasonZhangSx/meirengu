@@ -5,6 +5,8 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
+import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.utils.RedisUtil;
@@ -32,17 +34,18 @@ public class UserAddressController extends BaseController{
 
     @Autowired
     private UserAddressService userAddressService;
-
+    @Autowired
+    AddressService service;
     private static final Logger logger = LoggerFactory.getLogger(UserAddressController.class);
 
     @RequestMapping(value = "insert", method = RequestMethod.POST)
-    public Result insertAddress(@RequestParam(value = "mobile", required = false) String mobile,
+    public Result insertAddress(@RequestParam(value = "mobile", required = true) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
-                                @RequestParam(value = "user_name", required = false) String userName,
-                                @RequestParam(value = "user_address", required = false) String userAddress,
+                                @RequestParam(value = "user_name", required = true) String userName,
+                                @RequestParam(value = "user_address", required = true) String userAddress,
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
-                                @RequestParam(value = "is_default", required = false) Boolean isDefault){
+                                @RequestParam(value = "is_default", defaultValue = "0",required = false) Integer isDefault){
 
         logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
@@ -64,7 +67,7 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserPhone(mobile);
                 userAddressBean.setDelFlag(1);
                 userAddressBean.setAreaId(areaId);
-                userAddressBean.setDefault(isDefault);
+                userAddressBean.setIsDefault(isDefault);
                 int res = userAddressService.insert(userAddressBean);
                 if(res == 0){
                     userAddressBean.setAddressId(UuidUtils.getShortUuid());
@@ -85,14 +88,14 @@ public class UserAddressController extends BaseController{
 
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
-    public Result updateAddress(@RequestParam(value = "mobile", required = false) String mobile,
+    public Result updateAddress(@RequestParam(value = "mobile", required = true) String mobile,
                                 @RequestParam(value = "token", required = true) String token,
                                 @RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "user_id", required = true) Integer userId,
                                 @RequestParam(value = "user_name", required = false) String userName,
                                 @RequestParam(value = "user_address", required = false) String userAddress,
-                                @RequestParam(value = "area_id", required = true) Integer areaId,
-                                @RequestParam(value = "is_default", required = false) Boolean isDefault){
+                                @RequestParam(value = "area_id", required = false) Integer areaId,
+                                @RequestParam(value = "is_default", required = false) Integer isDefault){
 
         try{
             RedisUtil redisUtil = new RedisUtil();
@@ -121,8 +124,7 @@ public class UserAddressController extends BaseController{
                 userAddressBean.setUserId(userId);
                 userAddressBean.setUserPhone(mobile);
                 userAddressBean.setUserName(userName);
-                userAddressBean.setDelFlag(1);
-                userAddressBean.setDefault(isDefault);
+                userAddressBean.setIsDefault(isDefault);
                 userAddressBean.setAreaId(areaId);
                 int res = userAddressService.updateByAdressId(userAddressBean);
                 if(res == 0){
@@ -157,11 +159,9 @@ public class UserAddressController extends BaseController{
                 UserAddress userAddress = new UserAddress();
                 userAddress.setAddressId(addressId);
                 userAddressService.selectByUserAddress(userAddress);
-                if(userAddress.getDefault()!=null){
-                    if(userAddress.getDefault()){
-                        return super.setResult(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, null, StatusCode.codeMsgMap.get(StatusCode
-                                .ADDREAA_IS_NOT_ALLOWED_DELETE));
-                    }
+                if(!StringUtil.isEmpty(userAddress.getIsDefault())){
+                    return super.setResult(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, null, StatusCode.codeMsgMap.get(StatusCode
+                        .ADDREAA_IS_NOT_ALLOWED_DELETE));
                 }
                 userAddress.setDelFlag(1);
                 userAddressService.updateByAdressId(userAddress);
@@ -196,6 +196,15 @@ public class UserAddressController extends BaseController{
                 paramMap.put("userId",userId);
                 Page<UserAddress> page = super.setPageParams(pageNum,pageSize);
                 page = userAddressService.getListByPage(page,paramMap);
+                List<Map<String, Object>> list = page.getList();
+                for (Map<String, Object> list1:list){
+                    if(!StringUtil.isEmpty(list1.get("areaId"))){
+                        AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
+                        list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
+                        list1.put("city",addressPO.getCity()+"");
+                        list1.put("area",addressPO.getArea()+"");
+                    }
+                }
                 if(page.getList().size() != 0){
                     return super.setResult(StatusCode.OK, page,StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
@@ -251,11 +260,16 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
-        List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
-        if(userAddressList != null && userAddressList.size() > 0){
-           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else{
-            return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+        try {
+            List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
+            if(userAddressList != null && userAddressList.size() > 0){
+               return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+            }
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 }

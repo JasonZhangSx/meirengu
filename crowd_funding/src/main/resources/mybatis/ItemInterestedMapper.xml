@@ -13,16 +13,16 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 	</resultMap>
 
-	<sql id="table_name">item_interested t</sql>
+	<sql id="table_name">item_interested</sql>
 	<sql id="select_columns">
 		t.id as id, t.item_id as itemId, t.user_id as userId, t.user_name as userName, t.user_phone as userPhone, t.status as status, t.create_time as createTime, t.update_time as updateTime
 	</sql>
 
 	<insert id="insert" parameterType="itemInterested" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, item_id, user_id, user_name, user_phone, status, create_time, update_time)
+			(id, item_id, user_id, user_name, user_phone, status, create_time)
 		VALUES
-			(#{id}, #{itemId}, #{userId}, #{userName}, #{userPhone}, #{status}, #{createTime}, #{updateTime})
+			(#{id}, #{itemId}, #{userId}, #{userName}, #{userPhone}, #{status}, #{createTime})
 	</insert>
 
 	<update id="update" parameterType="itemInterested">
@@ -59,22 +59,22 @@
 	</update>
 
 	<select id="detail" parameterType="integer" resultType="itemInterested">
-		select <include refid="select_columns" /> from <include refid="table_name"/>
+		select <include refid="select_columns" /> from <include refid="table_name"/> t
 		where id=#{id}
 	</select>
 
-	<update id="cancle" parameterType="itemInterested">
-		UPDATE <include refid="table_name" /> SET status=0 WHERE item_id=#{itemId} and user_id=#{userId}
+	<update id="updateStatus" parameterType="itemInterested">
+		UPDATE <include refid="table_name" /> SET status=#{status} WHERE item_id=#{itemId} and user_id=#{userId}
 	</update>
 
 	<select id="detailByUserAndItem" parameterType="itemInterested" resultType="itemInterested">
-		select <include refid="select_columns" /> from <include refid="table_name"/>
+		select <include refid="select_columns" /> from <include refid="table_name"/> t
 		where item_id=#{itemId} and user_id=#{userId}
 	</select>
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />, i.item_name, i.header_image, i.item_status  FROM <include refid="table_name" />
+		select <include refid="select_columns" />, i.item_name as itemName, i.header_image as headerImage, i.item_status as itemStatus  FROM <include refid="table_name" /> t
 		LEFT JOIN item i ON i.item_id=t.item_id
 		where 1=1
 		<if test="itemId != null">
@@ -97,7 +97,7 @@
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1) FROM <include refid="table_name" /> t
 		LEFT JOIN item i ON i.item_id=t.item_id
 		where 1=1
 		<if test="itemId != null">

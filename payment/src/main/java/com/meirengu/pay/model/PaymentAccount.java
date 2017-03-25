@@ -16,12 +16,11 @@ public class PaymentAccount implements  AnnotationValidable {
     private String currencyType;
     @ValidateNotNull(attributeValue = "用户Id")
     @ValidateDigit
-    @ValidateSize(attributeValue = "用户Id",minSize = "8",maxSize = "9")
     private Integer userId;
 
     private String password;
     @ValidateNotNull(attributeValue = "手机号")
-    @ValidatePattern(attributeValue = "手机号",pattern="^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$")
+    @ValidatePattern(attributeValue = "手机号",pattern="^[1][3,4,5,7,8][0-9]{9}$")
     private String mobile;
     @ValidatePattern(attributeValue = "邮箱",pattern="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$")
     private String email;

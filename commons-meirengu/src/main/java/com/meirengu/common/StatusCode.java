@@ -48,6 +48,8 @@ public class StatusCode {
     public static final int EMAIL_FORMAT_ERROR = 40103;
     public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
     public static final int PASSWORD_IS_MALFORMED = 40105;
+    public static final int MSG_TEMPLATE_INVALID = 40106;
+
     //40200-40300//news_cms
 
     //40300-40400//medical_beauty
@@ -93,6 +95,15 @@ public class StatusCode {
     public static final int PAYMENT_RECORD_ERROR_REFUND_CONFIRM_ISNULL = 40625;
     public static final int PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL = 40626;
     public static final int PAYMENT_RECORD_ERROR_STATUS = 40627;
+    public static final int PAYMENT_RECORD_ERROR_BAOFU_PAY = 40628;
+    public static final int PAYMENT_RECORD_ERROR_BAOFU_PAY_ENCRYPTION = 40629;
+    public static final int PAYMENT_RECORD_ERROR_BAOFU_PAY_READ_CONFIGURE = 40630;
+    public static final int PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL = 40631;
+    public static final int PAYMENT_RECORD_ERROR_BAOFU_AUTH=40632;
+    public static final int PAYMENT_RECORD_SUCCESS_BAOFU_AUTH=40633;
+    public static final int CHANNEL_BANK_SUCCESS_SELECT=40634;
+    public static final int CHANNEL_BANK_ERROR_SELECT=40635;
+    public static final int CHANNEL_BANK_ERROR_SELECT_IS_NULL=40636;
 
 
     //40700-40750//sms
@@ -135,7 +146,9 @@ public class StatusCode {
     public static final int USER_PASSWORD_IS_EXITS = 50108;
     public static final int USER_INVITER_IS_NOT_EXITS = 50109;
     public static final int ADDRESS_IS_NOT_EXITS = 50110;
-
+    public static final int VETIFY_IS_NOT_ALLOWED = 50111;
+    public static final int NOTIFY_GENERATE_FAIL = 50112;
+    public static final int NOTIFY_READ_FAIL = 50113;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -143,6 +156,11 @@ public class StatusCode {
     public static final int FEEDBACK_CONTENT_OUTOF = 50202;
     public static final int FEEDBACK_CONTENT_COUNT_OUTOF = 50203;
     public static final int BULLETIN_ERROR_LIST = 50204;
+    public static final int CLASS_IS_REPEATED = 50205;
+    public static final int QUESTION_IS_REPEATED = 50206;
+    public static final int SLIDESHOW_SELECT_ERROR = 50207;
+    public static final int SLIDESHOW_INSERT_ERROR = 50208;
+    public static final int SLIDESHOW_UPDATE_ERROR = 50209;
 
     //50251-50300//rebate
     public static final int REBATE_BATCH_ERROR_INSERT = 50251;
@@ -177,7 +195,7 @@ public class StatusCode {
     public static final int ITEM_COOPERATION_ERROR_DELETE = 50514;
     public static final int ITEM_INTERESTED_ERROR_INSERT = 50515;
     public static final int ITEM_INTERESTED_ERROR_UPDATE = 50516;
-    public static final int ITEM_INTERESTED_ERROR_DELETE = 50517;
+    public static final int ITEM_INTERESTED_ERROR_CANCLE = 50517;
     public static final int ITEM_BE_INTERESTED = 50518;
     public static final int ITEM_NOT_BE_INTERESTED = 50519;
     public static final int ITEM_LEVEL_APPOINT_FULL = 50520;
@@ -280,6 +298,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.EMAIL_FORMAT_ERROR, "邮箱格式错误");
         codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
         codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
+        codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
+
+
         //40200-40300//news_cms
 
         //40300-40400//medical_beauty
@@ -337,6 +358,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, "用户地址id与用户id不匹配");
         codeMsgMap.put(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, "默认地址不允许删除");
         codeMsgMap.put(StatusCode.OLD_PASSWORD_IS_ERROR, "原密码错误");
+        codeMsgMap.put(StatusCode.NOTIFY_GENERATE_FAIL, "消息生成失败");
+        codeMsgMap.put(StatusCode.NOTIFY_READ_FAIL, "消息设置已读失败");
+        codeMsgMap.put(StatusCode.VETIFY_IS_NOT_ALLOWED, "用户超过允许认证次数");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
@@ -344,6 +368,11 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_OUTOF, "提交字数应在200以内，请修改后重新提交");
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
+        codeMsgMap.put(StatusCode.CLASS_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.SLIDESHOW_SELECT_ERROR, "轮播图获取失败");
+        codeMsgMap.put(StatusCode.SLIDESHOW_INSERT_ERROR, "轮播图增加失败");
+        codeMsgMap.put(StatusCode.SLIDESHOW_UPDATE_ERROR, "轮播图修改失败");
 
         //50200-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");
@@ -375,11 +404,11 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_INSERT, "项目合作设置保存失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_UPDATE, "项目合作设置修改失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "项目合作设置删除失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "感兴趣项目保存失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_INSERT, "设置感兴趣项目失败， 请重试");
         codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_UPDATE, "感兴趣项目修改失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_DELETE, "感兴趣项目删除失败， 请重试");
-        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "已设置对该项目感兴趣");
-        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "已取消对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_INTERESTED_ERROR_CANCLE, "取消感兴趣项目失败， 请重试");
+        codeMsgMap.put(StatusCode.ITEM_BE_INTERESTED, "该用户对该项目感兴趣");
+        codeMsgMap.put(StatusCode.ITEM_NOT_BE_INTERESTED, "该用户对该项目不感兴趣");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_COMPLETED, "该档位已完成");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_NULL, "档位信息为空");
@@ -389,6 +418,11 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
 
         //40600-40700//payment
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT, "用户资金账户创建成功");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT, "用户资金账户创建失败");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL, "该用户资金账户不存在");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT, "该用户资金账户不存在");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT, "该用户资金账户查询失败");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_PARAMETER, "参数有误");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_UPDATE, "该用户资金账户更新失败");
@@ -412,6 +446,15 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM_ISNULL, "该退款记录不存在");
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL, "该提现记录不存在");
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_STATUS, "流水记录有误");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY, "宝付支付失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_ENCRYPTION, "Base64加密失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_READ_CONFIGURE, "宝付配置读取失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL, "宝付返回值为空");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH, "宝付实名失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_BAOFU_AUTH, "宝付实名成功");
+        codeMsgMap.put(StatusCode.CHANNEL_BANK_SUCCESS_SELECT, "渠道支持银行查询成功");
+        codeMsgMap.put(StatusCode.CHANNEL_BANK_ERROR_SELECT, "渠道支持银行查询失败");
+        codeMsgMap.put(StatusCode.CHANNEL_BANK_ERROR_SELECT_IS_NULL, "渠道支持银行查询数据为空");
 
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");

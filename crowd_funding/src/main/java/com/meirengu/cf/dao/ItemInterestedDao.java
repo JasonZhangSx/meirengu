@@ -8,7 +8,7 @@ import com.meirengu.dao.BaseDao;
  */
 public interface ItemInterestedDao extends BaseDao<ItemInterested>{
 
-    int cancle(ItemInterested itemInterested);
+    int updateStatus(ItemInterested itemInterested);
 
     ItemInterested detailByUserAndItem(ItemInterested itemInterested);
 }

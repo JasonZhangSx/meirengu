@@ -4,20 +4,22 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.dao.PaymentRecordDao;
 import com.meirengu.pay.model.PaymentAccount;
-import com.meirengu.pay.model.PaymentRecord;
 import com.meirengu.pay.service.CapitalService;
 import com.meirengu.pay.utils.PaymentException;
 import com.meirengu.pay.utils.PaymentTypeUtil;
 import com.meirengu.pay.utils.ResultUtil;
+import com.meirengu.pay.vo.PaymentRecordVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 资金处理ServiceImpl
  * Author: haoyang.Yu
  * Create Date: 2017/3/21 11:18.
  */
+@Service
 public class CapitalServiceImpl extends BaseServiceImpl implements CapitalService {
     private final static Logger logger = LoggerFactory.getLogger(CapitalServiceImpl.class);
     @Autowired
@@ -31,12 +33,12 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
      */
     @Override
     public String confirmRefund(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
         PaymentAccount paymentAccount = new PaymentAccount();
         try {
-            paymentRecord = (PaymentRecord) super.execute(content,paymentRecord);
+            paymentRecord = (PaymentRecordVo) super.execute(content,paymentRecord);
             logger.info("Request confirmRefund parameter:{}",paymentRecord.toString());
-            PaymentRecord record = new PaymentRecord();
+            PaymentRecordVo record = new PaymentRecordVo();
             record.setOrderSn(paymentRecord.getOrderSn());
             record = paymentRecordDao.selectPaymentRecord(record);
             Integer status = checkStatus(paymentRecord.getStatus());
@@ -50,7 +52,7 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
             if (record.getPaymentMethod()== PaymentTypeUtil.PaymentMethod_Balance) {
                 paymentAccountDao.updateBalance(record.getAccountId(),paymentAccount.getAccountBalance().add(record.getPaymentAmount()));
             }
-            paymentRecord = new PaymentRecord();
+            paymentRecord = new PaymentRecordVo();
             paymentRecord.setPaymentId(record.getPaymentId());
             paymentRecord.setStatus(status);
             paymentRecordDao.updatePaymentRecord(paymentRecord);
@@ -68,12 +70,12 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
      */
     @Override
     public String confirmWithdrawals(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
         PaymentAccount paymentAccount = new PaymentAccount();
         try {
-            paymentRecord = (PaymentRecord) super.execute(content,paymentRecord);
+            paymentRecord = (PaymentRecordVo) super.execute(content,paymentRecord);
             logger.info("Request confirmWithdrawals parameter:{}",paymentRecord.toString());
-            PaymentRecord record = new PaymentRecord();
+            PaymentRecordVo record = new PaymentRecordVo();
             record.setOrderSn(paymentRecord.getOrderSn());
             record = paymentRecordDao.selectPaymentRecord(record);
             Integer status = checkStatus(paymentRecord.getStatus());
@@ -86,7 +88,7 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
                     throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
                 }
             }
-            paymentRecord = new PaymentRecord();
+            paymentRecord = new PaymentRecordVo();
             paymentRecord.setPaymentId(record.getPaymentId());
             paymentRecord.setStatus(status);
             paymentRecordDao.updatePaymentRecord(paymentRecord);

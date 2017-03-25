@@ -1,11 +1,9 @@
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -16,23 +14,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.*;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.meirengu.pay.vo.WxRefundSendData;
 import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.MD5Util;
-import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-
 
 
 public class WebContent1 {

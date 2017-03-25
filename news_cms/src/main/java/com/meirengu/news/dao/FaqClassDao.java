@@ -34,8 +34,7 @@ public interface FaqClassDao extends PageDao<FaqClass>{
      * 问题详情
      * @return
      */
-    public Map<String, Object> detail(int id);
-
+    public Map<String, Object> detail(int classId);
 
     public int getFaqClass(FaqClass faqClass);
 

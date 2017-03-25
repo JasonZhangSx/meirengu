@@ -81,6 +81,7 @@ public class RefundServiceImpl implements RefundService{
             if(orderState != Constants.ORDER_PAID){
                 state = 5;
                 resultMap.put("state", state);
+                LOGGER.info(">> order state is not paid....");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return resultMap;
             }
@@ -89,7 +90,8 @@ public class RefundServiceImpl implements RefundService{
             params.put("order_sn", unionSN);
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(ConfigUtil.getValue("payment.detail.url"), params);
             if(hr.getStatusCode() != 200){
-                state = 5;
+                state = 6;
+                LOGGER.info(">> get payment detail fail....");
                 resultMap.put("state", state);
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return resultMap;
@@ -99,7 +101,8 @@ public class RefundServiceImpl implements RefundService{
             JSONObject contentJson = JSONObject.parseObject(content);
             int code = contentJson.get("code") == null ? 0 : Integer.parseInt(contentJson.get("code").toString());
             if(code != 200){
-                state = 5;
+                state = 7;
+                LOGGER.info(">> payment detail reuturn is {}", content);
                 resultMap.put("state", state);
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return resultMap;
