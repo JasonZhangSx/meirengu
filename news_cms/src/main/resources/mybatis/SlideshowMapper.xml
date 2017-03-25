@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.SlideshowDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.news.model.Slideshow" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="slideshow_position" property="slideshowPosition" jdbcType="INTEGER" />
+    <result column="slideshow_name" property="slideshowName" jdbcType="VARCHAR" />
+    <result column="slideshow_image" property="slideshowImage" jdbcType="VARCHAR" />
+    <result column="slideshow_link" property="slideshowLink" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operate_account" property="operateAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, slideshow_position, slideshow_name, slideshow_image, slideshow_link, status, 
+    create_time, update_time, operate_account
+  </sql>
+  <select id="selectSlideShow" resultMap="BaseResultMap" parameterType="com.meirengu.news.model.Slideshow" >
+    select
+    <include refid="Base_Column_List" />
+    from slideshow
+    where 1=1
+    <if test="id != null" >
+      AND id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="slideshowPosition != null" >
+      AND slideshow_position =  #{slideshowPosition,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <insert id="insertSlideshow" parameterType="com.meirengu.news.model.Slideshow" >
+    insert into slideshow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="slideshowPosition != null" >
+        slideshow_position,
+      </if>
+      <if test="slideshowName != null" >
+        slideshow_name,
+      </if>
+      <if test="slideshowImage != null" >
+        slideshow_image,
+      </if>
+      <if test="slideshowLink != null" >
+        slideshow_link,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="operateAccount != null" >
+        operate_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="slideshowPosition != null" >
+        #{slideshowPosition,jdbcType=INTEGER},
+      </if>
+      <if test="slideshowName != null" >
+        #{slideshowName,jdbcType=VARCHAR},
+      </if>
+      <if test="slideshowImage != null" >
+        #{slideshowImage,jdbcType=VARCHAR},
+      </if>
+      <if test="slideshowLink != null" >
+        #{slideshowLink,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateAccount != null" >
+        #{operateAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSlideshow" parameterType="com.meirengu.news.model.Slideshow" >
+    update slideshow
+    <set >
+      <if test="slideshowPosition != null" >
+        slideshow_position = #{slideshowPosition,jdbcType=INTEGER},
+      </if>
+      <if test="slideshowName != null" >
+        slideshow_name = #{slideshowName,jdbcType=VARCHAR},
+      </if>
+      <if test="slideshowImage != null" >
+        slideshow_image = #{slideshowImage,jdbcType=VARCHAR},
+      </if>
+      <if test="slideshowLink != null" >
+        slideshow_link = #{slideshowLink,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateAccount != null" >
+        operate_account = #{operateAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
