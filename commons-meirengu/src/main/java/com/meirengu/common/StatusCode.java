@@ -158,6 +158,9 @@ public class StatusCode {
     public static final int BULLETIN_ERROR_LIST = 50204;
     public static final int CLASS_IS_REPEATED = 50205;
     public static final int QUESTION_IS_REPEATED = 50206;
+    public static final int SLIDESHOW_SELECT_ERROR = 50207;
+    public static final int SLIDESHOW_INSERT_ERROR = 50208;
+    public static final int SLIDESHOW_UPDATE_ERROR = 50209;
 
     //50300-50400//medical_beauty
 
@@ -356,6 +359,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
         codeMsgMap.put(StatusCode.CLASS_IS_REPEATED, "分类不能重复");
         codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.SLIDESHOW_SELECT_ERROR, "轮播图获取失败");
+        codeMsgMap.put(StatusCode.SLIDESHOW_INSERT_ERROR, "轮播图增加失败");
+        codeMsgMap.put(StatusCode.SLIDESHOW_UPDATE_ERROR, "轮播图修改失败");
 
 
         //50300-50400//medical_beauty
