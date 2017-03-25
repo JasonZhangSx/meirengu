@@ -123,6 +123,9 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             if (paymentAccount.getPassword()!=null){
                 pay.setPassword(paymentAccount.getPassword());
             }
+            if (paymentAccount.getAccountName()!=null){
+                pay.setAccountName(paymentAccount.getAccountName());
+            }
             logger.info("updateAccount Parameter check End<========");
             paymentDao.updateAccount(pay);
             logger.info("updateAccount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_SUCCESS_UPDATE));
@@ -159,9 +162,5 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
         return null;
     }
 
-    public static void main(String[] args)   {
-        Map o = ResultUtil.userStatus(HttpUtil.httpGet("http://192.168.0.135/uc/user/verifyUser?user_id=719191733",null));
-        logger.info(o.toString());
-    }
 
 }
