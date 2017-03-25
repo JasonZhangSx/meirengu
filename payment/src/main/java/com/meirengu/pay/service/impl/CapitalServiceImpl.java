@@ -12,12 +12,14 @@ import com.meirengu.pay.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 资金处理ServiceImpl
  * Author: haoyang.Yu
  * Create Date: 2017/3/21 11:18.
  */
+@Service
 public class CapitalServiceImpl extends BaseServiceImpl implements CapitalService {
     private final static Logger logger = LoggerFactory.getLogger(CapitalServiceImpl.class);
     @Autowired

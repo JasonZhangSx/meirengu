@@ -309,4 +309,15 @@ public class PaymentController extends BaseController{
     public String payment(@RequestParam(value = "content", required = true) String content){
         return paymentService.payment(content);
     }
+
+    /**
+     * 宝付回调
+     * @param data_content
+     * @return
+     */
+    @RequestMapping(value = "baofuCallback",method = RequestMethod.GET)
+    @ResponseBody
+    public String baofuCallback(@RequestParam(value = "data_content", required = false) String data_content){
+        return paymentService.baofuCallback(data_content);
+    }
 }

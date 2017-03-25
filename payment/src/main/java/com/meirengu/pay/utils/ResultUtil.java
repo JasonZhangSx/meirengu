@@ -58,4 +58,18 @@ public class ResultUtil {
         }
         return null;
     }
+    /**
+     * 判断其它接口状态并取值
+     * @param json
+     * @return
+     */
+    public static Map userStatus(String json){
+        Gson gson = new Gson();
+        Map caseMap =gson.fromJson(json,Map.class);
+        if (caseMap.get("code").equals(new Double(200))){
+            caseMap= (Map) caseMap.get("data");
+            return caseMap;
+        }
+        return null;
+    }
 }

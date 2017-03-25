@@ -23,30 +23,37 @@ public interface PaymentService {
     Payment detail(Payment payment);
 
     /**
-     * 退款申请
+     * 退款申请-yhy
      * @param content
      * @return
      */
     String refund(String content);
 
     /**
-     * 提现申请
+     * 提现申请-yhy
      * @param content
      * @return
      */
     String withdrawals(String content);
 
     /**
-     * 充值申请
+     * 充值申请-yhy
      * @param content
      * @return
      */
     String recharge(String content);
 
     /**
-     * 支付申请
+     * 支付申请-yhy
      * @param content
      * @return
      */
     String payment(String content);
+
+    /**
+     * 宝付回调-yhy
+     * @param content
+     * @return
+     */
+    String baofuCallback(String content);
 }
