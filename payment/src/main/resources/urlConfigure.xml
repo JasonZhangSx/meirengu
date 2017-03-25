@@ -11,5 +11,15 @@
         <terminalId>${terminal.id}</terminalId>
         <memberId>${member.id}</memberId>
         <dataType>${data.type}</dataType>
+        <version>${baofu.version}</version>
+        <txnType>${txn_type}</txnType>
+        <txnSubType>${txn_sub_type}</txnSubType>
+        <returnUrl>${return_url}</returnUrl>
+        <requestUrl>${request_url}</requestUrl>
+        <bizType>${biz_type}</bizType>
+        <cerName>${cer.name}</cerName>
+        <identityCheckType>${identityCheck_type}</identityCheckType>
+        <identityCheckUrl>${identityCheck_url}</identityCheckUrl>
+        <bankCheckUrl>${bankCheckUrl}</bankCheckUrl>
     </BaoFu>
 </RESULT>

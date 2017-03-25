@@ -48,4 +48,16 @@ public class PaymentAccountController {
     public String getPayAccount(@RequestParam(value = "content", required = true) String content){
         return paymentAccountService.getAccountByUserId(content);
     }
+
+    /**
+     * 实名认证
+     * @param content
+     * @return
+     */
+    @RequestMapping(value = "auth",method = RequestMethod.POST)
+    @ResponseBody
+    public String auth(@RequestParam(value = "content", required = true) String content){
+        return paymentAccountService.auth(content);
+    }
+
 }

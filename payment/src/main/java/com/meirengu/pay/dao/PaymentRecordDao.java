@@ -1,12 +1,12 @@
 package com.meirengu.pay.dao;
 
 
-import com.meirengu.pay.model.PaymentRecord;
+import com.meirengu.pay.vo.PaymentRecordVo;
 
 public interface PaymentRecordDao {
-    int insertPaymentRecord(PaymentRecord record);
+    int insertPaymentRecord(PaymentRecordVo record);
 
-    PaymentRecord selectPaymentRecord(PaymentRecord record);
+    PaymentRecordVo selectPaymentRecord(PaymentRecordVo record);
 
-    int updatePaymentRecord(PaymentRecord record);
+    int updatePaymentRecord(PaymentRecordVo record);
 }

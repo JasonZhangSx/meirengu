@@ -6,9 +6,12 @@ import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.model.PaymentAccount;
 import com.meirengu.pay.service.PaymentAccountService;
+import com.meirengu.pay.utils.BaoFuUtil;
+import com.meirengu.pay.utils.HttpUtil;
 import com.meirengu.pay.utils.PaymentException;
 import com.meirengu.pay.utils.ResultUtil;
 import com.meirengu.pay.utils.check.*;
+import com.meirengu.pay.vo.AuthDataVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +44,24 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
         try {
             paymentAccount = (PaymentAccount) super.execute(content,paymentAccount);
             logger.info("Request getAccountByUserId parameter:{}",paymentAccount.toString());
-            paymentAccount = paymentDao.selectByUserId(paymentAccount.getUserId());
+            Integer userId = paymentAccount.getUserId();
+            paymentAccount = paymentDao.selectByUserId(userId) == null ? null : paymentDao.selectByUserId(userId);
             if (paymentAccount==null){
-                throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
+                logger.error("Capture getAccountByUserId ErrorMsg:{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL));
+                if (super.url==null){
+                    projectValue();
+                }
+                Map userMap = ResultUtil.userStatus(HttpUtil.httpGet(super.url+"/uc/user/verifyUser?user_id="+paymentAccount.getUserId(),null));
+                if (userMap==null){
+                    throw new PaymentException(StatusCode.USER_NOT_EXITS);
+                }
+                paymentAccount.setUserId(userId);
+                paymentAccount.setMobile(paymentAccount.getMobile());
+                paymentDao.insertAccount(paymentAccount);
+                logger.info("createAccount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT));
             }
-            map.put("account",paymentAccount);
-            return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_SUCCESS_SELECT,map);
+            map.put("account",paymentDao.selectByUserId(userId));
+            return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {
             logger.error("Capture getAccountByUserId ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT,null);
@@ -76,7 +91,7 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             pay.setMobile(paymentAccount.getMobile());
             paymentDao.insertAccount(pay);
             logger.info("createAccount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT));
-            return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT,null);
+            return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             logger.error("Capture createAccount ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT, null);
@@ -105,15 +120,48 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
                 va.validate(paymentAccount,paymentAccount.getClass().getDeclaredField("status"));
                 pay.setStatus(paymentAccount.getStatus());
             }
+            if (paymentAccount.getPassword()!=null){
+                pay.setPassword(paymentAccount.getPassword());
+            }
             logger.info("updateAccount Parameter check End<========");
-            pay.setPassword(paymentAccount.getPassword());
             paymentDao.updateAccount(pay);
             logger.info("updateAccount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_SUCCESS_UPDATE));
-            return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_SUCCESS_UPDATE,null);
+            return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             logger.error("Capture createAccount ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_UPDATE), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_ERROR_UPDATE, null);
         }
+    }
+    /**
+     * 实名+银行卡认证
+     * @param content
+     * @return
+     */
+    @Override
+    public String auth(String content) {
+        AuthDataVo authDataVo = new AuthDataVo();
+        Map<String,Object> map = new HashMap<>();
+        try {
+            authDataVo = (AuthDataVo) super.execute(content,authDataVo);
+            logger.info("Request auth parameter:{}",authDataVo.toString());
+            logger.info("auth Parameter check Start========>");
+            Validator.getInstance().validate(authDataVo);
+            logger.info("auth Parameter check End<========");
+            if (BaoFuUtil.bankCheck(authDataVo.getRealName(),authDataVo.getIdentityNumber(),authDataVo.getBankNo(),authDataVo.getMobile())){
+                logger.info("auth prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_BAOFU_AUTH));
+                return ResultUtil.getResult(StatusCode.OK,null);
+            }
+        } catch (Exception e) {
+            logger.error("Capture auth ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH), e.getMessage());
+            map.put("ErrorMsg",e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH, map);
+        }
+        return null;
+    }
+
+    public static void main(String[] args)   {
+        Map o = ResultUtil.userStatus(HttpUtil.httpGet("http://192.168.0.135/uc/user/verifyUser?user_id=719191733",null));
+        logger.info(o.toString());
     }
 
 }
