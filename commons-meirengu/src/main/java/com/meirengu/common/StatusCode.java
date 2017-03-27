@@ -161,6 +161,9 @@ public class StatusCode {
     public static final int SLIDESHOW_SELECT_ERROR = 50207;
     public static final int SLIDESHOW_INSERT_ERROR = 50208;
     public static final int SLIDESHOW_UPDATE_ERROR = 50209;
+    public static final int VERSION_INSERT_ERROR = 20210;
+    public static final int VERSION_UPDATE_ERROR = 20211;
+    public static final int VERSION_DELETE_ERROR = 20212;
 
     //50251-50300//rebate
     public static final int REBATE_BATCH_ERROR_INSERT = 50251;
@@ -373,6 +376,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.SLIDESHOW_SELECT_ERROR, "轮播图获取失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_INSERT_ERROR, "轮播图增加失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_UPDATE_ERROR, "轮播图修改失败");
+        codeMsgMap.put(StatusCode.VERSION_INSERT_ERROR, "版本信息插入失败");
+        codeMsgMap.put(StatusCode.VERSION_UPDATE_ERROR, "版本信息修改失败");
+        codeMsgMap.put(StatusCode.VERSION_DELETE_ERROR, "版本信息删除失败");
 
         //50200-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");
