@@ -3,6 +3,7 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.uc.model.Area;
 import com.meirengu.uc.po.AddressPO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.utils.ObjectUtils;
@@ -22,6 +23,7 @@ import java.util.List;
  * Created by huoyan403 on 3/18/2017.
  */
 @RestController
+@RequestMapping("address")
 public class AddressController extends BaseController {
 
 
@@ -29,36 +31,41 @@ public class AddressController extends BaseController {
 
     @Autowired
     AddressService service;// 调用业务层方法
-    @RequestMapping(value = "/showProvinceList" ,method = RequestMethod.GET)
+    @RequestMapping(value = "/province" ,method = RequestMethod.GET)
     public Result showProvinceList(HttpServletRequest request, HttpServletResponse respons) {
         try {
             return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("AddressController.redis get token result:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-    @RequestMapping(value = "/showCityListByPid",method = RequestMethod.GET)
+    @RequestMapping(value = "/city",method = RequestMethod.GET)
     public Result showCityListByPid(int pid) throws IOException {
-            try {
+        try {
             return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("AddressController.showCityListByPid:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-    @RequestMapping(value = "/showAreasByCityId",method = RequestMethod.GET)
+    @RequestMapping(value = "/area",method = RequestMethod.GET)
     public Result showAreasByCityId(Integer citys_id) throws IOException {
         try {
-            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            List<Area> areaList = service.showAreaListBycid(citys_id);
+            if(areaList.size()!=0){
+                return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("AddressController.showAreasByCityId:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
 
-   @RequestMapping("/showAddress")
+   @RequestMapping(value = "/superarea",method = RequestMethod.GET)
     public Result showProByCityId(Integer area_id) throws IOException {
        try {
             AddressPO addressPO = service.showAddress(area_id);
@@ -68,7 +75,7 @@ public class AddressController extends BaseController {
                return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
            }
        }catch (Exception e){
-           logger.info("LoginController.redis get token result:{}",e.getMessage());
+           logger.info("AddressController.showProByCityId:{}",e.getMessage());
            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
        }
 

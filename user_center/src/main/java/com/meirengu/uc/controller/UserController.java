@@ -1,7 +1,9 @@
 package com.meirengu.uc.controller;
 
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
@@ -45,6 +47,113 @@ public class UserController extends BaseController{
     @Autowired
     VerityService verityService;
 
+
+
+    /**
+     * @param pageNum 当前页
+     * @param pageSize 每页显示的条数
+     * @param sortBy 排序字段
+     * @param order 升序/降序
+     * @return
+     */
+    @RequestMapping(value = "inviter",method = {RequestMethod.POST})
+    public Result inviter(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+                       @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                       @RequestParam(value="invest_conditions", required = false) Integer investConditions,
+                       @RequestParam(value="is_auth", required = false) Integer isAuth,
+                       @RequestParam(value="phone", required = false) String phone,
+                       @RequestParam(value="invite_phone", required = false) String invitePhone,
+                       @RequestParam(value="realname", required = false) String realname,
+                       @RequestParam(value="invite_realname", required = false) String inviteRealname,
+                       @RequestParam(value="idcard", required = false) String idcard,
+                       @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
+                       @RequestParam(value="sortby", required = false) String sortBy,
+                       @RequestParam(value="order", required = false) String order){
+        try {
+            Map paramMap = new HashMap<String, Object>();
+            Page<User> page = super.setPageParams(pageNum,pageSize);
+            paramMap.put("investConditions", investConditions);
+            paramMap.put("isAuth", isAuth);
+            paramMap.put("phone", phone);
+            paramMap.put("realname", realname);
+            paramMap.put("idcard", idcard);
+            paramMap.put("invitePhone", invitePhone);
+            paramMap.put("inviteRealname", inviteRealname);
+            paramMap.put("inviteIdcard", inviteIdcard);
+            paramMap.put("sortBy", sortBy);
+            paramMap.put("order", order);
+            page = userService.getListByPage(page, paramMap);
+            List<Map<String,Object>> list = page.getList();
+            for(Map map:list){
+                userService.getUserRestMoney(map);
+                userService.getUserTotalInvestMoney(map);
+            }
+            if(page.getList().size() != 0){
+                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+        }catch (Exception e){
+            logger.info("throw exception:", e);
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
+
+    /**
+     * 获取用户信息
+     * @param pageNum
+     * @param pageSize
+     * @param investConditions
+     * @param isAuth
+     * @param phone
+     * @param realname
+     * @param idcard
+     * @param sortBy
+     * @param order
+     * @return
+     */
+    @RequestMapping(value = "list",method = {RequestMethod.POST})
+    public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+                       @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                       @RequestParam(value="invest_conditions", required = false) Integer investConditions,
+                       @RequestParam(value="is_auth", required = false) Integer isAuth,
+                       @RequestParam(value="phone", required = false) String phone,
+                       @RequestParam(value="realname", required = false) String realname,
+                       @RequestParam(value="idcard", required = false) String idcard,
+                       @RequestParam(value="sortby", required = false) String sortBy,
+                       @RequestParam(value="order", required = false) String order){
+        try {
+            Map paramMap = new HashMap<String, Object>();
+            Page<User> page = super.setPageParams(pageNum,pageSize);
+            paramMap.put("investConditions", investConditions);
+            paramMap.put("isAuth", isAuth);
+            paramMap.put("phone", phone);
+            paramMap.put("realname", realname);
+            paramMap.put("idcard", idcard);
+            paramMap.put("sortBy", sortBy);
+            paramMap.put("order", order);
+            page = userService.getByPage(page, paramMap);
+            List<Map<String,Object>> list = page.getList();
+            for(Map map:list){
+                map.remove("password");
+                userService.getUserRestMoney(map);
+                userService.getUserTotalInvestMoney(map);
+            }
+            if(page.getList().size() != 0){
+                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+        }catch (Exception e){
+            logger.info("throw exception:", e);
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
+    /**
+     * 用户信息更新
+     * @param userVO
+     * @return
+     */
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result updateUserInfo(UserVO userVO) {
         try {
@@ -52,11 +161,13 @@ public class UserController extends BaseController{
                 RedisUtil redisUtil = new RedisUtil();
                 boolean b = redisUtil.existsObject(userVO.getToken());
                 if(b){
-                    if (StringUtils.isEmpty(userVO.getPhone()) || !ValidatorUtil.isMobile(userVO.getPhone())) {
-                        return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                                .MOBILE_FORMAT_ERROR));
+                    if (!StringUtils.isEmpty(userVO.getPhone())) {
+                        if(!ValidatorUtil.isMobile(userVO.getPhone())) {
+                            return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                                    .MOBILE_FORMAT_ERROR));
+                        }
                     }
-                    if(userVO.getEmail() != null&&!"".equals(userVO.getEmail())){
+                    if(!StringUtil.isEmpty(userVO.getEmail())){
                         if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
                             return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                                     .EMAIL_FORMAT_ERROR));
@@ -66,10 +177,10 @@ public class UserController extends BaseController{
                     logger.error("UserController.updateUserInfo result << {}, result:{}", result);
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
-                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                    return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }else{
-                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
         }catch (Exception e){
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -78,7 +189,7 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 密码找回
+     * 登陆密码找回
      * @param mobile
      * @param checkCode
      * @param newPassword
@@ -87,8 +198,7 @@ public class UserController extends BaseController{
     @RequestMapping(value = "password/retrieve",method = RequestMethod.POST)
     public Result retrievePassword(@RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "check_code", required = true) String checkCode,
-                                   @RequestParam(value = "new_password", required = true) String newPassword
-                                   ) {
+                                   @RequestParam(value = "new_password", required = true) String newPassword) {
         try {
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
@@ -114,9 +224,13 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                         .CAPTCHA_EXPIRE));
             }
+            code.setUse(true);
+            code.setUsingTime(new Date());
+            int updateResult = checkCodeService.update(code);
+
             User usr = new User();
             usr.setPhone(mobile);
-            usr.setPassword(newPassword);
+            usr.setPassword(PasswordEncryption.createHash(newPassword));
             int result = userService.updatePasswordByPhone(usr);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
@@ -131,7 +245,7 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 修改密码
+     * 修改登陆密码
      * @param mobile
      * @param newPassword
      * @param token
@@ -166,11 +280,11 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
                             .USER_NOT_EXITS));
                 }
-                if(!oldPassword.equals(usr.getPassword())){
+                if(validatePassword(oldPassword,usr)){
                     return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                             .OLD_PASSWORD_IS_ERROR));
                 }
-                usr.setPassword(newPassword);
+                usr.setPassword(PasswordEncryption.createHash(newPassword));
                 int result = userService.updatePasswordByPhone(usr);
                 if(result != 0){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
@@ -212,6 +326,13 @@ public class UserController extends BaseController{
         }
     }
 
+    /**
+     * 用户使用动态密码登陆 设置密码接口
+     * @param token
+     * @param userId
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
     public Result setPassword (@RequestParam(value = "token", required = true) String token,
                                @RequestParam(value = "user_id", required = true) Integer userId,
@@ -226,7 +347,7 @@ public class UserController extends BaseController{
                     User user = userService.retrieveByUserId(userId);
                     if(user != null){
                         if("".equals(user.getPassword())){
-                            user.setPassword(password);
+                            user.setPassword(PasswordEncryption.createHash(password));
                             userService.update(user);
                             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                         }else{
@@ -301,6 +422,118 @@ public class UserController extends BaseController{
         }catch (Exception e){
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                     .INTERNAL_SERVER_ERROR));
+        }
+    }
+    /**
+     * 修改交易密码
+     * @param mobile
+     * @param newPassword
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "paypassword/modify",method = RequestMethod.POST)
+    public Result modifyPayPassword(  @RequestParam(value = "mobile", required = true) String mobile,
+                                   @RequestParam(value = "old_password", required = true) String oldPassword,
+                                   @RequestParam(value = "new_password", required = true) String newPassword,
+                                   @RequestParam(value = "token", required = true) String token) {
+        //判断token是否有效
+        try{
+            RedisUtil redisUtil = new RedisUtil();
+            Object userRedis =   redisUtil.getObject(token);
+            if(!StringUtil.isEmpty(userRedis)){
+                if (newPassword == null || oldPassword ==null) {
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
+                }
+                //验证手机号是否注册
+                User user = userService.retrieveByPhone(mobile);
+                if(StringUtil.isEmpty(user)){
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
+                if (oldPassword == null) {
+                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                            (StatusCode.PASSWORD_IS_MALFORMED));
+                }
+                User usr = userService.retrieveByPhone(mobile);
+                if(usr == null){
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
+                            .USER_NOT_EXITS));
+                }
+                int result = userService.modifyPayPassword(user.getUserId(),mobile,oldPassword,newPassword);
+                if(result != 0){
+                    return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
+                            .OK));
+                }
+            }else{
+                //无效token返回登陆
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
+        }catch (Exception e){
+            logger.info("LoginController.redis get token result:{}",e.getMessage());
+        }
+        return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.OLD_PASSWORD_IS_ERROR));
+    }
+
+
+    /**
+     * 交易密码找回
+     * @param mobile
+     * @param checkCode
+     * @param newPassword
+     * @return
+     */
+    @RequestMapping(value = "paypassword/retrieve",method = RequestMethod.POST)
+    public Result retrievePayPassword(@RequestParam(value = "mobile", required = true) String mobile,
+                                   @RequestParam(value = "check_code", required = true) String checkCode,
+                                   @RequestParam(value = "new_password", required = true) String newPassword,
+                                   @RequestParam(value = "type", required = true) Integer type) {
+        try {
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                        .MOBILE_FORMAT_ERROR));
+            }
+            if (newPassword == null) {
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
+                        (StatusCode.PASSWORD_IS_MALFORMED));
+            }
+            //验证手机号是否注册
+            User user = userService.retrieveByPhone(mobile);
+            if(StringUtil.isEmpty(user)){
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            if(type==1){
+                //验证验证码是否有效
+                CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+                if (code == null) {
+                    return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                            .CAPTCHA_INVALID));
+                }
+                if (code.getExpireTime().compareTo(new Date()) < 0) {
+                    return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                            .CAPTCHA_EXPIRE));
+                }
+                code.setUse(true);
+                code.setUsingTime(new Date());
+                int updateResult = checkCodeService.update(code);
+            }
+            int result = userService.setPayPassword(user.getUserId(),newPassword);
+            if(result != 0){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+                    .INTERNAL_SERVER_ERROR));
+        }
+        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+    }
+    private Boolean validatePassword(String password,User user){
+        try {
+            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
+            return  result;
+        }catch (Exception e){
+            logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
+            return  false;
         }
     }
 }

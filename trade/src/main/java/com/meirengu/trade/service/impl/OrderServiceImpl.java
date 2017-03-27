@@ -246,6 +246,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             boolean updateFlag = itemLevelUpdate(order);
             if (updateFlag) {
                 result.setCode(StatusCode.OK);
+                result.setData(order);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
                 return result;
             }
@@ -556,7 +557,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param map
      * @return
      */
-    public Integer getCount(Map map){
+    public int getCount(Map map){
         return orderDao.getCount(map);
+    }
+
+    /**
+     * 通过订单编号更新订单消息
+     * @param order
+     * @return
+     */
+    public int updateBySn(Order order) {
+        return orderDao.updateBySn(order);
     }
 }

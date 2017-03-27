@@ -26,10 +26,6 @@ public class UserVO extends BaseObject implements Serializable{
      **/
     private String phone;
     /**
-     * 会员密码
-     **/
-    private String password;
-    /**
      * 会员头像
      **/
     private String avatar;
@@ -111,14 +107,6 @@ public class UserVO extends BaseObject implements Serializable{
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getAvatar() {

@@ -64,17 +64,16 @@ public class VerifyController extends BaseController {
 
     /*认证接口*/
     @RequestMapping(method = {RequestMethod.POST})
-    public Result vetify(@RequestParam(value = "user_id", required = false)Integer userId,
-                         @RequestParam(value = "bank_code", required = false)String bankCode,
-                         @RequestParam(value = "bank_idcard", required = false)String bankIdcard,
-                         @RequestParam(value = "bank_phone", required = false)String bankPhone,
-                         @RequestParam(value = "idcard", required = false)String idcard,
-                         @RequestParam(value = "realname", required = false)String realname,
+    public Result vetify(@RequestParam(value = "user_id", required = true)Integer userId,
+                         @RequestParam(value = "bank_code", required = true)String bankCode,
+                         @RequestParam(value = "bank_idcard", required = true)String bankIdcard,
+                         @RequestParam(value = "bank_phone", required = true)String bankPhone,
+                         @RequestParam(value = "idcard", required = true)String idcard,
+                         @RequestParam(value = "realname", required = true)String realname,
                          @RequestParam(value = "password", required = false)String password,
-                         @RequestParam(value = "token", required = false)String token) {
+                         @RequestParam(value = "token", required = true)String token) {
 
         try {
-
             //判断有无token
             if(!StringUtil.isEmpty(token)){
                 //判断token是否有效
@@ -84,28 +83,30 @@ public class VerifyController extends BaseController {
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }
-            if(ValidatorUtil.isMobile(bankPhone)){
+            if(!StringUtil.isEmpty(bankPhone) && ValidatorUtil.isMobile(bankPhone)){
 
             }
-            if(ValidatorUtil.isPassword(password)){
+            if(!StringUtil.isEmpty(idcard) && ValidatorUtil.isIDCard(idcard)){
 
             }
-            if(ValidatorUtil.isIDCard(idcard)){
-
-            }
-            if(ValidatorUtil.isUsername(realname)){
+            if(!StringUtil.isEmpty(realname) && ValidatorUtil.isUsername(realname)){
 
             }
             RedisUtil redisUtil = new RedisUtil();
+            Integer times = 0;
             if(redisUtil.existsObject("verify_"+userId)){
-                String times = (String) redisUtil.getObject("verify_"+userId);
-                if(Integer.parseInt(times)>Integer.parseInt(ConfigUtil.getConfig("verify_times"))){
-//                    return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
+                times = (Integer) redisUtil.getObject("verify_"+userId);
+                if(times>Integer.parseInt(ConfigUtil.getConfig("VERIFY_TIMES"))){
+                    return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
                 }
-                redisUtil.setObject("verify_"+userId,times+1);
             }
-            Integer result = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
-            return  null;
+            redisUtil.setObject("verify_"+userId,times+1,60*60*24);
+            Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
+            if(flag){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }
         }catch (Exception e){
             logger.info("LoginController.redis get token result:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

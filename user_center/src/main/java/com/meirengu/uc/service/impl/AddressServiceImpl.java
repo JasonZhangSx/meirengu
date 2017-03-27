@@ -6,6 +6,7 @@ import com.meirengu.uc.model.Area;
 import com.meirengu.uc.po.AddressPO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.thread.AddressToRedisThread;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -25,18 +27,44 @@ public class AddressServiceImpl implements AddressService {
     // 查询出所有的省份
     @Transactional(readOnly = true)
     public List<Area> showProvinceList() {
-        return areasMapper.showProvinceList();
+        RedisUtil redisUtil = new RedisUtil();
+        List<Area> provinceList = new ArrayList<>();
+        if(redisUtil.existsObject("provinceList")){
+            provinceList = (List<Area>)redisUtil.getList("provinceList");
+        }else{
+            provinceList = areasMapper.showProvinceList();
+            redisUtil.setList("provinceList",provinceList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
+        }
+        return provinceList;
     }
     // 根据省id来查询所对应的城市名称
     @Transactional(readOnly = true)
     public List<Area> showCityListByPid(int pid) {
-        return areasMapper.showCityListByPid(pid);
+
+        RedisUtil redisUtil = new RedisUtil();
+        List<Area> cityList = new ArrayList<>();
+        if(redisUtil.existsObject("cityList_"+pid)){
+            cityList = (List<Area>)redisUtil.getList("cityList_"+pid);
+        }else{
+            cityList = areasMapper.showCityListByPid(pid);
+            redisUtil.setList("cityList_"+pid,cityList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
+        }
+        return cityList;
     }
 
     // 根据city的id来查询所有的区、县
     @Transactional(readOnly = true)
     public List<Area> showAreaListBycid(int cid) {
-        return areasMapper.showAreaListBycid(cid);
+
+        RedisUtil redisUtil = new RedisUtil();
+        List<Area> areaList = new ArrayList<>();
+        if(redisUtil.existsObject("areaList_"+cid)){
+            areaList = (List<Area>)redisUtil.getList("areaList_"+cid);
+        }else{
+            areaList = areasMapper.showAreaListBycid(cid);
+            redisUtil.setList("areaList_"+cid,areaList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
+        }
+        return areaList;
     }
 
     public AddressPO showAddress(Integer area_id) {

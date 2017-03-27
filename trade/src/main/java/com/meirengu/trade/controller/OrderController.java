@@ -437,4 +437,34 @@ public class OrderController extends BaseController{
 
     }
 
+
+    /**
+     * 订单支付回调
+     * @param orderSn
+     * @param paymentMethod
+     * @param outSn
+     * @return
+     */
+    @RequestMapping(value = "payment",  method = RequestMethod.POST)
+    public Result paymentCallBack(@RequestParam(value = "order_sn", required = false)String orderSn,
+                                  @RequestParam(value = "payment_method", required = false)int paymentMethod,
+                                  @RequestParam(value = "out_sn", required = false)String outSn) {
+        if (StringUtils.isEmpty(orderSn) || StringUtils.isEmpty(outSn)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Order order = new Order();
+        order.setOrderSn(orderSn);
+        order.setPaymentMethod(paymentMethod);
+        order.setOutSn(outSn);
+        order.setOrderState(OrderStateEnum.PAID.getValue());
+        try {
+            int i = orderService.updateBySn(order);
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
+
 }

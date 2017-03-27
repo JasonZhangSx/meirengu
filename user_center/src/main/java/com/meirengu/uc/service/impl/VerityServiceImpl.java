@@ -69,9 +69,9 @@ public class VerityServiceImpl implements VerityService{
     }
 
     @Override
-    public Integer verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
+    public  Boolean  verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
                               String idcard, String realname, String password) {
-
+        Boolean flag = false;
         HttpResult hr = null;
         Map<String, Object> map = new HashMap<String, Object>();
 //        map.put("userId",userId);
@@ -93,7 +93,7 @@ public class VerityServiceImpl implements VerityService{
         if(hr.getStatusCode()==200){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
-            if("".equals(map.get(4000))){
+            if(40632==(Integer) account.get("code")){
                 User user = new User();
                 user.setUserId(userId);
                 user.setRealname(realname);
@@ -103,10 +103,22 @@ public class VerityServiceImpl implements VerityService{
                 user.setBankPhone(bankPhone);
                 user.setIsAuth(1);
                 userDao.update(user);
+
+                Map<String, String> payAccount = new HashMap<String, String>();
+                payAccount.put("accountName",realname);
+                payAccount.put("userId",userId+"");
+                Map<String, String> paramsModify = new HashMap<String, String>();
+                paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+                String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
+                hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                if(hr.getStatusCode()!=200){
+                    hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                }
+                flag = true;
             }
         }else{
             logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
         }
-        return null;
+        return flag;
     }
 }
