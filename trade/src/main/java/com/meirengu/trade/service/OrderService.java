@@ -76,6 +76,13 @@ public interface OrderService extends BaseService<Order>{
      * @param map
      * @return
      */
-    public Integer getCount(Map map);
+    int getCount(Map map);
+
+    /**
+     * 通过订单编号更新订单消息
+     * @param order
+     * @return
+     */
+    int updateBySn(Order order);
 
 }

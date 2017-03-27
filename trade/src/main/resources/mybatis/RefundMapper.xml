@@ -92,8 +92,14 @@
 	</update>
 	<select id="detail" parameterType="integer" resultType="refund">
 		select <include refid="select_columns" /> from <include refid="table_name"/>
-		where refund_id=#{id}
+		where refund_id=#{refundId}
 	</select>
+	<select id="getBySn" parameterType="string" resultType="refund">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where refund_sn=#{refundSn}
+	</select>
+
+
 	<sql id="findPage_where">
 		<where>
 			<if test="refundSn != null and refundSn != ''">

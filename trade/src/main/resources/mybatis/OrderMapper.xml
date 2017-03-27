@@ -84,6 +84,78 @@
 			order_id = #{orderId}
 		</where>
 	</update>
+	<!-- 根据订单编号修改订单信息 -->
+	<update id="updateBySn" parameterType="order">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="orderAmount != null">
+				order_amount=#{orderAmount},
+			</if>
+			<if test="costAmount != null">
+				cost_amount=#{costAmount},
+			</if>
+			<if test="rebateAmount != null">
+				rebate_amount=#{rebateAmount},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name=#{userName},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="userEmail != null and userEmail != ''">
+				user_email=#{userEmail},
+			</if>
+			<if test="userAddressId != null">
+				user_address_id=#{userAddressId},
+			</if>
+			<if test="createTime != null">
+				create_time=#{createTime},
+			</if>
+			<if test="orderType != null">
+				order_type=#{orderType},
+			</if>
+			<if test="paymentMethod != null">
+				payment_method=#{paymentMethod},
+			</if>
+			<if test="outSn != null and outSn != ''">
+				out_sn=#{outSn},
+			</if>
+			<if test="finishedTime != null">
+				finished_time=#{finishedTime},
+			</if>
+			<if test="receipt != null and receipt != ''">
+				receipt=#{receipt},
+			</if>
+			<if test="orderMessage != null and orderMessage != ''">
+				order_message=#{orderMessage},
+			</if>
+			<if test="orderState != null">
+				order_state=#{orderState},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+			<if test="orderFrom != null and orderFrom != ''">
+				order_from=#{orderFrom},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+			<if test="userWeixin != null and userWeixin != ''">
+				user_weixin=#{userWeixin},
+			</if>
+		</set>
+		<where>
+			order_sn = #{orderSn}
+		</where>
+	</update>
 	<select id="detail" parameterType="integer" resultType="order">
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where order_id=#{id}
