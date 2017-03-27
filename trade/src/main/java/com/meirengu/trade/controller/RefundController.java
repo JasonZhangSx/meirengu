@@ -193,5 +193,27 @@ public class RefundController extends BaseController{
         }
     }
 
+    /**
+     * 退款回调
+     * @param refundSn
+     * @param thirdRefundSn
+     * @return
+     */
+    @RequestMapping(value = "payment",  method = RequestMethod.POST)
+    public Result paymentCallBack(@RequestParam(value = "refund_sn", required = false)String refundSn,
+                                  @RequestParam(value = "third_refund_sn", required = false)String thirdRefundSn,
+                                  @RequestParam(value = "payment_status", required = false)int paymentStatus) {
+        if (StringUtils.isEmpty(refundSn) || StringUtils.isEmpty(thirdRefundSn) || !(paymentStatus == 2 || paymentStatus == 3)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try {
+            Result result = refundService.paymentCallBack(refundSn, thirdRefundSn, paymentStatus);
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
 
 }

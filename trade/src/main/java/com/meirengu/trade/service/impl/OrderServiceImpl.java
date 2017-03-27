@@ -12,6 +12,8 @@ import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.trade.service.RebateReceiveService;
+import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -37,6 +39,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
+    private RebateReceiveService rebateReceiveService;
+
+    @Autowired
+    private RebateUsedService rebateUsedService;
+
+    @Autowired
     private OrderDao orderDao;
     /**
      * 获取订单详情
@@ -47,27 +55,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
             //查询地址信息
-            int userAddressId = (int)map.get("userAddressId");
-            if (userAddressId != 0) {
-                //请求user_center服务获取用户地址信息
-                String addressUrl = ConfigUtil.getConfig("user.center.host") + Constant.ADDRESS_URL + "?" + "address_id="+ userAddressId;;
-                HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
-                if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
-                    JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
-                    int code = resultJson.getIntValue("code");
-                    if (code == StatusCode.OK) {
-                        JSONArray addressArray = resultJson.getJSONArray("data");
-                        for (int i = 0; i < addressArray.size(); i++) {
-                            JSONObject addressJson = addressArray.getJSONObject(i);
-                            int addressId = addressJson.getIntValue("addressId");
-                            Map<String, Object> addressMap = new HashMap<String, Object>();
-                            addressMap.put("userName", addressJson.getString("userName"));
-                            addressMap.put("userPhone", addressJson.getString("userPhone"));
-                            addressMap.put("province", addressJson.getString("province"));
-                            addressMap.put("city", addressJson.getString("city"));
-                            addressMap.put("areas", addressJson.getString("areas"));
-                            addressMap.put("userAddress", addressJson.getString("userAddress"));
-                            map.putAll(addressMap);
+            if (map.get("userAddressId") != null) {
+                int userAddressId = (int)((long)map.get("userAddressId"));
+                if (userAddressId != 0) {
+                    //请求user_center服务获取用户地址信息
+                    String addressUrl = ConfigUtil.getConfig("user.center.host") + Constant.ADDRESS_URL + "?" + "address_id="+ userAddressId;;
+                    HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+                    if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
+                        JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
+                        int code = resultJson.getIntValue("code");
+                        if (code == StatusCode.OK) {
+                            JSONArray addressArray = resultJson.getJSONArray("data");
+                            for (int i = 0; i < addressArray.size(); i++) {
+                                JSONObject addressJson = addressArray.getJSONObject(i);
+                                int addressId = addressJson.getIntValue("addressId");
+                                Map<String, Object> addressMap = new HashMap<String, Object>();
+                                addressMap.put("userName", addressJson.getString("userName"));
+                                addressMap.put("userPhone", addressJson.getString("userPhone"));
+                                addressMap.put("province", addressJson.getString("province"));
+                                addressMap.put("city", addressJson.getString("city"));
+                                addressMap.put("areas", addressJson.getString("areas"));
+                                addressMap.put("userAddress", addressJson.getString("userAddress"));
+                                map.putAll(addressMap);
+                            }
                         }
                     }
                 }
@@ -206,11 +216,24 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     /**
      * 新增认购订单
      * @param order
+     * @param rebateReceiveId
      * @return
+     * @throws IOException
+     * @throws OrderRpcException
      */
     @Transactional
-    public Result insertSubscriptions(Order order)  throws IOException, OrderRpcException{
+    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IOException, OrderRpcException{
         Result result = new Result();
+
+        //首先校验优惠券是否有效
+        if (rebateReceiveId != 0) {
+            result = rebateReceiveService.validateRebate(order, rebateReceiveId);
+            if (result.getCode() != StatusCode.OK) {
+                return result;
+            }
+        }
+
+        //订单业务
         //1.查询该档位剩余份数
         result = isItemLevelNumEnough(order, OrderStateEnum.UNPAID.getValue());
         if (result.getCode() != StatusCode.OK){
@@ -223,8 +246,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             boolean updateFlag = itemLevelUpdate(order);
             if (updateFlag) {
                 result.setCode(StatusCode.OK);
+                result.setData(order);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
                 return result;
+            }
+            //异步去使用优惠券
+            if (rebateReceiveId != 0) {
+                rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
         } else {
             result.setCode(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT);
@@ -429,7 +457,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         }
                     }
                 }
-
             }
         }
 
@@ -439,18 +466,34 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     /**
      * 新增预约订单
      * @param order
+     * @param rebateReceiveId
      * @return
+     * @throws IOException
+     * @throws OrderRpcException
      */
     @Transactional
-    public Result appointment(Order order)  throws IOException, OrderRpcException{
+    public Result insertAppointment(Order order, int rebateReceiveId)  throws IOException, OrderRpcException{
         Result result = new Result();
-        //1.查询该档位剩余份数
+        //首先校验优惠券是否有效
+        if (rebateReceiveId != 0) {
+            result = rebateReceiveService.validateRebate(order, rebateReceiveId);
+            if (result.getCode() != StatusCode.OK) {
+                return result;
+            }
+        }
+        //订单业务
+        //查询该档位剩余份数是否满足购买要求
         result = isItemLevelNumEnough(order, OrderStateEnum.BOOK.getValue());
         if (result.getCode() != StatusCode.OK){
             return result;
         }
         int i = insert(order);
-        if (i != 1) {
+        if (i == 1) {
+            //异步去使用优惠券
+            if (rebateReceiveId != 0) {
+                rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
+            }
+        } else {
             result.setCode(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
         }
@@ -514,7 +557,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param map
      * @return
      */
-    public Integer getCount(Map map){
+    public int getCount(Map map){
         return orderDao.getCount(map);
+    }
+
+    /**
+     * 通过订单编号更新订单消息
+     * @param order
+     * @return
+     */
+    public int updateBySn(Order order) {
+        return orderDao.updateBySn(order);
     }
 }

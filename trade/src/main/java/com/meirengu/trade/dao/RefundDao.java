@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  * @create Tue Mar 14 17:15:51 CST 2017
  */
 public interface RefundDao extends BaseDao<Refund>{
+
+    Refund getBySn(String refundSn);
 }

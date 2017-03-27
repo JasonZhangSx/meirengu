@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.trade.dao.RebateUsedDao" >
+
+	<resultMap id="rebateUsedMap" type="RebateUsed">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="rebate_sn" property="rebateSn" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="rebate_batch_id" property="rebateBatchId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="activity_identification" property="activityIdentification" jdbcType="VARCHAR" javaType="String"/>
+		<result column="order_sn" property="orderSn" jdbcType="VARCHAR" javaType="String"/>
+		<result column="rebate_amount" property="rebateAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="used_time" property="usedTime" jdbcType="DATE" javaType="Date"/>
+	</resultMap>
+
+	<sql id="table_name">`rebate_used`</sql>
+	<sql id="select_columns">
+		id as id, user_id as userId, user_phone as userPhone, rebate_sn as rebateSn, rebate_batch_id as rebateBatchId, activity_identification as activityIdentification, order_sn as orderSn, rebate_amount as rebateAmount, used_time as usedTime
+	</sql>
+
+	<insert id="insert" parameterType="rebateUsed" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO <include refid="table_name" />
+			(id, user_id, user_phone, rebate_sn, rebate_batch_id, activity_identification, order_sn, rebate_amount, used_time)
+		VALUES
+			(#{id}, #{userId}, #{userPhone}, #{rebateSn}, #{rebateBatchId}, #{activityIdentification}, #{orderSn}, #{rebateAmount}, #{usedTime})
+	</insert>
+
+	<update id="update" parameterType="rebateUsed">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="userId != null and userId != ''">
+				user_id=#{userId},
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				user_phone=#{userPhone},
+			</if>
+			<if test="rebateSn != null and rebateSn != ''">
+				rebate_sn=#{rebateSn},
+			</if>
+			<if test="rebateBatchId != null and rebateBatchId != ''">
+				rebate_batch_id=#{rebateBatchId},
+			</if>
+			<if test="activityIdentification != null and activityIdentification != ''">
+				activity_identification=#{activityIdentification},
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				order_sn=#{orderSn},
+			</if>
+			<if test="rebateAmount != null and rebateAmount != ''">
+				rebate_amount=#{rebateAmount},
+			</if>
+			<if test="usedTime != null and usedTime != ''">
+				used_time=#{usedTime},
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="rebateUsed">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

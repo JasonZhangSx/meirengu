@@ -72,7 +72,8 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "user_address_id", required = false) int userAddressId,
                                     @RequestParam(value = "order_message", required = false) String orderMessage,
                                     @RequestParam(value = "order_from", required = false) String orderFrom,
-                                    @RequestParam(value = "user_weixin", required = false) String userWeixin){
+                                    @RequestParam(value = "user_weixin", required = false) String userWeixin,
+                                    @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
 
         if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
@@ -109,7 +110,7 @@ public class OrderController extends BaseController{
         order.setOperateAccount("");//目前后台不生成订单
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
-            Result result = orderService.appointment(order);
+            Result result = orderService.insertAppointment(order, rebateReceiveId);
             return result;
         }catch (Exception e){
             logger.error("throw exception:", e);
@@ -154,8 +155,8 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "user_address_id", required = false) int userAddressId,
                                       @RequestParam(value = "order_message", required = false) String orderMessage,
                                       @RequestParam(value = "order_from", required = false) String orderFrom,
-                                      @RequestParam(value = "user_weixin", required = false) String userWeixin
-                                    ){
+                                      @RequestParam(value = "user_weixin", required = false) String userWeixin,
+                                      @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
 
 
         if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
@@ -194,7 +195,7 @@ public class OrderController extends BaseController{
         order.setOperateAccount("");//目前后台不生成订单
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
-            Result result = orderService.insertSubscriptions(order);
+            Result result = orderService.insertSubscriptions(order, rebateReceiveId);
             return result;
         } catch (OrderRpcException oe) {
             logger.error("throw OrderRpcException:", oe);
@@ -429,6 +430,36 @@ public class OrderController extends BaseController{
         try {
             int count = orderService.getCount(paramMap);
             return setResult(StatusCode.OK, count, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
+
+
+    /**
+     * 订单支付回调
+     * @param orderSn
+     * @param paymentMethod
+     * @param outSn
+     * @return
+     */
+    @RequestMapping(value = "payment",  method = RequestMethod.POST)
+    public Result paymentCallBack(@RequestParam(value = "order_sn", required = false)String orderSn,
+                                  @RequestParam(value = "payment_method", required = false)int paymentMethod,
+                                  @RequestParam(value = "out_sn", required = false)String outSn) {
+        if (StringUtils.isEmpty(orderSn) || StringUtils.isEmpty(outSn)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Order order = new Order();
+        order.setOrderSn(orderSn);
+        order.setPaymentMethod(paymentMethod);
+        order.setOutSn(outSn);
+        order.setOrderState(OrderStateEnum.PAID.getValue());
+        try {
+            int i = orderService.updateBySn(order);
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

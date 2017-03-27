@@ -25,4 +25,11 @@ public interface PaymentAccountService {
      */
     String updateAccount(String content);
 
+    /**
+     * 实名+银行卡认证
+     * @param content
+     * @return
+     */
+    String auth(String content);
+
 }

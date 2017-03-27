@@ -9,7 +9,7 @@ public interface PaymentAccountDao {
 
     int insertAccount(PaymentAccount record);
 
-    PaymentAccount selectByUserId(Integer accountId);
+    PaymentAccount selectByUserId(Integer userId);
 
     int updateAccount(PaymentAccount record);
 

@@ -9,20 +9,15 @@ import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.dao.PaymentDao;
 import com.meirengu.pay.dao.PaymentRecordDao;
 import com.meirengu.pay.model.Payment;
-import com.meirengu.pay.model.PaymentAccount;
-import com.meirengu.pay.model.PaymentRecord;
 import com.meirengu.pay.service.PaymentService;
+import com.meirengu.pay.utils.*;
 import com.meirengu.pay.utils.ConfigUtil;
-import com.meirengu.pay.utils.PaymentException;
-import com.meirengu.pay.utils.PaymentTypeUtil;
-import com.meirengu.pay.utils.ResultUtil;
 import com.meirengu.pay.utils.check.ValidateException;
 import com.meirengu.pay.utils.check.Validator;
+import com.meirengu.pay.vo.PaymentRecordVo;
 import com.meirengu.pay.vo.WxNotifyData;
-import com.meirengu.utils.DateAndTime;
+import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.RequestUtil;
-import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -331,12 +327,12 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
     @Override
     @Transactional(readOnly = false)
     public String refund(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Refund);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             LOGGER.info("refund prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_APPLY));
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_APPLY,null);
+            return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             LOGGER.error("Capture refund ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_REFUND_APPLY), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_REFUND_APPLY, null);
@@ -351,12 +347,12 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
     @Override
     @Transactional(readOnly = false)
     public String withdrawals(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Withdrawals);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY,null);
+            return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             LOGGER.error("Capture withdrawals ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY, null);
@@ -370,15 +366,19 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
      */
     @Override
     public String recharge(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
+        Map<String,Object> map = new HashMap<>();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Recharge);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
+            map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(), OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX),
+                    paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
             LOGGER.info("recharge prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY));
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY,null);
+            return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {
             LOGGER.error("Capture recharge ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY), e.getMessage());
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY, null);
+            map.put("ErrorMsg",e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_RECHARGE_APPLY, map);
         }
     }
 
@@ -389,20 +389,33 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
      */
     @Override
     public String payment(String content) {
-        PaymentRecord paymentRecord = new PaymentRecord();
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
+        Map<String,Object> map = new HashMap<>();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Payment);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
                 paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             }else{
-
+                map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(), OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX),
+                        paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
             }
             LOGGER.info("payment prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY));
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY,null);
+            return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {
             LOGGER.error("Capture payment ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY), e.getMessage());
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY, null);
+            map.put("ErrorMsg",e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_PAYMENT_APPLY, map);
         }
+    }
+
+    /**
+     * 宝付回调-yhy
+     * @param content
+     * @return
+     */
+    @Override
+    public String baofuCallback(String content) {
+        return null;
     }
 }

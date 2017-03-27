@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.trade.dao.RebateBatchDao" >
+
+	<resultMap id="rebateBatchMap" type="RebateBatch">
+		<id column="batch_id" property="batchId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="rebate_type" property="rebateType" jdbcType="SMALLINT" javaType="Integer"/>
+		<result column="rebate_name" property="rebateName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="rebate_scope" property="rebateScope" jdbcType="VARCHAR" javaType="String"/>
+		<result column="rebate_amount" property="rebateAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="rebate_limit" property="rebateLimit" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="valid_days" property="validDays" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="valid_start_time" property="validStartTime" jdbcType="DATE" javaType="Date"/>
+		<result column="valid_end_time" property="validEndTime" jdbcType="DATE" javaType="Date"/>
+		<result column="valid_type" property="validType" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="batch_statue" property="batchStatue" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="batch_count" property="batchCount" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="channel" property="channel" jdbcType="VARCHAR" javaType="String"/>
+		<result column="budget_amount" property="budgetAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">`rebate_batch`</sql>
+	<sql id="select_columns">
+		batch_id as batchId, rebate_type as rebateType, rebate_name as rebateName, rebate_scope as rebateScope, rebate_amount as rebateAmount, rebate_limit as rebateLimit, valid_days as validDays, valid_start_time as validStartTime, valid_end_time as validEndTime, valid_type as validType, batch_statue as batchStatue, batch_count as batchCount, channel as channel, budget_amount as budgetAmount, remarks as remarks, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="rebateBatch" useGeneratedKeys="true" keyProperty="batchId" >
+		INSERT INTO <include refid="table_name" />
+			(batch_id, rebate_type, rebate_name, rebate_scope, rebate_amount, rebate_limit, valid_days, valid_start_time, valid_end_time, valid_type, batch_statue, batch_count, channel, budget_amount, remarks, create_time, operate_account)
+		VALUES
+			(#{batchId}, #{rebateType}, #{rebateName}, #{rebateScope}, #{rebateAmount}, #{rebateLimit}, #{validDays}, #{validStartTime}, #{validEndTime}, #{validType}, #{batchStatue}, #{batchCount}, #{channel}, #{budgetAmount}, #{remarks}, #{createTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="rebateBatch">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="batchId != null and batchId != ''">
+				batch_id=#{batchId},
+			</if>
+			<if test="rebateType != null and rebateType != ''">
+				rebate_type=#{rebateType},
+			</if>
+			<if test="rebateName != null and rebateName != ''">
+				rebate_name=#{rebateName},
+			</if>
+			<if test="rebateScope != null and rebateScope != ''">
+				rebate_scope=#{rebateScope},
+			</if>
+			<if test="rebateAmount != null and rebateAmount != ''">
+				rebate_amount=#{rebateAmount},
+			</if>
+			<if test="rebateLimit != null and rebateLimit != ''">
+				rebate_limit=#{rebateLimit},
+			</if>
+			<if test="validDays != null and validDays != ''">
+				valid_days=#{validDays},
+			</if>
+			<if test="validStartTime != null and validStartTime != ''">
+				valid_start_time=#{validStartTime},
+			</if>
+			<if test="validEndTime != null and validEndTime != ''">
+				valid_end_time=#{validEndTime},
+			</if>
+			<if test="validType != null and validType != ''">
+				valid_type=#{validType},
+			</if>
+			<if test="batchStatue != null and batchStatue != ''">
+				batch_statue=#{batchStatue},
+			</if>
+			<if test="batchCount != null and batchCount != ''">
+				batch_count=#{batchCount},
+			</if>
+			<if test="channel != null and channel != ''">
+				channel=#{channel},
+			</if>
+			<if test="budgetAmount != null and budgetAmount != ''">
+				budget_amount=#{budgetAmount},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			batch_id = #{batchId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="rebateBatch">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where batch_id=#{id} AND batch_statue=1
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

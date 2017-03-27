@@ -27,4 +27,13 @@ public interface RefundService extends BaseService<Refund>{
      * @throws Exception
      */
     Result refundAudit(Refund refund, Order order)throws Exception;
+
+    /**
+     * 退款回调
+     * @param refundSn
+     * @param thirdRefundSn
+     * @param paymentStatus
+     * @return
+     */
+    Result paymentCallBack(String refundSn, String thirdRefundSn, int paymentStatus);
 }
