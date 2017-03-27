@@ -1,6 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ include file="../common/common.jsp"%>
-<!DOCTYPE html>
 <html>
 <head>
     <meta charset=utf-8>
@@ -12,11 +11,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>已发布项目列表</title>
+    <title>待合作项目列表</title>
 </head>
 <body>
 <section class="Hui-article-box" style="top: 0; left: 0;">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 新建项目列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 待合作项目 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -59,10 +58,8 @@
                             <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.updateTime}</td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-已发布项目列表-详情','众筹-已发布项目列表-详情.html','10001')" href="javascript:;"
-                                   title="查看"><i class="Hui-iconfont">&#xe725;</i></a>
-                                <a style="text-decoration:none" onClick="project_stop(this,'10001')" href="javascript:;"
-                                   title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
+                                   onClick="project_edit('众筹-待合作项目-设置','众筹-待合作项目-设置.html','10001')" href="javascript:;"
+                                   title="设置">设置</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -73,7 +70,6 @@
     </div>
 </section>
 <script type="text/javascript">
-
     $('.table-sort').dataTable({
         "aaSorting": [[1, "desc"]],//默认第几个排序
         "bStateSave": true,//状态保存
@@ -151,4 +147,3 @@
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
 </html>
-

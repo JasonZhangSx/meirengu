@@ -1,4 +1,4 @@
-package com.meirengu.erp.controller.crowdfunding;
+package com.meirengu.erp.controller.partner;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
@@ -48,6 +48,6 @@ public class PartnerController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/partner/itemCreateList", map);
+        return new ModelAndView("/partner/partnerClassList", map);
     }
 }
