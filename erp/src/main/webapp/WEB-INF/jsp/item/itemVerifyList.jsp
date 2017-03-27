@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ include file="../common/common.jsp"%>
-<!DOCTYPE html>
 <html>
 <head>
+    <base href="${basePath}">
     <meta charset=utf-8>
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
@@ -12,11 +12,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>待复审项目列表</title>
+    <title>待初审项目列表</title>
 </head>
 <body>
-<section class="Hui-article-box" style="top: 0; left: 0;">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 新建项目列表 <a
+<section class="Hui-article-box" style="top: 0; left: 0">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 待初审项目列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -59,8 +59,8 @@
                             <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.updateTime}</td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-待复审项目-复审','众筹-待复审项目-复审.html','10001')" href="javascript:;"
-                                   title="复审">复审</a>
+                                   onClick="project_edit('众筹-待初审项目-审核','众筹-待初审项目-审核.html','10001')" href="javascript:;"
+                                   title="审核">审核</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -81,11 +81,6 @@
         ]
     });
 
-    $(function () {
-        $(".Hui-aside ul a").on("click", function () {
-            console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
-        })
-    })
     //*项目-编辑*/
     function project_edit(title, url, id, w, h) {
         var index = layer.open({
@@ -149,4 +144,3 @@
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
 </html>
-

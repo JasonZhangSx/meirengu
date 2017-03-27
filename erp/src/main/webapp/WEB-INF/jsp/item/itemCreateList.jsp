@@ -2,6 +2,7 @@
 <%@ include file="../common/common.jsp"%>
 <html>
 <head>
+    <base href="<%=basePath %>">
     <meta charset=utf-8>
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
@@ -29,7 +30,7 @@
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
-                        class="btn btn-primary radius" onClick="project_edit('添加项目','project_edit.html','10001')"
+                        class="btn btn-primary radius" onClick="project_edit('添加项目','/erp/item/project_edit.html','10001')"
                         href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加项目</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
             <div class="mt-20">

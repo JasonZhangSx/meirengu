@@ -10,7 +10,9 @@
     <packaging>war</packaging>
     <name>erp Maven Webapp</name>
     <url>http://maven.apache.org</url>
-
+    <properties>
+        <env>dev</env>
+    </properties>
     <dependencies>
         <!-- SPRING basic begin -->
         <!-- spring -->
