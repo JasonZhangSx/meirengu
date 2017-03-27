@@ -1,11 +1,14 @@
 package com.meirengu.cf.controller;
 
+import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.cf.service.ItemLevelService;
+import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,8 @@ public class ItemLevelController extends BaseController{
 
     @Autowired
     private ItemLevelService itemLevelService;
+    @Autowired
+    private ItemService itemService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
@@ -106,9 +111,21 @@ public class ItemLevelController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "{level_id}", method = RequestMethod.GET)
     public Result detail(@PathVariable(value = "level_id")int levelId){
+        Map<String, Object> map;
         try {
             ItemLevel itemLevel = itemLevelService.detail(levelId);
-            return super.setResult(StatusCode.OK, itemLevel, StatusCode.codeMsgMap.get(StatusCode.OK));
+            if(itemLevel == null){
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, "", StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+            map = ObjectUtils.bean2Map(itemLevel);
+            int itemId = itemLevel.getItemId();
+            Item item = itemService.detail(itemId);
+            if(item != null){
+                map.put("partnerId", item.getPartnerId());
+                map.put("itemName", item.getItemName());
+            }
+
+            return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             LOGGER.error(">> get item detail detail throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
