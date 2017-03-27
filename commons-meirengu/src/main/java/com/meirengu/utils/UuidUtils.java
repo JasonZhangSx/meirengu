@@ -11,8 +11,7 @@ public class UuidUtils {
 
     private static AtomicInteger IntId = new AtomicInteger(0);
     public static Integer getShortUuid() {
-        Integer i = ((int) (System.currentTimeMillis() - 10000000000000L) / 1000) << 16L | (IntId.addAndGet(1));
-        return Integer.parseInt((i+"").substring(1,10));
+        return ((int) (System.currentTimeMillis() - 1000000000000L) / 1000) << 16L | (IntId.addAndGet(1));
     }
     public static void main(String args[]){
         List<Integer> test01 = new ArrayList<Integer>();
