@@ -223,8 +223,8 @@ public class UserAddressController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "get", method = {RequestMethod.POST})
-    public Result list(@RequestParam(value="address_id", required = true) int addressId,
+    @RequestMapping(value = "detail", method = {RequestMethod.POST})
+    public Result detail(@RequestParam(value="address_id", required = true) int addressId,
                        @RequestParam(value="user_id", required = true) int userId,
                        @RequestParam(value = "token", required = true) String token){
 
@@ -236,6 +236,14 @@ public class UserAddressController extends BaseController{
                 userAddress.setUserId(userId);
                 userAddress.setAddressId(addressId);
                 UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
+
+                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
+                if(addressPO!=null){
+                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
+                    userAddressPO.setCity(addressPO.getCity()+"");
+                    userAddressPO.setAreas(addressPO.getArea()+"");
+                }
+
                 if(userAddressPO != null){
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
