@@ -236,6 +236,14 @@ public class UserAddressController extends BaseController{
                 userAddress.setUserId(userId);
                 userAddress.setAddressId(addressId);
                 UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
+
+                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
+                if(addressPO!=null){
+                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
+                    userAddressPO.setCity(addressPO.getCity()+"");
+                    userAddressPO.setAreas(addressPO.getArea()+"");
+                }
+
                 if(userAddressPO != null){
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
