@@ -223,8 +223,8 @@ public class UserAddressController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "get", method = {RequestMethod.POST})
-    public Result list(@RequestParam(value="address_id", required = true) int addressId,
+    @RequestMapping(value = "detail", method = {RequestMethod.POST})
+    public Result detail(@RequestParam(value="address_id", required = true) int addressId,
                        @RequestParam(value="user_id", required = true) int userId,
                        @RequestParam(value = "token", required = true) String token){
 

@@ -49,55 +49,7 @@ public class UserController extends BaseController{
 
 
 
-    /**
-     * @param pageNum 当前页
-     * @param pageSize 每页显示的条数
-     * @param sortBy 排序字段
-     * @param order 升序/降序
-     * @return
-     */
-    @RequestMapping(value = "inviter",method = {RequestMethod.POST})
-    public Result inviter(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                       @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(value="invest_conditions", required = false) Integer investConditions,
-                       @RequestParam(value="is_auth", required = false) Integer isAuth,
-                       @RequestParam(value="phone", required = false) String phone,
-                       @RequestParam(value="invite_phone", required = false) String invitePhone,
-                       @RequestParam(value="realname", required = false) String realname,
-                       @RequestParam(value="invite_realname", required = false) String inviteRealname,
-                       @RequestParam(value="idcard", required = false) String idcard,
-                       @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
-                       @RequestParam(value="sortby", required = false) String sortBy,
-                       @RequestParam(value="order", required = false) String order){
-        try {
-            Map paramMap = new HashMap<String, Object>();
-            Page<User> page = super.setPageParams(pageNum,pageSize);
-            paramMap.put("investConditions", investConditions);
-            paramMap.put("isAuth", isAuth);
-            paramMap.put("phone", phone);
-            paramMap.put("realname", realname);
-            paramMap.put("idcard", idcard);
-            paramMap.put("invitePhone", invitePhone);
-            paramMap.put("inviteRealname", inviteRealname);
-            paramMap.put("inviteIdcard", inviteIdcard);
-            paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
-            page = userService.getListByPage(page, paramMap);
-            List<Map<String,Object>> list = page.getList();
-            for(Map map:list){
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
-            }
-            if(page.getList().size() != 0){
-                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
-            }
-        }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-        }
-    }
+
 
     /**
      * 获取用户信息
