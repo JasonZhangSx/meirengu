@@ -1,6 +1,8 @@
 package com.meirengu.uc.dao;
 
+import com.meirengu.dao.BaseDao;
 import com.meirengu.uc.model.User;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,7 @@ import java.util.Map;
  * @author Marvin
  * @create 2017-01-12 下午8:15
  */
-public interface UserDao {
+public interface UserDao extends BaseDao<User>{
 
     /**
      * 新增会员
@@ -65,4 +67,8 @@ public interface UserDao {
     int updatePasswordByPhone(User user);
 
     List<User> listUserAvatar(List<String> list);
+
+    List<Map<String,Object>> getUserByPage(Map paramMap, RowBounds rowBounds);
+
+    int getUserCount(Map paramMap);
 }

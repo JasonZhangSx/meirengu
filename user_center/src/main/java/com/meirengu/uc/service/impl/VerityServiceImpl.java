@@ -93,7 +93,7 @@ public class VerityServiceImpl implements VerityService{
         if(hr.getStatusCode()==200){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
-            if("40632".equals(account.get("code"))){
+            if(40632==(Integer) account.get("code")){
                 User user = new User();
                 user.setUserId(userId);
                 user.setRealname(realname);
@@ -103,6 +103,17 @@ public class VerityServiceImpl implements VerityService{
                 user.setBankPhone(bankPhone);
                 user.setIsAuth(1);
                 userDao.update(user);
+
+                Map<String, String> payAccount = new HashMap<String, String>();
+                payAccount.put("accountName",realname);
+                payAccount.put("userId",userId+"");
+                Map<String, String> paramsModify = new HashMap<String, String>();
+                paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+                String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
+                hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                if(hr.getStatusCode()!=200){
+                    hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                }
                 flag = true;
             }
         }else{

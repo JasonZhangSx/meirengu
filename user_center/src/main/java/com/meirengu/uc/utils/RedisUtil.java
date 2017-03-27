@@ -196,7 +196,7 @@ public final class RedisUtil {
     public static void setList(String key ,List<?> list,int expiretime) {
         try {
 
-            if (StringUtil.isEmpty(list)) {
+            if (!StringUtil.isEmpty(list)) {
                 String result = getJedis().set(key.getBytes(), SerializableUtil.serializeList(list));
                 if(result.equals("OK")) {
                     getJedis().expire(key.getBytes(), expiretime);

@@ -2,6 +2,7 @@ package com.meirengu.uc.thread;
 
 import com.meirengu.uc.dao.AreasMapper;
 import com.meirengu.uc.model.Area;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class AddressToRedisThread implements Runnable{
         for (Area area:list){
             redisUtil.delkeyObject("area_"+area.getAreaId());
             String value = JacksonUtil.toJSon(area);
-            redisUtil.setObject("area_"+area.getAreaId(),value,86400*30);
+            redisUtil.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
-        logger.info("get area form redis :{}",redisUtil.getObject("areas"));
+        logger.info("set area form redis :{}","");
     }
 }

@@ -1,6 +1,9 @@
 package com.meirengu.uc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.meirengu.common.PasswordEncryption;
+import com.meirengu.model.Page;
+import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Inviter;
@@ -11,8 +14,10 @@ import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
-import com.meirengu.utils.StringUtil;
-import com.meirengu.utils.UuidUtils;
+import com.meirengu.utils.*;
+import com.meirengu.utils.HttpUtil.HttpResult;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * 会员服务实现类
@@ -31,7 +35,7 @@ import java.util.List;
  * @create 2017-01-12 下午8:24
  */
 @Service
-public class UserServiceImpl extends Thread implements UserService {
+public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -93,9 +97,6 @@ public class UserServiceImpl extends Thread implements UserService {
         }
         if(!StringUtil.isEmpty(userVO.getAvatar())){
             user.setAvatar(userVO.getAvatar());
-        }
-        if(!StringUtil.isEmpty(userVO.getPassword())){
-            user.setPassword(userVO.getPassword());
         }
         if(!StringUtil.isEmpty(userVO.getPhone())){
             user.setPhone(userVO.getPhone());
@@ -270,5 +271,135 @@ public class UserServiceImpl extends Thread implements UserService {
             avatarPOs.add(avatarPO);
         }
         return avatarPOs;
+    }
+
+    @Override
+    public void getUserRestMoney(Map map) {
+        Boolean flag = false;
+        HttpResult hr = null;
+        Map<String, Object> paramsmap = new HashMap<String, Object>();
+        paramsmap.put("userId",map.get("userId"));
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("content", JacksonUtil.toJSon(map));
+        String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
+        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(map));
+        logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
+        try {
+            hr = HttpUtil.doGet(urlAppend);
+        } catch (Exception e) {
+            logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+        }
+        if(hr.getStatusCode()==200){
+            Map<String,Object> account = new HashedMap();
+            account = JacksonUtil.readValue(hr.getContent(),Map.class);
+            if(account!=null){
+                Map mapData = (Map)account.get("data");
+                if(mapData!=null){
+                    Map accountUser = (Map) mapData.get("account");
+                    if(accountUser!=null){
+                       map.put("accountBalance",accountUser.get("accountBalance"));
+                    }
+                }
+            }
+        }else{
+            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+        }
+    }
+
+    @Override
+    public void getUserTotalInvestMoney(Map map) {
+
+    }
+
+    @Override
+    public Page<User> getByPage(Page<User> page, Map paramMap) {
+
+        int startPos = page.getStartPos();
+        int pageSize = page.getPageSize();
+        RowBounds rowBounds = new RowBounds(startPos, pageSize);
+        List<Map<String, Object>> aList = userDao.getUserByPage(paramMap, rowBounds);
+        int totalCount = userDao.getUserCount(paramMap);
+        page.setTotalCount(totalCount);
+        page.setList(aList);
+        page.init();
+        logger.info(" page params is "+ JSON.toJSON(paramMap));
+        return page;
+    }
+
+    @Override
+    public int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword) {
+        try {
+            Boolean flag = false;
+            HttpResult hr = null;
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("userId",userId+"");
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("content", JacksonUtil.toJSon(map));
+            String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
+            String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(map));
+            logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
+            try {
+                hr = HttpUtil.doGet(urlAppend);
+            } catch (Exception e) {
+                logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+            }
+            if(hr.getStatusCode()==200){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    Map mapData = (Map)account.get("data");
+                    if(mapData!=null){
+                        Map accountUser = (Map) mapData.get("account");
+                        if(accountUser!=null){
+                            String password = (String) accountUser.get("password");
+                            if(PasswordEncryption.validatePassword(oldPassword,password)){
+
+                                Map<String, String> payAccount = new HashMap<String, String>();
+                                payAccount.put("password",PasswordEncryption.createHash(newPassword));
+                                payAccount.put("userId",userId+"");
+                                Map<String, String> paramsModify = new HashMap<String, String>();
+                                paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+                                String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
+                                hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                if(hr.getStatusCode()!=200){
+                                    hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                }else{
+                                    return 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+            }
+        }catch (Exception e){
+
+        }
+        return 0;
+    }
+
+    @Override
+    public int setPayPassword(Integer userId, String newPassword) {
+
+        try {
+            HttpResult hr = null;
+            Map<String, String> payAccount = new HashMap<String, String>();
+            payAccount.put("password",PasswordEncryption.createHash(newPassword));
+            payAccount.put("userId",userId+"");
+            Map<String, String> paramsModify = new HashMap<String, String>();
+            paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+            String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
+            hr = HttpUtil.doPostForm(urlModify,paramsModify);
+            if(hr.getStatusCode()!=200) {
+                hr = HttpUtil.doPostForm(urlModify, paramsModify);
+                return 1;
+            }else{
+                return 1;
+            }
+        }catch (Exception e){
+            logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
+        }
+        return 0;
     }
 }

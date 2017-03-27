@@ -44,7 +44,7 @@
         user_id as userId, nickname, realname, phone, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
         birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
-        is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state
+        is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state,invest_conditions AS investConditions
     </sql>
 
     <insert id="create" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
@@ -196,18 +196,18 @@
     <select id="retrieveByUserId" parameterType="INTEGER" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
-        WHERE user_id=#{userId}
+        WHERE user_id=#{userId}   AND state = 1
     </select>
 
     <select id="retrieveByPhone" parameterType="String" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
-        WHERE phone=#{phone}
+        WHERE phone=#{phone}         AND state = 1
     </select>
     <select id="selectByInviterPhone" parameterType="String" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
-        WHERE phone=#{mobileInviter}
+        WHERE phone=#{mobileInviter}   AND state = 1
     </select>
     <select id="listUserAvatar" parameterType="List" resultType="User">
         SELECT user_id as userId,avatar
@@ -218,11 +218,168 @@
         </foreach>
     </select>
 
-    <select id="verifyByPasswordAndPhone" parameterType="java.util.Map" resultType="User">
-        SELECT <include refid="select_columns" />
-        FROM <include refid="table_name"/>
-        WHERE phone=#{phone} AND password = #{password}
+    <!-- 分页相关开始 -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+        select
+        a.nickname,
+        a.realname,
+        a.phone,
+        a.idcard AS idCard,
+        a.bank_code AS bankCode,
+        a.bank_idcard AS bankIdCard,
+        a.bank_phone AS bankPhone,
+        a.avatar,
+        a.sex,
+        a.birthday,
+        a.email,
+        a.area_id AS areaId,
+        a.register_from AS registerFrom,
+        a.register_time AS registerTime,
+        a.login_time AS loginTime,
+        a.last_login_time AS lastLoginTime,
+        a.login_ip AS loginIp,
+        a.last_login_ip AS lastLoginIp,
+        a.login_from AS loginFrom,
+        a.login_num AS loginNum,
+        a.is_auth AS isAuth,
+        a.is_buy AS isBuy,
+        a.is_allow_inform AS isAllowInform,
+        a.is_allow_talk AS isAllowTalk,
+        a.state,
+        ui.invited_user_phone AS invitedUserPhone,
+        ui.register_time AS invitedRegisterTime,
+        ui.invest_time AS invitedInvestTime,
+        ui.reward AS invitedreward,
+        u.realname AS invitedRealName,
+        u.nickname AS invitedNickName,
+        u.invest_conditions AS invitedInvestConditions,
+        u.idcard AS invitedIdCard,
+        u.bank_code AS invitedBankCode,
+        u.bank_idcard AS invitedBankIdCard,
+        u.bank_phone AS invitedBankPhone
+        from  user a
+        LEFT JOIN user_invite ui  on a.user_id = ui.user_id
+        LEFT JOIN user u ON ui.invited_user_id = u.user_id
+        <where> 1=1
+            <if test="investConditions != null and investConditions != ''">
+                AND a.invest_conditions=#{investConditions}
+            </if>
+            <if test="isAuth != null and isAuth != ''">
+                AND a.is_auth=#{isAuth}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND a.phone=#{phone}
+            </if>
+            <if test="realname != null and realname != ''">
+                AND a.realname=#{realname}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                AND a.idcard=#{idcard}
+            </if>
+            <if test="invitePhone != null and invitePhone != ''">
+                AND ui.invited_user_phone=#{invitePhone}
+            </if>
+            <if test="inviteRealname != null and inviteRealname != ''">
+                AND u.realname=#{inviteRealname}
+            </if>
+            <if test="inviteIdcard != null and inviteIdcard != ''">
+                AND u.idcard=#{inviteIdcard}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
     </select>
 
+    <select id="getCount" parameterType="Map" resultType="Integer">
+        select count(*)
+        from  user a
+        LEFT JOIN user_invite ui  on a.user_id = ui.user_id
+        LEFT JOIN user u ON ui.invited_user_id = u.user_id
+        <where> 1=1
+            <if test="investConditions != null and investConditions != ''">
+                AND a.invest_conditions=#{investConditions}
+            </if>
+            <if test="isAuth != null and isAuth != ''">
+                AND a.is_auth=#{isAuth}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND a.phone=#{phone}
+            </if>
+            <if test="realname != null and realname != ''">
+                AND a.realname=#{realname}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                AND a.idcard=#{idcard}
+            </if>
+            <if test="invitePhone != null and invitePhone != ''">
+                AND ui.invited_user_phone=#{invitePhone}
+            </if>
+            <if test="inviteRealname != null and inviteRealname != ''">
+                AND u.realname=#{inviteRealname}
+            </if>
+            <if test="inviteIdcard != null and inviteIdcard != ''">
+                AND u.idcard=#{inviteIdcard}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+    <!-- 分页相关结束 -->
+
+    <!-- 分页相关开始 -->
+    <select id="getUserByPage" resultType="Map" parameterType="Map">
+        select <include refid="select_columns" />
+        from
+        <include refid="table_name" />
+        <where> 1=1
+            <if test="investConditions != null">
+                AND invest_conditions=#{investConditions}
+            </if>
+            <if test="isAuth != null">
+                AND is_auth=#{isAuth}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone=#{phone}
+            </if>
+            <if test="realname != null and realname != ''">
+                AND realname=#{realname}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                AND idcard=#{idcard}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+
+    <select id="getUserCount" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        <where> 1 = 1
+            <if test="investConditions != null">
+                AND invest_conditions=#{investConditions}
+            </if>
+            <if test="isAuth != null">
+                AND is_auth=#{isAuth}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone=#{phone}
+            </if>
+            <if test="realname != null and realname != ''">
+                AND realname=#{realname}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                AND idcard=#{idcard}
+            </if>
+        </where>
+        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+            order by #{sortBy} #{order}
+        </if>
+    </select>
+    <!-- 分页相关结束 -->
 
 </mapper>

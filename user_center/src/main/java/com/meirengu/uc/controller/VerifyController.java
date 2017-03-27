@@ -86,9 +86,6 @@ public class VerifyController extends BaseController {
             if(!StringUtil.isEmpty(bankPhone) && ValidatorUtil.isMobile(bankPhone)){
 
             }
-            if(!StringUtil.isEmpty(password) && ValidatorUtil.isPassword(password)){
-
-            }
             if(!StringUtil.isEmpty(idcard) && ValidatorUtil.isIDCard(idcard)){
 
             }
@@ -96,13 +93,14 @@ public class VerifyController extends BaseController {
 
             }
             RedisUtil redisUtil = new RedisUtil();
+            Integer times = 0;
             if(redisUtil.existsObject("verify_"+userId)){
-                String times = (String) redisUtil.getObject("verify_"+userId);
-                if(Integer.parseInt(times)>Integer.parseInt(ConfigUtil.getConfig("verify_times"))){
+                times = (Integer) redisUtil.getObject("verify_"+userId);
+                if(times>Integer.parseInt(ConfigUtil.getConfig("VERIFY_TIMES"))){
                     return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
                 }
-                redisUtil.setObject("verify_"+userId,times+1);
             }
+            redisUtil.setObject("verify_"+userId,times+1,60*60*24);
             Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
             if(flag){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));

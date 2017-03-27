@@ -1,11 +1,14 @@
 package com.meirengu.uc.service;
 
+import com.meirengu.model.Page;
+import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员服务接口类
@@ -13,7 +16,7 @@ import java.util.List;
  * @author Marvin
  * @create 2017-01-12 下午8:19
  */
-public interface UserService {
+public interface UserService extends BaseService<User>{
 
 
     /**
@@ -43,15 +46,70 @@ public interface UserService {
      */
 //    User verifyByPasswordAndPhone(String mobile,String password);
 
+    /**
+     * 更新用户信息
+     * @param userVO
+     * @return
+     */
     int updateUserInfo(UserVO userVO);
 
+    /**
+     * 用户首次设置密码
+     * @param usr
+     * @return
+     */
     int updatePasswordByPhone(User usr);
 
+    /**
+     * 更新用户信息
+     * @param user
+     * @param mobile
+     * @param ip
+     * @param from
+     * @return
+     */
     int updateUserInfo(User user, String mobile, String ip, Integer from);
 
+    /**
+     * 用户动态密码登陆创建用户
+     * @param mobile
+     * @param password
+     * @param from
+     * @param ip
+     * @param avatar
+     * @return
+     */
     User createUserInfo(String mobile, String password, Integer from, String ip,String avatar);
 
+    /**
+     * 用户注册方式 创建用户
+     * @param registerVO
+     * @return
+     */
     User createUserInfo(RegisterVO registerVO);
 
+    /**
+     * 获取用户头像
+     * @param listUserIds
+     * @return
+     */
     List<AvatarPO> listUserAvatar(List<String> listUserIds);
+
+    /**
+     * 调用支付系统获取余额信息
+     * @param map
+     */
+    void getUserRestMoney(Map map);
+
+    /**
+     * 调取订单系统获取累计投资额
+     * @param map
+     */
+    void getUserTotalInvestMoney(Map map);
+
+    Page<User> getByPage(Page<User> page, Map paramMap);
+
+    int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword);
+
+    int setPayPassword(Integer userId, String newPassword);
 }
