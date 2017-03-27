@@ -100,7 +100,7 @@ public class VerifyController extends BaseController {
                     return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
                 }
             }
-            redisUtil.setObject("verify_"+userId,times+1,60*60*24);
+            redisUtil.setObject("verify_"+userId,times+1,86400);
             Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
             if(flag){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
