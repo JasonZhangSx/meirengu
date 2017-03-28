@@ -2,7 +2,6 @@ package com.meirengu.uc.controller;
 
 import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.StatusCode;
-import com.meirengu.common.TokenProccessor;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
@@ -125,6 +124,15 @@ public class LoginController extends BaseController {
                 if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
                     if(user==null || StringUtil.isEmpty(user.getUserId())){
                         try {
+                            CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+                            if (code == null) {
+                                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
+                                        .CAPTCHA_INVALID));
+                            }
+                            if (code.getExpireTime().compareTo(new Date()) < 0) {
+                                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                                        .CAPTCHA_EXPIRE));
+                            }
                             //用户为空则注册一个
                             User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
                             RegisterPO registerPO = loginService.setUserToRedis(usr);
@@ -147,6 +155,7 @@ public class LoginController extends BaseController {
                     code.setUse(true);
                     code.setUsingTime(new Date());
                     int updateResult = checkCodeService.update(code);
+
                     logger.info("LoginController.login update code result:{}", updateResult);
                     userService.updateUserInfo(user,mobile,ip,from);
                     RegisterPO registerPO = loginService.setUserToRedis(user);
@@ -194,10 +203,6 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CAPTCHA_INVALID,null, StatusCode.codeMsgMap.get(StatusCode
                         .CAPTCHA_INVALID));
             }
-            if (StringUtil.isEmpty(registerVO.getPassword()) && ValidatorUtil.isPassword(registerVO.getPassword())) {
-                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                        (StatusCode.PASSWORD_IS_MALFORMED));
-            }
             //查看邀请人手机号是否注册
             if(!StringUtil.isEmpty(registerVO.getMobile_inviter())){
                 User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
@@ -220,11 +225,12 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                         .CAPTCHA_EXPIRE));
             }
+            code.setUse(true);
+            code.setUsingTime(new Date());
+            int updateResult = checkCodeService.update(code);
+
             User usr = userService.createUserInfo(registerVO);
-            RegisterPO registerPO = new RegisterPO();
-            registerPO.setUser(usr);
-            String token = TokenProccessor.getInstance().makeToken();
-            loginService.getNewToken(token,usr);
+            RegisterPO registerPO = loginService.setUserToRedis(usr);
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info(e.getMessage());

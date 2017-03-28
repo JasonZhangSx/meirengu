@@ -161,6 +161,9 @@ public class StatusCode {
     public static final int SLIDESHOW_SELECT_ERROR = 50207;
     public static final int SLIDESHOW_INSERT_ERROR = 50208;
     public static final int SLIDESHOW_UPDATE_ERROR = 50209;
+    public static final int VERSION_INSERT_ERROR = 20210;
+    public static final int VERSION_UPDATE_ERROR = 20211;
+    public static final int VERSION_DELETE_ERROR = 20212;
 
     //50251-50300//rebate
     public static final int REBATE_BATCH_ERROR_INSERT = 50251;
@@ -348,7 +351,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.RECORD_NOT_EXISTED, "记录不存在");
 
         //50100-50200//user_center
-        codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码发送失败");
+        codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码每小时限制发送三次");
         codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
         codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
         codeMsgMap.put(StatusCode.USER_PASSWORD_IS_EXITS, "用户密码已存在");
@@ -373,6 +376,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.SLIDESHOW_SELECT_ERROR, "轮播图获取失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_INSERT_ERROR, "轮播图增加失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_UPDATE_ERROR, "轮播图修改失败");
+        codeMsgMap.put(StatusCode.VERSION_INSERT_ERROR, "版本信息插入失败");
+        codeMsgMap.put(StatusCode.VERSION_UPDATE_ERROR, "版本信息修改失败");
+        codeMsgMap.put(StatusCode.VERSION_DELETE_ERROR, "版本信息删除失败");
 
         //50200-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");

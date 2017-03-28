@@ -53,7 +53,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemCreateList", map);
+        return new ModelAndView("/item/itemCreateList", map);
     }
 
     /**
@@ -82,7 +82,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemVerifyList", map);
+        return new ModelAndView("/item/itemVerifyList", map);
     }
 
     /**
@@ -111,7 +111,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemCooperateList", map);
+        return new ModelAndView("/item/itemCooperateList", map);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemReviewList", map);
+        return new ModelAndView("/item/itemReviewList", map);
     }
 
     /**
@@ -169,7 +169,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemPublishList", map);
+        return new ModelAndView("/item/itemPublishList", map);
     }
 
     /**
@@ -198,7 +198,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemPublishedList", map);
+        return new ModelAndView("/item/itemPublishedList", map);
     }
 
     /**
@@ -227,7 +227,7 @@ public class ItemController extends BaseController{
             e.printStackTrace();
         }
 
-        return new ModelAndView("/crowd_funding/itemCompletedList", map);
+        return new ModelAndView("/item/itemCompletedList", map);
     }
 
 }

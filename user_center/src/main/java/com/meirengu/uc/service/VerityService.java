@@ -9,5 +9,5 @@ public interface VerityService {
     Boolean selectPayAccountByUserId(Integer userId);
 
 
-    Integer verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone, String idcard, String realname, String password);
+    Boolean verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone, String idcard, String realname, String password,Integer investConditions);
 }

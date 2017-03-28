@@ -1,9 +1,11 @@
 package com.meirengu.uc.model;
 
+import java.io.Serializable;
+
 /**
  * Created by huoyan403 on 3/21/2017.
  */
-public class Area {
+public class Area implements Serializable{
 
     private Integer areaId;
     private String areaName;

@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 /**
  * 登录服务实现类
  *
@@ -29,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
         RedisUtil redisUtil = new RedisUtil();
         //删除本次token  建立一个新的有效token
         redisUtil.delkeyObject(token);
-        String newToken = UUID.randomUUID().toString().replace("-", "");
+        String newToken = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
         redisUtil.setObject(newToken,userRedis,tokenTime);
         RegisterPO registerPO = new RegisterPO();
@@ -44,11 +42,11 @@ public class LoginServiceImpl implements LoginService {
 
         RegisterPO registerPO = new RegisterPO();
         registerPO.setUser(usr);
-        String token1 = TokenProccessor.getInstance().makeToken();
+        String token = TokenProccessor.getInstance().makeToken();
         RedisUtil redisUtil = new RedisUtil();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
-        redisUtil.setObject(token1,usr,tokenTime);
-        registerPO.setToken(token1);
+        redisUtil.setObject(token,usr,tokenTime);
+        registerPO.setToken(token);
         registerPO.getUser().setPassword("");
         return registerPO;
     }

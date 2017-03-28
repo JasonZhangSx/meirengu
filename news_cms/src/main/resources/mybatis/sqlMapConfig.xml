@@ -11,5 +11,6 @@
 		<typeAlias alias="bulletin" type="com.meirengu.news.model.Bulletin" />
 		<typeAlias alias="feedback" type="com.meirengu.news.model.Feedback" />
 		<typeAlias alias="activity" type="com.meirengu.news.model.Activity" />
+		<typeAlias alias="versionUpgrade" type="com.meirengu.news.model.VersionUpgrade" />
 	</typeAliases>
 </configuration>

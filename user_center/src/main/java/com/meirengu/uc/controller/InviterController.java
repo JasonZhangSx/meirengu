@@ -64,6 +64,8 @@ public class InviterController extends BaseController{
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
+
+
     @RequestMapping(method = {RequestMethod.GET})
     public Result detail(@RequestParam(value="id", required = true) Integer id){
 
