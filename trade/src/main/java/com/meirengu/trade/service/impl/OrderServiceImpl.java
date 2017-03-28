@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
@@ -309,20 +310,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 int levelStatus = itemLevel.getIntValue("levelStatus");
                 //'档位状态：1：预约中；2已预约满；3候补中；4认购中；5已完成',
                 if (nextState == OrderStateEnum.BOOK.getValue()) {
-                    if (levelStatus == 1) {
+                    if (levelStatus == Constant.LEVEL_APPOINTING) {
                         itemFlag = true;
                     }
                 } else if (nextState == OrderStateEnum.UNPAID.getValue()) {
-                    if (levelStatus == 4) {
+                    if (levelStatus == Constant.LEVEL_CROWDING) {
                         itemFlag = true;
                     }
                 } else if (nextState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                    if (levelStatus != 5) {
+                    if (levelStatus != Constant.LEVEL_COMPLETED) {
                         itemFlag = true;
                     }
                 }
                 //如果是预约订单，档位状态为预约满或候补中时
-                if (nextState == OrderStateEnum.BOOK.getValue() && (levelStatus == 2 || levelStatus == 3)) {
+                if (nextState == OrderStateEnum.BOOK.getValue()
+                        && (levelStatus == Constant.LEVEL_APPOINT_FULL || levelStatus == Constant.LEVEL_CANDIDITING)) {
                     result.setCode(StatusCode.ITEM_LEVEL_HAVE_ENOUGH);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ITEM_LEVEL_HAVE_ENOUGH));
                     return result;
@@ -424,7 +426,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public Page getPage(Page page, Map map)  throws IOException {
         int needAvatar = (int)map.get("needAvatar");
         int itemId = map.get("itemId")==null ?  0 : (int)map.get("itemId");
-        if (needAvatar == 1){
+        if (needAvatar == Constant.YES){
             //该请求为支持人数列表的请求
             //1.查询项目状态
             String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
@@ -435,7 +437,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 if (code == StatusCode.OK) {
                     JSONObject item = resultJson.getJSONObject("data");
                     int itemStatus = item.getIntValue("itemStatus");
-                    if (itemStatus == 10) {
+                    if (itemStatus == Constant.ITEM_PERHEARTING) {
                         map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
                     } else {
                         map.put("orderState", OrderStateEnum.PAID.getValue());
@@ -446,7 +448,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //2.查询列表
         page = getListByPage(page, map);
         //3.判断是否是支持人数列表，然后查询头像信息
-        if (needAvatar == 1) {
+        if (needAvatar == Constant.YES) {
             List<Map<String, Object>> aList = page.getList();
             if (aList != null && aList.size() > 0) {
                 //用户ID的set

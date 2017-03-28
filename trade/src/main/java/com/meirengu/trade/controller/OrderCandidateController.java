@@ -1,6 +1,5 @@
 package com.meirengu.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
@@ -10,12 +9,13 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.rocketmq.MyConsumer;
 import com.meirengu.trade.rocketmq.MyProducer;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.trade.utils.ConfigUtil;
-import com.meirengu.trade.utils.TokenUtils;
+import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.*;
 
 /**
@@ -48,7 +48,6 @@ public class OrderCandidateController extends BaseController{
     @Autowired
     private MyConsumer myConsumer;
 
-
     /**
      * 候补预约新增接口
      * @param userId
@@ -65,16 +64,21 @@ public class OrderCandidateController extends BaseController{
      */
     @RequestMapping( method = RequestMethod.POST)
     public Result insert(@RequestParam(value = "user_id", required = false) int userId,
-                                    @RequestParam(value = "user_name", required = false) String userName,
-                                    @RequestParam(value = "user_phone", required = false) String userPhone,
-                                    @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                                    @RequestParam(value = "item_id", required = false) int itemId,
-                                    @RequestParam(value = "item_name", required = false) String itemName,
-                                    @RequestParam(value = "item_level_id", required = false) int itemLevelId,
-                                    @RequestParam(value = "item_level_name", required = false) String itemLevelName,
-                                    @RequestParam(value = "item_num", required = false) int itemNum,
-                                    @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount
-                                    ){
+                          @RequestParam(value = "user_name", required = false) String userName,
+                          @RequestParam(value = "user_phone", required = false) String userPhone,
+                          @RequestParam(value = "user_weixin", required = false) String userWeixin,
+                          @RequestParam(value = "item_id", required = false) int itemId,
+                          @RequestParam(value = "item_name", required = false) String itemName,
+                          @RequestParam(value = "item_level_id", required = false) int itemLevelId,
+                          @RequestParam(value = "item_level_name", required = false) String itemLevelName,
+                          @RequestParam(value = "item_num", required = false) int itemNum,
+                          @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
+                          @RequestParam(value = "token", required = false) String token){
+
+        //验证密码
+        if (!TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
 
         if (userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(userWeixin)
                 || itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
@@ -93,7 +97,7 @@ public class OrderCandidateController extends BaseController{
         orderCandidate.setItemLevelName(itemLevelName);
         orderCandidate.setItemNum(itemNum);
         orderCandidate.setOrderAmount(orderAmount);
-        orderCandidate.setStatus(0);//新增为未处理状态
+        orderCandidate.setStatus(Constant.NO);//新增为未处理状态
         orderCandidate.setOperateAccount("");//新增默认为空
 
         try{
@@ -110,6 +114,18 @@ public class OrderCandidateController extends BaseController{
 
     }
 
+    /**
+     * 候补预约列表
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param userId
+     * @param userPhone
+     * @param itemName
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
@@ -160,12 +176,13 @@ public class OrderCandidateController extends BaseController{
     }
 
     @RequestMapping(value = "/auth_token", method = RequestMethod.POST)
-    public Result authToken(@RequestParam(value = "token")String token){
+    public Result authToken(HttpServletRequest request,
+                            @RequestParam(value = "key")String key){
+        String token = request.getHeader("token");
         if (TokenUtils.authToken(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
         return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-
     }
 
 

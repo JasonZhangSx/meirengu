@@ -11,6 +11,7 @@ import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.OrderSNUtils;
+import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -71,7 +72,13 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "order_message", required = false) String orderMessage,
                                     @RequestParam(value = "order_from", required = false) String orderFrom,
                                     @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                                    @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
+                                    @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
+        @RequestParam(value = "token", required = false) String token){
+
+            //验证token
+            if (!TokenUtils.authToken(token)) {
+                return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
 
         if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
@@ -96,8 +103,8 @@ public class OrderController extends BaseController{
         order.setUserPhone(userPhone);
         order.setUserEmail("");//目前没有邮箱，设为空字符
         order.setUserAddressId(userAddressId);
-        order.setOrderType(1);//订单类型目前都是普通
-        order.setPaymentMethod(0);//支付类型默认为余额支付
+        order.setOrderType(Constant.ORDER_TYPE_ORDINARY);//订单类型目前都是普通
+        order.setPaymentMethod(Constant.PAYMENT_METHOD_BALANCE);//支付类型默认为余额支付
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
         order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
         order.setReceipt("");//目前没有发票
@@ -152,8 +159,14 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "order_message", required = false) String orderMessage,
                                       @RequestParam(value = "order_from", required = false) String orderFrom,
                                       @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                                      @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
+                                      @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
+                                      @RequestParam(value = "payment_method", required = false)int paymentMethod,
+                                      @RequestParam(value = "token", required = false) String token){
 
+        //验证token
+        if (!TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
 
         if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
@@ -179,8 +192,8 @@ public class OrderController extends BaseController{
         order.setUserPhone(userPhone);
         order.setUserEmail("");//目前没有邮箱，设为空字符
         order.setUserAddressId(userAddressId);
-        order.setOrderType(1);//订单类型目前都是普通
-        order.setPaymentMethod(0);//支付类型默认为余额支付
+        order.setOrderType(Constant.ORDER_TYPE_ORDINARY);//订单类型目前都是普通
+        order.setPaymentMethod(paymentMethod);
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
         order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
         order.setReceipt("");//目前没有发票
@@ -243,14 +256,21 @@ public class OrderController extends BaseController{
      * @param orderId
      * @return
      */
-    @RequestMapping(value = "/{order_id}",  method = RequestMethod.DELETE)
-    public Result delete(@PathVariable("order_id") int orderId){
+    @RequestMapping(value = "/{order_id}",  method = RequestMethod.POST)
+    public Result delete(@PathVariable("order_id") int orderId,
+                         @RequestParam(value = "token", required = false) String token){
+
+        //验证token
+        if (!TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
+
         if (orderId == 0 ) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
         order.setOrderId(orderId);
-        order.setFlag(0);//逻辑删除状态 0为删除，1为未删除
+        order.setFlag(Constant.DELETE);//逻辑删除状态 0为删除，1为未删除
         try{
             Result result = orderService.deleteOrder(order);
             return result;
@@ -293,7 +313,7 @@ public class OrderController extends BaseController{
         }
         Map<String, Object> map = new HashMap<>();
         //前台不展示删除订单
-        map.put("flag", 1);//逻辑删除状态 0为删除，1为未删除
+        map.put("flag", Constant.NOT_DELETE);//逻辑删除状态 0为删除，1为未删除
         map.put("orderSn", orderSn);
         map.put("userPhone", userPhone);
         map.put("itemName", itemName);
@@ -365,7 +385,14 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "appointment/cancel/{order_id}",  method = RequestMethod.POST)
-    public Result appointmentCancel(@PathVariable("order_id") int orderId){
+    public Result appointmentCancel(@PathVariable("order_id") int orderId,
+                                    @RequestParam(value = "token", required = false) String token){
+
+        //验证token
+        if (!TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
+
         if (orderId == 0 ) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }

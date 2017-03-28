@@ -98,7 +98,7 @@ public class RedisClient {
         Boolean exist = false;
         ShardedJedis jedis = getShardedJedisPool().getResource();
         try {
-            exist = jedis.exists(key.getBytes());
+            exist = jedis.exists(key);
         } finally {
             getShardedJedisPool().returnResource(jedis);
         }

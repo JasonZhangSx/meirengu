@@ -27,9 +27,12 @@ import java.util.*;
 public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> implements RebateBatchService{
     private static final Logger logger = LoggerFactory.getLogger(RebateBatchServiceImpl.class);
 
+    @Autowired
+    private RedisClient redisClient;
 
     @Autowired
     private RebateDao rebateDao;
+
 
     /**
      * 新增抵扣券批次
@@ -89,18 +92,16 @@ public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> impleme
 
     private void pushRedisList(Set<String> strSet, int batchId) {
         List<String> strList = new ArrayList<String>(strSet);
-        JedisPoolConfig config = new JedisPoolConfig();
-        RedisClient redisService = new RedisClient(config, "192.168.0.135:6379");
         int i = 1;
         int num = 10000;
         long k = 0;//成功保存的条数
         String[] a = null;
         while ((i * num) < strList.size()) {
             a = strList.subList((i - 1) * num, i * num).toArray(new String[num]);
-            k += redisService.lpush("rebate_batch_" + batchId, a);
+            k += redisClient.lpush("rebate_batch_" + batchId, a);
             i++;
         }
-        k += redisService.lpush("rebate_batch_" + batchId, strList.subList((i - 1) * num, strList.size()).toArray(new String[(strList.size() - ((i - 1) * num))]));
+        k += redisClient.lpush("rebate_batch_" + batchId, strList.subList((i - 1) * num, strList.size()).toArray(new String[(strList.size() - ((i - 1) * num))]));
     }
 
 

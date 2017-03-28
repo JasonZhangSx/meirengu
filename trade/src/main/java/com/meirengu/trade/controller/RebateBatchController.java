@@ -5,6 +5,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.common.RebateTypeEnum;
 import com.meirengu.trade.model.Order;
@@ -88,12 +89,12 @@ public class RebateBatchController extends BaseController{
             }
         }
         //如果有效期判断类型为 1按绝对时间过期 则有效期开始时间，有效期截至时间字段必传
-        if (validType == 1) {
+        if (validType == Constant.REBATE_EXPIRE_BY_ABSOLUTE_TIME) {
             if (validStartTime == null || validEndTime == null) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
             //如果有效期判断类型为 2按相对时间过期 则有效天数字段必传
-        } else if (validType == 2) {
+        } else if (validType == Constant.REBATE_EXPIRE_BY_RELATIVE_TIME) {
             if (validDays == 0) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
@@ -110,7 +111,7 @@ public class RebateBatchController extends BaseController{
         rebateBatch.setValidStartTime(validStartTime);
         rebateBatch.setValidEndTime(validEndTime);
         rebateBatch.setValidType(validType);
-        rebateBatch.setBatchStatue(1);//默认有效
+        rebateBatch.setBatchStatue(Constant.YES);//默认有效
         rebateBatch.setBatchCount(batchCount);
         rebateBatch.setChannel(channel);
         rebateBatch.setBudgetAmount(budgetAmount);
@@ -129,94 +130,11 @@ public class RebateBatchController extends BaseController{
 
     }
 
-//    /**
-//     * 退款审核
-//     * @param refundId
-//     * @param orderId
-//     * @param refundState
-//     * @param adminMessage
-//     * @return
-//     */
-//    @RequestMapping(value = "/audit/{refund_id}", method = RequestMethod.POST)
-//    public Result refundAudit(@PathVariable("refund_id") int refundId,
-//                              @RequestParam(value = "order_id", required = false) int orderId,
-//                              @RequestParam(value = "refund_state", required = false) int refundState,
-//                              @RequestParam(value = "admin_message", required = false) String adminMessage) {
-//
-//        if (refundId == 0 || orderId == 0 || refundState == 0 || StringUtils.isEmpty(adminMessage)) {
-//            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-//        }
-//
-//        //退款申请记录表修改信息
-//        Refund refund = new Refund();
-//        refund.setRefundId(refundId);
-//        refund.setAdminMessage(adminMessage);
-//        refund.setAdminTime(new Date());
-//        refund.setRefundState(refundState);
-//
-//        //订单表修改信息
-//        Order order = new Order();
-//        order.setOrderId(orderId);
-//        if (refundState == 2) {
-//            order.setOrderState(OrderStateEnum.REFUND_CONFIRM.getValue());
-//        } else if (refundState == 3) {
-//            order.setOrderState(OrderStateEnum.REFUND_REFUSE.getValue());
-//        }
-//
-//        try {
-//            Result result = refundService.refundAudit(refund, order);
-//            logger.info("Request getResponse: {}", JSON.toJSON(result));
-//            return result;
-//        } catch (Exception e) {
-//            logger.error("throw exception:", e);
-//            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-//        }
-//    }
-//
-//    /**
-//     * 退款列表
-//     * @param pageNum
-//     * @param pageSize
-//     * @param sortBy
-//     * @param order
-//     * @param orderSn
-//     * @param userId
-//     * @param userPhone
-//     * @param refundState
-//     * @return
-//     */
-//    @RequestMapping(method = RequestMethod.GET)
-//    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
-//                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
-//                          @RequestParam(value = "sort_by", required = false) String sortBy,
-//                          @RequestParam(value = "order", required = false) String order,
-//                          @RequestParam(value = "order_sn", required = false) String orderSn,
-//                          @RequestParam(value = "user_id", required = false) String userId,
-//                          @RequestParam(value = "user_phone", required = false) String userPhone,
-//                          @RequestParam(value = "refund_state", required = false) String refundState){
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("orderSn", orderSn);
-//        map.put("userId", userId);
-//        map.put("userPhone", userPhone);
-//        map.put("refundState", refundState);
-//        map.put("sortBy", sortBy);
-//        map.put("order", order);
-//        Page<Refund> page = new Page<Refund>();
-//        page.setPageNow(pageNum);
-//        page.setPageSize(pageSize);
-//        try{
-//            page = refundService.getListByPage(page, map);
-//            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
-//        }catch (Exception e){
-//            logger.error("throw exception:", e);
-//            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-//        }
-//    }
-        @InitBinder
-        public void initBinder(WebDataBinder binder) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-        }
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
 }

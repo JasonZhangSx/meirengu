@@ -4,6 +4,7 @@ import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.dao.RebateReceiveDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Rebate;
@@ -40,6 +41,9 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
     private static final Logger logger = LoggerFactory.getLogger(RebateReceiveServiceImpl.class);
 
     @Autowired
+    private RedisClient redisClient;
+
+    @Autowired
     private RebateService rebateService;
     @Autowired
     private RebateBatchService rebateBatchService;
@@ -56,9 +60,6 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
     @Transactional
     public Result receiveRebate(int userId, String userPhone, List<Integer> batchIdList, String activityIdentification) {
         Result result = new Result();
-
-        JedisPoolConfig config = new JedisPoolConfig();
-        RedisClient redisService = new RedisClient(config, "192.168.0.135:6379");
 
         List<String> list = null;
         String rebateSn = null;
@@ -88,7 +89,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
             //验证该批次下是否有可用优惠券
             boolean flag = false;
             //redis中取出优惠券号
-            list = redisService.blpop(1, "rebate_batch_" + batchId);
+            list = redisClient.blpop(1, "rebate_batch_" + batchId);
             if (list != null && list.size() > 1) {
                 rebateSn = list.get(1);
                 if (StringUtils.isNotBlank(rebateSn)) {
@@ -105,16 +106,16 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                 rebateReceive.setRebateBatchId(rebateBatch.getBatchId());
                 rebateReceive.setActivityIdentification(activityIdentification);
                 rebateReceive.setReceiveTime(new Date());
-                rebateReceive.setStatus(1);//未使用
+                rebateReceive.setStatus(Constant.REBATE_RECEIVE_UNUSED);//未使用
                 insert(rebateReceive);
                 //改变该优惠券过期时间
                 rebate = new Rebate();
                 rebate.setRebateSn(rebateSn);
-                if (rebateBatch.getValidType() == 1) {
+                if (rebateBatch.getValidType() == Constant.REBATE_EXPIRE_BY_ABSOLUTE_TIME) {
                     //该优惠券按绝对时间过期
                     rebate.setValidStartTime(rebateBatch.getValidStartTime());
                     rebate.setValidEndTime(rebateBatch.getValidEndTime());
-                } else if (rebateBatch.getValidType() == 2) {
+                } else if (rebateBatch.getValidType() == Constant.REBATE_EXPIRE_BY_RELATIVE_TIME) {
                     //该优惠券按相对时间过期
                     Date currentDate = new Date();
                     rebate.setValidStartTime(currentDate);
