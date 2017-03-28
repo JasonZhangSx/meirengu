@@ -1,6 +1,8 @@
 package com.meirengu.trade.service.impl;
+import com.alibaba.fastjson.JSON;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.dao.RebateReceiveDao;
 import com.meirengu.trade.model.Order;
@@ -13,6 +15,7 @@ import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.service.RebateService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +77,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
             }
             //验证用户是否有此类优惠券
             paramMap = new HashMap<String, Object>();
-            paramMap.put("batchId", batchId);
+            paramMap.put("rebateBatchId", batchId);
             int totalCount = rebateReceiveDao.getCount(paramMap);
             if (totalCount != 0) {
                 logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：该用户领取该优惠券以打次数上限");
@@ -158,4 +161,23 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         result.setData(rebateReceive);
         return result;
     }
+
+    /**
+     * 获取优惠券分页列表
+     * @param page
+     * @param map
+     * @return
+     */
+    public Page getRebateInfoListByPage(Page page, Map map) {
+        int startPos = page.getStartPos();
+        int pageSize = page.getPageSize();
+        RowBounds rowBounds = new RowBounds(startPos, pageSize);
+        List<Map<String, Object>> aList = rebateReceiveDao.getByPage(map, rowBounds);
+        int totalCount = rebateReceiveDao.getCount(map);
+        page.setTotalCount(totalCount);
+        page.setList(aList);
+        page.init();
+        return page;
+    }
+
 }

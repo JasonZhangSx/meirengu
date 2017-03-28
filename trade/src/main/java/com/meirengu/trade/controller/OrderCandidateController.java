@@ -1,11 +1,21 @@
 package com.meirengu.trade.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.client.producer.SendStatus;
+import com.alibaba.rocketmq.common.message.Message;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.OrderCandidate;
+import com.meirengu.trade.rocketmq.MyConsumer;
+import com.meirengu.trade.rocketmq.MyProducer;
 import com.meirengu.trade.service.OrderCandidateService;
+import com.meirengu.trade.utils.ConfigUtil;
+import com.meirengu.trade.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +34,20 @@ import java.util.*;
  * Created by maoruxin on 2017/3/14.
  */
 @RestController
-@RequestMapping("/orderCandidate")
+@RequestMapping("/order_candidate")
 public class OrderCandidateController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(OrderCandidateController.class);
 
     @Autowired
     private OrderCandidateService orderCandidateService;
+
+    @Autowired
+    private MyProducer myProducer;
+
+    @Autowired
+    private MyConsumer myConsumer;
+
 
     /**
      * 候补预约新增接口
@@ -121,6 +138,35 @@ public class OrderCandidateController extends BaseController{
         }
     }
 
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
+    public Result sendMessage(@RequestParam(value = "content")String content){
+
+        Message msg = new Message("deploy", "MyTag", content.getBytes());
+        SendResult sendResult = null;
+        try {
+            sendResult = myProducer.getDefaultMQProducer().send(msg);
+        } catch (MQClientException e) {
+            logger.error(e.getMessage() + String.valueOf(sendResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+        }
+        return new Result();
+
+    }
+
+    @RequestMapping(value = "/auth_token", method = RequestMethod.POST)
+    public Result authToken(@RequestParam(value = "token")String token){
+        if (TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
+        return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+
+    }
 
 
 }

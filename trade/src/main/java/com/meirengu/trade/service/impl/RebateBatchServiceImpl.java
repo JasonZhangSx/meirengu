@@ -50,13 +50,16 @@ public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> impleme
     }
     public Result batchRebateInsert(RebateBatch rebateBatch) {
         Result result = new Result();
+        result.setCode(StatusCode.OK);
+        result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         //券号的生成
         Set<String> strSet = generateNumber(rebateBatch);
-        if (strSet.size() < rebateBatch.getBatchCount()) {
-            result.setCode(StatusCode.REBATE_SN_REPEAT);
-            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REBATE_SN_REPEAT));
-            strSet.addAll(generateNumber(rebateBatch));
-        }
+        //到这一步不会发生重复
+//        if (strSet.size() < rebateBatch.getBatchCount()) {
+//            result.setCode(StatusCode.REBATE_SN_REPEAT);
+//            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REBATE_SN_REPEAT));
+//            strSet.addAll(generateNumber(rebateBatch));
+//        }
         //数据库批量插入
         List<Rebate> rebateList = new ArrayList<Rebate>();
         Rebate rebate = null;

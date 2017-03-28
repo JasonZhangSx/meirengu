@@ -39,7 +39,6 @@ public class OrderController extends BaseController{
     /**
      * 预约新增接口
      * @param itemId
-     * @param itemName
      * @param itemLevelId
      * @param itemLevelName
      * @param itemLevelAmount
@@ -58,7 +57,6 @@ public class OrderController extends BaseController{
      */
     @RequestMapping(value = "/appointment", method = RequestMethod.POST)
     public Result insertAppointment(@RequestParam(value = "item_id", required = false) int itemId,
-                                    @RequestParam(value = "item_name", required = false) String itemName,
                                     @RequestParam(value = "item_level_id", required = false) int itemLevelId,
                                     @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                     @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
@@ -75,7 +73,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "user_weixin", required = false) String userWeixin,
                                     @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
 
-        if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
+        if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
                 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
                 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)){
@@ -86,7 +84,6 @@ public class OrderController extends BaseController{
         Order order = new Order();
         order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_BOOK_SN_PREFIX));
         order.setItemId(itemId);
-        order.setItemName(itemName);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
@@ -111,6 +108,7 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             Result result = orderService.insertAppointment(order, rebateReceiveId);
+            result.setData(null);
             return result;
         }catch (Exception e){
             logger.error("throw exception:", e);
@@ -122,7 +120,6 @@ public class OrderController extends BaseController{
     /**
      * 认购新增接口
      * @param itemId
-     * @param itemName
      * @param itemLevelId
      * @param itemLevelName
      * @param itemLevelAmount
@@ -141,7 +138,6 @@ public class OrderController extends BaseController{
      */
     @RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
     public Result insertSubscriptions(@RequestParam(value = "item_id", required = false) int itemId,
-                                      @RequestParam(value = "item_name", required = false) String itemName,
                                       @RequestParam(value = "item_level_id", required = false) int itemLevelId,
                                       @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                       @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
@@ -159,7 +155,7 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId){
 
 
-        if (itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
+        if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
                 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
                 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)) {
@@ -171,7 +167,6 @@ public class OrderController extends BaseController{
         Order order = new Order();
         order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_ORDER_SN_PREFIX));
         order.setItemId(itemId);
-        order.setItemName(itemName);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
