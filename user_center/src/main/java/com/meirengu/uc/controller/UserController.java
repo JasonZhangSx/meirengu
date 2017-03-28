@@ -484,7 +484,7 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "paypassword/retrieve",method = RequestMethod.POST)
     public Result retrievePayPassword(@RequestParam(value = "mobile", required = true) String mobile,
-                                   @RequestParam(value = "check_code", required = true) String checkCode,
+                                   @RequestParam(value = "check_code", required = false) String checkCode,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
                                    @RequestParam(value = "type", required = true) Integer type) {
         try {

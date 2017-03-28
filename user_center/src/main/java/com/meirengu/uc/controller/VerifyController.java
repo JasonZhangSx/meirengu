@@ -113,6 +113,4 @@ public class VerifyController extends BaseController {
             return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
         }
     }
-
-
-    }
+}
