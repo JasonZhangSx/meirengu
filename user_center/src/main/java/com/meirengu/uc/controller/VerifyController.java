@@ -71,6 +71,7 @@ public class VerifyController extends BaseController {
                          @RequestParam(value = "idcard", required = true)String idcard,
                          @RequestParam(value = "realname", required = true)String realname,
                          @RequestParam(value = "password", required = false)String password,
+                         @RequestParam(value = "invest_conditions", required = false)String investConditions,
                          @RequestParam(value = "token", required = true)String token) {
 
         try {
@@ -101,7 +102,7 @@ public class VerifyController extends BaseController {
                 }
             }
             redisUtil.setObject("verify_"+userId,times+1,86400);
-            Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
+            Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
             if(flag){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

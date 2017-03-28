@@ -155,6 +155,16 @@ public class User extends BaseObject {
      **/
     private Integer state;
 
+    private Integer investConditions;
+
+    public Integer getInvestConditions() {
+        return investConditions;
+    }
+
+    public void setInvestConditions(Integer investConditions) {
+        this.investConditions = investConditions;
+    }
+
     public Date getLoginTime() {
         return loginTime;
     }
