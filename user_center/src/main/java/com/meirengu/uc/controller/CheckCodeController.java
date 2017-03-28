@@ -8,6 +8,7 @@ import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,12 @@ public class CheckCodeController extends BaseController {
                          @RequestParam(required = true) String type) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         try {
+
+            RedisUtil redisUtil = new RedisUtil();
+            if(redisUtil.existsObject(type+"_"+mobile)){
+                return setResult(StatusCode.CHECK_CODE_SENDER_REFUSED, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CHECK_CODE_SENDER_REFUSED));
+            }
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                 return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -60,12 +67,12 @@ public class CheckCodeController extends BaseController {
                     JSONObject resultObj = JSON.parseObject(hr.getContent());
                     if ("200".equals(resultObj.getString("code"))) {
                         //store db
+                        redisUtil.setObject(type+"_"+mobile,"have been send !",30);
                         CheckCode checkCode = new CheckCode();
                         checkCode.setMobile(mobile);
                         checkCode.setCode(code);
                         Date nowTime = new Date();
-                        Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig
-                                ("EXPIRE_CHECKCODE_LOGIN")));
+                        Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig("EXPIRE_CHECKCODE_LOGIN")));
                         checkCode.setCreateTime(nowTime);
                         checkCode.setExpireTime(expireTime);
                         checkCode.setIp(StringUtils.defaultString(ip, ""));

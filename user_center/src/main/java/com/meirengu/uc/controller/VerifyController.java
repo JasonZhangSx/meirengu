@@ -106,13 +106,11 @@ public class VerifyController extends BaseController {
             if(flag){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            logger.info("VerifyController.vetify throws Exception:{}",e.getMessage());
+            return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
         }
     }
-
-
-    }
+}

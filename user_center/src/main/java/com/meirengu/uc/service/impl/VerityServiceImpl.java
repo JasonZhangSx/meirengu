@@ -90,7 +90,7 @@ public class VerityServiceImpl implements VerityService{
         } catch (Exception e) {
             logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
         }
-        if(hr.getStatusCode()==200){
+        if(hr!=null && hr.getStatusCode()==200){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(40632==(Integer) account.get("code")){
@@ -118,7 +118,7 @@ public class VerityServiceImpl implements VerityService{
                 flag = true;
             }
         }else{
-            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+            logger.info("VerityServiceImpl.back code >> params:{}, exception:{}");
         }
         return flag;
     }

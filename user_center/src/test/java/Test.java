@@ -1,8 +1,3 @@
-import com.meirengu.utils.UuidUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by huoyan403 on 3/17/2017.
  */
@@ -13,7 +8,9 @@ public class Test {
        /* String mobile = "13207603761";
         System.err.print(mobile.substring(7,11));*/
 
-        List<Integer> list = new ArrayList<Integer>();
+       System.out.print("kong_123");
+       System.out.print("kong_123".getBytes());
+       /* List<Integer> list = new ArrayList<Integer>();
         for(int i=0;i<1000000;i++){
             list.add(UuidUtils.getShortUuid());
         }
@@ -26,6 +23,6 @@ public class Test {
                 }
             }
         }
-
+*/
     }
 }
