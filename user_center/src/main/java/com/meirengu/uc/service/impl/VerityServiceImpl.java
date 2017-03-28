@@ -70,7 +70,7 @@ public class VerityServiceImpl implements VerityService{
 
     @Override
     public  Boolean  verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
-                              String idcard, String realname, String password,String investConditions) {
+                              String idcard, String realname, String password,Integer investConditions) {
         Boolean flag = false;
         HttpResult hr = null;
         Map<String, Object> map = new HashMap<String, Object>();
@@ -101,7 +101,7 @@ public class VerityServiceImpl implements VerityService{
                 user.setBankIdCard(bankIdcard);
                 user.setBankCode(bankCode);
                 user.setBankPhone(bankPhone);
-                user.setInvestConditions(Integer.parseInt(investConditions));
+                user.setInvestConditions(investConditions);
                 user.setIsAuth(1);
                 userDao.update(user);
 

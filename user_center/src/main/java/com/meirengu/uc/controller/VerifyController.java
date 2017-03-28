@@ -71,7 +71,7 @@ public class VerifyController extends BaseController {
                          @RequestParam(value = "idcard", required = true)String idcard,
                          @RequestParam(value = "realname", required = true)String realname,
                          @RequestParam(value = "password", required = false)String password,
-                         @RequestParam(value = "invest_conditions", required = false)String investConditions,
+                         @RequestParam(value = "invest_conditions", required = false)Integer investConditions,
                          @RequestParam(value = "token", required = true)String token) {
 
         try {
