@@ -34,7 +34,7 @@ import java.util.*;
  */
 public abstract class BaseServiceImpl {
     protected static String url;
-    private static String tradeUrl="/trade/order";
+    protected static String tradeUrl="/trade/order";
     protected  static SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -68,7 +68,7 @@ public abstract class BaseServiceImpl {
             logger.info("recordUtil Parameter check Start========>");
             Validator.getInstance().validate(paymentRecord);
             //幂等校验
-            if (paymentRecordDao.selectPaymentRecord(paymentRecord)!=null){
+            if (paymentRecordDao.selectPaymentRecordCount(paymentRecord)!=null){
                 throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_INSERT_REPEAT);
             }
             PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(paymentRecord.getUserId());

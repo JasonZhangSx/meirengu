@@ -56,6 +56,24 @@
     <if test="orderSn != null" >
       AND order_sn = #{orderSn,jdbcType=INTEGER}
     </if>
+    <if test="transactionSn != null" >
+      AND transaction_sn = #{transactionSn,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectPaymentRecordCount" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+      COUNT(1)
+    from payment_record
+    where 1=1
+    <if test="paymentId != null" >
+      AND payment_id = #{paymentId,jdbcType=INTEGER}
+    </if>
+    <if test="orderSn != null" >
+      AND order_sn = #{orderSn,jdbcType=INTEGER}
+    </if>
+    <if test="transactionSn != null" >
+      AND transaction_sn = #{transactionSn,jdbcType=INTEGER}
+    </if>
   </select>
   <insert id="insertPaymentRecord" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
     insert into payment_record
