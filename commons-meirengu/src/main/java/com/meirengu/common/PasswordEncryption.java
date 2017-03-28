@@ -206,7 +206,7 @@ public class PasswordEncryption {
                 System.out.println("TESTS FAILED!");
             else
                 System.out.println("TESTS PASSED!");
-                System.err.print(createHash("65%142%128%126%141%128%143%88%75%84%82%77%76%124%125%83%83%128%75%124%80%80%77%75%83%82%78%84%76%125%128%76%128%129%75%126%81%83%77%81%"));
+                System.err.print(createHash("1"));
         }
         catch(Exception ex)
         {
