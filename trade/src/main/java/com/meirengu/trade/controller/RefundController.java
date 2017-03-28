@@ -5,6 +5,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Refund;
@@ -91,8 +92,8 @@ public class RefundController extends BaseController{
         refund.setRefundPaymentname("");//支付方式代码申请时为空
         refund.setRefundMessage(refundMessage);
         refund.setUserMessage(userMessage);
-        refund.setRefundType(2);//类型:1为买家,2为卖家
-        refund.setRefundState(1);//状态:1为待处理,2为同意,3为拒绝
+        refund.setRefundType(Constant.REFUND_TYPE_SELLER);//类型:1为买家,2为卖家
+        refund.setRefundState(Constant.REFUND_STATE_WAIT);//状态:1为待处理,2为同意,3为拒绝
 
         Order order = new Order();
         order.setOrderId(orderId);
@@ -137,9 +138,9 @@ public class RefundController extends BaseController{
         //订单表修改信息
         Order order = new Order();
         order.setOrderId(orderId);
-        if (refundState == 2) {
+        if (refundState == Constant.REFUND_STATE_AGREE) {
             order.setOrderState(OrderStateEnum.REFUND_CONFIRM.getValue());
-        } else if (refundState == 3) {
+        } else if (refundState == Constant.REFUND_STATE_REFUSE) {
             order.setOrderState(OrderStateEnum.REFUND_REFUSE.getValue());
         }
 
@@ -203,7 +204,8 @@ public class RefundController extends BaseController{
     public Result paymentCallBack(@RequestParam(value = "refund_sn", required = false)String refundSn,
                                   @RequestParam(value = "third_refund_sn", required = false)String thirdRefundSn,
                                   @RequestParam(value = "payment_status", required = false)int paymentStatus) {
-        if (StringUtils.isEmpty(refundSn) || StringUtils.isEmpty(thirdRefundSn) || !(paymentStatus == 2 || paymentStatus == 3)) {
+        if (StringUtils.isEmpty(refundSn) || StringUtils.isEmpty(thirdRefundSn)
+                || !(paymentStatus == Constant.PAYMENT_SUCCESS || paymentStatus == Constant.PAYMENT_FAIL)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         try {

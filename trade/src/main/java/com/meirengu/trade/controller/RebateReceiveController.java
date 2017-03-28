@@ -61,53 +61,6 @@ public class RebateReceiveController extends BaseController{
 
     }
 
-
-
-//    /**
-//     * 退款审核
-//     * @param refundId
-//     * @param orderId
-//     * @param refundState
-//     * @param adminMessage
-//     * @return
-//     */
-//    @RequestMapping(value = "/audit/{refund_id}", method = RequestMethod.POST)
-//    public Result refundAudit(@PathVariable("refund_id") int refundId,
-//                              @RequestParam(value = "order_id", required = false) int orderId,
-//                              @RequestParam(value = "refund_state", required = false) int refundState,
-//                              @RequestParam(value = "admin_message", required = false) String adminMessage) {
-//
-//        if (refundId == 0 || orderId == 0 || refundState == 0 || StringUtils.isEmpty(adminMessage)) {
-//            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-//        }
-//
-//        //退款申请记录表修改信息
-//        Refund refund = new Refund();
-//        refund.setRefundId(refundId);
-//        refund.setAdminMessage(adminMessage);
-//        refund.setAdminTime(new Date());
-//        refund.setRefundState(refundState);
-//
-//        //订单表修改信息
-//        Order order = new Order();
-//        order.setOrderId(orderId);
-//        if (refundState == 2) {
-//            order.setOrderState(OrderStateEnum.REFUND_CONFIRM.getValue());
-//        } else if (refundState == 3) {
-//            order.setOrderState(OrderStateEnum.REFUND_REFUSE.getValue());
-//        }
-//
-//        try {
-//            Result result = refundService.refundAudit(refund, order);
-//            logger.info("Request getResponse: {}", JSON.toJSON(result));
-//            return result;
-//        } catch (Exception e) {
-//            logger.error("throw exception:", e);
-//            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-//        }
-//    }
-//
-
     /**
      * 抵扣券列表
      * @param pageNum
@@ -140,7 +93,7 @@ public class RebateReceiveController extends BaseController{
         page.setPageNow(pageNum);
         page.setPageSize(pageSize);
         try{
-            page = rebateReceiveService.getListByPage(page, map);
+            page = rebateReceiveService.getRebateInfoListByPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception:", e);

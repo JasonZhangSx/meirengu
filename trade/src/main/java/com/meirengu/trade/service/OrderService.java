@@ -40,7 +40,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IOException, OrderRpcException;
+    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException;
 
     /**
      * 获取客户端订单列表
