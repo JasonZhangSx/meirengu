@@ -1,4 +1,5 @@
 package com.meirengu.trade.service;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Rebate;
@@ -7,6 +8,7 @@ import com.meirengu.service.BaseService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * RebateReceive服务接口 
@@ -31,4 +33,12 @@ public interface RebateReceiveService extends BaseService<RebateReceive>{
      * @return
      */
     Result validateRebate(Order order, int rebateReceiveId);
+
+    /**
+     * 获取优惠券分页列表
+     * @param page
+     * @param map
+     * @return
+     */
+    Page getRebateInfoListByPage(Page page, Map map);
 }

@@ -32,8 +32,14 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
      * @return
      */
     public int rebateUse(int rebateReceiveId, String orderSn) {
+        //修改用户领取记录表优惠券状态
         RebateReceive rebateReceive = rebateReceiveService.detail(rebateReceiveId);
+        RebateReceive updateRebateReceive = new RebateReceive();
+        updateRebateReceive.setId(rebateReceive.getId());
+        updateRebateReceive.setStatus(2);//已使用
+        int j = rebateReceiveService.update(updateRebateReceive);
         RebateBatch rebateBatch = rebateBatchService.detail(rebateReceive.getRebateBatchId());
+        //新增优惠券使用记录
         RebateUsed rebateUsed = new RebateUsed();
         rebateUsed.setUserId(rebateReceive.getUserId());
         rebateUsed.setUserPhone(rebateReceive.getUserPhone());

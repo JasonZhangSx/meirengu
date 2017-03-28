@@ -144,9 +144,8 @@ public class HttpUtil {
                 }
                 httpget.setParams(params);
             }
-            
-            System.out.println("REQUEST:" + httpget.getURI());
-            
+            logger.info("REQUEST:" + httpget.getURI());
+
             HttpResponse response = httpclient.execute(httpget);
             result = new HttpResult();
             result.setResponse(response);
@@ -218,9 +217,9 @@ public class HttpUtil {
                 }
                 httppost.setParams(params);
             }
-            
-            System.out.println("REQUEST:" + httppost.getURI());
-            
+
+            logger.info("REQUEST:" + httppost.getURI());
+
             HttpResponse response = httpclient.execute(httppost);
             result = new HttpResult();
             result.setResponse(response);
@@ -287,12 +286,11 @@ public class HttpUtil {
             HttpPost httppost = new HttpPost(url);
             httppost.setEntity(new StringEntity(entityString, org.apache.http.entity.ContentType.APPLICATION_JSON));
             
-            //System.out.println("REQUEST:" + httppost.getURI());
-            
+
             HttpResponse response = httpclient.execute(httppost);
             result = new HttpResult();
             result.setResponse(response);
-            System.out.println("ReasonPhrase:" + response.getStatusLine().getReasonPhrase());
+            logger.info("ReasonPhrase:" + response.getStatusLine().getReasonPhrase());
             try {
                 HttpEntity entity = response.getEntity();
                 String content = EntityUtils.toString(entity);
@@ -361,9 +359,9 @@ public class HttpUtil {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             HttpPost httppost = new HttpPost(url);
             httppost.setEntity(entity);
-            
-            System.out.println("REQUEST:" + httppost.getURI());
-            
+
+            logger.info("REQUEST:" + httppost.getURI());
+
             HttpResponse response = httpclient.execute(httppost);
             result = new HttpResult();
             result.setResponse(response);
@@ -426,7 +424,7 @@ public class HttpUtil {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
+            logger.error("发送 POST 请求出现异常！"+e);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
@@ -480,21 +478,5 @@ public class HttpUtil {
 	        sb.append(content);
 	        return sb.toString();
 	    }
-	}
-	
-	public static void main(String[] args) throws ClientProtocolException,
-			IOException {
-//		System.out.println(HttpUtil.doGetSecure("https://10.10.208.58/upay/usertest.jsp", null));
-//	    System.out.println(HttpUtil.doGetSecure("http://10.10.208.58:8084/upay/usertest.jsp", null));
-//	    System.out.println(HttpUtil.doPost("http://localhost:8080/upay/onlineUser/payment.json", "something"));
-//	    System.out.println(HttpUtil.doPostSecure("https://10.10.208.58/upay/onlineUser/balance.json", "something"));
-	    Map<String, String> parameters = new HashMap<String, String>();
-	    parameters.put("phone_number", "085222093438");
-        parameters.put("trx_id", "201406101441379174");
-        parameters.put("amount", "0");
-        parameters.put("item", "COIN");
-        parameters.put("secret_token", "ae4132cece29a7704edc3a1ee1179e421ac1fc07");
-        parameters.put("callback_url", "https://60.194.14.144/upay/upoint.jsp");
-	    System.out.println(HttpUtil.doPostForm("https://upoint.co.id/api/generate", parameters));
 	}
 }

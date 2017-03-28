@@ -17,6 +17,7 @@ import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.ObjectUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 int userAddressId = (int)((long)map.get("userAddressId"));
                 if (userAddressId != 0) {
                     //请求user_center服务获取用户地址信息
-                    String addressUrl = ConfigUtil.getConfig("user.center.host") + Constant.ADDRESS_URL + "?" + "address_id="+ userAddressId;;
+                    String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ userAddressId;;
                     HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
                     if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                         JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
@@ -78,6 +79,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                                 addressMap.put("userAddress", addressJson.getString("userAddress"));
                                 map.putAll(addressMap);
                             }
+                        }
+                    }
+                }
+            }
+            if (map.get("itemId") != null) {
+                int itemId = (int)((long)map.get("itemId"));
+                if (itemId != 0) {
+                    //查询项目头图
+                    String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
+                    HttpResult itemResult = HttpUtil.doGet(url);
+                    if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+                        JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+                        int code = resultJson.getIntValue("code");
+                        if (code == StatusCode.OK) {
+                            JSONObject item = resultJson.getJSONObject("data");
+                            String headerImagePath = item.getString("headerImage");
+                            map.put("headerImage", headerImagePath);
                         }
                     }
                 }
@@ -112,7 +130,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //请求user_center服务获取用户地址信息
             String addressIdsStr = addressIdSet.toString();
             String addressIds = addressIdsStr.substring(addressIdsStr.indexOf("[")+1,addressIdsStr.indexOf("]"));
-            String addressUrl = ConfigUtil.getConfig("user.center.host") + Constant.ADDRESS_URL + "?" + "address_id="+ URLEncoder.encode(addressIds, "UTF-8");;
+            String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ URLEncoder.encode(addressIds, "UTF-8");;
 
             HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
             Map<String, Object> addressMap = null;
@@ -139,7 +157,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //请求crowd_funding服务获取项目档位信息
             String itemLevelIdStr = itemLeavelIdSet.toString();
             String itemLevelIds = itemLevelIdStr.substring(itemLevelIdStr.indexOf("[")+1,itemLevelIdStr.indexOf("]"));
-            String itemLevelUrl = ConfigUtil.getConfig("crowd.funding.host") + Constant.ITEM_LEVEL_LIST_API + "?" + "level_id="+ URLEncoder.encode(itemLevelIds, "UTF-8");;
+            String itemLevelUrl = ConfigUtil.getConfig("item.level.list.url") + "?" + "level_id="+ URLEncoder.encode(itemLevelIds, "UTF-8");;
             HttpResult itemLevelListHttpResult = HttpUtil.doGet(itemLevelUrl);
             Map<String, Object> itemLevelMap = null;
             if (itemLevelListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
@@ -222,7 +240,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws OrderRpcException
      */
     @Transactional
-    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IOException, OrderRpcException{
+    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException{
         Result result = new Result();
 
         //首先校验优惠券是否有效
@@ -240,15 +258,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             return result;
         }
         //2新增认购订单
+        //设置itemName
+        Map<String, Object> tempMap = (Map<String, Object>) result.getData();
+        order.setItemName((String) tempMap.get("itemName"));
         int i = insert(order);
         if (i == 1) {
             //3.修改项目档位信息
             boolean updateFlag = itemLevelUpdate(order);
             if (updateFlag) {
                 result.setCode(StatusCode.OK);
-                result.setData(order);
+                Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
+                //返给客户端partnerId,供客户调支付传参数
+                orderMap.put("partnerId", tempMap.get("partnerId"));
+                result.setData(orderMap);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
-                return result;
             }
             //异步去使用优惠券
             if (rebateReceiveId != 0) {
@@ -259,7 +282,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
             return result;
         }
-        return null;
+        return result;
     }
 
     /**
@@ -275,7 +298,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         result.setCode(StatusCode.OK);
         result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         int itemLevelId = order.getItemLevelId();
-        String itemLevelInfoUrl = ConfigUtil.getConfig("crowd.funding.host")  + Constant.ITEM_LEVEL_API + "/" + itemLevelId;
+        String itemLevelInfoUrl = ConfigUtil.getConfig("item.level.url") + "/" + itemLevelId;
         HttpResult itemLevelInfoResult = HttpUtil.doGet(itemLevelInfoUrl);
         if (itemLevelInfoResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(itemLevelInfoResult.getContent());
@@ -287,20 +310,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 int levelStatus = itemLevel.getIntValue("levelStatus");
                 //'档位状态：1：预约中；2已预约满；3候补中；4认购中；5已完成',
                 if (nextState == OrderStateEnum.BOOK.getValue()) {
-                    if (levelStatus == 1) {
+                    if (levelStatus == Constant.LEVEL_APPOINTING) {
                         itemFlag = true;
                     }
                 } else if (nextState == OrderStateEnum.UNPAID.getValue()) {
-                    if (levelStatus == 4) {
+                    if (levelStatus == Constant.LEVEL_CROWDING) {
                         itemFlag = true;
                     }
                 } else if (nextState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                    if (levelStatus != 5) {
+                    if (levelStatus != Constant.LEVEL_COMPLETED) {
                         itemFlag = true;
                     }
                 }
                 //如果是预约订单，档位状态为预约满或候补中时
-                if (nextState == OrderStateEnum.BOOK.getValue() && (levelStatus == 2 || levelStatus == 3)) {
+                if (nextState == OrderStateEnum.BOOK.getValue()
+                        && (levelStatus == Constant.LEVEL_APPOINT_FULL || levelStatus == Constant.LEVEL_CANDIDITING)) {
                     result.setCode(StatusCode.ITEM_LEVEL_HAVE_ENOUGH);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ITEM_LEVEL_HAVE_ENOUGH));
                     return result;
@@ -339,6 +363,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ITEM_LEVEL_NUM_ERROR));
                     return result;
                 }
+                //临时传值，后面流程使用
+                Map<String, Object> tempMap = new HashMap<String, Object>();
+                tempMap.put("itemName", itemLevel.getString("itemName"));
+                tempMap.put("partnerId", itemLevel.getString("partnerId"));
+                result.setData(tempMap);
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
                 throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
@@ -370,7 +399,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         paramMap.put("level_amount", order.getItemLevelAmount().toString());
         paramMap.put("item_num", order.getItemNum().toString());
         paramMap.put("total_amount", order.getOrderAmount().toString());
-        String url = ConfigUtil.getConfig("crowd.funding.host") + Constant.ITEM_LEVEL_UPDATE_API;
+        String url = ConfigUtil.getConfig("item.level.update.url");
         HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
         if (httpResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(httpResult.getContent());
@@ -397,10 +426,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public Page getPage(Page page, Map map)  throws IOException {
         int needAvatar = (int)map.get("needAvatar");
         int itemId = map.get("itemId")==null ?  0 : (int)map.get("itemId");
-        if (needAvatar == 1){
+        if (needAvatar == Constant.YES){
             //该请求为支持人数列表的请求
             //1.查询项目状态
-            String url = ConfigUtil.getConfig("crowd.funding.host") + Constant.ITEM_API + "/" + itemId + "?user_id=0";
+            String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
             HttpResult itemResult = HttpUtil.doGet(url);
             if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(itemResult.getContent());
@@ -408,7 +437,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 if (code == StatusCode.OK) {
                     JSONObject item = resultJson.getJSONObject("data");
                     int itemStatus = item.getIntValue("itemStatus");
-                    if (itemStatus == 10) {
+                    if (itemStatus == Constant.ITEM_PERHEARTING) {
                         map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
                     } else {
                         map.put("orderState", OrderStateEnum.PAID.getValue());
@@ -419,7 +448,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //2.查询列表
         page = getListByPage(page, map);
         //3.判断是否是支持人数列表，然后查询头像信息
-        if (needAvatar == 1) {
+        if (needAvatar == Constant.YES) {
             List<Map<String, Object>> aList = page.getList();
             if (aList != null && aList.size() > 0) {
                 //用户ID的set
@@ -433,7 +462,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //请求user_center服务获取用户地址信息
                 String userIdsStr = userIdsSet.toString();
                 String userIds = userIdsStr.substring(userIdsStr.indexOf("[")+1,userIdsStr.indexOf("]"));
-                String userIdsUrl = ConfigUtil.getConfig("user.center.host") + Constant.AVATAR_LIST_API + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");;
+                String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");;
                 HttpResult avatarListHttpResult = HttpUtil.doGet(userIdsUrl);
                 if (avatarListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                     JSONObject resultJson = JSON.parseObject(avatarListHttpResult.getContent());
@@ -459,7 +488,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
             }
         }
-
         return page;
     }
 
@@ -487,6 +515,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         if (result.getCode() != StatusCode.OK){
             return result;
         }
+        //设置itemName
+        Map<String, Object> tempMap = (Map<String, Object>) result.getData();
+        order.setItemName((String) tempMap.get("itemName"));
         int i = insert(order);
         if (i == 1) {
             //异步去使用优惠券

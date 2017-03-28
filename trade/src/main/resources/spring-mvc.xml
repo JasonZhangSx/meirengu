@@ -96,4 +96,12 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="redisClient" class="com.meirengu.common.RedisClient">
+		<constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
+	</bean>
+
+	<bean class="com.meirengu.utils.TokenUtils">
+		<property name="redisClient" ref="redisClient"/>
+	</bean>
+
 </beans>

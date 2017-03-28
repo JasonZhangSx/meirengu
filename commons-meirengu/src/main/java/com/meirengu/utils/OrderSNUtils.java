@@ -8,7 +8,7 @@ package com.meirengu.utils;
 public class OrderSNUtils {
 
     //前缀区分业务类型，第一位为业务类型：电商 9，众筹 8
-    // 第二位为订单类型： 1 普通订单   2 联合订单   3退款订单     4退款订单   5充值订单
+    // 第二位为订单类型： 1 普通订单   2 联合订单   3退款订单     4退款订单   5充值订单      6支付订单
 
     private static final String ORDER_SN_PREFIX = "91";
 
@@ -25,6 +25,8 @@ public class OrderSNUtils {
     public static final String CROWD_FUNDING_BOOK_SN_PREFIX = "84";
     //众筹充值订单
     public static final String CROWD_FUNDING_RECHARGE_SN_PREFIX = "85";
+    //众筹支付订单
+    public static final String CROWD_FUNDING_PAYMENT_SN_PREFIX = "86";
 
     public static String getOrderSN(){
 
