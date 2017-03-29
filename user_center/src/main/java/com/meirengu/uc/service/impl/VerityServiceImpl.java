@@ -117,6 +117,8 @@ public class VerityServiceImpl implements VerityService{
                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
                 }
                 result =  (Integer) account.get("code");
+            }else{
+                result =  (Integer) account.get("code");
             }
         }else{
             logger.info("VerityServiceImpl.back code >> params:{}, exception:{}");
