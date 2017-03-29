@@ -101,8 +101,16 @@ public class VerifyController extends BaseController {
             Integer flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
             if(flag==StatusCode.OK){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else if(flag == StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL){
+                return super.setResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL, null, StatusCode.
+                        codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL));
+            }
+            if(flag == StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH){
+                return super.setResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH, null, StatusCode.
+                        codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH));
             }else{
-                return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
+                return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.
+                        codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
             }
         }catch (Exception e){
             logger.info("VerifyController.vetify throws Exception:{}",e.getMessage());
