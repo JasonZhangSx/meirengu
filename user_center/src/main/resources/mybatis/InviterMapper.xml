@@ -30,7 +30,6 @@
         invited_user_id,
         invited_user_phone,
         register_time,
-        invest_time,
         reward
         )
         VALUES
@@ -40,7 +39,6 @@
         #{invitedUserId},
         #{invitedUserPhone},
         #{registerTime},
-        #{investTime},
         #{reward}
         );
     </insert>

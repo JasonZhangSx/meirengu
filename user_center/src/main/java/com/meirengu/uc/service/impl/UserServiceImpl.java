@@ -57,7 +57,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             inviter.setUserId(userInviter.getUserId());
             inviter.setInvitedUserId(user.getUserId());
             inviter.setInvitedUserPhone(user.getPhone());
-            inviter.setInvestTime(new Date());
             inviter.setRegisterTime(new Date());
             inviter.setReward(new BigDecimal("0"));
             inviterDao.insert(inviter);
