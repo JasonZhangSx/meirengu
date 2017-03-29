@@ -19,6 +19,6 @@ public class TokenUtils {
     }
 
     public static boolean authToken(String token){
-        return redisClient.existsBytes(token);
+        return redisClient.existsObject(token);
     }
 }
