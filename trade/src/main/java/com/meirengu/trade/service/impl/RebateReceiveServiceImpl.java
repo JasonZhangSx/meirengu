@@ -78,6 +78,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
             }
             //验证用户是否有此类优惠券
             paramMap = new HashMap<String, Object>();
+            paramMap.put("userId", userId);
             paramMap.put("rebateBatchId", batchId);
             int totalCount = rebateReceiveDao.getCount(paramMap);
             if (totalCount != 0) {
@@ -173,8 +174,8 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         int startPos = page.getStartPos();
         int pageSize = page.getPageSize();
         RowBounds rowBounds = new RowBounds(startPos, pageSize);
-        List<Map<String, Object>> aList = rebateReceiveDao.getByPage(map, rowBounds);
-        int totalCount = rebateReceiveDao.getCount(map);
+        List<Map<String, Object>> aList = rebateReceiveDao.getRebateInfoByPage(map, rowBounds);
+        int totalCount = rebateReceiveDao.getRebateInfoCount(map);
         page.setTotalCount(totalCount);
         page.setList(aList);
         page.init();

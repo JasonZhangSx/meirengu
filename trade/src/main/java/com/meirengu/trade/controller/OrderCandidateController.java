@@ -58,7 +58,6 @@ public class OrderCandidateController extends BaseController{
      * @param userPhone
      * @param userWeixin
      * @param itemId
-     * @param itemName
      * @param itemLevelId
      * @param itemLevelName
      * @param itemNum
@@ -66,12 +65,11 @@ public class OrderCandidateController extends BaseController{
      * @return
      */
     @RequestMapping( method = RequestMethod.POST)
-    public Result insert(@RequestParam(value = "user_id", required = false) int userId,
+    public Result insertCandidate(@RequestParam(value = "user_id", required = false) int userId,
                           @RequestParam(value = "user_name", required = false) String userName,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "user_weixin", required = false) String userWeixin,
                           @RequestParam(value = "item_id", required = false) int itemId,
-                          @RequestParam(value = "item_name", required = false) String itemName,
                           @RequestParam(value = "item_level_id", required = false) int itemLevelId,
                           @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                           @RequestParam(value = "item_num", required = false) int itemNum,
@@ -84,7 +82,7 @@ public class OrderCandidateController extends BaseController{
         }
 
         if (userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(userWeixin)
-                || itemId == 0 || StringUtils.isEmpty(itemName) || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
+                || itemId == 0  || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemNum == 0 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) ){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
@@ -95,7 +93,7 @@ public class OrderCandidateController extends BaseController{
         orderCandidate.setUserPhone(userPhone);
         orderCandidate.setUserWeixin(userWeixin);
         orderCandidate.setItemId(itemId);
-        orderCandidate.setItemName(itemName);
+        orderCandidate.setItemName("待会改为从项目服务获取");
         orderCandidate.setItemLevelId(itemLevelId);
         orderCandidate.setItemLevelName(itemLevelName);
         orderCandidate.setItemNum(itemNum);
@@ -104,7 +102,7 @@ public class OrderCandidateController extends BaseController{
         orderCandidate.setOperateAccount("");//新增默认为空
 
         try{
-            int i = orderCandidateService.insert(orderCandidate);
+            int i = orderCandidateService.insertCandidate(orderCandidate);
             if (i > 0) {
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             } else {
