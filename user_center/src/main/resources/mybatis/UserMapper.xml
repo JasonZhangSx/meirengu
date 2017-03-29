@@ -217,7 +217,13 @@
             #{item}
         </foreach>
     </select>
+    <select id="getBankIdCard" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        WHERE  bank_idcard = #{bankIdcard}
 
+    </select>
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
         select
@@ -380,6 +386,7 @@
             order by #{sortBy} #{order}
         </if>
     </select>
+
     <!-- 分页相关结束 -->
 
 </mapper>

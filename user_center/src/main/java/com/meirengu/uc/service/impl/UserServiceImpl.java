@@ -408,4 +408,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         return 0;
     }
+
+    @Override
+    public boolean getBankIdCard(String bankIdcard) {
+        Boolean flag = false;
+        if(userDao.getBankIdCard(bankIdcard)==1){
+            flag = true;
+        }
+        return flag;
+    }
 }

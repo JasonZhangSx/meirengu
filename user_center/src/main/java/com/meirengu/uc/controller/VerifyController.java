@@ -90,6 +90,10 @@ public class VerifyController extends BaseController {
             if(!StringUtil.isEmpty(realname) && ValidatorUtil.isUsername(realname)){
 
             }
+            if(userService.getBankIdCard(bankIdcard)){
+                return super.setResult(StatusCode.BANK_ID_CARD_IS_EXITS, null, StatusCode.
+                        codeMsgMap.get(StatusCode.BANK_ID_CARD_IS_EXITS));
+            }
             Integer times = 0;
             if(redisClient.existsObject("verify_"+userId)){
                 times = (Integer) redisClient.getObject("verify_"+userId);
