@@ -78,18 +78,16 @@ public class BulletinController extends BaseController {
     public Result list(@RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value = "sortby", required = false) String sortBy,
-                       @RequestParam(value = "order", required = false) String order){
+                       @RequestParam(value = "order", required = false) String order,
+                       @RequestParam(value = "status", required = false) Integer status){
         Map paramMap = new HashMap<String, Object>();
         Page<Bulletin> page = super.setPageParams(pageNum, pageSize);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
+        paramMap.put("status", status);
         try {
             page = blletinService.getPageList(page, paramMap);
-            if(page.getList().size() != 0){
-                return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return setResult(StatusCode.BULLETIN_ERROR_LIST, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_LIST));
-            }
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception:", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
