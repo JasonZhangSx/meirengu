@@ -6,6 +6,10 @@ package com.meirengu.cf.common;
  * @create 2017-03-17 11:26
  */
 public class Constants {
+
+    public static final int STATUS_YES = 1;
+
+    public static final int STATUS_NO = 0;
     /** 项目状态 */
     /** 1:新建中； */
     public static final int ITEM_BUILDING = 1;

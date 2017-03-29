@@ -314,7 +314,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserTotalInvestMoney(Map map) {
-
+        map.put("totalInvestMoney","100000");
     }
 
     @Override
@@ -407,5 +407,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
         }
         return 0;
+    }
+
+    @Override
+    public boolean getBankIdCard(String bankIdcard) {
+        Boolean flag = false;
+        if(userDao.getBankIdCard(bankIdcard)==1){
+            flag = true;
+        }
+        return flag;
     }
 }

@@ -151,6 +151,7 @@ public class StatusCode {
     public static final int NOTIFY_READ_FAIL = 50113;
     public static final int CHECK_CODE_SENDER_REFUSED = 50114;
     public static final int VETIFY_IS_ERROR = 50115;
+    public static final int BANK_ID_CARD_IS_EXITS = 50116;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -210,6 +211,12 @@ public class StatusCode {
     public static final int ITEM_APPOINT_NUM_NOT_ENOUGH = 50524;
     public static final int ITEM_BUY_NUM_NOT_ENOUGH = 50525;
     public static final int ITEM_LEVEL_TOTAL_AMOUNT_ERROR = 50526;
+    public static final int TYPE_INSERT_ERROR = 50527;
+    public static final int TYPE_UPDATE_ERROR = 50528;
+    public static final int TYPE_DELETE_ERROR = 50529;
+    public static final int ITEM_TYPE_INSERT_ERROR = 50530;
+    public static final int ITEM_TYPE_UPDATE_ERROR = 50531;
+    public static final int ITEM_TYPE_DELETE_ERROR = 50532;
 
     //50600-50700//payment
 
@@ -368,6 +375,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.VETIFY_IS_NOT_ALLOWED, "用户超过允许认证次数");
         codeMsgMap.put(StatusCode.CHECK_CODE_SENDER_REFUSED, "验证码限制 30 秒发送一次");
         codeMsgMap.put(StatusCode.VETIFY_IS_ERROR, "认证失败");
+        codeMsgMap.put(StatusCode.BANK_ID_CARD_IS_EXITS, "该卡已绑定");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
@@ -426,6 +434,12 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_APPOINT_NUM_NOT_ENOUGH, "档位可预约数量不足");
         codeMsgMap.put(StatusCode.ITEM_BUY_NUM_NOT_ENOUGH, "档位可购买数量不足");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
+        codeMsgMap.put(StatusCode.TYPE_INSERT_ERROR, "众筹类型插入失败");
+        codeMsgMap.put(StatusCode.TYPE_UPDATE_ERROR, "众筹类型修改失败");
+        codeMsgMap.put(StatusCode.TYPE_DELETE_ERROR, "众筹类型删除失败");
+        codeMsgMap.put(StatusCode.ITEM_TYPE_INSERT_ERROR, "众筹项目分类插入失败");
+        codeMsgMap.put(StatusCode.ITEM_TYPE_UPDATE_ERROR, "众筹项目分类修改失败");
+        codeMsgMap.put(StatusCode.ITEM_TYPE_DELETE_ERROR, "众筹项目分类删除失败");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");

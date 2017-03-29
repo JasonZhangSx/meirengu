@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
 import com.meirengu.common.PasswordEncryption;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
@@ -11,7 +12,6 @@ import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -43,7 +43,8 @@ public class LoginController extends BaseController {
     UserService userService;
     @Autowired
     CheckCodeService checkCodeService;
-
+    @Autowired
+    private RedisClient redisClient;
     /**
      * 用户登陆接口
      * @param mobile
@@ -77,11 +78,9 @@ public class LoginController extends BaseController {
         try{
             if(!StringUtil.isEmpty(token)){
                 //判断token是否有效
-                RedisUtil redisUtil = new RedisUtil();
-                Object userRedis =   redisUtil.getObject(token);
-                if(!StringUtil.isEmpty(userRedis)){
+                if(redisClient.existsObject(token)){
                     //获取新的token
-                    RegisterPO registerPO = loginService.getNewToken(token,userRedis);
+                    RegisterPO registerPO = loginService.getNewToken(token,redisClient.getObject(token));
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     //无效token返回登陆

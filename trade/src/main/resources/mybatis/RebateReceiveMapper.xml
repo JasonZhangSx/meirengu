@@ -100,13 +100,22 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getRebateInfoByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_tbcolumns" />, tr.valid_start_time AS validStartTime, valid_end_time AS validEndTime
+		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
 		FROM
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr
-		ON tb.user_id = #{userId}
-		AND tb.rebate_sn = tr.rebate_sn
-		<include refid="findPage_where"/>
+		ON tb.rebate_sn = tr.rebate_sn
+		AND tb.user_id = #{userId}
+		<if test="status != null and status != 0">
+			AND tb.status = #{status}
+		</if>
+		LEFT JOIN rebate_batch trb
+		ON tb.rebate_batch_id = trb.batch_id
+		AND tb.user_id = #{userId}
+		<if test="status != null and status != 0">
+			AND tb.status = #{status}
+		</if>
+		WHERE tr.rebate_id is NOT NULL
 	</select>
 
 	<select id="getRebateInfoCount" parameterType="Map" resultType="Integer">
@@ -114,9 +123,18 @@
 		FROM
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr
-		ON tb.user_id = #{userId}
-		AND tb.rebate_sn = tr.rebate_sn
-		<include refid="findPage_where"/>
+		ON tb.rebate_sn = tr.rebate_sn
+		AND tb.user_id = #{userId}
+		<if test="status != null and status != 0">
+			AND tb.status = #{status}
+		</if>
+		LEFT JOIN rebate_batch trb
+		ON tb.rebate_batch_id = trb.batch_id
+		AND tb.user_id = #{userId}
+		<if test="status != null and status != 0">
+			AND tb.status = #{status}
+		</if>
+		WHERE tr.rebate_id is NOT NULL
 	</select>
 	<!-- 分页相关结束 -->
 	<!-- 分页相关开始 -->
