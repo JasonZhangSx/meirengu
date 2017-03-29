@@ -7,13 +7,11 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateReceiveService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

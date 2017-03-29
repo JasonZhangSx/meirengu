@@ -1,6 +1,7 @@
 package com.meirengu.trade.model;
 
 import com.meirengu.model.BaseObject;
+
 import java.util.Date;
  /*
   * RebateReceive 实体类

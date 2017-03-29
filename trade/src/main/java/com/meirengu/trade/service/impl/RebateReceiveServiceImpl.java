@@ -1,9 +1,9 @@
 package com.meirengu.trade.service.impl;
-import com.alibaba.fastjson.JSON;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.dao.RebateReceiveDao;
 import com.meirengu.trade.model.Order;
@@ -12,7 +12,6 @@ import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateBatchService;
 import com.meirengu.trade.service.RebateReceiveService;
-import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.service.RebateService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.math.BigDecimal;
 import java.util.Date;

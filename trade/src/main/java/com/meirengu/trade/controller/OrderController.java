@@ -9,20 +9,14 @@ import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
-import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.OrderSNUtils;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.*;
 
 /**
  * 订单控制类

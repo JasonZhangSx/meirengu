@@ -1,9 +1,3 @@
-import com.meirengu.utils.MD5Util;
-import com.meirengu.utils.ObjectUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * ${DESCRIPTION}
  *

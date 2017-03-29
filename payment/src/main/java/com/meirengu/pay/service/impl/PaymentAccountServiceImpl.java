@@ -1,9 +1,7 @@
 package com.meirengu.pay.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.pay.dao.PaymentAccountDao;
-import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.model.PaymentAccount;
 import com.meirengu.pay.service.PaymentAccountService;
 import com.meirengu.pay.utils.BaoFuUtil;
@@ -16,9 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
