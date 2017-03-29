@@ -7,6 +7,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateReceiveService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,9 @@ public class RebateReceiveController extends BaseController{
      */
     @RequestMapping( method = RequestMethod.POST)
     public Result receiveRebate(@RequestParam(value = "user_id", required = false)int userId,
-                              @RequestParam(value = "user_phone", required = false)String userPhone,
-                              @RequestParam(value = "batch_ids", required = false)List<Integer> batchIdList,
-                              @RequestParam(value = "activity_identification", required = false)String activityIdentification){
+                                 @RequestParam(value = "user_phone", required = false)String userPhone,
+                                 @RequestParam(value = "batch_ids", required = false)List<Integer> batchIdList,
+                                 @RequestParam(value = "activity_identification", required = false)String activityIdentification){
 
         if (userId == 0 || batchIdList == null || batchIdList.size() == 0){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -52,6 +53,34 @@ public class RebateReceiveController extends BaseController{
 
         try {
             Result result = rebateReceiveService.receiveRebate(userId, userPhone, batchIdList ,activityIdentification);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
+            return result;
+        } catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
+
+    /**
+     * 根据标识领取优惠券
+     * @param userId
+     * @param userPhone
+     * @param mark
+     * @param activityIdentification
+     * @return
+     */
+    @RequestMapping(value = "/mark", method = RequestMethod.POST)
+    public Result receiveRebateByMark(@RequestParam(value = "user_id", required = false)int userId,
+                                       @RequestParam(value = "user_phone", required = false)String userPhone,
+                                       @RequestParam(value = "mark", required = false)int mark,
+                                       @RequestParam(value = "activity_identification", required = false)String activityIdentification) {
+        if (userId == 0 || mark == 0){
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        try {
+            Result result = rebateReceiveService.receiveRebateByMark(userId, userPhone, mark ,activityIdentification);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         } catch (Exception e){

@@ -62,6 +62,7 @@ public class RebateBatchController extends BaseController{
      */
     @RequestMapping( method = RequestMethod.POST)
     public Result refundApply(@RequestParam(value = "rebate_type", required = false)int rebateType,
+                              @RequestParam(value = "rebate_mark", required = false)int rebateMark,
                               @RequestParam(value = "rebate_name", required = false) String rebateName,
                               @RequestParam(value = "rebate_scope", required = false) String rebateScope,
                               @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
@@ -76,10 +77,9 @@ public class RebateBatchController extends BaseController{
                               @RequestParam(value = "remarks", required = false) String remarks,
                               @RequestParam(value = "operate_account", required = false) String operateAccount){
 
-        if (rebateType == 0 || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope)
+        if (rebateType == 0 || rebateMark == 0 || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope)
                 || StringUtils.isEmpty(operateAccount) || rebateAmount == null || rebateAmount.equals(BigDecimal.ZERO) || validType == 0 || batchCount == 0
-                || StringUtils.isEmpty(channel) || budgetAmount == null || budgetAmount.equals(BigDecimal.ZERO)
-                ){
+                || StringUtils.isEmpty(channel) || budgetAmount == null || budgetAmount.equals(BigDecimal.ZERO)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //如果券类型为满减型，限额字段必须有值

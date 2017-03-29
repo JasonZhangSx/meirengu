@@ -180,7 +180,6 @@ public class OrderCandidateController extends BaseController{
     public Result authToken(HttpServletRequest request,
                             @RequestParam(value = "key")String key){
         String token = request.getHeader("token");
-        redisClient.existsBytes(token);
         if (TokenUtils.authToken(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }

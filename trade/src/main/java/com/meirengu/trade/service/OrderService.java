@@ -22,6 +22,12 @@ public interface OrderService extends BaseService<Order>{
      */
     Map<String, Object> orderDetail (int orderId) throws IOException ;
     /**
+     * 获取订单详情
+     * @param orderSn
+     * @return
+     */
+    Map<String, Object> orderDetailBySn (String orderSn) throws IOException ;
+    /**
      *获取后台订单列表
      * @param page
      * @param map
