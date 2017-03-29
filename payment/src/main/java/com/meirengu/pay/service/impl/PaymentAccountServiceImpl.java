@@ -83,7 +83,7 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             logger.info("createAccount Parameter check Start========>");
             Validator.getInstance().validate(paymentAccount);
             logger.info("createAccount Parameter check End<========");
-            paymentAccount.setCreateTime(new Date());
+            pay.setCreateTime(new Date());
             if (paymentDao.selectByUserId(paymentAccount.getUserId())!=null){
                 throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT);
             }

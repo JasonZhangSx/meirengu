@@ -90,6 +90,12 @@ public class ItemController extends BaseController {
             return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
             List<Map<String, Object>> list = itemService.getList(map);
+            List<Map<String, Object>> resultList = new ArrayList<>();
+            for (Map<String, Object> resultMap : list){
+                resultMap.put("privince", "北京市");
+                resultMap.put("city", "朝阳区");
+                resultList.add(resultMap);
+            }
             return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
@@ -123,10 +129,10 @@ public class ItemController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "{item_id}", method = RequestMethod.GET)
     public Result detail(@PathVariable(value = "item_id", required = false)int itemId,
-                         @RequestParam(value = "user_id", required = false)int userId){
+                         @RequestParam(value = "user_id", required = false)Integer userId){
         try {
             Map<String, Object> beanMap = itemService.moreDetail(itemId);
-            if(userId != 0 && beanMap != null){
+            if(!StringUtil.isEmpty(userId) && userId != 0 && beanMap != null){
                 //是否感兴趣
                 boolean b = itemInterestedService.isBeInterested(itemId, userId);
                 beanMap.put("isInterested", b);

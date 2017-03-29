@@ -219,7 +219,7 @@
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppConfig>
-                        <contextPath>/news</contextPath>
+                        <contextPath>/cms</contextPath>
                     </webAppConfig>
                 </configuration>
             </plugin>
