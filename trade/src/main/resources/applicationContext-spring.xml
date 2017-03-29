@@ -37,7 +37,6 @@
     </bean>
 
 
-    <!--
     <bean id="myConsumer" class="com.meirengu.trade.rocketmq.MyConsumer"
           init-method="init"
           destroy-method="destroy"
@@ -53,5 +52,4 @@
         <property name="producerGroup" value="MyProducerGroup" />
         <property name="namesrvAddr" value="192.168.0.135:9876" />
     </bean>
-    -->
 </beans>
