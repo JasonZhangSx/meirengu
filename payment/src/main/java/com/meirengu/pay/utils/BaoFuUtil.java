@@ -101,7 +101,7 @@ public class BaoFuUtil {
         ArrayData.put("id_holder", idHolder);
         ArrayData.put("mobile", mobile);
         ArrayData.put("trans_id", transId);
-        ArrayData.put("txn_amt", "1000");
+        ArrayData.put("txn_amt", "1");
         ArrayData.put("return_url", returnUrl);
         ArrayData.put("txn_type", txnType);
 //        ArrayData.put("commodity_name", commodityName);
@@ -150,6 +150,7 @@ public class BaoFuUtil {
             logger.error("Capture baofuReturn ErrorMsg:{}", "Resp_code is empty");
             throw new PaymentException(null, "Resp_code is empty！");
         }
+        logger.info("Request baofuReturn Msg: Decrypt Success,Data :{}",map.toString());
         return map;
     }
 
@@ -187,7 +188,7 @@ public class BaoFuUtil {
     private static boolean identityCodeCheck(Map<String, String> map) throws PaymentException {
         if (map == null || map.get("data") == null) {
             logger.error("Capture identityCodeCheck ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL));
-            throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL);
+            throw new PaymentException(null,map.get("errorMsg"));
         }
         map = JSONObject.parseObject(String.valueOf(map.get("data")),map.getClass());
         if (map.get("code").equals("0")) {
