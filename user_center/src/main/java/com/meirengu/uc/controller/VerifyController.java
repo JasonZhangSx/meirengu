@@ -1,5 +1,6 @@
 package com.meirengu.uc.controller;
 
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
@@ -7,7 +8,6 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.slf4j.Logger;
@@ -31,7 +31,8 @@ public class VerifyController extends BaseController {
     private VerityService verityService;
     @Autowired
     UserService userService;
-
+    @Autowired
+    private RedisClient redisClient;
     //验证实名绑定卡到哪一阶段了
     @RequestMapping(value = "test",method = {RequestMethod.POST})
     public Result update(@RequestParam(value = "user_id", required = false)Integer userId,
@@ -39,9 +40,7 @@ public class VerifyController extends BaseController {
         //判断有无token
         if(!StringUtil.isEmpty(token)){
             //判断token是否有效
-                RedisUtil redisUtil = new RedisUtil();
-                Object userRedis =   redisUtil.getObject(token);
-                if(StringUtil.isEmpty(userRedis)){
+            if(!redisClient.existsObject(token)){
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
         }
@@ -71,15 +70,14 @@ public class VerifyController extends BaseController {
                          @RequestParam(value = "idcard", required = true)String idcard,
                          @RequestParam(value = "realname", required = true)String realname,
                          @RequestParam(value = "password", required = false)String password,
+                         @RequestParam(value = "invest_conditions", required = false)Integer investConditions,
                          @RequestParam(value = "token", required = true)String token) {
 
         try {
             //判断有无token
             if(!StringUtil.isEmpty(token)){
                 //判断token是否有效
-                RedisUtil redisUtil = new RedisUtil();
-                Object userRedis =   redisUtil.getObject(token);
-                if(StringUtil.isEmpty(userRedis)){
+                if(!redisClient.existsObject(token)){
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }
@@ -92,26 +90,35 @@ public class VerifyController extends BaseController {
             if(!StringUtil.isEmpty(realname) && ValidatorUtil.isUsername(realname)){
 
             }
-            RedisUtil redisUtil = new RedisUtil();
+            if(userService.getBankIdCard(bankIdcard)){
+                return super.setResult(StatusCode.BANK_ID_CARD_IS_EXITS, null, StatusCode.
+                        codeMsgMap.get(StatusCode.BANK_ID_CARD_IS_EXITS));
+            }
             Integer times = 0;
-            if(redisUtil.existsObject("verify_"+userId)){
-                times = (Integer) redisUtil.getObject("verify_"+userId);
+            if(redisClient.existsObject("verify_"+userId)){
+                times = (Integer) redisClient.getObject("verify_"+userId);
                 if(times>Integer.parseInt(ConfigUtil.getConfig("VERIFY_TIMES"))){
                     return super.setResult(StatusCode.VETIFY_IS_NOT_ALLOWED, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_NOT_ALLOWED));
                 }
             }
-            redisUtil.setObject("verify_"+userId,times+1,86400);
-            Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password);
-            if(flag){
+            redisClient.setObject("verify_"+userId,times+1,86400);
+            Integer flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
+            if(flag==StatusCode.OK){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else if(flag == StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL){
+                return super.setResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL, null, StatusCode.
+                        codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL));
+            }
+            if(flag == StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH){
+                return super.setResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH, null, StatusCode.
+                        codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH));
             }else{
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.
+                        codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            logger.info("VerifyController.vetify throws Exception:{}",e.getMessage());
+            return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
         }
     }
-
-
-    }
+}

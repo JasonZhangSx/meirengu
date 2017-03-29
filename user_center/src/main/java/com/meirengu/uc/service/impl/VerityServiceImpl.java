@@ -1,5 +1,6 @@
 package com.meirengu.uc.service.impl;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.dao.VerityDao;
 import com.meirengu.uc.model.User;
@@ -69,18 +70,18 @@ public class VerityServiceImpl implements VerityService{
     }
 
     @Override
-    public  Boolean  verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
-                              String idcard, String realname, String password) {
-        Boolean flag = false;
+    public  Integer  verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
+                              String idcard, String realname, String password,Integer investConditions) {
         HttpResult hr = null;
+        Integer result = 0;
         Map<String, Object> map = new HashMap<String, Object>();
 //        map.put("userId",userId);
 //        map.put("bankCode",bankCode);
+//        map.put("password",password);
         map.put("bankNo",bankIdcard);
         map.put("mobile",bankPhone);
         map.put("identityNumber",idcard);
-        map.put("realName",URLEncoder.encode(realname));
-//        map.put("password",password);
+        map.put("realName",realname);
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", JacksonUtil.toJSon(map));
         String url = ConfigUtil.getConfig("URI_VETIFY_USER_PAYACCOUNT");
@@ -90,10 +91,10 @@ public class VerityServiceImpl implements VerityService{
         } catch (Exception e) {
             logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
         }
-        if(hr.getStatusCode()==200){
+        if(hr!=null && hr.getStatusCode()==StatusCode.OK){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
-            if(40632==(Integer) account.get("code")){
+            if(StatusCode.OK==(Integer) account.get("code")){
                 User user = new User();
                 user.setUserId(userId);
                 user.setRealname(realname);
@@ -101,6 +102,7 @@ public class VerityServiceImpl implements VerityService{
                 user.setBankIdCard(bankIdcard);
                 user.setBankCode(bankCode);
                 user.setBankPhone(bankPhone);
+                user.setInvestConditions(investConditions);
                 user.setIsAuth(1);
                 userDao.update(user);
 
@@ -114,11 +116,13 @@ public class VerityServiceImpl implements VerityService{
                 if(hr.getStatusCode()!=200){
                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
                 }
-                flag = true;
+                result =  (Integer) account.get("code");
+            }else{
+                result =  (Integer) account.get("code");
             }
         }else{
-            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+            logger.info("VerityServiceImpl.back code >> params:{}, exception:{}");
         }
-        return flag;
+        return result;
     }
 }

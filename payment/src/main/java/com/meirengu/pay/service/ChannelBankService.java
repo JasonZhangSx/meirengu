@@ -10,7 +10,7 @@ import java.util.List;
  * Create Date: 2017/3/24 19:21.
  */
 public interface ChannelBankService {
-    String getChannelBank(String content);
+    String getChannelBank(String bankCode);
 
     String delete(String content);
 

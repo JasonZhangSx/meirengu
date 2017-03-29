@@ -1,6 +1,7 @@
 package com.meirengu.uc.controller;
 
 import com.meirengu.common.PasswordEncryption;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -12,7 +13,6 @@ import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.uc.vo.LegalizeVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.StringUtil;
@@ -46,7 +46,8 @@ public class UserController extends BaseController{
     CheckCodeService checkCodeService;
     @Autowired
     VerityService verityService;
-
+    @Autowired
+    private RedisClient redisClient;
 
 
     /**
@@ -158,9 +159,7 @@ public class UserController extends BaseController{
     public Result updateUserInfo(UserVO userVO) {
         try {
             if(!StringUtil.isEmpty(userVO.getToken())){
-                RedisUtil redisUtil = new RedisUtil();
-                boolean b = redisUtil.existsObject(userVO.getToken());
-                if(b){
+                if(redisClient.existsObject(userVO.getToken())){
                     if (!StringUtils.isEmpty(userVO.getPhone())) {
                         if(!ValidatorUtil.isMobile(userVO.getPhone())) {
                             return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -258,9 +257,7 @@ public class UserController extends BaseController{
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 if (newPassword == null || oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_MALFORMED));
@@ -340,9 +337,7 @@ public class UserController extends BaseController{
         if(!StringUtil.isEmpty(token)){
             //判断token是否有效
             try{
-                RedisUtil redisUtil = new RedisUtil();
-                Object userRedis =   redisUtil.getObject(token);
-                if(!StringUtil.isEmpty(userRedis)){
+                if(redisClient.existsObject(token)){
 
                     User user = userService.retrieveByUserId(userId);
                     if(user != null){
@@ -438,9 +433,7 @@ public class UserController extends BaseController{
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 if (newPassword == null || oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_MALFORMED));
@@ -484,7 +477,7 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "paypassword/retrieve",method = RequestMethod.POST)
     public Result retrievePayPassword(@RequestParam(value = "mobile", required = true) String mobile,
-                                   @RequestParam(value = "check_code", required = true) String checkCode,
+                                   @RequestParam(value = "check_code", required = false) String checkCode,
                                    @RequestParam(value = "new_password", required = true) String newPassword,
                                    @RequestParam(value = "type", required = true) Integer type) {
         try {

@@ -91,14 +91,6 @@ public class User extends BaseObject {
      **/
     private Integer loginFrom;
     /**
-     * 会员登录时间
-     **/
-    private Date logIntegerime;
-    /**
-     * 会员上一次登录时间
-     **/
-    private Date lastLogIntegerime;
-    /**
      * 会员登录ip
      **/
     private String loginIp;
@@ -162,6 +154,16 @@ public class User extends BaseObject {
      * 会员的开启状态 1为开启 0为关闭
      **/
     private Integer state;
+
+    private Integer investConditions;
+
+    public Integer getInvestConditions() {
+        return investConditions;
+    }
+
+    public void setInvestConditions(Integer investConditions) {
+        this.investConditions = investConditions;
+    }
 
     public Date getLoginTime() {
         return loginTime;
@@ -329,22 +331,6 @@ public class User extends BaseObject {
 
     public void setLoginFrom(Integer loginFrom) {
         this.loginFrom = loginFrom;
-    }
-
-    public Date getLogIntegerime() {
-        return logIntegerime;
-    }
-
-    public void setLogIntegerime(Date logIntegerime) {
-        this.logIntegerime = logIntegerime;
-    }
-
-    public Date getLastLogIntegerime() {
-        return lastLogIntegerime;
-    }
-
-    public void setLastLogIntegerime(Date lastLogIntegerime) {
-        this.lastLogIntegerime = lastLogIntegerime;
     }
 
     public String getLoginIp() {

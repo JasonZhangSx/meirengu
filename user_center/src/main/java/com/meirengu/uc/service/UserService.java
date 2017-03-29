@@ -112,4 +112,6 @@ public interface UserService extends BaseService<User>{
     int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword);
 
     int setPayPassword(Integer userId, String newPassword);
+
+    boolean getBankIdCard(String bankIdcard);
 }

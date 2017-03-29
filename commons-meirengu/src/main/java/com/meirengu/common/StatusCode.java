@@ -149,6 +149,9 @@ public class StatusCode {
     public static final int VETIFY_IS_NOT_ALLOWED = 50111;
     public static final int NOTIFY_GENERATE_FAIL = 50112;
     public static final int NOTIFY_READ_FAIL = 50113;
+    public static final int CHECK_CODE_SENDER_REFUSED = 50114;
+    public static final int VETIFY_IS_ERROR = 50115;
+    public static final int BANK_ID_CARD_IS_EXITS = 50116;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -370,6 +373,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.NOTIFY_GENERATE_FAIL, "消息生成失败");
         codeMsgMap.put(StatusCode.NOTIFY_READ_FAIL, "消息设置已读失败");
         codeMsgMap.put(StatusCode.VETIFY_IS_NOT_ALLOWED, "用户超过允许认证次数");
+        codeMsgMap.put(StatusCode.CHECK_CODE_SENDER_REFUSED, "验证码限制 30 秒发送一次");
+        codeMsgMap.put(StatusCode.VETIFY_IS_ERROR, "认证失败");
+        codeMsgMap.put(StatusCode.BANK_ID_CARD_IS_EXITS, "该卡已绑定");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

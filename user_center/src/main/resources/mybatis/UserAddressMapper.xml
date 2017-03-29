@@ -131,7 +131,7 @@
     <if test="updateTime != null">
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
     </if>
-    order by create_time DESC
+    order by is_default DESC
   </select>
 
   <select id="getCount" parameterType="Map" resultType="Integer">

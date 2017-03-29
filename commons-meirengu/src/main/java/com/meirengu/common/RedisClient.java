@@ -1,19 +1,15 @@
 package com.meirengu.common;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.meirengu.model.Result;
+import com.meirengu.utils.SerializableUtil;
+import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
+import redis.clients.jedis.*;
 
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
+import java.util.*;
 
 /**
  * 全局状态码常量类
@@ -102,6 +98,9 @@ public class RedisClient {
             getShardedJedisPool().returnResource(jedis);
         }
     }
+
+
+
     
     public void set(String key,String value) {
         ShardedJedis jedis = getShardedJedisPool().getResource();
@@ -380,17 +379,156 @@ public class RedisClient {
             getShardedJedisPool().returnResource(jedis);
         }
     }
-    
+
+    /*以下方法 key都经过了key.getByte()处理 --------------started*/
+    /*以下方法 key都经过了key.getByte()处理 --------------started*/
+    /**
+     * 删除key
+     */
+    public Long delkeyObject(String key) {
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.del(key.getBytes());
+        }catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }finally{
+            if(jedis != null)
+            {
+                jedis.close();
+            }
+        }
+    }
+
+    public Boolean existsObject(String key) {
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.exists(key.getBytes());
+        }catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }finally{
+            if(jedis != null)
+            {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     * 设置List集合
+     * @param key
+     * @param list
+     */
+    public void setList(String key ,List<?> list,int expiretime) {
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            if (!StringUtil.isEmpty(list)) {
+                String result = jedis.set(key.getBytes(), SerializableUtil.serializeList(list));
+                if(result.equals("OK")) {
+                    jedis.expire(key.getBytes(), expiretime);
+                }
+            }else{//如果list为空,则设置一个空
+                jedis.set(key.getBytes(), "".getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            getShardedJedisPool().returnResource(jedis);
+        }
+    }
+
+    /**
+     * 获取List集合
+     * @param key
+     * @return
+     */
+    public List<?> getList(String key){
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        List value = new ArrayList();
+        try {
+            if(jedis == null || !jedis.exists(key)){
+                return null;
+            }
+            byte[] data = jedis.get(key.getBytes());
+            value =  SerializableUtil.unserializeList(data);
+        }catch (Exception e){
+            logger.debug("getList:" + key + "throws Exception :{}"+e.getMessage());
+        }
+        finally {
+            getShardedJedisPool().returnResource(jedis);
+        }
+        return value;
+    }
+    /**
+     * 获取redis键值-object
+     *
+     * @param key
+     * @return
+     */
+    public Object getObject(String key) {
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            byte[] bytes = jedis.get(key.getBytes());
+            if(!StringUtils.isEmpty(bytes)) {
+                return SerializableUtil.unserialize(bytes);
+            }
+        } catch (Exception e) {
+            logger.error("getObject获取redis键值异常:key=" + key + " cause:" + e.getMessage());
+        } finally {
+            getShardedJedisPool().returnResource(jedis);
+        }
+        return null;
+    }
+
+    /**
+     * 设置redis键值-object
+     * @param key
+     * @param value
+     * @return
+     */
+    public String setObject(String key, Object value) {
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.set(key.getBytes(), SerializableUtil.serialize(value));
+        } catch (Exception e) {
+            logger.error("setObject设置redis键值异常:key=" + key + " value="+ e.getMessage());
+            return null;
+        } finally {
+            getShardedJedisPool().returnResource(jedis);
+        }
+    }
+
+    public String setObject(String key, Object value,int expiretime) {
+        String result = "";
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            result = jedis.set(key.getBytes(), SerializableUtil.serialize(value));
+            if(result.equals("OK")) {
+                jedis.expire(key.getBytes(), expiretime);
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error("setObject设置redis键值异常:key=" + key + " value=");
+        } finally {
+            getShardedJedisPool().returnResource(jedis);
+        }
+        return result;
+    }
+    /*以上方法 key都经过了key.getByte()处理 --------------end*/
+
+
     public static void main(String[] args) {
         JedisPoolConfig config = new JedisPoolConfig();
         RedisClient redisService = new RedisClient(config, "192.168.0.135:6379");
         
         ShardedJedis jedis = redisService.getShardedJedisPool().getResource();
         String key = "test_incr1";
+        redisService.setObject("123",new Result());
+        System.err.print(redisService.getObject(""));
+//        long a = jedis.incr(key);
 
-        long a = jedis.incr(key);
-       
-        System.out.println(a);
+//        System.out.println(a);
         System.out.println(jedis.get(key));
       
     }

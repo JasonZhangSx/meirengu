@@ -2,6 +2,7 @@ package com.meirengu.uc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.PasswordEncryption;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
@@ -14,8 +15,11 @@ import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
-import com.meirengu.utils.*;
+import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.JacksonUtil;
+import com.meirengu.utils.StringUtil;
+import com.meirengu.utils.UuidUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -46,7 +50,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user){
-
         int result = userDao.create(user);
         if(!StringUtil.isEmpty(user.getMobileInviter())){
             User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
@@ -174,6 +177,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }else{
             user.setAvatar(avatar);
         }
+        user.setNickname("MRG_"+mobile.substring(7,11));
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(from);
         user.setLastLoginTime(new Date());
@@ -189,6 +193,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
+        ObjectUtils.getNotNullObject(user,User.class);
         int result = this.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
@@ -251,6 +256,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }catch (Exception e){
             logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
+        ObjectUtils.getNotNullObject(user,User.class);
         int result = this.create(user);
         if(result ==0){
             user.setUserId(UuidUtils.getShortUuid());
@@ -308,7 +314,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserTotalInvestMoney(Map map) {
-
+        map.put("totalInvestMoney","100000");
     }
 
     @Override
@@ -401,5 +407,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
         }
         return 0;
+    }
+
+    @Override
+    public boolean getBankIdCard(String bankIdcard) {
+        Boolean flag = false;
+        if(userDao.getBankIdCard(bankIdcard)==1){
+            flag = true;
+        }
+        return flag;
     }
 }

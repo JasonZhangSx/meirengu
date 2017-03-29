@@ -9,6 +9,7 @@ import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.dao.PaymentDao;
 import com.meirengu.pay.dao.PaymentRecordDao;
 import com.meirengu.pay.model.Payment;
+import com.meirengu.pay.model.PaymentAccount;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.*;
 import com.meirengu.pay.utils.ConfigUtil;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -365,11 +368,15 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
      * @return
      */
     @Override
+    @Transactional(readOnly = false)
     public String recharge(String content) {
         PaymentRecordVo paymentRecord = new PaymentRecordVo();
         Map<String,Object> map = new HashMap<>();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Recharge);
+            paymentRecord.setChannelRequestTime(new Date());
+            String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
+            paymentRecord.setTransactionSn(transactionSn);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(), OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX),
                     paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
@@ -388,16 +395,20 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
      * @return
      */
     @Override
+    @Transactional(readOnly = false)
     public String payment(String content) {
         PaymentRecordVo paymentRecord = new PaymentRecordVo();
         Map<String,Object> map = new HashMap<>();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Payment);
+            paymentRecord.setChannelRequestTime(new Date());
+            String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_PAYMENT_SN_PREFIX);
+            paymentRecord.setTransactionSn(transactionSn);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
                 paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             }else{
-                map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(), OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX),
+                map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(),transactionSn ,
                         paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
             }
             LOGGER.info("payment prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY));
@@ -415,7 +426,60 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
      * @return
      */
     @Override
+    @Transactional(readOnly = false)
     public String baofuCallback(String content) {
-        return null;
+        Map<String, String> map = new HashMap<>();
+        PaymentRecordVo paymentRecordVo = new PaymentRecordVo();
+        PaymentAccount paymentAccount = new PaymentAccount();
+        try {
+            map = BaoFuUtil.baofuReturn(content);
+        } catch (PaymentException e) {
+            LOGGER.error("Capture baofuCallback ErrorMsg : ",e.getMessage());
+            return "OK";
+        }
+        PaymentRecordVo paymentRecord = new PaymentRecordVo();
+        paymentRecord.setTransactionSn(map.get("trans_id"));
+        paymentRecordVo = paymentRecordDao.selectPaymentRecord(paymentRecord);
+        if (paymentRecordVo==null){
+            LOGGER.error("Capture baofuCallback ErrorMsg : transId Is Null :{}",paymentRecord.getTransactionSn());
+            return "ERROR";
+        }
+        paymentAccount = paymentAccountDao.selectByUserId(paymentRecordVo.getUserId());
+        if (paymentAccount == null) {
+            LOGGER.error("Capture baofuCallback ErrorMsg : paymentAccount Is Null :{}",paymentRecordVo.getUserId());
+            return "ERROR";
+        }
+        if (paymentRecordVo.getStatus()!=PaymentTypeUtil.PaymentStatus_Apply){
+            return "OK";
+        }
+        paymentRecord.setPaymentId(paymentRecordVo.getPaymentId());
+        paymentRecord.setStatus(PaymentTypeUtil.PaymentStatus_Success);
+        if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Recharge){
+            paymentRecord.setPaymentFrontBalance(paymentAccount.getAccountBalance());
+            BigDecimal paymentBackBalance = paymentAccount.getAccountBalance().add(paymentRecord.getPaymentAmount()).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+            paymentRecord.setPaymentBackBalance(paymentBackBalance);
+            paymentRecord.setChannelResponseTime(new Date());
+            paymentRecord.setReturnMsg(map.get("returnContent"));
+            LOGGER.info("payment baofuCallback message : Update Account Balance Start,FrontBalance:{}",paymentRecord.getPaymentFrontBalance());
+            paymentRecordDao.updatePaymentRecord(paymentRecord);
+            paymentAccountDao.updateBalance(paymentRecordVo.getAccountId(),paymentRecord.getPaymentBackBalance());
+            LOGGER.info("payment baofuCallback message : Update Account Balance End,BackBalance:{}",paymentRecord.getPaymentBackBalance());
+            Map<String,String> postParameter = new HashMap<>();
+            postParameter.put("tpl_id","1790350");
+            postParameter.put("mobile",paymentRecordVo.getUserPhone());
+            postParameter.put("datetime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            postParameter.put("money",String.valueOf(paymentRecordVo.getPaymentAmount()));
+            LOGGER.info("payment baofuCallback message : Send message Start:{}",map.toString());
+            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/sms/single_send_tpl",postParameter,"UTF-8");
+            LOGGER.info("payment baofuCallback message : Send message End");
+        }else if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Payment){
+            Map<String,String> postParameter = new HashMap<>();
+            postParameter.put("order_sn",paymentRecordVo.getOrderSn());
+            postParameter.put("payment_method",paymentRecordVo.getPaymentMethod().toString());
+            postParameter.put("out_sn",paymentRecordVo.getTransactionSn());
+            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+super.tradeUrl+"/payment",postParameter,"UTF-8");
+        }
+        return "OK";
     }
+
 }

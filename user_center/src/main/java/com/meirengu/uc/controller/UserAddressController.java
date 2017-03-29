@@ -1,5 +1,6 @@
 package com.meirengu.uc.controller;
 
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -9,7 +10,6 @@ import com.meirengu.uc.po.AddressPO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.UuidUtils;
 import com.meirengu.utils.ValidatorUtil;
@@ -36,6 +36,8 @@ public class UserAddressController extends BaseController{
     private UserAddressService userAddressService;
     @Autowired
     AddressService service;
+    @Autowired
+    private RedisClient redisClient;
     private static final Logger logger = LoggerFactory.getLogger(UserAddressController.class);
 
     @RequestMapping(value = "insert", method = RequestMethod.POST)
@@ -49,9 +51,7 @@ public class UserAddressController extends BaseController{
 
         logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 //verify params
                 if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -98,9 +98,7 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "is_default", required = false) Integer isDefault){
 
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 //verify params
                 if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -152,9 +150,7 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "token", required = true) String token){
 
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 //默认地址不允许删除
                 UserAddress userAddress = new UserAddress();
                 userAddress.setAddressId(addressId);
@@ -189,9 +185,7 @@ public class UserAddressController extends BaseController{
                        @RequestParam(value="user_id", required = true) int userId,
                        @RequestParam(value = "token", required = true) String token){
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 Map paramMap = new HashMap<String, Object>();
                 paramMap.put("userId",userId);
                 Page<UserAddress> page = super.setPageParams(pageNum,pageSize);
@@ -229,9 +223,7 @@ public class UserAddressController extends BaseController{
                        @RequestParam(value = "token", required = true) String token){
 
         try{
-            RedisUtil redisUtil = new RedisUtil();
-            Object userRedis =   redisUtil.getObject(token);
-            if(!StringUtil.isEmpty(userRedis)){
+            if(redisClient.existsObject(token)){
                 UserAddress userAddress = new UserAddress();
                 userAddress.setUserId(userId);
                 userAddress.setAddressId(addressId);

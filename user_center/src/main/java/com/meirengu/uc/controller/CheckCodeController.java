@@ -2,6 +2,7 @@ package com.meirengu.uc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
@@ -32,7 +33,8 @@ public class CheckCodeController extends BaseController {
 
     @Autowired
     CheckCodeService checkCodeService;
-
+    @Autowired
+    private RedisClient redisClient;
     private static final Logger logger = LoggerFactory.getLogger(CheckCodeController.class);
 
     /**
@@ -46,6 +48,11 @@ public class CheckCodeController extends BaseController {
                          @RequestParam(required = true) String type) {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         try {
+
+            if(redisClient.existsObject(type+"_"+mobile)){
+                return setResult(StatusCode.CHECK_CODE_SENDER_REFUSED, null, StatusCode.codeMsgMap.get(StatusCode
+                        .CHECK_CODE_SENDER_REFUSED));
+            }
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                 return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -60,12 +67,12 @@ public class CheckCodeController extends BaseController {
                     JSONObject resultObj = JSON.parseObject(hr.getContent());
                     if ("200".equals(resultObj.getString("code"))) {
                         //store db
+                        redisClient.setObject(type+"_"+mobile,"have been send !",30);
                         CheckCode checkCode = new CheckCode();
                         checkCode.setMobile(mobile);
                         checkCode.setCode(code);
                         Date nowTime = new Date();
-                        Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig
-                                ("EXPIRE_CHECKCODE_LOGIN")));
+                        Date expireTime = new Date(nowTime.getTime() + Long.valueOf(ConfigUtil.getConfig("EXPIRE_CHECKCODE_LOGIN")));
                         checkCode.setCreateTime(nowTime);
                         checkCode.setExpireTime(expireTime);
                         checkCode.setIp(StringUtils.defaultString(ip, ""));

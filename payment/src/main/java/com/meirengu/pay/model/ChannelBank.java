@@ -2,6 +2,7 @@ package com.meirengu.pay.model;
 
 import com.meirengu.pay.utils.check.AnnotationValidable;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ChannelBank implements AnnotationValidable {
@@ -13,9 +14,9 @@ public class ChannelBank implements AnnotationValidable {
 
     private String bankName;
 
-    private Short singleLimitAmout;
+    private BigDecimal singleLimitAmout;
 
-    private Short dayLimitAmount;
+    private BigDecimal dayLimitAmount;
 
     private Date createTime;
 
@@ -55,19 +56,19 @@ public class ChannelBank implements AnnotationValidable {
         this.bankName = bankName == null ? null : bankName.trim();
     }
 
-    public Short getSingleLimitAmout() {
+    public BigDecimal getSingleLimitAmout() {
         return singleLimitAmout;
     }
 
-    public void setSingleLimitAmout(Short singleLimitAmout) {
+    public void setSingleLimitAmout(BigDecimal singleLimitAmout) {
         this.singleLimitAmout = singleLimitAmout;
     }
 
-    public Short getDayLimitAmount() {
+    public BigDecimal getDayLimitAmount() {
         return dayLimitAmount;
     }
 
-    public void setDayLimitAmount(Short dayLimitAmount) {
+    public void setDayLimitAmount(BigDecimal dayLimitAmount) {
         this.dayLimitAmount = dayLimitAmount;
     }
 

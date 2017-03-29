@@ -35,4 +35,21 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="resolveLazily" value="true" />
     </bean>
+
+
+    <bean id="myConsumer" class="com.meirengu.trade.rocketmq.MyConsumer"
+          init-method="init"
+          destroy-method="destroy"
+          scope="singleton">
+        <property name="consumerGroup" value="MyConsumerGroup" />
+        <property name="namesrvAddr" value="192.168.0.135:9876" />
+    </bean>
+
+    <bean id="myProducer" class="com.meirengu.trade.rocketmq.MyProducer"
+        init-method="init"
+        destroy-method="destroy"
+        scope="singleton">
+        <property name="producerGroup" value="MyProducerGroup" />
+        <property name="namesrvAddr" value="192.168.0.135:9876" />
+    </bean>
 </beans>
