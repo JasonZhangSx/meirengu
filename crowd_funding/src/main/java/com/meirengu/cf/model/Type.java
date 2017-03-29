@@ -7,19 +7,19 @@ import com.meirengu.model.BaseObject;
   */
 public class Type  extends BaseObject {
 	/** 众筹类型id */
-	private int typeId;
+	private Integer typeId;
 	/** 众筹类型名称 */
 	private String typeName;
 	/** 排序：数字越小权重越大 */
-	private int typeSort;
+	private Integer typeSort;
 	/** 删除标识： 1 未删除  0 删除 */
-	private int flag;
+	private Integer flag;
 
-	public void setTypeId(int typeId){
+	public void setTypeId(Integer typeId){
 		this.typeId = typeId;
 	}
 
-	public int getTypeId(){
+	public Integer getTypeId(){
 		return typeId;
 	}
 
@@ -31,19 +31,19 @@ public class Type  extends BaseObject {
 		return typeName;
 	}
 
-	public void setTypeSort(int typeSort){
+	public void setTypeSort(Integer typeSort){
 		this.typeSort = typeSort;
 	}
 
-	public int getTypeSort(){
+	public Integer getTypeSort(){
 		return typeSort;
 	}
 
-	public void setFlag(int flag){
+	public void setFlag(Integer flag){
 		this.flag = flag;
 	}
 
-	public int getFlag(){
+	public Integer getFlag(){
 		return flag;
 	}
 

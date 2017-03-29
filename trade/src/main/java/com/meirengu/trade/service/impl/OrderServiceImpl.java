@@ -49,6 +49,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private OrderDao orderDao;
     /**
      * 获取订单详情
+     * @param orderSn
+     * @return
+     */
+    public Map<String, Object> orderDetailBySn (String orderSn) throws IOException {
+        Map<String, Object> map = orderDao.orderDetailBySn(orderSn);
+        return map;
+    }
+    /**
+     * 获取订单详情
      * @param orderId
      * @return
      */

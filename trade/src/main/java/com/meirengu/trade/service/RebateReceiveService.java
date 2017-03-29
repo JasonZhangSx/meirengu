@@ -27,6 +27,17 @@ public interface RebateReceiveService extends BaseService<RebateReceive>{
     Result receiveRebate(int userId, String userPhone, List<Integer> batchIdList, String activityIdentification);
 
     /**
+     * 根据标识领取优惠券
+     * @param userId
+     * @param userPhone
+     * @param rebateMark
+     * @param activityIdentification
+     * @return
+     */
+    Result receiveRebateByMark(int userId, String userPhone, int rebateMark, String activityIdentification);
+
+
+    /**
      * 校验该优惠券是否有效
      * @param order
      * @param rebateReceiveId

@@ -140,7 +140,7 @@
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <update id="updateBalance" parameterType="com.meirengu.pay.model.PaymentAccount" >
+  <update id="updateBalance" >
     update payment_account
     <set >
       <if test="accountBalance != null" >

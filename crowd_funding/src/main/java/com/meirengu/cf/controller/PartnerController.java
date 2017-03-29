@@ -29,22 +29,22 @@ import java.util.Map;
 @RequestMapping("partner")
 public class PartnerController extends BaseController{
 
-    /*private static final Logger LOGGER = LoggerFactory.getLogger(PartnerController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PartnerController.class);
 
     @Autowired
     PartnerService partnerService;
 
-    *//**
+    /**
      * 获取请求列表
      * @param pageSize
      * @param pageNum
      * @param isPage
-     * @param className
+     * @param partnerName
      * @param flag
      * @param sortBy
      * @param order
      * @return
-     *//*
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
     public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
@@ -80,13 +80,13 @@ public class PartnerController extends BaseController{
         }
     }
 
-    *//**
+    /**
      * 新增行业分类
      * @param className
      * @param classDescription
      * @return
-     *//*
-    @ResponseBody
+     */
+    /*@ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public Result insert(@RequestParam(value = "class_name", required = false) String className,
                          @RequestParam(value = "class_description", required = false) String classDescription){
@@ -103,13 +103,13 @@ public class PartnerController extends BaseController{
             LOGGER.error(">> insert partner class throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-    }
+    }*/
 
-    *//**
+    /**
      * 获取行业分类详情
      * @param classId
      * @return
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "{class_id}", method = RequestMethod.GET)
     public Result detail(@PathVariable(value = "class_id", required = false)int classId){
@@ -122,7 +122,7 @@ public class PartnerController extends BaseController{
         }
     }
 
-    *//**
+    /**
      * 修改行业分类信息
      * @param classId
      * @param className
@@ -131,8 +131,8 @@ public class PartnerController extends BaseController{
      * @param partnerNum
      * @param flag
      * @return
-     *//*
-    @ResponseBody
+     */
+    /*@ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
     public Result update(@RequestParam(value = "class_id", required = false)int classId,
                          @RequestParam(value = "class_name", required = false)String className,
@@ -153,13 +153,13 @@ public class PartnerController extends BaseController{
             LOGGER.error(">> update partner class throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-    }
+    }*/
 
-    *//**
+    /*
      * 删除行业分类
      * @param classId
      * @return
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "{class_id}", method = RequestMethod.DELETE)
     public Result delete(@PathVariable(value = "class_id", required = false)int classId){
@@ -190,5 +190,4 @@ public class PartnerController extends BaseController{
 
         return pc;
     }
-*/
 }

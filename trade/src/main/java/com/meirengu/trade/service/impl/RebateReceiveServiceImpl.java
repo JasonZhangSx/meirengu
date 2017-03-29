@@ -70,7 +70,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         for (Integer batchId : batchIdList) {
             rebateBatch = rebateBatchService.detail(batchId);
             //验证批次是否有效
-            if (rebateBatch == null ) {
+            if (rebateBatch == null || rebateBatch.getBatchStatue() == 0) {
                 logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：没有有效的该批次的优惠券");
                 result.setCode(StatusCode.REBATE_BATCH_INVALIDITY);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REBATE_BATCH_INVALIDITY));
@@ -78,6 +78,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
             }
             //验证用户是否有此类优惠券
             paramMap = new HashMap<String, Object>();
+            paramMap.put("userId", userId);
             paramMap.put("rebateBatchId", batchId);
             int totalCount = rebateReceiveDao.getCount(paramMap);
             if (totalCount != 0) {
@@ -135,6 +136,17 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
     }
 
     /**
+     * 根据标识领取优惠券
+     * @param userId
+     * @param userPhone
+     * @param rebateMark
+     * @param activityIdentification
+     * @return
+     */
+    public Result receiveRebateByMark(int userId, String userPhone, int rebateMark, String activityIdentification) {
+        return new Result();
+    }
+    /**
      * 校验该优惠券是否有效
      * @param order
      * @param rebateReceiveId
@@ -173,8 +185,8 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         int startPos = page.getStartPos();
         int pageSize = page.getPageSize();
         RowBounds rowBounds = new RowBounds(startPos, pageSize);
-        List<Map<String, Object>> aList = rebateReceiveDao.getByPage(map, rowBounds);
-        int totalCount = rebateReceiveDao.getCount(map);
+        List<Map<String, Object>> aList = rebateReceiveDao.getRebateInfoByPage(map, rowBounds);
+        int totalCount = rebateReceiveDao.getRebateInfoCount(map);
         page.setTotalCount(totalCount);
         page.setList(aList);
         page.init();

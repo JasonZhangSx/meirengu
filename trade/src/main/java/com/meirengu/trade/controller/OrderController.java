@@ -73,7 +73,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "order_from", required = false) String orderFrom,
                                     @RequestParam(value = "user_weixin", required = false) String userWeixin,
                                     @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
-        @RequestParam(value = "token", required = false) String token){
+                                    @RequestParam(value = "token", required = false) String token){
 
             //验证token
             if (!TokenUtils.authToken(token)) {
@@ -419,6 +419,24 @@ public class OrderController extends BaseController{
         }
         try{
             Map<String, Object> orderDetailMap = orderService.orderDetail(orderId);
+            return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 订单详情
+     * @return
+     */
+    @RequestMapping(value = "detailsn/{order_sn}",  method = RequestMethod.GET)
+    public Result detail(@PathVariable("order_sn") String orderSn){
+        if (StringUtils.isEmpty(orderSn)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try{
+            Map<String, Object> orderDetailMap = orderService.orderDetailBySn(orderSn);
             return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception:", e);

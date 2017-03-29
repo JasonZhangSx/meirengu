@@ -21,16 +21,19 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-                项目编号：<input type="text" class="input-text" style="width:120px;">　
-                项目名称：<input type="text" class="input-text" style="width:120px;">　
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
-                    查 询
-                </button>
-            </div>
+            <form action="delete" id="itemForm" method="post">
+                <div class="text-c">
+                    项目编号：<input type="text" class="input-text" style="width:120px;" value="${itemId}" name="itemId">　
+                    项目名称：<input type="text" class="input-text" style="width:120px;" value="${itemName}" name="itemName">　
+                    <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                        查 询
+                    </button>
+                </div>
+            </form>
+
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
-                        class="btn btn-primary radius" onClick="project_edit('添加项目','/erp/item/project_edit.html','10001')"
+                        class="btn btn-primary radius" onClick="project_edit('添加项目','/erp/item/to_add','10001')"
                         href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加项目</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
             <div class="mt-20">
@@ -65,7 +68,7 @@
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-新建项目列表-添加基本信息','众筹-新建项目列表-添加基本信息.html','10001')"
+                                   onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
                                    href="javascript:;" title="项目编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
                                 <a style="text-decoration:none" class="ml-5" onClick="project_del(this,'10001')"
                                    href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>

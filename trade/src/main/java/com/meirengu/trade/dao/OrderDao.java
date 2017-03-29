@@ -16,11 +16,17 @@ public interface OrderDao extends BaseDao<Order>{
      * @param orderId
      * @return
      */
-    public Map<String, Object> orderDetail(int orderId);
+    Map<String, Object> orderDetail(int orderId);
     /**
      * 通过订单编号更新订单消息
      * @param order
      * @return
      */
     int updateBySn(Order order);
+
+    /**
+     * 通过订单编号查询订单消息
+     * @return
+     */
+    Map<String, Object> orderDetailBySn(String orderSn);
 }
