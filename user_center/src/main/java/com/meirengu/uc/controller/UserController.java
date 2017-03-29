@@ -116,6 +116,7 @@ public class UserController extends BaseController{
     @RequestMapping(value = "list",method = {RequestMethod.POST})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                       @RequestParam(value="is_page", required = false,defaultValue = "1") Integer isPage,
                        @RequestParam(value="invest_conditions", required = false) Integer investConditions,
                        @RequestParam(value="is_auth", required = false) Integer isAuth,
                        @RequestParam(value="phone", required = false) String phone,
@@ -125,15 +126,20 @@ public class UserController extends BaseController{
                        @RequestParam(value="order", required = false) String order){
         try {
             Map paramMap = new HashMap<String, Object>();
-            Page<User> page = super.setPageParams(pageNum,pageSize);
-            paramMap.put("investConditions", investConditions);
-            paramMap.put("isAuth", isAuth);
-            paramMap.put("phone", phone);
-            paramMap.put("realname", realname);
-            paramMap.put("idcard", idcard);
-            paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
-            page = userService.getByPage(page, paramMap);
+            Page<User> page = new Page<User>();
+            if(isPage==1){
+                page = super.setPageParams(pageNum,pageSize);
+                paramMap.put("investConditions", investConditions);
+                paramMap.put("isAuth", isAuth);
+                paramMap.put("phone", phone);
+                paramMap.put("realname", realname);
+                paramMap.put("idcard", idcard);
+                paramMap.put("sortBy", sortBy);
+                paramMap.put("order", order);
+                page = userService.getByPage(page, paramMap);
+            }else{
+                page = userService.getUserList(page,paramMap);
+            }
             List<Map<String,Object>> list = page.getList();
             for(Map map:list){
                 map.remove("password");

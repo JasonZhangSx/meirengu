@@ -331,6 +331,25 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return page;
     }
 
+    /**
+     * 不分页 封装入page
+     * @param page
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public Page<User> getUserList(Page<User> page, Map paramMap) {
+
+        List<Map<String, Object>> aList = userDao.getUserByPage(paramMap);
+        int totalCount = userDao.getUserCount(paramMap);
+        page.setPageSize(aList.size());
+        page.setTotalCount(totalCount);
+        page.setList(aList);
+        page.init();
+        logger.info(" page params is "+ JSON.toJSON(paramMap));
+        return page;
+    }
+
     @Override
     public int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword) {
         try {
