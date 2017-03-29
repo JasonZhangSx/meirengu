@@ -106,8 +106,8 @@
                     class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href=合作方-行业分类.html title=项目列表>行业分类管理</a></li>
-                    <li><a href=javascript:void(0) data-href=合作方-合作方列表.html title=项目列表>合作方列表</a></li>
+                    <li><a href=javascript:void(0) data-href="partner/class/list" title=项目列表>行业分类管理</a></li>
+                    <li><a href=javascript:void(0) data-href="partner/list" title=项目列表>合作方列表</a></li>
                 </ul>
             </dd>
         </dl>
