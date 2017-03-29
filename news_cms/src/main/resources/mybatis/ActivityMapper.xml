@@ -118,13 +118,8 @@
         select <include refid="select_columns" />
         from
         <include refid="table_name" />
-        <where> 1=1
-            <if test="activityId != null and activityId != ''">
-               AND activity_id=#{activityId}
-            </if>
-            <if test="activityName != null and activityName != ''">
-               AND activity_name=#{activityName}
-            </if>
+        <where>
+
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}
@@ -135,13 +130,8 @@
         select count(*)
         from
         <include refid="table_name" />
-        <where> 1 = 1
-            <if test="activityId != null and activityId != ''">
-                AND activity_id=#{activityId}
-            </if>
-            <if test="activityName != null and activityName != ''">
-                AND activity_name=#{activityName}
-            </if>
+        <where>
+
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}

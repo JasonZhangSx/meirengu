@@ -71,4 +71,6 @@ public interface UserDao extends BaseDao<User>{
     List<Map<String,Object>> getUserByPage(Map paramMap, RowBounds rowBounds);
 
     int getUserCount(Map paramMap);
+
+    int getBankIdCard(String bankIdcard);
 }

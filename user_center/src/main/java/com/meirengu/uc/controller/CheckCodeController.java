@@ -2,13 +2,13 @@ package com.meirengu.uc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.utils.RedisUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +33,8 @@ public class CheckCodeController extends BaseController {
 
     @Autowired
     CheckCodeService checkCodeService;
-
+    @Autowired
+    private RedisClient redisClient;
     private static final Logger logger = LoggerFactory.getLogger(CheckCodeController.class);
 
     /**
@@ -48,8 +49,7 @@ public class CheckCodeController extends BaseController {
         logger.info("CheckCodeController.create params >> mobile:{}", mobile);
         try {
 
-            RedisUtil redisUtil = new RedisUtil();
-            if(redisUtil.existsObject(type+"_"+mobile)){
+            if(redisClient.existsObject(type+"_"+mobile)){
                 return setResult(StatusCode.CHECK_CODE_SENDER_REFUSED, null, StatusCode.codeMsgMap.get(StatusCode
                         .CHECK_CODE_SENDER_REFUSED));
             }
@@ -67,7 +67,7 @@ public class CheckCodeController extends BaseController {
                     JSONObject resultObj = JSON.parseObject(hr.getContent());
                     if ("200".equals(resultObj.getString("code"))) {
                         //store db
-                        redisUtil.setObject(type+"_"+mobile,"have been send !",30);
+                        redisClient.setObject(type+"_"+mobile,"have been send !",30);
                         CheckCode checkCode = new CheckCode();
                         checkCode.setMobile(mobile);
                         checkCode.setCode(code);
