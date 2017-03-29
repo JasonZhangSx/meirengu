@@ -8,5 +8,7 @@ public interface PaymentRecordDao {
 
     PaymentRecordVo selectPaymentRecord(PaymentRecordVo record);
 
+    Integer selectPaymentRecordCount(PaymentRecordVo record);
+
     int updatePaymentRecord(PaymentRecordVo record);
 }

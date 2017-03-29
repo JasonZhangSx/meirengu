@@ -24,19 +24,20 @@ import java.util.Map;
 public class ChannelBankServiceImpl extends BaseServiceImpl implements ChannelBankService {
     private final static Logger logger = LoggerFactory.getLogger(ChannelBankServiceImpl.class);
     @Autowired
-    private ChannelBankDao paymentDao;
+    private ChannelBankDao channelBankDao;
     @Override
-    public String getChannelBank(String content) {
+    public String getChannelBank(String bankCode) {
         Map<String,Object> map = new HashMap<>();
         ChannelBank channelBank = new ChannelBank();
         try {
-            channelBank = (ChannelBank) super.execute(content,channelBank);
-            logger.info("Request getChannelBank parameter:{}",channelBank.toString());
-            List<ChannelBank> list = paymentDao.getChannelBank(channelBank);
+//            channelBank = (ChannelBank) super.execute(content,channelBank);
+            channelBank.setBankCode(bankCode);
+            logger.info("Request getChannelBank parameter:{}",channelBank);
+            List<ChannelBank> list = channelBankDao.getChannelBank(channelBank);
             if (list==null){
                 throw new PaymentException(StatusCode.CHANNEL_BANK_ERROR_SELECT_IS_NULL);
             }
-            map.put("channelBank",channelBank);
+            map.put("channelBank",list);
             logger.info("getChannelBank prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.CHANNEL_BANK_SUCCESS_SELECT));
             return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {

@@ -101,7 +101,7 @@ public class BaoFuUtil {
         ArrayData.put("id_holder", idHolder);
         ArrayData.put("mobile", mobile);
         ArrayData.put("trans_id", transId);
-        ArrayData.put("txn_amt", txnAmt);
+        ArrayData.put("txn_amt", "1000");
         ArrayData.put("return_url", returnUrl);
         ArrayData.put("txn_type", txnType);
 //        ArrayData.put("commodity_name", commodityName);
@@ -126,11 +126,12 @@ public class BaoFuUtil {
         }
     }
 
-    private static Map baofuReturn(String content) throws PaymentException {
+    public static Map baofuReturn(String content) throws PaymentException {
         if (content.isEmpty()) {//判断参数是否为空
             logger.error("Capture baofuReturn ErrorMsg:{}", "Return data is empty");
             throw new PaymentException(null, "Return data is empty");
         }
+        logger.info("Request baofuReturn parameter:{}",content);
         content = RsaCodingUtil.decryptByPubCerFile(content, cerPath);
         if (content.isEmpty()) {//判断解密是否正确。如果为空则宝付公钥不正确
             logger.error("Capture baofuReturn ErrorMsg:{}", "Check if the decryption key is correct");
@@ -142,8 +143,9 @@ public class BaoFuUtil {
             logger.error("Capture baofuReturn ErrorMsg {}", "Base64 Decryption failure");
             throw new PaymentException(null, "Capture baofuReturn ErrorMsg {}", "Base64 Decryption failure");
         }
-        Map<String, Object> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map = dataType.equals("json") ? JSONObject.parseObject(content, map.getClass()) : null;
+        map.put("returnContent",content);
         if (!map.containsKey("resp_code")) {
             logger.error("Capture baofuReturn ErrorMsg:{}", "Resp_code is empty");
             throw new PaymentException(null, "Resp_code is empty！");
@@ -241,7 +243,6 @@ public class BaoFuUtil {
      int r = random.nextInt(i.length);
      String body = i[r];
      */
-
 }
 
 

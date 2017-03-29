@@ -9,7 +9,7 @@ public class PaymentRecord implements AnnotationValidable {
     private Integer paymentId;
     @ValidateNotNull(attributeValue = "用户id")
     @ValidateDigit()
-    @ValidateSize(attributeValue = "用户Id",minSize = "8",maxSize = "9")
+//    @ValidateSize(attributeValue = "用户Id",minSize = "8",maxSize = "9")
     private Integer userId;
 
     private String userName;
@@ -27,8 +27,8 @@ public class PaymentRecord implements AnnotationValidable {
 
     @ValidateSize(attributeValue = "银行代码",minSize = "3",maxSize = "4")
     private String paymentBankType;
-    @ValidateNotNull(attributeValue = "支付类型")
-    @ValidateInt(attributeValue = "支付类型",min = 1,max = 4)
+//    @ValidateNotNull(attributeValue = "支付类型")
+//    @ValidateInt(attributeValue = "支付类型",min = 1,max = 4)
     private Integer paymentType;
 
     private Date channelRequestTime;
