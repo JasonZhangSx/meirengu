@@ -98,8 +98,8 @@ public class VerifyController extends BaseController {
                 }
             }
             redisClient.setObject("verify_"+userId,times+1,86400);
-            Boolean flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
-            if(flag){
+            Integer flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
+            if(flag==StatusCode.OK){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
