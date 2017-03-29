@@ -55,7 +55,7 @@
                 invest_time=#{investTime},
             </if>
             <if test="reward != null ">
-                reward=#{reward},
+                reward = reward + #{reward},
             </if>
             id=#{id}
         </set>
