@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DateUtils {
 
@@ -561,5 +562,28 @@ public class DateUtils {
 	public static Timestamp getNowTimestamp() {
 		long curTime = System.currentTimeMillis();
 		return new Timestamp(curTime);
+	}
+
+	/**
+	 * 获取当天的开始时间
+	 * @return
+	 */
+	public static Date getCurrentDayBeginTime() {
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.set(Calendar.HOUR_OF_DAY, 0);
+		currentDate.set(Calendar.MINUTE, 0);
+		currentDate.set(Calendar.SECOND, 0);
+		return currentDate.getTime();
+	}
+	/**
+	 * 获取当天的结束时间
+	 * @return
+	 */
+	public static Date getCurrentDayEndTime() {
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.set(Calendar.HOUR_OF_DAY, 23);
+		currentDate.set(Calendar.MINUTE, 59);
+		currentDate.set(Calendar.SECOND, 59);
+		return currentDate.getTime();
 	}
 }
