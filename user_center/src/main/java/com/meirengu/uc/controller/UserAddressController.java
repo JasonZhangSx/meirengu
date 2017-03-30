@@ -182,32 +182,25 @@ public class UserAddressController extends BaseController{
     @RequestMapping(value = "list", method = {RequestMethod.POST})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
-                       @RequestParam(value="user_id", required = true) int userId,
-                       @RequestParam(value = "token", required = true) String token){
+                       @RequestParam(value="user_id", required = true) int userId){
         try{
-            if(redisClient.existsObject(token)){
-                Map paramMap = new HashMap<String, Object>();
-                paramMap.put("userId",userId);
-                Page<UserAddress> page = super.setPageParams(pageNum,pageSize);
-                page = userAddressService.getListByPage(page,paramMap);
-                List<Map<String, Object>> list = page.getList();
-                for (Map<String, Object> list1:list){
-                    if(!StringUtil.isEmpty(list1.get("areaId"))){
-                        AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
-                        list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
-                        list1.put("city",addressPO.getCity()+"");
-                        list1.put("area",addressPO.getArea()+"");
-                    }
+            Map paramMap = new HashMap<String, Object>();
+            paramMap.put("userId",userId);
+            Page<UserAddress> page = super.setPageParams(pageNum,pageSize);
+            page = userAddressService.getListByPage(page,paramMap);
+            List<Map<String, Object>> list = page.getList();
+            for (Map<String, Object> list1:list){
+                if(!StringUtil.isEmpty(list1.get("areaId"))){
+                    AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
+                    list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
+                    list1.put("city",addressPO.getCity()+"");
+                    list1.put("area",addressPO.getArea()+"");
                 }
-                if(page.getList().size() != 0){
-                    return super.setResult(StatusCode.OK, page,StatusCode.codeMsgMap.get(StatusCode.OK));
-                }else{
-                    return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
-                }
+            }
+            if(page.getList().size() != 0){
+                return super.setResult(StatusCode.OK, page,StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                //无效token返回登陆
-                Page<UserAddress> page = new Page<>();
-                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, page, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
             logger.info("LoginController.redis get token result:{}",e.getMessage());
@@ -219,32 +212,25 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "detail", method = {RequestMethod.POST})
     public Result detail(@RequestParam(value="address_id", required = true) int addressId,
-                       @RequestParam(value="user_id", required = true) int userId,
-                       @RequestParam(value = "token", required = true) String token){
+                       @RequestParam(value="user_id", required = true) int userId){
 
         try{
-            if(redisClient.existsObject(token)){
-                UserAddress userAddress = new UserAddress();
-                userAddress.setUserId(userId);
-                userAddress.setAddressId(addressId);
-                UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
+            UserAddress userAddress = new UserAddress();
+            userAddress.setUserId(userId);
+            userAddress.setAddressId(addressId);
+            UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
 
-                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
-                if(addressPO!=null){
-                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
-                    userAddressPO.setCity(addressPO.getCity()+"");
-                    userAddressPO.setAreas(addressPO.getArea()+"");
-                }
+            AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
+            if(addressPO!=null){
+                userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
+                userAddressPO.setCity(addressPO.getCity()+"");
+                userAddressPO.setAreas(addressPO.getArea()+"");
+            }
 
-                if(userAddressPO != null){
-                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
-                }else{
-                    return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
-                }
+            if(userAddressPO != null){
+                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                //无效token返回登陆
-                Page<UserAddress> page = new Page<>();
-                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, page, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+                return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
             }
         }catch (Exception e){
             logger.info("LoginController.redis get token result:{}",e.getMessage());
