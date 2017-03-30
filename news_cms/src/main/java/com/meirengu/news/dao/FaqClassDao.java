@@ -38,5 +38,5 @@ public interface FaqClassDao extends PageDao<FaqClass>{
 
     public int getFaqClass(FaqClass faqClass);
 
-    public List<FaqClass> listAllFaqClass();
+    public List<FaqClass> listAllFaqClass(FaqClass faqClass);
 }

@@ -79,9 +79,14 @@
         SELECT count(*)
         FROM faq_class WHERE class_name=#{className}
     </select>
-    <select id="listAllFaqClass"  resultType="faqClass">
+    <select id="listAllFaqClass"  parameterType="faqClass" resultType="faqClass" >
         SELECT class_id AS classId,class_name AS className
-        FROM faq_class ORDER BY create_time DESC
+        FROM faq_class
+        where 1=1
+        <if test="status != null">
+            AND status=#{status}
+        </if>
+        ORDER BY create_time DESC
     </select>
 
     <!--<update id="publish" parameterType="Map" >
@@ -101,7 +106,7 @@
         <if test="className != null and className != ''">
             AND class_name=#{className}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             AND status=#{status}
         </if>
         <if test="createTime != null and createTime != ''">
@@ -129,7 +134,7 @@
         <if test="className != null and className != ''">
             AND class_name=#{className}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             AND status=#{status}
         </if>
         <if test="createTime != null and createTime != ''">
