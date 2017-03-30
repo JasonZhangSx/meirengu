@@ -220,14 +220,14 @@ public class UserAddressController extends BaseController{
             userAddress.setAddressId(addressId);
             UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
 
-            AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
-            if(addressPO!=null){
-                userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
-                userAddressPO.setCity(addressPO.getCity()+"");
-                userAddressPO.setAreas(addressPO.getArea()+"");
-            }
 
             if(userAddressPO != null){
+                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
+                if(addressPO!=null){
+                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
+                    userAddressPO.setCity(addressPO.getCity()+"");
+                    userAddressPO.setAreas(addressPO.getArea()+"");
+                }
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
