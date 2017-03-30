@@ -54,10 +54,10 @@
 			<if test="rebateScope != null and rebateScope != ''">
 				rebate_scope=#{rebateScope},
 			</if>
-			<if test="rebateAmount != null and rebateAmount != ''">
+			<if test="rebateAmount != null">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="rebateLimit != null and rebateLimit != ''">
+			<if test="rebateLimit != null">
 				rebate_limit=#{rebateLimit},
 			</if>
 			<if test="validDays != null and validDays != ''">
@@ -105,6 +105,105 @@
 	<select id="detail" parameterType="integer" resultType="rebateBatch">
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where batch_id=#{id}
+	</select>
+
+	<sql id="findPage_where">
+		<where>
+			<if test="batchId != null">
+				AND batch_id=#{batchId}
+			</if>
+			<if test="rebateType != null">
+				AND rebate_type=#{rebateType}
+			</if>
+			<if test="rebateMark != null">
+				AND rebate_mark=#{rebateMark}
+			</if>
+			<if test="rebateName != null and rebateName != ''">
+				AND rebate_name=#{rebateName}
+			</if>
+			<if test="rebateScope != null and rebateScope != ''">
+				AND rebate_scope=#{rebateScope}
+			</if>
+			<if test="rebateAmount != null">
+				AND rebate_amount=#{rebateAmount}
+			</if>
+			<if test="rebateLimit != null">
+				AND rebate_limit=#{rebateLimit}
+			</if>
+			<if test="validDays != null and validDays != ''">
+				valid_days=#{validDays},
+			</if>
+			<if test="validStartTime != null and validStartTime != ''">
+				valid_start_time=#{validStartTime},
+			</if>
+			<if test="validEndTime != null and validEndTime != ''">
+				valid_end_time=#{validEndTime},
+			</if>
+			<if test="validType != null and validType != ''">
+				valid_type=#{validType},
+			</if>
+			<if test="batchStatue != null and batchStatue != ''">
+				batch_statue=#{batchStatue},
+			</if>
+			<if test="batchCount != null and batchCount != ''">
+				batch_count=#{batchCount},
+			</if>
+			<if test="channel != null and channel != ''">
+				channel=#{channel},
+			</if>
+			<if test="budgetAmount != null and budgetAmount != ''">
+				budget_amount=#{budgetAmount},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks=#{remarks},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+
+
+			<if test="id != null">
+				AND tb.id = #{id}
+			</if>
+			<if test="userId != null">
+				AND tb.user_id = #{userId}
+			</if>
+			<if test="userPhone != null and userPhone != ''">
+				AND tb.user_phone = #{userPhone}
+			</if>
+			<if test="rebateSn != null and rebateSn != ''">
+				AND tb.rebate_sn = #{rebateSn}
+			</if>
+			<if test="rebateBatchId != null">
+				AND tb.rebate_batch_id = #{rebateBatchId}
+			</if>
+			<if test="rebateMark != null">
+				AND tb.rebate_mark=#{rebateMark}
+			</if>
+			<if test="activityIdentification != null and activityIdentification != ''">
+				AND tb.activity_identification = #{activityIdentification}
+			</if>
+			<if test="receiveTimeBegin != null">
+				AND tb.receive_time >= #{receiveTimeBegin}
+			</if>
+			<if test="receiveTimeEnd != null">
+				AND tb.receive_time &lt;= #{receiveTimeEnd}
+			</if>
+			<if test="status != null">
+				AND tb.status = #{status}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findByCondition" parameterType="Map" resultType="rebateBatch">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		<include refid="findPage_where"/>
 	</select>
 
 	<!-- 分页相关开始 -->
