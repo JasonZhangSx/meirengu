@@ -160,7 +160,6 @@
     <if test="updateTime != null">
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
     </if>
-    order by create_time DESC
   </select>
   <!-- 分页相关结束 -->
 
