@@ -1,7 +1,9 @@
 package com.meirengu.cf.controller;
 
 import com.meirengu.cf.common.Constants;
+import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemClass;
+import com.meirengu.cf.model.Type;
 import com.meirengu.cf.service.ItemClassService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -12,7 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
