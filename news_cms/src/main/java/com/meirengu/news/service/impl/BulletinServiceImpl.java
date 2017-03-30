@@ -83,4 +83,13 @@ public class BulletinServiceImpl implements BulletinService{
         return pageService.getList(map, bulletinDao);
     }
 
+    /**
+     * 通过公共ID获取详情
+     * @param bulletinId
+     * @return
+     */
+    public Bulletin detail(int bulletinId) {
+        return bulletinDao.getById(bulletinId);
+    }
+
 }

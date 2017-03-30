@@ -164,6 +164,10 @@
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where order_id=#{id}
 	</select>
+	<select id="orderDetailBySn" parameterType="String" resultType="Map">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where order_sn=#{orderSn}
+	</select>
 	<sql id="findPage_where">
 		<where>
 			<if test="orderId != null">

@@ -1,6 +1,7 @@
 package com.meirengu.trade.model;
 
 import com.meirengu.model.BaseObject;
+
 import java.math.BigDecimal;
 import java.util.Date;
  /*
@@ -12,6 +13,8 @@ public class RebateBatch  extends BaseObject {
 	private Integer batchId;
 	/** 抵扣券类别：1通用型，2满减型，3固定项目抵扣券 */
 	private Integer rebateType;
+	/** 抵扣券标识 */
+	private Integer rebateMark;
 	/** 抵扣券名称 */
 	private String rebateName;
 	/** 抵扣券适用范围 */
@@ -61,7 +64,15 @@ public class RebateBatch  extends BaseObject {
 		return rebateType;
 	}
 
-	public void setRebateName(String rebateName){
+	 public Integer getRebateMark() {
+		 return rebateMark;
+	 }
+
+	 public void setRebateMark(Integer rebateMark) {
+		 this.rebateMark = rebateMark;
+	 }
+
+	 public void setRebateName(String rebateName){
 		this.rebateName = rebateName;
 	}
 

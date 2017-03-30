@@ -1,6 +1,7 @@
 package com.meirengu.trade.model;
 
 import com.meirengu.model.BaseObject;
+
 import java.util.Date;
  /*
   * RebateReceive 实体类
@@ -17,6 +18,8 @@ public class RebateReceive  extends BaseObject {
 	private String rebateSn;
 	/** 抵扣券批次ID */
 	private Integer rebateBatchId;
+	/** 抵扣券标识 */
+	private Integer rebateMark;
 	/** 活动标识 */
 	private String activityIdentification;
 	/** 领取时间 */
@@ -64,7 +67,15 @@ public class RebateReceive  extends BaseObject {
 		return rebateBatchId;
 	}
 
-	public void setActivityIdentification(String activityIdentification){
+	 public Integer getRebateMark() {
+		 return rebateMark;
+	 }
+
+	 public void setRebateMark(Integer rebateMark) {
+		 this.rebateMark = rebateMark;
+	 }
+
+	 public void setActivityIdentification(String activityIdentification){
 		this.activityIdentification = activityIdentification;
 	}
 

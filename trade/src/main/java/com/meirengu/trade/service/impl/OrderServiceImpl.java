@@ -5,13 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
-import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.*;
 
 /**
  * Order服务实现层 
@@ -47,6 +46,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Autowired
     private OrderDao orderDao;
+    /**
+     * 获取订单详情
+     * @param orderSn
+     * @return
+     */
+    public Map<String, Object> orderDetailBySn (String orderSn) throws IOException {
+        Map<String, Object> map = orderDao.orderDetailBySn(orderSn);
+        return map;
+    }
     /**
      * 获取订单详情
      * @param orderId

@@ -384,7 +384,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, "用户每天提交反馈意见上限5条，请您明天再来");
         codeMsgMap.put(StatusCode.BULLETIN_ERROR_LIST, "获取公告列表失败，请重试");
         codeMsgMap.put(StatusCode.CLASS_IS_REPEATED, "分类不能重复");
-        codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "分类不能重复");
+        codeMsgMap.put(StatusCode.QUESTION_IS_REPEATED, "问题不能重复");
         codeMsgMap.put(StatusCode.SLIDESHOW_SELECT_ERROR, "轮播图获取失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_INSERT_ERROR, "轮播图增加失败");
         codeMsgMap.put(StatusCode.SLIDESHOW_UPDATE_ERROR, "轮播图修改失败");

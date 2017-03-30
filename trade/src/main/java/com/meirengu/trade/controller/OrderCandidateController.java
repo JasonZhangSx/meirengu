@@ -14,7 +14,6 @@ import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.rocketmq.MyConsumer;
 import com.meirengu.trade.rocketmq.MyProducer;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * 候补订单控制类
@@ -180,7 +178,6 @@ public class OrderCandidateController extends BaseController{
     public Result authToken(HttpServletRequest request,
                             @RequestParam(value = "key")String key){
         String token = request.getHeader("token");
-        redisClient.existsBytes(token);
         if (TokenUtils.authToken(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }

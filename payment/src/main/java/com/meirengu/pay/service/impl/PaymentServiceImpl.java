@@ -13,11 +13,8 @@ import com.meirengu.pay.model.PaymentAccount;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.*;
 import com.meirengu.pay.utils.ConfigUtil;
-import com.meirengu.pay.utils.check.ValidateException;
-import com.meirengu.pay.utils.check.Validator;
 import com.meirengu.pay.vo.PaymentRecordVo;
 import com.meirengu.pay.vo.WxNotifyData;
-import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -378,7 +375,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
             paymentRecord.setTransactionSn(transactionSn);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
-            map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(), OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX),
+            map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(),transactionSn,
                     paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
             LOGGER.info("recharge prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_RECHARGE_APPLY));
             return ResultUtil.getResult(StatusCode.OK,map);
@@ -456,7 +453,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         paymentRecord.setStatus(PaymentTypeUtil.PaymentStatus_Success);
         if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Recharge){
             paymentRecord.setPaymentFrontBalance(paymentAccount.getAccountBalance());
-            BigDecimal paymentBackBalance = paymentAccount.getAccountBalance().add(paymentRecord.getPaymentAmount()).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+            BigDecimal paymentBackBalance = paymentAccount.getAccountBalance().add(paymentRecordVo.getPaymentAmount()).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
             paymentRecord.setPaymentBackBalance(paymentBackBalance);
             paymentRecord.setChannelResponseTime(new Date());
             paymentRecord.setReturnMsg(map.get("returnContent"));

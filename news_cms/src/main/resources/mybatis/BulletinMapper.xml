@@ -7,7 +7,7 @@
         <result property="bulletinTitle" column="bulletin_title" javaType="string" jdbcType="VARCHAR" />
         <result property="bulletinContent" column="bulletin_content" javaType="string" jdbcType="VARCHAR" />
         <result property="status" column="status" javaType="int" jdbcType="INTEGER" />
-        <result property="createTime" column="create_time" javaType="int" jdbcType="INTEGER" />
+        <result property="createTime" column="create_time" javaType="Date" jdbcType="DATE" />
         <result property="updateTime" column="update_time" javaType="Date" jdbcType="TIMESTAMP" />
         <result property="operateAccount" column="operate_account" javaType="int" jdbcType="INTEGER" />
 	</resultMap>

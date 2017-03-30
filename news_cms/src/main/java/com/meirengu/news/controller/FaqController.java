@@ -77,13 +77,13 @@ public class FaqController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "get", method = {RequestMethod.POST})
+    @RequestMapping(value = "get", method = {RequestMethod.GET})
     public Result get(@RequestParam(value="faq_id", required = true) Integer faqId){
         Faq faq = faqService.getFaqById(faqId);
-        if(StringUtil.isEmpty(faq)){
-            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+        if(!StringUtil.isEmpty(faq)){
+            return super.setResult(StatusCode.OK, faq, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else{
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }
     }
 
@@ -94,11 +94,11 @@ public class FaqController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "list", method = {RequestMethod.POST})
+    @RequestMapping(value = "list", method = {RequestMethod.GET})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize){
         Map paramMap = new HashMap<String, Object>();
-        Page<Faq> page = super.setPageParams(pageSize,pageNum);
+        Page<Faq> page = super.setPageParams(pageNum,pageSize);
         try{
             page = faqService.getPageList(page, paramMap);
             if(page.getList().size() != 0){

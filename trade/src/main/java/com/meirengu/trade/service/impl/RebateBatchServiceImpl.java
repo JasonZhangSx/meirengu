@@ -2,6 +2,7 @@ package com.meirengu.trade.service.impl;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
+import com.meirengu.trade.dao.RebateBatchDao;
 import com.meirengu.trade.dao.RebateDao;
 import com.meirengu.trade.model.Rebate;
 import com.meirengu.trade.model.RebateBatch;
@@ -29,6 +30,9 @@ public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> impleme
 
     @Autowired
     private RedisClient redisClient;
+
+    @Autowired
+    private RebateBatchDao rebateBatchDao;
 
     @Autowired
     private RebateDao rebateDao;
@@ -134,5 +138,9 @@ public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> impleme
             bf.setLength(0);
         }
         return strSet;
+    }
+
+    public List<RebateBatch> findByCondition(Map<String, Object> paramMap){
+        return rebateBatchDao.findByCondition(paramMap);
     }
 }

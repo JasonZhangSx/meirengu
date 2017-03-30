@@ -3,31 +3,21 @@ package com.meirengu.trade.controller;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
-import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.common.RebateTypeEnum;
-import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.RebateBatch;
-import com.meirengu.trade.model.Refund;
-import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateBatchService;
-import com.meirengu.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 优惠券批次控制类
@@ -62,6 +52,7 @@ public class RebateBatchController extends BaseController{
      */
     @RequestMapping( method = RequestMethod.POST)
     public Result refundApply(@RequestParam(value = "rebate_type", required = false)int rebateType,
+                              @RequestParam(value = "rebate_mark", required = false)int rebateMark,
                               @RequestParam(value = "rebate_name", required = false) String rebateName,
                               @RequestParam(value = "rebate_scope", required = false) String rebateScope,
                               @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
@@ -76,10 +67,9 @@ public class RebateBatchController extends BaseController{
                               @RequestParam(value = "remarks", required = false) String remarks,
                               @RequestParam(value = "operate_account", required = false) String operateAccount){
 
-        if (rebateType == 0 || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope)
+        if (rebateType == 0 || rebateMark == 0 || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope)
                 || StringUtils.isEmpty(operateAccount) || rebateAmount == null || rebateAmount.equals(BigDecimal.ZERO) || validType == 0 || batchCount == 0
-                || StringUtils.isEmpty(channel) || budgetAmount == null || budgetAmount.equals(BigDecimal.ZERO)
-                ){
+                || StringUtils.isEmpty(channel) || budgetAmount == null || budgetAmount.equals(BigDecimal.ZERO)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //如果券类型为满减型，限额字段必须有值

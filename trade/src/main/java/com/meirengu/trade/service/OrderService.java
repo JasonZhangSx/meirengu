@@ -1,9 +1,9 @@
 package com.meirengu.trade.service;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.service.BaseService;
 import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.model.Order;
-import com.meirengu.service.BaseService;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,6 +21,12 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     Map<String, Object> orderDetail (int orderId) throws IOException ;
+    /**
+     * 获取订单详情
+     * @param orderSn
+     * @return
+     */
+    Map<String, Object> orderDetailBySn (String orderSn) throws IOException ;
     /**
      *获取后台订单列表
      * @param page

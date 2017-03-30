@@ -1,6 +1,6 @@
 package com.meirengu.trade.service;
-import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.service.BaseService;
+import com.meirengu.trade.model.OrderCandidate;
 
 import java.io.IOException;
 

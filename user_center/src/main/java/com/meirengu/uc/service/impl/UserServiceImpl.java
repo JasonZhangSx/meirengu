@@ -57,7 +57,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             inviter.setUserId(userInviter.getUserId());
             inviter.setInvitedUserId(user.getUserId());
             inviter.setInvitedUserPhone(user.getPhone());
-            inviter.setInvestTime(new Date());
             inviter.setRegisterTime(new Date());
             inviter.setReward(new BigDecimal("0"));
             inviterDao.insert(inviter);
@@ -325,6 +324,25 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         RowBounds rowBounds = new RowBounds(startPos, pageSize);
         List<Map<String, Object>> aList = userDao.getUserByPage(paramMap, rowBounds);
         int totalCount = userDao.getUserCount(paramMap);
+        page.setTotalCount(totalCount);
+        page.setList(aList);
+        page.init();
+        logger.info(" page params is "+ JSON.toJSON(paramMap));
+        return page;
+    }
+
+    /**
+     * 不分页 封装入page
+     * @param page
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public Page<User> getUserList(Page<User> page, Map paramMap) {
+
+        List<Map<String, Object>> aList = userDao.getUserByPage(paramMap);
+        int totalCount = userDao.getUserCount(paramMap);
+        page.setPageSize(aList.size());
         page.setTotalCount(totalCount);
         page.setList(aList);
         page.init();

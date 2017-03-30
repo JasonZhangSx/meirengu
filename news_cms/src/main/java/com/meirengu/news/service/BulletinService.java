@@ -29,6 +29,13 @@ public interface BulletinService extends PageBaseService<Bulletin>{
      */
     int update(int bulletinId,String bulletinTitle,String bulletinContent,int status) throws Exception;
 
+    /**
+     * 通过公共ID获取详情
+     * @param bulletinId
+     * @return
+     */
+    Bulletin detail(int bulletinId);
+
 
 
 
