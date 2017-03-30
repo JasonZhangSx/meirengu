@@ -62,7 +62,9 @@
                             <td>${item.targetAmount}</td>
                             <td>${item.preheatingDays}</td>
                             <td>${item.crowdDays}</td>
-                            <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.createTime}</td>
+                            <td>
+                                ${item.createTime}
+                            </td>
                             <td>
                                 <c:if test="${item.itemStatus == 1}">新建中</c:if>
                             </td>

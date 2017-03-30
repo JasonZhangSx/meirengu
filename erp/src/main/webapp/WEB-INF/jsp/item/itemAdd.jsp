@@ -1,5 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
-<%@ include file="../common/common.jsp" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,10 +18,22 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-    <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-    <title>添加项目</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel=stylesheet type=text/css href="static/h-ui/css/H-ui.min.css"/>
+    <link rel=stylesheet type=text/css href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel=stylesheet type=text/css href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel=stylesheet type=text/css href="static/h-ui.admin/skin/default/skin.css" id=skin/>
+    <link rel=stylesheet type=text/css href="static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+</html>
+<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 <style>
     .select-box1 {
         padding-left: 0;
@@ -82,122 +99,129 @@
 <div class="page-container">
     <!-- 选项卡 -->
 
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
-
+    <span class="form form-horizontal" id="form-article-add">
         <!-- 基本信息 -->
         <div>
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">基本信息</h3>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                           placeholder="项目标题最多30字" id="" name="">
+            <form action="" method="post">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">基本信息</h3>
                 </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">项目简介：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <input type="text" class="input-text" value="" id="itemName" name="itemName"
+                               maxlength="30"
+                               placeholder="项目标题最多30字">
+                    </div>
                 </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<c:forEach items="${type}" var="type">
-                            <option value="${type.typeId}">${type.typeName}</option>
-                        </c:forEach>
-					</select>
-					</span>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目简介：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <textarea id="itemProfile" name="itemProfile" cols="" rows="" class="textarea" placeholder="..."
+                                  datatype="*10-100"
+                                  dragonfly="true" nullmsg="备注不能为空！"
+                                  onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                    </div>
                 </div>
-                <label class="form-label col-xs-4 col-sm-2">项目分类：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<c:forEach items="${itemClass}" var="itemClass">
-                            <option value="${itemClass.classId}">${itemClass.className}</option>
-                        </c:forEach>
-					</select>
-					</span>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">项目方：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<c:forEach items="${partner}" var="partner">
-                            <option value="${partner.partnerId}">${partner.partnerName}</option>
-                        </c:forEach>
-					</select>
-					</span>
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2" style="line-height:30px;">项目地区：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <label data-toggle="distpicker" style="display:block;width:100%">
-						<span class="select-box select-box1" style="border:none;">
-					  	<select name="" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----">
-                            <c:forEach items="${provinces}" var="provinces">
-                                <option value="${provinces.areaId}">${provinces.areaName}</option>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="typeId" id="typeId" class="select">
+                            <c:forEach items="${type}" var="type">
+                                <option value="${type.typeId}">${type.typeName}</option>
                             </c:forEach>
                         </select>
-						  <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1" data-city="---- 选择市 ----"></select>
-						  <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1"
-                                  data-district="---- 选择区 ----"></select>
-						</span>
-                    </label>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">项目分类：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="classId" id="classId" class="select">
+                            <c:forEach items="${itemClass}" var="itemClass">
+                                <option value="${itemClass.classId}" selected>${itemClass.className}</option>
+                                <option value="${itemClass.classId}">${itemClass.className}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
                 </div>
-            </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="targetAmount"
+                               name="targetAmount">
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder=""
+                               id="preheatingDays" name="preheatingDays">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目方：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="partnerId" id="partnerId" class="select">
+                            <c:forEach items="${partner}" var="partner">
+                                <option value="${partner.partnerId}" selected>${partner.partnerName}</option>
+                                <option value="${partner.partnerId}">${partner.partnerName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="crowdDays"
+                               name="crowdDays">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2" style="line-height:30px;">项目地区：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <label data-toggle="distpicker" style="display:block;width:100%">
+                            <span class="select-box select-box1" style="border:none;">
+                            <select name="" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----">
+                                <c:forEach items="${provinces}" var="provinces">
+                                    <option value="${provinces.areaId}">${provinces.areaName}</option>
+                                </c:forEach>
+                            </select>
+                              <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1" data-city="---- 选择市 ----"></select>
+                              <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1"
+                                      data-district="---- 选择区 ----"></select>
+                            </span>
+                        </label>
+                    </div>
+                </div>
 
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">项目头图：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <!-- 图片上传模块 -->
-                    <div class="uploader-list-container">
-                        <div class="queueList">
-                            <div id="dndArea" class="placeholder">
-                                <div id="filePicker-2"></div>
-                                <p>或将照片拖到这里，单次最多可选300张</p>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目头图：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <!-- 图片上传模块 -->
+                        <div class="uploader-list-container">
+                            <div class="queueList">
+                                <div id="dndArea" class="placeholder">
+                                    <div id="filePicker-2"></div>
+                                    <p>或将照片拖到这里，单次最多可选300张</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="statusBar" style="display:none;">
-                            <div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>
-                            <div class="info"></div>
-                            <div class="btns">
-                                <div id="filePicker2"></div>
-                                <div class="uploadBtn">开始上传</div>
+                            <div class="statusBar" style="display:none;">
+                                <div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>
+                                <div class="info"></div>
+                                <div class="btns">
+                                    <div id="filePicker2"></div>
+                                    <div class="uploadBtn">开始上传</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row cl">
-            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                <button class="btn btn-primary radius" type="button">保存此项</button>
-            </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                        <button class="btn btn-primary radius" type="button">保存继续进行</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
-    </form>
 
         <!-- 内容设置 -->
         <div>
@@ -215,7 +239,7 @@
             <div class="content_set">
                 <div class="item">
                     <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">主标题1：</label>
+                        <label class="form-label col-xs-4 col-sm-2">主标题：</label>
                         <div class="formControls col-xs-8 col-sm-8">
                             <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id=""
                                    name="">
@@ -581,7 +605,7 @@
             </div>
         </div>
 
-    </form>
+    </span>
 </div>
 
 <script src=lib/jquery/1.9.1/jquery.min.js></script>

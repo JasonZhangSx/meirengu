@@ -1,5 +1,6 @@
 package com.meirengu.cf.controller;
 
+import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.service.ItemInterestedService;
 import com.meirengu.cf.service.ItemService;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 项目控制层
@@ -74,30 +72,36 @@ public class ItemController extends BaseController {
         map.put("sortBy", sortBy);
         map.put("order", order);
 
-        if(isPage){
-            Page<Item> page = new Page<>();
-            page.setPageNow(pageNum);
-            page.setPageSize(pageSize);
-            page = itemService.getListByPage(page, map);
-            List<Map<String, Object>> list = page.getList();
-            List<Map<String, Object>> resultList = new ArrayList<>();
-            for (Map<String, Object> resultMap : list){
-                resultMap.put("privince", "北京市");
-                resultMap.put("city", "朝阳区");
-                resultList.add(resultMap);
+        try {
+            if(isPage){
+                Page<Item> page = new Page<>();
+                page.setPageNow(pageNum);
+                page.setPageSize(pageSize);
+                page = itemService.getListByPage(page, map);
+                List<Map<String, Object>> list = page.getList();
+                List<Map<String, Object>> resultList = new ArrayList<>();
+                for (Map<String, Object> resultMap : list){
+                    resultMap.put("privince", "北京市");
+                    resultMap.put("city", "朝阳区");
+                    resultList.add(resultMap);
+                }
+                page.setList(resultList);
+                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                List<Map<String, Object>> list = itemService.getList(map);
+                List<Map<String, Object>> resultList = new ArrayList<>();
+                for (Map<String, Object> resultMap : list){
+                    resultMap.put("privince", "北京市");
+                    resultMap.put("city", "朝阳区");
+                    resultList.add(resultMap);
+                }
+                return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
-            page.setList(resultList);
-            return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else {
-            List<Map<String, Object>> list = itemService.getList(map);
-            List<Map<String, Object>> resultList = new ArrayList<>();
-            for (Map<String, Object> resultMap : list){
-                resultMap.put("privince", "北京市");
-                resultMap.put("city", "朝阳区");
-                resultList.add(resultMap);
-            }
-            return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">> ItemController.list throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+
     }
 
     /**
@@ -107,8 +111,25 @@ public class ItemController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public Result insert(Item item){
+    public Result insert(@RequestParam(value = "item_name", required = false) String itemName,
+                         @RequestParam(value = "item_profile", required = false) String itemProfile,
+                         @RequestParam(value = "type_id", required = false) Integer typeId,
+                         @RequestParam(value = "class_id", required = false) Integer classId,
+                         @RequestParam(value = "target_amount", required = false) BigDecimal targetAmount,
+                         @RequestParam(value = "preheating_days", required = false) Integer preheatingDays,
+                         @RequestParam(value = "partner_id", required = false) Integer partnerId,
+                         @RequestParam(value = "crowd_days", required = false) Integer crowdDays,
+                         @RequestParam(value = "area_id", required = false) Integer areaId,
+                         @RequestParam(value = "header_image", required = false) String headerImage,
+                         @RequestParam(value = "sponsor_name", required = false) String sponsorName,
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
         try {
+            Item item = setEntity(null, itemName, itemProfile, typeId, classId,
+                    targetAmount, new BigDecimal(0), new BigDecimal(0),
+                    preheatingDays, null, null, crowdDays,
+                    null, null, partnerId, areaId, headerImage,
+                    Constants.ITEM_BUILDING, Constants.STATUS_YES, 255, new Date(), null,
+                    operateAccount, sponsorName);
             int insertNum = itemService.insert(item);
             if(insertNum == 1){
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -157,9 +178,27 @@ public class ItemController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.PUT)
-    public Result update(Item item){
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "item_name", required = false) String itemName,
+                         @RequestParam(value = "item_profile", required = false) String itemProfile,
+                         @RequestParam(value = "type_id", required = false) Integer typeId,
+                         @RequestParam(value = "class_id", required = false) Integer classId,
+                         @RequestParam(value = "target_amount", required = false) BigDecimal targetAmount,
+                         @RequestParam(value = "preheating_days", required = false) Integer preheatingDays,
+                         @RequestParam(value = "partner_id", required = false) Integer partnerId,
+                         @RequestParam(value = "crowd_days", required = false) Integer crowdDays,
+                         @RequestParam(value = "area_id", required = false) Integer areaId,
+                         @RequestParam(value = "header_image", required = false) String headerImage,
+                         @RequestParam(value = "sponsor_name", required = false) String sponsorName,
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
         try {
+            Item item = setEntity(itemId, itemName, itemProfile, typeId, classId,
+                    targetAmount, new BigDecimal(0), new BigDecimal(0),
+                    preheatingDays, null, null, crowdDays,
+                    null, null, partnerId, areaId, headerImage,
+                    Constants.ITEM_BUILDING, Constants.STATUS_YES, 255, new Date(), null,
+                    operateAccount, sponsorName);
             int updateNum = itemService.update(item);
             if(updateNum == 1){
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -250,4 +289,41 @@ public class ItemController extends BaseController {
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    public Item setEntity(Integer itemId, String itemName, String itemProfile, Integer typeId, Integer classId,
+                          BigDecimal targetAmount, BigDecimal appointAmount, BigDecimal completedAmount,
+                          Integer preheatingDays, Date preheatingStartTime, Date preheatingEndTime, Integer crowdDays,
+                          Date crowdStartTime, Date crowdEndTime, Integer partnerId, Integer areaId, String headerImage,
+                          Integer itemStatus, Integer flag, Integer itemSort, Date createTime, Date updateTime,
+                          String operateAccount, String sponsorName) {
+        Item item = new Item();
+
+        item.setItemId(itemId);
+        item.setItemName(itemName);
+        item.setItemProfile(itemProfile);
+        item.setTypeId(typeId);
+        item.setClassId(classId);
+        item.setTargetAmount(targetAmount);
+        item.setAppointAmount(appointAmount);
+        item.setCompletedAmount(completedAmount);
+        item.setPreheatingDays(preheatingDays);
+        item.setPreheatingStartTime(preheatingStartTime);
+        item.setPreheatingEndTime(preheatingEndTime);
+        item.setCrowdDays(crowdDays);
+        item.setCrowdStartTime(crowdStartTime);
+        item.setCrowdEndTime(crowdEndTime);
+        item.setPartnerId(partnerId);
+        item.setAreaId(areaId);
+        item.setHeaderImage(headerImage);
+        item.setItemStatus(itemStatus);
+        item.setFlag(flag);
+        item.setItemSort(itemSort);
+        item.setCreateTime(createTime);
+        item.setUpdateTime(updateTime);
+        item.setOperateAccount(operateAccount);
+        item.setSponsorName(sponsorName);
+
+        return item;
+    }
+
 }

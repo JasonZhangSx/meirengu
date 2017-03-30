@@ -9,15 +9,15 @@ import java.util.Date;
   */
 public class Item  extends BaseObject {
 	/** 众筹项目索引id */
-	int itemId;
+	Integer itemId;
 	/** 项目名称(不超过30字) */
 	String itemName;
 	/** 项目简介 */
 	String itemProfile;
 	/** 众筹类型id */
-	int typeId;
+	Integer typeId;
 	/** 项目分类id */
-	int classId;
+	Integer classId;
 	/** 目标金额 */
 	BigDecimal targetAmount;
 	 /** 预约金额 */
@@ -25,29 +25,29 @@ public class Item  extends BaseObject {
 	/** 已筹金额 */
 	BigDecimal completedAmount;
 	/** 预热天数 */
-	int preheatingDays;
+	Integer preheatingDays;
 	/** 预热开始时间 */
 	Date preheatingStartTime;
 	/** 预热结束时间 */
 	Date preheatingEndTime;
 	/** 众筹天数 */
-	int crowdDays;
+	Integer crowdDays;
 	/** 众筹开始时间 */
 	Date crowdStartTime;
 	/** 众筹结束时间 */
 	Date crowdEndTime;
 	/** 合作方id */
-	int partnerId;
+	Integer partnerId;
 	/** 项目区域id */
-	int areaId;
+	Integer areaId;
 	/** 项目头图 */
 	String headerImage;
 	/** 状态：1:新建中；2:初审中；3初审通过；4初审未通过；5:设置合作中；6:复审中；7复审通过；8复审未通过；9待发布；10:预热中；11认筹中；12 已完成；13已下架 */
-	int itemStatus;
+	Integer itemStatus;
 	/** 删除标识： 1 未删除  0 删除 */
-	int flag;
+	Integer flag;
 	/** 排序，数字越小权重越大 */
-	int itemSort;
+	Integer itemSort;
 	/** 创建时间 */
 	Date createTime;
 	/** 修改时间 */
@@ -57,11 +57,11 @@ public class Item  extends BaseObject {
 	/** 项目发起人名称 */
 	String sponsorName;
 
-	public void setItemId(int itemId){
+	public void setItemId(Integer itemId){
 		this.itemId = itemId;
 	}
 
-	public int getItemId(){
+	public Integer getItemId(){
 		return itemId;
 	}
 
@@ -81,19 +81,19 @@ public class Item  extends BaseObject {
 		return itemProfile;
 	}
 
-	public void setTypeId(int typeId){
+	public void setTypeId(Integer typeId){
 		this.typeId = typeId;
 	}
 
-	public int getTypeId(){
+	public Integer getTypeId(){
 		return typeId;
 	}
 
-	public void setClassId(int classId){
+	public void setClassId(Integer classId){
 		this.classId = classId;
 	}
 
-	public int getClassId(){
+	public Integer getClassId(){
 		return classId;
 	}
 
@@ -113,11 +113,11 @@ public class Item  extends BaseObject {
 		return completedAmount;
 	}
 
-	public void setPreheatingDays(int preheatingDays){
+	public void setPreheatingDays(Integer preheatingDays){
 		this.preheatingDays = preheatingDays;
 	}
 
-	public int getPreheatingDays(){
+	public Integer getPreheatingDays(){
 		return preheatingDays;
 	}
 
@@ -137,11 +137,11 @@ public class Item  extends BaseObject {
 		return preheatingEndTime;
 	}
 
-	public void setCrowdDays(int crowdDays){
+	public void setCrowdDays(Integer crowdDays){
 		this.crowdDays = crowdDays;
 	}
 
-	public int getCrowdDays(){
+	public Integer getCrowdDays(){
 		return crowdDays;
 	}
 
@@ -161,19 +161,19 @@ public class Item  extends BaseObject {
 		return crowdEndTime;
 	}
 
-	public void setPartnerId(int partnerId){
+	public void setPartnerId(Integer partnerId){
 		this.partnerId = partnerId;
 	}
 
-	public int getPartnerId(){
+	public Integer getPartnerId(){
 		return partnerId;
 	}
 
-	public void setAreaId(int areaId){
+	public void setAreaId(Integer areaId){
 		this.areaId = areaId;
 	}
 
-	public int getAreaId(){
+	public Integer getAreaId(){
 		return areaId;
 	}
 
@@ -185,27 +185,27 @@ public class Item  extends BaseObject {
 		return headerImage;
 	}
 
-	public void setItemStatus(int itemStatus){
+	public void setItemStatus(Integer itemStatus){
 		this.itemStatus = itemStatus;
 	}
 
-	public int getItemStatus(){
+	public Integer getItemStatus(){
 		return itemStatus;
 	}
 
-	public void setFlag(int flag){
+	public void setFlag(Integer flag){
 		this.flag = flag;
 	}
 
-	public int getFlag(){
+	public Integer getFlag(){
 		return flag;
 	}
 
-	public void setItemSort(int itemSort){
+	public void setItemSort(Integer itemSort){
 		this.itemSort = itemSort;
 	}
 
-	public int getItemSort(){
+	public Integer getItemSort(){
 		return itemSort;
 	}
 
@@ -241,11 +241,12 @@ public class Item  extends BaseObject {
 		return sponsorName;
 	}
 
-	 public BigDecimal getAppointAmount() {
+	public BigDecimal getAppointAmount() {
 		 return appointAmount;
 	 }
 
-	 public void setAppointAmount(BigDecimal appointAmount) {
+	public void setAppointAmount(BigDecimal appointAmount) {
 		 this.appointAmount = appointAmount;
 	 }
+
  }
