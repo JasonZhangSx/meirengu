@@ -3,31 +3,21 @@ package com.meirengu.trade.controller;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
-import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.common.RebateTypeEnum;
-import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.RebateBatch;
-import com.meirengu.trade.model.Refund;
-import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateBatchService;
-import com.meirengu.utils.OrderSNUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 优惠券批次控制类

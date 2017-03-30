@@ -1,9 +1,9 @@
 package com.meirengu.trade.service;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.service.BaseService;
 import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.model.Order;
-import com.meirengu.service.BaseService;
 
 import java.io.IOException;
 import java.util.Map;

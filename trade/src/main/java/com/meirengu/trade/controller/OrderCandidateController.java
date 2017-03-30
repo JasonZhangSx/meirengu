@@ -14,7 +14,6 @@ import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.rocketmq.MyConsumer;
 import com.meirengu.trade.rocketmq.MyProducer;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * 候补订单控制类

@@ -109,6 +109,8 @@ public interface UserService extends BaseService<User>{
 
     Page<User> getByPage(Page<User> page, Map paramMap);
 
+    Page<User> getUserList(Page<User> page, Map paramMap);
+
     int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword);
 
     int setPayPassword(Integer userId, String newPassword);

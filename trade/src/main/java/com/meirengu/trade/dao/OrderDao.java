@@ -1,7 +1,6 @@
 package com.meirengu.trade.dao;
-import com.meirengu.trade.model.Order;
 import com.meirengu.dao.BaseDao;
-import org.springframework.stereotype.Repository;
+import com.meirengu.trade.model.Order;
 
 import java.util.Map;
 
