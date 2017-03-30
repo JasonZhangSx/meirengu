@@ -60,22 +60,25 @@ public class UserController extends BaseController{
         String urlForGetUserAddress = ConfigUtil.getConfig("user.address.list");
         try {
             Map<String,String> paramsMap = new HashedMap();
+            Map<String,Object> mapUserInfo = new HashedMap();
             paramsMap.put("phone",phone);
-            map = ( Map<String, Object>)super.httpPost(urlForGetUser,paramsMap);
-            JSONArray objects =(JSONArray) map.get("list");
+            mapUserInfo = ( Map<String, Object>)super.httpPost(urlForGetUser,paramsMap);
+            JSONArray objects =(JSONArray) mapUserInfo.get("list");
             Map<String,Object> user  = ( Map<String,Object>)objects.get(0);
-//            Map<String,Object> user = JSONArray.toJavaObject(objects,Map.class);
-//            Map<String,Object> user = JSONArray.parseObject();//.readValue((JSONArray)map.get("list"),Map.class);
 
             Map<String,String> paramsForAddress = new HashedMap();
-//            paramsForAddress.put("userId",user.get("userId")+"");
+            paramsForAddress.put("user_id",user.get("userId")+"");
 
-            Object data = super.httpPost(urlForGetUserAddress,paramsForAddress);
+            Map<String,Object> mapAddress = ( Map<String, Object>)super.httpPost(urlForGetUserAddress,paramsForAddress);
+
+            // TODO: 3/30/2017 可能会有exception
+            map.put("userInfo", ((JSONArray) mapUserInfo.get("list")).get(0));
+            map.put("mapAddress",mapAddress);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ModelAndView("/user/userList", map);
+        return new ModelAndView("/user/userDetail", map);
     }
 
 

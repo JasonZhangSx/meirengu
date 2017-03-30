@@ -65,8 +65,8 @@ public class FaqClassServiceImpl implements FaqClassService {
     }
 
     @Override
-    public List<ListAllFaqClassPo> listAllFaqClass() {
-        List<FaqClass> faqClassList = faqClassDao.listAllFaqClass();
+    public List<ListAllFaqClassPo> listAllFaqClass(FaqClass faClass) {
+        List<FaqClass> faqClassList = faqClassDao.listAllFaqClass(faClass);
         List<ListAllFaqClassPo> listAllFaqClassPo = new ArrayList<ListAllFaqClassPo>();
         for(FaqClass faqClass :faqClassList){
             ListAllFaqClassPo faqClassPo = new ListAllFaqClassPo();
