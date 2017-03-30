@@ -104,7 +104,9 @@ public class StatusCode {
     public static final int CHANNEL_BANK_SUCCESS_SELECT=40634;
     public static final int CHANNEL_BANK_ERROR_SELECT=40635;
     public static final int CHANNEL_BANK_ERROR_SELECT_IS_NULL=40636;
-
+    public static final int PAYMENT_RECORD_ERROR_SELECT_IS_NULL=40637;
+    public static final int PAYMENT_RECORD_ERROR_SELECT=40638;
+    public static final int PAYMENT_RECORD_SUCCESS_SELECT=40639;
 
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
@@ -479,6 +481,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.CHANNEL_BANK_SUCCESS_SELECT, "渠道支持银行查询成功");
         codeMsgMap.put(StatusCode.CHANNEL_BANK_ERROR_SELECT, "渠道支持银行查询失败");
         codeMsgMap.put(StatusCode.CHANNEL_BANK_ERROR_SELECT_IS_NULL, "渠道支持银行查询数据为空");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL, "交易记录查询数据为空");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_SELECT, "交易记录查询数据成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_SELECT, "交易记录查询数据失败");
 
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");

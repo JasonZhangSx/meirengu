@@ -124,7 +124,7 @@ public class OrderCandidateController extends BaseController{
      * @param userId
      * @param userPhone
      * @param itemName
-     * @param state
+     * @param status
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
@@ -135,12 +135,12 @@ public class OrderCandidateController extends BaseController{
                           @RequestParam(value = "user_id", required = false) String userId,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
-                          @RequestParam(value = "state", required = false) String state){
+                          @RequestParam(value = "status", required = false) Integer status){
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("userPhone", userPhone);
         map.put("itemName", itemName);
-        map.put("state", state);
+        map.put("status", status);
         map.put("sortBy", sortBy);
         map.put("order", order);
         Page<OrderCandidate> page = new Page<OrderCandidate>();
