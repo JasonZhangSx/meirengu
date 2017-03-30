@@ -27,7 +27,6 @@ public class UserController {
     @RequestMapping("list")
     public ModelAndView partnerList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
-                                    @RequestParam(value="is_page", required = false,defaultValue = "0") Integer isPage,
                                     @RequestParam(value="phone", required = false) String phone,
                                     @RequestParam(value="realname", required = false) String realname,
                                     @RequestParam(value="idcard", required = false) String idcard,
@@ -42,7 +41,6 @@ public class UserController {
             paramsMap.put("idcard",idcard);
             paramsMap.put("page",pageNum+"");
             paramsMap.put("per_page",pageSize+"");
-            paramsMap.put("is_page",isPage+"");
             map = this.sendPost(url,paramsMap);
             map.put("phone",phone);
             map.put("realname",realname);

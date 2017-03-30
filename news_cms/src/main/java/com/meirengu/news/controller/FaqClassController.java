@@ -33,7 +33,7 @@ public class FaqClassController extends BaseController{
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "list", method = {RequestMethod.POST})
+    @RequestMapping(value = "list", method = {RequestMethod.GET})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value="sortby", required = false) String sortBy,
