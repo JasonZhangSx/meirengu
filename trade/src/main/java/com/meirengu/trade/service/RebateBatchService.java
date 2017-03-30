@@ -3,6 +3,9 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.service.BaseService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * RebateBatch服务接口 
  * @author 建新
@@ -16,4 +19,11 @@ public interface RebateBatchService extends BaseService<RebateBatch>{
      * @return
      */
     Result insertRebateBatch(RebateBatch rebateBatch);
+
+    /**
+     * 根据条件查询优惠券批次
+     * @param paramMap
+     * @return
+     */
+    List<RebateBatch> findByCondition(Map<String, Object> paramMap);
 }

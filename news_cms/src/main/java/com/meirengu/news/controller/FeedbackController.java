@@ -36,7 +36,6 @@ public class FeedbackController extends BaseController {
      * @param userPhone
      * @return
      */
-    @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public Result insert (@RequestParam(value = "feedback_content", required = false) String feedbackContent,
                                       @RequestParam(value = "user_id", required = false) Integer userId,
