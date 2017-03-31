@@ -98,7 +98,7 @@ public class ItemLevelController extends BaseController{
         try {
             int insertNum = itemLevelService.insert(itemLevel);
             if(insertNum == 1){
-                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.OK, itemLevel, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.ITEM_LEVEL_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_LEVEL_ERROR_INSERT));
             }
@@ -149,8 +149,8 @@ public class ItemLevelController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{level_id}", method = RequestMethod.PUT)
-    public Result update(@PathVariable(value = "level_id", required = false) int levelId,
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "level_id", required = false) int levelId,
                          @RequestParam(value = "level_name", required = false) String levelName,
                          @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
                          @RequestParam(value = "level_desc", required = false) String levelDesc,
@@ -170,7 +170,7 @@ public class ItemLevelController extends BaseController{
                          @RequestParam(value = "level_status", required = false) Integer levelStatus,
                          @RequestParam(value = "level_sort", required = false) Integer levelSort){
 
-       /* ItemLevel itemLevel = this.setEntity(levelId, 0, levelName, levelAmount, levelDesc,
+       ItemLevel itemLevel = this.setEntity(levelId, 0, levelName, levelAmount, levelDesc,
                 totalNumber, singleLimitNumber, bookNumber, completedNumber, paybackDays,
                 null, isShareBonus, yearRate, investmentPeriod, revenueModel,
                 shareBonusPeriod, isNeedAddress, isNeedAgreement, levelStatus, levelSort,
@@ -185,9 +185,7 @@ public class ItemLevelController extends BaseController{
         }catch (Exception e){
             LOGGER.error(">> update item level throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }*/
-
-        return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
 
     }
 

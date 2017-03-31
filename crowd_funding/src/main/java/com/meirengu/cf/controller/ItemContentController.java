@@ -80,7 +80,7 @@ public class ItemContentController extends BaseController{
         try {
             int insertNum = itemContentService.insert(itemContent);
             if(insertNum == 1){
-                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.OK, itemContent, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.ITEM_CONTENT_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_CONTENT_ERROR_INSERT));
             }
@@ -119,8 +119,8 @@ public class ItemContentController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{content_id}", method = RequestMethod.PUT)
-    public Result update(@PathVariable(value = "content_id", required = false) Integer contentId,
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "content_id", required = false) Integer contentId,
                          @RequestParam(value = "content_type", required = false) Integer contentType,
                          @RequestParam(value = "content_title", required = false) String contentTitle,
                          @RequestParam(value = "content_subtitle", required = false) String contentSubtitle,

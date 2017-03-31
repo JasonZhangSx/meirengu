@@ -132,7 +132,7 @@ public class ItemController extends BaseController {
                     operateAccount, sponsorName);
             int insertNum = itemService.insert(item);
             if(insertNum == 1){
-                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.ITEM_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_INSERT));
             }
@@ -185,19 +185,30 @@ public class ItemController extends BaseController {
                          @RequestParam(value = "type_id", required = false) Integer typeId,
                          @RequestParam(value = "class_id", required = false) Integer classId,
                          @RequestParam(value = "target_amount", required = false) BigDecimal targetAmount,
+                         @RequestParam(value = "appoint_amount", required = false) BigDecimal appointAmount,
+                         @RequestParam(value = "completed_amount", required = false) BigDecimal completedAmount,
                          @RequestParam(value = "preheating_days", required = false) Integer preheatingDays,
+                         @RequestParam(value = "preheating_start_time", required = false) Date preheatingStartTime,
+                         @RequestParam(value = "preheating_end_time", required = false) Date preheatingEndTime,
                          @RequestParam(value = "partner_id", required = false) Integer partnerId,
                          @RequestParam(value = "crowd_days", required = false) Integer crowdDays,
+                         @RequestParam(value = "crowd_start_time", required = false) Date crowdStartTime,
+                         @RequestParam(value = "crowd_end_time", required = false) Date crowdEndTime,
                          @RequestParam(value = "area_id", required = false) Integer areaId,
                          @RequestParam(value = "header_image", required = false) String headerImage,
                          @RequestParam(value = "sponsor_name", required = false) String sponsorName,
+                         @RequestParam(value = "item_sort", required = false) Integer itemSort,
+                         @RequestParam(value = "item_status", required = false) Integer itemStatus,
                          @RequestParam(value = "operate_account", required = false) String operateAccount){
         try {
+            if(StringUtil.isEmpty(itemId)){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
             Item item = setEntity(itemId, itemName, itemProfile, typeId, classId,
-                    targetAmount, new BigDecimal(0), new BigDecimal(0),
-                    preheatingDays, null, null, crowdDays,
-                    null, null, partnerId, areaId, headerImage,
-                    Constants.ITEM_BUILDING, Constants.STATUS_YES, 255, new Date(), null,
+                    targetAmount, appointAmount, completedAmount,
+                    preheatingDays, preheatingStartTime, preheatingEndTime, crowdDays,
+                    crowdStartTime, crowdEndTime, partnerId, areaId, headerImage,
+                    itemStatus, null, itemSort, null, null,
                     operateAccount, sponsorName);
             int updateNum = itemService.update(item);
             if(updateNum == 1){
