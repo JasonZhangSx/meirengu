@@ -283,7 +283,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserRestMoney(Map map) {
-        Boolean flag = false;
         HttpResult hr = null;
         Map<String, Object> paramsmap = new HashMap<String, Object>();
         paramsmap.put("userId",map.get("userId"));
@@ -319,6 +318,42 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         map.put("totalInvestMoney","100000");
     }
 
+    @Override
+    public void getWithdrawalsAmount(Map map) {
+        map.put("withdrawalsAmount","100000");
+    }
+
+    @Override
+    public void getBankName(Map map) {
+        HttpResult hr = null;
+//        Map<String, Object> paramsmap = new HashMap<String, Object>();
+//        paramsmap.put("bankCode",map.get("bankCode"));
+        String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
+        String urlAppend = url+"?bankCode="+ map.get("bankCode");
+        logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+        try {
+            hr = HttpUtil.doGet(urlAppend);
+        } catch (Exception e) {
+            logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
+        }
+        if(hr.getStatusCode()==200){
+            Map<String,Object> account = new HashedMap();
+            account = JacksonUtil.readValue(hr.getContent(),Map.class);
+            if(account!=null){
+                Map mapData = (Map)account.get("data");
+                if(mapData!=null){
+                    ArrayList channelBank = (ArrayList) mapData.get("channelBank");
+                    if(channelBank.size()!=0){
+                        Map channel = (Map)channelBank.get(0);
+                        map.put("bankName",channel.get("bankName"));
+                    }
+
+                }
+            }
+        }else{
+            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+        }
+    }
     @Override
     public Page<User> getByPage(Page<User> page, Map paramMap) {
 
@@ -438,4 +473,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         return flag;
     }
+
+
 }
