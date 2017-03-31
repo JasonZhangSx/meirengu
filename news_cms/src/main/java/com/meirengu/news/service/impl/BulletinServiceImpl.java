@@ -88,7 +88,7 @@ public class BulletinServiceImpl implements BulletinService{
      * @param bulletinId
      * @return
      */
-    public Bulletin detail(int bulletinId) {
+    public Map<String, Object> detail(int bulletinId) {
         return bulletinDao.getById(bulletinId);
     }
 

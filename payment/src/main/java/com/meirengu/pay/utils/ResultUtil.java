@@ -49,12 +49,12 @@ public class ResultUtil {
      * @param json
      * @return
      */
-    public static Object judgeStatus(String json){
+    public static Map judgeStatus(String json){
         Gson gson = new Gson();
         Map caseMap =gson.fromJson(json,Map.class);
         if (caseMap.get("code").equals(new Double(200))){
             caseMap= (Map) caseMap.get("data");
-            return caseMap.get("list");
+            return caseMap;
         }
         return null;
     }
