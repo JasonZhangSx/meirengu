@@ -35,7 +35,9 @@
             </c:forEach>
           </c:if>
           <c:if test="${empty list}">
-            暂无公告内容！
+              <div class="text-c rule">
+                  暂无公告内容！
+              </div>
           </c:if>
     </div>
   </div>

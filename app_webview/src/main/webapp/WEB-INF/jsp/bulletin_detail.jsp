@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html>
 <head>
@@ -15,24 +17,28 @@
 
 	<div class="findNotDet_cont">
     <div class="wrapper">
-      <div class="tit border_b1">
-        <h4>美人谷关于新手标的更迭公告<small>2016/09/22  15:33:33</small></h4>
-      </div>
-      <p>
-        美人谷关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷
-        关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷关于新
-        手标的更迭公告美人谷关于新手标的更迭。
-
-        美人谷关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷
-        关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷关于新
-        手标的更迭公告美人谷关于新手标的更迭。
-        美人谷关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷
-        关于新手标的更迭公告美人谷关于新手标的更迭公告美人谷关于新
-        手标的更迭公告美人谷关于新手标的更迭。
-      </p>
-      <div class="bot">
-        美人谷技术团队
-      </div>
+        <c:if test="${not empty bulletin}">
+            <div class="tit border_b1">
+                <h4>${bulletin.bulletinTitle}
+                    <small>
+                        <jsp:useBean id="dateValue" class="java.util.Date"/>
+                        <jsp:setProperty name="dateValue" property="time" value="${bulletin.createTime}"/>
+                        <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd/ HH:mm:ss"/>
+                    </small>
+                </h4>
+            </div>
+            <p>
+                ${bulletin.bulletinContent}
+            </p>
+            <div class="bot">
+                美人谷团队
+            </div>
+        </c:if>
+        <c:if test="${empty bulletin}">
+            <div class="text-c rule">
+                没有找到公告详情内容！
+            </div>
+        </c:if>
     </div>
   </div>
 
