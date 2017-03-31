@@ -121,7 +121,7 @@ public class VerityServiceImpl implements VerityService{
                 result =  (Integer) account.get("code");
             }
         }else{
-            logger.info("VerityServiceImpl.back code >> params:{}, exception:{}");
+            logger.info("VerityServiceImpl.send successful >>", hr.getContent());
         }
         return result;
     }
