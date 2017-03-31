@@ -62,8 +62,8 @@ public abstract class BaseServiceImpl {
      * @throws PaymentException
      */
     public PaymentRecordVo recordUtil(String count, PaymentRecordVo paymentRecord, Integer payType) throws PaymentException {
-        logger.info("Request execute parameter:{},{},业务操作：{}", count,paymentRecord.toString(),payType);
         try {
+            logger.info("Request execute parameter:{},{},业务操作：{}", count,paymentRecord.toString(),payType);
             paymentRecord = JSONObject.parseObject(count,paymentRecord.getClass());
             logger.info("recordUtil Parameter check Start========>");
             Validator.getInstance().validate(paymentRecord);
@@ -110,12 +110,10 @@ public abstract class BaseServiceImpl {
         if (url==null){
             projectValue();
         }
-        Object o = ResultUtil.judgeStatus(HttpUtil.httpGet(url+tradeUrl+"?order_sn="+paymentRecord.getOrderSn(),null));
-        List list = (List) o;
-        if (list.size()!=1){
+        Map map = ResultUtil.judgeStatus(HttpUtil.httpGet(url+tradeUrl+"/detailsn/"+paymentRecord.getOrderSn(),null));
+        if (map==null){
             throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_INSERT_NO_EXISTENT);
         }
-        Map map = (Map) list.get(0);
         if (!map.get("orderAmount").equals(paymentRecord.getOrderAmount().doubleValue())){
             throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_INSERT_ORDER_AMOUNT_NO_CONFORM);
         }
@@ -137,4 +135,5 @@ public abstract class BaseServiceImpl {
         }
         logger.info("projectValue Initialization End========>");
     }
+
 }

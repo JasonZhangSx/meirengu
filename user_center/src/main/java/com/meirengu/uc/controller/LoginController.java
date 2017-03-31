@@ -213,7 +213,7 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
             }
             Boolean flag = false;
-            if(StringUtil.isEmpty(registerVO.getCheck_code()) && !StringUtil.isEmpty(registerVO.getMobile_inviter())){
+            if(StringUtil.isEmpty(registerVO.getCheck_code())){
                 //分享页面注册 处理初始化用户前的业务逻辑
                 flag = true;
             }

@@ -7,4 +7,6 @@ import com.meirengu.uc.model.Inviter;
  * Created by huoyan403 on 3/23/2017.
  */
 public interface InviterDao extends BaseDao<Inviter>{
+
+    Inviter detail(Inviter inviter);
 }

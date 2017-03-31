@@ -116,12 +116,18 @@ public class UserController extends BaseController{
                 Map map = ApacheBeanUtils.objectToMap(user);
                 userService.getUserRestMoney(map);
                 userService.getUserTotalInvestMoney(map);
+
+                userService.getWithdrawalsAmount(map);
+                userService.getBankName(map);
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
             }else if(!StringUtil.isEmpty(phone)){
                 User user = userService.retrieveByPhone(phone);
                 Map map = ApacheBeanUtils.objectToMap(user);
                 userService.getUserRestMoney(map);
                 userService.getUserTotalInvestMoney(map);
+
+                userService.getWithdrawalsAmount(map);
+                userService.getBankName(map);
                 return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -176,6 +182,8 @@ public class UserController extends BaseController{
                 map.remove("password");
                 userService.getUserRestMoney(map);
                 userService.getUserTotalInvestMoney(map);
+                userService.getWithdrawalsAmount(map);
+                userService.getBankName(map);
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
