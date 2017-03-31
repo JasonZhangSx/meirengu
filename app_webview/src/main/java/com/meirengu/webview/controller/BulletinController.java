@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 平台公告控制类
  *
@@ -26,8 +29,10 @@ public class BulletinController {
     }
 
     @RequestMapping(value = "bulletins/{bulletin_id}", method = RequestMethod.GET)
-    public ModelAndView detail(@PathVariable(value = "bulletin_id") String bulletinId){
-        return new ModelAndView("bulletin_detail");
+    public ModelAndView detail(@PathVariable(value = "bulletin_id") Integer bulletinId){
+        Map model = new HashMap();
+        model.put("bulletin", bulletinService.bulletinById(bulletinId));
+        return new ModelAndView("bulletin_detail", model);
     }
 
 }

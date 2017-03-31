@@ -16,4 +16,11 @@ public interface BulletinService {
      */
     public JSONObject bulletins();
 
+    /**
+     * 根据公告id获取公告详情
+     * @param bulletinId
+     * @return
+     */
+    public JSONObject bulletinById(Integer bulletinId);
+
 }
