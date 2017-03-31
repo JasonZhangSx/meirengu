@@ -2,7 +2,6 @@ package com.meirengu.uc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.PasswordEncryption;
-import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
@@ -12,7 +11,9 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
+import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.HttpUtil;
@@ -61,11 +62,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             inviter.setReward(new BigDecimal("0"));
             inviterDao.insert(inviter);
         }
-        Thread t = Thread.currentThread();
-        String name = t.getName();
         if(result == 1){
+            //初始化支付账户
             InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
             initPayAccountThread.run();
+            //领取注册抵扣券
+            ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
+            receiveCouponsThread.run();
             return result;
         }else{
             logger.info("UserServiceImpl createUser failed :{}",user);
@@ -287,7 +290,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", JacksonUtil.toJSon(map));
         String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
-        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(map));
+        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
         logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
         try {
             hr = HttpUtil.doGet(urlAppend);
