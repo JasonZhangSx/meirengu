@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html>
 <head>
@@ -20,39 +22,41 @@
 
 	<div class="findProblems_cont">
     <div class="menu border_b1 box">
-      <ul>
-        <li class="active"><a href="javascript:void(0)">问题分类</a></li><li><a href="javascript:void(0)">问题分类</a></li>
-        <li><a href="javascript:void(0)">问题分类</a></li><li><a href="javascript:void(0)">问题分类</a></li>
-        <li><a href="javascript:void(0)">问题分类</a></li><li><a href="javascript:void(0)">问题分类</a></li>
-        <li><a href="javascript:void(0)">问题分类</a></li><li><a href="javascript:void(0)">问题分类</a></li>
-      </ul>
+      <c:if test="${not empty faqClasses}">
+        <ul>
+          <c:forEach items="${faqClasses}" var="class" varStatus="stat">
+            <c:if test="${stat.count - 1 == index}"><li class="active"><a href="<%=request.getContextPath()%>/faqs/${class.classId}/${stat.count - 1}">${class.className}</a></li></c:if>
+            <c:if test="${stat.count - 1 != index}"><li><a href="<%=request.getContextPath()%>/faqs/${class.classId}/${stat.count - 1}">${class.className}</a></li></c:if>
+          </c:forEach>
+        </ul>
+      </c:if>
     </div>
     <div class="wrapper">
       <ul>
-        <li class="active">
-          <span class="border_b1"><em>如何联系医生？</em><var><img src="<%=request.getContextPath()%>/img/arr_right.png" style="width:0.15rem" /></var></span>
-          <div class="wrapper">
-            <p>
-              您可以在医生详情页中点击“电话咨询”联系医生，如遇联系无人回复建议您耐心等待，医生可能在手术不能及时回复您，希望您谅解。
-            </p>
-          </div>
-        </li>
-        <li>
-          <span class="border_b1"><em>如何联系院生？</em><var><img src="<%=request.getContextPath()%>/img/arr_right.png" style="width:0.15rem" /></var></span>
-          <div class="wrapper">
-            <p>
-              您可以在医院详情页中点击“电话咨询”联系医院。
-            </p>
-          </div>
-        </li>
-        <li>
-          <span class="border_b1"><em>右功下单后，订单有效期是多久？</em><var><img src="<%=request.getContextPath()%>/img/arr_right.png" style="width:0.15rem" /></var></span>
-          <div class="wrapper">
-            <p>
-              如无特殊说明的，订单需在下单后3个月内使用。希望您尽快去医院消费，以避免您最终忘记造成不必要的损失。
-            </p>
-          </div>
-        </li>
+       <c:if test="${not empty classFaqs.list}">
+         <c:forEach items="${classFaqs.list}" var="faq" varStatus="stat">
+           <c:if test="${stat.first}">
+             <li class="active">
+               <span class="border_b1"><em>${faq.faqQuestion}</em><var><img src="<%=request.getContextPath()%>/img/arr_right.png" style="width:0.15rem" /></var></span>
+               <div class="wrapper">
+                 <p>
+                    ${faq.faqAnswer}
+                 </p>
+               </div>
+             </li>
+           </c:if>
+           <c:if test="${not stat.first}">
+             <li>
+               <span class="border_b1"><em>${faq.faqQuestion}</em><var><img src="<%=request.getContextPath()%>/img/arr_right.png" style="width:0.15rem" /></var></span>
+               <div class="wrapper">
+                 <p>
+                     ${faq.faqAnswer}
+                 </p>
+               </div>
+             </li>
+           </c:if>
+         </c:forEach>
+       </c:if>
       </ul>
     </div>
   </div>
