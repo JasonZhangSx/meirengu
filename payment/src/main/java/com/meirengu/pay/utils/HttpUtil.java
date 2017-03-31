@@ -99,6 +99,7 @@ public class HttpUtil {
         HttpGet httpGet = new HttpGet(url);
         CloseableHttpResponse httpResponse = null;
         try {
+            logger.info("HttpGet Request Start,Url:{}",url.toString());
             httpResponse = closeableHttpClient.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
             content = EntityUtils.toString(entity, encode);

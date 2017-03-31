@@ -320,4 +320,24 @@ public class PaymentController extends BaseController{
     public String baofuCallback(@RequestParam(value = "data_content", required = false) String data_content){
         return paymentService.baofuCallback(data_content);
     }
+    /**
+     * 根据用户id查询交易记录
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "paymentRecord",method = RequestMethod.GET)
+    @ResponseBody
+    public String paymentRecord(@RequestParam(value = "userId", required = true) String userId){
+        return paymentService.getPaymentRecord(userId);
+    }
+    /**
+     * 根据用户id查询交易记录
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "withdrawalsAmount",method = RequestMethod.GET)
+    @ResponseBody
+    public String getWithdrawalsAmount(@RequestParam(value = "userId", required = true) String userId){
+        return paymentService.getWithdrawalsAmount(userId);
+    }
 }
