@@ -16,4 +16,8 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
     @Autowired
     private InviterDao inviterDao;
 
+    @Override
+    public Inviter detail(Inviter inviter) {
+        return inviterDao.detail(inviter);
+    }
 }

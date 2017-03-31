@@ -8,4 +8,5 @@ import com.meirengu.uc.model.Inviter;
  */
 public interface InviterService extends BaseService<Inviter>{
 
+    Inviter detail(Inviter inviter);
 }
