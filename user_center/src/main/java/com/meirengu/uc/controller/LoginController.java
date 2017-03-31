@@ -171,6 +171,8 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     public Result logout(){
+
+
         //清空token
         //清空redis
         //清空推送别名
@@ -198,10 +200,6 @@ public class LoginController extends BaseController {
                             .MOBILE_FORMAT_ERROR));
                 }
             }
-            if (StringUtil.isEmpty(registerVO.getCheck_code())) {
-                return super.setResult(StatusCode.CAPTCHA_INVALID,null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_INVALID));
-            }
             //查看邀请人手机号是否注册
             if(!StringUtil.isEmpty(registerVO.getMobile_inviter())){
                 User userInviter = userService.retrieveByPhone(registerVO.getMobile_inviter());
@@ -214,23 +212,34 @@ public class LoginController extends BaseController {
             if(!StringUtil.isEmpty(user)){
                 return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
             }
-            //验证验证码是否有效
-            CheckCode code = checkCodeService.retrieve(registerVO.getMobile(), Integer.valueOf(registerVO.getCheck_code()));
-            if (code == null) {
-                return super.setResult(StatusCode.CAPTCHA_INVALID,null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_INVALID));
+            Boolean flag = false;
+            if(StringUtil.isEmpty(registerVO.getCheck_code()) && !StringUtil.isEmpty(registerVO.getMobile_inviter())){
+                //分享页面注册 处理初始化用户前的业务逻辑
+                flag = true;
             }
-            if (code.getExpireTime().compareTo(new Date()) < 0) {
-                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_EXPIRE));
+            if(!StringUtil.isEmpty(registerVO.getCheck_code())){
+                //验证验证码注册 功能：校验验证码有效性  处理验证码已使用
+                CheckCode code = checkCodeService.retrieve(registerVO.getMobile(), Integer.valueOf(registerVO.getCheck_code()));
+                if (code == null) {
+                    return super.setResult(StatusCode.CAPTCHA_INVALID,null, StatusCode.codeMsgMap.get(StatusCode
+                            .CAPTCHA_INVALID));
+                }
+                if (code.getExpireTime().compareTo(new Date()) < 0) {
+                    return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
+                            .CAPTCHA_EXPIRE));
+                }
+                code.setUse(true);
+                code.setUsingTime(new Date());
+                int updateResult = checkCodeService.update(code);
+                flag = true;
             }
-            code.setUse(true);
-            code.setUsingTime(new Date());
-            int updateResult = checkCodeService.update(code);
-
-            User usr = userService.createUserInfo(registerVO);
-            RegisterPO registerPO = loginService.setUserToRedis(usr);
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            if(flag){
+                User usr = userService.createUserInfo(registerVO);
+                RegisterPO registerPO = loginService.setUserToRedis(usr);
+                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            }
         }catch (Exception e){
             logger.info(e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -239,8 +248,7 @@ public class LoginController extends BaseController {
 
     private Boolean validatePassword(String password,User user){
         try {
-            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
-            return  result;
+            return  PasswordEncryption.validatePassword(password,user.getPassword());
         }catch (Exception e){
             logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
             return  false;

@@ -2,7 +2,7 @@ package com.meirengu.uc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.PasswordEncryption;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
@@ -12,7 +12,9 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
+import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.vo.RegisterVO;
 import com.meirengu.uc.vo.UserVO;
 import com.meirengu.utils.HttpUtil;
@@ -61,11 +63,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             inviter.setReward(new BigDecimal("0"));
             inviterDao.insert(inviter);
         }
-        Thread t = Thread.currentThread();
-        String name = t.getName();
         if(result == 1){
+            //初始化支付账户
             InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
             initPayAccountThread.run();
+            //领取注册抵扣券
+            ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
+            receiveCouponsThread.run();
             return result;
         }else{
             logger.info("UserServiceImpl createUser failed :{}",user);
@@ -280,19 +284,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserRestMoney(Map map) {
-        Boolean flag = false;
         HttpResult hr = null;
         Map<String, Object> paramsmap = new HashMap<String, Object>();
         paramsmap.put("userId",map.get("userId"));
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", JacksonUtil.toJSon(map));
         String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
-        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(map));
-        logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
+        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
+        logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend, params});
         try {
             hr = HttpUtil.doGet(urlAppend);
         } catch (Exception e) {
-            logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
         }
         if(hr.getStatusCode()==200){
             Map<String,Object> account = new HashedMap();
@@ -307,7 +310,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
             }
         }else{
-            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+            logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
         }
     }
 
@@ -316,6 +319,45 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         map.put("totalInvestMoney","100000");
     }
 
+    @Override
+    public void getWithdrawalsAmount(Map map) {
+        map.put("withdrawalsAmount","");
+
+
+
+    }
+
+    @Override
+    public void getBankName(Map map) {
+        map.put("bankName","");//防止为空客户端崩溃
+
+        try {
+            HttpResult hr = null;
+            String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
+            String urlAppend = url+"?bankCode="+ map.get("bankCode");
+            hr = HttpUtil.doGet(urlAppend);
+            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+            if(hr.getStatusCode()== StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    Map mapData = (Map)account.get("data");
+                    if(mapData!=null){
+                        ArrayList channelBank = (ArrayList) mapData.get("channelBank");
+                        if(channelBank.size()!=0){
+                            Map channel = (Map)channelBank.get(0);
+                            map.put("bankName",channel.get("bankName"));
+                        }
+
+                    }
+                }
+            }else{
+                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+            }
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
+        }
+    }
     @Override
     public Page<User> getByPage(Page<User> page, Map paramMap) {
 
@@ -435,4 +477,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         return flag;
     }
+
+
 }

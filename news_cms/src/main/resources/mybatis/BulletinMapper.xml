@@ -15,13 +15,13 @@
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="Bulletin_columns">
 	    <![CDATA[
-		bulletin_id,bulletin_title,bulletin_content,status,create_time,update_time,operate_account
+		bulletin_id AS bulletinId, bulletin_title AS bulletinTitle, bulletin_content AS bulletinContent, status, create_time AS createTime, update_time AS updateTime, operate_account AS operateAccount
 	    ]]>
 	</sql>
 
     <sql id="Bulletin_tbcolumns">
 	    <![CDATA[
-		tb.bulletin_id,tb.bulletin_title,tb.bulletin_content,tb.status,tb.create_time,tb.update_time,tb.operate_account
+		tb.bulletin_id AS bulletinId, tb.bulletin_title AS bulletinTitle, tb.bulletin_content AS bulletinContent, tb.status AS status,tb.create_time AS createTime,tb.update_time AS updateTime,tb.operate_account AS operateAccount
 	    ]]>
 	</sql>
 	
@@ -61,10 +61,10 @@
 	</update>
 
     
-    <select id="getById" resultMap="RM_Bulletin">
-		SELECT <include refid="Bulletin_columns" />
+    <select id="getById" resultType="Map">
+		SELECT <include refid="Bulletin_tbcolumns" />
 	    <![CDATA[
-		    FROM bulletin 
+		    FROM bulletin tb
 	        WHERE 
 		        bulletin_id = #{id} 
 	    ]]>
@@ -112,7 +112,7 @@
     	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
     	因为分页查询将传 offset,pageSize,lastRows 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
     -->
-    <select id="findPage" resultType="map">
+    <select id="findPage" resultType="Map">
     	SELECT <include refid="Bulletin_tbcolumns" />
 	    FROM bulletin tb
 		<include refid="Bulletin_findPage_where"/>

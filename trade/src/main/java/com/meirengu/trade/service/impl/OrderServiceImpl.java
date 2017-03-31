@@ -105,7 +105,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         if (code == StatusCode.OK) {
                             JSONObject item = resultJson.getJSONObject("data");
                             String headerImagePath = item.getString("headerImage");
+                            String itemStatus = item.getString("itemStatus");
                             map.put("headerImage", headerImagePath);
+                            map.put("itemStatus", itemStatus);
                         }
                     }
                 }
