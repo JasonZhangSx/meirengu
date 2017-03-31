@@ -2,6 +2,7 @@ package com.meirengu.uc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.PasswordEncryption;
+import com.meirengu.common.StatusCode;
 import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
@@ -290,11 +291,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         params.put("content", JacksonUtil.toJSon(map));
         String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
         String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
-        logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
+        logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend, params});
         try {
             hr = HttpUtil.doGet(urlAppend);
         } catch (Exception e) {
-            logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
         }
         if(hr.getStatusCode()==200){
             Map<String,Object> account = new HashedMap();
@@ -309,7 +310,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 }
             }
         }else{
-            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+            logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
         }
     }
 
@@ -320,38 +321,41 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getWithdrawalsAmount(Map map) {
-        map.put("withdrawalsAmount","100000");
+        map.put("withdrawalsAmount","");
+
+
+
     }
 
     @Override
     public void getBankName(Map map) {
-        HttpResult hr = null;
-//        Map<String, Object> paramsmap = new HashMap<String, Object>();
-//        paramsmap.put("bankCode",map.get("bankCode"));
-        String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
-        String urlAppend = url+"?bankCode="+ map.get("bankCode");
-        logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
-        try {
-            hr = HttpUtil.doGet(urlAppend);
-        } catch (Exception e) {
-            logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
-        }
-        if(hr.getStatusCode()==200){
-            Map<String,Object> account = new HashedMap();
-            account = JacksonUtil.readValue(hr.getContent(),Map.class);
-            if(account!=null){
-                Map mapData = (Map)account.get("data");
-                if(mapData!=null){
-                    ArrayList channelBank = (ArrayList) mapData.get("channelBank");
-                    if(channelBank.size()!=0){
-                        Map channel = (Map)channelBank.get(0);
-                        map.put("bankName",channel.get("bankName"));
-                    }
+        map.put("bankName","");//防止为空客户端崩溃
 
+        try {
+            HttpResult hr = null;
+            String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
+            String urlAppend = url+"?bankCode="+ map.get("bankCode");
+            hr = HttpUtil.doGet(urlAppend);
+            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+            if(hr.getStatusCode()== StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    Map mapData = (Map)account.get("data");
+                    if(mapData!=null){
+                        ArrayList channelBank = (ArrayList) mapData.get("channelBank");
+                        if(channelBank.size()!=0){
+                            Map channel = (Map)channelBank.get(0);
+                            map.put("bankName",channel.get("bankName"));
+                        }
+
+                    }
                 }
+            }else{
+                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
             }
-        }else{
-            logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
         }
     }
     @Override
