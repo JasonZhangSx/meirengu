@@ -67,10 +67,17 @@ public class InviterController extends BaseController{
 
 
     @RequestMapping(method = {RequestMethod.GET})
-    public Result detail(@RequestParam(value="id", required = true) Integer id){
+    public Result detail(@RequestParam(value="id", required = false) Integer id,
+                         @RequestParam(value="invited_user_id", required = false) Integer invitedUserId){
 
         try {
-            Inviter inviter  = inviterService.detail(id);
+            if(StringUtil.isEmpty(id) && StringUtil.isEmpty(invitedUserId)){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+            Inviter inviter = new Inviter();
+            inviter.setId(id);
+            inviter.setInvitedUserId(invitedUserId);
+            inviter  = inviterService.detail(inviter);
             if(!StringUtil.isEmpty(inviter)){
                 return super.setResult(StatusCode.OK, inviter, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

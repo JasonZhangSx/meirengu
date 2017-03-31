@@ -68,8 +68,15 @@
         <!--update <include refid="table_name" /> set status = 4 WHERE Inviter_id=#{id}-->
     </update>
 
-    <select id="detail" parameterType="INTEGER" resultType="Inviter">
-        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE id=#{id}
+    <select id="detail" parameterType="Inviter" resultType="Inviter">
+        SELECT <include refid="select_columns" /> FROM <include refid="table_name" />
+        WHERE 1 = 1
+        <if test="id!=null">
+            AND id=#{id}
+        </if>
+        <if test="invitedUserId!=null and invitedUserId!=''">
+            AND invited_user_id=#{invitedUserId}
+        </if>
     </select>
 
     <!-- 分页相关开始 -->
