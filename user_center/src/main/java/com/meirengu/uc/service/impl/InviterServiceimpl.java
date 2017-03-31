@@ -7,6 +7,9 @@ import com.meirengu.uc.service.InviterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by huoyan403 on 3/23/2017.
  */
@@ -19,5 +22,10 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
     @Override
     public Inviter detail(Inviter inviter) {
         return inviterDao.detail(inviter);
+    }
+
+    @Override
+    public void getReward(List<Map<String, Object>> list) {
+
     }
 }
