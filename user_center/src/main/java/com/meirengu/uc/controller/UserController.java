@@ -345,9 +345,19 @@ public class UserController extends BaseController{
      * @return
      */
     @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
-    public Result verifyUser (@RequestParam(value = "user_id", required = true) Integer userId){
+    public Result verifyUser (@RequestParam(value = "user_id", required = false) Integer userId,
+                              @RequestParam(value = "phone", required = false) String phone){
         try {
-            User user = userService.retrieveByUserId(userId);
+            if(StringUtil.isEmpty(userId) && StringUtil.isEmpty(phone)){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+            User user = new User();
+            if(!StringUtil.isEmpty(userId)){
+                user = userService.retrieveByUserId(userId);
+            }
+            if(!StringUtil.isEmpty(phone)){
+                user = userService.retrieveByPhone(phone);
+            }
             if(user != null){
                 Map<String,Object> map = new HashedMap();
                 map.put("mobile",user.getPhone()+"");//加上空字符串 防止为空 json转换异常
