@@ -9,7 +9,7 @@ public class Test {
         System.err.print(mobile.substring(7,11));*/
 
        System.out.print("kong_123");
-       System.out.print("kong_123".getBytes());
+       System.out.print("areaList_120100".getBytes());
        /* List<Integer> list = new ArrayList<Integer>();
         for(int i=0;i<1000000;i++){
             list.add(UuidUtils.getShortUuid());
@@ -24,5 +24,10 @@ public class Test {
             }
         }
 */
+        for(int i=0;i<1000;i++){
+
+
+
+        }
     }
 }

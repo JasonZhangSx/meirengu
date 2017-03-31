@@ -1,4 +1,8 @@
+import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.GenEntityMysql;
+import org.junit.Test;
+
+import java.util.Date;
 
 /**
  * 生成mysql文件
@@ -33,4 +37,5 @@ public class GenerateClassTest {
                 username, password, driver, databaseName);
         gm.start("version_upgrade");
     }
+
 }

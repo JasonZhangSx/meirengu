@@ -4,6 +4,8 @@ package com.meirengu.news.dao;
 import com.meirengu.news.model.Bulletin;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 /**
  * 公告数据操作
  * Created by maoruxin on 2017/3/10.
@@ -30,5 +32,5 @@ public interface BulletinDao extends PageDao<Bulletin>{
      * @param id
      * @return
      */
-    public Bulletin getById(int id);
+    public Map<String, Object> getById(int id);
 }

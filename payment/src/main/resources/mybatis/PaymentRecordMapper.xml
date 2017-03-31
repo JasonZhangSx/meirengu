@@ -75,6 +75,32 @@
       AND transaction_sn = #{transactionSn,jdbcType=INTEGER}
     </if>
   </select>
+  <select id="getPaymentRecord" resultMap="ResultMapWithBLOBs" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from payment_record
+    where 1=1
+    <if test="userId != null" >
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="paymentId != null" >
+      AND payment_id = #{paymentId,jdbcType=INTEGER}
+    </if>
+    <if test="orderSn != null" >
+      AND order_sn = #{orderSn,jdbcType=INTEGER}
+    </if>
+    <if test="transactionSn != null" >
+      AND transaction_sn = #{transactionSn,jdbcType=INTEGER}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="paymentType != null" >
+      AND payment_type = #{paymentType,jdbcType=INTEGER}
+    </if>
+  </select>
   <insert id="insertPaymentRecord" parameterType="com.meirengu.pay.vo.PaymentRecordVo" >
     insert into payment_record
     <trim prefix="(" suffix=")" suffixOverrides="," >

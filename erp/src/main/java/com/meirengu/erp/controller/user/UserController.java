@@ -1,7 +1,9 @@
 package com.meirengu.erp.controller.user;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
@@ -20,12 +22,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("user")
-public class UserController {
+public class UserController extends BaseController{
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("list")
-    public ModelAndView partnerList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+    public ModelAndView userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
                                     @RequestParam(value="phone", required = false) String phone,
                                     @RequestParam(value="realname", required = false) String realname,
@@ -41,7 +43,7 @@ public class UserController {
             paramsMap.put("idcard",idcard);
             paramsMap.put("page",pageNum+"");
             paramsMap.put("per_page",pageSize+"");
-            map = this.sendPost(url,paramsMap);
+            map = (Map<String,Object>)super.httpPost(url,paramsMap);
             map.put("phone",phone);
             map.put("realname",realname);
             map.put("idcard",idcard);
@@ -51,7 +53,33 @@ public class UserController {
         return new ModelAndView("/user/userList", map);
     }
 
+    @RequestMapping("detail")
+    public ModelAndView userDetail( @RequestParam(value="phone", required = true) String phone){
+        Map<String, Object> map = new HashMap<>();
+        String urlForGetUser = ConfigUtil.getConfig("user.list");
+        String urlForGetUserAddress = ConfigUtil.getConfig("user.address.list");
+        try {
+            Map<String,String> paramsMap = new HashedMap();
+            Map<String,Object> mapUserInfo = new HashedMap();
+            paramsMap.put("phone",phone);
+            mapUserInfo = ( Map<String, Object>)super.httpPost(urlForGetUser,paramsMap);
+            JSONArray objects =(JSONArray) mapUserInfo.get("list");
+            Map<String,Object> user  = ( Map<String,Object>)objects.get(0);
 
+            Map<String,String> paramsForAddress = new HashedMap();
+            paramsForAddress.put("user_id",user.get("userId")+"");
+
+            Map<String,Object> mapAddress = ( Map<String, Object>)super.httpPost(urlForGetUserAddress,paramsForAddress);
+
+            // TODO: 3/30/2017 可能会有exception
+            map.put("userInfo", ((JSONArray) mapUserInfo.get("list")).get(0));
+            map.put("mapAddress",mapAddress);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/user/userDetail", map);
+    }
 
 
 

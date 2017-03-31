@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -353,6 +354,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Withdrawals);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
+            paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));
             return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
@@ -406,9 +408,11 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
                 paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
+                map.put("paymentMethod","0");
             }else{
                 map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(),transactionSn ,
                         paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
+                map.put("paymentMethod","1");
             }
             LOGGER.info("payment prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_PAYMENT_APPLY));
             return ResultUtil.getResult(StatusCode.OK,map);
@@ -479,6 +483,61 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+super.tradeUrl+"/payment",postParameter,"UTF-8");
         }
         return "OK";
+    }
+    /**
+     * 根据用户id查询交易记录
+     * @param userId
+     * @return
+     */
+    @Override
+    public String getPaymentRecord(String userId) {
+        Map<String,Object> map = new HashMap<>();
+        PaymentRecordVo paymentRecordVo = new PaymentRecordVo();
+        try {
+            paymentRecordVo.setUserId(Integer.valueOf(userId));
+            paymentRecordVo.setStatus(PaymentTypeUtil.PaymentStatus_Success);
+            LOGGER.info("Request getPaymentRecord parameter:{}",paymentRecordVo.toString());
+            List<PaymentRecordVo> list = paymentRecordDao.getPaymentRecord(paymentRecordVo);
+            if (list==null){
+                throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL);
+            }
+            map.put("paymentList",list);
+            LOGGER.info("getPaymentRecord prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.CHANNEL_BANK_SUCCESS_SELECT));
+            return ResultUtil.getResult(StatusCode.OK,map);
+        } catch (Exception e) {
+            LOGGER.error("Capture getChannelBank ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.CHANNEL_BANK_ERROR_SELECT), e.getMessage());
+            return ResultUtil.getResult(StatusCode.CHANNEL_BANK_ERROR_SELECT,null);
+        }
+    }
+    /**
+     * 根据用户id查询提现金额
+     * @param userId
+     * @return
+     */
+    @Override
+    public String getWithdrawalsAmount(String userId) {
+        Map<String,Object> map = new HashMap<>();
+        PaymentRecordVo paymentRecordVo = new PaymentRecordVo();
+        try {
+            paymentRecordVo.setUserId(Integer.valueOf(userId));
+            paymentRecordVo.setPaymentType(PaymentTypeUtil.PaymentType_Withdrawals);
+            paymentRecordVo.setStatus(PaymentTypeUtil.PaymentStatus_Success);
+            LOGGER.info("Request getWithdrawalsAmount parameter:{}",paymentRecordVo.toString());
+            List<PaymentRecordVo> list = paymentRecordDao.getPaymentRecord(paymentRecordVo);
+            if (list==null){
+                throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL);
+            }
+            BigDecimal withdrawalsAmount = new BigDecimal(0);
+            for (PaymentRecordVo paymentRecord : list){
+                withdrawalsAmount = withdrawalsAmount.add(paymentRecord.getPaymentAmount());
+            }
+            map.put("withdrawalsAmount",withdrawalsAmount);
+            LOGGER.info("getWithdrawalsAmount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.CHANNEL_BANK_SUCCESS_SELECT));
+            return ResultUtil.getResult(StatusCode.OK,map);
+        } catch (Exception e) {
+            LOGGER.error("Capture getChannelBank ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.CHANNEL_BANK_ERROR_SELECT), e.getMessage());
+            return ResultUtil.getResult(StatusCode.CHANNEL_BANK_ERROR_SELECT,null);
+        }
     }
 
 }

@@ -94,6 +94,7 @@ public class RebateBatchController extends BaseController{
         //抵扣券批次信息
         RebateBatch rebateBatch = new RebateBatch();
         rebateBatch.setRebateType(rebateType);
+        rebateBatch.setRebateMark(rebateMark);
         rebateBatch.setRebateName(rebateName);
         rebateBatch.setRebateScope(rebateScope);
         rebateBatch.setRebateAmount(rebateAmount);

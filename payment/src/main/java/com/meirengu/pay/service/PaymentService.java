@@ -56,4 +56,17 @@ public interface PaymentService {
      * @return
      */
     String baofuCallback(String content);
+
+    /**
+     * 根据用户id查询交易记录
+     * @param userId
+     * @return
+     */
+    String getPaymentRecord(String userId);
+    /**
+     * 根据用户id查询提现金额
+     * @param userId
+     * @return
+     */
+    String getWithdrawalsAmount(String userId);
 }

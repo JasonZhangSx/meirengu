@@ -1,9 +1,9 @@
 package com.meirengu.news.controller;
 
 import com.meirengu.common.StatusCode;
-import com.meirengu.news.model.Article;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.FeedbackService;
+import com.meirengu.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,9 @@ public class FeedbackController extends BaseController {
         }
 
         Map paramMap = new HashMap<String, Object>();
-        paramMap.put("userId",userId);
+        paramMap.put("userId", userId);
+        paramMap.put("createTimeBegin", DateUtils.getCurrentDayBeginTime());
+        paramMap.put("createTimeEnd", DateUtils.getCurrentDayEndTime());
         int feedbackNum = feedbackService.getTotalCount(paramMap);
         if(feedbackNum > 5){
             return setResult(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, null, StatusCode.codeMsgMap.get(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF));

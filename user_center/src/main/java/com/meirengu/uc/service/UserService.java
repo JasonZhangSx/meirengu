@@ -107,6 +107,12 @@ public interface UserService extends BaseService<User>{
      */
     void getUserTotalInvestMoney(Map map);
 
+    /*获取体现中金额*/
+    void getWithdrawalsAmount(Map map);
+
+    /*获取银行名称*/
+    void getBankName(Map map);
+
     Page<User> getByPage(Page<User> page, Map paramMap);
 
     Page<User> getUserList(Page<User> page, Map paramMap);
@@ -116,4 +122,5 @@ public interface UserService extends BaseService<User>{
     int setPayPassword(Integer userId, String newPassword);
 
     boolean getBankIdCard(String bankIdcard);
+
 }

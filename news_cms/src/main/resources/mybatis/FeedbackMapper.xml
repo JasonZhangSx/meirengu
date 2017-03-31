@@ -58,10 +58,10 @@
         from
         <include refid="table_name" />
         <where>
-        <if test="feedbackId != null and feedbackId != '' and feedbackId != 0">
+        <if test="feedbackId != null">
             AND feedback_id=#{id}
         </if>
-        <if test="userId != null and userId != ''">
+        <if test="userId != null">
             AND user_id=#{userId}
         </if>
         <if test="userPhone != null and userPhone != ''">
@@ -70,15 +70,18 @@
         <if test="userName != null and userName != ''">
             AND user_name=#{userName}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             AND status=#{status}
+        </if>
+        <if test="createTimeBegin != null">
+            AND create_time >= #{createTimeBegin}
+        </if>
+        <if test="createTimeEnd != null">
+            AND create_time &lt;= #{createTimeEnd}
         </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}
-        </if>
-        <if test="offset != null and offset != 0 and limit != null and limit != 0">
-            limit ${offset},${limit}
         </if>
     </select>
 
@@ -87,10 +90,10 @@
         from
         <include refid="table_name" />
         <where>
-            <if test="feedbackId != null and feedbackId != '' and feedbackId != 0">
+            <if test="feedbackId != null">
                 AND feedback_id=#{id}
             </if>
-            <if test="userId != null and userId != ''">
+            <if test="userId != null">
                 AND user_id=#{userId}
             </if>
             <if test="userPhone != null and userPhone != ''">
@@ -99,8 +102,14 @@
             <if test="userName != null and userName != ''">
                 AND user_name=#{userName}
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null">
                 AND status=#{status}
+            </if>
+            <if test="createTimeBegin != null">
+                AND create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd != null">
+                AND create_time &lt;= #{createTimeEnd}
             </if>
         </where>
     </select>

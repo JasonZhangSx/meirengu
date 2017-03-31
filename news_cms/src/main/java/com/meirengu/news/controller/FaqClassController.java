@@ -36,10 +36,12 @@ public class FaqClassController extends BaseController{
     @RequestMapping(value = "list", method = {RequestMethod.GET})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
+                       @RequestParam(value="status", required = false) Integer status,
                        @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="order", required = false) String order){
         Map paramMap = new HashMap<String, Object>();
         Page<FaqClass> page = super.setPageParams(pageNum,pageSize);
+        paramMap.put("status", status);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
         try{
@@ -89,9 +91,11 @@ public class FaqClassController extends BaseController{
     /**
      * 获取所有分类
      */
-    @RequestMapping(value = "listfaqclass", method = {RequestMethod.GET})
-    public Result list(){
-        List<ListAllFaqClassPo> listAllFaqClassPo = faqClassService.listAllFaqClass();
+    @RequestMapping(value = "listall", method = {RequestMethod.GET})
+    public Result list( @RequestParam(value="status", required = true) Byte status){
+        FaqClass faqClass = new FaqClass();
+        faqClass.setStatus(status);
+        List<ListAllFaqClassPo> listAllFaqClassPo = faqClassService.listAllFaqClass(faqClass);
         return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(listAllFaqClassPo,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 

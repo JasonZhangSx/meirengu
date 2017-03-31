@@ -2,6 +2,8 @@ package com.meirengu.news.service;
 
 import com.meirengu.news.model.Bulletin;
 
+import java.util.Map;
+
 
 /**
  * 公告服务接口类
@@ -34,7 +36,7 @@ public interface BulletinService extends PageBaseService<Bulletin>{
      * @param bulletinId
      * @return
      */
-    Bulletin detail(int bulletinId);
+    Map<String, Object> detail(int bulletinId);
 
 
 

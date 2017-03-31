@@ -107,7 +107,7 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getRebateInfoByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
+		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, trb.rebate_limit AS rebateLimit, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
 		FROM
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr

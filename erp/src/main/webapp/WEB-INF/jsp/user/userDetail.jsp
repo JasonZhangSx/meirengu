@@ -1,4 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../common/common.jsp"%>
 <html>
 <head>
     <meta charset=utf-8>
@@ -37,43 +39,48 @@
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">用户ID：</label>
-                <div class="formControls col-xs-8 col-sm-5">12332123213</div>
+                <div class="formControls col-xs-8 col-sm-5">${userInfo.userId}</div>
             </div>
             <div class="col-xs-10 col-sm-5">
                 <label class="form-label col-xs-4 col-sm-4">用户帐号：</label>
-                <div class="formControls col-xs-8 col-sm-6">133333333</div>
+                <div class="formControls col-xs-8 col-sm-6">${userInfo.phone}</div>
             </div>
         </div>
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">用户昵称：</label>
-                <div class="formControls col-xs-8 col-sm-5">阿迪舒服</div>
+                <div class="formControls col-xs-8 col-sm-5">${userInfo.nickname}</div>
             </div>
             <div class="col-xs-10 col-sm-5">
                 <label class="form-label col-xs-4 col-sm-4">用户姓名： </label>
-                <div class="formControls col-xs-8 col-sm-6">王二小</div>
+                <div class="formControls col-xs-8 col-sm-6">${userInfo.realname}</div>
             </div>
         </div>
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">性别：</label>
-                <div class="formControls col-xs-8 col-sm-5">男</div>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <c:if test="${userInfo.sex==0}">未保存</c:if>
+                    <c:if test="${userInfo.sex==1}">男</c:if>
+                    <c:if test="${userInfo.sex==2}">女</c:if>
+
+                </div>
             </div>
             <div class="col-xs-10 col-sm-5">
                 <label class="form-label col-xs-4 col-sm-4">出生日期：</label>
-                <div class="formControls col-xs-8 col-sm-6">1999/9/4</div>
+                <div class="formControls col-xs-8 col-sm-6">${userInfo.birthday}</div>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                52444322322222222
+                ${userInfo.idCard}
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">常用地址：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                xxxxxxxxxxxxxxxxxxxxxxxxx
+                <%--${userInfo.}--%> 无
             </div>
         </div>
         <div class="row cl">
@@ -82,17 +89,17 @@
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">账户余额：</label>
-                <div class="formControls col-xs-8 col-sm-5">123123.00</div>
+                <div class="formControls col-xs-8 col-sm-5">${userInfo.accountBalance}</div>
             </div>
             <div class="col-xs-10 col-sm-5">
                 <label class="form-label col-xs-4 col-sm-4">累计投资金额：</label>
-                <div class="formControls col-xs-8 col-sm-6">1231312</div>
+                <div class="formControls col-xs-8 col-sm-6">${userInfo.totalInvestMoney}</div>
             </div>
         </div>
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">累计分红金额：</label>
-                <div class="formControls col-xs-8 col-sm-5">12312312.00</div>
+                <div class="formControls col-xs-8 col-sm-5"><%--${userInfo.}--%>接口未返回</div>
             </div>
         </div>
 
@@ -106,27 +113,29 @@
                     <th>收货人</th>
                     <th>联系方式</th>
                     <th>地址</th>
-                    <th>邮编</th>
-                    <th>使用次数</th>
                     <th>是否常用</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="text-c">
-                    <td>1</td>
-                    <td>玉之光</td>
-                    <td>收益权众筹</td>
-                    <td>4万元档</td>
-                    <td>是</td>
-                    <td>20000</td>
-                </tr>
+                <c:forEach items="${mapAddress.list}" var="list">
+                    <tr class="text-c">
+                        <td>${list.userName}</td>
+                        <td>${list.userPhone}</td>
+                        <td>${list.province} ${list.city} ${list.area} ${list.userAddress}</td>
+                        <td>
+                            <c:if test="${list.isDefault==1}">是</c:if>
+                            <c:if test="${list.isDefault==0}">否</c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
     </form>
 </div>
 
-<script>$(function () {
+<script>
+    (function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })

@@ -96,8 +96,12 @@ public class FaqController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "list", method = {RequestMethod.GET})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
-                                    @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize){
+                                    @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                                    @RequestParam(value="class_id", required = false) Integer classId,
+                                    @RequestParam(value="status", required = false) Integer status){
         Map paramMap = new HashMap<String, Object>();
+        paramMap.put("classId",classId);
+        paramMap.put("status",status);
         Page<Faq> page = super.setPageParams(pageNum,pageSize);
         try{
             page = faqService.getPageList(page, paramMap);
