@@ -102,6 +102,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                 rebateReceive.setUserPhone(userPhone);
                 rebateReceive.setRebateSn(rebateSn);
                 rebateReceive.setRebateBatchId(rebateBatch.getBatchId());
+                rebateReceive.setRebateMark(rebateBatch.getRebateMark());
                 rebateReceive.setActivityIdentification(activityIdentification);
                 rebateReceive.setReceiveTime(new Date());
                 rebateReceive.setStatus(Constant.REBATE_RECEIVE_UNUSED);//未使用
@@ -181,7 +182,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                     rebateReceive.setUserPhone(userPhone);
                     rebateReceive.setRebateSn(rebateSn);
                     rebateReceive.setRebateBatchId(rebateBatch.getBatchId());
-                    rebateReceive.setRebateMark(rebateBatch.getBatchId());
+                    rebateReceive.setRebateMark(rebateBatch.getRebateMark());
                     rebateReceive.setActivityIdentification(activityIdentification);
                     rebateReceive.setReceiveTime(new Date());
                     rebateReceive.setStatus(Constant.REBATE_RECEIVE_UNUSED);//未使用

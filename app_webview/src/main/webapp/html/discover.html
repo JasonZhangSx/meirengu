@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="./../css/index.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<script type="text/javascript">
+	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
+	</script>
+
+	<header>
+		<div class="swiper-container head_swiper" style="height:4.8rem;overflow:hidden;">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img src="https://img.meirenguvip.com/test.jpg" width="100%" alt="" />
+				</div>
+				<div class="swiper-slide">
+					<img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
+				</div>
+			</div>
+			<div class="pagination"></div>
+		</div>
+	</header>
+	<div class="find_cont">
+		<div class="wrapper">
+			<div>
+				<a href="http://localhost:8888/webview/activities">
+					<img src="./../img/find_icon1.png" alt="" style="width:.36rem" /><br/>
+					热门活动
+				</a>
+				<a href="http://localhost:8888/webview/bulletins">
+					<img src="./../img/find_icon2.png" alt="" style="width:.29rem" /><br/>
+					平台公告
+				</a>
+			</div>
+			<div>
+				<a href="http://localhost:8888/webview/faqs">
+					<img src="./../img/find_icon3.png" alt="" style="width:.36rem" /><br/>
+					常见问题
+				</a>
+				<a href="http://localhost:8888/webview/feedback">
+					<img src="./../img/find_icon4.png" alt="" style="width:.36rem" /><br/>
+					意见反馈
+				</a>
+			</div>
+			<div>
+				<a href="./about.html">
+					<img src="./../img/find_icon5.png" alt="" style="width:.33rem" /><br/>
+					关于我们
+				</a>
+				<a href="javascript:void(0)">
+
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="./../js/zepto.js"></script>
+<script type="text/javascript" src="./../js/swiper.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var head_swiper= new Swiper('.head_swiper',{
+       pagination: '.pagination',
+       paginationClickable: true,
+       autoplay:3000,
+       speed:800,
+       calculateHeight:true,
+       onTouchStart:function(){
+         head_swiper.stopAutoplay();
+       },
+       onTouchEnd:function(){
+         head_swiper.startAutoplay();
+       }
+     });
+	})
+</script>
+
+</html>

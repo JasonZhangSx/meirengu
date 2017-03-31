@@ -40,7 +40,7 @@
                         <th width="40">账号</th>
                         <th width="100">项目名称</th>
                         <th width="100">回报档位</th>
-                        <th>数量</th>
+                        <th width="40">数量</th>
                         <th width="80">订单总额</th>
                         <th width="70">微信号</th>
                         <th width="60">预约时间</th>
@@ -53,21 +53,20 @@
                         <tr class="text-c">
                             <td>${item.userPhone}</td>
                             <td>${item.itemName}</td>
-                            <td>${item.typeName}</td>
-                            <td></td>
-                            <td>${item.targetAmount}</td>
-                            <td>${item.preheatingDays}</td>
-                            <td>${item.crowdDays}</td>
+                            <td>${item.itemNum}</td>
+                            <td>${item.orderAmount}</td>
+                            <td>${item.userWeixin}</td>
                             <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.createTime}</td>
                             <td>
-                                <c:if test="${item.itemStatus == 1}">新建中</c:if>
+                                <c:if test="${item.status == 0}">未处理</c:if>
+                                <c:if test="${item.status == 1}">已处理</c:if>
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
                                    onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
                                    href="javascript:;" title="项目编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
                                 <a style="text-decoration:none" class="ml-5" onClick="project_del(this,'10001')"
-                                   href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                                   href="javascript:;" title="处理"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
                     </c:forEach>
