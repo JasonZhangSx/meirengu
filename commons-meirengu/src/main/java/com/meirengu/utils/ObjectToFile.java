@@ -16,7 +16,7 @@ public class ObjectToFile {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectToFile.class);
 
-    public void writeObject( List<HashMap<String,String>> list,String filePath) {
+    public void writeObject( List<Map<String,String>> list,String filePath) {
         try {
 
             FileOutputStream outStream = new FileOutputStream(filePath);
@@ -32,14 +32,14 @@ public class ObjectToFile {
         }
     }
 
-    public List<HashMap<String,String>> readObject(String filePath){
+    public List<Map<String,String>> readObject(String filePath){
         try {
             FileInputStream freader;
             freader = new FileInputStream(filePath);
             ObjectInputStream objectInputStream = new ObjectInputStream(freader);
 
             logger.info("ObjectToFile.readObject successful:{}");
-            return  ( List<HashMap<String,String>>) objectInputStream.readObject();
+            return  ( List<Map<String,String>>) objectInputStream.readObject();
 
         } catch (FileNotFoundException e) {
             logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
