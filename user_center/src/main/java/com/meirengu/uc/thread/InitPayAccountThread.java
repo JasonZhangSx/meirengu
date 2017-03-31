@@ -44,14 +44,14 @@ public class InitPayAccountThread implements Runnable{
     public void run(){
 
         try {
-            comeon();
+            initPayAccount();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("InitPayAccountThread initPayAccount throws Exception :{}",e.getMessage());
         }
     }
    @Retryable(value= {RemoteAccessException.class},maxAttempts = 3,backoff = @Backoff(delay = 5000l,multiplier = 1))
-   public void comeon() throws Exception{
-       HttpResult hr = null;
+   public void initPayAccount() throws Exception{
+        HttpResult hr = null;
 
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
