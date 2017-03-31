@@ -64,7 +64,7 @@
     <select id="getById" resultType="Map">
 		SELECT <include refid="Bulletin_tbcolumns" />
 	    <![CDATA[
-		    FROM bulletin 
+		    FROM bulletin tb
 	        WHERE 
 		        bulletin_id = #{id} 
 	    ]]>
