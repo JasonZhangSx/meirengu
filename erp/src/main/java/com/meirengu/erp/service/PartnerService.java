@@ -11,4 +11,6 @@ import java.util.List;
 public interface PartnerService {
 
     List getPartnerList();
+
+    List getPartnerClassList();
 }

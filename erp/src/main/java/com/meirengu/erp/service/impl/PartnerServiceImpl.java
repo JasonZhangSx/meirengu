@@ -16,4 +16,9 @@ public class PartnerServiceImpl implements PartnerService{
     public List getPartnerList() {
         return null;
     }
+
+    @Override
+    public List getPartnerClassList() {
+        return null;
+    }
 }

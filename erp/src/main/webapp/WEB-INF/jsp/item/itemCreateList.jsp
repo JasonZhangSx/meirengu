@@ -63,10 +63,13 @@
                             <td>${item.preheatingDays}</td>
                             <td>${item.crowdDays}</td>
                             <td>
-                                ${item.createTime}
+                                <jsp:useBean id="dateValue" class="java.util.Date"/>
+                                <jsp:setProperty name="dateValue" property="time" value="${item.createTime}"/>
+                                <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>
                             </td>
                             <td>
-                                <c:if test="${item.itemStatus == 1}">新建中</c:if>
+                                <c:if test="${item.itemStatus == 1}">待提交</c:if>
+                                <c:if test="${item.itemStatus == 4}">待修改</c:if>
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"

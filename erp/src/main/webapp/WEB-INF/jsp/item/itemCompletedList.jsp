@@ -57,7 +57,11 @@
                             <td>${item.targetAmount}</td>
                             <td>${item.preheatingDays}</td>
                             <td>${item.crowdDays}</td>
-                            <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.updateTime}</td>
+                            <td>
+                                <jsp:useBean id="dateValue" class="java.util.Date"/>
+                                <jsp:setProperty name="dateValue" property="time" value="${item.updateTime}"/>
+                                <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>
+                            </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
                                    onClick="project_edit('众筹-已完成项目-详情','众筹-已完成项目-详情.html','10001')" href="javascript:;"

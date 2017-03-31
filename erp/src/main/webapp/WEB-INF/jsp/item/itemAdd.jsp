@@ -102,7 +102,9 @@
     <span class="form form-horizontal" id="form-article-add">
         <!-- 基本信息 -->
         <div>
-            <form action="" method="post">
+            <form action="add" id="itemAddForm" method="post">
+
+                <input type="hidden" name="itemId" id="itemId">
                 <div class="row cl">
                     <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">基本信息</h3>
                 </div>
@@ -110,8 +112,7 @@
                     <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
                     <div class="formControls col-xs-8 col-sm-8">
                         <input type="text" class="input-text" value="" id="itemName" name="itemName"
-                               maxlength="30"
-                               placeholder="项目标题最多30字">
+                               maxlength="30" required placeholder="项目标题最多30字">
                     </div>
                 </div>
                 <div class="row cl">
@@ -138,7 +139,6 @@
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
                         <select name="classId" id="classId" class="select">
                             <c:forEach items="${itemClass}" var="itemClass">
-                                <option value="${itemClass.classId}" selected>${itemClass.className}</option>
                                 <option value="${itemClass.classId}">${itemClass.className}</option>
                             </c:forEach>
                         </select>
@@ -149,7 +149,7 @@
                     <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="targetAmount"
-                               name="targetAmount">
+                               name="targetAmount" required>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
                     <div class="formControls col-xs-8 col-sm-3">
@@ -162,7 +162,6 @@
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
                         <select name="partnerId" id="partnerId" class="select">
                             <c:forEach items="${partner}" var="partner">
-                                <option value="${partner.partnerId}" selected>${partner.partnerName}</option>
                                 <option value="${partner.partnerId}">${partner.partnerName}</option>
                             </c:forEach>
                         </select>
@@ -179,7 +178,7 @@
                     <div class="formControls col-xs-8 col-sm-9">
                         <label data-toggle="distpicker" style="display:block;width:100%">
                             <span class="select-box select-box1" style="border:none;">
-                            <select name="" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----">
+                            <select name="areaId" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----">
                                 <c:forEach items="${provinces}" var="provinces">
                                     <option value="${provinces.areaId}">${provinces.areaName}</option>
                                 </c:forEach>
@@ -194,6 +193,7 @@
 
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">项目头图：</label>
+                    <input type="hidden" id="headerImage" name="headerImage">
                     <div class="formControls col-xs-8 col-sm-8">
                         <!-- 图片上传模块 -->
                         <div class="uploader-list-container">
@@ -212,12 +212,13 @@
                                 </div>
                             </div>
                         </div>
+                        <%--<input type="file" name="file" id="file"> <input type="button" id="uploadButton" value="开始上传">--%>
                     </div>
                 </div>
 
                 <div class="row cl">
                     <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                        <button class="btn btn-primary radius" type="button">保存继续进行</button>
+                        <button class="btn btn-primary radius" type="button" onclick="itemAdd()">保存</button>
                     </div>
                 </div>
             </form>
@@ -230,55 +231,72 @@
             </div>
             <div class="row cl content_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
                 <div class="wrapper">
-                    <span class="current">项目介绍<var></var></span>
-                    <span>融资方案<var></var></span>
+                    <span class="current" cnum="0">项目介绍<var></var></span>
+                    <span cnum="1">融资方案<var></var></span>
                 </div>
-                <em>+</em>
+                <%--<em>+</em>--%>
             </div>
             <div class="cl"></div>
             <div class="content_set">
-                <div class="item">
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id=""
-                                   name="">
+                <form action="content/add" method="post" id="contentAddForm0">
+                    <input type="hidden" name="itemId" id="itemId0">
+                    <input type="hidden" name="contentType" value="1">
+                    <input type="hidden" id="contentId0" name="contentId" value="0">
+                    <div class="item">
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">主标题：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle0"
+                                       name="contentTitle">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                      dragonfly="true" nullmsg="备注不能为空！"
-                                      onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">内容：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <textarea name="contentInfo" id="contentInfo0" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                          dragonfly="true" nullmsg="备注不能为空！"
+                                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">主标题2：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id=""
-                                   name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                      dragonfly="true" nullmsg="备注不能为空！"
-                                      onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row cl">
-                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                    <button class="btn btn-primary radius" type="button">保存此项</button>
-                </div>
+                        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                            <button class="btn btn-primary radius" id="contentAddBtn0" type="button"  onclick="contentAdd()"><i
+                                    class="Hui-iconfont">&#xe632;</i> 保存</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form action="content/add" method="post" id="contentAddForm1">
+                    <input type="hidden" name="itemId" id="itemId1">
+                    <input type="hidden" name="contentType" value="2">
+                    <input type="hidden" id="contentId1" name="contentId" value="0">
+                    <div class="item">
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">主标题：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle1"
+                                       name="contentTitle">
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">内容：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <textarea name="contentInfo" id="contentInfo1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                          dragonfly="true" nullmsg="备注不能为空！"
+                                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                            <button class="btn btn-primary radius" id="contentAddBtn1" type="button" onclick="contentAdd()"><i
+                                    class="Hui-iconfont">&#xe632;</i> 保存</button>
+                        </div>
+                    </div>
+                </form>
+
+
             </div>
 
             <div class="huibao_set">
@@ -349,30 +367,149 @@
 
                 <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
                     <div class="wrapper">
-                        <span class="current">档位名称1<var></var></span>
-                        <span>档位名称2<var></var></span>
+                        <span class="current" cnum="0">档位1<var></var></span>
                     </div>
                     <em>+</em>
                 </div>
                 <div class="cl"></div>
                 <div class="huibao_wrapper">
                     <div class="huibao_tab">
+                        <form id="levelAddForm0" >
+                            <input type="hidden" id="itemId10" name="itemId">
+                            <input type="hidden" id="levelId0" name="levelId" value="0">
+                            <div class="row cl" style="display:block">
+                                <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="levelName0" name="levelName1">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <textarea name="levelDesc" id="levelDesc0" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                              dragonfly="true" nullmsg="备注不能为空！"
+                                              onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                                </div>
+                            </div>
+
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">总份数：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber0"
+                                           name="totalNumber">
+                                </div>
+                                <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber0"
+                                           name="singleLimitNumber">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays0"
+                                           name="paybackDays">
+                                </div>
+                                <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
+                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                <select id="isShareBonus0" name="isShareBonus" class="select">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
+                                           name="yearRate">
+                                </div>
+                                <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod0"
+                                           name="investmentPeriod">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
+                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                <select name="revenueModel" id="revenue_model0" class="select">
+                                    <option value="1">一次性还款</option>
+                                    <option value="2">按月还息到期还本</option>
+                                </select>
+                                </span>
+                                </div>
+                                <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
+                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                <select name="shareBonusPeriod" id="shareBonusPeriod" class="select">
+                                    <option value="1">1月</option>
+                                    <option value="3">3月</option>
+                                    <option value="6">6月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
+                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                <select name="isNeedAddress" id="isNeedAddress0" class="select">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                                </span>
+                                </div>
+                                <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
+                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                <select name="isNeedAgreement" id="isNeedAgreement0" class="select">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                                    <button class="btn btn-secondary radius" type="button" id="levelAddBtn0"  onclick="levelAdd()"><i
+                                            class="Hui-iconfont">&#xe632;</i> 保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hide_huibao_tab" style="display:none">
+                <div class="huibao_tab">
+                    <form id="levelAddForm$1" >
+                        <input type="hidden" id="itemId1$1" name="itemId">
+                        <input type="hidden" id="levelId$1" name="levelId" value="0">
                         <div class="row cl" style="display:block">
                             <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
                             <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                                <input type="text" class="input-text" value="" maxlength="30" id="levelName$1" name="levelName">
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
                             <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                                <input type="text" class="input-text" value="" maxlength="30" id="levelAmount$1" name="levelAmount">
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
                             <div class="formControls col-xs-8 col-sm-8">
-                                <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                <textarea name="levelDesc" id="levelDesc$1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
                                           dragonfly="true" nullmsg="备注不能为空！"
                                           onKeyUp="$.Huitextarealength(this,200)"></textarea>
                                 <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
@@ -382,199 +519,94 @@
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">总份数：</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                                       name="">
+                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber$1"
+                                       name="totalNumber">
                             </div>
                             <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                                       name="">
+                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber$1"
+                                       name="singleLimitNumber">
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id=""
-                                       name="">
+                                <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays$1"
+                                       name="paybackDays">
                             </div>
                             <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
                             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-							<select name="" class="select">
-								<option value="0">是</option>
-								<option value="1">否</option>
-							</select>
-							</span>
+                            <select id="isShareBonus$1" name="isShareBonus" class="select">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                            </span>
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id=""
-                                       name="">
+                                <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate$1"
+                                       name="yearRate">
                             </div>
                             <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id=""
-                                       name="">
+                                <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod$1"
+                                       name="investmentPeriod">
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
                             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-							<select name="" class="select">
-								<option value="0">一次性还款</option>
-								<option value="1">等额本金...</option>
-							</select>
-							</span>
+                            <select name="revenueModel" id="revenue_model$1" class="select">
+                                <option value="1">一次性还款</option>
+                                <option value="2">按月还息到期还本</option>
+                            </select>
+                            </span>
                             </div>
                             <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
                             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-							<select name="" class="select">
-								<option value="0">1月</option>
-								<option value="1">3月</option>
-								<option value="0">6月</option>
-								<option value="1">12月</option>
-							</select>
-							</span>
+                            <select name="shareBonusPeriod" id="shareBonusPeriod$1" class="select">
+                                <option value="1">1月</option>
+                                <option value="3">3月</option>
+                                <option value="6">6月</option>
+                                <option value="12">12月</option>
+                            </select>
+                            </span>
                             </div>
                         </div>
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
                             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-							<select name="" class="select">
-								<option value="0">是</option>
-								<option value="1">否</option>
-							</select>
-							</span>
+                            <select name="isNeedAddress" id="isNeedAddress$1" class="select">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                            </span>
                             </div>
                             <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
                             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-							<select name="" class="select">
-								<option value="0">是</option>
-								<option value="1">否</option>
-							</select>
-							</span>
+                            <select name="isNeedAgreement" id="isNeedAgreement$1" class="select">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                            </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="huibao_tab">
                         <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">另外一档位名称：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="仿照第一个添加表格" maxlength="30" id="" name="">
+                            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                                <button class="btn btn-secondary radius" type="button" id="levelAddBtn$1"  onclick="levelAdd()"><i
+                                        class="Hui-iconfont">&#xe632;</i> 保存
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="hide_huibao_tab" style="display:none">
-                <div class="huibao_tab">
-                    <div class="row cl" style="display:block">
-                        <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <input type="text" class="input-text" value="" maxlength="30" id="" name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <input type="text" class="input-text" value="" maxlength="30" id="" name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                      dragonfly="true" nullmsg="备注不能为空！"
-                                      onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                        </div>
-                    </div>
-
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">总份数：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                                   name="">
-                        </div>
-                        <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                                   name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id=""
-                                   name="">
-                        </div>
-                        <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
-                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="" name="">
-                        </div>
-                        <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id=""
-                                   name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
-                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">一次性还款</option>
-							<option value="1">等额本金...</option>
-						</select>
-						</span>
-                        </div>
-                        <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
-                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">1月</option>
-							<option value="1">3月</option>
-							<option value="0">6月</option>
-							<option value="1">12月</option>
-						</select>
-						</span>
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
-                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                        </div>
-                        <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
-                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="hide_content_item" style="display:none;">
                 <div class="item">
                     <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">主标题2：</label>
+                        <label class="form-label col-xs-4 col-sm-2">主标题：</label>
                         <div class="formControls col-xs-8 col-sm-8">
                             <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id=""
                                    name="">
@@ -595,10 +627,7 @@
         <!-- 保存提交 -->
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核
-                </button>
-                <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i
-                        class="Hui-iconfont">&#xe632;</i> 保存草稿
+                <button class="btn btn-primary radius" type="button" onclick="verify()"><i class="Hui-iconfont">&#xe632;</i> 提交审核
                 </button>
                 <button onClick="layer_close();" class="btn btn-default radius" type="button">
                     &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
@@ -615,12 +644,6 @@
 <script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
 <script src=static/h-ui/js/H-ui.js></script>
 <script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
-<script>$(function () {
-    $(".Hui-aside ul a").on("click", function () {
-        console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
-    })
-}), $(".toTop").show()</script>
-
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
@@ -629,220 +652,19 @@
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
-
-<!-- 省市区 -->
-<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
-<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>
-
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
+<script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 
 <script type="text/javascript">
-    // tab切换
-    $(function () {
-        $('body').on('click', '.huibao_set .huibao_tab_menu span', function (event) {
-            console.log($(event.target));
-            $('.huibao_set .huibao_tab_menu span').removeClass('current');
-            $(event.target).addClass('current');
-            var index = $(event.target).index();
-            $('.huibao_set .huibao_tab').hide();
-            $('.huibao_set .huibao_tab').eq(index).show()
-        })
-        $('body').on('click', '.content_tab_menu span', function (event) {
-            console.log($(event.target));
-            $('.content_tab_menu span').removeClass('current');
-            $(event.target).addClass('current');
-            var index = $(event.target).index();
-            $('.content_set .item').hide();
-            $('.content_set .item').eq(index).show()
-        })
-    })
-    $(function () {
-        function sortName(menu) {
-            // for (var i = 0; i < menu.length; i++) {
-            // 	$(menu[i]).html('名称' + (i+1)+'<var></var>');
-            // }
-        }
 
-        $('.huibao_wrapper').find('.huibao_tab').eq(0).show();
-        $('.content_set').find('.item').eq(0).show();
-        $('.huibao_tab_menu em').on('click', function () {
-            var aObj = $('.hide_huibao_tab').find('.huibao_tab').eq(0).clone();
-            var a = confirm('要新增一项吗'),
-                    menu = $('.huibao_tab_menu .wrapper span');
-            if (a) {
-                $('.huibao_tab_menu .wrapper').append('<span>未命名<var></var></span>');
-                sortName($('.huibao_tab_menu .wrapper span'));
-                $('.huibao_wrapper').append(aObj);
-            }
-        })
-        $('.content_tab_menu em').on('click', function () {
-            var aObj = $('.hide_content_item').find('.item').eq(0).clone();
-            var a = confirm('要新增一项吗'),
-                    menu = $('.content_tab_menu .wrapper span');
-            if (a) {
-                $('.content_tab_menu .wrapper').append('<span>未命名<var></var></span>');
-                sortName($('.content_tab_menu .wrapper span'));
-                $('.content_set').append(aObj);
-            }
-        })
-        $('.huibao_tab_menu').on('click', 'span var', function (event) {
-            event.stopPropagation();
-            var index = $(event.target).parent().index(),
-                    a = confirm('要删除此项吗');
-            if (a) {
-                $(event.target).parent().remove();
-                $('.huibao_set .huibao_tab').eq(index).remove();
-                // sortName($('.huibao_tab_menu .wrapper span'));
-            }
-        })
-        $('.content_tab_menu').on('click', 'span var', function (event) {
-            event.stopPropagation();
-            var index = $(event.target).parent().index(),
-                    a = confirm('要删除此项吗');
-            if (a) {
-                $(event.target).parent().remove();
-                $('.content_set .item').eq(index).remove();
-                // sortName($('.huibao_tab_menu .wrapper span'));
-            }
-        })
-    })
-    $(function () {
-        $.Huitab(".content_tab_menu span", ".content_set .item", "current", "click", "0");
-        $.Huitab(".tabBar span", ".tabCon", "current", "click", "0");
-
-    });
     $('#datetimepicker').datetimepicker({
         lang: $.datetimepicker.setLocale('ch'),
     });
-    //表单验证
-    $(function () {
-        $('.skin-minimal input').iCheck({
-            checkboxClass: 'icheckbox-blue',
-            radioClass: 'iradio-blue',
-            increaseArea: '20%'
-        });
-        $("#form-article-add").validate({
-            rules: {
-                articletitle: {
-                    required: true,
-                }
-            },
-            onkeyup: false,
-            focusCleanup: true,
-            success: "valid",
-            submitHandler: function (form) {
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
-            }
-        })
-
-        $list = $("#fileList"),
-                $btn = $("#btn-star"),
-                state = "pending",
-                uploader;
-
-        var uploader = WebUploader.create({
-            auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
-
-            // 文件接收服务端。
-            server: 'http://lib.h-ui.net/webuploader/0.1.5/server/fileupload.php',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            // 只允许选择图片文件。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-        uploader.on('fileQueued', function (file) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="item">' +
-                            '<div class="pic-box"><img></div>' +
-                            '<div class="info">' + file.name + '</div>' +
-                            '<p class="state">等待上传...</p>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
-            $list.append($li);
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb(file, function (error, src) {
-                if (error) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
-                }
-
-                $img.attr('src', src);
-            }, thumbnailWidth, thumbnailHeight);
-        });
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function (file, percentage) {
-            var $li = $('#' + file.id),
-                    $percent = $li.find('.progress-box .sr-only');
-
-            // 避免重复创建
-            if (!$percent.length) {
-                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
-            }
-            $li.find(".state").text("上传中");
-            $percent.css('width', percentage * 100 + '%');
-        });
-
-        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file) {
-            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        });
-
-        // 文件上传失败，显示上传出错。
-        uploader.on('uploadError', function (file) {
-            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
-        });
-
-        // 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on('uploadComplete', function (file) {
-            $('#' + file.id).find('.progress-box').fadeOut();
-        });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
-
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
-            } else {
-                $btn.text('开始上传');
-            }
-        });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
-        });
-
-    });
 
     (function ($) {
-
+        var uploader;
         // 大图上传 当domReady的时候开始初始化
         $(function () {
             var $wrap = $('.uploader-list-container'),
@@ -995,7 +817,7 @@
                 swf: 'lib/webuploader/0.1.5/Uploader.swf',
                 chunked: false,
                 chunkSize: 512 * 1024,
-                server: 'http://lib.h-ui.net/webuploader/0.1.5/server/fileupload.php',
+                server: 'upload?foldName=item',
                 // runtimeOrder: 'flash',
 
                 // accept: {
@@ -1008,7 +830,8 @@
                 disableGlobalDnd: true,
                 fileNumLimit: 300,
                 fileSizeLimit: 200 * 1024 * 1024,    // 200 M
-                fileSingleSizeLimit: 50 * 1024 * 1024    // 50 M
+                fileSingleSizeLimit: 50 * 1024 * 1024,    // 50 M
+                duplicate:true
             });
 
             // 拖拽时不接受 js, txt 文件。
@@ -1032,6 +855,13 @@
 
             uploader.on('dialogOpen', function () {
                 console.log('here');
+            });
+
+            uploader.on( 'uploadSuccess', function( file, response ) {
+                if(response.code == 200){
+                    $("#headerImage").val("item/"+response.data);
+                }
+                console.log("response: "+response.data);
             });
 
             // uploader.on('filesQueued', function() {
@@ -1267,6 +1097,7 @@
             }
 
             function setState(val) {
+
                 var file, stats;
 
                 if (val === state) {
