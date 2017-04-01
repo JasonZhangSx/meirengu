@@ -486,30 +486,23 @@ public class UserController extends BaseController{
     @RequestMapping(value = "paypassword/modify",method = RequestMethod.POST)
     public Result modifyPayPassword(  @RequestParam(value = "mobile", required = true) String mobile,
                                    @RequestParam(value = "old_password", required = true) String oldPassword,
-                                   @RequestParam(value = "new_password", required = true) String newPassword,
+                                   @RequestParam(value = "new_password", required = false) String newPassword,
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
         try{
             if(redisClient.existsObject(token)){
-                if (newPassword == null || oldPassword ==null) {
+                if (oldPassword ==null) {
                     return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
                             (StatusCode.PASSWORD_IS_MALFORMED));
                 }
                 //验证手机号是否注册
-                User user = userService.retrieveByPhone(mobile);
-                if(StringUtil.isEmpty(user)){
-                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-                }
-                if (oldPassword == null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_MALFORMED));
-                }
                 User usr = userService.retrieveByPhone(mobile);
                 if(usr == null){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
                             .USER_NOT_EXITS));
                 }
-                int result = userService.modifyPayPassword(user.getUserId(),mobile,oldPassword,newPassword);
+                //// TODO: 4/1/2017 需增加外部验证oldpassword是否正确 
+                int result = userService.modifyPayPassword(usr.getUserId(),mobile,oldPassword,newPassword);
                 if(result != 0){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
                             .OK));
