@@ -424,16 +424,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                         if(accountUser!=null){
                             String password = (String) accountUser.get("password");
                             if(PasswordEncryption.validatePassword(oldPassword,password)){
-
-                                Map<String, String> payAccount = new HashMap<String, String>();
-                                payAccount.put("password",PasswordEncryption.createHash(newPassword));
-                                payAccount.put("userId",userId+"");
-                                Map<String, String> paramsModify = new HashMap<String, String>();
-                                paramsModify.put("content", JacksonUtil.toJSon(payAccount));
-                                String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
-                                hr = HttpUtil.doPostForm(urlModify,paramsModify);
-                                if(hr.getStatusCode()!=200){
+                                if(!StringUtil.isEmpty(newPassword)){
+                                    Map<String, String> payAccount = new HashMap<String, String>();
+                                    payAccount.put("password",PasswordEncryption.createHash(newPassword));
+                                    payAccount.put("userId",userId+"");
+                                    Map<String, String> paramsModify = new HashMap<String, String>();
+                                    paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+                                    String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
                                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                    if(hr.getStatusCode()!=200){
+                                        hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                    }else{
+                                        return 1;
+                                    }
                                 }else{
                                     return 1;
                                 }
