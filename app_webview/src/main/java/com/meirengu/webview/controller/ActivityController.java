@@ -21,6 +21,8 @@ public class ActivityController {
 
     @RequestMapping(value = "activities", method = RequestMethod.GET)
     public ModelAndView activities(){
-        return new ModelAndView("activities", activityService.activities());
+        return new ModelAndView("activity_list", activityService.activities());
     }
+
+
 }

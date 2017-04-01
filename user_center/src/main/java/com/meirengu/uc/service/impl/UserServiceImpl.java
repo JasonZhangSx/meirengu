@@ -53,17 +53,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public int create(User user){
         int result = userDao.create(user);
-        if(!StringUtil.isEmpty(user.getMobileInviter())){
-            User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
-            Inviter inviter = new Inviter();
-            inviter.setUserId(userInviter.getUserId());
-            inviter.setInvitedUserId(user.getUserId());
-            inviter.setInvitedUserPhone(user.getPhone());
-            inviter.setRegisterTime(new Date());
-            inviter.setReward(new BigDecimal("0"));
-            inviterDao.insert(inviter);
-        }
         if(result == 1){
+            if(!StringUtil.isEmpty(user.getMobileInviter())){
+                //初始化邀请关系？//优化改成异步
+                User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
+                Inviter inviter = new Inviter();
+                inviter.setUserId(userInviter.getUserId());
+                inviter.setInvitedUserId(user.getUserId());
+                inviter.setInvitedUserPhone(user.getPhone());
+                inviter.setRegisterTime(new Date());
+                inviter.setReward(new BigDecimal("0"));
+                inviterDao.insert(inviter);
+            }
             //初始化支付账户
             InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
             initPayAccountThread.run();
@@ -199,10 +200,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         ObjectUtils.getNotNullObject(user,User.class);
         int result = this.create(user);
         if(result ==0){
+            //如果失败，重试一次
             user.setUserId(UuidUtils.getShortUuid());
-            this.create(user);
+            result = this.create(user);
         }
-        return user;
+        return result == 1 ? user : null;
     }
 
     /**

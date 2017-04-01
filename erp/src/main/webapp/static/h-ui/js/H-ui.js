@@ -202,7 +202,7 @@ function stopDefault(e) {
 			Do not use both ajaxSubmit and ajaxForm on the same form.  These
 			functions are mutually exclusive.  Use ajaxSubmit if you want
 			to bind your own submit handler to the form.  For example,
-		
+
 			$(document).ready(function() {
 				$('#myForm').on('submit', function(e) {
 					e.preventDefault(); // <-- important
@@ -211,24 +211,24 @@ function stopDefault(e) {
 					});
 				});
 			});
-		
+
 			Use ajaxForm when you want the plugin to manage all the event binding
 			for you.  For example,
-		
+
 			$(document).ready(function() {
 				$('#myForm').ajaxForm({
 					target: '#output'
 				});
 			});
-		
+
 			You can also use ajaxForm with delegation (requires jQuery v1.7+), so the
 			form does not have to exist when you invoke ajaxForm:
-		
+
 			$('#myForm').ajaxForm({
 				delegation: true,
 				target: '#output'
 			});
-		
+
 			When using ajaxForm, the ajaxSubmit function will be invoked for you
 			at the appropriate time.
 		*/
@@ -240,7 +240,7 @@ function stopDefault(e) {
 	feature.formdata = window.FormData !== undefined;
 	var hasProp = !!$.fn.prop;
 	// attr2 uses prop when it can but checks the return type for
-	// an expected string.  this accounts for the case where a form 
+	// an expected string.  this accounts for the case where a form
 	// contains inputs with names like "action" or "method"; in those
 	// cases "prop" returns the element
 	$.fn.attr2 = function() {
@@ -2570,7 +2570,7 @@ function stopDefault(e) {
  * ======================================================================== */
 !function($) {
 	var
-	// 插件名 
+	// 插件名
 	plugin = 'emailsuggest',
 
 	// 默认参数配置
@@ -2627,7 +2627,7 @@ function stopDefault(e) {
 			width,
 			height,
 			style,
-			// 左右边框 
+			// 左右边框
 			borderWidth = 2;
 
 			elem = $(elem);
@@ -2711,7 +2711,7 @@ function stopDefault(e) {
 
 				elems.removeClass('active').eq(this.selectedIndex).addClass('active');
 				break;
-				// 向下 
+				// 向下
 			case 40:
 				this.selectedIndex++;
 
@@ -4600,13 +4600,13 @@ jQuery(function($) {
 	  					} else {
 	  						console.log("incorrect argument, ignored.");
 	  						topMargin = 0;
-	  					}	
+	  					}
 	  				}
 	  			} else {
 	  				topMargin = 0;
 	  			}
 	  			menuSize = $('.'+itemClass).size();
-  			}			
+  			}
 			stickyHeight = parseInt($(this).height());
 			stickyMarginB = parseInt($(this).css('margin-bottom'));
 			currentMarginT = parseInt($(this).next().closest('div').css('margin-top'));
@@ -4674,12 +4674,12 @@ jQuery(function($) {
 !function($) {
 	'use strict';
 	// MODAL CLASS DEFINITION
-	// ======================	
+	// ======================
 	var Modal = function(element, options) {
 		this.options = options;
 		this.$body = $(document.body);
 		this.$element = $(element);
-		this.$backdrop = 
+		this.$backdrop =
 		this.isShown = null;
 		this.scrollbarWidth = 0;
 
@@ -5035,22 +5035,22 @@ $(function() {
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 !function ($) {
-	'use strict';	
+	'use strict';
 	function transitionEnd() {
-		var el = document.createElement('bootstrap');	
+		var el = document.createElement('bootstrap');
 		var transEndEventNames = {
 			WebkitTransition : 'webkitTransitionEnd',
 			MozTransition    : 'transitionend',
 			OTransition      : 'oTransitionEnd otransitionend',
 			transition       : 'transitionend'
-		}	
+		}
 		for (var name in transEndEventNames) {
 			if (el.style[name] !== undefined) {
 				return { end: transEndEventNames[name] }
 			}
-		}		
+		}
 		return false // explicit for ie8 (  ._.)
-	}	
+	}
 	// http://blog.alexmaccaw.com/css-transitions
 	$.fn.emulateTransitionEnd = function (duration) {
 		var called = false;
@@ -5061,9 +5061,9 @@ $(function() {
 		}
 		setTimeout(callback, duration);
 		return this;
-	}	
+	}
 	$(function () {
-		$.support.transition = transitionEnd();	
+		$.support.transition = transitionEnd();
 		if (!$.support.transition) return;
 		$.event.special.bsTransitionEnd = {
 			bindType: $.support.transition.end,
@@ -5072,7 +5072,7 @@ $(function() {
 				if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments);
 			}
 		}
-	})	
+	})
 }(window.jQuery);
 
 /* =======================================================================
@@ -5168,7 +5168,7 @@ $(function() {
 	}
 
 	Tooltip.prototype.enter = function(obj) {
-		var self = obj instanceof this.constructor ? 
+		var self = obj instanceof this.constructor ?
 		obj: $(obj.currentTarget).data('bs.' + this.type);
 
 		if (self && self.$tip && self.$tip.is(':visible')) {
@@ -5532,7 +5532,7 @@ $(function() {
 function($) {
 	'use strict';
 	// POPOVER PUBLIC CLASS DEFINITION
-	// ===============================	
+	// ===============================
 	var Popover = function(element, options) {
 		this.init('popover', element, options)
 	}
@@ -5548,7 +5548,7 @@ function($) {
 	})
 
 	// NOTE: POPOVER EXTENDS tooltip.js
-	// ================================	
+	// ================================
 	Popover.prototype = $.extend({},$.fn.tooltip.Constructor.prototype);
 	Popover.prototype.constructor = Popover;
 	Popover.prototype.getDefaults = function() {
@@ -5592,7 +5592,7 @@ function($) {
 	}
 
 	// POPOVER PLUGIN DEFINITION
-	// =========================	
+	// =========================
 	function Plugin(option) {
 		return this.each(function() {
 			var $this = $(this);
@@ -5691,7 +5691,7 @@ $(function() {
 	$.fn.alert.Constructor = Alert;
 
 	// ALERT NO CONFLICT
-	// =================	
+	// =================
 	$.fn.alert.noConflict = function() {
 		$.fn.alert = old;
 		return this;
@@ -8196,7 +8196,7 @@ function($) {
 	Method show() does not set display css correctly and datetimepicker is not shown.
 	Changed to .css('display', 'block') solve the problem.
 	See https://github.com/vitalets/x-editable/issues/37
-	
+
 	In jquery 1.7.2+ everything works fine.
 	*/
 			//this.picker.find('>div').hide().filter('.datetimepicker-'+DPGlobal.modes[this.viewMode].clsName).show();

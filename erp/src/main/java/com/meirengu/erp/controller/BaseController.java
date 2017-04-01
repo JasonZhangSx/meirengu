@@ -1,9 +1,13 @@
 package com.meirengu.erp.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,6 +20,28 @@ import java.util.Map;
  * @create 2017-03-28 16:46
  */
 public class BaseController {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+
+    /**
+     * 封装返回数据对象
+     * @param code 返回状态码
+     * @param data 返回数据集合
+     * @param msg 返回状态消息
+     * @return
+     */
+    public Result setResult(int code, Object data, String msg){
+        Result result = new Result();
+        result.setCode(code);
+        result.setMsg(msg);
+        if (code == 200 && (data != null && !"".equals(data))){
+            result.setData(data);
+        }else {
+            //result.setData("");
+        }
+        LOGGER.info("Request getResponse: {}", JSON.toJSON(result));
+        return result;
+    }
 
     public Object httpGet(String url) throws IOException {
         HttpUtil.HttpResult hr = HttpUtil.doGet(url);

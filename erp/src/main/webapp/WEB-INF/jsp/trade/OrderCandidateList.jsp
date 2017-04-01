@@ -16,15 +16,15 @@
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 待审核预约订单 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 候补预约列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
             <form action="delete" id="itemForm" method="post">
                 <div class="text-c">
-                    用户账号：<input type="text" class="input-text" style="width:120px;" value="${userPhone}" name="userPhone">　
-                    项目名称：<input type="text" class="input-text" style="width:120px;" value="${itemName}" name="itemName">　
+                    用户账号：<input type="text" class="input-text" style="width:120px;" value="${query.userPhone}" name="userPhone">　
+                    项目名称：<input type="text" class="input-text" style="width:120px;" value="${query.itemName}" name="itemName">　
                     <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                         查 询
                     </button>
@@ -32,31 +32,36 @@
             </form>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
+                <span class="r" style="line-height:30px;">共有数据：<strong>${page.totalCount}</strong> 条</span></div>
             <div class="mt-20">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
-                        <th width="40">账号</th>
-                        <th width="100">项目名称</th>
-                        <th width="100">回报档位</th>
-                        <th width="40">数量</th>
-                        <th width="80">订单总额</th>
-                        <th width="70">微信号</th>
-                        <th width="60">预约时间</th>
-                        <th width="100">状态</th>
-                        <th width="100">操作</th>
+                        <th>账号</th>
+                        <th>项目名称</th>
+                        <th>回报档位</th>
+                        <th>数量</th>
+                        <th>订单总额</th>
+                        <th>微信号</th>
+                        <th>预约时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${list}" var="item">
+                    <c:forEach items="${page.list}" var="item">
                         <tr class="text-c">
                             <td>${item.userPhone}</td>
                             <td>${item.itemName}</td>
+                            <td>${item.itemLevelName}</td>
                             <td>${item.itemNum}</td>
                             <td>${item.orderAmount}</td>
                             <td>${item.userWeixin}</td>
-                            <td><%--<fmt:formatDate value="${item.createTime}" pattern="yyyy-MM-dd HH:mm:ss" type="date"/>--%>${item.createTime}</td>
+                            <td>
+                                <jsp:useBean id="dateObject" class="java.util.Date" scope="page"></jsp:useBean>
+                                <jsp:setProperty property="time" name="dateObject" value="${item.createTime}"/>
+                                <fmt:formatDate value="${dateObject}" pattern="yyyy-MM-dd HH:mm:ss" />
+                            </td>
                             <td>
                                 <c:if test="${item.status == 0}">未处理</c:if>
                                 <c:if test="${item.status == 1}">已处理</c:if>
