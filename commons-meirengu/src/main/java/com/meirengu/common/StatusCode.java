@@ -155,6 +155,7 @@ public class StatusCode {
     public static final int VETIFY_IS_ERROR = 50115;
     public static final int BANK_ID_CARD_IS_EXITS = 50116;
     public static final int REGISTER_IS_FAILED = 50117;
+    public static final int ID_CARD_IS_NOT_EXITS = 50118;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -380,6 +381,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.VETIFY_IS_ERROR, "认证失败");
         codeMsgMap.put(StatusCode.BANK_ID_CARD_IS_EXITS, "该卡已绑定");
         codeMsgMap.put(StatusCode.REGISTER_IS_FAILED, "注册失败");
+        codeMsgMap.put(StatusCode.ID_CARD_IS_NOT_EXITS, "身份证号不匹配");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
