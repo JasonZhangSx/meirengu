@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.meirengu.model.Result;
 import com.meirengu.news.model.Feedback;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +50,9 @@ public class FeedbackController extends BaseController {
 
         Map paramMap = new HashMap<String, Object>();
         paramMap.put("userId", userId);
-        paramMap.put("createTimeBegin", DateUtils.getCurrentDayBeginTime());
-        paramMap.put("createTimeEnd", DateUtils.getCurrentDayEndTime());
+        Date currentDate = new Date();
+        paramMap.put("createTimeBegin", DateUtils.getDayBeginTime(currentDate));
+        paramMap.put("createTimeEnd", DateUtils.getDayEndTime(currentDate));
         int feedbackNum = feedbackService.getTotalCount(paramMap);
         if(feedbackNum > 5){
             return setResult(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF, null, StatusCode.codeMsgMap.get(StatusCode.FEEDBACK_CONTENT_COUNT_OUTOF));

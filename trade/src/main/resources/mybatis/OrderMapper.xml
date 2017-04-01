@@ -239,8 +239,11 @@
 			<if test="outSn != null and outSn != ''">
 				AND out_sn=#{outSn}
 			</if>
-			<if test="finishedTime != null">
-				AND finished_time=#{finishedTime}
+			<if test="finishedTimeBegin != null">
+				AND finished_time >= #{finishedTimeBegin}
+			</if>
+			<if test="finishedTimeEnd != null">
+				AND finished_time &lt;= #{finishedTimeEnd}
 			</if>
 			<if test="receipt != null and receipt != ''">
 				AND receipt=#{receipt}
@@ -289,4 +292,5 @@
 		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
+
 </mapper>
