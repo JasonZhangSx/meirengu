@@ -39,7 +39,7 @@ public class ChannelBankController {
         return channelBankService.update(content);
     }
     /**
-     * 查询渠道银行
+     * 查询渠道银行列表
      * @param bankCode
      * @return
      */
