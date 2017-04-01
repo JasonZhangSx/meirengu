@@ -7,6 +7,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.model.Result;
+import com.meirengu.pay.vo.PaymentRecordVo;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
@@ -322,13 +323,13 @@ public class PaymentController extends BaseController{
     }
     /**
      * 根据用户id查询交易记录
-     * @param userId
+     * @param paymentRecordVo
      * @return
      */
     @RequestMapping(value = "paymentRecord",method = RequestMethod.GET)
     @ResponseBody
-    public String paymentRecord(@RequestParam(value = "userId", required = true) String userId){
-        return paymentService.getPaymentRecord(userId);
+    public String paymentRecord(PaymentRecordVo paymentRecordVo){
+        return paymentService.getPaymentRecord(paymentRecordVo);
     }
     /**
      * 根据用户id查询交易记录
