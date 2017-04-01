@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="./../css/index.css" media="screen" charset="utf-8">
+</head>
+<body style='background: -webkit-gradient(linear, left top, right top, from(#a7dee6),to(#ade3ee));'>
+	<script type="text/javascript">
+	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
+	</script>
+
+	<div class="inviteReward_cont">
+    <header class="text-c">
+      <img src="./../img/invite_banner.png" style="width:6.4rem" alt="" />
+    </header>
+    <figure>
+      <figcaption>福利 <em><var>1</var></em></figcaption>
+      <p>
+        邀请好友注册成功，被邀请人即可获得500现金抵扣券。
+      </p>
+    </figure>
+    <figure>
+      <figcaption>福利 <em><var>2</var></em></figcaption>
+      <p>
+        被邀请人首次认购众筹项目成功后，彼此可获得被邀请人认购金额0.5%的奖励。
+      </p>
+    </figure>
+
+		<div class="together">
+			MEIRENGU TOGETHER！
+			<a href="javascript:invokeAppMethod()"><img src="./../img/invite_gift.png" alt="" style="width:.43rem;" />给好友送新手礼</a>
+		</div>
+
+		<div class="table">
+			<table>
+				<tr>
+					<th colspan="2">活动规则</th>
+				</tr>
+				<tr>
+					<td style="width:.35rem">1.</td><td>被邀请人注册时输入邀请人手机号，注册成功，即为邀请成功。</td>
+				</tr>
+				<tr>
+					<td>2.</td><td>被邀请人自注册日起 1个月内，参与任何众筹项目认购，邀请人和被邀请人都可获得认购金额 0.5%的奖励。</td>
+				</tr>
+				<tr>
+					<td>3.</td><td>奖励发放时间：认购成功3天后发放。</td>
+				</tr>
+				<tr>
+					<td>4.</td><td>活动期限：长期有效。</td>
+				</tr>
+				<tr>
+					<td>5.</td><td>如有任何疑问请联系客服：4008868323。</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<img src="./../img/invite_bot.jpg" style="width:100%" alt="" />
+  </div>
+	<!--<button onclick="sendInfoToJava()">App调用JS方法(带参数)</button>-->
+	<script>
+		function sendInfoToJava(){
+			var name = '我是JS';
+			window.AndroidWebView.showInfoFromJs(name);
+		}
+		function invokeAppMethod(){
+			window.AndroidWebView.showInfoFromJs();
+		}
+		function showInfoFromAppWithMsg(msg){
+			alert("来自App的消息: "+msg);
+		}
+		function showInfoFromApp(){
+			alert("通过App调用JS");
+		}
+	</script>
+   </body>
+</html>

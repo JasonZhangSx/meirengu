@@ -19,16 +19,16 @@
     <div class="wrapper">
           <c:if test="${not empty list}">
             <c:forEach items="${list}" var="bulletin">
-              <a href="<%=request.getContextPath()%>/bulletins/${bulletin.bulletin_id}" class="item border_b1">
+              <a href="<%=request.getContextPath()%>/bulletins/${bulletin.bulletinId}" class="item border_b1">
                 <div class="tit clearfix">
-                    <h4>${bulletin.bulletin_title}</h4><em></em>
+                    <h4>${bulletin.bulletinTitle}</h4><em></em>
                 </div>
                 <div class="txt">
-                    ${bulletin.bulletin_content}
+                    ${bulletin.bulletinContent}
                 </div>
                 <div class="date">
                     <jsp:useBean id="dateValue" class="java.util.Date"/>
-                    <jsp:setProperty name="dateValue" property="time" value="${bulletin.create_time}"/>
+                    <jsp:setProperty name="dateValue" property="time" value="${bulletin.createTime}"/>
                     <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd/ HH:mm:ss"/>
                 </div>
               </a>
