@@ -134,8 +134,12 @@ public class LoginController extends BaseController {
                             }
                             //用户为空则注册一个
                             User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
-                            RegisterPO registerPO = loginService.setUserToRedis(usr);
-                            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                            if (usr != null){
+                                RegisterPO registerPO = loginService.setUserToRedis(usr);
+                                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                            }else {
+                                return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                            }
                         }catch (Exception e){
                             logger.info(e.getMessage());
                             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -235,7 +239,7 @@ public class LoginController extends BaseController {
                 RegisterPO registerPO = loginService.setUserToRedis(usr);
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
-                return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+                return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
             }
         }catch (Exception e){
             logger.info(e.getMessage());

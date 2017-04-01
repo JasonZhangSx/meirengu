@@ -51,8 +51,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     InviterDao inviterDao;
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
-    public int create(User user){
+    public User create(User user){
         int result = userDao.create(user);
+        if(result == 0){
+            user.setUserId(UuidUtils.getShortUuid());
+            result = userDao.create(user);
+        }
         if(result == 1){
             if(!StringUtil.isEmpty(user.getMobileInviter())){
                 //初始化邀请关系？//优化改成异步
@@ -71,10 +75,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             //领取注册抵扣券
             ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
             receiveCouponsThread.run();
-            return result;
+            return user;
         }else{
             logger.info("UserServiceImpl createUser failed :{}",user);
-            return 0;
+            return null;
         }
     }
 
@@ -187,7 +191,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setLastLoginTime(new Date());
         user.setLoginIp(ip);
         user.setLastLoginIp(ip);
-        user.setPassword(password);
         user.setPhone(mobile);
         user.setLoginNum(1);
         user.setIsAuth(0);
@@ -197,14 +200,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
-        ObjectUtils.getNotNullObject(user,User.class);
-        int result = this.create(user);
-        if(result ==0){
-            //如果失败，重试一次
-            user.setUserId(UuidUtils.getShortUuid());
-            result = this.create(user);
+        try {
+            user.setPassword(PasswordEncryption.createHash(password));
+        }catch (Exception e){
+            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
-        return result == 1 ? user : null;
+        ObjectUtils.getNotNullObject(user,User.class);
+        return this.create(user);
+//        if(result ==0){
+//            //如果失败，重试一次
+//
+//            result = this.create(user);
+//        }
+//        return result == 1 ? user : null;
     }
 
     /**
@@ -262,12 +270,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
         ObjectUtils.getNotNullObject(user,User.class);
-        int result = this.create(user);
-        if(result ==0){
-            user.setUserId(UuidUtils.getShortUuid());
-            this.create(user);
-        }
-        return user;
+        return this.create(user);
     }
 
     @Override
