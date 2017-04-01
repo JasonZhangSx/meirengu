@@ -2,6 +2,7 @@
 <%@include file="../common/common.jsp"%>
 <html>
 <head>
+    <base href="<%=basePath %>">
     <title>Title</title>
 </head>
 <body>

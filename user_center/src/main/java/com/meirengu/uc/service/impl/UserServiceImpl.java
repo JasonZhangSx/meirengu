@@ -51,29 +51,34 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     InviterDao inviterDao;
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
-    public int create(User user){
+    public User create(User user){
         int result = userDao.create(user);
-        if(!StringUtil.isEmpty(user.getMobileInviter())){
-            User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
-            Inviter inviter = new Inviter();
-            inviter.setUserId(userInviter.getUserId());
-            inviter.setInvitedUserId(user.getUserId());
-            inviter.setInvitedUserPhone(user.getPhone());
-            inviter.setRegisterTime(new Date());
-            inviter.setReward(new BigDecimal("0"));
-            inviterDao.insert(inviter);
+        if(result == 0){
+            user.setUserId(UuidUtils.getShortUuid());
+            result = userDao.create(user);
         }
         if(result == 1){
+            if(!StringUtil.isEmpty(user.getMobileInviter())){
+                //初始化邀请关系？//优化改成异步
+                User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
+                Inviter inviter = new Inviter();
+                inviter.setUserId(userInviter.getUserId());
+                inviter.setInvitedUserId(user.getUserId());
+                inviter.setInvitedUserPhone(user.getPhone());
+                inviter.setRegisterTime(new Date());
+                inviter.setReward(new BigDecimal("0"));
+                inviterDao.insert(inviter);
+            }
             //初始化支付账户
             InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
             initPayAccountThread.run();
             //领取注册抵扣券
             ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
             receiveCouponsThread.run();
-            return result;
+            return user;
         }else{
             logger.info("UserServiceImpl createUser failed :{}",user);
-            return 0;
+            return null;
         }
     }
 
@@ -186,7 +191,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setLastLoginTime(new Date());
         user.setLoginIp(ip);
         user.setLastLoginIp(ip);
-        user.setPassword(password);
         user.setPhone(mobile);
         user.setLoginNum(1);
         user.setIsAuth(0);
@@ -196,13 +200,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
-        ObjectUtils.getNotNullObject(user,User.class);
-        int result = this.create(user);
-        if(result ==0){
-            user.setUserId(UuidUtils.getShortUuid());
-            this.create(user);
+        try {
+            user.setPassword(PasswordEncryption.createHash(password));
+        }catch (Exception e){
+            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
-        return user;
+        ObjectUtils.getNotNullObject(user,User.class);
+        return this.create(user);
+//        if(result ==0){
+//            //如果失败，重试一次
+//
+//            result = this.create(user);
+//        }
+//        return result == 1 ? user : null;
     }
 
     /**
@@ -260,12 +270,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
         ObjectUtils.getNotNullObject(user,User.class);
-        int result = this.create(user);
-        if(result ==0){
-            user.setUserId(UuidUtils.getShortUuid());
-            this.create(user);
-        }
-        return user;
+        return this.create(user);
     }
 
     @Override
@@ -419,16 +424,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                         if(accountUser!=null){
                             String password = (String) accountUser.get("password");
                             if(PasswordEncryption.validatePassword(oldPassword,password)){
-
-                                Map<String, String> payAccount = new HashMap<String, String>();
-                                payAccount.put("password",PasswordEncryption.createHash(newPassword));
-                                payAccount.put("userId",userId+"");
-                                Map<String, String> paramsModify = new HashMap<String, String>();
-                                paramsModify.put("content", JacksonUtil.toJSon(payAccount));
-                                String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
-                                hr = HttpUtil.doPostForm(urlModify,paramsModify);
-                                if(hr.getStatusCode()!=200){
+                                if(!StringUtil.isEmpty(newPassword)){
+                                    Map<String, String> payAccount = new HashMap<String, String>();
+                                    payAccount.put("password",PasswordEncryption.createHash(newPassword));
+                                    payAccount.put("userId",userId+"");
+                                    Map<String, String> paramsModify = new HashMap<String, String>();
+                                    paramsModify.put("content", JacksonUtil.toJSon(payAccount));
+                                    String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
                                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                    if(hr.getStatusCode()!=200){
+                                        hr = HttpUtil.doPostForm(urlModify,paramsModify);
+                                    }else{
+                                        return 1;
+                                    }
                                 }else{
                                     return 1;
                                 }

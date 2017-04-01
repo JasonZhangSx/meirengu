@@ -1,9 +1,6 @@
 <html>
 <head>
     <title></title>
-    <link type="text/css" rel="stylesheet" href="/resource/bootstrap4.0.0/css/bootstrap.css">
-    <script type="text/javascript" charset="utf-8" src="/resource/bootstrap4.0.0/js/bootstrap.js"/>
-    <script type="text/javascript" charset="utf-8" src="/resource/bootstrap4.0.0/js/bootstrap.min.js"/>
 </head>
 
 <body>

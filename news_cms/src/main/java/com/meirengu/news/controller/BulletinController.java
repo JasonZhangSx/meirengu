@@ -97,8 +97,8 @@ public class BulletinController extends BaseController {
     @RequestMapping(value = "/{bulletin_id}")
     public Result detail(@PathVariable("bulletin_id") int bulletinId) {
         try {
-            Bulletin bulletin = blletinService.detail(bulletinId);
-            return setResult(StatusCode.OK, bulletin, StatusCode.codeMsgMap.get(StatusCode.OK));
+            Map<String, Object> bulletinMap = blletinService.detail(bulletinId);
+            return setResult(StatusCode.OK, bulletinMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception:", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -102,7 +103,7 @@ public class OrderController extends BaseController{
         order.setOrderType(Constant.ORDER_TYPE_ORDINARY);//订单类型目前都是普通
         order.setPaymentMethod(Constant.PAYMENT_METHOD_BALANCE);//支付类型默认为余额支付
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
-        order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
+        order.setFinishedTime(new Date());//先插入当前时间，支付完成后跟新时间
         order.setReceipt("");//目前没有发票
         order.setOrderMessage(orderMessage==null?"":orderMessage);
         order.setOrderState(OrderStateEnum.BOOK.getValue());
@@ -191,7 +192,7 @@ public class OrderController extends BaseController{
         order.setOrderType(Constant.ORDER_TYPE_ORDINARY);//订单类型目前都是普通
         order.setPaymentMethod(paymentMethod);
         order.setOutSn("");//目前为预扣库存  第三方支付号为空
-        order.setFinishedTime(new Date());//目前众筹订单中完成时间字段没有意义
+        order.setFinishedTime(new Date());//先插入当前时间，支付完成后跟新时间
         order.setReceipt("");//目前没有发票
         order.setOrderMessage(orderMessage==null?"":orderMessage);
         order.setOrderState(OrderStateEnum.UNPAID.getValue());
@@ -492,6 +493,7 @@ public class OrderController extends BaseController{
         order.setOrderSn(orderSn);
         order.setPaymentMethod(paymentMethod);
         order.setOutSn(outSn);
+        order.setFinishedTime(new Date());
         order.setOrderState(OrderStateEnum.PAID.getValue());
         try {
             int i = orderService.updateBySn(order);
@@ -503,4 +505,22 @@ public class OrderController extends BaseController{
 
     }
 
+    /**
+     * 生成3天订单txt文件
+     */
+    @RequestMapping(value = "/generate_order_txt")
+    public Result  generateOrderTxt() {
+        try {
+            orderService.generateOrderTxt();
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (IOException ie) {
+            logger.error("throw IOException:", ie);
+            ie.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }  catch (Exception e) {
+            logger.error("throw exception:", e);
+            e.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 }
