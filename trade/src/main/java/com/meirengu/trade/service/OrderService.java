@@ -90,5 +90,9 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     int updateBySn(Order order);
+    /**
+     * 生成3天订单txt文件
+     */
+    void generateOrderTxt() throws IOException ;
 
 }

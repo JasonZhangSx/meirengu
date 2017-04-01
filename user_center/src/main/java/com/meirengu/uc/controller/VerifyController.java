@@ -121,4 +121,25 @@ public class VerifyController extends BaseController {
             return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
         }
     }
+
+
+
+    @RequestMapping(value = "user",method = {RequestMethod.GET})
+    public Result user(@RequestParam(value = "user_id", required = true)Integer userId,
+                         @RequestParam(value = "id_card", required = false)String idcard,
+                         @RequestParam(value = "realname", required = false)String realname){
+
+        try {
+            User user = userService.retrieveByUserId(userId);
+            if(user!=null && user.getIdCard().equals(idcard)){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.ID_CARD_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_NOT_EXITS));
+            }
+
+        }catch (Exception e){
+            logger.info("VerifyController user Throws Exception :{}" ,e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
 }
