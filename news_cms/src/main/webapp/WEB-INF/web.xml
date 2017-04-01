@@ -19,6 +19,15 @@
     <filter-name>hiddenHttpMethodFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+<!--
+  <filter>
+    <filter-name>ValidateSignFilter</filter-name>
+    <filter-class>com.meirengu.filter.ValidateSignFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ValidateSignFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>-->
   <!-- configure the HiddenHttpMethodFilter,convert the post method to put or delete -->
   <filter>
     <filter-name>HiddenHttpMethodFilter</filter-name>
