@@ -131,8 +131,12 @@
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 					<select name="typeId" id="typeId" class="select">
 						<c:forEach items="${type}" var="type">
-                            <option value="${type.typeId}" selected>${type.typeName}</option>
-                            <option value="${type.typeId}">${type.typeName}</option>
+                            <c:if test="${type.typeId == item.typeId}">
+                                <option value="${type.typeId}" selected>${type.typeName}</option>
+                            </c:if>
+                            <c:if test="${type.typeId != item.typeId}">
+                                <option value="${type.typeId}">${type.typeName}</option>
+                            </c:if>
                         </c:forEach>
 					</select>
 					</span>
@@ -147,7 +151,6 @@
                             <c:if test="${itemClass.classId != item.typeId}">
                                 <option value="${itemClass.classId}">${itemClass.className}</option>
                             </c:if>
-
                         </c:forEach>
 					</select>
 					</span>
