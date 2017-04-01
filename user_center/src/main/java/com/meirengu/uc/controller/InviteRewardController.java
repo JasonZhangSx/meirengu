@@ -33,7 +33,7 @@ public class InviteRewardController extends BaseController{
     private InviterService inviterService;
 
     @RequestMapping(value = "notify",method = RequestMethod.GET)
-    public Result notify(@RequestParam(value="filePath", required = true) String filePath) {
+    public Result notify(@RequestParam(value="file_name", required = true) String filePath) {
         try {
 
             List<Map<String,String>> investInfo =  ObjectToFile.readObject(filePath);
