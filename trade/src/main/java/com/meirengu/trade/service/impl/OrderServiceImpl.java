@@ -18,6 +18,7 @@ import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.ObjectToFile;
 import com.meirengu.utils.ObjectUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
@@ -111,8 +112,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             JSONObject item = resultJson.getJSONObject("data");
                             String headerImagePath = item.getString("headerImage");
                             String itemStatus = item.getString("itemStatus");
+                            int partnerId = item.getIntValue("partnerId");
                             map.put("headerImage", headerImagePath);
                             map.put("itemStatus", itemStatus);
+                            map.put("partnerId", partnerId);
                         }
                     }
                 }
@@ -383,7 +386,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //临时传值，后面流程使用
                 Map<String, Object> tempMap = new HashMap<String, Object>();
                 tempMap.put("itemName", itemLevel.getString("itemName"));
-                tempMap.put("partnerId", itemLevel.getString("partnerId"));
+                tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
@@ -656,13 +659,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             }
             fileName.createNewFile();
             logger.debug(fileName + "已创建");
-            BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-            out.write(resultMap.toString());
-            out.close();
+            List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+            Map<String, String> tempMap = new HashMap<String, String>();
+            for(Integer key : resultMap.keySet()){
+                tempMap.put(key.toString(), resultMap.get(key).toString());
+            }
+            mapList.add(tempMap);
+            ObjectToFile.writeObject(mapList, fileNameStr);
 
             //请求项目服务
-            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
-            HttpResult itemResult = HttpUtil.doGet(url);
+//            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
+//            HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
 

@@ -509,15 +509,18 @@ public class OrderController extends BaseController{
      * 生成3天订单txt文件
      */
     @RequestMapping(value = "/generate_order_txt")
-    public void generateOrderTxt() {
+    public Result  generateOrderTxt() {
         try {
             orderService.generateOrderTxt();
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (IOException ie) {
             logger.error("throw IOException:", ie);
             ie.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }  catch (Exception e) {
             logger.error("throw exception:", e);
             e.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 }
