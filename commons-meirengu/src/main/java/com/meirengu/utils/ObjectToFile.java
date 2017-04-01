@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ public class ObjectToFile {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectToFile.class);
 
-    public void writeObject( List<Map<String,String>> list,String filePath) {
+    public static void writeObject(List<Map<String, String>> list, String filePath) {
         try {
 
             FileOutputStream outStream = new FileOutputStream(filePath);
@@ -32,7 +33,7 @@ public class ObjectToFile {
         }
     }
 
-    public List<Map<String,String>> readObject(String filePath){
+    public static List<Map<String,String>> readObject(String filePath){
         try {
             FileInputStream freader;
             freader = new FileInputStream(filePath);
