@@ -12,17 +12,18 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>候补预约列表</title>
+    <title>待审核预约订单列表</title>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 候补预约列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 待审核预约订单 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
             <form action="delete" id="itemForm" method="post">
                 <div class="text-c">
+                    订单编号：<input type="text" class="input-text" style="width:120px;" value="${query.orderSn}" name="orderSn">　
                     用户账号：<input type="text" class="input-text" style="width:120px;" value="${query.userPhone}" name="userPhone">　
                     项目名称：<input type="text" class="input-text" style="width:120px;" value="${query.itemName}" name="itemName">　
                     <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
@@ -37,35 +38,51 @@
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
+                        <th>订单编号</th>
                         <th>账号</th>
                         <th>项目名称</th>
                         <th>回报档位</th>
+                        <th>单价</th>
                         <th>数量</th>
                         <th>订单总额</th>
-                        <th>微信号</th>
-                        <th>预约时间</th>
+                        <th>本金</th>
+                        <th>抵扣券金额</th>
+                        <th>年化收益率</th>
+                        <th>期限</th>
+                        <th>分红方式</th>
+                        <th>收货人</th>
+                        <th>收货地址</th>
                         <th>状态</th>
+                        <th>预约时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${page.list}" var="item">
                         <tr class="text-c">
+                            <td>${item.orderSn}</td>
                             <td>${item.userPhone}</td>
                             <td>${item.itemName}</td>
                             <td>${item.itemLevelName}</td>
+                            <td>${item.itemLevelAmount}</td>
                             <td>${item.itemNum}</td>
                             <td>${item.orderAmount}</td>
-                            <td>${item.userWeixin}</td>
+                            <td>${item.costAmount}</td>
+                            <td>${item.rebateAmount}</td>
+                            <td>${item.yearRate}%</td>
+                            <td>${item.investmentPeriod}个月</td>
+                            <td>${item.shareBonusPeriod}月/次</td>
+                            <td>${item.userName}(${item.userPhone})</td>
+                            <td>${item.province}${item.city}${item.areas}${item.userAddress}</td>
+                            <td>
+                                <c:if test="${item.orderState == 1}">待审核</c:if>
+                            </td>
                             <td>
                                 <jsp:useBean id="dateObject" class="java.util.Date" scope="page"></jsp:useBean>
                                 <jsp:setProperty property="time" name="dateObject" value="${item.createTime}"/>
                                 <fmt:formatDate value="${dateObject}" pattern="yyyy-MM-dd HH:mm:ss" />
                             </td>
-                            <td>
-                                <c:if test="${item.status == 0}">未处理</c:if>
-                                <c:if test="${item.status == 1}">已处理</c:if>
-                            </td>
+
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
                                    onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
