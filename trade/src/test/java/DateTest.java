@@ -8,17 +8,5 @@ import java.util.Date;
  */
 public class DateTest {
 
-    @Test
-    public void test1(){
-        Date beginDate = DateUtils.getCurrentDayBeginTime();
-        System.out.println(DateUtils.dateToStr(beginDate));
-        Date endDate = DateUtils.getCurrentDayEndTime();
-        System.out.println(DateUtils.dateToStr(endDate));
-    }
-    public static void main(String[] args) {
-        Date beginDate = DateUtils.getCurrentDayBeginTime();
-        System.out.println(DateUtils.dateToStr(beginDate,"yyyy-MM-dd HH:mm:ss"));
-        Date endDate = DateUtils.getCurrentDayEndTime();
-        System.out.println(DateUtils.dateToStr(endDate,"yyyy-MM-dd HH:mm:ss"));
-    }
+
 }

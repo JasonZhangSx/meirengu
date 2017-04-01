@@ -568,22 +568,24 @@ public class DateUtils {
 	 * 获取当天的开始时间
 	 * @return
 	 */
-	public static Date getCurrentDayBeginTime() {
-		Calendar currentDate = new GregorianCalendar();
-		currentDate.set(Calendar.HOUR_OF_DAY, 0);
-		currentDate.set(Calendar.MINUTE, 0);
-		currentDate.set(Calendar.SECOND, 0);
-		return currentDate.getTime();
+	public static Date getDayBeginTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		return cal.getTime();
 	}
 	/**
 	 * 获取当天的结束时间
 	 * @return
 	 */
-	public static Date getCurrentDayEndTime() {
-		Calendar currentDate = new GregorianCalendar();
-		currentDate.set(Calendar.HOUR_OF_DAY, 23);
-		currentDate.set(Calendar.MINUTE, 59);
-		currentDate.set(Calendar.SECOND, 59);
-		return currentDate.getTime();
+	public static Date getDayEndTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		return cal.getTime();
 	}
 }

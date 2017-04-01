@@ -19,6 +19,7 @@ import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.ObjectUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -611,5 +616,57 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     public int updateBySn(Order order) {
         return orderDao.updateBySn(order);
+    }
+
+    /**
+     * 生成3天订单txt文件
+     */
+    public void generateOrderTxt() throws IOException {
+        //查询下单3天的订单
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        //获取4天前的日期
+        Date currentDate = new Date();
+        Date beforeDate = DateUtils.addDays(currentDate,-4);
+        paramMap.put("finishedTimeBegin", com.meirengu.utils.DateUtils.getDayBeginTime(beforeDate));
+        paramMap.put("finishedTimeEnd", com.meirengu.utils.DateUtils.getDayEndTime(beforeDate));
+        paramMap.put("orderState", OrderStateEnum.PAID.getValue());
+        List<Map<String, Object>> orderList = getList(paramMap);
+        Map<Integer, BigDecimal> resultMap = new HashMap<Integer, BigDecimal>();
+        if (orderList != null && orderList.size() > 0) {
+            for (Map<String, Object> order : orderList) {
+                if (order != null) {
+                    int userId = Integer.parseInt(order.get("userId").toString());
+                    BigDecimal costAmount = (BigDecimal)order.get("costAmount");
+                    if (resultMap.get(userId) != null) {
+                        BigDecimal alreadyCostAmount = (BigDecimal)resultMap.get(userId);
+                        resultMap.put(userId, alreadyCostAmount.add(costAmount));
+                    } else {
+                        resultMap.put(userId, costAmount);
+                    }
+                }
+            }
+
+            String orderPath = ConfigUtil.getConfig("order.txt.path");
+            String txtName = "order." + com.meirengu.utils.DateUtils.dateToStr(currentDate, "yyyy-MM-dd") + ".txt";
+            String fileNameStr = orderPath + txtName;
+            File fileName = new File(fileNameStr);
+            if (fileName.exists()) {
+                fileName.delete();
+                logger.debug(fileName + "已删除");
+            }
+            fileName.createNewFile();
+            logger.debug(fileName + "已创建");
+            BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+            out.write(resultMap.toString());
+            out.close();
+
+            //请求项目服务
+            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
+            HttpResult itemResult = HttpUtil.doGet(url);
+            //后续处理对方处理失败重新请求
+        }
+
+
+
     }
 }
