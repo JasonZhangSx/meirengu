@@ -29,11 +29,11 @@
     <link rel=stylesheet type=text/css href="static/h-ui.admin/css/style.css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
-    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
-</html>
-<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <script>DD_belatedPNG.fix('*');</script><![endif]-->
+    <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+    <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <title>项目添加</title>
 <style>
     .select-box1 {
         padding-left: 0;
@@ -367,7 +367,7 @@
 
                 <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
                     <div class="wrapper">
-                        <span class="current" cnum="0">档位1<var></var></span>
+                        <span class="current" cnum="0"><sa>档位1</sa><var></var></span>
                     </div>
                     <em>+</em>
                 </div>
@@ -380,7 +380,7 @@
                             <div class="row cl" style="display:block">
                                 <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
                                 <div class="formControls col-xs-8 col-sm-8">
-                                    <input type="text" class="input-text" value="" maxlength="30" id="levelName0" name="levelName1">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="levelName0" name="levelName">
                                 </div>
                             </div>
                             <div class="row cl">

@@ -31,5 +31,10 @@ public interface PaymentAccountService {
      * @return
      */
     String auth(String content);
-
+    /**
+     * 判断交易密码
+     * @param userId 用户id
+     * @return 查询结果
+     */
+    String checkPayPwd(Integer userId,String pwd);
 }

@@ -9,8 +9,6 @@ import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemLevel;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.HttpUtil.HttpResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,30 +150,44 @@ public class ItemController extends BaseController {
     @RequestMapping("save")
     public Map itemSave(Item item){
         Map<String, Object> returnMap = new HashMap<>();
-        try {
-            Map<String, String> params = new HashMap<>();
-            params.put("item_name", item.getItemName());
-            params.put("item_profile", item.getItemProfile());
-            params.put("type_id", String.valueOf(item.getTypeId()));
-            params.put("class_id", String.valueOf(item.getClassId()));
-            params.put("target_amount", String.valueOf(item.getTargetAmount()));
-            params.put("preheating_days", String.valueOf(item.getPreheatingDays()));
-            params.put("partner_id", String.valueOf(item.getPartnerId()));
-            params.put("crowd_days", String.valueOf(item.getCrowdDays()));
-            params.put("area_id", "2");
-            params.put("header_image", item.getHeaderImage());
-            params.put("operate_account", "jason");
-            params.put("sponsor_name","jason");
+        Map<String, String> params = new HashMap<>();
+        params.put("item_name", item.getItemName());
+        params.put("item_profile", item.getItemProfile());
+        params.put("type_id", String.valueOf(item.getTypeId()));
+        params.put("class_id", String.valueOf(item.getClassId()));
+        params.put("target_amount", String.valueOf(item.getTargetAmount()));
+        params.put("preheating_days", String.valueOf(item.getPreheatingDays()));
+        params.put("partner_id", String.valueOf(item.getPartnerId()));
+        params.put("crowd_days", String.valueOf(item.getCrowdDays()));
+        params.put("area_id", "2");
+        params.put("header_image", item.getHeaderImage());
+        params.put("operate_account", "jason");
+        params.put("sponsor_name","jason");
 
-            Object itemResult = itemService.itemInsert(params);
-            if(itemResult != null){
-                returnMap.put("code", StatusCode.OK);
-                returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
-                returnMap.put("data", itemResult);
+        try {
+
+            if(item.getItemId() == null || item.getItemId() == 0){
+                Object itemResult = itemService.itemInsert(params);
+                if(itemResult != null){
+                    returnMap.put("code", StatusCode.OK);
+                    returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
+                    returnMap.put("data", itemResult);
+                }else {
+                    returnMap.put("code", StatusCode.ITEM_ERROR_INSERT);
+                    returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_INSERT));
+                }
             }else {
-                returnMap.put("code", StatusCode.ITEM_ERROR_INSERT);
-                returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_INSERT));
+                params.put("item_id", String.valueOf(item.getItemId()));
+                if(itemService.contentUpdate(params)){
+                    returnMap.put("code", StatusCode.OK);
+                    returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
+                    returnMap.put("data", item);
+                }else {
+                    returnMap.put("code", StatusCode.ITEM_ERROR_UPDATE);
+                    returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.ITEM_ERROR_UPDATE));
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

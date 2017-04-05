@@ -229,6 +229,6 @@ public final class DateAndTime {
 	
 	
 	public static void main(String args[]) throws Exception{
-		
+		System.err.print(dateDiff("dd",DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss"),DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss")));
 	}
 }

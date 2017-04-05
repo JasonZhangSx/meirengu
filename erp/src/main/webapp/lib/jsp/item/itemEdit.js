@@ -40,8 +40,9 @@ function levelAdd(){
             console.log(data);
             if(data.code == '200'){
                 var content = data.data;
+                console.log(content);
                 $("#levelId"+levelIndex).val(content.levelId);
-                $('.huibao_set .huibao_tab_menu span[cnum='+levelIndex+']').text(content.levelName+'<var></var>');
+                $('.huibao_set .huibao_tab_menu span[cnum='+levelIndex+'] sa' ).text(content.levelName);
                 alert("回报档位添加成功");
             }
         }
@@ -288,19 +289,19 @@ $(function () {
             '</div>' +
             '</form></div>';
 
-        aObj = aObj.replace(/#1/g,"2");
-
         var cnum = $('.huibao_tab_menu .wrapper span:last-child').attr("cnum");
+        cnum = parseInt(cnum)+1;
+        aObj = aObj.replace(/#1/g,cnum);
         console.log(cnum);
         var a = confirm('要新增项目档位吗'),
             menu = $('.huibao_tab_menu .wrapper span');
         if (a) {
             $('.huibao_tab_menu span').removeClass('current');
-            $('.huibao_tab_menu .wrapper').append('<span cnum="'+(parseInt(cnum)+1)+'" class="current">档位<var></var></span>');
+            $('.huibao_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current"><sa>档位</sa><var></var></span>');
             sortName($('.huibao_tab_menu .wrapper span'));
             $('.huibao_wrapper').children().hide();
             $('.huibao_wrapper').append(aObj);
-            levelIndex = parseInt(cnum)+1;
+            levelIndex = cnum;
         }
     })
     $('.content_tab_menu em').on('click', function () {

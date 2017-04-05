@@ -24,9 +24,9 @@
     <div class="menu border_b1 box">
       <c:if test="${not empty faqClasses}">
         <ul>
-          <c:forEach items="${faqClasses}" var="class" varStatus="stat">
-            <c:if test="${stat.count - 1 == index}"><li class="active"><a href="<%=request.getContextPath()%>/faqs/${class.classId}/${stat.count - 1}">${class.className}</a></li></c:if>
-            <c:if test="${stat.count - 1 != index}"><li><a href="<%=request.getContextPath()%>/faqs/${class.classId}/${stat.count - 1}">${class.className}</a></li></c:if>
+          <c:forEach items="${faqClasses}" var="faqclass" varStatus="stat">
+            <c:if test="${stat.count - 1 == index}"><li class="active"><a href="<%=request.getContextPath()%>/faqs/${faqclass.classId}/${stat.count - 1}">${faqclass.className}</a></li></c:if>
+            <c:if test="${stat.count - 1 != index}"><li><a href="<%=request.getContextPath()%>/faqs/${faqclass.classId}/${stat.count - 1}">${faqclass.className}</a></li></c:if>
           </c:forEach>
         </ul>
       </c:if>
