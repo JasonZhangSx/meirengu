@@ -46,7 +46,7 @@ public class InviteRewardController extends BaseController{
                     Inviter inviter = new Inviter();
                     inviter.setInvitedUserId(Integer.parseInt(userId+""));
                     inviter = inviterService.detail(inviter);
-                    if(!StringUtil.isEmpty(inviter.getId())){
+                    if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
                     // TODO: 4/1/2017 根据注册时间  投资时间 校验是否有效期
                         Date registerTime = inviter.getRegisterTime();
                         Date investTime = inviter.getInvestTime();
