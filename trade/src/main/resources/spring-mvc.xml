@@ -95,13 +95,27 @@
 			</list>
 		</constructor-arg>
 	</bean>
-
 	<bean id="redisClient" class="com.meirengu.common.RedisClient">
 		<constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
 	</bean>
-
 	<bean class="com.meirengu.utils.TokenUtils">
 		<property name="redisClient" ref="redisClient"/>
+	</bean>
+
+	<bean id="consumer" class="com.meirengu.trade.rocketmq.Consumer"
+		  init-method="init"
+		  destroy-method="destroy"
+		  scope="singleton">
+		<property name="consumerGroup" value="TradeConsumerGroup" />
+		<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />
+	</bean>
+
+	<bean id="producer" class="com.meirengu.trade.rocketmq.Producer"
+		  init-method="init"
+		  destroy-method="destroy"
+		  scope="singleton">
+		<property name="producerGroup" value="TradeProducerGroup" />
+		<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />
 	</bean>
 
 </beans>

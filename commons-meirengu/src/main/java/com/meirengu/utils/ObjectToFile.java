@@ -21,14 +21,14 @@ public class ObjectToFile {
      * @param filePath
      * @return
      */
-    public static List<Map<String,String>> readObject(String filePath){
+    public static  List<String[]>  readObject(String filePath){
         try {
             FileInputStream freader;
             freader = new FileInputStream(filePath);
             ObjectInputStream objectInputStream = new ObjectInputStream(freader);
 
             logger.info("ObjectToFile.readObject successful:{}");
-            return  ( List<Map<String,String>>) objectInputStream.readObject();
+            return  (  List<String[]> ) objectInputStream.readObject();
 
         } catch (FileNotFoundException e) {
             logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
@@ -73,30 +73,21 @@ public class ObjectToFile {
 
             FileOutputStream outStream = new FileOutputStream(filePath);
             StringBuffer sb = new StringBuffer();
-            sb.append("[");
-            int i = 0;
-            for(String[] arr:list){
-                i++;
-                sb.append("{");
+            for(int i=0;i<list.size();i++){
+                String[] arr = list.get(i);
                 for (int index = 0; index < arr.length; index++)
                 {
-                    sb.append("\"");
                     sb.append(arr[index]);
-                    sb.append("\"");
                     if(index<arr.length-1){
                         sb.append(",");
                     }
                 }
-                sb.append("}");
-                if(i<arr.length-1){
-                    sb.append(",");
+                if(i<list.size()-1){
+                    sb.append("|");
                 }
             }
-            sb.append("]");
             byte[] contentInBytes = sb.toString().getBytes();
             outStream.write(contentInBytes);
-//            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outStream);
-//            objectOutputStream.writeObject(list);
             outStream.close();
             logger.info("ObjectToFile.writeObject successful:{}");
         } catch (FileNotFoundException e) {
@@ -106,25 +97,5 @@ public class ObjectToFile {
         }
     }
 
-    public static void main(String args[]){
-        ObjectToFile of = new ObjectToFile();
-        Map map = new HashMap();
-        map.put(200736768,100000);
-        map.put(164691969,100000);
-
-        List list = new ArrayList();
-        list.add(map);
-        of.writeObject(list,"E://1.txt");
-//            of.readArray("E://1.txt");
-//        List<String[]> arr = new ArrayList<>();
-//        String[] ch = { "a", "b","c"};
-//        String[] ch1 = { "1", "2","3"};
-//        arr.add(ch);
-//        arr.add(ch1);
-//        of.writeArray(arr,"E://1.txt");
-//        of.writeFile("E://1.txt",arr.toString().getBytes());
-
-
-    }
 
 }

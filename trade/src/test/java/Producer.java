@@ -1,6 +1,6 @@
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.common.message.Message;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.junit.Test;
 
 /**
@@ -14,7 +14,7 @@ public class Producer {
         try {
             producer.start();
             Message msg = new Message("deploy",
-                    "MyTag",
+                    "orderLoseEfficacy",
                     "1",
                     "Just for test.".getBytes());
             msg.setDelayTimeLevel(2);
@@ -23,7 +23,7 @@ public class Producer {
                     " result:" + result.getSendStatus());
 
             msg = new Message("deploy",
-                    "MyTag",
+                    "orderLoseEfficacy",
                     "2",
                     "Just for test.".getBytes());
             msg.setDelayTimeLevel(3);
@@ -33,7 +33,7 @@ public class Producer {
                     " result:" + result.getSendStatus());
 
             msg = new Message("deploy",
-                    "MyTag",
+                    "orderLoseEfficacy",
                     "1",
                     "Just for test.".getBytes());
             msg.setDelayTimeLevel(4);

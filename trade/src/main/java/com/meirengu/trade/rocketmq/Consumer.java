@@ -3,25 +3,29 @@ package com.meirengu.trade.rocketmq;
 
 import java.util.List;
 
+import com.meirengu.trade.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
-import com.alibaba.rocketmq.common.message.MessageExt;
-import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
+import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class MyConsumer {
+public class Consumer {
 
-    private final Logger logger = LoggerFactory.getLogger(MyConsumer.class);
+    private final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     private DefaultMQPushConsumer defaultMQPushConsumer;
     private String namesrvAddr;
     private String consumerGroup;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * Spring bean init-method
@@ -37,18 +41,18 @@ public class MyConsumer {
         // 注意：ConsumerGroupName需要由应用来保证唯一
         defaultMQPushConsumer = new DefaultMQPushConsumer(consumerGroup);
         defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
-        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+//        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 
         // 订阅指定MyTopic下tags等于MyTag
 
-        defaultMQPushConsumer.subscribe("deploy", "MyTag");
+        defaultMQPushConsumer.subscribe("deploy", "orderLoseEfficacy");
 
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         // 设置为集群消费(区别于广播消费)
-        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+//        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 
         defaultMQPushConsumer.registerMessageListener(new MessageListenerConcurrently() {
 
@@ -57,11 +61,13 @@ public class MyConsumer {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 
                 MessageExt msg = msgs.get(0);
+                logger.info(msg.toString());
                 if (msg.getTopic().equals("deploy")) {
                     // TODO 执行Topic的消费逻辑
-                    if (msg.getTags() != null && msg.getTags().equals("MyTag")) {
+                    if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
                         // TODO 执行Tag的消费
                         logger.debug(msg.toString());
+                        orderService.orderLoseEfficacy(new String(msg.getBody()));
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
