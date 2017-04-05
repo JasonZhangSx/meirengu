@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,14 +19,14 @@ public class ObjectToFile {
      * @param filePath
      * @return
      */
-    public static  List<String[]>  readObject(String filePath){
+    public static  List<Map<String,String>>  readObject(String filePath){
         try {
             FileInputStream freader;
             freader = new FileInputStream(filePath);
             ObjectInputStream objectInputStream = new ObjectInputStream(freader);
 
             logger.info("ObjectToFile.readObject successful:{}");
-            return  (  List<String[]> ) objectInputStream.readObject();
+            return  (  List<Map<String,String>> ) objectInputStream.readObject();
 
         } catch (FileNotFoundException e) {
             logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
