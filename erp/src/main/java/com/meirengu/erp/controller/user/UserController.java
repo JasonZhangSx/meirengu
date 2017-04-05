@@ -36,18 +36,10 @@ public class UserController<T> extends BaseController{
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
-                                    @RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                                    @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
-                                    @RequestParam(value="sortby", required = false) String sortBy,
-                                    @RequestParam(value="order", required = false) String order){
-    //获取分页控件的信息
-        String start = request.getParameter("start");
-        System.out.println(start);
-        String length = request.getParameter("length");
-        System.out.println(length);
+                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard){
+
     //获取前台额外传递过来的查询条件
         String extra_search = request.getParameter("extra_search");
         System.out.println(extra_search);
@@ -58,8 +50,10 @@ public class UserController<T> extends BaseController{
         paramsMap.put("phone",phone);
         paramsMap.put("realname",realname);
         paramsMap.put("idcard",idcard);
-        paramsMap.put("page",pageNum+"");
-        paramsMap.put("per_page",pageSize+"");
+
+        int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
+        paramsMap.put("page",page+"");
+        paramsMap.put("per_page",request.getParameter("length"));
 
         map = (Map<String,Object>)super.httpPost(url,paramsMap);
 
@@ -73,7 +67,7 @@ public class UserController<T> extends BaseController{
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         List userList = (List) map.get("list");
-        view.setiTotalDisplayRecords(userList.size());//显示总记录
+        view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
         view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 
         view.setAaData(userList);

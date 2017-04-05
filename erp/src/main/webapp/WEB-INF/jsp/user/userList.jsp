@@ -185,22 +185,22 @@
                     </thead>
                     <%--<tbody>--%>
                     <%--<tr class="text-c">--%>
-                        <%--<td>1</td>--%>
-                        <%--<td>18510162765</td>--%>
-                        <%--<td>是</td>--%>
-                        <%--<td>魏华鑫</td>--%>
-                        <%--<td>5137291990123223232</td>--%>
-                        <%--<td>年收入30万</td>--%>
-                        <%--<td>招商银行62223423423423</td>--%>
-                        <%--<td>5000.00</td>--%>
-                        <%--<td>100000.00</td>--%>
-                        <%--<td>2017-02-14 15:33:33</td>--%>
-                        <%--<td>--%>
-                            <%--<a style="text-decoration:none" class="ml-5"--%>
-                               <%--onClick="userList_detail('用户-用户列表-详情','用户-用户列表-详情.html','10001')" href="javascript:;"--%>
-                               <%--title="查看"><i class="Hui-iconfont">&#xe725;</i></a>--%>
-                            <%--冻结/解绑银行卡--%>
-                        <%--</td>--%>
+                    <%--<td>1</td>--%>
+                    <%--<td>18510162765</td>--%>
+                    <%--<td>是</td>--%>
+                    <%--<td>魏华鑫</td>--%>
+                    <%--<td>5137291990123223232</td>--%>
+                    <%--<td>年收入30万</td>--%>
+                    <%--<td>招商银行62223423423423</td>--%>
+                    <%--<td>5000.00</td>--%>
+                    <%--<td>100000.00</td>--%>
+                    <%--<td>2017-02-14 15:33:33</td>--%>
+                    <td>
+                    <a style="text-decoration:none" class="ml-5"
+                    onClick="userList_detail('用户-用户列表-详情','用户-用户列表-详情.html','10001')" href="javascript:;"
+                    title="查看"><i class="Hui-iconfont">&#xe725;</i></a>
+                    冻结/解绑银行卡
+                    </td>
                     <%--</tr>--%>
                     <%--</tbody>--%>
                 </table>
@@ -221,7 +221,6 @@
 <script type="text/javascript" language="javascript" class="init">
     var table;
     $(document).ready(function() {
-        alert("init table");
 
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
@@ -256,8 +255,58 @@
                 }
             },
             "columns": [
-                { "data": "total" },
-                { "data": "level" }
+                { "data": "userId" },
+                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        if(row.isAuth=='0'){
+                            return '<label> 是 </label>';
+                        }
+                        if(row.isAuth=='1'){
+                            return '<label> 否 </label>';
+                        }
+                    }
+                },
+                { "data": "realname" },
+                { "data": "idCard" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        if(row.investConditions=='0'){
+                            return '<label> 未选择 </label>';
+                        }
+                        if(row.investConditions=='1'){
+                            return '<label>  专业投资人  </label>';
+                        }
+                        if(row.investConditions=='2'){
+                            return '<label>  投资金额30万  </label>';
+                        }
+                        if(row.investConditions=='3'){
+                            return '<label>  投资金额10万 </label>';
+                        }
+                    }
+                },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
+                    }
+                },
+                { "data": "accountBalance" },
+                { "data": "totalInvestMoney" },
+                { "data": "registerTime",
+                    render: function(data, type, row, meta) {
+                        //先讲 时间格式化
+                        //这类问题主要给大家讲逻辑，因为都是类似的问题，类似的解决方案
+                        //最基础的解决方案： 一、直接在数据源就格式化为常见的格式（sql或者后台代码格式化）;二、在dt里面格式化;
+                        //在js格式化时间的三种方式，我这里示范一种
+                        //具体方法的链接：http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                        return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
+                    }
+                },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'用户-用户列表-详情.html\',\'10001\')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+                    }
+                }
             ]
 
         } );
@@ -272,14 +321,14 @@
 </script>
 <script type="text/javascript">
 
-//    $('.table-sort').dataTable({
-//        "aaSorting": [[1, "desc"]],//默认第几个排序
-//        "bStateSave": true,//状态保存
-//        "aoColumnDefs": [
-//            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-//            {"orderable": false, "aTargets": [0, 8]}// 不参与排序的列
-//        ]
-//    });
+    //    $('.table-sort').dataTable({
+    //        "aaSorting": [[1, "desc"]],//默认第几个排序
+    //        "bStateSave": true,//状态保存
+    //        "aoColumnDefs": [
+    //            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+    //            {"orderable": false, "aTargets": [0, 8]}// 不参与排序的列
+    //        ]
+    //    });
     //*项目-编辑*/
     function userList_detail(title, url, id, w, h) {
         var index = layer.open({
@@ -288,6 +337,27 @@
             content: url
         });
         layer.full(index);
+    }
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
     }
 </script>
 </body>
