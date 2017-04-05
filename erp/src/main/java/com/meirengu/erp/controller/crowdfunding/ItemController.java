@@ -9,8 +9,6 @@ import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemLevel;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.HttpUtil.HttpResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
