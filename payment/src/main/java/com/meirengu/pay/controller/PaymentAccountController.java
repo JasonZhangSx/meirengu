@@ -59,5 +59,15 @@ public class PaymentAccountController {
     public String auth(@RequestParam(value = "content", required = true) String content){
         return paymentAccountService.auth(content);
     }
+    /**
+     * 校验支付密码是否正确
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "checkPwd",method = RequestMethod.POST)
+    @ResponseBody
+    public String checkPwd(@RequestParam(value = "userId", required = true) Integer userId,@RequestParam(value = "pwd", required = true) String pwd){
+        return paymentAccountService.checkPayPwd(userId,pwd);
+    }
 
 }

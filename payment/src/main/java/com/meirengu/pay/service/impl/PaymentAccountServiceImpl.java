@@ -1,5 +1,6 @@
 package com.meirengu.pay.service.impl;
 
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.StatusCode;
 import com.meirengu.pay.dao.PaymentAccountDao;
 import com.meirengu.pay.model.PaymentAccount;
@@ -156,6 +157,27 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_AUTH, map);
         }
         return null;
+    }
+
+    @Override
+    public String checkPayPwd(Integer userId,String pwd) {
+        Map<String,Object> map = new HashMap<>();
+        PaymentAccount paymentAccount = new PaymentAccount();
+        try {
+            logger.info("Request checkPayPwd parameter:{}",paymentAccount.toString());
+            paymentAccount = paymentDao.selectByUserId(userId) == null ? null : paymentDao.selectByUserId(userId);
+            if (paymentAccount==null){
+                logger.error("Capture checkPayPwd ErrorMsg:{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL));
+                throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
+            }
+            if (!PasswordEncryption.validatePassword(pwd,paymentAccount.getPassword())){
+                throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT);
+            }
+            return ResultUtil.getResult(StatusCode.OK,map);
+        } catch (Exception e) {
+            logger.error("Capture checkPayPwd ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR,null);
+        }
     }
 
 
