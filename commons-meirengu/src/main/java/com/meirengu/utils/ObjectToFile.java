@@ -32,14 +32,19 @@ public class ObjectToFile {
         }
     }
 
-    public static List<String[]> readArray(String filePath){
+    public static Object readArray(String filePath){
         try {
             FileInputStream freader;
-            freader = new FileInputStream(filePath);
-            ObjectInputStream objectInputStream = new ObjectInputStream(freader);
+//            freader = new FileInputStream(filePath);
+//            ObjectInputStream objectInputStream = new ObjectInputStream(freader);
+//            logger.info("ObjectToFile.readObject successful:{}");
+//            return  ( List<String[]>) objectInputStream.readObject();
+
+
+            FileInputStream fileInputStream = new FileInputStream(filePath);
 
             logger.info("ObjectToFile.readObject successful:{}");
-            return  ( List<String[]>) objectInputStream.readObject();
+            return   fileInputStream.read();
 
         } catch (FileNotFoundException e) {
             logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
@@ -47,9 +52,9 @@ public class ObjectToFile {
         } catch (IOException e) {
             logger.info("ObjectToFile.readObject throws IOException:{}",e.getMessage());
             return null;
-        } catch (ClassNotFoundException e) {
-            logger.info("ObjectToFile.readObject throws ClassNotFoundException:{}",e.getMessage());
-            return null;
+//        } catch (ClassNotFoundException e) {
+//            logger.info("ObjectToFile.readObject throws ClassNotFoundException:{}",e.getMessage());
+//            return null;
         }
 
     }
@@ -58,9 +63,31 @@ public class ObjectToFile {
         try {
 
             FileOutputStream outStream = new FileOutputStream(filePath);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outStream);
-
-            objectOutputStream.writeObject(list);
+            StringBuffer sb = new StringBuffer();
+            sb.append("[");
+            int i = 0;
+            for(String[] arr:list){
+                i++;
+                sb.append("{");
+                for (int index = 0; index < arr.length; index++)
+                {
+                    sb.append("\"");
+                    sb.append(arr[index]);
+                    sb.append("\"");
+                    if(index<arr.length-1){
+                        sb.append(",");
+                    }
+                }
+                sb.append("}");
+                if(i<arr.length-1){
+                    sb.append(",");
+                }
+            }
+            sb.append("]");
+            byte[] contentInBytes = sb.toString().getBytes();
+            outStream.write(contentInBytes);
+//            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outStream);
+//            objectOutputStream.writeObject(list);
             outStream.close();
             logger.info("ObjectToFile.writeObject successful:{}");
         } catch (FileNotFoundException e) {
@@ -91,26 +118,47 @@ public class ObjectToFile {
         }
 
     }
+
+    public static void writeFile(String string,byte[] bytes) {
+        FileOutputStream fileOutputStream=null;
+        BufferedOutputStream bufferedOutputStream=null;
+        try{
+            fileOutputStream=new FileOutputStream(string);
+            bufferedOutputStream =new BufferedOutputStream(fileOutputStream);
+            bufferedOutputStream.write(bytes);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            try {
+                bufferedOutputStream.flush();
+                fileOutputStream.close();
+                bufferedOutputStream.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
     public static void main(String args[]){
         ObjectToFile of = new ObjectToFile();
         Map map = new HashMap();
         map.put(200736768,100000);
         map.put(164691969,100000);
-//        map.put("money",1000000);
-//
-//        Map map1 = new HashMap();
-//        map1.put("userId",343453);
-//        map1.put("money",3000000);
 
         List list = new ArrayList();
         list.add(map);
-//        list.add(map1);
-            List<String[]> arr = of.readArray("E://2.txt");
-            for(String[] arr1:arr){
-                System.err.print(arr1);
-            }
- //        of.writeArray(list,"E://1.txt");
-//        System.err.print();
+         of.writeObject(list,"E://1.txt");
+            of.readArray("E://1.txt");
+//        List<String[]> arr = new ArrayList<>();
+//        String[] ch = { "a", "b","c"};
+//        String[] ch1 = { "1", "2","3"};
+//        arr.add(ch);
+//        arr.add(ch1);
+//        of.writeArray(arr,"E://1.txt");
+//        of.writeFile("E://1.txt",arr.toString().getBytes());
+
+
     }
 
 }
