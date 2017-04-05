@@ -405,6 +405,9 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             paymentRecord.setChannelRequestTime(new Date());
             String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_PAYMENT_SN_PREFIX);
             paymentRecord.setTransactionSn(transactionSn);
+            if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
+                paymentRecord.setStatus(PaymentTypeUtil.PaymentStatus_Success);
+            }
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             if (paymentRecord.getPaymentMethod()==PaymentTypeUtil.PaymentMethod_Balance){
                 paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
@@ -486,16 +489,13 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
     }
     /**
      * 根据用户id查询交易记录
-     * @param userId
+     * @param paymentRecordVo
      * @return
      */
     @Override
-    public String getPaymentRecord(String userId) {
+    public String getPaymentRecord(PaymentRecordVo paymentRecordVo) {
         Map<String,Object> map = new HashMap<>();
-        PaymentRecordVo paymentRecordVo = new PaymentRecordVo();
         try {
-            paymentRecordVo.setUserId(Integer.valueOf(userId));
-            paymentRecordVo.setStatus(PaymentTypeUtil.PaymentStatus_Success);
             LOGGER.info("Request getPaymentRecord parameter:{}",paymentRecordVo.toString());
             List<PaymentRecordVo> list = paymentRecordDao.getPaymentRecord(paymentRecordVo);
             if (list==null){

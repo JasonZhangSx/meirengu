@@ -1,6 +1,7 @@
 package com.meirengu.pay.service;
 
 import com.meirengu.pay.model.Payment;
+import com.meirengu.pay.vo.PaymentRecordVo;
 import com.meirengu.pay.vo.WxNotifyData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,10 +60,10 @@ public interface PaymentService {
 
     /**
      * 根据用户id查询交易记录
-     * @param userId
+     * @param paymentRecordVo
      * @return
      */
-    String getPaymentRecord(String userId);
+    String getPaymentRecord(PaymentRecordVo paymentRecordVo);
     /**
      * 根据用户id查询提现金额
      * @param userId
