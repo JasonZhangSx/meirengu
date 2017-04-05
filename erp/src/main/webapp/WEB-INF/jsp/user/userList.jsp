@@ -144,7 +144,6 @@
         </dl>
     </div>
 </aside>
-<form action="/erp/user/list" method="post" >
 <div class="dislpayArrow hidden-xs"><a class=pngfix href=javascript:void(0) data-href=javascript:void(0);
                                        onclick=displaynavbar(this)></a></div>
 <section class="Hui-article-box">
@@ -168,9 +167,8 @@
                 <span class="r" style="line-height:30px;">共有数据：<strong>${totalCount}</strong> 条</span></div>
             <div class="mt-20">
 
-                    <table id="userTable" class="table table-border table-bordered table-bg table-hover table-sort">
+                    <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
-                        <c:forEach items="${list}"></c:forEach>
                         <tr class="text-c">
                             <th>编号</th>
                             <th>账号</th>
@@ -186,11 +184,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach items="${list}" var="list">
+                        <c:forEach items="${list}" var="list" varStatus="idx" begin="1" step="1">
                             <tr class="text-c">
-                                <td>${list.userId}</td>
+                                <td>${idx.index}</td>
+                                <%--<td>${list.userId}</td>--%>
                                 <td>${list.phone}</td>
-                                <td>${list.isAuth}</td>
+                                <td>
+                                    <c:if test="${list.isAuth == 1}">是</c:if>
+                                    <c:if test="${list.isAuth == 0}">否</c:if>
+                                </td>
                                 <td>${list.realname}</td>
                                 <td>${list.idCard}</td>
                                 <td>${list.investConditions}</td>
@@ -198,12 +200,6 @@
                                 <td>${list.accountBalance}</td>
                                 <td>${list.totalInvestMoney}</td>
                                 <td>${list.registerTime}</td>
-                               <%-- <td>5137291990123223232</td>
-                                <td>年收入30万</td>
-                                <td>招商银行62223423423423</td>
-                                <td>5000.00</td>
-                                <td>100000.00</td>
-                                <td>2017-02-14 15:33:33</td>--%>
                                 <td>
                                     <a style="text-decoration:none" class="ml-5"
                                        onClick="userList_detail('用户-用户列表-详情','用户-用户列表-详情.html','10001')" href="javascript:;"
@@ -215,11 +211,9 @@
                         </tbody>
                     </table>
             </div>
-
         </article>
     </div>
 </section>
-</form>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
@@ -233,6 +227,7 @@
 <script type="text/javascript" language="javascript" class="init">
     var table;
     $(document).ready(function() {
+        alert("init table");
         table = $('#userTable').DataTable( {
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框

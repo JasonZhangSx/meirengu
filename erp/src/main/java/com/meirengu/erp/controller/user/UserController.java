@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,12 +27,18 @@ public class UserController extends BaseController{
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
+
+    @RequestMapping("tolist")
+    public ModelAndView userList(){
+        return new ModelAndView("/user/userList");
+    }
+    @ResponseBody
     @RequestMapping("list")
-    public ModelAndView userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+    public Map userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
-                                    @RequestParam(value="phone", required = false) String phone,
-                                    @RequestParam(value="realname", required = false) String realname,
-                                    @RequestParam(value="idcard", required = false) String idcard,
+                                    @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
+                                    @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
+                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
                                     @RequestParam(value="sortby", required = false) String sortBy,
                                     @RequestParam(value="order", required = false) String order){
         Map<String, Object> map = new HashMap<>();
@@ -50,7 +57,7 @@ public class UserController extends BaseController{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ModelAndView("/user/userList", map);
+        return map;
     }
 
     @RequestMapping("detail")
