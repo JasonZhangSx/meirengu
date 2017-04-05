@@ -55,7 +55,7 @@ public class InviteRewardController extends BaseController{
                                     DateAndTime.convertDateToString(investTime,"yyyy-MM-dd HH:mm:ss"));
 
                             // TODO: 4/1/2017 封装入结构 写入文件
-                            if(i<=30){
+                            if(i<34){
                                 String[] arr = new String[3];
                                 arr[0] = userId+"";
                                 arr[1] = inviter.getUserId()+"";

@@ -2,6 +2,7 @@ package com.meirengu.erp.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
@@ -9,13 +10,12 @@ import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("user")
-public class UserController extends BaseController{
+public class UserController<T> extends BaseController{
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -32,15 +32,62 @@ public class UserController extends BaseController{
     public ModelAndView userList(){
         return new ModelAndView("/user/userList");
     }
+
+    @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
-    @RequestMapping("list")
-    public Map userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+    public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
+                                    @RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                                     @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
                                     @RequestParam(value="sortby", required = false) String sortBy,
                                     @RequestParam(value="order", required = false) String order){
+    //获取分页控件的信息
+        String start = request.getParameter("start");
+        System.out.println(start);
+        String length = request.getParameter("length");
+        System.out.println(length);
+    //获取前台额外传递过来的查询条件
+        String extra_search = request.getParameter("extra_search");
+        System.out.println(extra_search);
+
+        Map<String,String> paramsMap = new HashedMap();
+        Map<String, Object> map = new HashMap<>();
+        String url = ConfigUtil.getConfig("user.list");
+        paramsMap.put("phone",phone);
+        paramsMap.put("realname",realname);
+        paramsMap.put("idcard",idcard);
+        paramsMap.put("page",pageNum+"");
+        paramsMap.put("per_page",pageSize+"");
+
+        map = (Map<String,Object>)super.httpPost(url,paramsMap);
+
+//        map.put("phone",phone);
+//        map.put("realname",realname);
+//        map.put("idcard",idcard);
+
+//        List<Map<String,Object>> list  = new ArrayList<Map<String,Object>>();
+//        list.add(map);
+
+
+        DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
+        List userList = (List) map.get("list");
+        view.setiTotalDisplayRecords(userList.size());//显示总记录
+        view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+
+        view.setAaData(userList);
+        return view;
+    }
+    @ResponseBody
+    @RequestMapping("listTest")
+    public Map userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
+                        @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
+                        @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
+                        @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
+                        @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
+                        @RequestParam(value="sortby", required = false) String sortBy,
+                        @RequestParam(value="order", required = false) String order){
         Map<String, Object> map = new HashMap<>();
         String url = ConfigUtil.getConfig("user.list");
         try {
