@@ -706,6 +706,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         // 当消息发送失败时如何处理
         if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
             // TODO
+            logger.debug("发送消息：" + orderSn + "失败");
+            logger.error(sendResult.toString());
         }
     }
     /**
