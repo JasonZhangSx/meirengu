@@ -353,6 +353,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         PaymentRecordVo paymentRecord = new PaymentRecordVo();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Withdrawals);
+            paymentRecord.setOrderSn(OrderSNUtils.CROWD_FUNDING_WITHDRAWALS_SN_PREFIX);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));
@@ -378,6 +379,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             paymentRecord.setChannelRequestTime(new Date());
             String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
             paymentRecord.setTransactionSn(transactionSn);
+            paymentRecord.setOrderSn(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(),transactionSn,
                     paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));

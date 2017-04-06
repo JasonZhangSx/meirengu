@@ -223,14 +223,16 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/appointment/audit/{order_id}",  method = RequestMethod.POST)
-    public Result appointmentAudit(@PathVariable("order_id") int orderId ,
-                                    @RequestParam(value = "status") int orderStatus){
+    public Result appointmentAudit(@PathVariable("order_id") int orderId,
+                                    @RequestParam(value = "status") int orderStatus,
+                                    @RequestParam(value = "operate_account") String operateAccount){
         if (orderId == 0 || !(orderStatus == OrderStateEnum.BOOK_ADUIT_FAIL.getValue() || orderStatus == OrderStateEnum.BOOK_ADUIT_PASS.getValue())) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
         order.setOrderId(orderId);
         order.setOrderState(orderStatus);
+        order.setOperateAccount(operateAccount);
         try{
             Result result = orderService.appointmentAudit(order);
             return  result;
