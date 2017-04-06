@@ -28,7 +28,7 @@ public class OrderSNUtils {
     //众筹支付订单
     public static final String CROWD_FUNDING_PAYMENT_SN_PREFIX = "86";
     //众筹提现订单
-    public static final String CROWD_FUNDING_WITHDRAWALS_SN_PREFIX = "86";
+    public static final String CROWD_FUNDING_WITHDRAWALS_SN_PREFIX = "87";
 
     public static String getOrderSN(){
 
