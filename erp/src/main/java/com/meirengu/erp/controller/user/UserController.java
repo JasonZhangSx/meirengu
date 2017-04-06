@@ -66,7 +66,10 @@ public class UserController<T> extends BaseController{
 
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List userList = (List) map.get("list");
+        List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
+        for (int i = 0;i<userList.size();i++){
+            userList.get(i).put("id",i+1);
+        }
         view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
         view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 

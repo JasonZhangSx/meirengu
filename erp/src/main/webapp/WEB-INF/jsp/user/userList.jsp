@@ -154,10 +154,10 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                用户账号：<input type="text" class="input-text" style="width:120px;">　
-                姓名：<input type="text" class="input-text" style="width:120px;">　
-                身份证号：<input type="text" class="input-text" style="width:120px;">　
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                用户账号：<input type="text" id="phone" class="input-text" style="width:120px;">　
+                姓名：<input type="text" id="realname" class="input-text" style="width:120px;">　
+                身份证号：<input type="text" id="idcard" class="input-text" style="width:120px;">　
+                <button name="" id="" onclick="search1()" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
@@ -249,13 +249,17 @@
                 "url": "/erp/user/list",
                 "dataSrc": "aaData",
                 "data": function ( d ) {
-                    var level1 = $('#level1').val();
+                    var phone = $('#phone').val();
+                    var realname = $('#realname').val();
+                    var idcard = $('#idcard').val();
                     //添加额外的参数传给服务器
-                    d.extra_search = level1;
+                    d.phone = phone;
+                    d.realname = realname;
+                    d.idcard = idcard;
                 }
             },
             "columns": [
-                { "data": "userId" },
+                { "data": "id" },
                 { "data": "phone" },
                 { "data": null,
                     render: function(data, type, row, meta) {
@@ -281,7 +285,7 @@
                             return '<label>  投资金额30万  </label>';
                         }
                         if(row.investConditions=='3'){
-                            return '<label>  投资金额10万 </label>';
+                            return '<label>  投资金额100万 </label>';
                         }
                     }
                 },
