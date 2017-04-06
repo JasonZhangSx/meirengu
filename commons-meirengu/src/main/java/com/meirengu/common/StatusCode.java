@@ -107,6 +107,9 @@ public class StatusCode {
     public static final int PAYMENT_RECORD_ERROR_SELECT_IS_NULL=40637;
     public static final int PAYMENT_RECORD_ERROR_SELECT=40638;
     public static final int PAYMENT_RECORD_SUCCESS_SELECT=40639;
+    public static final int PAYMENT_ACCOUNT_CHECK_PWD_SUCCESS=40640;
+    public static final int PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT=40641;
+    public static final int PAYMENT_ACCOUNT_CHECK_PWD_ERROR=40642;
 
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
@@ -490,6 +493,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL, "交易记录查询数据为空");
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_SELECT, "交易记录查询数据成功");
         codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_SELECT, "交易记录查询数据失败");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_SUCCESS, "交易密码校验成功");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT, "交易密码不符");
+        codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR, "交易密码校验失败");
 
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");

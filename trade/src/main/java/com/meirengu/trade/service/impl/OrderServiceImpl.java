@@ -12,6 +12,7 @@ import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
+import com.meirengu.trade.rocketmq.Producer;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
@@ -22,6 +23,10 @@ import com.meirengu.utils.ObjectToFile;
 import com.meirengu.utils.ObjectUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +59,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Autowired
     private OrderDao orderDao;
+
+    @Autowired
+    private Producer producer;
     /**
      * 获取订单详情
      * @param orderSn
@@ -283,7 +291,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         order.setItemName((String) tempMap.get("itemName"));
         int i = insert(order);
         if (i == 1) {
-            //3.修改项目档位信息
+            //3.订单生成后附属操作
+            // 修改项目档位信息
             boolean updateFlag = itemLevelUpdate(order);
             if (updateFlag) {
                 result.setCode(StatusCode.OK);
@@ -293,10 +302,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 result.setData(orderMap);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
             }
-            //异步去使用优惠券
+            // 异步去使用优惠券
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
+            // 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+            sendRocketMQDeployQueue(order.getOrderSn());
         } else {
             result.setCode(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
@@ -667,13 +678,59 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             mapList.add(tempMap);
             ObjectToFile.writeObject(mapList, fileNameStr);
 
-            //请求项目服务
-//            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
-//            HttpResult itemResult = HttpUtil.doGet(url);
+            //请求用户服务
+            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
+            HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
-
-
-
     }
+
+    /**
+     * 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+     * @param orderSn
+     */
+    private void sendRocketMQDeployQueue(String orderSn) {
+        Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 24h
+        msg.setDelayTimeLevel(19);
+        SendResult sendResult = null;
+        try {
+            logger.debug("发送消息：" + orderSn);
+            sendResult = producer.getDefaultMQProducer().send(msg);
+        } catch (MQClientException e) {
+            logger.error(e.getMessage() + String.valueOf(sendResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.debug("发送消息：" + orderSn + "失败");
+            logger.error(sendResult.toString());
+        }
+    }
+    /**
+     * 订单失效
+     * @return
+     */
+    public boolean orderLoseEfficacy(String orderSn) {
+        boolean flag = true;
+        //订单在24小时内未支付，置失效
+        Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
+        if (orderMap != null) {
+            int orderState = Integer.parseInt(orderMap.get("orderState").toString());
+            if (orderState != OrderStateEnum.PAID.getValue()) {
+                Order order = new Order();
+                order.setOrderSn(orderSn);
+                order.setOrderState(OrderStateEnum.LOSS_EFFICACY.getValue());
+                orderDao.updateBySn(order);
+                //请求项目服务修改档位状态
+            }
+        } else {
+            logger.error("该订单号：" + orderSn + "不存在");
+        }
+        return flag;
+    }
+
 }

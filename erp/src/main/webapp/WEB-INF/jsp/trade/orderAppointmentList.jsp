@@ -145,6 +145,16 @@
         });
     }
 
+    /*预约订单-审核*/
+    function project_stop(obj, id) {
+        layer.confirm('确认要下架吗？', function (index) {
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+            $(obj).remove();
+            layer.msg('已下架!', {icon: 5, time: 1000});
+        });
+    }
+
     /*项目-发布*/
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {

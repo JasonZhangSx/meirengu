@@ -80,7 +80,7 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("UserAddressController. insert UserAddress throws Exception ",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -135,7 +135,7 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("UserAddressController.update throws Exception ",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -167,7 +167,7 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("UserAddressController.delete throws Exception:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -193,7 +193,10 @@ public class UserAddressController extends BaseController{
                 if(!StringUtil.isEmpty(list1.get("areaId"))){
                     AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
                     list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
+                    list1.put("provinceId",addressPO.getProvinceId()+"");//加空字符串 非空不报错
                     list1.put("city",addressPO.getCity()+"");
+                    list1.put("cityId",addressPO.getCityId()+"");
+                    list1.put("areaId",addressPO.getAreaId()+"");
                     list1.put("area",addressPO.getArea()+"");
                 }
             }
@@ -203,7 +206,7 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.info("UserAddressController.listUseraddress throws Exception:{}",e.getMessage());
             Page<UserAddress> page = new Page<>();
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }

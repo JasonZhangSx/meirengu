@@ -1,9 +1,9 @@
 package com.meirengu.trade.controller;
 
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.client.producer.SendStatus;
-import com.alibaba.rocketmq.common.message.Message;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.Message;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -11,8 +11,8 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
-import com.meirengu.trade.rocketmq.MyConsumer;
-import com.meirengu.trade.rocketmq.MyProducer;
+import com.meirengu.trade.rocketmq.Consumer;
+import com.meirengu.trade.rocketmq.Producer;
 import com.meirengu.trade.service.OrderCandidateService;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -43,13 +43,11 @@ public class OrderCandidateController extends BaseController{
     private OrderCandidateService orderCandidateService;
 
     @Autowired
-    private MyProducer myProducer;
+    private Producer producer;
 
     @Autowired
-    private MyConsumer myConsumer;
+    private Consumer consumer;
 
-    @Autowired
-    private RedisClient redisClient;
 
     /**
      * 候补预约新增接口
@@ -161,7 +159,7 @@ public class OrderCandidateController extends BaseController{
         Message msg = new Message("deploy", "MyTag", content.getBytes());
         SendResult sendResult = null;
         try {
-            sendResult = myProducer.getDefaultMQProducer().send(msg);
+            sendResult = producer.getDefaultMQProducer().send(msg);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {

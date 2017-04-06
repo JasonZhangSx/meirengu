@@ -4,9 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +14,38 @@ public class ObjectToFile {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectToFile.class);
 
-    public static void writeObject(List<Map<String, String>> list, String filePath) {
+    /**
+     * 读取文件 采用writeObject方式写入
+     * @param filePath
+     * @return
+     */
+    public static  List<Map<String,String>>  readObject(String filePath){
+        try {
+            FileInputStream freader;
+            freader = new FileInputStream(filePath);
+            ObjectInputStream objectInputStream = new ObjectInputStream(freader);
+
+            logger.info("ObjectToFile.readObject successful:{}");
+            return  (  List<Map<String,String>> ) objectInputStream.readObject();
+
+        } catch (FileNotFoundException e) {
+            logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
+            return null;
+        } catch (IOException e) {
+            logger.info("ObjectToFile.readObject throws IOException:{}",e.getMessage());
+            return null;
+        } catch (ClassNotFoundException e) {
+            logger.info("ObjectToFile.readObject throws ClassNotFoundException:{}",e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 写入文件 采用ObjectOutputStream 写入
+     * @param list
+     * @param filePath
+     */
+    public static void writeObject( List<Map<String,String>> list,String filePath) {
         try {
 
             FileOutputStream outStream = new FileOutputStream(filePath);
@@ -33,45 +61,39 @@ public class ObjectToFile {
         }
     }
 
-    public static List<Map<String,String>> readObject(String filePath){
+    /**
+     * 写入文件 采用明文写入
+     * @param list
+     * @param filePath
+     */
+    public static void writeArray(List<String[]> list,String filePath) {
         try {
-            FileInputStream freader;
-            freader = new FileInputStream(filePath);
-            ObjectInputStream objectInputStream = new ObjectInputStream(freader);
 
-            logger.info("ObjectToFile.readObject successful:{}");
-            return  ( List<Map<String,String>>) objectInputStream.readObject();
-
+            FileOutputStream outStream = new FileOutputStream(filePath);
+            StringBuffer sb = new StringBuffer();
+            for(int i=0;i<list.size();i++){
+                String[] arr = list.get(i);
+                for (int index = 0; index < arr.length; index++)
+                {
+                    sb.append(arr[index]);
+                    if(index<arr.length-1){
+                        sb.append(",");
+                    }
+                }
+                if(i<list.size()-1){
+                    sb.append("|");
+                }
+            }
+            byte[] contentInBytes = sb.toString().getBytes();
+            outStream.write(contentInBytes);
+            outStream.close();
+            logger.info("ObjectToFile.writeObject successful:{}");
         } catch (FileNotFoundException e) {
-            logger.info("ObjectToFile.readObject throws FileNotFoundException:{}",e.getMessage());
-            return null;
+            logger.info("ObjectToFile.writeObject failed:{}",e.getMessage());
         } catch (IOException e) {
-            logger.info("ObjectToFile.readObject throws IOException:{}",e.getMessage());
-            return null;
-        } catch (ClassNotFoundException e) {
-            logger.info("ObjectToFile.readObject throws ClassNotFoundException:{}",e.getMessage());
-            return null;
+            logger.info("ObjectToFile.writeObject failed:{}",e.getMessage());
         }
-
     }
 
-
-    public static void main(String args[]){
-        ObjectToFile of = new ObjectToFile();
-        Map map = new HashMap();
-        map.put("userId",123123123);
-        map.put("money",1000000);
-
-        Map map1 = new HashMap();
-        map1.put("userId",343453);
-        map1.put("money",3000000);
-
-        List list = new ArrayList();
-        list.add(map);
-        list.add(map1);
-
-        of.writeObject(list,"E://1.txt");
-        System.err.print(of.readObject("E://1.txt"));
-    }
 
 }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ include file="../common/common.jsp"%>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset=utf-8>
@@ -144,7 +145,6 @@
         </dl>
     </div>
 </aside>
-<form action="/erp/user/list" method="post" >
 <div class="dislpayArrow hidden-xs"><a class=pngfix href=javascript:void(0) data-href=javascript:void(0);
                                        onclick=displaynavbar(this)></a></div>
 <section class="Hui-article-box">
@@ -154,10 +154,10 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                用户账号：<input type="text" name="phone" value="${phone}" class="input-text" style="width:120px;">　
-                姓名：<input type="text" name="realname" value="${realname}" class="input-text" style="width:120px;">　
-                身份证号：<input type="text" name="idcard" value="${idcard}" class="input-text" style="width:120px;">　
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                用户账号：<input type="text" id="phone" class="input-text" style="width:120px;">　
+                姓名：<input type="text" id="realname" class="input-text" style="width:120px;">　
+                身份证号：<input type="text" id="idcard" class="input-text" style="width:120px;">　
+                <button name="" id="" onclick="search1()" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
@@ -165,61 +165,49 @@
                 <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
                         class="btn btn-primary radius" href="javascript:;"><i
                         class="Hui-iconfont">&#xe634;</i> 导出</a></span>
-                <span class="r" style="line-height:30px;">共有数据：<strong>${totalCount}</strong> 条</span></div>
+                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
             <div class="mt-20">
-
-                    <table id="userTable" class="table table-border table-bordered table-bg table-hover table-sort">
-                        <thead>
-                        <c:forEach items="${list}"></c:forEach>
-                        <tr class="text-c">
-                            <th>编号</th>
-                            <th>账号</th>
-                            <th>是否实名</th>
-                            <th>姓名</th>
-                            <th>身份证号</th>
-                            <th>投资人认证</th>
-                            <th>银行卡</th>
-                            <th>账户余额</th>
-                            <th>已投资金额</th>
-                            <th>注册时间</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${list}" var="list">
-                            <tr class="text-c">
-                                <td>${list.userId}</td>
-                                <td>${list.phone}</td>
-                                <td>${list.isAuth}</td>
-                                <td>${list.realname}</td>
-                                <td>${list.idCard}</td>
-                                <td>${list.investConditions}</td>
-                                <td>${list.bankIdCard}</td>
-                                <td>${list.accountBalance}</td>
-                                <td>${list.totalInvestMoney}</td>
-                                <td>${list.registerTime}</td>
-                               <%-- <td>5137291990123223232</td>
-                                <td>年收入30万</td>
-                                <td>招商银行62223423423423</td>
-                                <td>5000.00</td>
-                                <td>100000.00</td>
-                                <td>2017-02-14 15:33:33</td>--%>
-                                <td>
-                                    <a style="text-decoration:none" class="ml-5"
-                                       onClick="userList_detail('用户-用户列表-详情','用户-用户列表-详情.html','10001')" href="javascript:;"
-                                       title="查看"><i class="Hui-iconfont">&#xe725;</i></a>
-                                    冻结/解绑银行卡
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
+                <table id="example" class="table table-border table-bordered table-bg table-hover table-sort">
+                    <thead>
+                    <tr class="text-c">
+                        <th>编号</th>
+                        <th>账号</th>
+                        <th>是否实名</th>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>投资人认证</th>
+                        <th>银行卡</th>
+                        <th>账户余额</th>
+                        <th>已投资金额</th>
+                        <th>注册时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <%--<tbody>--%>
+                    <%--<tr class="text-c">--%>
+                    <%--<td>1</td>--%>
+                    <%--<td>18510162765</td>--%>
+                    <%--<td>是</td>--%>
+                    <%--<td>魏华鑫</td>--%>
+                    <%--<td>5137291990123223232</td>--%>
+                    <%--<td>年收入30万</td>--%>
+                    <%--<td>招商银行62223423423423</td>--%>
+                    <%--<td>5000.00</td>--%>
+                    <%--<td>100000.00</td>--%>
+                    <%--<td>2017-02-14 15:33:33</td>--%>
+                    <td>
+                    <a style="text-decoration:none" class="ml-5"
+                    onClick="userList_detail('用户-用户列表-详情','用户-用户列表-详情.html','10001')" href="javascript:;"
+                    title="查看"><i class="Hui-iconfont">&#xe725;</i></a>
+                    冻结/解绑银行卡
+                    </td>
+                    <%--</tr>--%>
+                    <%--</tbody>--%>
+                </table>
             </div>
-
         </article>
     </div>
 </section>
-</form>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
@@ -233,7 +221,8 @@
 <script type="text/javascript" language="javascript" class="init">
     var table;
     $(document).ready(function() {
-        table = $('#userTable').DataTable( {
+
+        table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
             aLengthMenu:[10],//设置一页展示10条记录
@@ -260,14 +249,68 @@
                 "url": "/erp/user/list",
                 "dataSrc": "aaData",
                 "data": function ( d ) {
-                    var level1 = $('#level1').val();
+                    var phone = $('#phone').val();
+                    var realname = $('#realname').val();
+                    var idcard = $('#idcard').val();
                     //添加额外的参数传给服务器
-                    d.extra_search = level1;
+                    d.phone = phone;
+                    d.realname = realname;
+                    d.idcard = idcard;
                 }
             },
             "columns": [
-                { "data": "total" },
-                { "data": "level" }
+                { "data": "id" },
+                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        if(row.isAuth=='0'){
+                            return '<label> 是 </label>';
+                        }
+                        if(row.isAuth=='1'){
+                            return '<label> 否 </label>';
+                        }
+                    }
+                },
+                { "data": "realname" },
+                { "data": "idCard" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        if(row.investConditions=='0'){
+                            return '<label> 未选择 </label>';
+                        }
+                        if(row.investConditions=='1'){
+                            return '<label>  专业投资人  </label>';
+                        }
+                        if(row.investConditions=='2'){
+                            return '<label>  投资金额30万  </label>';
+                        }
+                        if(row.investConditions=='3'){
+                            return '<label>  投资金额100万 </label>';
+                        }
+                    }
+                },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
+                    }
+                },
+                { "data": "accountBalance" },
+                { "data": "totalInvestMoney" },
+                { "data": "registerTime",
+                    render: function(data, type, row, meta) {
+                        //先讲 时间格式化
+                        //这类问题主要给大家讲逻辑，因为都是类似的问题，类似的解决方案
+                        //最基础的解决方案： 一、直接在数据源就格式化为常见的格式（sql或者后台代码格式化）;二、在dt里面格式化;
+                        //在js格式化时间的三种方式，我这里示范一种
+                        //具体方法的链接：http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                        return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
+                    }
+                },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'用户-用户列表-详情.html\',\'10001\')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+                    }
+                }
             ]
 
         } );
@@ -282,14 +325,14 @@
 </script>
 <script type="text/javascript">
 
-    $('.table-sort').dataTable({
-        "aaSorting": [[1, "desc"]],//默认第几个排序
-        "bStateSave": true,//状态保存
-        "aoColumnDefs": [
-            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-            {"orderable": false, "aTargets": [0, 8]}// 不参与排序的列
-        ]
-    });
+    //    $('.table-sort').dataTable({
+    //        "aaSorting": [[1, "desc"]],//默认第几个排序
+    //        "bStateSave": true,//状态保存
+    //        "aoColumnDefs": [
+    //            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+    //            {"orderable": false, "aTargets": [0, 8]}// 不参与排序的列
+    //        ]
+    //    });
     //*项目-编辑*/
     function userList_detail(title, url, id, w, h) {
         var index = layer.open({
@@ -298,6 +341,27 @@
             content: url
         });
         layer.full(index);
+    }
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
     }
 </script>
 </body>
