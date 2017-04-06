@@ -42,7 +42,7 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             paymentAccount = (PaymentAccount) super.execute(content,paymentAccount);
             logger.info("Request getAccountByUserId parameter:{}",paymentAccount.toString());
             Integer userId = paymentAccount.getUserId();
-            paymentAccount = paymentDao.selectByUserId(userId) == null ? null : paymentDao.selectByUserId(userId);
+            paymentAccount = paymentDao.selectByUserId(userId);
             if (paymentAccount==null){
                 logger.error("Capture getAccountByUserId ErrorMsg:{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL));
                 if (super.url==null){
@@ -55,9 +55,10 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
                 paymentAccount.setUserId(userId);
                 paymentAccount.setMobile(paymentAccount.getMobile());
                 paymentDao.insertAccount(paymentAccount);
+                paymentAccount = paymentDao.selectByUserId(userId);
                 logger.info("createAccount prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_SUCCESS_INSERT));
             }
-            map.put("account",paymentDao.selectByUserId(userId));
+            map.put("account",paymentAccount);
             return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {
             logger.error("Capture getAccountByUserId ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT), e.getMessage());

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RESULT>
     <VALUE>　　
-        <projectUrl>${projectUrl}</projectUrl>　　
+        <projectUrl>${projectUrl}</projectUrl>
+        <inviteUrl>${inviteUrl}</inviteUrl>　　
     </VALUE>
     <BaoFu>
         <charSet>${char.set}</charSet>
