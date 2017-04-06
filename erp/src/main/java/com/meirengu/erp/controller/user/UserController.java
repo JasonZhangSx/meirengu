@@ -40,36 +40,27 @@ public class UserController<T> extends BaseController{
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard){
 
-    //获取前台额外传递过来的查询条件
-        String extra_search = request.getParameter("extra_search");
-        System.out.println(extra_search);
-
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
         String url = ConfigUtil.getConfig("user.list");
+        //查询参数
         paramsMap.put("phone",phone);
         paramsMap.put("realname",realname);
         paramsMap.put("idcard",idcard);
-
+        /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
         paramsMap.put("page",page+"");
         paramsMap.put("per_page",request.getParameter("length"));
 
         map = (Map<String,Object>)super.httpPost(url,paramsMap);
-
-//        map.put("phone",phone);
-//        map.put("realname",realname);
-//        map.put("idcard",idcard);
-
-//        List<Map<String,Object>> list  = new ArrayList<Map<String,Object>>();
-//        list.add(map);
-
-
+        //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
+        //后台处理数据 保存编号 没有编号的不需要这一步
         for (int i = 0;i<userList.size();i++){
             userList.get(i).put("id",i+1);
         }
+        //保存给datatabls 分页数据
         view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
         view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 
