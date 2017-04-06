@@ -33,6 +33,14 @@ public class UserController extends BaseController{
         return new ModelAndView("/user/userList");
     }
 
+    /**
+     * 分页查看用户信息数据
+     * @param request
+     * @param phone
+     * @param realname
+     * @param idcard
+     * @return
+     */
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
@@ -53,6 +61,7 @@ public class UserController extends BaseController{
         paramsMap.put("per_page",request.getParameter("length"));
 
         map = (Map<String,Object>)super.httpPost(url,paramsMap);
+
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
@@ -67,34 +76,12 @@ public class UserController extends BaseController{
         view.setAaData(userList);
         return view;
     }
-    @ResponseBody
-    @RequestMapping("listTest")
-    public Map userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                        @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
-                        @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
-                        @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                        @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
-                        @RequestParam(value="sortby", required = false) String sortBy,
-                        @RequestParam(value="order", required = false) String order){
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.list");
-        try {
-            Map<String,String> paramsMap = new HashedMap();
-            paramsMap.put("phone",phone);
-            paramsMap.put("realname",realname);
-            paramsMap.put("idcard",idcard);
-            paramsMap.put("page",pageNum+"");
-            paramsMap.put("per_page",pageSize+"");
-            map = (Map<String,Object>)super.httpPost(url,paramsMap);
-            map.put("phone",phone);
-            map.put("realname",realname);
-            map.put("idcard",idcard);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
 
+    /**
+     * 查看个人信息详情
+     * @param phone
+     * @return
+     */
     @RequestMapping("detail")
     public ModelAndView userDetail( @RequestParam(value="phone", required = true) String phone){
         Map<String, Object> map = new HashMap<>();
