@@ -207,12 +207,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
-//        if(result ==0){
-//            //如果失败，重试一次
-//
-//            result = this.create(user);
-//        }
-//        return result == 1 ? user : null;
     }
 
     /**
@@ -224,7 +218,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public User createUserInfo(RegisterVO registerVO) {
         //创建用户
         User user = new User();
-        if("".equals(registerVO.getAvatar())) {
+        if(StringUtil.isEmpty(registerVO.getAvatar())) {
             String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
             user.setAvatar(avatarDefault[(int) Math.random()*number]);
