@@ -9,4 +9,6 @@ import com.meirengu.dao.BaseDao;
 public interface VersionUpgradeDao extends BaseDao<VersionUpgrade>{
 
     int updateVersion(VersionUpgrade vu);
+
+    VersionUpgrade getLastVersion(VersionUpgrade vu);
 }

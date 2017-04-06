@@ -41,4 +41,13 @@ public class VersionUpgradeServiceImpl extends BaseServiceImpl<VersionUpgrade> i
         }
 
     }
+
+    @Override
+    public VersionUpgrade getLastVersion(Integer appId, Integer appChannel, Integer status) {
+        VersionUpgrade vu = new VersionUpgrade();
+        vu.setAppId(appId);
+        vu.setAppChannel(appChannel);
+        vu.setStatus(status);
+        return versionUpgradeDao.getLastVersion(vu);
+    }
 }

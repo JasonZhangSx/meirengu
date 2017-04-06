@@ -10,4 +10,6 @@ import com.meirengu.service.BaseService;
 public interface VersionUpgradeService extends BaseService<VersionUpgrade>{
 
     boolean updateVersion(VersionUpgrade vu);
+
+    VersionUpgrade getLastVersion(Integer appId, Integer appChannel, Integer status);
 }
