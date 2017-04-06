@@ -126,7 +126,7 @@ function verify() {
     }
     $.ajax({
         type: "POST",
-        url: "item/verify",
+        url: "item/submit_verify",
         data: {"itemId": itemId},
         dataType: "json",
         success: function(data){

@@ -3,6 +3,7 @@ package com.meirengu.cf.controller;
 import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.service.ItemInterestedService;
+import com.meirengu.cf.service.ItemOperateRecordService;
 import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
@@ -37,6 +38,8 @@ public class ItemController extends BaseController {
     ItemService itemService;
     @Autowired
     ItemInterestedService itemInterestedService;
+    @Autowired
+    ItemOperateRecordService itemOperateRecordService;
 
     /**
      * 获取项目列表
@@ -106,7 +109,7 @@ public class ItemController extends BaseController {
 
     /**
      * 新增项目
-     * @param item
+     * @param
      * @return
      */
     @ResponseBody
@@ -174,7 +177,7 @@ public class ItemController extends BaseController {
 
     /**
      * 修改项目信息
-     * @param item
+     * @param
      * @return
      */
     @ResponseBody
@@ -297,6 +300,70 @@ public class ItemController extends BaseController {
             }
 
         }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 初审
+     * @param itemId
+     * @param operateStatus
+     * @param operateRemark
+     * @param operateAccount
+     * @return
+     */
+    @RequestMapping(value = "verify", method = RequestMethod.POST)
+    @ResponseBody
+    public Result verify(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "operate_status", required = false) Integer operateStatus,
+                         @RequestParam(value = "operate_remark", required = false) String operateRemark,
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+        if(itemId == null || operateStatus == null ||
+                StringUtil.isEmpty(operateRemark) || StringUtil.isEmpty(operateAccount)){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        if(itemId == 0 || (operateStatus != 1 && operateStatus != 0)){
+            return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+
+        try {
+            itemService.verify(itemId, operateStatus, operateRemark, operateAccount);
+            return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">>ItemOperateRecordController.verify throw exception:{}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 复审
+     * @param itemId
+     * @param operateStatus
+     * @param operateRemark
+     * @param operateAccount
+     * @return
+     */
+    @RequestMapping(value = "review", method = RequestMethod.POST)
+    @ResponseBody
+    public Result review(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "operate_status", required = false) Integer operateStatus,
+                         @RequestParam(value = "operate_remark", required = false) String operateRemark,
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+        if(itemId == null || operateStatus == null ||
+                StringUtil.isEmpty(operateRemark) || StringUtil.isEmpty(operateAccount)){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        if(itemId == 0 || (operateStatus != 1 && operateStatus != 0)){
+            return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+        }
+
+        try {
+            itemService.review(itemId, operateStatus, operateRemark, operateAccount);
+            return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">>ItemOperateRecordController.review throw exception:{}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

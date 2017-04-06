@@ -16,9 +16,5 @@ public class FileTest {
 //        } catch (Exception i) {
 //            i.printStackTrace();
 //        }
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("a",3);
-        System.out.println(map.get("a"));
-        System.out.println((String)map.get("a"));
     }
 }

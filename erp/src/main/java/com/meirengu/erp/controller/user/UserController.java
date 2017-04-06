@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("user")
-public class UserController<T> extends BaseController{
+public class UserController extends BaseController{
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -33,80 +33,55 @@ public class UserController<T> extends BaseController{
         return new ModelAndView("/user/userList");
     }
 
+    /**
+     * 分页查看用户信息数据
+     * @param request
+     * @param phone
+     * @param realname
+     * @param idcard
+     * @return
+     */
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
-                                    @RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                                    @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
-                                    @RequestParam(value="sortby", required = false) String sortBy,
-                                    @RequestParam(value="order", required = false) String order){
-    //获取分页控件的信息
-        String start = request.getParameter("start");
-        System.out.println(start);
-        String length = request.getParameter("length");
-        System.out.println(length);
-    //获取前台额外传递过来的查询条件
-        String extra_search = request.getParameter("extra_search");
-        System.out.println(extra_search);
+                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard){
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
         String url = ConfigUtil.getConfig("user.list");
+        //查询参数
         paramsMap.put("phone",phone);
         paramsMap.put("realname",realname);
         paramsMap.put("idcard",idcard);
-        paramsMap.put("page",pageNum+"");
-        paramsMap.put("per_page",pageSize+"");
+        /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
+        int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
+        paramsMap.put("page",page+"");
+        paramsMap.put("per_page",request.getParameter("length"));
 
         map = (Map<String,Object>)super.httpPost(url,paramsMap);
 
-//        map.put("phone",phone);
-//        map.put("realname",realname);
-//        map.put("idcard",idcard);
-
-//        List<Map<String,Object>> list  = new ArrayList<Map<String,Object>>();
-//        list.add(map);
-
-
+        //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List userList = (List) map.get("list");
-        view.setiTotalDisplayRecords(userList.size());//显示总记录
+        List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
+        //后台处理数据 保存编号 没有编号的不需要这一步
+        for (int i = 0;i<userList.size();i++){
+            userList.get(i).put("id",i+1);
+        }
+        //保存给datatabls 分页数据
+        view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
         view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 
         view.setAaData(userList);
         return view;
     }
-    @ResponseBody
-    @RequestMapping("listTest")
-    public Map userList(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                        @RequestParam(value="per_page", required = false, defaultValue = "100") Integer pageSize,
-                        @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
-                        @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                        @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
-                        @RequestParam(value="sortby", required = false) String sortBy,
-                        @RequestParam(value="order", required = false) String order){
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.list");
-        try {
-            Map<String,String> paramsMap = new HashedMap();
-            paramsMap.put("phone",phone);
-            paramsMap.put("realname",realname);
-            paramsMap.put("idcard",idcard);
-            paramsMap.put("page",pageNum+"");
-            paramsMap.put("per_page",pageSize+"");
-            map = (Map<String,Object>)super.httpPost(url,paramsMap);
-            map.put("phone",phone);
-            map.put("realname",realname);
-            map.put("idcard",idcard);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
 
+    /**
+     * 查看个人信息详情
+     * @param phone
+     * @return
+     */
     @RequestMapping("detail")
     public ModelAndView userDetail( @RequestParam(value="phone", required = true) String phone){
         Map<String, Object> map = new HashMap<>();

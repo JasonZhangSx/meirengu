@@ -8,12 +8,15 @@ import com.meirengu.erp.model.Item;
 import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemLevel;
 import com.meirengu.erp.service.ItemService;
+import com.meirengu.erp.service.PartnerService;
+import com.meirengu.erp.service.TypeService;
 import com.meirengu.erp.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,6 +38,10 @@ public class ItemController extends BaseController {
 
     @Autowired
     ItemService itemService;
+    @Autowired
+    TypeService typeService;
+    @Autowired
+    PartnerService partnerService;
 
     /**
      * 新建list
@@ -128,9 +135,9 @@ public class ItemController extends BaseController {
     public ModelAndView toItemAdd(){
         Map<String, Object> returnMap = new HashMap<>();
         try {
-            List itemClassData = (List) httpGet(ConfigUtil.getConfig("item.class.list"));
-            List typeData = (List) httpGet(ConfigUtil.getConfig("type.list"));
-            List partnerData = (List) httpGet(ConfigUtil.getConfig("partner.list"));
+            List itemClassData = itemService.getItemClassList();
+            List typeData = typeService.getTypeList();
+            List partnerData = partnerService.getPartnerList();
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
             returnMap.put("itemClass", itemClassData);
             returnMap.put("type", typeData);
@@ -300,9 +307,9 @@ public class ItemController extends BaseController {
     public ModelAndView toItemEdit(Integer itemId){
         Map<String, Object> returnMap = new HashMap<>();
         try {
-            List itemClassData = (List) httpGet(ConfigUtil.getConfig("item.class.list"));
-            List typeData = (List) httpGet(ConfigUtil.getConfig("type.list"));
-            List partnerData = (List) httpGet(ConfigUtil.getConfig("partner.list"));
+            List itemClassData = itemService.getItemClassList();
+            List typeData = typeService.getTypeList();
+            List partnerData = partnerService.getPartnerList();
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
             StringBuffer itemUrl = new StringBuffer(ConfigUtil.getConfig("item.list"));
             itemUrl.append("/").append(itemId);
@@ -327,16 +334,93 @@ public class ItemController extends BaseController {
         return new ModelAndView("/item/itemEdit", returnMap);
     }
 
-    @RequestMapping(value = "verify", method = RequestMethod.POST)
-    public Map verify(Integer itemId){
+    /**
+     * 提交初审
+     * @param itemId
+     * @return
+     */
+    @RequestMapping(value = "submit_verify", method = RequestMethod.POST)
+    public Map submit_verify(Integer itemId){
         Map<String, Object> returnMap = new HashMap<>();
-        if(itemService.verify(itemId)){
+        if(itemService.submitVerify(itemId)){
             returnMap.put("code", StatusCode.OK);
             returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
             returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
             returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+
+        return returnMap;
+    }
+
+    @RequestMapping(value = "to_verify")
+    public ModelAndView toVerify(Integer itemId){
+        Map<String, Object> returnMap = null;
+
+        try {
+            returnMap = getItemInfo(itemId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("/item/itemVerify", returnMap);
+    }
+
+    @RequestMapping(value = "verify")
+    public Map verify(Integer itemId, Integer operateStatus, String operateRemark){
+        Map<String, Object> returnMap = new HashMap<>();
+        if(itemService.verify(itemId, operateStatus, operateRemark)){
+            returnMap.put("code", StatusCode.OK);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+        return returnMap;
+    }
+
+    @RequestMapping(value = "to_cooperate")
+    public ModelAndView toOperation(Integer itemId){
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = getItemInfo(itemId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ModelAndView("/item/itemCooperate", returnMap);
+    }
+
+    @RequestMapping(value = "to_review")
+    public ModelAndView toReview(Integer itemId){
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = getItemInfo(itemId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ModelAndView("/item/itemReview", returnMap);
+    }
+
+
+    private Map getItemInfo(Integer itemId) throws IOException {
+
+        Map<String, Object> returnMap = new HashMap<>();
+        List itemClassData = itemService.getItemClassList();
+        List typeData = typeService.getTypeList();
+        List partnerData = partnerService.getPartnerList();
+        List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
+        Item item = itemService.itemDetail(itemId);
+        List contentData = itemService.getContentList(itemId, null);
+        List levelData = itemService.getLevelList(itemId);
+        returnMap.put("itemClass", itemClassData);
+        returnMap.put("type", typeData);
+        returnMap.put("partner", partnerData);
+        returnMap.put("provinces", provinceData);
+        returnMap.put("item", item);
+        returnMap.put("content", contentData);
+        returnMap.put("level", levelData);
+        returnMap.put("imageUrl", ConfigUtil.getConfig("image.show.url"));
 
         return returnMap;
     }

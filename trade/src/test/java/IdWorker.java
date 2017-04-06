@@ -108,9 +108,8 @@ public class IdWorker {
 //            public void run() {
 //                while (true) {
 //                    long id = idWorker.nextId();
-//                    System.out.println("duplicate:" + id);
 //                    if (!set.add(id)) {
-//                        System.out.println("duplicate:" + id);
+
 //                    }
 //                }
 //            }
@@ -146,10 +145,7 @@ public class IdWorker {
         Date endTime = new Date();
         long useTime = endTime.getTime() - startTime.getTime();
         for(String str : strSet) {
-            System.out.println(str);
         }
-        System.out.println(strSet.size());
-        System.out.println(useTime);
 
 
 

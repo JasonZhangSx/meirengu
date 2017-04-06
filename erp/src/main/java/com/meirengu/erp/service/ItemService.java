@@ -33,10 +33,9 @@ public interface ItemService {
 
     /**
      * 获取项目分类列表
-     * @param params
      * @return
      */
-    List getItemClassList(Map<String, String> params);
+    List getItemClassList();
 
     /**
      * 项目内容添加
@@ -78,5 +77,45 @@ public interface ItemService {
      * @param itemId
      * @return
      */
-    boolean verify(Integer itemId);
+    boolean submitVerify(Integer itemId);
+
+    /**
+     * 获取项目详情
+     * @param itemId
+     * @return
+     */
+    Item itemDetail(Integer itemId);
+
+    /**
+     * 获取内容列表
+     * @param itemId
+     * @param contentType
+     * @return
+     */
+    List getContentList(Integer itemId, Integer contentType);
+
+    /**
+     * 获取项目档位列表
+     * @param itemId
+     * @return
+     */
+    List getLevelList(Integer itemId);
+
+    /**
+     * 初审审核
+     * @return
+     */
+    boolean verify(Integer itemId, Integer operateStatus, String operateRemark);
+
+    /**
+     * 设置合作
+     * @return
+     */
+    boolean setCooperate();
+
+    /**
+     * 复审审核
+     * @return
+     */
+    boolean review(Integer itemId, Integer operateStatus, String operateRemark);
 }

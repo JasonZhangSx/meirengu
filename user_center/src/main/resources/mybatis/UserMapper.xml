@@ -263,8 +263,8 @@
         u.bank_code AS invitedBankCode,
         u.bank_idcard AS invitedBankIdCard,
         u.bank_phone AS invitedBankPhone
-        from  user a
-        LEFT JOIN user_invite ui  on a.user_id = ui.user_id
+        from  user_invite ui
+        LEFT JOIN user a  on a.user_id = ui.user_id
         LEFT JOIN user u ON ui.invited_user_id = u.user_id
         <where> 1=1
             <if test="investConditions != null and investConditions != ''">
@@ -299,8 +299,8 @@
 
     <select id="getCount" parameterType="Map" resultType="Integer">
         select count(*)
-        from  user a
-        LEFT JOIN user_invite ui  on a.user_id = ui.user_id
+        from  user_invite ui
+        LEFT JOIN user a  on a.user_id = ui.user_id
         LEFT JOIN user u ON ui.invited_user_id = u.user_id
         <where> 1=1
             <if test="investConditions != null and investConditions != ''">
