@@ -9,6 +9,7 @@ import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,19 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     @Autowired
     AreasMapper areasMapper;
     @Override
+    @Transactional
     public int insert(UserAddress userAddress) {
-
-        if(!StringUtil.isEmpty(userAddress.getIsDefault())){
+        //查询是否有地址 没有强制为默认地址
+        UserAddress address = new UserAddress();
+        address.setUserId(userAddress.getUserId());
+        address.setIsDefault(1);
+        address = userAddressDao.selectByUserAddress(address);
+        if(address==null || StringUtil.isEmpty(address.getAddressId())){
+            userAddress.setIsDefault(1);
+        }
+        //如果新增默认地址要清空数据库 原有默认地址
+        if(1==(userAddress.getIsDefault())){
             userAddressDao.updateClearDefaultAddress(userAddress.getUserId());
-        }else{
-
         }
         return userAddressDao.insert(userAddress);
     }
@@ -41,6 +49,7 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     }
 
     @Override
+    @Transactional
     public int updateByAdressId(UserAddress userAddress) {
 
         if(!StringUtil.isEmpty(userAddress.getIsDefault())){
