@@ -193,7 +193,10 @@ public class UserAddressController extends BaseController{
                 if(!StringUtil.isEmpty(list1.get("areaId"))){
                     AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
                     list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
+                    list1.put("provinceId",addressPO.getProvinceId()+"");//加空字符串 非空不报错
                     list1.put("city",addressPO.getCity()+"");
+                    list1.put("cityId",addressPO.getCityId()+"");
+                    list1.put("areaId",addressPO.getAreaId()+"");
                     list1.put("area",addressPO.getArea()+"");
                 }
             }
