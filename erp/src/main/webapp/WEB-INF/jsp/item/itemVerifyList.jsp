@@ -64,7 +64,7 @@
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-待初审项目-审核','众筹-待初审项目-审核.html','10001')" href="javascript:;"
+                                   onClick="project_edit('众筹-待初审项目-审核','item/to_verify?itemId=${item.itemId}','10001')" href="javascript:;"
                                    title="审核">审核</a>
                             </td>
                         </tr>

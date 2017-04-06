@@ -22,7 +22,7 @@ public class TypeServiceImpl implements TypeService{
     @Override
     public List getTypeList() {
 
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.class.list"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("type.list"));
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
             int statusCode = hr.getStatusCode();
