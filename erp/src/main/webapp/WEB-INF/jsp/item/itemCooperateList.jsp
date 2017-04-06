@@ -62,7 +62,7 @@
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-待合作项目-设置','众筹-待合作项目-设置.html','10001')" href="javascript:;"
+                                   onClick="project_edit('众筹-待合作项目-设置','item/to_cooperate?itemId=${item.itemId}','10001')" href="javascript:;"
                                    title="设置">设置</a>
                             </td>
                         </tr>
