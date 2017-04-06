@@ -230,6 +230,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public Result appointmentAudit(Order order) throws IOException, OrderRpcException {
         Result result = new Result();
         Order orderDetail = detail(order.getOrderId());
+        if (orderDetail == null || orderDetail.getOrderId() == null) {
+            result.setCode(StatusCode.ORDER_NOT_EXIST);
+            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_NOT_EXIST));
+            return result;
+        }
         //审核通过需要改变档位的份数
         if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
             //1.查询该档位剩余份数
@@ -251,6 +256,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     return result;
                 }
             }
+            // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+            sendRocketMQDeployQueue(order.getOrderSn());
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -292,22 +299,22 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         int i = insert(order);
         if (i == 1) {
             //3.订单生成后附属操作
-            // 修改项目档位信息
-            boolean updateFlag = itemLevelUpdate(order);
-            if (updateFlag) {
-                result.setCode(StatusCode.OK);
-                Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
-                //返给客户端partnerId,供客户调支付传参数
-                orderMap.put("partnerId", tempMap.get("partnerId"));
-                result.setData(orderMap);
-                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
-            }
-            // 异步去使用优惠券
+            // 优惠券置为已使用状态
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
+            // 修改项目档位信息
+            itemLevelUpdate(order);
+
             // 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
             sendRocketMQDeployQueue(order.getOrderSn());
+
+            // 组织数据返回给客户端
+            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
+            orderMap.put("partnerId", tempMap.get("partnerId"));
+            result.setCode(StatusCode.OK);
+            result.setData(orderMap);
+            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         } else {
             result.setCode(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
@@ -541,7 +548,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             }
         }
         //订单业务
-        //查询该档位剩余份数是否满足购买要求
+        //1.查询该档位剩余份数是否满足购买要求
         result = isItemLevelNumEnough(order, OrderStateEnum.BOOK.getValue());
         if (result.getCode() != StatusCode.OK){
             return result;
@@ -549,9 +556,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //设置itemName
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
         order.setItemName((String) tempMap.get("itemName"));
+        //2.新增订单
         int i = insert(order);
         if (i == 1) {
-            //异步去使用优惠券
+            //3.订单生成后附属操作
+            //优惠券置为已使用状态
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
@@ -679,11 +688,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             ObjectToFile.writeObject(mapList, fileNameStr);
 
             //请求用户服务
-            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + fileNameStr;
+            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
             HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
-    }
+        }
 
     /**
      * 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效

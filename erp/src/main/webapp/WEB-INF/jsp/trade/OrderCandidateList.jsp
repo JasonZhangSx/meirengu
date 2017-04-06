@@ -70,8 +70,6 @@
                                 <a style="text-decoration:none" class="ml-5"
                                    onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
                                    href="javascript:;" title="项目编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
-                                <a style="text-decoration:none" class="ml-5" onClick="project_del(this,'10001')"
-                                   href="javascript:;" title="处理"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -81,6 +79,8 @@
         </article>
     </div>
 </section>
+<input type="hidden" id="errcode">
+<input type="hidden" id="errmsg">
 <script type="text/javascript">
 
     $('.table-sort').dataTable({
@@ -92,64 +92,47 @@
         ]
     });
 
-    //*项目-编辑*/
-    function project_edit(title, url, id, w, h) {
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*项目-删除*/
-    function project_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $.ajax({
-                type: 'POST',
-                url: '',
-                dataType: 'json',
-                success: function (data) {
-                    $(obj).parents("tr").remove();
-                    layer.msg('已删除!', {icon: 1, time: 1000});
-                },
-                error: function (data) {
-                    console.log(data.msg);
-                },
+    /*预约订单审核*/
+    function candidate_handle(obj, id) {
+        layer.confirm('是否处理完成？', {
+                btn: ['完成', '取消'],
+                shade: false,
+                closeBtn: 0
+            },
+            //state 处理完成为1
+            function () {
+                if (candidateHandleAjax(id, 1)) {
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">已处理</span>');
+                    $(obj).remove();
+                    layer.msg('已处理', {icon: 5, time: 1000});
+                } else {
+                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
+                }
             });
-        });
-    }
-    /*项目-下架*/
-    function project_stop(obj, id) {
-        layer.confirm('确认要下架吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
-            $(obj).remove();
-            layer.msg('已下架!', {icon: 5, time: 1000});
-        });
     }
 
-    /*项目-发布*/
-    function project_start(obj, id) {
-        layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="picture_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-            $(obj).remove();
-            layer.msg('已发布!', {icon: 6, time: 1000});
+    function candidateHandleAjax(id, status) {
+        var url = "<%=basePath %>/order_appointment/handle/"+id;
+        var flag=false;
+        $.ajax({
+            type: "post",
+            url: url,
+            cache:false,
+            async:false,
+            data:{status:status},
+            dataType:"json",
+            success: function(data){
+                var code = data.code;//200 is success，other is fail
+                if(code=="200"){
+                    flag=true;
+                }else{
+                    $("#errcode").val(data.code);
+                    $("#errmsg").val(data.msg);
+                    flag=false;
+                }
+            }
         });
-    }
-    /*项目-申请上线*/
-    function project_shenqing(obj, id) {
-        $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
-        $(obj).parents("tr").find(".td-manage").html("");
-        layer.msg('已提交申请，耐心等待审核!', {icon: 1, time: 2000});
-    }
-
-    /*项目-删除*/
-    function project_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
-        });
+        return flag;
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
