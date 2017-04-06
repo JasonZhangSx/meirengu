@@ -45,11 +45,8 @@
     <update id="update" parameterType="Inviter">
         update <include refid="table_name" />
         <set>
-            <if test="invitedUserPhone != null and invitedUserPhone != ''">
+            <if test="invitedUserPhone != null ">
                 invited_user_phone=#{invitedUserPhone},
-            </if>
-            <if test="registerTime != null ">
-                register_time=#{registerTime},
             </if>
             <if test="investTime != null">
                 invest_time=#{investTime},
@@ -57,10 +54,21 @@
             <if test="reward != null ">
                 reward = reward + #{reward},
             </if>
-            id=#{id}
+            <if test="id != null ">
+               id = #{id},
+            </if>
         </set>
         <where>
-            id = #{id}
+            1 = 1
+            <if test="invitedUserPhone != null">
+                AND invited_user_phone=#{invitedUserPhone}
+            </if>
+            <if test="invitedUserId != null ">
+                AND invited_user_id = #{invitedUserId}
+            </if>
+            <if test="id != null ">
+                AND id = #{id}
+            </if>
         </where>
     </update>
 
