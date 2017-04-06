@@ -224,6 +224,7 @@ public class StatusCode {
     public static final int ITEM_TYPE_INSERT_ERROR = 50530;
     public static final int ITEM_TYPE_UPDATE_ERROR = 50531;
     public static final int ITEM_TYPE_DELETE_ERROR = 50532;
+    public static final int OPERATE_RECORD_INSERT_ERROR = 50533;
 
     //50600-50700//payment
 
@@ -452,6 +453,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_TYPE_INSERT_ERROR, "众筹项目分类插入失败");
         codeMsgMap.put(StatusCode.ITEM_TYPE_UPDATE_ERROR, "众筹项目分类修改失败");
         codeMsgMap.put(StatusCode.ITEM_TYPE_DELETE_ERROR, "众筹项目分类删除失败");
+        codeMsgMap.put(StatusCode.OPERATE_RECORD_INSERT_ERROR, "操作记录插入失败");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");

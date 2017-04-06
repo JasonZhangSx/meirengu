@@ -61,12 +61,12 @@ public class Constants {
     /** 1初审 */
     public static final int RECORD_FIRST_VERIFY = 1;
     /** 2设置合作 */
-    public static final int LEVEL_OPERATION = 2;
+    public static final int RECORD_OPERATION = 2;
     /** 3:复审； */
-    public static final int LEVEL_REVIEW_VERIFY = 3;
+    public static final int RECORD_REVIEW_VERIFY = 3;
     /** 4发布 */
-    public static final int LEVEL_PUBLISH = 4;
+    public static final int RECORD_PUBLISH = 4;
     /** 5下架 */
-    public static final int LEVEL_OFF = 5;
+    public static final int RECORD_OFF = 5;
 
 }

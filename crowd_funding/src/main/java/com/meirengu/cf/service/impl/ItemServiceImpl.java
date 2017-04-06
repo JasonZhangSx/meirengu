@@ -3,7 +3,9 @@ import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.dao.ItemDao;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemLevel;
+import com.meirengu.cf.model.ItemOperateRecord;
 import com.meirengu.cf.service.ItemLevelService;
+import com.meirengu.cf.service.ItemOperateRecordService;
 import com.meirengu.cf.service.ItemService;
 import com.meirengu.exception.BusinessException;
 import com.meirengu.service.impl.BaseServiceImpl;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -30,6 +33,8 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     ItemDao itemDao;
     @Autowired
     ItemLevelService itemLevelService;
+    @Autowired
+    ItemOperateRecordService itemOperateRecordService;
 
     @Override
     public int updateStatus(Item item) {
@@ -150,6 +155,130 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     @Override
     public Map<String, Object> moreDetail(int id) {
         return itemDao.moreDetail(id);
+    }
+
+    @Override
+    @Transactional
+    public void verify(int itemId, int operateStatus, String operateRemark, String operateAccount) {
+        //1插入审核记录 2修改项目状态
+        ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+        itemOperateRecord.setItemId(itemId);
+        itemOperateRecord.setOperateType(Constants.RECORD_FIRST_VERIFY);
+        itemOperateRecord.setOperateStatus(operateStatus);
+        itemOperateRecord.setOperateRemark(operateRemark);
+        itemOperateRecord.setOperateTime(new Date());
+        itemOperateRecord.setOperateAccount(operateAccount);
+
+        Item item = new Item();
+        item.setItemId(itemId);
+        if(operateStatus == Constants.STATUS_YES){
+            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_SUCCESS);
+        }else if(operateStatus == Constants.STATUS_NO){
+            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_FAIL);
+        }else{
+            LOGGER.warn(">>ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+            throw new BusinessException("ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+        }
+
+        try {
+            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+            if(insertNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify insert operate record fail... return insertNum is {}", insertNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify insert operate record fail...");
+            }
+
+            int updateNum = super.update(item);
+            if(updateNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify update item status fail... return updateNum is {}", updateNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify update item status fail...");
+            }
+        }catch (Exception e){
+            throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
+        }
+    }
+
+    @Override
+    public void setCooperate(int itemId, int operateStatus, String operateRemark, String operateAccount) {
+        //1插入审核记录 2修改项目状态
+        ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+        itemOperateRecord.setItemId(itemId);
+        itemOperateRecord.setOperateType(Constants.RECORD_OPERATION);
+        itemOperateRecord.setOperateStatus(operateStatus);
+        itemOperateRecord.setOperateRemark(operateRemark);
+        itemOperateRecord.setOperateTime(new Date());
+        itemOperateRecord.setOperateAccount(operateAccount);
+
+        Item item = new Item();
+        item.setItemId(itemId);
+        if(operateStatus == Constants.STATUS_YES){
+            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_SUCCESS);
+        }else if(operateStatus == Constants.STATUS_NO){
+            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_FAIL);
+        }else{
+            LOGGER.warn(">>ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+            throw new BusinessException("ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+        }
+
+        try {
+            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+            if(insertNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify insert operate record fail... return insertNum is {}", insertNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify insert operate record fail...");
+            }
+
+            int updateNum = super.update(item);
+            if(updateNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify update item status fail... return updateNum is {}", updateNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify update item status fail...");
+            }
+        }catch (Exception e){
+            throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void review(int itemId, int operateStatus, String operateRemark, String operateAccount) {
+        //1插入审核记录 2修改项目状态
+        ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+        itemOperateRecord.setItemId(itemId);
+        itemOperateRecord.setOperateType(Constants.RECORD_REVIEW_VERIFY);
+        itemOperateRecord.setOperateStatus(operateStatus);
+        itemOperateRecord.setOperateRemark(operateRemark);
+        itemOperateRecord.setOperateTime(new Date());
+        itemOperateRecord.setOperateAccount(operateAccount);
+
+        Item item = new Item();
+        item.setItemId(itemId);
+        if(operateStatus == Constants.STATUS_YES){
+            item.setItemStatus(Constants.ITEM_REVIEW_VERIFY_SUCCESS);
+        }else if(operateStatus == Constants.STATUS_NO){
+            item.setItemStatus(Constants.ITEM_REVIEW_VERIFY_FAIL);
+        }else{
+            LOGGER.warn(">>ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+            throw new BusinessException("ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
+        }
+
+        try {
+            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+            if(insertNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.review insert operate record fail... return insertNum is {}", insertNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.review insert operate record fail...");
+            }
+
+            int updateNum = super.update(item);
+            if(updateNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.review update item status fail... return updateNum is {}", updateNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.review update item status fail...");
+            }
+        }catch (Exception e){
+            throw new BusinessException("ItemOperateRecordServiceImpl.review throw exception:",e);
+        }
+    }
+
+    @Override
+    public boolean publish() {
+        return false;
     }
 
 }

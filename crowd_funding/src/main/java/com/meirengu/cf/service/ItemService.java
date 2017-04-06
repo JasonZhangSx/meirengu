@@ -17,4 +17,28 @@ public interface ItemService extends BaseService<Item>{
     int changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
 
     Map<String, Object> moreDetail(int id);
+
+    /**
+     * 初审操作
+     * @return
+     */
+    void verify(int itemId, int operateStatus, String operateRemark, String operateAccount);
+
+    /**
+     * 设置合作
+     * @return
+     */
+    void setCooperate(int itemId, int operateStatus, String operateRemark, String operateAccount);
+
+    /**
+     * 复审操作
+     * @return
+     */
+    void review(int itemId, int operateStatus, String operateRemark, String operateAccount);
+
+    /**
+     * 发布
+     * @return
+     */
+    boolean publish();
 }
