@@ -332,7 +332,7 @@ public class PaymentController extends BaseController{
         return paymentService.getPaymentRecord(paymentRecordVo);
     }
     /**
-     * 根据用户id查询交易记录
+     * 根据用户id查询提现金额
      * @param userId
      * @return
      */

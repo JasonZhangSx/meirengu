@@ -207,6 +207,7 @@ public class PasswordEncryption {
 //            else
 //                System.out.println("TESTS PASSED!");
             System.err.print(validatePassword("","1000:29bcf0ef3b1f33698b2254415caf7c81957770883a8b65b7:d9cb6f281a95c4a44415b5e5e37fb607"));
+            System.err.print(createHash("1"));
         }
         catch(Exception ex)
         {

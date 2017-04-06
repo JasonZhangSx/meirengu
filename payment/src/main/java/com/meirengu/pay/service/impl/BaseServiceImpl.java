@@ -34,6 +34,7 @@ import java.util.*;
  */
 public abstract class BaseServiceImpl {
     protected static String url;
+    protected static String inviteUrl;
     protected static String tradeUrl="/trade/order";
     protected  static SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -63,7 +64,7 @@ public abstract class BaseServiceImpl {
      */
     public PaymentRecordVo recordUtil(String count, PaymentRecordVo paymentRecord, Integer payType) throws PaymentException {
         try {
-            logger.info("Request execute parameter:{},{},业务操作：{}", count,paymentRecord.toString(),payType);
+            logger.info("Request recordUtil parameter:{},{},业务操作：{}", count,paymentRecord.toString(),payType);
             paymentRecord = JSONObject.parseObject(count,paymentRecord.getClass());
             logger.info("recordUtil Parameter check Start========>");
             Validator.getInstance().validate(paymentRecord);
@@ -132,6 +133,7 @@ public abstract class BaseServiceImpl {
         for (Iterator i = root.elementIterator("VALUE"); i.hasNext();) {
             foo = (Element) i.next();
             url=foo.elementText("projectUrl");
+            inviteUrl=foo.elementText("inviteUrl");
         }
         logger.info("projectValue Initialization End========>");
     }
