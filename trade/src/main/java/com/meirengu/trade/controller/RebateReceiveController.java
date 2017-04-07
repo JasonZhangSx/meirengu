@@ -7,6 +7,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateReceiveService;
+import com.meirengu.trade.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,11 +129,18 @@ public class RebateReceiveController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-        @InitBinder
-        public void initBinder(WebDataBinder binder) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-        }
+
+    @RequestMapping(value = "/rebate_rules", method = RequestMethod.GET)
+    public Result rebateRules() {
+        String url = ConfigUtil.getConfig("rebate.rules.url");
+        return setResult(StatusCode.OK, url, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
 }
