@@ -95,6 +95,11 @@
 		WHERE app_id=#{appId} AND app_channel=#{appChannel} AND version_code=#{versionCodeBefore}
 	</update>
 
+	<select id="getLastVersion" parameterType="versionUpgrade" resultType="versionUpgrade">
+		select <include refid="select_columns"/> FROM <include refid="table_name" />
+		WHERE app_id=#{appId} and app_channel=#{appChannel} AND status=#{status}
+	</select>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />

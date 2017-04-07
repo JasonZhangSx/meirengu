@@ -1,9 +1,11 @@
 package com.meirengu.cf.controller;
 
+import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemLevel;
 import com.meirengu.cf.service.ItemLevelService;
 import com.meirengu.cf.service.ItemService;
+import com.meirengu.cf.utils.ConfigUtil;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -123,6 +125,17 @@ public class ItemLevelController extends BaseController{
             if(item != null){
                 map.put("partnerId", item.getPartnerId());
                 map.put("itemName", item.getItemName());
+                //根据不同的行业分类获取不同的协议地址
+                if(item.getTypeId() == Constants.TYPE_PRODUCT){
+                    map.put("agreement1", ConfigUtil.getConfig("type.product.agreement1"));
+                    map.put("agreement2", ConfigUtil.getConfig("type.product.agreement2"));
+                }else if(item.getTypeId() == Constants.TYPE_PROFIT){
+                    map.put("agreement1", ConfigUtil.getConfig("type.profit.agreement1"));
+                    map.put("agreement2", ConfigUtil.getConfig("type.profit.agreement2"));
+                }else if(item.getTypeId() == Constants.TYPE_SHARES){
+                    map.put("agreement1", ConfigUtil.getConfig("type.shares.agreement1"));
+                    map.put("agreement2", ConfigUtil.getConfig("type.shares.agreement2"));
+                }
             }
 
             return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
