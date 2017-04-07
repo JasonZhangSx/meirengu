@@ -18,6 +18,7 @@ public class Activity {
     private Date  endTime;
     private Date   createTime;
     private Date  updateTime;
+    private String  remarks;
     private String  operateAccount;
 
     public Integer getActivityId() {
@@ -106,6 +107,14 @@ public class Activity {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public String getOperateAccount() {

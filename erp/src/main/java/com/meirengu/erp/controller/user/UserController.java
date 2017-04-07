@@ -43,7 +43,7 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
-    public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
+    public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard){

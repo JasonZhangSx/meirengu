@@ -62,14 +62,14 @@
                                 <jsp:setProperty property="time" name="dateObject" value="${item.createTime}"/>
                                 <fmt:formatDate value="${dateObject}" pattern="yyyy-MM-dd HH:mm:ss" />
                             </td>
-                            <td>
+                            <td class="td-status">
                                 <c:if test="${item.status == 0}">未处理</c:if>
                                 <c:if test="${item.status == 1}">已处理</c:if>
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
-                                   href="javascript:;" title="项目编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+                                   onClick="candidate_handle(this,${item.id})"
+                                   href="javascript:;" title="处理"><i class="Hui-iconfont">&#xe6df;</i></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -112,7 +112,7 @@
     }
 
     function candidateHandleAjax(id, status) {
-        var url = "<%=basePath %>/order_appointment/handle/"+id;
+        var url = "<%=basePath %>/order_candidate/handle/"+id;
         var flag=false;
         $.ajax({
             type: "post",

@@ -1,4 +1,8 @@
 package com.meirengu.trade.service.impl;
+import com.meirengu.common.StatusCode;
+import com.meirengu.exception.BusinessException;
+import com.meirengu.model.Result;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.model.RebateUsed;
@@ -8,7 +12,9 @@ import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.service.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -31,7 +37,8 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
      * @param orderSn
      * @return
      */
-    public int rebateUse(int rebateReceiveId, String orderSn) {
+    @Transactional
+    public void rebateUse(int rebateReceiveId, String orderSn) throws OrderException {
         //修改用户领取记录表优惠券状态
         RebateReceive rebateReceive = rebateReceiveService.detail(rebateReceiveId);
         RebateReceive updateRebateReceive = new RebateReceive();
@@ -50,6 +57,8 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         rebateUsed.setRebateAmount(rebateBatch.getRebateAmount());
         rebateUsed.setUsedTime(new Date());
         int i = insert(rebateUsed);
-        return i;
+        if (!(j == 1 && i == 1)) {
+            throw new OrderException("优惠券使用失败，请重试", StatusCode.REBATE_USE_FAIL);
+        }
     }
 }

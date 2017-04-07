@@ -43,11 +43,17 @@ public class ActivityController extends BaseController{
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
                        @RequestParam(value="sortby", required = false) String sortBy,
+                       @RequestParam(value="status", required = false) Integer status,
+                       @RequestParam(value="activity_id", required = false) String activityId,
+                       @RequestParam(value="activity_name", required = false) String activityName,
                        @RequestParam(value="order", required = false) String order){
         Map paramMap = new HashMap<String, Object>();
         Page<Activity> page = super.setPageParams(pageNum,pageSize);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
+        paramMap.put("status", status);
+        paramMap.put("activityId", activityId);
+        paramMap.put("activityName", activityName);
 
         page = activityService.getListByPage(page, paramMap);
         try {
@@ -136,6 +142,7 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "activity_image", required = true)String activityImage,
                          @RequestParam(value = "activity_link", required = true)String activityLink,
                          @RequestParam(value = "activity_sort", required = true)Integer activitySort,
+                         @RequestParam(value = "remarks", required = false ,defaultValue = "")String remarks,
                          @RequestParam(value = "status", required = true)Integer status,
                          @RequestParam(value = "start_time", required = true)Date startTime,
                          @RequestParam(value = "end_time", required = true)Date endTime,
@@ -154,6 +161,7 @@ public class ActivityController extends BaseController{
             activity.setOperateAccount(operateAccount);
             activity.setCreateTime(new Date());
             activity.setUpdateTime(new Date());
+            activity.setRemarks(remarks);
             int result = activityService.insert(activity);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));

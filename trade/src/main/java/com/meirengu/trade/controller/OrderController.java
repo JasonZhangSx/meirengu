@@ -5,7 +5,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.OrderRpcException;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
@@ -112,10 +112,9 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             Result result = orderService.insertAppointment(order, rebateReceiveId);
-            result.setData(null);
             return result;
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -202,8 +201,8 @@ public class OrderController extends BaseController{
         try{
             Result result = orderService.insertSubscriptions(order, rebateReceiveId);
             return result;
-        } catch (OrderRpcException oe) {
-            logger.error("throw OrderRpcException:", oe);
+        } catch (OrderException oe) {
+            logger.error("throw OrderException:", oe);
             if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
@@ -236,8 +235,8 @@ public class OrderController extends BaseController{
         try{
             Result result = orderService.appointmentAudit(order);
             return  result;
-        }catch (OrderRpcException oe){
-            logger.error("throw OrderRpcException:", oe);
+        }catch (OrderException oe){
+            logger.error("throw OrderException:", oe);
             if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {

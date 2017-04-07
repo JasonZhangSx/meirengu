@@ -2,10 +2,11 @@ package com.meirengu.trade.service;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.service.BaseService;
-import com.meirengu.trade.common.OrderRpcException;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.Order;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ public interface OrderService extends BaseService<Order>{
      * @param orderId
      * @return
      */
-    Map<String, Object> orderDetail (int orderId) throws IOException ;
+    Map<String, Object> orderDetail (int orderId) throws ParseException, IOException ;
     /**
      * 获取订单详情
      * @param orderSn
@@ -40,13 +41,13 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result appointmentAudit(Order order)  throws IOException, OrderRpcException;
+    Result appointmentAudit(Order order)  throws IOException, OrderException;
     /**
      * 新增认购订单
      * @param order
      * @return
      */
-    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException;
+    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 获取客户端订单列表
@@ -61,7 +62,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertAppointment(Order order, int rebateReceiveId)  throws IOException, OrderRpcException;
+    Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 取消预约
@@ -98,6 +99,6 @@ public interface OrderService extends BaseService<Order>{
      * 订单失效
      * @return
      */
-    boolean orderLoseEfficacy(String orderSn);
+    boolean orderLoseEfficacy(String orderSn) throws IOException ;
 
 }

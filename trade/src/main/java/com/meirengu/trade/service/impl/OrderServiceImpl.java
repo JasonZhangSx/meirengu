@@ -8,7 +8,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.OrderRpcException;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
@@ -21,6 +21,7 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.ObjectToFile;
 import com.meirengu.utils.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -33,12 +34,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -76,9 +76,29 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param orderId
      * @return
      */
-    public Map<String, Object> orderDetail(int orderId) throws IOException {
+    public Map<String, Object> orderDetail(int orderId) throws ParseException, IOException {
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
+            //如果是待支付订单，返回剩余支付时长
+            int orderState = Integer.parseInt(map.get("orderState").toString());
+            String beginTimeStr = null;
+            if (orderState == OrderStateEnum.UNPAID.getValue()) {
+                beginTimeStr = map.get("createTime").toString();
+            } else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
+                //取updateTime作为订单变为待支付状态的时间
+                beginTimeStr = map.get("updateTime").toString();
+            }
+            if (StringUtils.isNotBlank(beginTimeStr)) {
+                Date beginTime = DateUtils.parseDate(beginTimeStr.substring(0,19),"yyyy-MM-dd HH:mm:ss");
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(beginTime);
+                cal.add(Calendar.DATE, 1);
+                Calendar cal2 = Calendar.getInstance();
+                cal2.setTime(new Date());
+                long remainingTime = cal.getTimeInMillis() - cal2.getTimeInMillis();
+                map.put("remainingTime", remainingTime);
+                logger.debug("剩余支付时间是{}" + remainingTime/1000);
+            }
             //查询地址信息
             if (map.get("userAddressId") != null) {
                 int userAddressId = (int)((long)map.get("userAddressId"));
@@ -227,7 +247,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @return
      */
     @Transactional
-    public Result appointmentAudit(Order order) throws IOException, OrderRpcException {
+    public Result appointmentAudit(Order order) throws IOException, OrderException {
         Result result = new Result();
         Order orderDetail = detail(order.getOrderId());
         if (orderDetail == null || orderDetail.getOrderId() == null) {
@@ -272,10 +292,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param rebateReceiveId
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
     @Transactional
-    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException{
+    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
 
         //首先校验优惠券是否有效
@@ -329,9 +349,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param nextState
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
-    public Result isItemLevelNumEnough(Order order, int nextState)throws IOException, OrderRpcException{
+    public Result isItemLevelNumEnough(Order order, int nextState)throws IOException, OrderException {
         Result result = new Result();
         result.setCode(StatusCode.OK);
         result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -408,11 +428,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
-                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
+                throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
             logger.error("httpcode: " + itemLevelInfoResult.getStatusCode() + "--httpcontent: " + itemLevelInfoResult.getContent());
-            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
+            throw new OrderException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
         }
         return result;
     }
@@ -421,9 +441,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单完成后修改项目档位信息
      * @param order
      * @return
-     * @throws OrderRpcException
+     * @throws OrderException
      */
-    public boolean itemLevelUpdate(Order order)throws OrderRpcException{
+    public boolean itemLevelUpdate(Order order)throws OrderException {
         //异步请求项目服务，修改项目档位信息，不得影响订单流程
         //目前设为同步请求，如果修改错误，则重新操作
         Map<String, String> paramMap = new HashMap<String, String>();
@@ -446,11 +466,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 return true;
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
-                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
+                throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
             logger.error("httpcode: " + httpResult.getStatusCode() + "--httpcontent: " + httpResult.getContent());
-            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
+            throw new OrderException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
         }
     }
 
@@ -535,10 +555,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param rebateReceiveId
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
     @Transactional
-    public Result insertAppointment(Order order, int rebateReceiveId)  throws IOException, OrderRpcException{
+    public Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
         //首先校验优惠券是否有效
         if (rebateReceiveId != 0) {
@@ -564,6 +584,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
+            // 组织数据返回给客户端
+            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
+            result.setData(orderMap);
         } else {
             result.setCode(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
@@ -688,7 +711,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             ObjectToFile.writeObject(mapList, fileNameStr);
 
             //请求用户服务
-            String url = ConfigUtil.getConfig("invite.reward.notify") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
+            String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
             HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
@@ -700,7 +723,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
-        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 24h
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 1d
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;
         try {
@@ -723,13 +746,22 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单失效
      * @return
      */
-    public boolean orderLoseEfficacy(String orderSn) {
+    public boolean orderLoseEfficacy(String orderSn) throws IOException {
         boolean flag = true;
         //订单在24小时内未支付，置失效
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
         if (orderMap != null) {
             int orderState = Integer.parseInt(orderMap.get("orderState").toString());
-            if (orderState != OrderStateEnum.PAID.getValue()) {
+            //如果已支付，则请求用户服务修改被邀请人的投资时间
+            if (orderState == OrderStateEnum.PAID.getValue() ) {
+                String url = ConfigUtil.getConfig("invite.invest.notify.url");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("invited_user_id", orderMap.get("userId").toString());
+                params.put("invited_user_phone", orderMap.get("userPhone").toString());
+                params.put("invest_time", orderMap.get("finishedTime").toString());
+                HttpResult inviterResult = HttpUtil.doPostForm(url, params);
+            }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue() ||
+                    orderState == OrderStateEnum.UNPAID.getValue()) {
                 Order order = new Order();
                 order.setOrderSn(orderSn);
                 order.setOrderState(OrderStateEnum.LOSS_EFFICACY.getValue());
