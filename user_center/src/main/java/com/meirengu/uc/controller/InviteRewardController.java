@@ -37,7 +37,7 @@ public class InviteRewardController extends BaseController{
         try {
 
             List<Map<String,String>> investInfo =  ObjectToFile.readObject(filePath);
-            // TODO: 4/1/2017 根据用户id 获取邀请人信息 判断是否为空
+            // 根据用户id 获取邀请人信息 判断是否为空
             List<String[]> file = new ArrayList<>();
             for (Map map:investInfo){
                 for(Object userId : map.keySet()){
@@ -47,14 +47,14 @@ public class InviteRewardController extends BaseController{
                     inviter.setInvitedUserId(Integer.parseInt(userId+""));
                     inviter = inviterService.detail(inviter);
                     if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
-                    // TODO: 4/1/2017 根据注册时间  投资时间 校验是否有效期
+                    // 根据注册时间  投资时间 校验是否有效期
                         Date registerTime = inviter.getRegisterTime();
                         Date investTime = inviter.getInvestTime();
                         try {
                             int i  = DateAndTime.dateDiff("dd",DateAndTime.convertDateToString(registerTime,"yyyy-MM-dd HH:mm:ss"),
                                     DateAndTime.convertDateToString(investTime,"yyyy-MM-dd HH:mm:ss"));
 
-                            // TODO: 4/1/2017 封装入结构 写入文件
+                            // 封装入结构 写入文件
                             if(i<34){
                                 String[] arr = new String[3];
                                 arr[0] = userId+"";
@@ -63,7 +63,7 @@ public class InviteRewardController extends BaseController{
                                 file.add(arr);
                             }
                         }catch (Exception e){
-
+                                logger.info("InviteRewardController.notify throws Exception :{} ",e.getMessage());
                         }
 
                     }
