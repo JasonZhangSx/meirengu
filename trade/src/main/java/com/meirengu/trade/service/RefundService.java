@@ -13,11 +13,13 @@ public interface RefundService extends BaseService<Refund>{
 
     /**
      * 退款申请
-     * @param refund
-     * @param order
+     * @param orderId
+     * @param refundMessage
+     * @param userMessage
      * @return
+     * @throws Exception
      */
-    Result refundApply(Refund refund, Order order)throws Exception;
+    Result refundApply(int orderId, String refundMessage, String userMessage)throws Exception;
 
     /**
      * 退款审核

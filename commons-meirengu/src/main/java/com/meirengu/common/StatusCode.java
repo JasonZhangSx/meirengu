@@ -182,6 +182,8 @@ public class StatusCode {
     public static final int REBATE_BATCH_INVALIDITY = 50254;
     public static final int REBATE_RECEIVE_INVALIDITY = 50255;
     public static final int NOT_MATCH_REBATE_BATCH_RULE = 50256;
+    public static final int REBATE_USE_FAIL = 50257;
+
 
 
 
@@ -236,18 +238,16 @@ public class StatusCode {
     public static final int SUBSCRIPTIONS_ORDER_ERROR_INSERT = 50751;
     public static final int APPOINTMENT_ORDER_ERROR_INSERT = 50752;
     public static final int CANDIDATE_ORDER_ERROR_INSERT = 50753;
-    public static final int REFUND_AMOUNT_IS_ZERO = 50754;
-    public static final int REMAIN_NUM_NOT_ENOUGH = 50755;
-    public static final int ORDER_ERROR_UPDATE = 50756;
-    public static final int ITEM_LEVEL_NOT_MATCH = 50757;
-    public static final int ITEM_LEVEL_HAVE_ENOUGH = 50758;
-    public static final int ITEM_LEVEL_NUM_ERROR = 50759;
-    public static final int APPOINTMENT_CANCEL_ERROR = 50760;
-    public static final int APPOINTMENT_HAVE_AUDIT = 50761;
-    public static final int DELETE_ORDER_ERROR = 50761;
-    public static final int ORDER_STATUS_NOT_DELETE = 50762;
-    public static final int ORDER_NOT_EXIST= 50763;
-    public static final int ORDER_CANDIDATE_HANDLE_ERROR= 50764;
+    public static final int ORDER_ERROR_UPDATE = 50754;
+    public static final int ITEM_LEVEL_NOT_MATCH = 50755;
+    public static final int ITEM_LEVEL_HAVE_ENOUGH = 50756;
+    public static final int ITEM_LEVEL_NUM_ERROR = 50757;
+    public static final int APPOINTMENT_CANCEL_ERROR = 50758;
+    public static final int APPOINTMENT_HAVE_AUDIT = 50759;
+    public static final int DELETE_ORDER_ERROR = 50760;
+    public static final int ORDER_STATUS_NOT_DELETE = 50761;
+    public static final int ORDER_NOT_EXIST= 50762;
+    public static final int ORDER_CANDIDATE_HANDLE_ERROR= 50763;
 
 
 
@@ -405,13 +405,14 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.VERSION_UPDATE_ERROR, "版本信息修改失败");
         codeMsgMap.put(StatusCode.VERSION_DELETE_ERROR, "版本信息删除失败");
 
-        //50200-50300//rebate
+        //50251-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");
         codeMsgMap.put(StatusCode.REBATE_SN_REPEAT, "券号生成器重复数量过多，请联系技术部处理");
         codeMsgMap.put(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE, "该券您已经达到领取上限，不可再次领取");
         codeMsgMap.put(StatusCode.REBATE_BATCH_INVALIDITY, "该批次抵扣券不可用");
         codeMsgMap.put(StatusCode.REBATE_RECEIVE_INVALIDITY, "该优惠券已无效，请更换其他优惠券");
         codeMsgMap.put(StatusCode.NOT_MATCH_REBATE_BATCH_RULE, "订单不符合该优惠券使用规则，请更换其他优惠券");
+        codeMsgMap.put(StatusCode.REBATE_USE_FAIL, "优惠券使用失败，请重试");
 
 
 
@@ -508,9 +509,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT, "认购订单保存失败，请重试");
         codeMsgMap.put(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT, "预约订单保存失败，请重试");
         codeMsgMap.put(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, "候补预约保存失败，请重试");
-        codeMsgMap.put(StatusCode.REFUND_AMOUNT_IS_ZERO, "退款金额为0，无法退款");
-        codeMsgMap.put(StatusCode.REMAIN_NUM_NOT_ENOUGH, "剩余份数不足");
-        codeMsgMap.put(StatusCode.ORDER_ERROR_UPDATE, "订单跟新失败，请重试");
+        codeMsgMap.put(StatusCode.ORDER_ERROR_UPDATE, "订单更新失败，请重试");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_NOT_MATCH, "档位当前状态不能进行该操作，请刷新档位信息");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_HAVE_ENOUGH, "该档位已被预约满，请您进入候补预约");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_NUM_ERROR, "该档位剩余份数不足，请您重新操作");
@@ -518,10 +517,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.APPOINTMENT_HAVE_AUDIT, "预约订单已通过审核，不可取消");
         codeMsgMap.put(StatusCode.DELETE_ORDER_ERROR, "删除订单失败，请重试");
         codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_DELETE, "只有已失效和已退款的订单可以删除");
-        codeMsgMap.put(StatusCode.ORDER_NOT_EXIST, "只有已失效和已退款的订单可以删除");
+        codeMsgMap.put(StatusCode.ORDER_NOT_EXIST, "该订单不存在");
         codeMsgMap.put(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR, "候补预约订单处理失败");
-
-
 
 
         //50800-50900//other
