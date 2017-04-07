@@ -246,8 +246,9 @@ public class StatusCode {
     public static final int APPOINTMENT_HAVE_AUDIT = 50759;
     public static final int DELETE_ORDER_ERROR = 50760;
     public static final int ORDER_STATUS_NOT_DELETE = 50761;
-    public static final int ORDER_NOT_EXIST= 50762;
-    public static final int ORDER_CANDIDATE_HANDLE_ERROR= 50763;
+    public static final int ORDER_NOT_EXIST = 50762;
+    public static final int ORDER_CANDIDATE_HANDLE_ERROR = 50763;
+    public static final int REFUND_APPLY_ERROR = 50764;
 
 
 
@@ -519,6 +520,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_DELETE, "只有已失效和已退款的订单可以删除");
         codeMsgMap.put(StatusCode.ORDER_NOT_EXIST, "该订单不存在");
         codeMsgMap.put(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR, "候补预约订单处理失败");
+        codeMsgMap.put(StatusCode.REFUND_APPLY_ERROR, "退款申请失败，请重试");
+
 
 
         //50800-50900//other

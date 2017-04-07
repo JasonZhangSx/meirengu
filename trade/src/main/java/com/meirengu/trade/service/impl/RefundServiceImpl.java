@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.RefundDao;
 import com.meirengu.trade.model.Order;
@@ -41,6 +42,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
     @Transactional
     public Result refundApply(int orderId, String refundMessage, String userMessage) throws Exception{
         Result result = new Result();
+        result.setCode(StatusCode.OK);
         //查询该订单记录
         Order order = orderService.detail(orderId);
         if (order != null && order.getOrderId() != null) {
@@ -71,9 +73,8 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             updateOrder.setOrderId(orderId);
             updateOrder.setOrderState(OrderStateEnum.REFUND_APPLY.getValue());
             int j = orderService.update(order);
-            if (i == 1 && j == 1 ) {
-                result.setCode(StatusCode.OK);
-                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+            if (!(i == 1 && j == 1 )) {
+                throw new OrderException("退款申请失败，请重试", StatusCode.REFUND_APPLY_ERROR);
             }
         }
         return result;
