@@ -82,11 +82,9 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
             if (record==null){
                 throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL);
             }
-            if (status==PaymentTypeUtil.PaymentStatus_Fail){
-                paymentAccount = paymentAccountDao.selectByUserId(record.getUserId());
-                if (paymentAccount == null) {
-                    throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
-                }
+            paymentAccount = paymentAccountDao.selectByUserId(record.getUserId());
+            if (paymentAccount == null) {
+                throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
             }
             paymentRecord = new PaymentRecordVo();
             paymentRecord.setPaymentId(record.getPaymentId());

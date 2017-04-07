@@ -42,65 +42,21 @@ public class RefundController extends BaseController{
     /**
      * 申请退款
      * @param orderId
-     * @param orderSN
-     * @param thirdOrderSN
-     * @param itemId
-     * @param userId
-     * @param userName
-     * @param userPhone
-     * @param orderAmount
+     * @param refundMessage
+     * @param userMessage
      * @return
      */
     @RequestMapping(value = "/application", method = RequestMethod.POST)
     public Result refundApply(@RequestParam(value = "order_id", required = false)int orderId,
-                              @RequestParam(value = "order_sn", required = false) String orderSN,
-                              @RequestParam(value = "third_order_sn", required = false) String thirdOrderSN,
-                              @RequestParam(value = "item_id", required = false) int itemId,
-                              @RequestParam(value = "user_id", required = false) int userId,
-                              @RequestParam(value = "user_name", required = false) String userName,
-                              @RequestParam(value = "user_phone", required = false) String userPhone,
-                              @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
-                              @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
                               @RequestParam(value = "refund_message", required = false) String refundMessage,
                               @RequestParam(value = "user_message", required = false) String userMessage){
 
-        if (orderId == 0 || StringUtils.isEmpty(orderSN) || StringUtils.isEmpty(thirdOrderSN)|| itemId == 0
-                || userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone)
-                || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || StringUtils.isEmpty(refundMessage)
-                || StringUtils.isEmpty(userMessage)){
+        if (orderId == 0 || StringUtils.isEmpty(refundMessage) || StringUtils.isEmpty(userMessage)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        if (costAmount == null || costAmount.equals(BigDecimal.ZERO)){
-            return setResult(StatusCode.REFUND_AMOUNT_IS_ZERO, null, StatusCode.codeMsgMap.get(StatusCode.REFUND_AMOUNT_IS_ZERO));
-        }
-
-        //退款记录表
-        Refund refund = new Refund();
-        refund.setRefundSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_REFUND_SN_PREFIX));
-        refund.setOrderId(orderId);
-        refund.setOrderSn(orderSN);
-        refund.setThirdOrderSn(thirdOrderSN);
-        refund.setItemId(itemId);
-        refund.setPartnerId(0);//目前退款只从平台退，不涉及合作方
-        refund.setUserId(userId);
-        refund.setUserName(userName);
-        refund.setUserPhone(userPhone);
-        refund.setAddTime(new Date());
-        refund.setOrderAmount(orderAmount);
-        refund.setOrderRefund(costAmount);
-        refund.setRefundPaymentcode("");//支付方式名称申请时为空
-        refund.setRefundPaymentname("");//支付方式代码申请时为空
-        refund.setRefundMessage(refundMessage);
-        refund.setUserMessage(userMessage);
-        refund.setRefundType(Constant.REFUND_TYPE_SELLER);//类型:1为买家,2为卖家
-        refund.setRefundState(Constant.REFUND_STATE_WAIT);//状态:1为待处理,2为同意,3为拒绝
-
-        Order order = new Order();
-        order.setOrderId(orderId);
-        order.setOrderState(OrderStateEnum.REFUND_APPLY.getValue());
 
         try {
-            Result result = refundService.refundApply(refund, order);
+            Result result = refundService.refundApply(orderId, refundMessage, userMessage);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         } catch (Exception e){

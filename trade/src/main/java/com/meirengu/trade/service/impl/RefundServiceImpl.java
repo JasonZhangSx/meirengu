@@ -10,9 +10,12 @@ import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RefundService;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.utils.OrderSNUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * Refund服务实现层 
@@ -30,18 +33,48 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
 
     /**
      * 退款申请
-     * @param refund
-     * @param order
+     * @param orderId
+     * @param refundMessage
+     * @param userMessage
      * @return
      */
     @Transactional
-    public Result refundApply(Refund refund, Order order) throws Exception{
+    public Result refundApply(int orderId, String refundMessage, String userMessage) throws Exception{
         Result result = new Result();
-        int i = insert(refund);
-        int j = orderService.update(order);
-        if (i == 1 && j == 1 ) {
-            result.setCode(StatusCode.OK);
-            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+        //查询该订单记录
+        Order order = orderService.detail(orderId);
+        if (order != null && order.getOrderId() != null) {
+            //新增退款记录表
+            Refund refund = new Refund();
+            refund.setRefundSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_REFUND_SN_PREFIX));
+            refund.setOrderId(orderId);
+            refund.setOrderSn(order.getOrderSn());
+            refund.setThirdOrderSn(order.getOutSn());
+            refund.setItemId(order.getItemId());
+            refund.setPartnerId(0);//目前退款只从平台退，不涉及合作方
+            refund.setUserId(order.getUserId());
+            refund.setUserName(order.getUserName());
+            refund.setUserPhone(order.getUserPhone());
+            refund.setAddTime(new Date());
+            refund.setOrderAmount(order.getOrderAmount());
+            refund.setOrderRefund(order.getCostAmount());
+            refund.setRefundPaymentcode("");//支付方式名称申请时为空
+            refund.setRefundPaymentname("");//支付方式代码申请时为空
+            refund.setRefundMessage(refundMessage);
+            refund.setUserMessage(userMessage);
+            refund.setRefundType(Constant.REFUND_TYPE_SELLER);//类型:1为买家,2为卖家
+            refund.setRefundState(Constant.REFUND_STATE_WAIT);//状态:1为待处理,2为同意,3为拒绝
+            int i = insert(refund);
+
+            //修改订单状态
+            Order updateOrder = new Order();
+            updateOrder.setOrderId(orderId);
+            updateOrder.setOrderState(OrderStateEnum.REFUND_APPLY.getValue());
+            int j = orderService.update(order);
+            if (i == 1 && j == 1 ) {
+                result.setCode(StatusCode.OK);
+                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+            }
         }
         return result;
     }
