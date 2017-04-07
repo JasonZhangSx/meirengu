@@ -27,4 +27,8 @@ public class ConfigUtil {
 	public static final String getSavePath(){
 		return bundle.getString("picture.save.path");
 	}
+
+	public static final String getValue(String key){
+		return bundle.getString(key);
+	}
 }

@@ -69,4 +69,12 @@ public class Constants {
     /** 5下架 */
     public static final int RECORD_OFF = 5;
 
+    /** 众筹分类 */
+    /** 1 产品众筹 */
+    public static final int TYPE_PRODUCT = 1;
+    /** 2 收益权众筹 */
+    public static final int TYPE_PROFIT = 2;
+    /** 3 股权众筹 */
+    public static final int TYPE_SHARES = 3;
+
 }
