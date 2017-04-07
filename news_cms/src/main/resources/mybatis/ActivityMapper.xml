@@ -15,6 +15,7 @@
         <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
         <result column="update_time" property="updateTime" jdbcType="DATE" javaType="Date"/>
         <result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="string"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" javaType="string"/>
     </resultMap>
     <sql id="select_columns">
         activity_id AS activityId,
@@ -28,7 +29,8 @@
         end_time AS endTime,
         create_time AS createTime,
         update_time AS updateTime,
-        operate_account AS operateAccount
+        operate_account AS operateAccount,
+        remarks
     </sql>
     <sql id='table_name'>activity</sql>
 
@@ -46,7 +48,8 @@
         end_time,
         create_time,
         update_time,
-        operate_account
+        operate_account,
+        remarks
         )
         VALUES
         (
@@ -61,7 +64,8 @@
         #{endTime},
         #{createTime},
         #{updateTime},
-        #{operateAccount}
+        #{operateAccount},
+        #{remarks}
 
         );
     </insert>

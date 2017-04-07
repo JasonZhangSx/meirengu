@@ -39,6 +39,7 @@ public class ActivityController extends BaseController{
                                @RequestParam(value = "activity_image")String activityImage,
                                @RequestParam(value = "activity_link")String activityLink,
                                @RequestParam(value = "activity_sort")Integer activitySort,
+                               @RequestParam(value = "remarks")String remarks,
                                @RequestParam(value = "status")Integer status,
                                @RequestParam(value = "start_time")String startTime,
                                @RequestParam(value = "end_time")String endTime
@@ -55,6 +56,7 @@ public class ActivityController extends BaseController{
             paramsMap.put("activity_type",activityType+"");
             paramsMap.put("status",status+"");
             paramsMap.put("activity_sort",activitySort+"");
+            paramsMap.put("remarks",remarks);
             String url = ConfigUtil.getConfig("user.activity.insert");
             Object obj = super.httpPost(url,paramsMap);
             //todo 做返回处理
@@ -94,13 +96,13 @@ public class ActivityController extends BaseController{
 
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
+        List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
 
         //保存给datatabls 分页数据
         view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
         view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 
-        view.setAaData(userList);
+        view.setAaData(activityList);
         return view;
     }
 }

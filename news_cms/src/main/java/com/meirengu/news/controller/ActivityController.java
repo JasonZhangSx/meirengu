@@ -136,6 +136,7 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "activity_image", required = true)String activityImage,
                          @RequestParam(value = "activity_link", required = true)String activityLink,
                          @RequestParam(value = "activity_sort", required = true)Integer activitySort,
+                         @RequestParam(value = "remarks", required = false ,defaultValue = "")String remarks,
                          @RequestParam(value = "status", required = true)Integer status,
                          @RequestParam(value = "start_time", required = true)Date startTime,
                          @RequestParam(value = "end_time", required = true)Date endTime,
@@ -154,6 +155,7 @@ public class ActivityController extends BaseController{
             activity.setOperateAccount(operateAccount);
             activity.setCreateTime(new Date());
             activity.setUpdateTime(new Date());
+            activity.setRemarks(remarks);
             int result = activityService.insert(activity);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
