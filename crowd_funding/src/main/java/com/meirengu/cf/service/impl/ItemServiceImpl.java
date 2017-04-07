@@ -7,6 +7,7 @@ import com.meirengu.cf.model.ItemOperateRecord;
 import com.meirengu.cf.service.ItemLevelService;
 import com.meirengu.cf.service.ItemOperateRecordService;
 import com.meirengu.cf.service.ItemService;
+import com.meirengu.common.StatusCode;
 import com.meirengu.exception.BusinessException;
 import com.meirengu.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             if(appointAmount != null && completedAmount == null){ //预约
                 type = 2;
                 //已约满
-                if(levelStatus != Constants.LEVEL_APPOINTING){
+                if(levelStatus == Constants.LEVEL_APPOINT_FULL){
                     LOGGER.warn(">> the level status is appoint full... status : {}", levelStatus);
                     return 2;
                 }
@@ -92,7 +93,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             }else if(appointAmount == null && completedAmount != null){ //完成
                 type = 1;
                 //已完成
-                if(levelStatus != Constants.LEVEL_CROWDING){
+                if(levelStatus == Constants.LEVEL_COMPLETED){
                     LOGGER.warn(">> the level status is completed... status : {}", levelStatus);
                     return 3;
                 }
@@ -147,6 +148,83 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             return 1;
         }catch (Exception e){
             errorMsg = ">> change amount throw exception: {}";
+            LOGGER.error(errorMsg, e);
+            throw new BusinessException(errorMsg, e);
+        }
+    }
+
+    /**
+     * 订单失效档位信息回滚
+     * @param itemId
+     * @param levelAmount
+     * @param levelId
+     * @param itemNum
+     * @param completedAmount
+     * @return
+     */
+    @Override
+    public int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
+
+        try {
+            //1.修改订单的预约/已筹金额
+            ItemLevel il = itemLevelService.detail(levelId);
+            if(il == null){
+                LOGGER.warn(">> the level does not exit.... id : ", levelId);
+                return StatusCode.ITEM_LEVEL_NULL;
+            }
+            int levelStatus = il.getLevelStatus();
+
+            BigDecimal levelAmount1 = il.getLevelAmount();
+            if(levelAmount.compareTo(levelAmount1) != 0){
+                LOGGER.warn(">> two level amount does not equal... param amount is {}, query amount is {}",
+                        new Object[]{levelAmount, levelAmount1});
+                return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
+            }
+
+            BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
+            int compareToReturnNum = -1;
+            int completedNumber = il.getCompletedNumber();
+            int currentNumber = completedNumber - itemNum;
+            //先比较已完成的数量和要回滚的数量
+            if(currentNumber < 0){
+                LOGGER.warn(">> two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{itemNum, completedNumber});
+                return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
+            }
+
+            compareToReturnNum = totalAmount.compareTo(completedAmount);
+
+            if(compareToReturnNum != 0){
+                LOGGER.warn(">> totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                        new Object[]{totalAmount, levelAmount, itemNum});
+                return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
+            }
+
+            Item item = new Item();
+            item.setItemId(itemId);
+            item.setCompletedAmount(totalAmount.multiply(new BigDecimal(-1)));
+            int i = itemDao.changeAmount(item);
+            if(i != 1){
+                LOGGER.warn(">> update amount fail....");
+                throw new BusinessException("update amount fail....");
+            }
+
+            ItemLevel levelParam = new ItemLevel();
+            levelParam.setLevelId(levelId);
+
+            levelParam.setCompletedNumber(currentNumber);
+
+            if(levelStatus == Constants.LEVEL_COMPLETED){
+                levelParam.setLevelStatus(Constants.LEVEL_CROWDING);
+            }
+            int j = itemLevelService.updateNumber(levelParam);
+            if(j != 1){
+                LOGGER.warn(">> update number fail....");
+                throw new BusinessException("update number fail....");
+            }
+
+            return StatusCode.OK;
+        }catch (Exception e){
+            String errorMsg = ">> change amount throw exception: {}";
             LOGGER.error(errorMsg, e);
             throw new BusinessException(errorMsg, e);
         }

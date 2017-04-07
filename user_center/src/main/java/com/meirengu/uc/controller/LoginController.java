@@ -132,6 +132,11 @@ public class LoginController extends BaseController {
                                 return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
                                         .CAPTCHA_EXPIRE));
                             }
+                            code.setUse(true);
+                            code.setUsingTime(new Date());
+                            int updateResult = checkCodeService.update(code);
+
+                            logger.info("LoginController.login update code result:{}", updateResult);
                             //用户为空则注册一个
                             User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
                             if (usr != null){

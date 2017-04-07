@@ -43,11 +43,17 @@ public class ActivityController extends BaseController{
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
                        @RequestParam(value="sortby", required = false) String sortBy,
+                       @RequestParam(value="status", required = false) Integer status,
+                       @RequestParam(value="activity_id", required = false) String activityId,
+                       @RequestParam(value="activity_name", required = false) String activityName,
                        @RequestParam(value="order", required = false) String order){
         Map paramMap = new HashMap<String, Object>();
         Page<Activity> page = super.setPageParams(pageNum,pageSize);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
+        paramMap.put("status", status);
+        paramMap.put("activityId", activityId);
+        paramMap.put("activityName", activityName);
 
         page = activityService.getListByPage(page, paramMap);
         try {

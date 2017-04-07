@@ -70,22 +70,20 @@ public class ActivityController extends BaseController{
     /**
      * 分页查看活动详情
      * @param request
-     * @param id
      * @param activityName
      * @return
      */
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
-                                 @RequestParam(value="id", required = false ,defaultValue = "") String id,
+                                 @RequestParam(value="activity_id", required = false ,defaultValue = "") String activityId,
                                  @RequestParam(value="activity_name", required = false ,defaultValue = "") String activityName){
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
         String url = ConfigUtil.getConfig("user.activity.list");
         //查询参数
-        paramsMap.put("id",id);
-        paramsMap.put("activity_name",activityName);
+        paramsMap.put("activity_id",activityId);
         paramsMap.put("activity_name",activityName);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
