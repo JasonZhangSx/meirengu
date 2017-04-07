@@ -115,7 +115,7 @@ public class OrderController extends BaseController{
             result.setData(null);
             return result;
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
