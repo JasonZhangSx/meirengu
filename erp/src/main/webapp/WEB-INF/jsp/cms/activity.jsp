@@ -154,8 +154,8 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                活动编号：<input type="text" class="input-text" style="width:120px;">　
-                活动名称：<input type="text" class="input-text" style="width:120px;">　
+                活动编号：<input type="text" id="activity_id" class="input-text" style="width:120px;">　
+                活动名称：<input type="text" id="activity_name" class="input-text" style="width:120px;">　
                 <button name="" id="" class="btn btn-success radius"  onclick="search()" type="button"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -236,13 +236,11 @@
                 "url": "/erp/activity/list",
                 "dataSrc": "aaData",
                 "data": function ( d ) {
-//                    var phone = $('#phone').val();
-//                    var realname = $('#realname').val();
-//                    var idcard = $('#idcard').val();
+                    var activity_id = $('#activity_id').val();
+                    var activity_name = $('#activity_name').val();
 //                    //添加额外的参数传给服务器
-//                    d.phone = phone;
-//                    d.realname = realname;
-//                    d.idcard = idcard;
+                    d.activity_id = activity_id;
+                    d.activity_name = activity_name;
                 }
             },
             "columns": [
@@ -307,7 +305,7 @@
                         return ' <td class="f-14 td-manage">' +
                                     '<a style="text-decoration:none" class="ml-5"' +
                                     'onClick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\',\'10001\')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
-                                        '</i></a><a style="text-decoration:none" onClick="project_stop(this,\'10001\')" href="javascript:;"title="下架">' +
+                                        '</i></a><a style="text-decoration:none" onClick="project_stop(this,'+row.id+')" href="javascript:;"title="下架">' +
                                         '<i class="Hui-iconfont">&#xe6de;</i>' +
                                     '</a>' +
                                 '</td>';
