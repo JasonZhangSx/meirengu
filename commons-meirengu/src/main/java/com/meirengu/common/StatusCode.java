@@ -225,6 +225,7 @@ public class StatusCode {
     public static final int ITEM_TYPE_UPDATE_ERROR = 50531;
     public static final int ITEM_TYPE_DELETE_ERROR = 50532;
     public static final int OPERATE_RECORD_INSERT_ERROR = 50533;
+    public static final int LEVEL_ROLLBACK_OUT_NUMBER = 50534;
 
     //50600-50700//payment
 
@@ -443,7 +444,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_LEVEL_APPOINT_FULL, "该档位已约满");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_COMPLETED, "该档位已完成");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_NULL, "档位信息为空");
-        codeMsgMap.put(StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH, "参数档位金额与该档位金额不一致");
+        codeMsgMap.put(StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH, "传入档位金额与该档位金额不一致");
         codeMsgMap.put(StatusCode.ITEM_APPOINT_NUM_NOT_ENOUGH, "档位可预约数量不足");
         codeMsgMap.put(StatusCode.ITEM_BUY_NUM_NOT_ENOUGH, "档位可购买数量不足");
         codeMsgMap.put(StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR, "该档位总金额错误");
@@ -454,6 +455,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_TYPE_UPDATE_ERROR, "众筹项目分类修改失败");
         codeMsgMap.put(StatusCode.ITEM_TYPE_DELETE_ERROR, "众筹项目分类删除失败");
         codeMsgMap.put(StatusCode.OPERATE_RECORD_INSERT_ERROR, "操作记录插入失败");
+        codeMsgMap.put(StatusCode.LEVEL_ROLLBACK_OUT_NUMBER, "回滚档位数量超过已筹数量");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
