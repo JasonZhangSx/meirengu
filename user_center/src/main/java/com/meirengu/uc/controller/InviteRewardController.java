@@ -70,10 +70,9 @@ public class InviteRewardController extends BaseController{
                 }
             }
             ObjectToFile.writeArray(file, ConfigUtil.getConfig("INVITE.INVESTMONEY.FILEPATH")+"user."+ DateUtils.getCurrentDate()+".txt");
-            HttpUtil hr = null;
 
-            // TODO: 4/1/2017 拿着文件名 路径名字 去调支付系统
-
+            // 去通知支付系统  异步 重试
+            inviterService.noticePayment();
             return setResult(StatusCode.OK,null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info("AddressController.redis get token result:{}",e.getMessage());

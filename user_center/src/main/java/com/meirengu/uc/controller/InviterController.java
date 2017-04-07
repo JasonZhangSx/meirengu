@@ -58,7 +58,7 @@ public class InviterController extends BaseController{
 
             page = inviterService.getListByPage(page, paramMap);
             if(page.getList().size() != 0){
-                /*查看邀请人邀请分红*/
+                // TODO: 4/7/2017  查看邀请人邀请分红
                 inviterService.getReward(page.getList());
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
