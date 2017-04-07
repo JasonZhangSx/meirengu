@@ -154,6 +154,9 @@
             <if test="isAuth != null and isAuth != ''">
                 is_auth=#{isAuth,jdbcType=INTEGER},
             </if>
+            <if test="investConditions != null">
+                invest_conditions=#{investConditions,jdbcType=INTEGER},
+            </if>
             user_id=#{userId}
         </set>
         <where>
