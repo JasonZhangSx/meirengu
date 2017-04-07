@@ -6,12 +6,15 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.news.model.VersionUpgrade;
 import com.meirengu.news.service.VersionUpgradeService;
+import com.meirengu.news.utils.ConfigUtil;
+import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -68,6 +71,32 @@ public class VersionUpgradeController extends com.meirengu.controller.BaseContro
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
+    }
+
+    /**
+     * 获取最新版本
+     * @param appChannel
+     * @param appId
+     * @param status
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "newest", method = RequestMethod.POST)
+    public Result newest(@RequestParam(value = "app_channel", required = false) Integer appChannel,
+                         @RequestParam(value = "app_id", required = false) Integer appId,
+                         @RequestParam(value = "status", required = false) Integer status){
+
+        if(appChannel == null || appId == null || status == null || appChannel == 0 || appId == 0){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        try {
+            VersionUpgrade vu = versionUpgradeService.getLastVersion(appId, appChannel, status);
+            return super.setResult(StatusCode.OK, vu, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            LOGGER.error(">> VersionUpgradeController.newest throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
     }
 
     @ResponseBody

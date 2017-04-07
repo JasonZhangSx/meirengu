@@ -6,6 +6,7 @@ import com.meirengu.trade.common.OrderRpcException;
 import com.meirengu.trade.model.Order;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ public interface OrderService extends BaseService<Order>{
      * @param orderId
      * @return
      */
-    Map<String, Object> orderDetail (int orderId) throws IOException ;
+    Map<String, Object> orderDetail (int orderId) throws ParseException, IOException ;
     /**
      * 获取订单详情
      * @param orderSn
@@ -61,7 +62,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertAppointment(Order order, int rebateReceiveId)  throws IOException, OrderRpcException;
+    Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException;
 
     /**
      * 取消预约
@@ -98,6 +99,6 @@ public interface OrderService extends BaseService<Order>{
      * 订单失效
      * @return
      */
-    boolean orderLoseEfficacy(String orderSn);
+    boolean orderLoseEfficacy(String orderSn) throws IOException ;
 
 }

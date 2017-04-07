@@ -16,31 +16,31 @@ public class Producer {
             Message msg = new Message("deploy",
                     "orderLoseEfficacy",
                     "1",
-                    "Just for test.".getBytes());
+                    "8152330892164581".getBytes());
             msg.setDelayTimeLevel(2);
             SendResult result = producer.send(msg);
             System.out.println("id:" + result.getMsgId() +
                     " result:" + result.getSendStatus());
 
-            msg = new Message("deploy",
-                    "orderLoseEfficacy",
-                    "2",
-                    "Just for test.".getBytes());
-            msg.setDelayTimeLevel(3);
-
-            result = producer.send(msg);
-            System.out.println("id:" + result.getMsgId() +
-                    " result:" + result.getSendStatus());
-
-            msg = new Message("deploy",
-                    "orderLoseEfficacy",
-                    "1",
-                    "Just for test.".getBytes());
-            msg.setDelayTimeLevel(4);
-
-            result = producer.send(msg);
-            System.out.println("id:" + result.getMsgId() +
-                    " result:" + result.getSendStatus());
+//            msg = new Message("deploy",
+//                    "orderLoseEfficacy",
+//                    "2",
+//                    "Just for test.".getBytes());
+//            msg.setDelayTimeLevel(3);
+//
+//            result = producer.send(msg);
+//            System.out.println("id:" + result.getMsgId() +
+//                    " result:" + result.getSendStatus());
+//
+//            msg = new Message("deploy",
+//                    "orderLoseEfficacy",
+//                    "1",
+//                    "Just for test.".getBytes());
+//            msg.setDelayTimeLevel(4);
+//
+//            result = producer.send(msg);
+//            System.out.println("id:" + result.getMsgId() +
+//                    " result:" + result.getSendStatus());
         } catch (Exception e) {
             e.printStackTrace();
         }finally{

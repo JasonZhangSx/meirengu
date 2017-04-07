@@ -10,9 +10,12 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,20 +96,19 @@ public class InviterController extends BaseController{
 
 
     @RequestMapping(method = {RequestMethod.PUT})
-    public Result update(@RequestParam(value = "id", required = true)Integer id,
-                         @RequestParam(value = "user_id", required = false)Integer userId,
+    public Result update(@RequestParam(value = "id", required = false)Integer id,
                          @RequestParam(value = "invited_user_id", required = false)Integer invitedUserId,
                          @RequestParam(value = "invited_user_phone", required = false)String invitedUserPhone,
-                         @RequestParam(value = "register_time", required = false)Date registerTime,
                          @RequestParam(value = "invest_time", required = false)Date investTime,
                          @RequestParam(value = "reward", required = false)BigDecimal reward){
         try {
+            if(StringUtil.isEmpty(id)  && StringUtil.isEmpty(invitedUserId) && StringUtil.isEmpty(invitedUserPhone)){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
             Inviter inviter = new Inviter();
             inviter.setId(id);
-            inviter.setUserId(userId);
             inviter.setInvitedUserId(invitedUserId);
             inviter.setInvitedUserPhone(invitedUserPhone);
-            inviter.setRegisterTime(registerTime);
             inviter.setInvestTime(investTime);
             inviter.setReward(reward);
             int result  = inviterService.update(inviter);
@@ -136,31 +138,14 @@ public class InviterController extends BaseController{
         }
     }
 
-    /*@RequestMapping(value = "insert",method = {RequestMethod.POST})
-    public Result insert(@RequestParam(value = "user_id", required = true)Integer userId,
-                         @RequestParam(value = "invited_user_id", required = true)Integer invitedUserId,
-                         @RequestParam(value = "invited_user_phone", required = true)String invitedUserPhone,
-                         @RequestParam(value = "register_time", required = true)Date registerTime,
-                         @RequestParam(value = "invest_time", required = true)Date investTime,
-                         @RequestParam(value = "reward", required = true)BigDecimal reward){
-
-        Inviter inviter = new Inviter();
-        inviter.setUserId(userId);
-        inviter.setInvitedUserId(invitedUserId);
-        inviter.setInvitedUserPhone(invitedUserPhone);
-        inviter.setRegisterTime(registerTime);
-        inviter.setInvestTime(investTime);
-        inviter.setReward(reward);
-        int result = inviterService.insert(inviter);
-        try {
-            if(result != 0){
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-            }
-        }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-        }
-    }*/
+    /**
+     * 格式化string类型时间
+     * @param binder
+     */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 }

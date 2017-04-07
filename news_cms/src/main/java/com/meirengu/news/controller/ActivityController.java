@@ -11,8 +11,11 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,9 +136,10 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "activity_image", required = true)String activityImage,
                          @RequestParam(value = "activity_link", required = true)String activityLink,
                          @RequestParam(value = "activity_sort", required = true)Integer activitySort,
+                         @RequestParam(value = "remarks", required = false ,defaultValue = "")String remarks,
                          @RequestParam(value = "status", required = true)Integer status,
-                         @RequestParam(value = "start_time", required = true)String startTime,
-                         @RequestParam(value = "end_time", required = true)String endTime,
+                         @RequestParam(value = "start_time", required = true)Date startTime,
+                         @RequestParam(value = "end_time", required = true)Date endTime,
                          @RequestParam(value = "operate_account", required = true)String operateAccount){
 
         try {
@@ -146,11 +150,12 @@ public class ActivityController extends BaseController{
             activity.setActivityName(activityName);
             activity.setActivityImage(activityImage);
             activity.setActivityLink(activityLink);
-            activity.setStartTime(DateAndTime.convertStringToDate(startTime));
-            activity.setEndTime(DateAndTime.convertStringToDate(endTime));
+            activity.setStartTime(startTime);
+            activity.setEndTime(endTime);
             activity.setOperateAccount(operateAccount);
             activity.setCreateTime(new Date());
             activity.setUpdateTime(new Date());
+            activity.setRemarks(remarks);
             int result = activityService.insert(activity);
             if(result != 0){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -161,5 +166,15 @@ public class ActivityController extends BaseController{
             logger.info("throw exception:", e);
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
+    }
+    /**
+     * 格式化string类型时间
+     * @param binder
+     */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }

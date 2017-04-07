@@ -16,5 +16,8 @@ public class FileTest {
 //        } catch (Exception i) {
 //            i.printStackTrace();
 //        }
+//        String s= "2017-04-07 11:50:32.0";
+//        System.out.println(s.substring(0,19));
+
     }
 }

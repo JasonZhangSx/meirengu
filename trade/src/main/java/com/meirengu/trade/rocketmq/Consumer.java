@@ -67,7 +67,12 @@ public class Consumer {
                     if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
                         // TODO 执行Tag的消费
                         logger.debug(msg.toString());
-                        orderService.orderLoseEfficacy(new String(msg.getBody()));
+                        try {
+                            orderService.orderLoseEfficacy(new String(msg.getBody()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success

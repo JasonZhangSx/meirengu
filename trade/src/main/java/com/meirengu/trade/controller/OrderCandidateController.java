@@ -19,10 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -152,6 +149,32 @@ public class OrderCandidateController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    @RequestMapping(value = "/handle/{id}", method = RequestMethod.POST)
+    public Result handle(@PathVariable("id") int id,
+                         @RequestParam(value = "status") int status,
+                         @RequestParam(value = "operate_account") String operateAccount){
+        if (id == 0) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        OrderCandidate orderCandidate = new OrderCandidate();
+        orderCandidate.setId(id);
+        orderCandidate.setStatus(status);
+        orderCandidate.setOperateAccount(operateAccount);
+        try{
+            int i = orderCandidateService.update(orderCandidate);
+            if (i == 1) {
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                return setResult(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR));
+            }
+        } catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
+
 
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
     public Result sendMessage(@RequestParam(value = "content")String content){
