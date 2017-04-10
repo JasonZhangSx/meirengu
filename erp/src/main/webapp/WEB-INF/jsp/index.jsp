@@ -28,9 +28,9 @@
 <body>
 <!-- header -->
 <header class=navbar-wrapper>
-    <div class="navbar navbar-fixed-top" style=background-color:#19a97b>
+    <div class="navbar navbar-fixed-top" style=background-color:#44b549>
         <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs"
-                                           href="/aboutHui.shtml" >Beauty-ERP</a> <a
+                                           href="/aboutHui.shtml" >Meirengu-ERP</a> <a
                 class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml" >H-ui</a> <span
                 class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0.0</span> <a aria-hidden=false
                                                                                 class="nav-toggle Hui-iconfont visible-xs"
@@ -158,7 +158,7 @@
                                        onclick=displaynavbar(this)></a></div>
 <!-- wrapper -->
 <section class="Hui-article-box">
-    <iframe src="item/create_list" width="100%" class="content_iframe" height="100%"></iframe>
+    <iframe src="item/create_list" width="100%" class="content_iframe" height="100%" scrolling="yes"></iframe>
 </section>
 <%--<section class="Hui-article-box">
 	<nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/" class="maincolor">首页</a> <span class="c-999 en">&gt;</span><span class="c-666">我的桌面</span> <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
