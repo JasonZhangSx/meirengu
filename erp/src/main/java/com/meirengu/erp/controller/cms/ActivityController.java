@@ -3,14 +3,20 @@ package com.meirengu.erp.controller.cms;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.StringUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +34,19 @@ public class ActivityController extends BaseController{
     @RequestMapping("toadd")
     public ModelAndView toadd(){
         return new ModelAndView("/cms/addactivity");
+    }
+    @RequestMapping("toedit")
+    public ModelAndView toedit(@RequestParam(value="activity_id", required = false ,defaultValue = "") String activityId){
+
+        Map<String, Object> map = new HashMap<>();
+        String url = ConfigUtil.getConfig("user.activity.detail");
+        String urlAppend = url+"?activity_id="+activityId;
+        try {
+            map = ( Map<String, Object>)super.httpGet(urlAppend);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/cms/editactivity", map);
     }
     @RequestMapping("tolist")
     public ModelAndView tolist(){
@@ -108,14 +127,33 @@ public class ActivityController extends BaseController{
     @RequestMapping("update")
     @ResponseBody
     public Map update( @RequestParam(value="activity_id", required = true ) String activityId,
-                       @RequestParam(value="status", required = true) String status){
+                       @RequestParam(value = "activity_type")Integer activityType,
+                       @RequestParam(value = "activity_name")String activityName,
+                       @RequestParam(value = "activity_image")String activityImage,
+                       @RequestParam(value = "activity_link")String activityLink,
+                       @RequestParam(value = "activity_sort")Integer activitySort,
+                       @RequestParam(value = "remarks")String remarks,
+                       @RequestParam(value = "status")String status,
+                       @RequestParam(value = "start_time")Date startTime,
+                       @RequestParam(value = "end_time")Date endTime){
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("activity_id",activityId);
+            paramsMap.put("operate_account","暂时保留");
+            if(!StringUtil.isEmpty(endTime)){
+                paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,""));
+            }if(!StringUtil.isEmpty(startTime)){
+                paramsMap.put("start_time",DateAndTime.convertDateToString(startTime,""));
+            }
+            paramsMap.put("activity_link",activityLink);
+            paramsMap.put("activity_image",activityImage);
+            paramsMap.put("activity_name",activityName);
+            paramsMap.put("activity_type",activityType+"");
+            paramsMap.put("activity_sort",activitySort+"");
+            paramsMap.put("remarks",remarks);
             paramsMap.put("status",status);
-            paramsMap.put("operate_account","操作账号");
             String url = ConfigUtil.getConfig("user.activity.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
@@ -123,5 +161,16 @@ public class ActivityController extends BaseController{
             e.printStackTrace();
         }
         return map;
+    }
+
+    /**
+     * 格式化string类型时间
+     * @param binder
+     */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }
