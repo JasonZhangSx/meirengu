@@ -25,7 +25,6 @@ public class Consumer {
                                 List<MessageExt> list,
                                 ConsumeConcurrentlyContext Context) {
                             Message msg = list.get(0);
-                            System.out.println(new String(msg.getBody()));
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
                     }

@@ -66,7 +66,6 @@ public class Consumer {
                     // TODO 执行Topic的消费逻辑
                     if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
                         // TODO 执行Tag的消费
-                        logger.debug(msg.toString());
                         try {
                             orderService.orderLoseEfficacy(new String(msg.getBody()));
                         } catch (Exception e) {

@@ -106,6 +106,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     //请求user_center服务获取用户地址信息
                     String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ userAddressId;;
                     HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+                    logger.debug("Request: {} getResponse: {}", addressUrl, addressHttpResult);
                     if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                         JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
                         int code = resultJson.getIntValue("code");
@@ -133,6 +134,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     //查询项目头图
                     String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
                     HttpResult itemResult = HttpUtil.doGet(url);
+                    logger.debug("Request: {} getResponse: {}", url, itemResult);
                     if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                         JSONObject resultJson = JSON.parseObject(itemResult.getContent());
                         int code = resultJson.getIntValue("code");
@@ -181,6 +183,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ URLEncoder.encode(addressIds, "UTF-8");;
 
             HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+            logger.debug("Request: {} getResponse: {}", addressUrl, addressHttpResult);
             Map<String, Object> addressMap = null;
             if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
@@ -207,6 +210,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             String itemLevelIds = itemLevelIdStr.substring(itemLevelIdStr.indexOf("[")+1,itemLevelIdStr.indexOf("]"));
             String itemLevelUrl = ConfigUtil.getConfig("item.level.list.url") + "?" + "level_id="+ URLEncoder.encode(itemLevelIds, "UTF-8");;
             HttpResult itemLevelListHttpResult = HttpUtil.doGet(itemLevelUrl);
+            logger.debug("Request: {} getResponse: {}", itemLevelUrl, itemLevelListHttpResult);
             Map<String, Object> itemLevelMap = null;
             if (itemLevelListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(itemLevelListHttpResult.getContent());
@@ -358,6 +362,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         int itemLevelId = order.getItemLevelId();
         String itemLevelInfoUrl = ConfigUtil.getConfig("item.level.url") + "/" + itemLevelId;
         HttpResult itemLevelInfoResult = HttpUtil.doGet(itemLevelInfoUrl);
+        logger.debug("Request: {} getResponse: {}", itemLevelInfoUrl, itemLevelInfoResult);
         if (itemLevelInfoResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(itemLevelInfoResult.getContent());
             int code = resultJson.getIntValue("code");
@@ -459,6 +464,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         paramMap.put("total_amount", order.getOrderAmount().toString());
         String url = ConfigUtil.getConfig("item.level.update.url");
         HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
+        logger.debug("Request: {} getResponse: {}", url, httpResult);
         if (httpResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(httpResult.getContent());
             int code = resultJson.getIntValue("code");
@@ -489,6 +495,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //1.查询项目状态
             String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
             HttpResult itemResult = HttpUtil.doGet(url);
+            logger.debug("Request: {} getResponse: {}", url, itemResult);
             if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(itemResult.getContent());
                 int code = resultJson.getIntValue("code");
@@ -522,6 +529,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 String userIds = userIdsStr.substring(userIdsStr.indexOf("[")+1,userIdsStr.indexOf("]"));
                 String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");
                 HttpResult avatarListHttpResult = HttpUtil.doGet(userIdsUrl);
+                logger.debug("Request: {} getResponse: {}", userIdsUrl, avatarListHttpResult);
                 if (avatarListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                     JSONObject resultJson = JSON.parseObject(avatarListHttpResult.getContent());
                     int code = resultJson.getIntValue("code");
@@ -561,6 +569,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 String itemIds = itemIdsStr.substring(itemIdsStr.indexOf("[")+1,itemIdsStr.indexOf("]"));
                 String url = ConfigUtil.getConfig("item.url") + "?item_id=" + URLEncoder.encode(itemIds, "UTF-8");
                 HttpResult itemResult = HttpUtil.doGet(url);
+                logger.debug("Request: {} getResponse: {}", url, itemResult);
                 if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                     JSONObject resultJson = JSON.parseObject(itemResult.getContent());
                     int code = resultJson.getIntValue("code");
@@ -770,6 +779,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //请求用户服务
             String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
             HttpResult itemResult = HttpUtil.doGet(url);
+            logger.debug("Request: {} getResponse: {}", url, itemResult);
             //后续处理对方处理失败重新请求
         }
     }
@@ -784,8 +794,34 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：" + orderSn);
+            logger.debug("发送消息：tag:orderLoseEfficacy" + orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
+        } catch (MQClientException e) {
+            logger.error(e.getMessage() + String.valueOf(sendResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.debug("发送消息：" + orderSn + "失败");
+            logger.error(sendResult.toString());
+        }
+    }
+    /**
+     * 生成的订单号放入rocketmq延迟队列，22小时内未支付发消息提醒
+     * @param orderSn
+     */
+    private void sendRocketMQDeployQueue4Sms(String orderSn) {
+        Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        msg.setDelayTimeLevel(19);
+        SendResult sendResult = null;
+        try {
+            logger.debug("发送消息：tag:orderRemindForPay" + orderSn);
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.debug("sendResult: " + sendResult);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
@@ -817,6 +853,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 params.put("invited_user_phone", orderMap.get("userPhone").toString());
                 params.put("invest_time", orderMap.get("finishedTime").toString());
                 HttpResult inviterResult = HttpUtil.doPostForm(url, params);
+                logger.debug("Request: {} getResponse: {}", url, inviterResult);
             }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue() ||
                     orderState == OrderStateEnum.UNPAID.getValue()) {
                 Order order = new Order();
