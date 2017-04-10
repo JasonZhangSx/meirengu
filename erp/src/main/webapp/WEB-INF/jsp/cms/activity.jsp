@@ -285,6 +285,7 @@
                     }
                 },
                 { "data": null,
+                    "className":"f-14 td-status",
                     render: function(data, type, row, meta) {
                         if(row.status=='1'){
                             return '<label> 待发布 </label>';
@@ -301,14 +302,25 @@
                     }
                 },
                 { "data": null,
+                    "className":"f-14 td-manage",
                     render: function(data, type, row, meta) {
-                        return ' <td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" class="ml-5"' +
-                                    'onClick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\',\'10001\')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
-                                        '</i></a><a style="text-decoration:none" onClick="project_stop(this,'+row.id+')" href="javascript:;"title="下架">' +
-                                        '<i class="Hui-iconfont">&#xe6de;</i>' +
-                                    '</a>' +
-                                '</td>';
+
+                        if(row.status=='1'){
+                            return '<td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.activityId+'" onclick="project_start(this,'+row.activityId+')" href="javascript:;" title="发布"><i class="Hui-iconfont">' +
+                                    '</i></a><a style="text-decoration:none" class="ml-5"  id="'+row.activityId+row.activityId+'" ' +
+                                    'onclick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\','+row.activityId+')" href="javascript:;" title="项目编辑">' +
+                                    '<i class="Hui-iconfont"></i></a> </td>'
+                        }
+                        if(row.status=='2'){
+                            return ' <td class="f-14 td-manage">' +
+                                        '<a style="text-decoration:none" id="'+row.activityId+'" class="ml-5"' +
+                                        'onClick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\',\'10001\')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
+                                            '</i></a>' +
+                                    '<a style="text-decoration:none" id="'+row.activityId+row.activityId+'" onClick="project_stop(this,'+row.activityId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
+                                    '</td>';
+                        }
+
                     }
                 }
             ]
@@ -362,20 +374,39 @@
     /*项目-下架*/
     function project_stop(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+//            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
             $(obj).remove();
+            $("#"+id).remove();
+            $("#"+id+id).remove();
             layer.msg('已下架!', {icon: 5, time: 1000});
+
+            $.ajax({
+                url:"erp/activity/update",
+                data:{
+                    "activity_id":id,
+                    "status":"3"
+                }
+            })
+
         });
     }
 
     /*项目-发布*/
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="picture_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span>进行中</span>');
             $(obj).remove();
             layer.msg('已发布!', {icon: 6, time: 1000});
+
+            $.ajax({
+                url:"update",
+                data:{
+                    "activity_id":id,
+                    "status":"3"
+                }
+            })
         });
     }
     /*项目-申请上线*/
