@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 充值提现记录
  * Author: haoyang.Yu
  * Create Date: 2017/3/31 16:01.
  */
