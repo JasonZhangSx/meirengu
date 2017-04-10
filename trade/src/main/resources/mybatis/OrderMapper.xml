@@ -251,7 +251,7 @@
 			<if test="orderMessage != null and orderMessage != ''">
 				AND order_message=#{orderMessage}
 			</if>
-			<if test="orderState != null">
+			<if test="orderState != null and orderState != 0">
 				AND order_state=#{orderState}
 			</if>
 			<if test="flag != null">

@@ -101,4 +101,10 @@ public interface OrderService extends BaseService<Order>{
      */
     boolean orderLoseEfficacy(String orderSn) throws IOException ;
 
+    /**
+     * 用户已购份数查询
+     * @param param
+     */
+    int getHasPurchaseCount(Map<String, Object> param);
+
 }
