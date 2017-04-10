@@ -724,7 +724,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 1d
-        msg.setDelayTimeLevel(19);
+        msg.setDelayTimeLevel(2);
         SendResult sendResult = null;
         try {
             logger.debug("发送消息：" + orderSn);
