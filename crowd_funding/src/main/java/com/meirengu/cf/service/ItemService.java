@@ -16,6 +16,8 @@ public interface ItemService extends BaseService<Item>{
 
     int changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
 
+    int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount);
+
     Map<String, Object> moreDetail(int id);
 
     /**

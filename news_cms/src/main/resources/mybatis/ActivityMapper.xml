@@ -123,7 +123,16 @@
         from
         <include refid="table_name" />
         <where>
-
+              1=1
+            <if test="activityName != null and activityName != ''">
+                AND activity_name=#{activityName}
+            </if>
+            <if test="activityId != null and activityId != ''">
+                AND activity_id=#{activityId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status=#{status}
+            </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}
@@ -135,7 +144,16 @@
         from
         <include refid="table_name" />
         <where>
-
+            1=1
+            <if test="activityName != null and activityName != ''">
+                AND activity_name=#{activityName}
+            </if>
+            <if test="activityId != null and activityId != ''">
+                AND activity_id=#{activityId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status=#{status}
+            </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
             order by #{sortBy} #{order}

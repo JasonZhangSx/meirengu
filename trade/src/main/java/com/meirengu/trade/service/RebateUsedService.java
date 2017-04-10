@@ -1,4 +1,6 @@
 package com.meirengu.trade.service;
+import com.meirengu.model.Result;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.model.RebateUsed;
 import com.meirengu.service.BaseService;
@@ -16,5 +18,5 @@ public interface RebateUsedService extends BaseService<RebateUsed>{
      * @param orderSn
      * @return
      */
-    int rebateUse(int rebateReceiveId, String orderSn);
+    void rebateUse(int rebateReceiveId, String orderSn)  throws OrderException;
 }

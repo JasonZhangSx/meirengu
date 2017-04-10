@@ -14,4 +14,6 @@ public interface InviterService extends BaseService<Inviter>{
     Inviter detail(Inviter inviter);
 
     void getReward(List<Map<String, Object>> list);
+
+    void noticePayment();
 }

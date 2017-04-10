@@ -8,7 +8,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.OrderRpcException;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
@@ -34,9 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -249,7 +247,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @return
      */
     @Transactional
-    public Result appointmentAudit(Order order) throws IOException, OrderRpcException {
+    public Result appointmentAudit(Order order) throws IOException, OrderException {
         Result result = new Result();
         Order orderDetail = detail(order.getOrderId());
         if (orderDetail == null || orderDetail.getOrderId() == null) {
@@ -294,10 +292,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param rebateReceiveId
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
     @Transactional
-    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException{
+    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
 
         //首先校验优惠券是否有效
@@ -351,9 +349,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param nextState
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
-    public Result isItemLevelNumEnough(Order order, int nextState)throws IOException, OrderRpcException{
+    public Result isItemLevelNumEnough(Order order, int nextState)throws IOException, OrderException {
         Result result = new Result();
         result.setCode(StatusCode.OK);
         result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -430,11 +428,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
-                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
+                throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
             logger.error("httpcode: " + itemLevelInfoResult.getStatusCode() + "--httpcontent: " + itemLevelInfoResult.getContent());
-            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
+            throw new OrderException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
         }
         return result;
     }
@@ -443,9 +441,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单完成后修改项目档位信息
      * @param order
      * @return
-     * @throws OrderRpcException
+     * @throws OrderException
      */
-    public boolean itemLevelUpdate(Order order)throws OrderRpcException{
+    public boolean itemLevelUpdate(Order order)throws OrderException {
         //异步请求项目服务，修改项目档位信息，不得影响订单流程
         //目前设为同步请求，如果修改错误，则重新操作
         Map<String, String> paramMap = new HashMap<String, String>();
@@ -468,11 +466,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 return true;
             } else {
                 logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
-                throw new OrderRpcException("请求项目服务异常 -- StatusCode: " + code, code);
+                throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
             logger.error("httpcode: " + httpResult.getStatusCode() + "--httpcontent: " + httpResult.getContent());
-            throw new OrderRpcException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
+            throw new OrderException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
         }
     }
 
@@ -557,10 +555,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param rebateReceiveId
      * @return
      * @throws IOException
-     * @throws OrderRpcException
+     * @throws OrderException
      */
     @Transactional
-    public Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException{
+    public Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
         //首先校验优惠券是否有效
         if (rebateReceiveId != 0) {
@@ -665,6 +663,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public int updateBySn(Order order) {
         return orderDao.updateBySn(order);
     }
+    /**
+     * 用户已购份数查询
+     * @param param
+     */
+    public int getHasPurchaseCount(Map<String, Object> param){
+        List<Map<String, Object>> result = getList(param);
+        int count = 0;
+        if (result != null && result.size() > 0) {
+            for (Map<String, Object> orderMap : result) {
+                if (orderMap != null) {
+                    int itemNum = Integer.parseInt(orderMap.get("itemNum").toString());
+                    count += itemNum;
+                }
+            }
+        }
+        return  count;
+    }
 
     /**
      * 生成3天订单txt文件
@@ -717,7 +732,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
-        }
+    }
 
     /**
      * 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
@@ -725,8 +740,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
-        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 1d
-        msg.setDelayTimeLevel(19);
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
         try {
             logger.debug("发送消息：" + orderSn);

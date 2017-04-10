@@ -2,7 +2,7 @@ package com.meirengu.trade.service;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.service.BaseService;
-import com.meirengu.trade.common.OrderRpcException;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.Order;
 
 import java.io.IOException;
@@ -41,13 +41,13 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result appointmentAudit(Order order)  throws IOException, OrderRpcException;
+    Result appointmentAudit(Order order)  throws IOException, OrderException;
     /**
      * 新增认购订单
      * @param order
      * @return
      */
-    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException;
+    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 获取客户端订单列表
@@ -62,7 +62,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderRpcException;
+    Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 取消预约
@@ -100,5 +100,11 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     boolean orderLoseEfficacy(String orderSn) throws IOException ;
+
+    /**
+     * 用户已购份数查询
+     * @param param
+     */
+    int getHasPurchaseCount(Map<String, Object> param);
 
 }

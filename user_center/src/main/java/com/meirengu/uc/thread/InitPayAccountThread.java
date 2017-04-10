@@ -50,7 +50,7 @@ public class InitPayAccountThread implements Runnable{
         }
     }
    @Retryable(value= {RemoteAccessException.class},maxAttempts = 3,backoff = @Backoff(delay = 5000l,multiplier = 1))
-   public void initPayAccount() throws Exception{
+   public void initPayAccount(){
         HttpResult hr = null;
 
         Map<String, Object> map = new HashMap<>();
@@ -70,7 +70,7 @@ public class InitPayAccountThread implements Runnable{
    }
     @Recover
     public void recover(RemoteAccessException e) {
-        System.out.println("重试回调执行");
-        System.out.println(e.getMessage());
+        logger.info("重试回调执行");
+        logger.info(e.getMessage());
     }
 }
