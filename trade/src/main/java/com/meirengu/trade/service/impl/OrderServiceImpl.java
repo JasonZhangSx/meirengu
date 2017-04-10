@@ -520,7 +520,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //请求user_center服务获取用户地址信息
                 String userIdsStr = userIdsSet.toString();
                 String userIds = userIdsStr.substring(userIdsStr.indexOf("[")+1,userIdsStr.indexOf("]"));
-                String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");;
+                String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");
                 HttpResult avatarListHttpResult = HttpUtil.doGet(userIdsUrl);
                 if (avatarListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                     JSONObject resultJson = JSON.parseObject(avatarListHttpResult.getContent());
@@ -545,6 +545,46 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     }
                 }
             }
+        // 我的订单列表需要项目头图
+        } else {
+            List<Map<String, Object>> aList = page.getList();
+            if (aList != null && aList.size() > 0) {
+                //项目ID的set
+                Set<Integer> itemIdsSet = new HashSet<Integer>();
+                //临时存放用户信息的Map
+                Map<Integer, Map<String, Object>> itemsTemp = new HashMap<Integer, Map<String, Object>>();
+                for (Map<String, Object> orderMap : aList){
+                    int itemIds = (int)((long)orderMap.get("itemId"));
+                    itemIdsSet.add(itemIds);
+                }
+                String itemIdsStr = itemIdsSet.toString();
+                String itemIds = itemIdsStr.substring(itemIdsStr.indexOf("[")+1,itemIdsStr.indexOf("]"));
+                String url = ConfigUtil.getConfig("item.url") + "?item_id=" + URLEncoder.encode(itemIds, "UTF-8");
+                HttpResult itemResult = HttpUtil.doGet(url);
+                if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+                    JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+                    int code = resultJson.getIntValue("code");
+                    if (code == StatusCode.OK) {
+                        JSONArray itemArray = resultJson.getJSONArray("data");
+                        Map<String, Object> itemsMap = null;
+                        for (int i = 0; i < itemArray.size(); i++) {
+                            JSONObject itemJson = itemArray.getJSONObject(i);
+                            int itemIdVal = itemJson.getIntValue("itemId");
+                            itemsMap = new HashMap<String, Object>();
+                            itemsMap.put("itemId", itemIdVal);
+                            itemsMap.put("headerImage", itemJson.getString("headerImage"));
+                            itemsTemp.put(itemIdVal,itemsMap);
+                        }
+                        //将获取的信息组装到原data中
+                        for (Map<String, Object> orderMap : aList){
+                            int itemIdVal = (int)((long)orderMap.get("itemId"));
+                            itemsMap = itemsTemp.get(itemIdVal);
+                            orderMap.putAll(itemsMap);
+                        }
+                    }
+                }
+            }
+
         }
         return page;
     }
