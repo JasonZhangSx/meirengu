@@ -444,7 +444,7 @@ public class OrderController extends BaseController{
 
 
     /**
-     * 查询用户某个档位已够次数
+     * 查询用户某个档位已购次数
      * @param itemLevelId
      * @param userId
      * @return
@@ -466,7 +466,7 @@ public class OrderController extends BaseController{
         orderStateList.add(OrderStateEnum.PAID.getValue());
         paramMap.put("orderStateList", orderStateList);
         try {
-            int count = orderService.getCount(paramMap);
+            int count = orderService.getHasPurchaseCount(paramMap);
             return setResult(StatusCode.OK, count, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception:", e);

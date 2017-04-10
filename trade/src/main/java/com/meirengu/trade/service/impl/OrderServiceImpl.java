@@ -663,6 +663,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public int updateBySn(Order order) {
         return orderDao.updateBySn(order);
     }
+    /**
+     * 用户已购份数查询
+     * @param param
+     */
+    public int getHasPurchaseCount(Map<String, Object> param){
+        List<Map<String, Object>> result = getList(param);
+        int count = 0;
+        if (result != null && result.size() > 0) {
+            for (Map<String, Object> orderMap : result) {
+                if (orderMap != null) {
+                    int itemNum = Integer.parseInt(orderMap.get("itemNum").toString());
+                    count += itemNum;
+                }
+            }
+        }
+        return  count;
+    }
 
     /**
      * 生成3天订单txt文件
@@ -715,7 +732,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             HttpResult itemResult = HttpUtil.doGet(url);
             //后续处理对方处理失败重新请求
         }
-        }
+    }
 
     /**
      * 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
@@ -723,8 +740,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
-        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 1d
-        msg.setDelayTimeLevel(2);
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
         try {
             logger.debug("发送消息：" + orderSn);
