@@ -292,7 +292,7 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+    public Result getPage(@RequestParam(value = "page_num", required = false, defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
                           @RequestParam(value = "sort_by", required = false) String sortBy,
                           @RequestParam(value = "order", required = false) String order,
@@ -300,7 +300,7 @@ public class OrderController extends BaseController{
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
                           @RequestParam(value = "user_id", required = false) String userId,
-                          @RequestParam(value = "order_state", required = false) String orderState,
+                          @RequestParam(value = "order_state", required = false, defaultValue = "0") int orderState,
                           @RequestParam(value = "need_avatar", required = false, defaultValue = "0") int needAvatar,
                           @RequestParam(value = "item_id", required = false, defaultValue = "0") int itemId){
         //如果需要头像，则必传项目ID，因为此时需要去获取项目的最新状态，查出该项目的订单
@@ -444,7 +444,7 @@ public class OrderController extends BaseController{
 
 
     /**
-     * 查询用户某个档位已够次数
+     * 查询用户某个档位已购次数
      * @param itemLevelId
      * @param userId
      * @return
@@ -466,7 +466,7 @@ public class OrderController extends BaseController{
         orderStateList.add(OrderStateEnum.PAID.getValue());
         paramMap.put("orderStateList", orderStateList);
         try {
-            int count = orderService.getCount(paramMap);
+            int count = orderService.getHasPurchaseCount(paramMap);
             return setResult(StatusCode.OK, count, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception:", e);
