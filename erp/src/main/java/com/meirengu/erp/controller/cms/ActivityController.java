@@ -103,4 +103,26 @@ public class ActivityController extends BaseController{
         view.setAaData(activityList);
         return view;
     }
+
+    @RequestMapping("update")
+    @ResponseBody
+    public Map update( @RequestParam(value="activity_id", required = true ) String activityId,
+                       @RequestParam(value="status", required = true) String status){
+
+        Map<String,Object> map = new HashedMap();
+        Map<String,String> paramsMap = new HashedMap();
+        try {
+            paramsMap.put("activity_id",activityId);
+            paramsMap.put("status",status);
+            String url = ConfigUtil.getConfig("user.activity.update");
+            map = ( Map<String, Object>)super.httpPost(url,paramsMap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
+
+
 }

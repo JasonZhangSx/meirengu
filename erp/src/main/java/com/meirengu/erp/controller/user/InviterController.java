@@ -68,4 +68,7 @@ public class InviterController extends BaseController{
         view.setAaData(userList);
         return view;
     }
+
+
+
 }

@@ -323,7 +323,7 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
                         .USER_NOT_EXITS));
             }
-            if(validatePassword(oldPassword,usr)){
+            if(!validatePassword(oldPassword,usr)){
                 return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                         .OLD_PASSWORD_IS_ERROR));
             }
