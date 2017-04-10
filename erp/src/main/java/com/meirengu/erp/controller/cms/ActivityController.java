@@ -3,6 +3,7 @@ package com.meirengu.erp.controller.cms;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,15 +115,13 @@ public class ActivityController extends BaseController{
         try {
             paramsMap.put("activity_id",activityId);
             paramsMap.put("status",status);
+            paramsMap.put("operate_account","操作账号");
             String url = ConfigUtil.getConfig("user.activity.update");
-            map = ( Map<String, Object>)super.httpPost(url,paramsMap);
-
+            HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
+            map.put("code",hr.getStatusCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return map;
     }
-
-
 }

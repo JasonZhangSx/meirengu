@@ -314,10 +314,10 @@
                         }
                         if(row.status=='2'){
                             return ' <td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.activityId+row.activityId+'" onClick="project_stop(this,'+row.activityId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
                                         '<a style="text-decoration:none" id="'+row.activityId+'" class="ml-5"' +
                                         'onClick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\',\'10001\')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
                                             '</i></a>' +
-                                    '<a style="text-decoration:none" id="'+row.activityId+row.activityId+'" onClick="project_stop(this,'+row.activityId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
                                     '</td>';
                         }
 
@@ -374,18 +374,23 @@
     /*项目-下架*/
     function project_stop(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
-//            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
-            $(obj).remove();
-            $("#"+id).remove();
-            $("#"+id+id).remove();
-            layer.msg('已下架!', {icon: 5, time: 1000});
-
             $.ajax({
-                url:"erp/activity/update",
+                url:"update",
                 data:{
                     "activity_id":id,
                     "status":"3"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+                        $(obj).remove();
+                        $("#"+id).remove();
+                        $("#"+id+id).remove();
+                        layer.msg('已下架!', {icon: 5, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
                 }
             })
 
@@ -395,16 +400,22 @@
     /*项目-发布*/
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span>进行中</span>');
-            $(obj).remove();
-            layer.msg('已发布!', {icon: 6, time: 1000});
-
             $.ajax({
                 url:"update",
                 data:{
                     "activity_id":id,
-                    "status":"3"
+                    "status":"2"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span>进行中</span>');
+                        $(obj).remove();
+                        layer.msg('已发布!', {icon: 6, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
                 }
             })
         });
