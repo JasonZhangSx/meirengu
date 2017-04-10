@@ -179,9 +179,10 @@ public class LoginController extends BaseController {
 
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public Result logout(){
+    public Result logout(@RequestParam(value = "token", required = false) String token,
+                         @RequestParam(value = "registration_id", required = false) String registrationId){
 
-
+        redisClient.delkeyObject(token);
         //清空token
         //清空redis
         //清空推送别名

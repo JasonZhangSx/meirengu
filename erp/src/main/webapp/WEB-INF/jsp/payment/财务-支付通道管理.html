@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset=utf-8>
@@ -14,24 +14,24 @@
     <script type="text/javascript" src="lib/html5.js"></script>
     <script type="text/javascript" src="lib/respond.min.js"></script>
     <![endif]-->
-    <link rel=stylesheet type=text/css href="static/h-ui/css/H-ui.min.css" />
-    <link rel=stylesheet type=text/css href="static/h-ui.admin/css/H-ui.admin.css" />
-    <link rel=stylesheet type=text/css href="lib/Hui-iconfont/1.0.8/iconfont.css" />
-    <link rel=stylesheet type=text/css href="static/h-ui.admin/skin/default/skin.css" id=skin />
-    <link rel=stylesheet type=text/css href="static/h-ui.admin/css/style.css" />
+    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
+    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
+    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
 </html>
-<title>index</title>
+
+<title>图片列表</title>
 </head>
 <body>
-<!-- header -->
 <header class=navbar-wrapper>
     <div class="navbar navbar-fixed-top" style=background-color:#19a97b>
         <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs"
-                                           href="/aboutHui.shtml" >Beauty-ERP</a> <a
-                class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml" >H-ui</a> <span
+                                           href=/aboutHui.shtml>Beauty-ERP</a> <a
+                class="logo navbar-logo-m f-l mr-10 visible-xs" href=/aboutHui.shtml>H-ui</a> <span
                 class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0.0</span> <a aria-hidden=false
                                                                                 class="nav-toggle Hui-iconfont visible-xs"
                                                                                 href=javascript:;>&#xe667;</a>
@@ -58,13 +58,13 @@
                 &#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href="item/create_list" title=新建项目列表>新建项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/verify_list" title=待初审项目>待初审项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/cooperate_list" title=待合作项目>待合作项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/review_list" title=待复审项目>待复审项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/publish_list" title=待发布项目列表>待发布项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/published_list" title=已发布项目列表>已发布项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/completed_list" title=已完成项目>已完成项目</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-新建项目列表.html title=新建项目列表>新建项目列表</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-待初审项目.html title=待初审项目>待初审项目</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-待合作项目.html title=待合作项目>待合作项目</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-待复审项目.html title=待复审项目>待复审项目</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-待发布项目列表.html title=待发布项目列表>待发布项目列表</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-已发布项目列表.html title=已发布项目列表>已发布项目列表</a></li>
+                    <li><a href=javascript:void(0) data-href=众筹-已完成项目.html title=已完成项目>已完成项目</a></li>
                 </ul>
             </dd>
         </dl>
@@ -73,9 +73,9 @@
                 &#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href="order_appointment" title=待审核预约订单>待审核预约订单</a></li>
-                    <li><a href=javascript:void(0) data-href="order_candidate" title=候补预约列表>候补预约列表</a></li>
-                    <li><a href=javascript:void(0) data-href="order" title=订单列表>订单列表</a></li>
+                    <li><a href=javascript:void(0) data-href=订单-待审核预约订单.html title=待审核预约订单>待审核预约订单</a></li>
+                    <li><a href=javascript:void(0) data-href=订单-候补预约列表.html title=候补预约列表>候补预约列表</a></li>
+                    <li><a href=javascript:void(0) data-href=订单-订单列表.html title=订单列表>订单列表</a></li>
                     <li><a href=javascript:void(0) data-href=订单-待审核退款订单.html title=待审核退款订单>待审核退款订单</a></li>
                     <li><a href=javascript:void(0) data-href=订单-退款订单列表.html title=退款订单列表>退款订单列表</a></li>
                 </ul>
@@ -106,8 +106,8 @@
                     class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href="partner/class/list" title=项目列表>行业分类管理</a></li>
-                    <li><a href=javascript:void(0) data-href="partner/list" title=项目列表>合作方列表</a></li>
+                    <li><a href=javascript:void(0) data-href=合作方-行业分类.html title=项目列表>行业分类管理</a></li>
+                    <li><a href=javascript:void(0) data-href=合作方-合作方列表.html title=项目列表>合作方列表</a></li>
                 </ul>
             </dd>
         </dl>
@@ -122,8 +122,8 @@
                     <li><a href=javascript:void(0) data-href=财务-收款记录.html title=收款记录>收款记录</a></li>
                     <li><a href=javascript:void(0) data-href=财务-放款分红记录.html title=放款分红记录>放款分红记录</a></li>
                     <li><a href=javascript:void(0) data-href=财务-支付通道管理.html title=放款分红记录>支付通道管理</a></li>
-                    <li><a href=javascript:void(0) data-href=record/rechargeRecord title=用户充值记录>用户充值记录</a></li>
-                    <li><a href=javascript:void(0) data-href=record/withdrawalsRecord title=用户提现记录>用户提现记录</a></li>
+                    <li><a href=javascript:void(0) data-href=财务-用户充值记录.html title=放款分红记录>用户充值记录</a></li>
+                    <li><a href=javascript:void(0) data-href=财务-用户提现记录.html title=放款分红记录>用户提现记录</a></li>
                     <li><a href=javascript:void(0) data-href=财务-抵扣券核销.html title=放款分红记录>抵扣券核销</a></li>
                 </ul>
             </dd>
@@ -156,34 +156,90 @@
 </aside>
 <div class="dislpayArrow hidden-xs"><a class=pngfix href=javascript:void(0) data-href=javascript:void(0);
                                        onclick=displaynavbar(this)></a></div>
-<!-- wrapper -->
 <section class="Hui-article-box">
-    <iframe src="item/create_list" width="100%" class="content_iframe" height="100%"></iframe>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 新建项目列表 <a
+            class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+            href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <!-- <div class="text-c">
+        项目名称：<input type="text" class="input-text" style="width:120px;">　
+        合作方名称：<input type="text" class="input-text" style="width:120px;">　
+        分类：<span class="select-box mr-20" style="width:120px">
+                        <select name="" class="select">
+                            <option value="0">首款</option>
+                            <option value="13">尾款</option>
+                        </select>
+                        </span>　
+        创建时间：<input type="text" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input type="text" class="input-text" style="width:120px;" id="datetimepicker3"/>
+                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查 询</button>
+            </div> -->
+            <div class="cl pd-5 bg-1 bk-gray mt-20">
+  				<span class="l">
+            <a class="btn btn-primary radius" href="javascript:;"><i class="Hui-iconfont">&#xe634;</i> 导出</a>
+          </span>
+                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
+
+            <div class="mt-20">
+                <table class="table table-border table-bordered table-bg table-hover table-sort">
+                    <thead>
+                    <tr class="text-c">
+                        <th>银行名称</th>
+                        <th>支付通道</th>
+                        <th>限额信息</th>
+                        <th>操作</th>
+                        <
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c">
+                        <td>招商银行</td>
+                        <td>北京玉之光</td>
+                        <td>北京玉之光众筹项目</td>
+                        <td>
+                            <a style="text-decoration:none" class="ml-5"
+                               onClick="project_edit('财务-支付通道管理-设置','财务-支付通道管理-设置.html','10001','600','270')"
+                               href="javascript:;" title="设置"><i class="Hui-iconfont">&#xe6df;</i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </article>
+    </div>
 </section>
-<%--<section class="Hui-article-box">
-	<nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/" class="maincolor">首页</a> <span class="c-999 en">&gt;</span><span class="c-666">我的桌面</span> <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-	<div class="Hui-article">
-		<article class="cl pd-20">
-			<p class="f-20 text-success">欢迎回来！</p>
-			<p>登录次数：18 </p>
-			<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
 
-		</article>
-
-	</div>
-</section>--%>
-<!-- footer -->
-<script src="lib/jquery/1.9.1/jquery.min.js" ></script>
-<script src="lib/layer/2.4/layer.js" ></script>
-<script src="lib/jquery.validation/1.14.0/jquery.validate.js" ></script>
-<script src="lib/jquery.validation/1.14.0/validate-methods.js" ></script>
-<script src="lib/jquery.validation/1.14.0/messages_zh.js" ></script>
-<script src="static/h-ui/js/H-ui.js" ></script>
-<script src="static/h-ui.admin/js/H-ui.admin.page.js" ></script>
+<script src=lib/jquery/1.9.1/jquery.min.js></script>
+<script src=lib/layer/2.4/layer.js></script>
+<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
+<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
+<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
+<script src=static/h-ui/js/H-ui.js></script>
+<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
+<!-- 时间插件 -->
+<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
+<script>
+
+    //*项目-编辑*/
+    function project_edit(title, url, id, w, h) {
+        layer_show(title, url, w, h);
+    }
+    // 时间
+    $('#datetimepicker2,#datetimepicker3').datetimepicker({
+        yearOffset: 0,
+        lang: $.datetimepicker.setLocale('ch'),
+        timepicker: false,
+        format: 'Y-m-d',
+        formatDate: 'Y/m/d',
+    });
+
+</script>
 </body>
 </html>
