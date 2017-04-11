@@ -95,16 +95,23 @@ public interface OrderService extends BaseService<Order>{
      * 生成3天订单txt文件
      */
     void generateOrderTxt() throws IOException ;
-    /**
-     * 订单失效
-     * @return
-     */
-    boolean orderLoseEfficacy(String orderSn) throws IOException ;
 
     /**
      * 用户已购份数查询
      * @param param
      */
     int getHasPurchaseCount(Map<String, Object> param);
+
+    /**
+     * 订单失效
+     * @return
+     */
+    void orderLoseEfficacy(String orderSn) throws IOException ;
+
+    /**
+     * 订单失效前提醒
+     * @return
+     */
+    void orderRemindForPay(String orderSn) throws IOException ;
 
 }

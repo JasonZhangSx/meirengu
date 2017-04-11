@@ -42,10 +42,6 @@ public class OrderCandidateController extends BaseController{
     @Autowired
     private Producer producer;
 
-    @Autowired
-    private Consumer consumer;
-
-
     /**
      * 候补预约新增接口
      * @param userId
@@ -88,7 +84,7 @@ public class OrderCandidateController extends BaseController{
         orderCandidate.setUserPhone(userPhone);
         orderCandidate.setUserWeixin(userWeixin);
         orderCandidate.setItemId(itemId);
-        orderCandidate.setItemName("待会改为从项目服务获取");
+        orderCandidate.setItemName("");
         orderCandidate.setItemLevelId(itemLevelId);
         orderCandidate.setItemLevelName(itemLevelName);
         orderCandidate.setItemNum(itemNum);
@@ -104,7 +100,7 @@ public class OrderCandidateController extends BaseController{
                 return setResult(StatusCode.CANDIDATE_ORDER_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.CANDIDATE_ORDER_ERROR_INSERT));
             }
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -145,7 +141,7 @@ public class OrderCandidateController extends BaseController{
             page = orderCandidateService.getListByPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -169,7 +165,7 @@ public class OrderCandidateController extends BaseController{
                 return setResult(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR));
             }
         } catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 

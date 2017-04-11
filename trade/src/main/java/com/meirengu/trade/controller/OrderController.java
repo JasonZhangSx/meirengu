@@ -1,5 +1,6 @@
 package com.meirengu.trade.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -72,10 +73,10 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
                                     @RequestParam(value = "token", required = false) String token){
 
-            //验证token
-            if (!TokenUtils.authToken(token)) {
-                return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
-            }
+        //验证token
+        if (!TokenUtils.authToken(token)) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
 
         if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
                 || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
@@ -112,6 +113,7 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             Result result = orderService.insertAppointment(order, rebateReceiveId);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         }catch (Exception e){
             logger.error("throw exception:{}", e);
@@ -200,16 +202,17 @@ public class OrderController extends BaseController{
         order.setUserWeixin(userWeixin==null?"":userWeixin);
         try{
             Result result = orderService.insertSubscriptions(order, rebateReceiveId);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         } catch (OrderException oe) {
-            logger.error("throw OrderException:", oe);
+            logger.error("throw OrderException: {}", oe);
             if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
                 return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -234,16 +237,17 @@ public class OrderController extends BaseController{
         order.setOperateAccount(operateAccount);
         try{
             Result result = orderService.appointmentAudit(order);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
             return  result;
         }catch (OrderException oe){
-            logger.error("throw OrderException:", oe);
+            logger.error("throw OrderException: {}", oe);
             if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
                 return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -271,9 +275,10 @@ public class OrderController extends BaseController{
         order.setFlag(Constant.DELETE);//逻辑删除状态 0为删除，1为未删除
         try{
             Result result = orderService.deleteOrder(order);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -330,7 +335,7 @@ public class OrderController extends BaseController{
             page = orderService.getPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -371,7 +376,7 @@ public class OrderController extends BaseController{
             page = orderService.getSystemPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -399,9 +404,10 @@ public class OrderController extends BaseController{
         order.setOrderState(OrderStateEnum.LOSS_EFFICACY.getValue());
         try{
             Result result = orderService.appointmentCancel(order);
+            logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -419,7 +425,7 @@ public class OrderController extends BaseController{
             Map<String, Object> orderDetailMap = orderService.orderDetail(orderId);
             return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -437,7 +443,7 @@ public class OrderController extends BaseController{
             Map<String, Object> orderDetailMap = orderService.orderDetailBySn(orderSn);
             return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -469,7 +475,7 @@ public class OrderController extends BaseController{
             int count = orderService.getHasPurchaseCount(paramMap);
             return setResult(StatusCode.OK, count, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -503,7 +509,7 @@ public class OrderController extends BaseController{
             int i = orderService.updateBySn(order);
             return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -518,11 +524,11 @@ public class OrderController extends BaseController{
             orderService.generateOrderTxt();
             return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (IOException ie) {
-            logger.error("throw IOException:", ie);
+            logger.error("throw IOException: {}", ie);
             ie.printStackTrace();
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }  catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             e.printStackTrace();
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }

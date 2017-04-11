@@ -97,7 +97,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 cal2.setTime(new Date());
                 long remainingTime = cal.getTimeInMillis() - cal2.getTimeInMillis();
                 map.put("remainingTime", remainingTime);
-                logger.debug("剩余支付时间是{}" + remainingTime/1000);
+                logger.debug("剩余支付时间是: {}" , remainingTime/1000);
             }
             //查询地址信息
             if (map.get("userAddressId") != null) {
@@ -120,7 +120,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                                 addressMap.put("userPhone", addressJson.getString("userPhone"));
                                 addressMap.put("province", addressJson.getString("province"));
                                 addressMap.put("city", addressJson.getString("city"));
-                                addressMap.put("areas", addressJson.getString("areas"));
+                                addressMap.put("areas", addressJson.getString("area"));
                                 addressMap.put("userAddress", addressJson.getString("userAddress"));
                                 map.putAll(addressMap);
                             }
@@ -259,7 +259,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_NOT_EXIST));
             return result;
         }
-        /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
+        /**----逻辑改为点击预约后立即改变档位状态，预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
         //审核通过需要改变档位的份数
         if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
             //1.查询该档位剩余份数
@@ -272,17 +272,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //2.修改订单状态
         int i = update(order);
         if (i == 1) {
-            /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
+            // 逻辑改为点击预约后立即改变档位状态
+            // 预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                boolean updateFlag = itemLevelUpdate(orderDetail);
-                if (updateFlag) {
-                    result.setCode(StatusCode.OK);
-                    result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
-                    return result;
-                }
+                itemLevelUpdate(order);
             }
-             **/
             // 审核通过变为待支付状态，
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
                 // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
@@ -443,11 +438,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
                 result.setData(tempMap);
             } else {
-                logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
+                logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
                 throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
-            logger.error("httpcode: " + itemLevelInfoResult.getStatusCode() + "--httpcontent: " + itemLevelInfoResult.getContent());
+            logger.error("httpcode: {}--httpcontent: {}" , itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getContent());
             throw new OrderException("请求项目服务异常 -- httpCode: " + itemLevelInfoResult.getStatusCode(), itemLevelInfoResult.getStatusCode());
         }
         return result;
@@ -464,6 +459,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, String> paramMap = new HashMap<String, String>();
         if (order.getOrderState() == OrderStateEnum.BOOK.getValue()) {
             paramMap.put("type", "2");
+        } else if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
+            paramMap.put("type", "1");
         } else if (order.getOrderState() == OrderStateEnum.UNPAID.getValue()) {
             paramMap.put("type", "1");
         }
@@ -481,11 +478,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (code == StatusCode.OK) {
                 return true;
             } else {
-                logger.error("businesscode: " + code + "--msg: " + StatusCode.codeMsgMap.get(code));
+                logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
                 throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
             }
         } else {
-            logger.error("httpcode: " + httpResult.getStatusCode() + "--httpcontent: " + httpResult.getContent());
+            logger.error("httpcode: {}--httpcontent: {}" , httpResult.getStatusCode(), httpResult.getContent());
             throw new OrderException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
         }
     }
@@ -778,10 +775,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             File fileName = new File(fileNameStr);
             if (fileName.exists()) {
                 fileName.delete();
-                logger.debug(fileName + "已删除");
+                logger.debug( "{}已删除", fileName);
             }
             fileName.createNewFile();
-            logger.debug(fileName + "已创建");
+            logger.debug( "{}已创建", fileName);
             List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
             Map<String, String> tempMap = new HashMap<String, String>();
             for(Integer key : resultMap.keySet()){
@@ -809,8 +806,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：tag:orderLoseEfficacy" + orderSn);
+            logger.debug("发送消息：tag:orderLoseEfficacy: {}", orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info("sendResult: {}", sendResult);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
@@ -820,7 +818,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         // 当消息发送失败时如何处理
         if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
             // TODO
-            logger.debug("发送消息：" + orderSn + "失败");
+            logger.error("发送消息：tag:orderLoseEfficacy: {}失败", orderSn);
             logger.error(sendResult.toString());
         }
     }
@@ -835,9 +833,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：tag:orderRemindForPay" + orderSn);
+            logger.debug("发送消息：tag:orderRemindForPay: {}", orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
-            logger.debug("sendResult: " + sendResult);
+            logger.info("sendResult: {}", sendResult);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
@@ -847,7 +845,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         // 当消息发送失败时如何处理
         if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
             // TODO
-            logger.debug("发送消息：" + orderSn + "失败");
+            logger.debug("发送消息：tag:orderRemindForPay: {}失败", orderSn);
             logger.error(sendResult.toString());
         }
     }
@@ -855,33 +853,106 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单失效
      * @return
      */
-    public boolean orderLoseEfficacy(String orderSn) throws IOException {
-        boolean flag = true;
+    public void orderLoseEfficacy(String orderSn) throws IOException {
         //订单在24小时内未支付，置失效
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
+        Map<String, String> params = null;
         if (orderMap != null) {
+            params = new HashMap<String, String>();
             int orderState = Integer.parseInt(orderMap.get("orderState").toString());
             //如果已支付，则请求用户服务修改被邀请人的投资时间
-            if (orderState == OrderStateEnum.PAID.getValue() ) {
+            if (orderState == OrderStateEnum.PAID.getValue()) {
                 String url = ConfigUtil.getConfig("invite.invest.notify.url");
-                Map<String, String> params = new HashMap<String, String>();
                 params.put("invited_user_id", orderMap.get("userId").toString());
                 params.put("invited_user_phone", orderMap.get("userPhone").toString());
                 params.put("invest_time", orderMap.get("finishedTime").toString());
                 HttpResult inviterResult = HttpUtil.doPostForm(url, params);
                 logger.debug("Request: {} getResponse: {}", url, inviterResult);
-            }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue() ||
-                    orderState == OrderStateEnum.UNPAID.getValue()) {
+            }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
+                    || orderState == OrderStateEnum.UNPAID.getValue()) {
                 Order order = new Order();
                 order.setOrderSn(orderSn);
                 order.setOrderState(OrderStateEnum.LOSS_EFFICACY.getValue());
                 orderDao.updateBySn(order);
+
                 //请求项目服务修改档位状态
+                params = new HashMap<String, String>();
+                params.put("item_id", orderMap.get("itemId").toString());
+                params.put("level_id", orderMap.get("itemLevelId").toString());
+                params.put("level_amount", orderMap.get("itemLevelAmount").toString());
+                params.put("item_num", orderMap.get("itemNum").toString());
+                params.put("total_amount", orderMap.get("orderAmount").toString());
+                String url = ConfigUtil.getConfig("item.level.rollback.url");
+                HttpResult httpResult = HttpUtil.doPostForm(url, params);
+                logger.debug("Request: {} getResponse: {}", url, httpResult);
+
+                // 发送短信提醒用户
+                // 1790354=【美人谷】亲，您的#item_name#项目订单由于超时未支付，订单已关闭了。您可以登录APP重新认购。感谢你支持#item_name#项目。
+                params = new HashMap<String, String>();
+                params.put("tpl_id", Integer.toString(1790354));
+                params.put("mobile", orderMap.get("userPhone").toString());
+                params.put("item_name", orderMap.get("itemName").toString());
+                String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
+                HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
+                logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
+
+                // 发送消息提醒用户
+                // 14986215=您的#item_name#项目订单由于超时未支付，订单已关闭了。
+                params = new HashMap<String, String>();
+                params.put("sender", Integer.toString(0));// 0默认为系统发送
+                params.put("tpl_id", Integer.toString(14986215));
+                params.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
+                params.put("receiver", orderMap.get("userId").toString());
+                params.put("item_name", orderMap.get("itemName").toString());
+                String msgurl = ConfigUtil.getConfig("notify.send.tpl.url");
+                HttpResult msgHttpResult = HttpUtil.doPostForm(msgurl, params);
+                logger.debug("Request: {} getResponse: {}", msgurl, msgHttpResult);
             }
         } else {
-            logger.error("该订单号：" + orderSn + "不存在");
+            logger.error("该订单号：{}不存在", orderSn);
         }
-        return flag;
     }
+
+    /**
+     * 订单失效前提醒
+     * @return
+     */
+    public void orderRemindForPay(String orderSn) throws IOException {
+        Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
+        Map<String, String> params = null;
+        if (orderMap != null) {
+            params = new HashMap<String, String>();
+            int orderState = Integer.parseInt(orderMap.get("orderState").toString());
+            if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
+                    || orderState == OrderStateEnum.UNPAID.getValue()) {
+
+                /**未支付与抵扣券短信目前无法发送
+                // 发送短信提醒用户
+                // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+                params = new HashMap<String, String>();
+                params.put("tpl_id", Integer.toString(1790353));
+                params.put("mobile", orderMap.get("userPhone").toString());
+                params.put("item_name", orderMap.get("itemName").toString());
+                String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
+                HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
+                logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
+                */
+
+                // 发送消息提醒用户
+                // 14986214=亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+                params.put("sender", Integer.toString(0));// 0默认为系统发送
+                params.put("tpl_id", Integer.toString(14986214));
+                params.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
+                params.put("receiver", orderMap.get("userId").toString());
+                params.put("item_name", orderMap.get("itemName").toString());
+                String msgurl = ConfigUtil.getConfig("notify.send.tpl.url");
+                HttpResult msgHttpResult = HttpUtil.doPostForm(msgurl, params);
+                logger.debug("Request: {} getResponse: {}", msgurl, msgHttpResult);
+            }
+        } else {
+            logger.error("该订单号：{}不存在", orderSn);
+        }
+    }
+
 
 }
