@@ -70,4 +70,10 @@ public interface PaymentService {
      * @return
      */
     String getWithdrawalsAmount(String userId);
+    /**
+     * 根据用户id查询邀请奖励金额
+     * @param userId
+     * @return
+     */
+    String getInvitationAmount(String userId);
 }

@@ -2,9 +2,12 @@ package com.meirengu.pay.service.impl;
 
 import com.meirengu.common.StatusCode;
 import com.meirengu.pay.dao.PaymentAccountDao;
+import com.meirengu.pay.dao.PaymentInvitationBonusDao;
 import com.meirengu.pay.model.PaymentAccount;
+import com.meirengu.pay.model.PaymentInvitationBonus;
 import com.meirengu.pay.service.BonusService;
 import com.meirengu.pay.utils.ResultUtil;
+import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.DateUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,8 @@ import java.util.List;
 public class BonusServiceImpl extends BaseServiceImpl implements BonusService {
     @Autowired
     private PaymentAccountDao paymentAccountDao;
-
+    @Autowired
+    private PaymentInvitationBonusDao paymentInvitationBonusDao;
     @Transactional
     @Override
     public String invite() {
@@ -40,11 +44,20 @@ public class BonusServiceImpl extends BaseServiceImpl implements BonusService {
             BufferedReader bufferedReader = new BufferedReader(read);
             for (String string : Arrays.asList(bufferedReader.readLine().split("\\|"))){
                 String[] str = string.split(",");
-                BigDecimal bigDecimal = new BigDecimal(str[str.length-1]);
+                BigDecimal bigDecimal = new BigDecimal(str[2]);
                 BigDecimal money = bigDecimal.multiply(BigDecimal.valueOf(0.005)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
                 for (int i=0;i<str.length-1;i++){
-                    PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(Integer.valueOf(str[i]));
+                    Integer userId = Integer.valueOf(str[i]);
+                    PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(userId);
                     paymentAccountDao.updateBalance(paymentAccount.getAccountId(),paymentAccount.getAccountBalance().add(money));
+                    PaymentInvitationBonus paymentInvitationBonus = new PaymentInvitationBonus();
+                    paymentInvitationBonus.setUserId(userId);
+                    paymentInvitationBonus.setPrincipal(money);
+                    if (i==0){
+                        paymentInvitationBonus.setInvestPrincipal(bigDecimal);
+                    }
+                    paymentInvitationBonus.setInvestmentTime(DateAndTime.addDay(-4));
+                    paymentInvitationBonusDao.insertSelective(paymentInvitationBonus);
                 }
             }
         } catch (UnsupportedEncodingException e) {

@@ -341,4 +341,15 @@ public class PaymentController extends BaseController{
     public String getWithdrawalsAmount(@RequestParam(value = "userId", required = true) String userId){
         return paymentService.getWithdrawalsAmount(userId);
     }
+
+    /**
+     * 根据用户id查询邀请奖励金额
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "invitationAmount",method = RequestMethod.GET)
+    @ResponseBody
+    public String getInvitationAmount(@RequestParam(value = "userId", required = true) String userId){
+        return paymentService.getInvitationAmount(userId);
+    }
 }

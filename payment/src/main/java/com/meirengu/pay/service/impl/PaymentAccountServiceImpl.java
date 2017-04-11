@@ -162,7 +162,6 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
 
     @Override
     public String checkPayPwd(Integer userId,String pwd) {
-        Map<String,Object> map = new HashMap<>();
         PaymentAccount paymentAccount = new PaymentAccount();
         try {
             logger.info("Request checkPayPwd parameter:{}",paymentAccount.toString());
@@ -174,7 +173,7 @@ public class PaymentAccountServiceImpl extends BaseServiceImpl implements Paymen
             if (!PasswordEncryption.validatePassword(pwd,paymentAccount.getPassword())){
                 throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT);
             }
-            return ResultUtil.getResult(StatusCode.OK,map);
+            return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             logger.error("Capture checkPayPwd ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR,null);
