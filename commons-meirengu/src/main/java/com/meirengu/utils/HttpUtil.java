@@ -1,23 +1,5 @@
 package com.meirengu.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -28,6 +10,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -37,6 +20,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class HttpUtil {
@@ -444,6 +443,81 @@ public class HttpUtil {
         return result;
     }
 
+    /**
+     * 支持SSL，可访问Https服务，也可以访问Http服务
+     * Content-Type: application/x-www-form-urlencode
+     * @param url
+     * @param parameters 请求中提交的参数
+     * @return
+     */
+    public static HttpResult doPut(String url, Map<String, String> parameters) {
+        HttpResult result= null;
+        try {
+
+            HttpClient httpclient = new DefaultHttpClient();
+            //Secure Protocol implementation.
+            SSLContext ctx = SSLContext.getInstance("SSL");
+            //Implementation of a trust manager for X509 certificates
+            X509TrustManager tm = new X509TrustManager() {
+
+                public void checkClientTrusted(X509Certificate[] xcs,
+                                               String string) throws CertificateException {
+
+                }
+
+                public void checkServerTrusted(X509Certificate[] xcs,
+                                               String string) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
+            ctx.init(null, new TrustManager[] { tm }, null);
+            SSLSocketFactory ssf = new SSLSocketFactory(ctx);
+
+            ClientConnectionManager ccm = httpclient.getConnectionManager();
+            //register https protocol in httpclient's scheme registry
+            SchemeRegistry sr = ccm.getSchemeRegistry();
+            sr.register(new Scheme("https", 443, ssf));
+
+            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+            for (String key : parameters.keySet()) {
+                formparams.add(new BasicNameValuePair(key, parameters.get(key)));
+            }
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+            HttpPut httpPut = new HttpPut(url);
+            httpPut.setEntity(entity);
+
+            logger.info("REQUEST:" + httpPut.getURI());
+
+            HttpResponse response = httpclient.execute(httpPut);
+            result = new HttpResult();
+            result.setResponse(response);
+            try {
+                HttpEntity respEntity = response.getEntity();
+                String content = EntityUtils.toString(respEntity);
+                result.setContent(content);
+                EntityUtils.consume(respEntity);
+            } catch (Exception e) {
+            } finally {
+                httpclient.getConnectionManager().shutdown();
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+
     public static class HttpResult {
 	    private HttpResponse response;
 	    private String content;
@@ -479,4 +553,6 @@ public class HttpUtil {
 	        return sb.toString();
 	    }
 	}
+
+
 }

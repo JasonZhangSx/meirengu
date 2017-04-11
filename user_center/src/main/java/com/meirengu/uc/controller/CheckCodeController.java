@@ -84,12 +84,12 @@ public class CheckCodeController extends BaseController {
                 }
 
             }
-            return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
+            return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, hr.getContent(), StatusCode.codeMsgMap.get(StatusCode
                     .CHECK_CODE_SEND_ERROR));
 
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            logger.info("checkCodeService.send check_code throws Exceprion :{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }

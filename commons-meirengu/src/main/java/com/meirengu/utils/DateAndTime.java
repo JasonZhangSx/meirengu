@@ -108,7 +108,16 @@ public final class DateAndTime {
 		c.add(Calendar.DATE, -1);
 		return df.format(c.getTime());
 	}
-	
+	/**
+	 * 获取当前日期相加后的日期（固定格式：yyyy-MM-dd）
+	 * @return	日期
+	 */
+	public static String addDay(int amount) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, amount);
+		return df.format(c.getTime());
+	}
 	/**
 	 * 获取明天的日期（固定格式：yyyy-MM-dd）
 	 * @return	日期
@@ -226,9 +235,5 @@ public final class DateAndTime {
 		}
 		return df.format(cal.getTime());
 	}
-	
-	
-	public static void main(String args[]) throws Exception{
-		System.err.print(dateDiff("dd",DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss"),DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss")));
-	}
+
 }

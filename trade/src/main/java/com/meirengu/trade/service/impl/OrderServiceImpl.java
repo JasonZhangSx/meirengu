@@ -259,6 +259,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_NOT_EXIST));
             return result;
         }
+        /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
         //审核通过需要改变档位的份数
         if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
             //1.查询该档位剩余份数
@@ -267,10 +268,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 return result;
             }
         }
-
+        **/
         //2.修改订单状态
         int i = update(order);
         if (i == 1) {
+            /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
                 boolean updateFlag = itemLevelUpdate(orderDetail);
@@ -280,8 +282,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     return result;
                 }
             }
-            // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
-            sendRocketMQDeployQueue(order.getOrderSn());
+             **/
+            // 审核通过变为待支付状态，
+            if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
+                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+                sendRocketMQDeployQueue(order.getOrderSn());
+                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+                sendRocketMQDeployQueue4Sms(order.getOrderSn());
+            }
+
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -332,6 +341,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
             // 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
             sendRocketMQDeployQueue(order.getOrderSn());
+            // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+            sendRocketMQDeployQueue4Sms(order.getOrderSn());
 
             // 组织数据返回给客户端
             Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
@@ -449,8 +460,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws OrderException
      */
     public boolean itemLevelUpdate(Order order)throws OrderException {
-        //异步请求项目服务，修改项目档位信息，不得影响订单流程
-        //目前设为同步请求，如果修改错误，则重新操作
+        //修改项目档位信息，如果请求失败，则订单也失败
         Map<String, String> paramMap = new HashMap<String, String>();
         if (order.getOrderState() == OrderStateEnum.BOOK.getValue()) {
             paramMap.put("type", "2");
@@ -633,6 +643,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
+
+            //修改档位信息
+            itemLevelUpdate(order);
+
             // 组织数据返回给客户端
             Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
             result.setData(orderMap);
@@ -790,6 +804,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
+        msg.setKeys("OSE" + orderSn);
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
         msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
@@ -815,6 +830,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue4Sms(String orderSn) {
         Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
+        msg.setKeys("ORFP" + orderSn);
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;
