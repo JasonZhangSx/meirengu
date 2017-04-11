@@ -233,19 +233,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setPhone(registerVO.getMobile());
         user.setMobileInviter(registerVO.getMobile_inviter());
         user.setNickname("MRG_"+registerVO.getMobile().substring(7,11));
-        if(!"".equals(registerVO.getWx_openid())){
+        if(!StringUtil.isEmpty(registerVO.getWx_openid())){
             user.setWxOpenid(registerVO.getWx_openid());
             user.setWxInfo(registerVO.getWx_info());
             user.setWx(registerVO.getWx());
             user.setNickname(registerVO.getWxNickName());
         }
-        if(!"".equals(registerVO.getQq_openid())) {
+        if(!StringUtil.isEmpty(registerVO.getQq_openid())) {
             user.setQqOpenid(registerVO.getQq_openid());
             user.setQqInfo(registerVO.getQq_info());
             user.setQq(registerVO.getQq());
             user.setNickname(registerVO.getQqNickName());
         }
-        if(!"".equals(registerVO.getSina_openid())) {
+        if(!StringUtil.isEmpty(registerVO.getSina_openid())) {
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
         }
@@ -321,9 +321,27 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void getWithdrawalsAmount(Map map) {
         map.put("withdrawalsAmount","");
-
-
-
+        try {
+            HttpResult hr = null;
+            String url = ConfigUtil.getConfig("URI_GET_WITHDRAWALSAMOUNT");
+            String urlAppend = url+"?userId="+ map.get("userId");
+            hr = HttpUtil.doGet(urlAppend);
+            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+            if(hr.getStatusCode()== StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    Map mapData = (Map)account.get("data");
+                    if(mapData!=null){
+                        map.put("withdrawalsAmount",mapData.get("withdrawalsAmount"));
+                    }
+                }
+            }else{
+                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+            }
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
+        }
     }
 
     @Override

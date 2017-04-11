@@ -161,9 +161,9 @@
                 </button>
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
-                        class="btn btn-primary radius" href="javascript:;"><i
-                        class="Hui-iconfont">&#xe634;</i> 导出</a></span>
+                <span class="l" style="margin-right:20px"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  -->
+                    <a class="btn btn-primary radius"  onClick="project_edit('添加活动','toadd','10001')" href="javascript:;">
+                        <i class="Hui-iconfont">&#xe600;</i> 添加活动</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
             <div class="mt-20">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -209,7 +209,6 @@
 <script type="text/javascript" language="javascript" class="init">
     var table;
     $(document).ready(function() {
-        alert("init table");
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
@@ -309,18 +308,18 @@
                             return '<td class="f-14 td-manage">' +
                                     '<a style="text-decoration:none" id="'+row.activityId+'" onclick="project_start(this,'+row.activityId+')" href="javascript:;" title="发布"><i class="Hui-iconfont">' +
                                     '</i></a><a style="text-decoration:none" class="ml-5"  id="'+row.activityId+row.activityId+'" ' +
-                                    'onclick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\','+row.activityId+')" href="javascript:;" title="项目编辑">' +
+                                    'onclick="project_edit(\'运营-活动列表-修改\',\'toedit\','+row.activityId+')" href="javascript:;" title="项目编辑">' +
                                     '<i class="Hui-iconfont"></i></a> </td>'
-                        }
-                        if(row.status=='2'){
+                        }else if(row.status=='2'){
                             return ' <td class="f-14 td-manage">' +
-                                        '<a style="text-decoration:none" id="'+row.activityId+'" class="ml-5"' +
-                                        'onClick="project_edit(\'运营-活动列表-添加\',\'运营-活动列表-添加.html\',\'10001\')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
-                                            '</i></a>' +
                                     '<a style="text-decoration:none" id="'+row.activityId+row.activityId+'" onClick="project_stop(this,'+row.activityId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
+                                        '<a style="text-decoration:none" id="'+row.activityId+'" class="ml-5"' +
+                                        'onClick="project_edit(\'运营-活动列表-修改\',\'toedit\','+row.activityId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
+                                            '</i></a>' +
                                     '</td>';
+                        }else{
+                            return ' <td class="f-14 td-manage"></td>';
                         }
-
                     }
                 }
             ]
@@ -367,25 +366,30 @@
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url+'?activity_id='+id,
         });
         layer.full(index);
     }
     /*项目-下架*/
     function project_stop(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
-//            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
-            $(obj).remove();
-            $("#"+id).remove();
-            $("#"+id+id).remove();
-            layer.msg('已下架!', {icon: 5, time: 1000});
-
             $.ajax({
-                url:"erp/activity/update",
+                url:"update",
                 data:{
                     "activity_id":id,
                     "status":"3"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+                        $(obj).remove();
+                        $("#"+id).remove();
+                        $("#"+id+id).remove();
+                        layer.msg('已下架!', {icon: 5, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
                 }
             })
 
@@ -395,16 +399,22 @@
     /*项目-发布*/
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span>进行中</span>');
-            $(obj).remove();
-            layer.msg('已发布!', {icon: 6, time: 1000});
-
             $.ajax({
                 url:"update",
                 data:{
                     "activity_id":id,
-                    "status":"3"
+                    "status":"2"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span>进行中</span>');
+                        $(obj).remove();
+                        layer.msg('已发布!', {icon: 6, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
                 }
             })
         });

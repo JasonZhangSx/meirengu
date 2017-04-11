@@ -487,13 +487,16 @@ public class OrderController extends BaseController{
     public Result paymentCallBack(@RequestParam(value = "order_sn", required = false)String orderSn,
                                   @RequestParam(value = "payment_method", required = false)int paymentMethod,
                                   @RequestParam(value = "out_sn", required = false)String outSn) {
-        if (StringUtils.isEmpty(orderSn) || StringUtils.isEmpty(outSn)) {
+        logger.debug("支付成功回调订单号：" + orderSn + "支付方式" + paymentMethod + "第三方支付号" + outSn);
+        if (StringUtils.isEmpty(orderSn)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
         order.setOrderSn(orderSn);
         order.setPaymentMethod(paymentMethod);
-        order.setOutSn(outSn);
+        if (StringUtils.isNotBlank(outSn)) {
+            order.setOutSn(outSn);
+        }
         order.setFinishedTime(new Date());
         order.setOrderState(OrderStateEnum.PAID.getValue());
         try {

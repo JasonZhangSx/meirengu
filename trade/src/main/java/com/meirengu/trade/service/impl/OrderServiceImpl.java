@@ -106,6 +106,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     //请求user_center服务获取用户地址信息
                     String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ userAddressId;;
                     HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+                    logger.debug("Request: {} getResponse: {}", addressUrl, addressHttpResult);
                     if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                         JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
                         int code = resultJson.getIntValue("code");
@@ -133,6 +134,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     //查询项目头图
                     String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
                     HttpResult itemResult = HttpUtil.doGet(url);
+                    logger.debug("Request: {} getResponse: {}", url, itemResult);
                     if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                         JSONObject resultJson = JSON.parseObject(itemResult.getContent());
                         int code = resultJson.getIntValue("code");
@@ -181,6 +183,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ URLEncoder.encode(addressIds, "UTF-8");;
 
             HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+            logger.debug("Request: {} getResponse: {}", addressUrl, addressHttpResult);
             Map<String, Object> addressMap = null;
             if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
@@ -207,6 +210,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             String itemLevelIds = itemLevelIdStr.substring(itemLevelIdStr.indexOf("[")+1,itemLevelIdStr.indexOf("]"));
             String itemLevelUrl = ConfigUtil.getConfig("item.level.list.url") + "?" + "level_id="+ URLEncoder.encode(itemLevelIds, "UTF-8");;
             HttpResult itemLevelListHttpResult = HttpUtil.doGet(itemLevelUrl);
+            logger.debug("Request: {} getResponse: {}", itemLevelUrl, itemLevelListHttpResult);
             Map<String, Object> itemLevelMap = null;
             if (itemLevelListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(itemLevelListHttpResult.getContent());
@@ -255,6 +259,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_NOT_EXIST));
             return result;
         }
+        /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
         //审核通过需要改变档位的份数
         if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
             //1.查询该档位剩余份数
@@ -263,10 +268,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 return result;
             }
         }
-
+        **/
         //2.修改订单状态
         int i = update(order);
         if (i == 1) {
+            /**----逻辑改为点击预约后立即改变档位状态，预约审核只改变订单状态
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
                 boolean updateFlag = itemLevelUpdate(orderDetail);
@@ -276,8 +282,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     return result;
                 }
             }
-            // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
-            sendRocketMQDeployQueue(order.getOrderSn());
+             **/
+            // 审核通过变为待支付状态，
+            if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
+                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+                sendRocketMQDeployQueue(order.getOrderSn());
+                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+                sendRocketMQDeployQueue4Sms(order.getOrderSn());
+            }
+
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -328,6 +341,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
             // 生成的订单号放入rocketmq延迟队列，24小时内未支付则订单失效
             sendRocketMQDeployQueue(order.getOrderSn());
+            // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+            sendRocketMQDeployQueue4Sms(order.getOrderSn());
 
             // 组织数据返回给客户端
             Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
@@ -358,6 +373,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         int itemLevelId = order.getItemLevelId();
         String itemLevelInfoUrl = ConfigUtil.getConfig("item.level.url") + "/" + itemLevelId;
         HttpResult itemLevelInfoResult = HttpUtil.doGet(itemLevelInfoUrl);
+        logger.debug("Request: {} getResponse: {}", itemLevelInfoUrl, itemLevelInfoResult);
         if (itemLevelInfoResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(itemLevelInfoResult.getContent());
             int code = resultJson.getIntValue("code");
@@ -444,8 +460,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws OrderException
      */
     public boolean itemLevelUpdate(Order order)throws OrderException {
-        //异步请求项目服务，修改项目档位信息，不得影响订单流程
-        //目前设为同步请求，如果修改错误，则重新操作
+        //修改项目档位信息，如果请求失败，则订单也失败
         Map<String, String> paramMap = new HashMap<String, String>();
         if (order.getOrderState() == OrderStateEnum.BOOK.getValue()) {
             paramMap.put("type", "2");
@@ -459,6 +474,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         paramMap.put("total_amount", order.getOrderAmount().toString());
         String url = ConfigUtil.getConfig("item.level.update.url");
         HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
+        logger.debug("Request: {} getResponse: {}", url, httpResult);
         if (httpResult.getStatusCode() == HttpStatus.SC_OK) {
             JSONObject resultJson = JSON.parseObject(httpResult.getContent());
             int code = resultJson.getIntValue("code");
@@ -489,6 +505,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //1.查询项目状态
             String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
             HttpResult itemResult = HttpUtil.doGet(url);
+            logger.debug("Request: {} getResponse: {}", url, itemResult);
             if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
                 JSONObject resultJson = JSON.parseObject(itemResult.getContent());
                 int code = resultJson.getIntValue("code");
@@ -520,8 +537,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //请求user_center服务获取用户地址信息
                 String userIdsStr = userIdsSet.toString();
                 String userIds = userIdsStr.substring(userIdsStr.indexOf("[")+1,userIdsStr.indexOf("]"));
-                String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");;
+                String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");
                 HttpResult avatarListHttpResult = HttpUtil.doGet(userIdsUrl);
+                logger.debug("Request: {} getResponse: {}", userIdsUrl, avatarListHttpResult);
                 if (avatarListHttpResult.getStatusCode() == HttpStatus.SC_OK) {
                     JSONObject resultJson = JSON.parseObject(avatarListHttpResult.getContent());
                     int code = resultJson.getIntValue("code");
@@ -545,6 +563,47 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     }
                 }
             }
+        // 我的订单列表需要项目头图
+        } else {
+            List<Map<String, Object>> aList = page.getList();
+            if (aList != null && aList.size() > 0) {
+                //项目ID的set
+                Set<Integer> itemIdsSet = new HashSet<Integer>();
+                //临时存放用户信息的Map
+                Map<Integer, Map<String, Object>> itemsTemp = new HashMap<Integer, Map<String, Object>>();
+                for (Map<String, Object> orderMap : aList){
+                    int itemIds = (int)((long)orderMap.get("itemId"));
+                    itemIdsSet.add(itemIds);
+                }
+                String itemIdsStr = itemIdsSet.toString();
+                String itemIds = itemIdsStr.substring(itemIdsStr.indexOf("[")+1,itemIdsStr.indexOf("]"));
+                String url = ConfigUtil.getConfig("item.url") + "?item_id=" + URLEncoder.encode(itemIds, "UTF-8");
+                HttpResult itemResult = HttpUtil.doGet(url);
+                logger.debug("Request: {} getResponse: {}", url, itemResult);
+                if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+                    JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+                    int code = resultJson.getIntValue("code");
+                    if (code == StatusCode.OK) {
+                        JSONArray itemArray = resultJson.getJSONArray("data");
+                        Map<String, Object> itemsMap = null;
+                        for (int i = 0; i < itemArray.size(); i++) {
+                            JSONObject itemJson = itemArray.getJSONObject(i);
+                            int itemIdVal = itemJson.getIntValue("itemId");
+                            itemsMap = new HashMap<String, Object>();
+                            itemsMap.put("itemId", itemIdVal);
+                            itemsMap.put("headerImage", itemJson.getString("headerImage"));
+                            itemsTemp.put(itemIdVal,itemsMap);
+                        }
+                        //将获取的信息组装到原data中
+                        for (Map<String, Object> orderMap : aList){
+                            int itemIdVal = (int)((long)orderMap.get("itemId"));
+                            itemsMap = itemsTemp.get(itemIdVal);
+                            orderMap.putAll(itemsMap);
+                        }
+                    }
+                }
+            }
+
         }
         return page;
     }
@@ -584,6 +643,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (rebateReceiveId != 0) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
+
+            //修改档位信息
+            itemLevelUpdate(order);
+
             // 组织数据返回给客户端
             Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
             result.setData(orderMap);
@@ -730,6 +793,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //请求用户服务
             String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
             HttpResult itemResult = HttpUtil.doGet(url);
+            logger.debug("Request: {} getResponse: {}", url, itemResult);
             //后续处理对方处理失败重新请求
         }
     }
@@ -740,12 +804,40 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
+        msg.setKeys("OSE" + orderSn);
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
         msg.setDelayTimeLevel(20);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：" + orderSn);
+            logger.debug("发送消息：tag:orderLoseEfficacy" + orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
+        } catch (MQClientException e) {
+            logger.error(e.getMessage() + String.valueOf(sendResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.debug("发送消息：" + orderSn + "失败");
+            logger.error(sendResult.toString());
+        }
+    }
+    /**
+     * 生成的订单号放入rocketmq延迟队列，22小时内未支付发消息提醒
+     * @param orderSn
+     */
+    private void sendRocketMQDeployQueue4Sms(String orderSn) {
+        Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
+        msg.setKeys("ORFP" + orderSn);
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        msg.setDelayTimeLevel(19);
+        SendResult sendResult = null;
+        try {
+            logger.debug("发送消息：tag:orderRemindForPay" + orderSn);
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.debug("sendResult: " + sendResult);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
@@ -777,6 +869,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 params.put("invited_user_phone", orderMap.get("userPhone").toString());
                 params.put("invest_time", orderMap.get("finishedTime").toString());
                 HttpResult inviterResult = HttpUtil.doPostForm(url, params);
+                logger.debug("Request: {} getResponse: {}", url, inviterResult);
             }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue() ||
                     orderState == OrderStateEnum.UNPAID.getValue()) {
                 Order order = new Order();

@@ -6,7 +6,6 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.news.model.Activity;
 import com.meirengu.news.service.ActivityService;
-import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,8 +91,8 @@ public class ActivityController extends BaseController{
                           @RequestParam(value = "activity_image", required = false)String activityImage,
                           @RequestParam(value = "activity_link", required = false)String activityLink,
                           @RequestParam(value = "activity_sort", required = false)Integer activitySort,
-                          @RequestParam(value = "start_time", required = false)String startTime,
-                          @RequestParam(value = "end_time", required = false)String endTime,
+                          @RequestParam(value = "start_time", required = false)Date startTime,
+                          @RequestParam(value = "end_time", required = false)Date endTime,
                           @RequestParam(value = "operate_account", required = true)String operateAccount){
 
         try {
@@ -105,8 +104,12 @@ public class ActivityController extends BaseController{
             activity.setActivityName(activityName);
             activity.setActivityImage(activityImage);
             activity.setActivityLink(activityLink);
-            activity.setStartTime(DateAndTime.convertStringToDate(startTime));
-            activity.setEndTime(DateAndTime.convertStringToDate(endTime));
+            if(!StringUtil.isEmpty(startTime)){
+                activity.setStartTime(startTime);
+            }
+            if(!StringUtil.isEmpty(endTime)){
+                activity.setEndTime(endTime);
+            }
             activity.setOperateAccount(operateAccount);
             activity.setUpdateTime(new Date());
             int result  = activityService.update(activity);
