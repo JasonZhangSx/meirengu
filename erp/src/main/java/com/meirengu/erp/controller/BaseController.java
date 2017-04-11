@@ -5,12 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -51,6 +49,11 @@ public class BaseController {
 
     public Object httpPost(String url, Map<String, String> params){
         HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
+        Object data = getData(hr);
+        return data;
+    }
+    public Object httpPut(String url, Map<String, String> params){
+        HttpUtil.HttpResult hr = HttpUtil.doPut(url, params);
         Object data = getData(hr);
         return data;
     }

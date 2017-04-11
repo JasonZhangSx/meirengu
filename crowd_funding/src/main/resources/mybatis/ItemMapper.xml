@@ -162,12 +162,13 @@
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
-		t1.type_name as typeName
+		t1.type_name as typeName, t2.class_name as className
 		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
+		LEFT JOIN `item_class` t2 ON  t2.class_id=t.class_id
 		where 1=1
-		<if test="itemId != null">
-			and t.item_id=#{itemId}
+		<if test="itemId != null and itemId != ''">
+			and t.item_id in (${itemId})
 		</if>
 		<if test="itemName != null and itemName != ''">
 			and t.item_name like '%${itemName}%'
@@ -188,9 +189,10 @@
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.type_id=t.type_id
+		LEFT JOIN `item_class` t2 ON  t2.class_id=t.class_id
 		where 1=1
-		<if test="itemId != null">
-			and t.item_id=#{itemId}
+		<if test="itemId != null and itemId != ''">
+			and t.item_id in (${itemId})
 		</if>
 		<if test="itemName != null and itemName != ''">
 			and t.item_name like '%${itemName}%'

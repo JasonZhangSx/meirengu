@@ -233,19 +233,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setPhone(registerVO.getMobile());
         user.setMobileInviter(registerVO.getMobile_inviter());
         user.setNickname("MRG_"+registerVO.getMobile().substring(7,11));
-        if(!"".equals(registerVO.getWx_openid())){
+        if(!StringUtil.isEmpty(registerVO.getWx_openid())){
             user.setWxOpenid(registerVO.getWx_openid());
             user.setWxInfo(registerVO.getWx_info());
             user.setWx(registerVO.getWx());
             user.setNickname(registerVO.getWxNickName());
         }
-        if(!"".equals(registerVO.getQq_openid())) {
+        if(!StringUtil.isEmpty(registerVO.getQq_openid())) {
             user.setQqOpenid(registerVO.getQq_openid());
             user.setQqInfo(registerVO.getQq_info());
             user.setQq(registerVO.getQq());
             user.setNickname(registerVO.getQqNickName());
         }
-        if(!"".equals(registerVO.getSina_openid())) {
+        if(!StringUtil.isEmpty(registerVO.getSina_openid())) {
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
         }

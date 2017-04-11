@@ -35,7 +35,7 @@ public interface NotifyService extends BaseService<Notify>{
      * @param receiver
      * @return
      */
-    boolean genNotify(Integer sender, String content, Integer type, Integer target,
+    boolean genNotify(Integer sender, String title, String content, Integer type, Integer target,
                           String targeType, String action, Integer receiver);
 
     /**

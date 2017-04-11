@@ -124,7 +124,7 @@ public class NotifyController extends BaseController {
             }
 
             String templateStr = MsgTemplateConfigUtil.getConfig(String.valueOf(tplId));
-
+            String templateTitle = MsgTemplateConfigUtil.getConfig(String.valueOf(tplId)+".title");
             if (StringUtil.isEmpty(templateStr)) {
                 return super.setResult(StatusCode.MSG_TEMPLATE_INVALID, "", StatusCode.codeMsgMap.get(StatusCode.MSG_TEMPLATE_INVALID));
             }
@@ -147,7 +147,7 @@ public class NotifyController extends BaseController {
                 templateStr = templateStr.replace("#" + key + "#", value);
             }
 
-            if (notifyService.genNotify(sender, templateStr,
+            if (notifyService.genNotify(sender, templateTitle, templateStr,
                     type, target, targetype, action, receiver)) {
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
             } else {
