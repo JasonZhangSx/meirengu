@@ -253,6 +253,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     @Transactional
     public Result appointmentAudit(Order order) throws IOException, OrderException {
         Result result = new Result();
+        result.setCode(StatusCode.OK);
+        result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         Order orderDetail = detail(order.getOrderId());
         if (orderDetail == null || orderDetail.getOrderId() == null) {
             result.setCode(StatusCode.ORDER_NOT_EXIST);
@@ -289,7 +291,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
             return result;
         }
-        return null;
+        return result;
     }
 
     /**
