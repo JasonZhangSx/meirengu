@@ -262,8 +262,15 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
             Collections.sort(aList, new Comparator<Map<String, Object>>() {
                 @Override
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                    if ("DESC".equalsIgnoreCase(order)) {
-                        //return
+                    //按金额排序
+                    if ("rebateAmount".equals(sortBy)) {
+                        BigDecimal rebateAmount1 = new BigDecimal(o1.get("rebateAmount").toString());
+                        BigDecimal rebateAmount2 = new BigDecimal(o2.get("rebateAmount").toString());
+                        if ("DESC".equalsIgnoreCase(order)) {
+                            return rebateAmount2.compareTo(rebateAmount1);
+                        } else {
+                            return rebateAmount1.compareTo(rebateAmount2);
+                        }
                     }
                     return 0;
                 }
