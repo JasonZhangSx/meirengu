@@ -337,6 +337,25 @@
             <artifactId>yunpian-java-sdk</artifactId>
         </dependency>
         <!-- TEST end -->
+
+        <!-- 易保全电子合同专用 -->
+        <dependency>
+            <groupId>yibaoquan</groupId>
+            <artifactId>rop-client</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>yibaoquan</groupId>
+            <artifactId>rop-common</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>yibaoquan</groupId>
+            <artifactId>themis-sdk</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <!-- 易保全电子合同专用 -->
+
     </dependencies>
 
     <build>
