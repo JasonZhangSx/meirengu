@@ -3,12 +3,12 @@
 <mapper namespace="com.meirengu.cf.dao.ItemCooperationDao" >
 
 	<resultMap id="itemCooperationMap" type="ItemCooperation">
-		<id column="item_id" property="itemId" jdbcType="INTEGER" javaType="int"/>
+		<id column="item_id" property="itemId" jdbcType="INTEGER" javaType="Integer"/>
 		<result column="commission_rate" property="commissionRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
 		<result column="guarantee_rate" property="guaranteeRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
-		<result column="prepaid_bonus" property="prepaidBonus" jdbcType="INTEGER" javaType="int"/>
-		<result column="loan_mode" property="loanMode" jdbcType="INTEGER" javaType="int"/>
-		<result column="first_ratio" property="firstRatio" jdbcType="INTEGER" javaType="int"/>
+		<result column="prepaid_bonus" property="prepaidBonus" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="loan_mode" property="loanMode" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="first_ratio" property="firstRatio" jdbcType="INTEGER" javaType="Integer"/>
 		<result column="sponsor_idcard" property="sponsorIdcard" jdbcType="VARCHAR" javaType="String"/>
 		<result column="sponsor_credit" property="sponsorCredit" jdbcType="VARCHAR" javaType="String"/>
 		<result column="principal_idcard" property="principalIdcard" jdbcType="VARCHAR" javaType="String"/>
@@ -18,39 +18,55 @@
 		<result column="store_renderings" property="storeRenderings" jdbcType="VARCHAR" javaType="String"/>
 		<result column="corporate_articles" property="corporateArticles" jdbcType="VARCHAR" javaType="String"/>
 		<result column="asset_water_liabilities" property="assetWaterLiabilities" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_name" property="shareholderName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_idcard" property="shareholderIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_address" property="shareholderAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="guarantee_name" property="guaranteeName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="guarantee_idcard" property="guaranteeIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="guarantee_address" property="guaranteeAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="pledged_shares" property="pledgedShares" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="partner_seal" property="partnerSeal" jdbcType="VARCHAR" javaType="String"/>
+		<result column="escrow_agreement" property="escrowAgreement" jdbcType="VARCHAR" javaType="String"/>
+		<result column="finance_service" property="financeService" jdbcType="VARCHAR" javaType="String"/>
+		<result column="finance_manage" property="financeManage" jdbcType="VARCHAR" javaType="String"/>
+		<result column="share_pledge_agreement" property="sharePledgeAgreement" jdbcType="VARCHAR" javaType="String"/>
+		<result column="guaranty_agreement" property="guarantyAgreement" jdbcType="VARCHAR" javaType="String"/>
 		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
 	</resultMap>
 
-	<sql id="table_name">item_cooperation</sql>
+	<sql id="table_name">`item_cooperation`</sql>
 	<sql id="select_columns">
-		item_id as itemId, commission_rate as commissionRate, guarantee_rate as guaranteeRate, prepaid_bonus as prepaidBonus, loan_mode as loanMode, first_ratio as firstRatio, sponsor_idcard as sponsorIdcard, sponsor_credit as sponsorCredit, principal_idcard as principalIdcard, principal_credit as principalCredit, business_licence as businessLicence, venue_rental_agreement as venueRentalAgreement, store_renderings as storeRenderings, corporate_articles as corporateArticles, asset_water_liabilities as assetWaterLiabilities, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		item_id as itemId, commission_rate as commissionRate, guarantee_rate as guaranteeRate, prepaid_bonus as prepaidBonus, loan_mode as loanMode, first_ratio as firstRatio, sponsor_idcard as sponsorIdcard, sponsor_credit as sponsorCredit, principal_idcard as principalIdcard, principal_credit as principalCredit, business_licence as businessLicence, venue_rental_agreement as venueRentalAgreement, store_renderings as storeRenderings, corporate_articles as corporateArticles, asset_water_liabilities as assetWaterLiabilities, shareholder_name as shareholderName, shareholder_idcard as shareholderIdcard, shareholder_address as shareholderAddress, guarantee_name as guaranteeName, guarantee_idcard as guaranteeIdcard, guarantee_address as guaranteeAddress, pledged_shares as pledgedShares, partner_seal as partnerSeal, escrow_agreement as escrowAgreement, finance_service as financeService, finance_manage as financeManage, share_pledge_agreement as sharePledgeAgreement, guaranty_agreement as guarantyAgreement, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="itemCooperation" useGeneratedKeys="true" keyProperty="itemId" >
 		INSERT INTO <include refid="table_name" />
-			(item_id, commission_rate, guarantee_rate, prepaid_bonus, loan_mode, first_ratio, sponsor_idcard, sponsor_credit, principal_idcard, principal_credit, business_licence, venue_rental_agreement, store_renderings, corporate_articles, asset_water_liabilities, create_time, operate_account)
+			(item_id, commission_rate, guarantee_rate, prepaid_bonus, loan_mode, first_ratio, sponsor_idcard, sponsor_credit, principal_idcard, principal_credit, business_licence, venue_rental_agreement, store_renderings, corporate_articles, asset_water_liabilities, shareholder_name, shareholder_idcard, shareholder_address, guarantee_name, guarantee_idcard, guarantee_address, pledged_shares, partner_seal, escrow_agreement, finance_service, finance_manage, share_pledge_agreement, guaranty_agreement, create_time, update_time, operate_account)
 		VALUES
-			(#{itemId}, #{commissionRate}, #{guaranteeRate}, #{prepaidBonus}, #{loanMode}, #{firstRatio}, #{sponsorIdcard}, #{sponsorCredit}, #{principalIdcard}, #{principalCredit}, #{businessLicence}, #{venueRentalAgreement}, #{storeRenderings}, #{corporateArticles}, #{assetWaterLiabilities}, #{createTime}, #{operateAccount})
+			(#{itemId}, #{commissionRate}, #{guaranteeRate}, #{prepaidBonus}, #{loanMode}, #{firstRatio}, #{sponsorIdcard}, #{sponsorCredit}, #{principalIdcard}, #{principalCredit}, #{businessLicence}, #{venueRentalAgreement}, #{storeRenderings}, #{corporateArticles}, #{assetWaterLiabilities}, #{shareholderName}, #{shareholderIdcard}, #{shareholderAddress}, #{guaranteeName}, #{guaranteeIdcard}, #{guaranteeAddress}, #{pledgedShares}, #{partnerSeal}, #{escrowAgreement}, #{financeService}, #{financeManage}, #{sharePledgeAgreement}, #{guarantyAgreement}, #{createTime}, #{updateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="itemCooperation">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="commissionRate != null">
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="commissionRate != null and commissionRate != ''">
 				commission_rate=#{commissionRate},
 			</if>
-			<if test="guaranteeRate != null">
+			<if test="guaranteeRate != null and guaranteeRate != ''">
 				guarantee_rate=#{guaranteeRate},
 			</if>
-			<if test="prepaidBonus != null">
+			<if test="prepaidBonus != null and prepaidBonus != ''">
 				prepaid_bonus=#{prepaidBonus},
 			</if>
-			<if test="loanMode != null">
+			<if test="loanMode != null and loanMode != ''">
 				loan_mode=#{loanMode},
 			</if>
-			<if test="firstRatio != null">
+			<if test="firstRatio != null and firstRatio != ''">
 				first_ratio=#{firstRatio},
 			</if>
 			<if test="sponsorIdcard != null and sponsorIdcard != ''">
@@ -80,6 +96,51 @@
 			<if test="assetWaterLiabilities != null and assetWaterLiabilities != ''">
 				asset_water_liabilities=#{assetWaterLiabilities},
 			</if>
+			<if test="shareholderName != null and shareholderName != ''">
+				shareholder_name=#{shareholderName},
+			</if>
+			<if test="shareholderIdcard != null and shareholderIdcard != ''">
+				shareholder_idcard=#{shareholderIdcard},
+			</if>
+			<if test="shareholderAddress != null and shareholderAddress != ''">
+				shareholder_address=#{shareholderAddress},
+			</if>
+			<if test="guaranteeName != null and guaranteeName != ''">
+				guarantee_name=#{guaranteeName},
+			</if>
+			<if test="guaranteeIdcard != null and guaranteeIdcard != ''">
+				guarantee_idcard=#{guaranteeIdcard},
+			</if>
+			<if test="guaranteeAddress != null and guaranteeAddress != ''">
+				guarantee_address=#{guaranteeAddress},
+			</if>
+			<if test="pledgedShares != null and pledgedShares != ''">
+				pledged_shares=#{pledgedShares},
+			</if>
+			<if test="partnerSeal != null and partnerSeal != ''">
+				partner_seal=#{partnerSeal},
+			</if>
+			<if test="escrowAgreement != null and escrowAgreement != ''">
+				escrow_agreement=#{escrowAgreement},
+			</if>
+			<if test="financeService != null and financeService != ''">
+				finance_service=#{financeService},
+			</if>
+			<if test="financeManage != null and financeManage != ''">
+				finance_manage=#{financeManage},
+			</if>
+			<if test="sharePledgeAgreement != null and sharePledgeAgreement != ''">
+				share_pledge_agreement=#{sharePledgeAgreement},
+			</if>
+			<if test="guarantyAgreement != null and guarantyAgreement != ''">
+				guaranty_agreement=#{guarantyAgreement},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},
 			</if>
@@ -92,6 +153,11 @@
 	<select id="detail" parameterType="integer" resultType="itemCooperation">
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where item_id=#{id}
+	</select>
+
+	<select id="getByItemId" parameterType="integer" resultType="itemCooperation">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where item_id=#{itemId}
 	</select>
 
 	<!-- 分页相关开始 -->
