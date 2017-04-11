@@ -276,7 +276,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             // 预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                itemLevelUpdate(order);
+                orderDetail.setOrderState(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+                itemLevelUpdate(orderDetail);
             }
             // 审核通过变为待支付状态，
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
