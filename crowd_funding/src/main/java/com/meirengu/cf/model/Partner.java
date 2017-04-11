@@ -13,6 +13,10 @@ public class Partner  extends BaseObject {
 	private int typeId;
 	/** 合作方名称 */
 	private String partnerName;
+	/** 公司成立日 **/
+	private Date partnerCreateDay;
+	/** 公司估值 **/
+	private int partnerValuation;
 	/** 服务专员id */
 	private int accountId;
 	/** 企业名词 */
@@ -288,4 +292,19 @@ public class Partner  extends BaseObject {
 		return operateAccount;
 	}
 
-}
+	 public Date getPartnerCreateDay() {
+		 return partnerCreateDay;
+	 }
+
+	 public void setPartnerCreateDay(Date partnerCreateDay) {
+		 this.partnerCreateDay = partnerCreateDay;
+	 }
+
+	 public int getPartnerValuation() {
+		 return partnerValuation;
+	 }
+
+	 public void setPartnerValuation(int partnerValuation) {
+		 this.partnerValuation = partnerValuation;
+	 }
+ }

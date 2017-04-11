@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
  /*
   * ItemCooperation 实体类
-  * Wed Mar 15 10:41:25 CST 2017 建新
+  * Mon Apr 10 16:18:41 CST 2017 建新
   */
 public class ItemCooperation  extends BaseObject {
 	/** 众筹项目索引id */
@@ -38,6 +38,32 @@ public class ItemCooperation  extends BaseObject {
 	private String corporateArticles;
 	/** 近一年流水、资产负债表 */
 	private String assetWaterLiabilities;
+	/** 股东姓名 */
+	private String shareholderName;
+	/** 股东身份证号 */
+	private String shareholderIdcard;
+	/** 股东地址 */
+	private String shareholderAddress;
+	/** 担保人姓名 */
+	private String guaranteeName;
+	/** 担保人身份证号 */
+	private String guaranteeIdcard;
+	/** 担保人地址 */
+	private String guaranteeAddress;
+	/** 抵押股份 */
+	private BigDecimal pledgedShares;
+	/** 项目方印章 */
+	private String partnerSeal;
+	/** 托管协议书 */
+	private String escrowAgreement;
+	/** 融资服务协议 */
+	private String financeService;
+	/** 融资管理协议 */
+	private String financeManage;
+	/** 股权质押合同 */
+	private String sharePledgeAgreement;
+	/** 保证合同 */
+	private String guarantyAgreement;
 	/** 创建时间 */
 	private Date createTime;
 	/** 修改时间 */
@@ -163,6 +189,110 @@ public class ItemCooperation  extends BaseObject {
 
 	public String getAssetWaterLiabilities(){
 		return assetWaterLiabilities;
+	}
+
+	public void setShareholderName(String shareholderName){
+		this.shareholderName = shareholderName;
+	}
+
+	public String getShareholderName(){
+		return shareholderName;
+	}
+
+	public void setShareholderIdcard(String shareholderIdcard){
+		this.shareholderIdcard = shareholderIdcard;
+	}
+
+	public String getShareholderIdcard(){
+		return shareholderIdcard;
+	}
+
+	public void setShareholderAddress(String shareholderAddress){
+		this.shareholderAddress = shareholderAddress;
+	}
+
+	public String getShareholderAddress(){
+		return shareholderAddress;
+	}
+
+	public void setGuaranteeName(String guaranteeName){
+		this.guaranteeName = guaranteeName;
+	}
+
+	public String getGuaranteeName(){
+		return guaranteeName;
+	}
+
+	public void setGuaranteeIdcard(String guaranteeIdcard){
+		this.guaranteeIdcard = guaranteeIdcard;
+	}
+
+	public String getGuaranteeIdcard(){
+		return guaranteeIdcard;
+	}
+
+	public void setGuaranteeAddress(String guaranteeAddress){
+		this.guaranteeAddress = guaranteeAddress;
+	}
+
+	public String getGuaranteeAddress(){
+		return guaranteeAddress;
+	}
+
+	public void setPledgedShares(BigDecimal pledgedShares){
+		this.pledgedShares = pledgedShares;
+	}
+
+	public BigDecimal getPledgedShares(){
+		return pledgedShares;
+	}
+
+	public void setPartnerSeal(String partnerSeal){
+		this.partnerSeal = partnerSeal;
+	}
+
+	public String getPartnerSeal(){
+		return partnerSeal;
+	}
+
+	public void setEscrowAgreement(String escrowAgreement){
+		this.escrowAgreement = escrowAgreement;
+	}
+
+	public String getEscrowAgreement(){
+		return escrowAgreement;
+	}
+
+	public void setFinanceService(String financeService){
+		this.financeService = financeService;
+	}
+
+	public String getFinanceService(){
+		return financeService;
+	}
+
+	public void setFinanceManage(String financeManage){
+		this.financeManage = financeManage;
+	}
+
+	public String getFinanceManage(){
+		return financeManage;
+	}
+
+	public void setSharePledgeAgreement(String sharePledgeAgreement){
+		this.sharePledgeAgreement = sharePledgeAgreement;
+	}
+
+	public String getSharePledgeAgreement(){
+		return sharePledgeAgreement;
+	}
+
+	public void setGuarantyAgreement(String guarantyAgreement){
+		this.guarantyAgreement = guarantyAgreement;
+	}
+
+	public String getGuarantyAgreement(){
+		return guarantyAgreement;
 	}
 
 	public void setCreateTime(Date createTime){
