@@ -278,15 +278,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
                 orderDetail.setOrderState(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
                 itemLevelUpdate(orderDetail);
-            }
-            // 审核通过变为待支付状态，
-            if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
-                sendRocketMQDeployQueue(order.getOrderSn());
-                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
-                sendRocketMQDeployQueue4Sms(order.getOrderSn());
-            }
 
+                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+                sendRocketMQDeployQueue(orderDetail.getOrderSn());
+                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+                sendRocketMQDeployQueue4Sms(orderDetail.getOrderSn());
+            }
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
