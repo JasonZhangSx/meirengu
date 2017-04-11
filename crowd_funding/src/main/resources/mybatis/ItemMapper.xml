@@ -166,8 +166,8 @@
 		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
 		where 1=1
-		<if test="itemId != null">
-			and t.item_id=#{itemId}
+		<if test="itemId != null and itemId != ''">
+			and t.item_id in (${itemId})
 		</if>
 		<if test="itemName != null and itemName != ''">
 			and t.item_name like '%${itemName}%'
@@ -189,8 +189,8 @@
 		select count(1) FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.type_id=t.type_id
 		where 1=1
-		<if test="itemId != null">
-			and t.item_id=#{itemId}
+		<if test="itemId != null and itemId != ''">
+			and t.item_id in (${itemId})
 		</if>
 		<if test="itemName != null and itemName != ''">
 			and t.item_name like '%${itemName}%'

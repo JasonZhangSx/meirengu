@@ -5,14 +5,12 @@ import com.meirengu.cf.model.Item;
 import com.meirengu.cf.service.ItemInterestedService;
 import com.meirengu.cf.service.ItemOperateRecordService;
 import com.meirengu.cf.service.ItemService;
-import com.meirengu.common.RedisClient;
+import com.meirengu.cf.service.PartnerService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
-import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
-import org.apache.commons.beanutils.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,8 @@ public class ItemController extends BaseController {
     ItemInterestedService itemInterestedService;
     @Autowired
     ItemOperateRecordService itemOperateRecordService;
+    @Autowired
+    PartnerService partnerService;
 
     /**
      * 获取项目列表
@@ -56,7 +56,7 @@ public class ItemController extends BaseController {
     public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value = "is_page", required = false) boolean isPage,
-                       @RequestParam(value = "item_id", required = false) Integer itemId,
+                       @RequestParam(value = "item_id", required = false) String itemId,
                        @RequestParam(value = "item_name", required = false) String itemName,
                        @RequestParam(value = "flag", required = false) Integer flag,
                        @RequestParam(value = "item_status", required = false) String itemStatus,
@@ -392,6 +392,26 @@ public class ItemController extends BaseController {
             LOGGER.error(">>ItemOperateRecordController.review throw exception:{}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    /**
+     * 根据项目id返回收益权转让协议内容
+     * @param itemId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "agreement", method = RequestMethod.GET)
+    public Result getAgreementContent(@RequestParam(value = "item_id", required = false) Integer itemId,
+                                      @RequestParam(value = "level_id", required = false) Integer levelId){
+
+        try {
+            Map<String, Object> map = partnerService.getAgreementContent(itemId, levelId);
+            return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">> PartnerController.getAgreementContent throw exception:{}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
     public Item setEntity(Integer itemId, String itemName, String itemProfile, Integer typeId, Integer classId,

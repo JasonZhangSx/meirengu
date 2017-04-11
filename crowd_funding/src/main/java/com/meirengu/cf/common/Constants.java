@@ -57,6 +57,12 @@ public class Constants {
     public static final int LEVEL_CROWDING = 4;
     /** 5:已完成； */
     public static final int LEVEL_COMPLETED = 5;
+    /** 收益方式 **/
+    /** 1 一次性还款 **/
+    public static final int LEVEL_PROFIT_ONCE = 1;
+    /** 2 按月还息到期还本 **/
+    public static final int LEVEL_PROFIT_MULTIPLE = 2;
+
     /** 操作审核记录 */
     /** 1初审 */
     public static final int RECORD_FIRST_VERIFY = 1;
