@@ -108,10 +108,11 @@ public class NotifyServiceImpl extends BaseServiceImpl<Notify> implements Notify
     }
 
     @Transactional
-    public boolean genNotify(Integer sender, String content, Integer type, Integer target,
+    public boolean genNotify(Integer sender, String title, String content, Integer type, Integer target,
                           String targetType, String action, Integer receiver){
         try {
             Notify n = new Notify();
+            n.setTitle(title);
             n.setContent(content);
             n.setType(type);
             if(target == null){

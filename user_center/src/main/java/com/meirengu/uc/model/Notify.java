@@ -9,6 +9,8 @@ import java.util.Date;
 public class Notify  extends BaseObject {
 	/** 消息索引ID */
 	private Integer id;
+	/** 消息标题 **/
+	private String title;
 	/** 消息内容 */
 	private String content;
 	/** 消息类型：1公告Announce；2提醒Remind；3信息、私信Message */
@@ -88,4 +90,11 @@ public class Notify  extends BaseObject {
 		return createTime;
 	}
 
-}
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+ }

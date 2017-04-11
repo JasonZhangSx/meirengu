@@ -58,7 +58,7 @@
                             <td>${item.itemId}</td>
                             <td>${item.itemName}</td>
                             <td>${item.typeName}</td>
-                            <td></td>
+                            <td>${item.className}</td>
                             <td>${item.targetAmount}</td>
                             <td>${item.preheatingDays}</td>
                             <td>${item.crowdDays}</td>

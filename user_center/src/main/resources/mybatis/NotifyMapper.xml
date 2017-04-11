@@ -15,14 +15,14 @@
 
 	<sql id="table_name">`notify`</sql>
 	<sql id="select_columns">
-		id as id, content as content, type as type, target as target, target_type as targetType, action as action, sender as sender, create_time as createTime
+		id as id, title as title, content as content, type as type, target as target, target_type as targetType, action as action, sender as sender, create_time as createTime
 	</sql>
 
 	<insert id="insert" parameterType="notify" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, content, type, target, target_type, action, sender, create_time)
+			(id, title, content, type, target, target_type, action, sender, create_time)
 		VALUES
-			(#{id}, #{content}, #{type}, #{target}, #{targetType}, #{action}, #{sender}, #{createTime})
+			(#{id}, #{title}, #{content}, #{type}, #{target}, #{targetType}, #{action}, #{sender}, #{createTime})
 	</insert>
 
 	<update id="update" parameterType="notify">
@@ -65,7 +65,7 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select t.content, t.type, t.target, t.target_type as targetType, t.action, t.sender,
+		select t.title, t.content, t.type, t.target, t.target_type as targetType, t.action, t.sender,
 		un.id, un.notify_id as notifyId, un.user_id as userId, un.is_read as isRead,
 		un.create_time as createTime  FROM <include refid="table_name" /> t
 		LEFT JOIN user_notify un ON un.notify_id=t.id
