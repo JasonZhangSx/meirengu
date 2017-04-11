@@ -98,7 +98,7 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
     }
 
     private static Integer checkStatus(Integer status) throws PaymentException {
-        if (status!=PaymentTypeUtil.PaymentStatus_Success||status!=PaymentTypeUtil.PaymentStatus_Fail){
+        if (status!=PaymentTypeUtil.PaymentStatus_Success&&status!=PaymentTypeUtil.PaymentStatus_Fail){
             throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_STATUS);
         }else {
             return status;
