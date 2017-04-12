@@ -108,7 +108,7 @@ public class VerifyController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "user",method = {RequestMethod.POST})
+    @RequestMapping(value = "user",method = {RequestMethod.GET})
     public Result user(@RequestParam(value = "user_id", required = true)Integer userId,
                          @RequestParam(value = "id_card", required = false)String idcard,
                          @RequestParam(value = "realname", required = false)String realname){
