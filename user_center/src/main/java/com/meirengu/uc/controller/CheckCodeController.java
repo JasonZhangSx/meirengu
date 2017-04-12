@@ -7,9 +7,12 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
+import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
+import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +38,9 @@ public class CheckCodeController extends BaseController {
     CheckCodeService checkCodeService;
     @Autowired
     private RedisClient redisClient;
+    @Autowired
+    private UserService userService;
+
     private static final Logger logger = LoggerFactory.getLogger(CheckCodeController.class);
 
     /**
@@ -57,6 +63,15 @@ public class CheckCodeController extends BaseController {
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                 return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
                         .MOBILE_FORMAT_ERROR));
+            }
+            //注册  登陆
+            // 找回登陆密码  找回交易密码 需要判断用户是否注册
+            if("1790347".equals(type)){
+                //验证手机号是否注册
+                User user = userService.retrieveByPhone(mobile);
+                if(StringUtil.isEmpty(user)){
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
             int code = checkCodeService.generate();
             HttpResult hr = checkCodeService.send(mobile, code, ip,type);
