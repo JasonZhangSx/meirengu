@@ -1,6 +1,8 @@
 package com.meirengu.uc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
+import com.meirengu.model.Result;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.dao.VerityDao;
 import com.meirengu.uc.model.User;
@@ -70,14 +72,11 @@ public class VerityServiceImpl implements VerityService{
     }
 
     @Override
-    public  Integer  verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
-                              String idcard, String realname, String password,Integer investConditions) {
+    public Result verityUser(Integer userId, String bankCode, String bankIdcard, String bankPhone,
+                             String idcard, String realname, String password, Integer investConditions) {
         HttpResult hr = null;
         Integer result = 0;
         Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("userId",userId);
-//        map.put("bankCode",bankCode);
-//        map.put("password",password);
         map.put("bankNo",bankIdcard);
         map.put("mobile",bankPhone);
         map.put("identityNumber",idcard);
@@ -116,13 +115,37 @@ public class VerityServiceImpl implements VerityService{
                 if(hr.getStatusCode()!=200){
                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
                 }
-                result =  (Integer) account.get("code");
+                return this.setResult((Integer) account.get("code"),null,(String) account.get("msg"));
             }else{
-                result =  (Integer) account.get("code");
+                Map data = (Map) account.get("data");
+                return this.setResult((Integer) account.get("code"),null,(String) data.get("ErrorMsg"));
             }
         }else{
-            logger.info("VerityServiceImpl.send successful >>", hr.getContent());
+            logger.info("VerityServiceImpl.send failed ！ >>", hr.getContent());
         }
+        return this.setResult(StatusCode.RETRIEVE_PAYMENT_GET_MESSAGE_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.RETRIEVE_PAYMENT_GET_MESSAGE_FAILED));
+    }
+
+
+
+
+    /**
+     * 封装返回数据对象
+     * @param code 返回状态码
+     * @param data 返回数据集合
+     * @param msg 返回状态消息
+     * @return
+     */
+    public Result setResult(int code, Object data, String msg){
+        Result result = new Result();
+        result.setCode(code);
+        result.setMsg(msg);
+        if (code == 200 && (data != null && !"".equals(data))){
+            result.setData(data);
+        }else {
+            //result.setData("");
+        }
+        logger.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
     }
 }
