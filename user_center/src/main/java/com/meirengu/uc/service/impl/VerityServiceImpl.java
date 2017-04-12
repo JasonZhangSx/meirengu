@@ -117,7 +117,8 @@ public class VerityServiceImpl implements VerityService{
                 }
                 return this.setResult((Integer) account.get("code"),null,(String) account.get("msg"));
             }else{
-                return this.setResult((Integer) account.get("code"),null,(String) account.get("msg"));
+                Map data = (Map) account.get("data");
+                return this.setResult((Integer) account.get("code"),null,(String) data.get("ErrorMsg"));
             }
         }else{
             logger.info("VerityServiceImpl.send failed ！ >>", hr.getContent());
