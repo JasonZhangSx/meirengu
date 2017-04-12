@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class AddressController extends BaseController {
         }
     }
     @RequestMapping(value = "/city",method = RequestMethod.GET)
-    public Result showCityListByPid(int pid) throws IOException {
+    public Result showCityListByPid(int pid){
         try {
             return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
@@ -50,7 +49,7 @@ public class AddressController extends BaseController {
         }
     }
     @RequestMapping(value = "/area",method = RequestMethod.GET)
-    public Result showAreasByCityId(Integer citys_id) throws IOException {
+    public Result showAreasByCityId(Integer citys_id){
         try {
             List<Area> areaList = service.showAreaListBycid(citys_id);
             if(areaList.size()!=0){
@@ -66,7 +65,7 @@ public class AddressController extends BaseController {
     }
 
    @RequestMapping(value = "/superarea",method = RequestMethod.GET)
-    public Result showProByCityId(Integer area_id) throws IOException {
+    public Result showProByCityId(Integer area_id){
        try {
             AddressPO addressPO = service.showAddress(area_id);
            if(addressPO !=null){

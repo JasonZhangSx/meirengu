@@ -102,8 +102,8 @@ public class VerifyController extends BaseController {
                 }
             }
             redisClient.setObject("verify_"+userId,times+1,86400);
-            Integer flag = verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
-            if(flag==StatusCode.OK){
+            return verityService.verityUser(userId,bankCode,bankIdcard,bankPhone,idcard,realname,password,investConditions);
+            /*if(flag==StatusCode.OK){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else if(flag == StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL){
                 return super.setResult(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_RETURN_VALUE_ISNULL, null, StatusCode.
@@ -115,10 +115,10 @@ public class VerifyController extends BaseController {
             }else{
                 return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.
                         codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
-            }
+            }*/
         }catch (Exception e){
             logger.info("VerifyController.vetify throws Exception:{}",e.getMessage());
-            return super.setResult(StatusCode.VETIFY_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.VETIFY_IS_ERROR));
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 

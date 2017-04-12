@@ -159,6 +159,9 @@ public class StatusCode {
     public static final int BANK_ID_CARD_IS_EXITS = 50116;
     public static final int REGISTER_IS_FAILED = 50117;
     public static final int ID_CARD_IS_NOT_EXITS = 50118;
+    public static final int RETRIEVE_PROJECT_GET_MESSAGE_EMPTY = 50119;
+    public static final int RETRIEVE_PROJECT_GET_MESSAGE_FAILED = 50120;
+    public static final int RETRIEVE_PAYMENT_GET_MESSAGE_FAILED = 50121;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -391,6 +394,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.BANK_ID_CARD_IS_EXITS, "该卡已绑定");
         codeMsgMap.put(StatusCode.REGISTER_IS_FAILED, "注册失败");
         codeMsgMap.put(StatusCode.ID_CARD_IS_NOT_EXITS, "身份证号不匹配");
+        codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_EMPTY, "调取项目模块获取数据为空! ");
+        codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, "调取项目模块获取项目信息失败! ");
+        codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, "调取支付模块获取认证信息失败! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

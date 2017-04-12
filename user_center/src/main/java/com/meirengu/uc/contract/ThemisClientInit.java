@@ -28,23 +28,6 @@ public class ThemisClientInit {
 
 	static{
 
-//		String filePath = "file:///e:/tmp/config.properties";
-//		String filePath = "file:///D:/workspace/user/yibaoquan/src/main/resources/config.properties";
-//		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//		Resource resource = resolver.getResource(filePath);
-//		Properties properties = new Properties();
-//		try {
-//			properties.load(resource.getInputStream());
-//		} catch (IOException e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//		Enumeration<?> it = properties.propertyNames();
-//		while (it.hasMoreElements()){
-//			String propName = (String)it.nextElement();
-//			props.put(propName,properties.getProperty(propName));
-//		}
-
 		SERVICE_URL = ConfigUtil.getConfig("services_url");
 		APP_KEY = 	ConfigUtil.getConfig("app_key");
 		APP_SECRET = ConfigUtil.getConfig("app_secret");
