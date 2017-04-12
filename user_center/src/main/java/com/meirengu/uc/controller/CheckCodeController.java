@@ -56,17 +56,16 @@ public class CheckCodeController extends BaseController {
         try {
 
             if(redisClient.existsObject(type+"_"+mobile)){
-                return setResult(StatusCode.CHECK_CODE_SENDER_REFUSED, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CHECK_CODE_SENDER_REFUSED));
+                return setResult(StatusCode.CHECK_CODE_SENDER_REFUSED, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_SENDER_REFUSED));
             }
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                        .MOBILE_FORMAT_ERROR));
+                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
             //注册  登陆
             // 找回登陆密码  找回交易密码 需要判断用户是否注册
-            if("1790347".equals(type)){
+            String codeType = ConfigUtil.getConfig("BACK_CODE_FOR_LOGIN");
+            if(codeType.equals(type)){
                 //验证手机号是否注册
                 User user = userService.retrieveByPhone(mobile);
                 if(StringUtil.isEmpty(user)){
