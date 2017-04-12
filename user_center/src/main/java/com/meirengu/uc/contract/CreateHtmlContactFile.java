@@ -27,7 +27,9 @@ public class CreateHtmlContactFile extends ThemisClientInit {
 		/**模版类型，TPL_TYPE_HTML使用html文件方式,TPL_TYPE_URL使用url地址方式*/
 		request.setTplType(ContactHtmlCreateFileRequest.TPL_TYPE_HTML);//使用html内容上传方式
 		/**html内容*/
-		String html = FileUtils.readFileToString(new File("E://contract001.html"),"UTF-8");
+
+	 	String contractTemplate = "E://contract001.html";
+		String html = FileUtils.readFileToString(new File(contractTemplate),"UTF-8");
 		//合同内容替换
 
 		html = html.replace("{signatureDate}","<em>"+ DateUtils.getPrintDate()+"</em>");//签署日期

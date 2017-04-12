@@ -398,7 +398,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_EMPTY, "调取项目模块获取数据为空! ");
         codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, "调取项目模块获取项目信息失败! ");
         codeMsgMap.put(StatusCode.RETRIEVE_PAYMENT_GET_MESSAGE_FAILED, "调取支付模块获取认证信息失败! ");
-        codeMsgMap.put(StatusCode.ID_CARD_IS_ERROR, "身份证号格式不正确! ");
+        codeMsgMap.put(StatusCode.ID_CARD_IS_ERROR, "身份证号不存在! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");
