@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>美人谷</title>
 	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
 	<meta name="format-detection" content="telephone=no" />
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" media="screen" charset="utf-8">
@@ -31,7 +31,7 @@
 				<div class="err_msg">
 					<c:if test="${not empty jsonObject}">
 						<c:choose>
-							<c:when test="${jsonObject.code == 200}">领取成功，可在个人中心，我的抵扣券查看。$('.mask').show(); </c:when>
+							<c:when test="${jsonObject.code == 200}">领取成功，可在个人中心，我的抵扣券查看。</c:when>
 							<c:when test="${jsonObject.code == 40016}">手机格式错误，请输入正确格式。</c:when>
 							<c:when test="${jsonObject.code == 50109}">邀请人不存在。</c:when>
 							<c:when test="${jsonObject.code == 50107}">您已经注册领取，可在个人中心，我的抵扣券查看。</c:when>
