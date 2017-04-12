@@ -104,8 +104,8 @@ public class RebateReceiveController extends BaseController{
     @RequestMapping(method = RequestMethod.GET)
     public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
                           @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
-                          @RequestParam(value = "sort_by", required = false) String sortBy,
-                          @RequestParam(value = "order", required = false) String order,
+                          @RequestParam(value = "sort_by", required = false, defaultValue = "rebateAmount") String sortBy,
+                          @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
                           @RequestParam(value = "user_id", required = false) String userId,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "status", required = false) int status){

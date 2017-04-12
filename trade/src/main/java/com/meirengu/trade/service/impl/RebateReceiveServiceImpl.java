@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * RebateReceive服务实现层 
@@ -258,6 +255,28 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         int pageSize = page.getPageSize();
         RowBounds rowBounds = new RowBounds(startPos, pageSize);
         List<Map<String, Object>> aList = rebateReceiveDao.getRebateInfoByPage(map, rowBounds);
+        //上述是通过多表连接查询的，不适合在sql中排序，so在service中对查询的结果进行排序
+        if (map.get("sortBy") != null && map.get("order") != null) {
+            String sortBy = map.get("sortBy").toString();
+            String order = map.get("order").toString();
+            Collections.sort(aList, new Comparator<Map<String, Object>>() {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    //按金额排序
+                    if ("rebateAmount".equals(sortBy)) {
+                        BigDecimal rebateAmount1 = new BigDecimal(o1.get("rebateAmount").toString());
+                        BigDecimal rebateAmount2 = new BigDecimal(o2.get("rebateAmount").toString());
+                        if ("DESC".equalsIgnoreCase(order)) {
+                            return rebateAmount2.compareTo(rebateAmount1);
+                        } else {
+                            return rebateAmount1.compareTo(rebateAmount2);
+                        }
+                    }
+                    return 0;
+                }
+            });
+
+        }
         int totalCount = rebateReceiveDao.getRebateInfoCount(map);
         page.setTotalCount(totalCount);
         page.setList(aList);

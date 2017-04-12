@@ -253,6 +253,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     @Transactional
     public Result appointmentAudit(Order order) throws IOException, OrderException {
         Result result = new Result();
+        result.setCode(StatusCode.OK);
+        result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         Order orderDetail = detail(order.getOrderId());
         if (orderDetail == null || orderDetail.getOrderId() == null) {
             result.setCode(StatusCode.ORDER_NOT_EXIST);
@@ -276,22 +278,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             // 预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                itemLevelUpdate(order);
-            }
-            // 审核通过变为待支付状态，
-            if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
-                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
-                sendRocketMQDeployQueue(order.getOrderSn());
-                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
-                sendRocketMQDeployQueue4Sms(order.getOrderSn());
-            }
+                orderDetail.setOrderState(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+                itemLevelUpdate(orderDetail);
 
+                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+                sendRocketMQDeployQueue(orderDetail.getOrderSn());
+                // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
+                sendRocketMQDeployQueue4Sms(orderDetail.getOrderSn());
+            }
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
             return result;
         }
-        return null;
+        return result;
     }
 
     /**

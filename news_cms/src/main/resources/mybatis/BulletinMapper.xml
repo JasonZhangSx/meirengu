@@ -129,7 +129,7 @@
 		FROM bulletin tb
 		<include refid="Bulletin_findPage_where"/>
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			order by #{sortBy} #{order}
+			order by ${sortBy} ${order}
 		</if>
 	</select>
 

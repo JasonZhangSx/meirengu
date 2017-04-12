@@ -189,7 +189,7 @@
 		<include refid="table_name" /> tb
 		<include refid="findPage_where"/>
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			order by #{sortBy} #{order}
+			order by ${sortBy} ${order}
 		</if>
 	</select>
 
