@@ -5,7 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
+import com.meirengu.erp.model.User;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.erp.utils.ExportExcel;
+import com.meirengu.utils.ApacheBeanUtils;
+import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,5 +140,37 @@ public class UserController extends BaseController{
             logger.info("UserController.sendPost throws Exception :{}" ,e.getMessage());
         }
         return  map;
+    }
+
+
+    @RequestMapping(value="/export", method= RequestMethod.GET)
+    public ModelAndView userExport(HttpServletResponse response){
+
+        try {
+            Map<String,String> paramsMap = new HashedMap();
+            Map<String, Object> map = new HashMap<>();
+            String url = ConfigUtil.getConfig("user.list");
+            //查询参数
+            paramsMap.put("is_page","0");
+
+            map = (Map<String,Object>)super.httpPost(url,paramsMap);
+            String fileName = "userInfo"+ DateUtils.getFormatDate("yyyyMMddHHmmss")+".xlsx";
+            //封装返回集合
+            DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
+            List<Map<String, String>> userList = (List<Map<String, String>>) map.get("list");
+            List<User> list = new ArrayList<User>();
+            for(Map userMap:userList){
+                User user = (User)ApacheBeanUtils.mapToObject(userMap,User.class);
+                list.add(user);
+            }
+            new ExportExcel("", User.class).setDataList(list).write(response, fileName).dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return new ModelAndView("/user/userList");
     }
 }
