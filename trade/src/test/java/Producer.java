@@ -16,7 +16,7 @@ public class Producer {
             Message msg = new Message("deploy",
                     "orderLoseEfficacy",
                     "1",
-                    "8468806917054455".getBytes());
+                    "8137037955835885".getBytes());
             msg.setDelayTimeLevel(1);
             SendResult result = producer.send(msg);
             System.out.println("id:" + result.getMsgId() +

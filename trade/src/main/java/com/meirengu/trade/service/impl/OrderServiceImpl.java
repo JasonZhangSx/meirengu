@@ -866,7 +866,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 params.put("invited_user_id", orderMap.get("userId").toString());
                 params.put("invited_user_phone", orderMap.get("userPhone").toString());
                 params.put("invest_time", orderMap.get("finishedTime").toString());
-                HttpResult inviterResult = HttpUtil.doPostForm(url, params);
+                HttpResult inviterResult = HttpUtil.doPut(url, params);
                 logger.debug("Request: {} getResponse: {}", url, inviterResult);
             }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
                     || orderState == OrderStateEnum.UNPAID.getValue()) {
