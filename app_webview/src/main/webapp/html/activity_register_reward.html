@@ -49,6 +49,7 @@
 			领 取
 		</a>
 		<a href="javascript:void(0)" class="receive end">
+			<!-- 领取成功，可在个人中心，我的抵扣券查看。 -->
 			已领取
 		</a>
   </div>
@@ -57,31 +58,28 @@
 </body>
 <script type="text/javascript" src="./../js/zepto.js"></script>
 <script type="text/javascript">
+
+	var mobile = "";
 	function GetQueryString(name)
 	{
 		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
 		var r = window.location.search.substr(1).match(reg);
 		if(r!=null)return  unescape(r[2]); return null;
 	}
-	$(function(){
-		// $('.receive.start').on('click',function(){
-		//
-		// 	// suc
-		// 	alert('领取成功');
-		// 	$(this).hide();
-		// 	$('.receive.end').show()
-		// })
 
-
-	})
+	function showInfoFromAppWithMsg(msg){
+		console.log("来自App的消息: "+msg);
+		mobile = msg;
+	}
 	function invokeA(){
-		var mobile = GetQueryString("mobile");
+		//var mobile = GetQueryString("mobile");
 		if (mobile != null && mobile != ''){
-			alert('领取成功，可在个人中心，我的抵扣券查看。');
+			//alert('领取成功，可在个人中心，我的抵扣券查看。');
 			$('.receive.start').hide();
 			$('.receive.end').show()
 		}else {
-			alert("调起App注册接口");
+			window.AndroidWebView.appLogin();
+			window.
 		}
 	}
 

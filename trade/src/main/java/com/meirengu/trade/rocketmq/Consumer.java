@@ -45,7 +45,7 @@ public class Consumer {
 
         // 订阅指定MyTopic下tags等于MyTag
 
-        defaultMQPushConsumer.subscribe("deploy", "orderLoseEfficacy");
+        defaultMQPushConsumer.subscribe("deploy", "*");
 
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
         // 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -64,14 +64,16 @@ public class Consumer {
                 logger.info(msg.toString());
                 if (msg.getTopic().equals("deploy")) {
                     // TODO 执行Topic的消费逻辑
-                    if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
-                        // TODO 执行Tag的消费
-                        try {
+                    try {
+                        if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
+                            // TODO 执行Tag的消费
                             orderService.orderLoseEfficacy(new String(msg.getBody()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } else if (msg.getTags() != null && msg.getTags().equals("orderRemindForPay")) {
+                            // TODO 执行Tag的消费
+                            orderService.orderRemindForPay(new String(msg.getBody()));
                         }
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success

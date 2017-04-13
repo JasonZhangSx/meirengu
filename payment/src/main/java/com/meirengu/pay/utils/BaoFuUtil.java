@@ -79,8 +79,10 @@ public class BaoFuUtil {
                 identityCheckType = foo.elementText("identityCheckType");
                 identityCheckUrl = foo.elementText("identityCheckUrl");
                 bankCheckUrl=foo.elementText("bankCheckUrl");
-                pfxPath = Thread.currentThread().getContextClassLoader().getResource(pfxName).getPath();
-                cerPath = Thread.currentThread().getContextClassLoader().getResource(cerName).getPath();
+                pfxPath = foo.elementText("keyPath")+pfxName;
+                cerPath = foo.elementText("keyPath")+cerName;
+//                pfxPath = Thread.currentThread().getContextClassLoader().getResource(pfxName).getPath();
+//                cerPath = Thread.currentThread().getContextClassLoader().getResource(cerName).getPath();
             }
         } catch (DocumentException e) {
             logger.error("Capture pay ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_BAOFU_PAY_READ_CONFIGURE), e.getMessage());

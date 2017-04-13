@@ -30,12 +30,15 @@ public class FeedbackController {
 
     @ResponseBody
     @RequestMapping(value = "feedback", method = RequestMethod.POST)
-    public String feedback(@RequestParam(value = "feedback_content") String feedbackContent){
+    public String feedback(@RequestParam(value = "feedback_content") String feedbackContent,
+                           @RequestParam(value = "user_id") Integer userId,
+                           @RequestParam(value = "user_name") String userName,
+                           @RequestParam(value = "user_phone") String userPhone){
         Feedback feedback =new Feedback();
         feedback.setFeedbackContent(encodeStr(feedbackContent));
-        feedback.setUserId(222);
-        feedback.setUserName("nini");
-        feedback.setUserPhone("13811930842");
+        feedback.setUserId(userId);
+        feedback.setUserName(userName);
+        feedback.setUserPhone(userPhone);
         boolean result = feedbackService.feedback(feedback);
         if (result){
             return "谢谢您宝贵的意见,我们会第一时间为您解决。";

@@ -22,5 +22,6 @@
         <identityCheckType>${identityCheck_type}</identityCheckType>
         <identityCheckUrl>${identityCheck_url}</identityCheckUrl>
         <bankCheckUrl>${bankCheckUrl}</bankCheckUrl>
+        <keyPath>${keyPath}</keyPath>
     </BaoFu>
 </RESULT>
