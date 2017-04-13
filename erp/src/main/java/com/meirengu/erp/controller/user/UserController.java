@@ -155,8 +155,6 @@ public class UserController extends BaseController{
 
             map = (Map<String,Object>)super.httpPost(url,paramsMap);
             String fileName = "userInfo"+ DateUtils.getFormatDate("yyyyMMddHHmmss")+".xlsx";
-            //封装返回集合
-            DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
             List<Map<String, String>> userList = (List<Map<String, String>>) map.get("list");
             List<User> list = new ArrayList<User>();
             for(Map userMap:userList){
@@ -164,13 +162,9 @@ public class UserController extends BaseController{
                 list.add(user);
             }
             new ExportExcel("", User.class).setDataList(list).write(response, fileName).dispose();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         return new ModelAndView("/user/userList");
     }
 }
