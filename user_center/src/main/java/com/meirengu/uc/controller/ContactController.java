@@ -102,21 +102,14 @@ public class ContactController extends BaseController{
         }
     /**
      * 处理oss上传pdf回调
-     * @param itemId
-     * @param levelId
-     * @param userId
      * @return
      */
      @RequestMapping(value = "/review",method = RequestMethod.GET)
-        public Result ReviewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
-                                        @RequestParam(value = "level_id",required = true) String levelId,
-                                        @RequestParam(value = "user_id",required = true) String userId) {
+        public Result ReviewContactFile(@RequestParam(value = "preservation_id") String preservationId) {
             try {
-                Map<String,String> map = new HashMap();
-                map.put("itemId",itemId);
-                map.put("levelId",levelId);
-                map.put("userId",userId);
                 //判断文件是否上传成功
+                Map<String,String> map = new HashMap();
+                map.put("preservationId",preservationId);
                 return contactService.ReviewContactFile(map);
             }catch (Exception e){
                 logger.info("AddressController.showCityListByPid:{}",e.getMessage());

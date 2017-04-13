@@ -231,7 +231,8 @@ public class ContactServiceImpl implements ContactService {
                                 String accessKeyId = ConfigUtil.getConfig("accessKeyId");
                                 String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
                                 String bucketName = ConfigUtil.getConfig("bucketName");
-                                String callbackUrl = ConfigUtil.getConfig("callbackUrl");
+                                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
+//                                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+preservationCreateResponse.getPreservationId();
 
                                 OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
                                 fileUtils.upload(inputStream,fileName,contractFolderName);
@@ -341,6 +342,37 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Result ReviewContactFile(Map<String, String> map) {
+
+        try {
+
+            ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
+            contractFileDownloadUrlRequest.setPreservationId(new Long(map.get("preservationId")));
+            ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
+            //根据下载url 获取文件流 并上传oss服务器
+            if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
+                logger.info("get download link success", contractFileDownloadUrlResponse.getDownUrl());
+                URL downUrl = new URL(contractFileDownloadUrlResponse.getDownUrl());
+                HttpURLConnection conn = (HttpURLConnection) downUrl.openConnection();
+                conn.setConnectTimeout(3 * 1000);   //设置超时间为3秒
+                conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");//防止屏蔽程序抓取而返回403错误
+                InputStream inputStream = conn.getInputStream();
+
+                //获取文件IO流 并将文件保存到oss
+                String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+                String endpoint = ConfigUtil.getConfig("endpoint");
+                String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+                String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+                String bucketName = ConfigUtil.getConfig("bucketName");
+                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
+//                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+map.get("preservationId");
+                String fileName = "contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf";
+
+                OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
+                fileUtils.upload(inputStream, fileName, contractFolderName);
+            }
+        }catch (Exception e){
+            logger.info("ReviewContactFile throws Exception " ,e.getMessage());
+        }
         return null;
     }
 
