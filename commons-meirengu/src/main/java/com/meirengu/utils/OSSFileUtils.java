@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,5 +63,7 @@ public class OSSFileUtils {
 
         return map;
     }
-
+    public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
+                ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+    }
 }
