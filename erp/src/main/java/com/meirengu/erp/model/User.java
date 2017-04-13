@@ -14,9 +14,7 @@ import java.util.Date;
 public class User extends BaseObject {
 
     private Integer userId;
-    @ExcelField(title="用户昵称",align=2, sort=1)
     private String nickname;
-    @ExcelField(title="用户实名",align=2, sort=12)
     private String realname;
     private String phone;
     private String mobileInviter;
