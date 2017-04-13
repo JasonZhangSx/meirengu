@@ -110,7 +110,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="tijiao()" type="button">添 加
                     </button>
                 </div>
             </div>
@@ -133,6 +133,15 @@
 <script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
 
 <script>
+
+    function tijiao() {
+        var length = $("#activity_image").length;
+        if(length!=0){
+            $(".form-horizontal").submit;
+        }else{
+            alert("活动图片不能为空！");
+        }
+    }
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({
         yearOffset: 0,
