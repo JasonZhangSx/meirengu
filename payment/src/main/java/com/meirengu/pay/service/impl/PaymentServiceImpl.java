@@ -11,6 +11,7 @@ import com.meirengu.pay.dao.PaymentInvitationBonusDao;
 import com.meirengu.pay.dao.PaymentRecordDao;
 import com.meirengu.pay.model.Payment;
 import com.meirengu.pay.model.PaymentAccount;
+import com.meirengu.pay.model.PaymentInvitationBonus;
 import com.meirengu.pay.service.PaymentService;
 import com.meirengu.pay.utils.*;
 import com.meirengu.pay.vo.PaymentRecordVo;
@@ -360,14 +361,6 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));
-//            Map<String,String> postParameter = new HashMap<>();
-//            postParameter.put("tpl_id","1790350");
-//            postParameter.put("mobile",paymentRecordVo.getUserPhone());
-//            postParameter.put("datetime",new SimpleDateFormat("yyyy年MM月dd日HH时mm分").format(new Date()));
-//            postParameter.put("money",String.valueOf(paymentRecordVo.getPaymentAmount()));
-//            LOGGER.info("payment baofuCallback message : Send message Start:{}",map.toString());
-//            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/sms/single_send_tpl",postParameter,"UTF-8");
-//            LOGGER.info("payment baofuCallback message : Send message End");
             return ResultUtil.getResult(StatusCode.OK,null);
         } catch (Exception e) {
             LOGGER.error("Capture withdrawals ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_APPLY), e.getMessage());
@@ -491,6 +484,12 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             postParameter.put("money",String.valueOf(paymentRecordVo.getPaymentAmount()));
             LOGGER.info("payment baofuCallback message : Send message Start:{}",map.toString());
             com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/sms/single_send_tpl",postParameter,"UTF-8");
+            // 发送消息提醒用户
+            postParameter.put("sender", Integer.toString(0));// 0默认为系统发送
+            postParameter.put("tpl_id", Integer.toString(14986211));
+            postParameter.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
+            postParameter.put("receiver", String.valueOf(paymentRecordVo.getUserId()));
+            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/uc/notify/tpl_send",postParameter,"UTF-8");
             LOGGER.info("payment baofuCallback message : Send message End");
         }else if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Payment){
             paySuccessNotice(paymentRecordVo);
@@ -516,6 +515,14 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         try {
             LOGGER.info("Request getPaymentRecord parameter:{}",paymentRecordVo.toString());
             List<PaymentRecordVo> list = paymentRecordDao.getPaymentRecord(paymentRecordVo);
+            List<PaymentInvitationBonus> paymentInvitationBonusList = paymentInvitationBonusDao.getUserBonus(paymentRecordVo.getUserId());
+            for (PaymentInvitationBonus paymentInvitationBonus : paymentInvitationBonusList){
+                PaymentRecordVo pay = new PaymentRecordVo();
+                pay.setPaymentAmount(paymentInvitationBonus.getPrincipal());
+                pay.setPaymentType(6);
+                pay.setCreateTime(paymentInvitationBonus.getCreateTime());
+                list.add(pay);
+            }
             if (list==null){
                 throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL);
             }
@@ -567,12 +574,9 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         LOGGER.info("Request getInvitationAmount parameter:{}",userId.toString());
         Map<String,Object> map = new HashMap<>();
         try {
-            BigDecimal invitationAmount = paymentInvitationBonusDao.selectSumPrincipal(Integer.valueOf(userId));
-            if (invitationAmount==null){
-                invitationAmount = new BigDecimal(0.00);
-            }
-            LOGGER.info("getWithdrawalsAmount prompt message: query success SumPrincipal {}",String.valueOf(invitationAmount));
-            map.put("invitationAmount",invitationAmount);
+            List<PaymentInvitationBonus> list = paymentInvitationBonusDao.selectSumPrincipal(userId);
+            LOGGER.info("getWithdrawalsAmount prompt message: query success SumPrincipal {}",list.toString());
+            map.put("invitationAmount",list);
             return ResultUtil.getResult(StatusCode.OK,map);
         }catch (Exception e){
             LOGGER.error("Capture getInvitationAmount ErrorMsg:{}",e.getMessage());
