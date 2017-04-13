@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.uc.dao.ContractDao" >
+
+	<resultMap id="contractMap" type="contract">
+		<id column="contract_id" property="contractId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="user_id" property="userId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="level_id" property="levelId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="preservation_id" property="preservationId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="contract_filepath" property="contractFilepath" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contract_no" property="contractNo" jdbcType="VARCHAR" javaType="String"/>
+		<result column="preservation_time" property="preservationTime" jdbcType="DATE" javaType="Date"/>
+	</resultMap>
+
+	<sql id="table_name">`user_contract`</sql>
+	<sql id="select_columns">
+		contract_id as contractId,
+		user_id as userId,
+		item_id as itemId,
+		level_id as levelId,
+		preservation_id as preservationId,
+		contract_filepath as contractFilepath,
+		contract_no as contractNo,
+		preservation_time as preservationTime
+	</sql>
+
+	<insert id="insert" parameterType="contract" useGeneratedKeys="true" keyProperty="contract_id" >
+		INSERT INTO <include refid="table_name" />
+			(
+				contract_id,
+				user_id,
+				item_id,
+				level_id,
+				preservation_id,
+				preservation_time,
+				contract_filepath,
+				contract_no
+			)
+			VALUES
+			(
+				#{contractId},
+				#{userId},
+				#{itemId},
+				#{levelId},
+				#{preservationId},
+				#{preservationTime},
+				#{contractFilepath},
+				#{contractNo}
+			)
+	</insert>
+
+	<select id="select" parameterType="contract" resultType="contract">
+		select
+		<include refid="select_columns" />
+		from <include refid="table_name" /> a
+		where 1 = 1
+		<if test="contractId != null">
+			AND contract_id = #{contractId,jdbcType=INTEGER}
+		</if>
+		<if test="userId != null">
+			AND user_id = #{userId,jdbcType=INTEGER}
+		</if>
+		<if test="itemId != null">
+			AND item_id = #{itemId,jdbcType=INTEGER}
+		</if>
+		<if test="levelId != null">
+			AND level_id = #{levelId,jdbcType=INTEGER}
+		</if>
+		<if test="preservationId != null">
+			AND preservation_id = #{preservationId,jdbcType=INTEGER}
+		</if>
+		<if test="preservationTime != null">
+			AND preservation_time = #{preservationTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="contractNo != null">
+			AND contract_no = #{contractNo,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

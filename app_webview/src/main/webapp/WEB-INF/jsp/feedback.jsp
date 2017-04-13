@@ -16,11 +16,14 @@
 	<div class="findFeedBack_cont">
     <div class="wrapper">
         <form name="feedbackForm" action="<%=request.getContextPath()%>/feedback" method="post" accept-charset="UTF-8">
-        <div class="p-r">
-            <textarea name="feedback_content" rows="6" cols="40" onkeyup="$.textarealength(this,150)" placeholder="请输入您的问题，我们会第一时间为您解决。"></textarea>
-            <p class="textarea-numberbar"><em class="textarea-length">0</em> / 150</p>
-        </div>
-        <a href="javascript:document.feedbackForm.submit();">提 交</a>
+            <div class="p-r">
+                <input type="hidden" id="user_id" name="user_id">
+                <input type="hidden" id="user_name" name="user_name">
+                <input type="hidden" id="user_phone" name="user_phone">
+                <textarea name="feedback_content" rows="6" cols="40" onkeyup="$.textarealength(this,150)" placeholder="请输入您的问题，我们会第一时间为您解决。"></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em> / 150</p>
+            </div>
+            <a href="javascript:document.feedbackForm.submit();">提 交</a>
         </form>
     </div>
   </div>
@@ -29,16 +32,30 @@
 </body>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/zepto.js"></script>
 <script>
-!function($) {
-  $.textarealength = function(obj, maxlength) {
-    var v = $(obj).val();
-    var l = v.length;
-    if (l > maxlength) {
-      v = v.substring(0, maxlength);
-      $(obj).val(v);
+    !function($) {
+      $.textarealength = function(obj, maxlength) {
+        var v = $(obj).val();
+        var l = v.length;
+        if (l > maxlength) {
+          v = v.substring(0, maxlength);
+          $(obj).val(v);
+        }
+        $(obj).parent().find(".textarea-length").text(v.length);
+      }
+    } ($);
+
+    function GetQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
     }
-    $(obj).parent().find(".textarea-length").text(v.length);
-  }
-} ($);
+
+    $(function () {
+        $("#user_id").val(GetQueryString("userId"));
+        $("#user_name").val(GetQueryString("userName"));
+        $("#user_phone").val(GetQueryString("userPhone"));
+    });
+
+
 </script>
 </html>

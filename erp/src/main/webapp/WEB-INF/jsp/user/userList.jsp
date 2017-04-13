@@ -162,9 +162,9 @@
                 </button>
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
+                <span class="l" onclick="export1()"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
                         class="btn btn-primary radius" href="javascript:;"><i
-                        class="Hui-iconfont">&#xe634;</i> 导出</a></span>
+                        class="Hui-iconfont">&#xe634;</i>导出</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
             <div class="mt-20">
                 <table id="example" class="table table-border table-bordered table-bg table-hover table-sort">
@@ -321,6 +321,10 @@
     {
         table.ajax.reload();
     }
+    function export1()
+        {
+           window.location.href="/erp/user/export";
+        }
 
 </script>
 <script type="text/javascript">
