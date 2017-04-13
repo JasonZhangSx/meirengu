@@ -3,8 +3,6 @@ package com.meirengu.erp.model;
 import com.meirengu.erp.utils.ExcelField;
 import com.meirengu.model.BaseObject;
 
-import java.util.Date;
-
 /**
  * 用户实体类
  *
