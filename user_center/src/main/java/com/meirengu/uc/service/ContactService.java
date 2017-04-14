@@ -16,5 +16,5 @@ public interface ContactService {
     //返回下载地址
     List<String> DownContactFile(Map<String, String> map);
 
-    Result ReviewContactFile(Map<String, String> map);
+    String ReviewContactFile(Map<String, String> map);
 }

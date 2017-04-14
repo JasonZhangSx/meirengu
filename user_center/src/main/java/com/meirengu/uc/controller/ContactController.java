@@ -4,6 +4,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.service.ContactService;
+import com.meirengu.uc.utils.GetIPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,15 +107,21 @@ public class ContactController extends BaseController{
      * @return
      */
      @RequestMapping(value = "/review",method = RequestMethod.GET)
-        public Result ReviewContactFile(@RequestParam(value = "preservation_id") String preservationId) {
+        public String ReviewContactFile(HttpServletRequest request,@RequestParam(value = "preservation_id") String preservationId) {
             try {
                 //判断文件是否上传成功
+                logger.info("call back review ip :{}",GetIPUtil.getRemoteIp(request));
+                logger.info("call back review ip :{}",request.getParameter("mimeType"));
+                logger.info("call back review ip :{}",request.getParameter("size"));
+                logger.info("call back review ip :{}",request.getParameter("var1"));
+                logger.info("call back review ip :{}",request.getParameter("var2"));
+
                 Map<String,String> map = new HashMap();
                 map.put("preservationId",preservationId);
                 return contactService.ReviewContactFile(map);
             }catch (Exception e){
                 logger.info("AddressController.showCityListByPid:{}",e.getMessage());
-                return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+                return "FAILED!";
             }
         }
 

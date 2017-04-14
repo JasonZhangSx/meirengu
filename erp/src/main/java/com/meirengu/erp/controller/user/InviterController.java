@@ -49,8 +49,8 @@ public class InviterController extends BaseController{
         String url = ConfigUtil.getConfig("user.inviter.list");
         //查询参数
         paramsMap.put("realname",realname);
-        paramsMap.put("inviteRealname",inviteRealname);
-        paramsMap.put("inviteIdcard",inviteIdcard);
+        paramsMap.put("invite_realname",inviteRealname);
+        paramsMap.put("invite_idcard",inviteIdcard);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
         paramsMap.put("page",page+"");
