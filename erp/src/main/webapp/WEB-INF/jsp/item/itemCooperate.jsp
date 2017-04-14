@@ -132,13 +132,70 @@
         background-color: #fff;
     }
 </style>
+<style>
+    .huibao_tab_menu, .content_tab_menu {
+        border-bottom: 1px #ddd solid;
+    }
+
+    .huibao_tab_menu span var, .content_tab_menu span var {
+        z-index: 222;
+        position: absolute;
+        display: none;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        font-size: 10px;
+        line-height: 10px;
+        text-align: center;
+        background-color: red;
+        color: #fff;
+        right: 2px;
+        top: 1px;
+    }
+
+    .huibao_tab_menu span var::before, .content_tab_menu span var::before {
+        content: "－";
+    }
+
+    .huibao_tab_menu span:hover var, .content_tab_menu span:hover var {
+        display: block;
+    }
+
+    .huibao_tab_menu span, .huibao_tab_menu em, .content_tab_menu span, .content_tab_menu em {
+        float: left;
+        display: inline;
+        position: relative;
+        line-height: 28px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        color: #a7a5a5;
+        padding: 5px 15px;
+        cursor: pointer;
+        background-color: #e8e8e8;
+    }
+
+    .huibao_tab_menu span.current, .content_tab_menu span.current {
+        background-color: #5a98de;
+        color: #fff;
+    }
+
+    .huibao_tab_menu em, .content_tab_menu em {
+        cursor: pointer;
+        font-style: normal;
+        font-size: 16px;
+        font-weight: 400;
+        background-color: #5eb95e;
+        color: #fff;
+    }
+
+    .huibao_set .huibao_tab {
+        display: none;
+    }
+</style>
 </head>
 <body>
 <div class="page-container">
     <!-- 选项卡 -->
-
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
-
         <!-- 基本信息 -->
         <div class="jiben_info">
             <div class="row cl">
@@ -180,29 +237,26 @@
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                    <input type="text" class="input-text" value="${item.preheatingDays}天">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目方：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 					<select name="" class="select">
-						<option value="0">宇智光</option>
-						<option value="1">宇智光</option>
-						<option value="11">宇智光</option>
-						<option value="13">├二级分类</option>
+						<option value="0">${item.partnerName}</option>
 					</select>
 					</span>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                    <input type="text" class="input-text" value="${item.crowdDays}天">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目地区：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="北京啊北京" disabled>
+                    <input type="text" class="input-text" value="${item.province}${item.city}" disabled>
                 </div>
             </div>
 
@@ -212,8 +266,8 @@
                     <!-- 审核模式 查看图 -->
                     <div class="portfoliobox">
                         <div class="picbox">
-                            <a href="temp/big/beauty.jpg" data-lightbox="gallery" data-title="项目头图"><img
-                                    src="temp/Thumb/shufang.jpg"></a>
+                            <a href="${imageUrl}${item.headerImage}" data-lightbox="gallery" data-title="项目头图"><img
+                                    src="${imageUrl}${item.headerImage}?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
                         </div>
                     </div>
 
@@ -223,141 +277,173 @@
         </div>
 
         <!-- 内容设置 -->
-        <div class="neirong_set">
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">内容信息</h3>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="" name="">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
-            </div>
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">内容设置</h3>
         </div>
+        <div class="row cl content_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
+            <div class="wrapper">
+                <c:forEach items="${content}" var="content" varStatus="index">
+                    <c:if test="${index.index == 0}">
+                        <span class="current">${content.contentTitle}</span>
+                    </c:if>
+                    <c:if test="${index.index != 0}">
+                        <span>${content.contentTitle}</span>
+                    </c:if>
+                </c:forEach>
+            </div>
+            <%--<em>+</em>--%>
+        </div>
+        <div class="cl"></div>
+        <div class="content_set">
+            <c:forEach items="${content}" var="content" varStatus="index">
+                <div class="item">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">主标题：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
+                            <input type="text" class="input-text" value="${content.contentTitle}" disabled>
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">内容：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
+                        <textarea name="contentInfo" id="contentInfo0" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                  disabled>${content.contentInfo}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+
+
         <!-- 回报信息 -->
         <div class="huibao_set">
             <div class="row cl">
                 <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">回报信息</h3>
             </div>
             <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
-                <span class="current">档位名称1</span>
-                <span>档位名称2</span>
+                <c:forEach items="${level}" var="level" varStatus="index">
+                    <c:if test="${index.index == 0}">
+                        <span class="current">${level.levelName}</span>
+                    </c:if>
+                    <c:if test="${index.index != 0}">
+                        <span>${level.levelName}</span>
+                    </c:if>
+                </c:forEach>
             </div>
             <div class="cl"></div>
-            <div class="huibao_tab">
-                <div class="row cl" style="display:block">
-                    <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+            <c:forEach items="${level}" var="level">
+                <div class="huibao_tab">
+                    <div class="row cl" style="display:block">
+                        <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
+                            <input type="text" class="input-text" value="${level.levelName}" disabled>
+                        </div>
                     </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
+                            <input type="text" class="input-text" value="${level.levelAmount}">
+                        </div>
                     </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
                         <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                  dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                                  dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)">${level.levelDesc}</textarea>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">总份数：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                               name="">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">总份数：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="${level.totalNumber}份" >
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="${level.singleLimitNumber}份">
+                        </div>
                     </div>
-                    <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                               name="">
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="" name="">
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="${level.paybackDays}天">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
+                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
+                            <c:if test="${level.isShareBonus == 1}">
+                                <option value="0">是</option>
+                            </c:if>
+							<c:if test="${level.isShareBonus == 0}">
+                                <option value="0">否</option>
+                            </c:if>
 						</select>
 						</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="" name="">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="${level.yearRate}%">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="${level.investmentPeriod}个月">
+                        </div>
                     </div>
-                    <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="" name="">
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
+                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 						<select name="" class="select">
-							<option value="0">一次性还款</option>
-							<option value="1">等额本金...</option>
+                            <c:if test="${level.isShareBonus == 1}">
+                                <option value="0">一次性还款</option>
+                            </c:if>
+							<c:if test="${level.isShareBonus == 2}">
+                                <option value="0">按月还息到期还本</option>
+                            </c:if>
 						</select>
 						</span>
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
+                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 						<select name="" class="select">
-							<option value="0">1月</option>
-							<option value="1">3月</option>
-							<option value="0">6月</option>
-							<option value="1">12月</option>
+							<option value="0">${level.shareBonusPeriod}个月</option>
 						</select>
 						</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
+                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
+							<c:if test="${level.isNeedAddress == 1}">
+                                <option value="0">是</option>
+                            </c:if>
+							<c:if test="${level.isNeedAddress == 0}">
+                                <option value="0">否</option>
+                            </c:if>
 						</select>
 						</span>
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
+                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
+							<c:if test="${level.isNeedAgreement == 1}">
+                                <option value="0">是</option>
+                            </c:if>
+							<c:if test="${level.isNeedAgreement == 0}">
+                                <option value="0">否</option>
+                            </c:if>
 						</select>
 						</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="huibao_tab">
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">另外一档位名称：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="仿照第一个添加表格" maxlength="30" id="" name="">
-                    </div>
-                </div>
-            </div>
+            </c:forEach>
+
         </div>
+
+        <form id="cooperateForm">
         <!-- 合作方式 -->
         <div class="hezuo_style">
             <div class="row cl">
@@ -366,31 +452,31 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">保证金：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="guaranteeRate" name="guaranteeRate">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="prepaidBonus" name="prepaidBonus">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">放款方式：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<option value="0">一次性</option>
-						<option value="1">俩次放款</option>
+					<select name="loanMode" id="loanMode" class="select">
+						<option value="1">一次性</option>
+						<option value="2">两次放款</option>
 					</select>
 					</span>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="30%（默认）" name="">
+                    <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">%
                 </div>
             </div>
         </div>
@@ -461,37 +547,37 @@
             <div class="row cl" style="display:block">
                 <label class="form-label col-xs-4 col-sm-2">股东姓名：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                    <input type="text" class="input-text" value="" maxlength="30" id="shareholderName" name="shareholderName">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">股东身份证号：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="shareholderIdcard" name="shareholderIdcard">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">股东地址：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="shareholderAddress" name="shareholderAddress">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">担保人姓名：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="guaranteeName" name="guaranteeName">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">担保人身份证号：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="guaranteeIdcard" name="guaranteeIdcard">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">担保人地址：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
+                    <input type="text" class="input-text" value="" placeholder="" id="guaranteeAddress" name="guaranteeAddress">
                 </div>
             </div>
             <div class="row cl">
@@ -592,13 +678,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="text-c">
-                        <td>初审</td>
-                        <td>通过</td>
-                        <td>...</td>
-                        <td>2017-02-15 15:33:33</td>
-                        <td>财务</td>
-                    </tr>
+                        <c:forEach items="${record}" var="record">
+                            <tr class="text-c">
+                                <td>
+                                    <c:if test="${record.operateType == 1}">初审</c:if>
+                                    <c:if test="${record.operateType == 2}">设置合作</c:if>
+                                    <c:if test="${record.operateType == 3}">复审</c:if>
+                                    <c:if test="${record.operateType == 4}">发布</c:if>
+                                    <c:if test="${record.operateType == 5}">下架</c:if>
+                                </td>
+                                <td>
+                                    <c:if test="${record.operateType == 1}">通过</c:if>
+                                    <c:if test="${record.operateType == 0}">不通过</c:if>
+                                </td>
+                                <td>${record.operateRemark}</td>
+                                <td>
+                                    <jsp:useBean id="dateValue" class="java.util.Date"/>
+                                    <jsp:setProperty name="dateValue" property="time" value="${record.operateTime}"/>
+                                    <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>
+                                </td>
+                                <td>${record.operateAccount}</td>
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -611,8 +712,7 @@
                 </div>
             </div>
         </div>
-
-
+    </form>
 </div>
 
 <script src=lib/jquery/1.9.1/jquery.min.js></script>
@@ -644,6 +744,16 @@
         $.Huitab(".huibao_set .huibao_tab_menu span", ".huibao_set .huibao_tab", "current", "click", "0")
         $.Huitab(".tabBar span", ".tabCon", "current", "click", "0")
     });
+
+    $('body').on('click', '.content_tab_menu span', function (event) {
+        console.log($(event.target));
+        $('.content_tab_menu span').removeClass('current');
+        $(event.target).addClass('current');
+        var index = $(event.target).index();
+        contentIndex = index;
+        $('.content_set .item').hide();
+        $('.content_set .item').eq(index).show()
+    })
     // $('#datetimepicker').datetimepicker({
     // 	lang:$.datetimepicker.setLocale('ch'),
     // });

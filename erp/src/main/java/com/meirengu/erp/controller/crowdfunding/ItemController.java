@@ -410,9 +410,10 @@ public class ItemController extends BaseController {
         List typeData = typeService.getTypeList();
         List partnerData = partnerService.getPartnerList();
         List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
-        Item item = itemService.itemDetail(itemId);
+        Map item = itemService.itemDetail(itemId);
         List contentData = itemService.getContentList(itemId, null);
         List levelData = itemService.getLevelList(itemId);
+        List recordData = itemService.getOperateRecordList(itemId);
         returnMap.put("itemClass", itemClassData);
         returnMap.put("type", typeData);
         returnMap.put("partner", partnerData);
@@ -421,7 +422,7 @@ public class ItemController extends BaseController {
         returnMap.put("content", contentData);
         returnMap.put("level", levelData);
         returnMap.put("imageUrl", ConfigUtil.getConfig("image.show.url"));
-
+        returnMap.put("record", recordData);
         return returnMap;
     }
 }

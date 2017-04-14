@@ -212,7 +212,7 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public Item itemDetail(Integer itemId) {
+    public Map itemDetail(Integer itemId) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.detail"));
         url.append("/").append(itemId);
         try {
@@ -224,8 +224,7 @@ public class ItemServiceImpl implements ItemService{
                 Object code = jsonObject.get("code");
                 if(code != null && code.equals(StatusCode.OK)){
                     JSONObject itemJson = (JSONObject) jsonObject.get("data");
-                    Item item = JSON.parseObject(itemJson.toJSONString(), Item.class);
-                    return item;
+                    return JSON.parseObject(itemJson.toJSONString(), Map.class);
                 }
             }
         } catch (IOException e) {
@@ -338,5 +337,26 @@ public class ItemServiceImpl implements ItemService{
         }
 
         return false;
+    }
+
+    @Override
+    public List getOperateRecordList(Integer itemId) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.operate.record.list"));
+        url.append("?item_id=").append(itemId);
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    return (List) jsonObject.get("data");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
