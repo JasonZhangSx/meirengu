@@ -60,6 +60,7 @@
 
 		<img src="./../img/invite_bot.jpg" style="width:100%" alt="" />
   </div>
+	<script type="text/javascript" src="./../js/common.js"></script>
 	<!--<button onclick="sendInfoToJava()">App调用JS方法(带参数)</button>-->
 	<script>
 		function sendInfoToJava(){
@@ -67,13 +68,20 @@
 			window.AndroidWebView.showInfoFromJs(name);
 		}
 		function invokeAppMethod(){
-			window.AndroidWebView.showInfoFromJs();
+			var flag = GetQueryString("flag");
+			//1为ios
+			if(flag == 1){
+				// JS通知WKWebView
+				window.webkit.messageHandlers.shareFromIos.postMessage("");
+			}else{
+				window.AndroidWebView.showInfoFromJs();
+			}
 		}
 		function showInfoFromAppWithMsg(msg){
-			alert("来自App的消息: "+msg);
+			//alert("来自App的消息: "+msg);
 		}
 		function showInfoFromApp(){
-			alert("通过App调用JS");
+			//alert("通过App调用JS");
 		}
 	</script>
    </body>
