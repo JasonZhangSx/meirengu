@@ -25,7 +25,7 @@ public class UploadController extends BaseController{
 
     @RequestMapping(value = "portrait", method = RequestMethod.POST)
     @ResponseBody
-    public Result test(MultipartHttpServletRequest request){
+    public Result portrait(MultipartHttpServletRequest request){
         //文件夹名
         String foldName = ConfigUtil.getConfig("foldName");
         //file组件的name

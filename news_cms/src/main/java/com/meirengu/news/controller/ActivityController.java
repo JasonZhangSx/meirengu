@@ -56,11 +56,7 @@ public class ActivityController extends BaseController{
 
         page = activityService.getListByPage(page, paramMap);
         try {
-            if(page.getList().size() != 0){
-                return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
-            }
+            return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.info("throw exception:", e);
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));

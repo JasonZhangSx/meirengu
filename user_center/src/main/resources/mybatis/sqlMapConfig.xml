@@ -9,5 +9,6 @@
 		<typeAlias alias="Inviter" type="com.meirengu.uc.model.Inviter" />
 		<typeAlias alias="notify" type="com.meirengu.uc.model.Notify" />
 		<typeAlias alias="userNotify" type="com.meirengu.uc.model.UserNotify" />
+		<typeAlias alias="contract" type="com.meirengu.uc.model.Contract" />
 	</typeAliases>
 </configuration>
