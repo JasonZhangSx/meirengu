@@ -86,8 +86,8 @@
                 &#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href=用户-用户列表.html title=项目列表>用户列表</a></li>
-                    <li><a href=javascript:void(0) data-href=用户-邀请记录.html title=项目列表>邀请记录</a></li>
+                    <li><a href=javascript:void(0) data-href=user/tolist title=项目列表>用户列表</a></li>
+                    <li><a href=javascript:void(0) data-href=inviter/tolist title=项目列表>邀请记录</a></li>
                 </ul>
             </dd>
         </dl>
@@ -96,7 +96,7 @@
                 &#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href=运营-活动列表.html title=活动列表>活动列表</a></li>
+                    <li><a href=javascript:void(0) data-href=activity/tolist title=活动列表>活动列表</a></li>
                     <li><a href=javascript:void(0) data-href=运营-抵扣券查询.html title=抵扣券查询>抵扣券查询</a></li>
                 </ul>
             </dd>

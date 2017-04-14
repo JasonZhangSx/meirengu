@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/activity" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
+    <form action="/erp/activity" method="post" id="form-horizontal" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -132,12 +132,13 @@
 <link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
 
-<script>
+<script  type="text/javascript" >
 
     function tijiao() {
-        var length = $("#activity_image").length;
+        var length = $("input[name='activity_image']").length
         if(length!=0){
-            $(".form-horizontal").submit;
+            alert(length)
+            $("#form-horizontal").submit();
         }else{
             alert("活动图片不能为空！");
         }
