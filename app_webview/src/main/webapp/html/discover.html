@@ -61,6 +61,7 @@
 </body>
 <script type="text/javascript" src="./../js/zepto.js"></script>
 <script type="text/javascript" src="./../js/swiper.js"></script>
+<script type="text/javascript" src="./../js/common.js"></script>
 <script type="text/javascript">
 
 	var user_id = "";
@@ -90,26 +91,30 @@
 	}*/
 
 	function showInfoFromAppWithUserId(userId){
-		alert("来自App的消息: "+userId);
+		//alert("来自App的消息: "+userId);
 		user_id = userId;
 	}
 
 	function showInfoFromAppWithUserName(userName){
-		alert("来自App的消息: "+userName);
+		//alert("来自App的消息: "+userName);
 		user_name = userName;
 	}
 
 	function showInfoFromAppWithUserPhone(userPhone){
-		alert("来自App的消息: "+userPhone);
+		//alert("来自App的消息: "+userPhone);
 		user_phone = userPhone;
 	}
 
 	function toFeedBack(){
 		if(user_id == null || user_id == ""){
-			alert("没登陆");
-			window.AndroidWebView.appLogin();
+			var flag = GetQueryString("flag");
+			//1为ios
+			if(flag == 1){
+				window.webkit.messageHandlers.appLogin.postMessage("");
+			}else {
+				window.AndroidWebView.appLogin();
+			}
 		}else{
-			alert("已登录");
 			window.location.href = "http://test.api.meirenguvip.com/webview/feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
 		}
 	}
