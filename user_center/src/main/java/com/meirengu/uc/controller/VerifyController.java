@@ -127,6 +127,12 @@ public class VerifyController extends BaseController {
     }
 
 
+    /**
+     * 注册验证
+     * @param phone
+     * @param invitePhone
+     * @return
+     */
     @RequestMapping(value = "register",method = {RequestMethod.POST})
     public Result user(@RequestParam(value = "phone", required = true)String phone,
                        @RequestParam(value = "invite_phone", required = false)String invitePhone){

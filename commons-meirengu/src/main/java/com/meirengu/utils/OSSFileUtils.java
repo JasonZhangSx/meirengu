@@ -1,6 +1,9 @@
 package com.meirengu.utils;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.Callback;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +67,22 @@ public class OSSFileUtils {
         return map;
     }
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
-                ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName+"/"+fileName,inputStream);
+        // 上传回调参数
+        Callback callback = new Callback();
+        callback.setCallbackUrl(callbackUrl);
+        callback.setCallbackBody("{\\\"mimeType\\\":${mimeType},\\\"size\\\":${size}}");
+        callback.setCalbackBodyType(Callback.CalbackBodyType.URL);
+        callback.addCallbackVar("x:var1", "value1");
+        callback.addCallbackVar("x:var2", "value2");
+        putObjectRequest.setCallback(callback);
+//        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        PutObjectResult putObjectResult = ossClient.putObject(putObjectRequest);
+        // 读取上传回调返回的消息内容
+        byte[] buffer = new byte[1024];
+        logger.info("callbackMessage :{} ", putObjectResult.getCallbackResponseBody().read(buffer));
+        // 一定要close，否则会造成连接资源泄漏
+        putObjectResult.getCallbackResponseBody().close();
     }
 }
