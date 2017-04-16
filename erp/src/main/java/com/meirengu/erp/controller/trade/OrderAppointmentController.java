@@ -9,39 +9,68 @@ import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
+
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 /**
  * 预约订单控制类
  * Created by maoruxin on 2017/3/30.
  */
-@RestController
+@Controller
 @RequestMapping("/order_appointment")
 public class OrderAppointmentController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(OrderAppointmentController.class);
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView orderAppointmentList(TradeQuery query) throws IOException {
-        ModelAndView mv = new ModelAndView();
-        query.setOrderState(1);
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + query.getParamsStr();
-        Object data = null;
+    /**
+     * 跳转到预约列表页面
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    public String orderAppointmentView() throws IOException {
+        return "/trade/orderAppointmentList";
+    }
+
+    /**
+     * 预约列表数据请求
+     * @param input
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public DataTablesOutput orderAppointmentList(@Valid @RequestBody DataTablesInput input) throws IOException {
+        // 组装请求参数
+        TradeQuery tradeQuery = new TradeQuery(input);
+        //查询预约状态的订单
+        tradeQuery.setOrderState(1);
+
+        String url = ConfigUtil.getConfig("order.list.url") + "?" + tradeQuery.getParamsStr();
+        Map<String,Object> httpData = null;
+        List<Map<String,Object>> list = null;
+        int totalCount = 0;
         try {
-            data = httpGet(url);
+            httpData = (Map<String,Object>)httpGet(url);
+            list = (List<Map<String,Object>>) httpData.get("list");
+            totalCount = Integer.parseInt(httpData.get("totalCount").toString());
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("throw exception:", e);
         }
-        mv.addObject("page", data);
-        mv.addObject("query", query);
-        mv.setViewName("/trade/orderAppointmentList");
-        return mv;
+        return setDataTablesOutput(input, list, totalCount);
     }
+
 
     /**
      * 预约审核

@@ -32,7 +32,8 @@ public class OrderCandidateController extends BaseController{
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView orderCandidateList(TradeQuery query) throws IOException {
         ModelAndView mv = new ModelAndView();
-        String url = ConfigUtil.getConfig("order.candidate.list.url") + "?" + URLEncoder.encode(query.getParamsStr(), "UTF-8");
+//        String url = ConfigUtil.getConfig("order.candidate.list.url") + "?" + URLEncoder.encode(query.getParamsStr(), "UTF-8");
+        String url = null;
         Object data = httpGet(url);
         mv.addObject("page", data);
         mv.addObject("query", query);

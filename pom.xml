@@ -140,6 +140,8 @@
         <ueditor.version>1.1.2</ueditor.version>
         <!-- ueditor json -->
         <ueditor-json.version>1.0.0</ueditor-json.version>
+        <!-- rocketmq clien -->
+        <rocketmq-client.version>4.0.0-incubating</rocketmq-client.version>
     </properties>
     <prerequisites>
         <maven>3.0.0</maven>
