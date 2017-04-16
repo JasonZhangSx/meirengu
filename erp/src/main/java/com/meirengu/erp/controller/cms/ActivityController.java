@@ -127,15 +127,15 @@ public class ActivityController extends BaseController{
     @RequestMapping("update")
     @ResponseBody
     public Map update( @RequestParam(value="activity_id", required = true ) String activityId,
-                       @RequestParam(value = "activity_type")Integer activityType,
-                       @RequestParam(value = "activity_name")String activityName,
-                       @RequestParam(value = "activity_image")String activityImage,
-                       @RequestParam(value = "activity_link")String activityLink,
-                       @RequestParam(value = "activity_sort")Integer activitySort,
-                       @RequestParam(value = "remarks")String remarks,
-                       @RequestParam(value = "status")String status,
-                       @RequestParam(value = "start_time")Date startTime,
-                       @RequestParam(value = "end_time")Date endTime){
+                       @RequestParam(value = "activity_type" , required = false)Integer activityType,
+                       @RequestParam(value = "activity_name", required = false)String activityName,
+                       @RequestParam(value = "activity_image", required = false)String activityImage,
+                       @RequestParam(value = "activity_link", required = false)String activityLink,
+                       @RequestParam(value = "activity_sort", required = false)Integer activitySort,
+                       @RequestParam(value = "remarks", required = false)String remarks,
+                       @RequestParam(value = "status", required = false)String status,
+                       @RequestParam(value = "start_time", required = false)Date startTime,
+                       @RequestParam(value = "end_time", required = false)Date endTime){
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
@@ -147,13 +147,27 @@ public class ActivityController extends BaseController{
             }if(!StringUtil.isEmpty(startTime)){
                 paramsMap.put("start_time",DateAndTime.convertDateToString(startTime,""));
             }
-            paramsMap.put("activity_link",activityLink);
-            paramsMap.put("activity_image",activityImage);
-            paramsMap.put("activity_name",activityName);
-            paramsMap.put("activity_type",activityType+"");
-            paramsMap.put("activity_sort",activitySort+"");
-            paramsMap.put("remarks",remarks);
-            paramsMap.put("status",status);
+            if(activityLink!=null){
+                paramsMap.put("activity_link",activityLink);
+            }
+            if(activityImage!=null){
+                paramsMap.put("activity_image",activityImage);
+            }
+            if(activityName!=null){
+                paramsMap.put("activity_name",activityName);
+            }
+            if(activityType!=null){
+                paramsMap.put("activity_type",activityType+"");
+            }
+            if(activitySort!=null){
+                paramsMap.put("activity_sort",activitySort+"");
+            }
+            if(remarks!=null){
+                paramsMap.put("remarks",remarks);
+            }
+            if(status!=null){
+                paramsMap.put("status",status);
+            }
             String url = ConfigUtil.getConfig("user.activity.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());

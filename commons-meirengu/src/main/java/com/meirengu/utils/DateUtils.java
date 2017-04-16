@@ -7,13 +7,14 @@ package com.meirengu.utils;
  * @author sunweiwei
  * @version 1.00 
  */
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class DateUtils {
 
@@ -542,7 +543,12 @@ public class DateUtils {
 			return null;
 		}
 	}
-
+	/**
+	 * 得到当前日期字符串 格式（yyyy-MM-dd） pattern可以为："yyyy-MM-dd" "HH:mm:ss" "E"
+	 */
+	public static String getFormatDate(String pattern) {
+		return DateFormatUtils.format(new Date(), pattern);
+	}
 	/**
 	 * 从指定Timestamp中得到相应的日期的字符串形式 日期"XXXX-XX-XX"
 	 * 

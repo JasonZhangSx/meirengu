@@ -1,7 +1,6 @@
-package com.meirengu.uc.contract;
+package com.meirengu.uc.utils;
 
 import com.google.common.collect.Maps;
-import com.meirengu.uc.utils.ConfigUtil;
 import org.mapu.themis.ThemisClient;
 
 import java.util.Map;

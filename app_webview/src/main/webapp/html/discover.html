@@ -28,21 +28,21 @@
 	<div class="find_cont">
 		<div class="wrapper">
 			<div>
-				<a href="http://localhost:8888/webview/activities">
+				<a href="http://test.api.meirenguvip.com/webview/activities">
 					<img src="./../img/find_icon1.png" alt="" style="width:.36rem" /><br/>
 					热门活动
 				</a>
-				<a href="http://localhost:8888/webview/bulletins">
+				<a href="http://test.api.meirenguvip.com/webview/bulletins">
 					<img src="./../img/find_icon2.png" alt="" style="width:.29rem" /><br/>
 					平台公告
 				</a>
 			</div>
 			<div>
-				<a href="http://localhost:8888/webview/faqs">
+				<a href="http://test.api.meirenguvip.com/webview/faqs">
 					<img src="./../img/find_icon3.png" alt="" style="width:.36rem" /><br/>
 					常见问题
 				</a>
-				<a href="http://localhost:8888/webview/feedback">
+				<a href="javascript: toFeedBack();">
 					<img src="./../img/find_icon4.png" alt="" style="width:.36rem" /><br/>
 					意见反馈
 				</a>
@@ -61,7 +61,12 @@
 </body>
 <script type="text/javascript" src="./../js/zepto.js"></script>
 <script type="text/javascript" src="./../js/swiper.js"></script>
+<script type="text/javascript" src="./../js/common.js"></script>
 <script type="text/javascript">
+
+	var user_id = "";
+	var user_name = "";
+	var user_phone = "";
 	$(function(){
 		var head_swiper= new Swiper('.head_swiper',{
        pagination: '.pagination',
@@ -77,6 +82,43 @@
        }
      });
 	})
+
+	/*function showInfoFromAppWithMsg(userId, userName, userPhone){
+		alert("来自App的消息: "+userId+" | "+userName+" | "+userPhone);
+		user_idd = user_id;
+		user_name = user_name;
+		user_phone = user_phone;
+	}*/
+
+	function showInfoFromAppWithUserId(userId){
+		//alert("来自App的消息: "+userId);
+		user_id = userId;
+	}
+
+	function showInfoFromAppWithUserName(userName){
+		//alert("来自App的消息: "+userName);
+		user_name = userName;
+	}
+
+	function showInfoFromAppWithUserPhone(userPhone){
+		//alert("来自App的消息: "+userPhone);
+		user_phone = userPhone;
+	}
+
+	function toFeedBack(){
+		if(user_id == null || user_id == ""){
+			var flag = GetQueryString("flag");
+			//1为ios
+			if(flag == 1){
+				window.webkit.messageHandlers.appLogin.postMessage("");
+			}else {
+				window.AndroidWebView.appLogin();
+			}
+		}else{
+			window.location.href = "http://test.api.meirenguvip.com/webview/feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
+		}
+	}
+
 </script>
 
 </html>

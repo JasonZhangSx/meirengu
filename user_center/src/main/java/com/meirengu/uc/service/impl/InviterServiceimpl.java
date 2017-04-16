@@ -8,6 +8,8 @@ import com.meirengu.uc.service.InviterService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.JacksonUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,43 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
     @Override
     public void getReward(List<Map<String, Object>> list) {
 
+        StringBuffer sb = new StringBuffer();
+        for(int i = 0; i<list.size();i++){
+
+            sb.append(String.valueOf(list.get(i).get("invitedUserId")));
+            if(i<list.size()-1){
+                sb.append(",");
+            }
+        }
+
+        HttpResult hr = null;
+        String url = ConfigUtil.getConfig("URI_GET_USER_REWARD");
+        String urlAppend = url+"?userId="+ sb.toString();
+        logger.info("InviterServiceimpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+        try {
+            hr = HttpUtil.doGet(urlAppend);
+        } catch (Exception e) {
+            logger.error("InviterServiceimpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
+        }
+        if(hr.getStatusCode()==200){
+            Map<String,Object> message = new HashedMap();
+            message = JacksonUtil.readValue(hr.getContent(),Map.class);
+            if(message!=null){
+                Map invitationAmount = (Map)message.get("data");
+                if(invitationAmount!=null){
+                    List<Map<String,String>> invitationAmountList = (List<Map<String,String>>)invitationAmount.get("invitationAmount");
+                   for (Map<String,String> map:invitationAmountList){
+                       for(Map userInvite:list){
+                            if(String.valueOf(map.get("userId")).equals(String.valueOf(userInvite.get("invitedUserId")))){
+                                userInvite.put("reward",String.valueOf(map.get("principal")));
+                            }
+                       }
+                   }
+                }
+            }
+        }else{
+            logger.error("InviterServiceimpl.back code >> params:{}, exception:{}");
+        }
     }
 
     /**

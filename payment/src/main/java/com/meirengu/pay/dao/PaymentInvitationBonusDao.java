@@ -4,8 +4,12 @@ package com.meirengu.pay.dao;
 import com.meirengu.pay.model.PaymentInvitationBonus;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface PaymentInvitationBonusDao {
+
+    List<PaymentInvitationBonus> getUserBonus(Integer userId);
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(PaymentInvitationBonus record);
@@ -18,5 +22,5 @@ public interface PaymentInvitationBonusDao {
 
     int updateByPrimaryKey(PaymentInvitationBonus record);
 
-    BigDecimal selectSumPrincipal(Integer userId);
+    List<PaymentInvitationBonus>  selectSumPrincipal(String userId);
 }
