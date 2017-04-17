@@ -39,7 +39,7 @@ public class ActivityController extends BaseController{
     public ModelAndView toedit(@RequestParam(value="activity_id", required = false ,defaultValue = "") String activityId){
 
         Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.activity.detail");
+        String url = ConfigUtil.getConfig("news.activity.detail");
         String urlAppend = url+"?activity_id="+activityId;
         try {
             map = ( Map<String, Object>)super.httpGet(urlAppend);
@@ -77,7 +77,7 @@ public class ActivityController extends BaseController{
             paramsMap.put("status",status+"");
             paramsMap.put("activity_sort",activitySort+"");
             paramsMap.put("remarks",remarks);
-            String url = ConfigUtil.getConfig("user.activity.insert");
+            String url = ConfigUtil.getConfig("news.activity.insert");
             Object obj = super.httpPost(url,paramsMap);
             //todo 做返回处理
             return new ModelAndView("/cms/activity");
@@ -101,7 +101,7 @@ public class ActivityController extends BaseController{
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.activity.list");
+        String url = ConfigUtil.getConfig("news.activity.list");
         //查询参数
         paramsMap.put("activity_id",activityId);
         paramsMap.put("activity_name",activityName);
@@ -168,7 +168,7 @@ public class ActivityController extends BaseController{
             if(status!=null){
                 paramsMap.put("status",status);
             }
-            String url = ConfigUtil.getConfig("user.activity.update");
+            String url = ConfigUtil.getConfig("news.activity.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
         } catch (Exception e) {

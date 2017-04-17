@@ -36,11 +36,13 @@ public class FaqClassController extends BaseController{
     @RequestMapping(value = "list", method = {RequestMethod.GET})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
+                       @RequestParam(value="class_id", required = false) Integer classId,
                        @RequestParam(value="status", required = false) Integer status,
                        @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="order", required = false) String order){
         Map paramMap = new HashMap<String, Object>();
         Page<FaqClass> page = super.setPageParams(pageNum,pageSize);
+        paramMap.put("classId", classId);
         paramMap.put("status", status);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
@@ -63,7 +65,7 @@ public class FaqClassController extends BaseController{
      * @param operateAccount
      * @return
      */
-    @RequestMapping(value = "save", method = {RequestMethod.POST})
+    @RequestMapping(value = "insert", method = {RequestMethod.POST})
     public Result list(@RequestParam(value="class_name", required = true) String className,
                        @RequestParam(value="operate_account", required = true) String operateAccount){
         FaqClass faqClass = new FaqClass();
@@ -99,11 +101,12 @@ public class FaqClassController extends BaseController{
         return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(listAllFaqClassPo,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
-    @RequestMapping(value = "status/update", method = {RequestMethod.PUT})
+    @RequestMapping(value = "update", method = {RequestMethod.PUT})
     public Result updateStatus(@RequestParam(value="class_id", required = true) Integer classId,
-                                            @RequestParam(value="status", required = true) Byte status,
-                                            @RequestParam(value="operate_account", required = true) String operateAccount){
-        Integer count = faqClassService.updateStatus(classId,status,operateAccount);
+                                            @RequestParam(value="status", required = false) Byte status,
+                                            @RequestParam(value="class_name", required = false) String className,
+                                            @RequestParam(value="operate_account", required = false) String operateAccount){
+        Integer count = faqClassService.updateStatus(classId,status,operateAccount,className);
         if(count == 0){
             return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
         }else{
