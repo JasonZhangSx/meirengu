@@ -63,7 +63,7 @@ public class FaqClassController extends BaseController{
      * @param operateAccount
      * @return
      */
-    @RequestMapping(value = "save", method = {RequestMethod.POST})
+    @RequestMapping(value = "insert", method = {RequestMethod.POST})
     public Result list(@RequestParam(value="class_name", required = true) String className,
                        @RequestParam(value="operate_account", required = true) String operateAccount){
         FaqClass faqClass = new FaqClass();
