@@ -66,7 +66,7 @@ public class OrderAppointmentController extends BaseController{
             totalCount = Integer.parseInt(httpData.get("totalCount").toString());
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
         }
         return setDataTablesOutput(input, list, totalCount);
     }
@@ -105,7 +105,7 @@ public class OrderAppointmentController extends BaseController{
                 return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
