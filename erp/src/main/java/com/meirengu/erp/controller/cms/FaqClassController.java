@@ -84,7 +84,10 @@ public class FaqClassController extends BaseController{
             //查询参数
             /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
             int page = start/length + 1;
-            String urlAppend = url+"?page="+page+"&per_page="+length+"&class_id="+classId;
+            String urlAppend = url+"?page="+page+"&per_page="+length;
+            if(classId!=null){
+                urlAppend = "&class_id="+classId;
+            }
             map = (Map<String,Object>)super.httpGet(urlAppend);
             //封装返回集合
             List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
@@ -111,7 +114,7 @@ public class FaqClassController extends BaseController{
             if(status!=null){
                 paramsMap.put("status",status);
             }
-            String url = ConfigUtil.getConfig("news.faqclass.status.update");
+            String url = ConfigUtil.getConfig("news.faqclass.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
         } catch (Exception e) {
@@ -129,9 +132,9 @@ public class FaqClassController extends BaseController{
             paramsMap.put("class_id",classId);
             paramsMap.put("operate_account","admin");
             if(className!=null){
-                paramsMap.put("status",className);
+                paramsMap.put("class_name",className);
             }
-            String url = ConfigUtil.getConfig("news.faqclass.status.update");
+            String url = ConfigUtil.getConfig("news.faqclass.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             if(hr.getStatusCode()==200){
                 return new ModelAndView("/cms/faqclass");
