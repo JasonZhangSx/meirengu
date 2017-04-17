@@ -7,8 +7,11 @@ import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,5 +73,29 @@ public class BaseController {
             }
         }
         return null;
+    }
+
+    public <T> DataTablesOutput<T> setDataTablesOutput(DataTablesInput input, List<T> data, int totalCount) {
+        DataTablesOutput<T> output = new DataTablesOutput<>();
+        output.setDraw(input.getDraw());
+        if (input.getLength() == 0) {
+            return output;
+        }
+
+        try {
+            long recordsTotal = totalCount;
+            if (recordsTotal == 0) {
+                return output;
+            }
+            output.setRecordsTotal(recordsTotal);
+            output.setData(data);
+            output.setRecordsFiltered(recordsTotal);
+
+        } catch (Exception e) {
+            output.setError(e.toString());
+        }
+
+
+        return output;
     }
 }

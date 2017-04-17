@@ -341,7 +341,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Result ReviewContactFile(Map<String, String> map) {
+    public String ReviewContactFile(Map<String, String> map) {
 
         try {
 
@@ -363,17 +363,24 @@ public class ContactServiceImpl implements ContactService {
                 String accessKeyId = ConfigUtil.getConfig("accessKeyId");
                 String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
                 String bucketName = ConfigUtil.getConfig("bucketName");
-                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
-//                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+map.get("preservationId");
+//                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
+                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+map.get("preservationId");
+
+                logger.info("call back Url :{}",callbackUrl);
+
+
                 String fileName = "contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf";
 
                 OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
                 fileUtils.upload(inputStream, fileName, contractFolderName);
+                return "SUCCESS";
+            }else{
+                return "SUCCESS";
             }
         }catch (Exception e){
-            logger.info("ReviewContactFile throws Exception " ,e.getMessage());
+            logger.info("ReviewContactFile throws Exception " ,e);
+            return "FAILED";
         }
-        return null;
     }
 
 
