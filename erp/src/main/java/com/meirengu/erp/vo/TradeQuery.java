@@ -2,19 +2,24 @@ package com.meirengu.erp.vo;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * 订单管理模块列表查询字段VO
  */
 public class TradeQuery implements Serializable {
-    
 
+	private static final Logger logger = LoggerFactory.getLogger(TradeQuery.class);
+    
 	private static final long serialVersionUID = -8836010001713826972L;
 
 
@@ -35,10 +40,13 @@ public class TradeQuery implements Serializable {
 	private String itemName;
 	/** 订单编号 */
 	private String orderSn;
-	/** 状态 */
+	/** 候补预约处理状态 */
 	private Integer status;
-	/** 状态 */
+	/** 订单状态 */
 	private Integer orderState;
+	/** 退款订单状态 */
+	private Integer refundState;
+
 
 	public TradeQuery(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
@@ -48,24 +56,46 @@ public class TradeQuery implements Serializable {
 	}
 
 	public TradeQuery(DataTablesInput input){
-		//获取column的search
-		Column parameter1 = input.getColumns().get(1);
-		String orderSn = parameter1.getSearch().getValue();
-		Column parameter2 = input.getColumns().get(2);
-		String userPhone = parameter1.getSearch().getValue();
-		Column parameter3 = input.getColumns().get(3);
-		String itemName = parameter1.getSearch().getValue();
+		// 分页字段
 		int start = input.getStart();
 		int length = input.getLength();
 		int pageNum = start / length + 1;
 
-
 		this.pageNum = pageNum;
 		this.pageSize = length;
 
-		this.orderSn = orderSn;
-		this.userPhone = userPhone;
-		this.itemName = itemName;
+		// 查询条件
+		List<Column> columnList = input.getColumns();
+		for (Column parameter : columnList) {
+			String parameterName = parameter.getName();
+			String parameterSearchValue = parameter.getSearch().getValue();
+			if (StringUtils.isEmpty(parameterName) || StringUtils.isEmpty(parameterSearchValue)) {
+				continue;
+			}
+			switch (parameterName) {
+				case "userPhone":
+					this.userPhone = parameterSearchValue;
+					break;
+				case "itemName":
+					this.itemName = parameterSearchValue;
+					break;
+				case "orderSn":
+					this.orderSn = parameterSearchValue;
+					break;
+				case "status":
+					this.status = Integer.parseInt(parameterSearchValue);
+					break;
+				case "orderState":
+					this.orderState = Integer.parseInt(parameterSearchValue);
+					break;
+				case "refundState":
+					this.refundState = Integer.parseInt(parameterSearchValue);
+					break;
+				default:
+					logger.info("tradeQueryVo中没有: {} 字段", parameterName);
+					break;
+			}
+		}
 	}
 
 	public Integer getPageNum() {
@@ -91,6 +121,9 @@ public class TradeQuery implements Serializable {
 	}
 
 	public String getSortColumn() {
+		if(StringUtils.isEmpty(sortColumn)){
+			sortColumn="create_time";
+		}
 		return sortColumn;
 	}
 
@@ -101,6 +134,9 @@ public class TradeQuery implements Serializable {
 
 
 	public String getOrder() {
+		if(StringUtils.isEmpty(order)){
+			order="desc";
+		}
 		return order;
 	}
 
@@ -148,38 +184,54 @@ public class TradeQuery implements Serializable {
 		this.orderState = orderState;
 	}
 
-	public String getParamsStr(){
+	public Integer getRefundState() {
+		return refundState;
+	}
+
+	public void setRefundState(Integer refundState) {
+		this.refundState = refundState;
+	}
+
+	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
-		if (this.pageNum != null) {
-			sb.append("page_num=" + this.pageNum);
+		if (this.getPageNum() != null) {
+			sb.append("page_num=" + this.getPageNum());
 			sb.append("&");
 		}
-		if (this.pageSize != null) {
-			sb.append("page_size=" + this.pageSize);
+		if (this.getPageSize() != null) {
+			sb.append("page_size=" + this.getPageSize());
 			sb.append("&");
 		}
-		if (this.sortColumn != null) {
-			sb.append("sort_by=" + this.sortColumn);
+		if (StringUtils.isNotBlank(this.getSortColumn())) {
+			sb.append("sort_by=" + this.getSortColumn());
 			sb.append("&");
 		}
-		if (this.order != null) {
-			sb.append("order=" + this.order);
+		if (StringUtils.isNotBlank(this.getOrder())) {
+			sb.append("order=" + this.getOrder());
 			sb.append("&");
 		}
-		if (this.userPhone != null) {
-			sb.append("user_phone=" + this.userPhone);
+		if (StringUtils.isNotBlank(this.getOrderSn())) {
+			sb.append("order_sn=" + this.getOrderSn());
 			sb.append("&");
 		}
-		if (this.itemName != null) {
-			sb.append("item_name=" + this.itemName);
+		if (StringUtils.isNotBlank(this.getUserPhone())) {
+			sb.append("user_phone=" + this.getUserPhone());
 			sb.append("&");
 		}
-		if (this.status != null) {
-			sb.append("status=" + this.status);
+		if (StringUtils.isNotBlank(this.getItemName())) {
+			sb.append("item_name=" + URLEncoder.encode(this.getItemName(), "UTF-8"));
 			sb.append("&");
 		}
-		if (this.orderState != null) {
-			sb.append("order_state=" + this.orderState);
+		if (this.getStatus() != null) {
+			sb.append("status=" + this.getStatus());
+			sb.append("&");
+		}
+		if (this.getOrderState() != null) {
+			sb.append("order_state=" + this.getOrderState());
+			sb.append("&");
+		}
+		if (this.getRefundState() != null) {
+			sb.append("refund_state=" + this.getRefundState());
 			sb.append("&");
 		}
 		//去掉最后一个&

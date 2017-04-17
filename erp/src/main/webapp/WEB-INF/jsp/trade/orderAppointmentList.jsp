@@ -21,14 +21,14 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-                <div class="text-c">
-                    订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
-                    用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                    项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">　
-                    <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
-                        查 询
-                    </button>
-                </div>
+            <div class="text-c">
+                订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
+                用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
+                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">　
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
@@ -56,8 +56,6 @@
                         <th>操作</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
                 </table>
             </div>
         </article>
@@ -73,6 +71,7 @@
     <button type="button" class="btn btn-{{this.type}} btn-sm" onclick="{{this.fn}}">{{this.name}}</button>
     {{/each}}
 </script>
+
 <script type="text/javascript">
 
     var table;
@@ -97,6 +96,7 @@
             "order": [[1, 'asc']],// dt默认是第一列升序排列 这里第一列为序号列，所以设置为不排序，并把默认的排序列设置到后面
             "serverSide": true,  //启用服务器端分页
             "processing": true,
+            "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
                 {"data": "orderSn"},
@@ -127,20 +127,20 @@
                     }
                 },
                 {
-                    "data": "addUserName",
+                    "data": null,
                     "render": function (data, type, row, meta) {
                         var userAddressId = row.userAddressId;
-                        if (userAddressId !== null && userAddressId != 0) {
+                        if (userAddressId != null && userAddressId != 0) {
                             return row.addUserName + "(" + row.addUserPhone + ")";
                         }
                         return "";
                     }
                 },
                 {
-                    "data": "addProvince",
+                    "data": null,
                     "render": function (data, type, row, meta) {
                         var userAddressId = row.userAddressId;
-                        if (userAddressId !== null && userAddressId != 0) {
+                        if (userAddressId != null && userAddressId != 0) {
                             return row.addProvince + row.addCity + row.addArea + row.addUserAddress;
                         }
                         return "";
@@ -169,6 +169,9 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                { "name": "orderSn",   "targets": 1 },
+                { "name": "userPhone",  "targets": 2 },
+                { "name": "itemName", "targets": 3 },
                 {
                     "targets": 17,
                     "render": function (data, type, row, meta) {
@@ -252,6 +255,7 @@
             function () {
                 if (appointmentAduitAjax(orderId, 2)) {
                     layer.msg('已通过', {icon: 6, time: 1000});
+                    table.ajax.reload();
                 } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
@@ -259,6 +263,7 @@
             function () {
                 if (appointmentAduitAjax(orderId, 3)) {
                     layer.msg('未通过', {icon: 5, time: 1000});
+                    table.ajax.reload();
                 } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
