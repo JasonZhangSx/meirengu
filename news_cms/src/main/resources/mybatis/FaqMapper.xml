@@ -48,25 +48,25 @@
     <update id="update" parameterType="faq">
         update <include refid="table_name" />
         <set>
-            <if test="faqQuestion != null and faqQuestion != ''">
+            <if test="faqQuestion != null">
                 faq_question=#{faqQuestion},
             </if>
-            <if test="faqAnswer != null and faqAnswer != ''">
+            <if test="faqAnswer != null ">
                 faq_answer=#{faqAnswer},
             </if>
-            <if test="classId != null and classId != ''">
+            <if test="classId != null ">
                 class_id=#{classId},
             </if>
-            <if test="className != null and className != ''">
+            <if test="className != null ">
                 class_name=#{className},
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null ">
                 status=#{status},
             </if>
             <if test="updateTime != null">
                 update_time=#{updateTime},
             </if>
-            <if test="operateAccount != null and operateAccount != ''">
+            <if test="operateAccount != null ">
             operate_account=#{operateAccount},
             </if>
                 faq_id=#{faqId}
