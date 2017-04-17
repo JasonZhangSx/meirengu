@@ -106,7 +106,7 @@ public class BaoFuUtil {
         ArrayData.put("id_holder", idHolder);
         ArrayData.put("mobile", mobile);
         ArrayData.put("trans_id", transId);
-        ArrayData.put("txn_amt", "1");
+        ArrayData.put("txn_amt", txnAmt);
         ArrayData.put("return_url", returnUrl);
         ArrayData.put("txn_type", txnType);
 //        ArrayData.put("commodity_name", commodityName);
