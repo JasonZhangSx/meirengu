@@ -95,8 +95,7 @@
 
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
-        select <include refid="select_columns" />,
-        0 AS readNum, 0 AS commentNum, 0 AS collectNum
+        select <include refid="select_columns" />
         from
         <include refid="table_name" /> a
         where 1=1
