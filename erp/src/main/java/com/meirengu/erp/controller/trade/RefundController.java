@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -24,42 +22,42 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 订单控制类
+ * 退款订单控制类
  * Created by maoruxin on 2017/3/30.
  */
 @Controller
-@RequestMapping("/order")
-public class OrderController extends BaseController{
+@RequestMapping("/refund")
+public class RefundController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RefundController.class);
 
     /**
-     * 跳转到订单列表页面
+     * 跳转到退款审核订单列表页面
      * @return
      * @throws IOException
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String orderView() throws IOException {
-        return "/trade/orderList";
+    public String refundView() throws IOException {
+        return "/trade/refundList";
     }
 
     /**
-     * 订单列表数据请求
+     * 退款订单列表数据请求
      * @param input
      * @return
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public DataTablesOutput orderList(@Valid @RequestBody DataTablesInput input) throws IOException {
+    public DataTablesOutput refundList(@Valid @RequestBody DataTablesInput input) throws IOException {
         // 组装请求参数
         TradeQuery tradeQuery = new TradeQuery(input);
-        //查询预约状态的订单
-        if (tradeQuery.getOrderState() == null) {
-            tradeQuery.setOrderState(4);
+        //查询退款待审核状态的订单
+        if (tradeQuery.getRefundState() == null) {
+            tradeQuery.setRefundState(1);
         }
 
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + tradeQuery.getParamsStr();
+        String url = ConfigUtil.getConfig("refund.list.url") + "?" + tradeQuery.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;
@@ -75,25 +73,27 @@ public class OrderController extends BaseController{
     }
 
     /**
-     * 申请退款
+     * 退款审核
+     * @param refundId
      * @param orderId
-     * @param userMessage
-     * @param refundMessage
+     * @param refundState
+     * @param adminMessage
      * @return
      */
-    @RequestMapping(value = "/refund/application", method = RequestMethod.POST)
+    @RequestMapping(value = "/audit/{refund_id}", method = RequestMethod.POST)
     @ResponseBody
-    public Result refundApply(@RequestParam(value = "orderId") Integer orderId ,
-                              @RequestParam(value = "userMessage") String userMessage,
-                              @RequestParam(value = "refundMessage") String refundMessage) {
-        if (orderId == null || orderId == 0 || StringUtils.isEmpty(userMessage) || StringUtils.isEmpty(refundMessage)) {
+    public Result refundAudit(@PathVariable("refundId") int refundId,
+                              @RequestParam(value = "orderId", required = false) Integer orderId,
+                              @RequestParam(value = "refundState", required = false) Integer refundState,
+                              @RequestParam(value = "adminMessage", required = false) String adminMessage) {
+        if (refundId == 0 || orderId == 0 || refundState == 0 || StringUtils.isEmpty(adminMessage)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        String url = ConfigUtil.getConfig("refund.application.url");
+        String url = ConfigUtil.getConfig("refund.audit.url") + "/" + refundId;
         Map<String, String> params = new HashMap<String, String>();
         params.put("order_id", orderId.toString());
-        params.put("user_message", userMessage);
-        params.put("refund_message", refundMessage);
+        params.put("refund_state", refundState.toString());
+        params.put("admin_message", adminMessage);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();

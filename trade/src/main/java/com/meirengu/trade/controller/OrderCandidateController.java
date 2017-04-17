@@ -127,6 +127,9 @@ public class OrderCandidateController extends BaseController{
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
                           @RequestParam(value = "status", required = false) Integer status){
+        if (!TokenUtils.authToken("asdfasdf")) {
+            return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("userPhone", userPhone);
