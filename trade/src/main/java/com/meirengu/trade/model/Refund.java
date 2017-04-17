@@ -30,7 +30,7 @@ public class Refund{
 	/** 买家手机号 */
 	private String userPhone;
 	/** 添加时间 */
-	private Date addTime;
+	private Date createTime;
 	/** 订单金额 */
 	private BigDecimal orderAmount;
 	/** 退款金额 */
@@ -146,12 +146,12 @@ public class Refund{
 		return userPhone;
 	}
 
-	public void setAddTime(Date addTime){
-		this.addTime = addTime;
+	public void setCreateTime(Date createTime){
+		this.createTime = createTime;
 	}
 
-	public Date getAddTime(){
-		return addTime;
+	public Date getCreateTime(){
+		return createTime;
 	}
 
 	public void setOrderAmount(BigDecimal orderAmount){
