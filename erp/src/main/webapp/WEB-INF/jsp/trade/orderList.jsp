@@ -85,7 +85,7 @@
                   </span>
                 </div>
             </div>
-            <div class="row cl">
+            <div class="row cl pt-10">
                 <label class="form-label col-xs-2 col-sm-2">备注：</label>
                 <div class="formControls col-xs-8 col-sm-8">
                     <textarea id="refundMessage" cols="" rows="" class="textarea"  placeholder="请输入退款备注" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <div class="row cl">
+            <div class="row cl pt-10">
                 <div class="text-c">
                     <input ONCLICK="refundApplyAjax()" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;确定&nbsp;&nbsp;">
                 </div>
@@ -311,8 +311,8 @@
     function refundApplyAjax() {
         var orderId = $("#orderId").val();
         var userMessage = $("#userMessage").find("option:selected").text();
-        var refundMessage = $("#refundMessage").text();
-        var url = "<%=basePath %>/refund/application";
+        var refundMessage = $("#refundMessage").val();
+        var url = "<%=basePath %>order/refund/application";
         $.ajax({
             type: "post",
             url: url,
@@ -323,9 +323,11 @@
             success: function(data){
                 var code = data.code;//200 is success，other is fail
                 if(code=="200"){
+                    $('.zd_div').fadeOut();
                     layer.msg('已处理', {icon: 5, time: 1000});
                     table.ajax.reload();
                 }else{
+                    $('.zd_div').fadeOut();
                     $("#errcode").val(data.code);
                     $("#errmsg").val(data.msg);
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
