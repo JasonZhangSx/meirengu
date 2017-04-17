@@ -350,6 +350,14 @@
         </dependency>
 
         <!-- TEST end -->
+
+        <!-- https://mvnrepository.com/artifact/com.github.darrachequesne/spring-data-jpa-datatables -->
+        <dependency>
+        <groupId>com.github.darrachequesne</groupId>
+        <artifactId>spring-data-jpa-datatables</artifactId>
+        <version>4.1</version>
+    </dependency>
+
     </dependencies>
 
     <build>

@@ -22,10 +22,11 @@ public class OrderController extends BaseController{
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView orderList(TradeQuery query) throws IOException {
         ModelAndView mv = new ModelAndView();
-        if (query.getOrderState() == null) {
-            query.setOrderState(4);//默认展示待支付
-        }
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + query.getParamsStr();
+//        if (query.getOrderState() == null) {
+//            query.setOrderState(4);//默认展示待支付
+//        }
+//        String url = ConfigUtil.getConfig("order.list.url") + "?" + query.getParamsStr();
+        String url = null;
         Object data = httpGet(url);
         mv.addObject("page", data);
         mv.addObject("query", query);

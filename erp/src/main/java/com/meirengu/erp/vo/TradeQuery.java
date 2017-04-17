@@ -2,6 +2,8 @@ package com.meirengu.erp.vo;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.springframework.data.jpa.datatables.mapping.Column;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ public class TradeQuery implements Serializable {
     
 
 	private static final long serialVersionUID = -8836010001713826972L;
+
+
 
 	/** 页号码,页码从1开始 */
 	private Integer pageNum;
@@ -35,6 +39,34 @@ public class TradeQuery implements Serializable {
 	private Integer status;
 	/** 状态 */
 	private Integer orderState;
+
+	public TradeQuery(int pageNum, int pageSize, String sortColumn, String order){
+		this.pageNum = pageNum;
+		this.pageSize = pageSize;
+		this.sortColumn = sortColumn;
+		this.order = order;
+	}
+
+	public TradeQuery(DataTablesInput input){
+		//获取column的search
+		Column parameter1 = input.getColumns().get(1);
+		String orderSn = parameter1.getSearch().getValue();
+		Column parameter2 = input.getColumns().get(2);
+		String userPhone = parameter1.getSearch().getValue();
+		Column parameter3 = input.getColumns().get(3);
+		String itemName = parameter1.getSearch().getValue();
+		int start = input.getStart();
+		int length = input.getLength();
+		int pageNum = start / length + 1;
+
+
+		this.pageNum = pageNum;
+		this.pageSize = length;
+
+		this.orderSn = orderSn;
+		this.userPhone = userPhone;
+		this.itemName = itemName;
+	}
 
 	public Integer getPageNum() {
 		if(pageNum==null||pageNum<=0){
