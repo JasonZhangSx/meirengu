@@ -40,7 +40,7 @@ public class FaqController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "save", method = {RequestMethod.POST})
+    @RequestMapping(value = "insert", method = {RequestMethod.POST})
     public Result save(@RequestParam(value="class_id", required = true) Integer classId,
                        @RequestParam(value="class_name", required = true) String className,
                        @RequestParam(value="faq_question", required = true) String faqQuestion,
@@ -117,7 +117,7 @@ public class FaqController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "status/update", method = {RequestMethod.PUT})
+    @RequestMapping(value = "update", method = {RequestMethod.PUT})
     public Result updateStatus(@RequestParam(value="faq_id", required = true) Integer faqId,
                                             @RequestParam(value="status", required = true) Byte status,
                                             @RequestParam(value="faq_question", required = true) String faqQuestion,

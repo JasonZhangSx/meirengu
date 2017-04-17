@@ -47,5 +47,5 @@ public interface FaqClassService extends PageBaseService<FaqClass>{
 
     public List<ListAllFaqClassPo> listAllFaqClass(FaqClass faqClass);
 
-    Integer updateStatus(Integer classId, Byte status, String operateAccount);
+    Integer updateStatus(Integer classId, Byte status, String operateAccount,String className);
 }
