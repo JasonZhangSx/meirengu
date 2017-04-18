@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ include file="../common/common.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,27 +12,12 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="lib/html5.js"></script>
-    <script type="text/javascript" src="lib/respond.min.js"></script>
-    <![endif]-->
-    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
-    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
-    <!--[if IE 6]>
-    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
-    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+   </head>
 </html>
-<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="/erp/faq" id="form" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -50,24 +37,27 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">问题分类：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="" class="select">
-					<option value="0">一级分类</option>
-					<option value="1">一级分类</option>
+				<select id="selected" name="class_id" class="select" onchange="changeValue()">
+                    <option value="">请选择分类</option>
+                    <c:forEach items="${list}" var="list">
+					    <option value="${list.classId}">${list.className}</option>
+                    </c:forEach>
 				</select>
 				</span>
                 </div>
             </div>
+            <input type="hidden" id="className" name="class_name" />
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">问题：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                           placeholder="项目标题最多30字" id="" name="">
+                    <input type="text" class="input-text" value="" id="faq_question" name="faq_question" minlength="1" maxlength="30"
+                           placeholder="问题名称最多30字">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">答案：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                    <textarea id="faq_answer" name="faq_answer" cols="" rows="" minlength="1" class="textarea" placeholder="..." datatype="*10-100"
                               dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
                     <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
                 </div>
@@ -77,7 +67,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="button">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="tijiao()" type="button">添 加
                     </button>
                 </div>
             </div>
@@ -88,25 +78,40 @@
 
     </form>
 </div>
-
-<script src=lib/jquery/1.9.1/jquery.min.js></script>
-<script src=lib/layer/2.4/layer.js></script>
-<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
-<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
-<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
-<script src=static/h-ui/js/H-ui.js></script>
-<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-<!-- 时间插件 -->
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
-
 <script>
+
+    function changeValue() {
+        var value = $("#selected").val();
+        var htmlvalue = $("#selected").find("option:selected").text();
+        $("#className").val(htmlvalue);
+        alert(value);
+        alert(htmlvalue);
+    }
+    function tijiao() {
+        var class_id = $("#selected").val();
+        var faq_question = $("#faq_question").val();
+        var faq_answer = $("#faq_answer").val();
+        if(class_id==null || class_id==""){
+            alert("请选择分类！");
+            return false;
+        }
+        if(faq_question==null || faq_question==""){
+            alert("请填写问题名称！");
+            return false;
+        }
+        if(faq_answer==null || faq_answer==""){
+            alert("请填写问题答案！");
+            return false;
+        }
+        $("#form").submit();
+
+    }
+
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({
         yearOffset: 0,

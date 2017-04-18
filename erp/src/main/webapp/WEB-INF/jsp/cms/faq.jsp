@@ -208,7 +208,7 @@
 //            "order": [[1, 'asc']],// dt默认是第一列升序排列 这里第一列为序号列，所以设置为不排序，并把默认的排序列设置到后面
 
             "columns": [
-                {"data": "classId"}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "faqId"}, //因为要加行号，所以要多一列，不然会把第一列覆盖
                 {"data": "className"},
                 {"data": "faqQuestion"},
                 {"data": "faqAnswer"},
@@ -228,16 +228,16 @@
 
                         if(row.status=='0'){
                             return '<td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" id="'+row.classId+'" onclick="project_start(this,'+row.classId+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" onclick="project_start(this,'+row.faqId+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>' +
                                     '<a style="text-decoration:none" class="ml-5" ' +
-                                    'onclick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;" title="项目编辑">' +
+                                    'onclick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.faqId+')" href="javascript:;" title="项目编辑">' +
                                     '<i class="Hui-iconfont"></i></a> </td>'
                         }
                         if(row.status=='1'){
                             return ' <td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" id="'+row.classId+'" onClick="project_stop(this,'+row.classId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" onClick="project_stop(this,'+row.faqId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
                                     '<a style="text-decoration:none" class="ml-5"' +
-                                    'onClick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
+                                    'onClick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.faqId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
                                     '</i></a>' +
                                     '</td>';
                         }else{
@@ -321,7 +321,7 @@
         var index = layer.open({
             type: 2,
             title: title,
-            content: url+"?class_id="+id
+            content: url+"?faq_id="+id
         });
         layer.full(index);
     }
@@ -339,7 +339,7 @@
             $.ajax({
                 url:"/erp/faq/update",
                 data:{
-                    "class_id":id,
+                    "faq_id":id,
                     "status":"0"
                 },
                 success : function(data) {
@@ -363,7 +363,7 @@
             $.ajax({
                 url:"/erp/faq/update",
                 data:{
-                    "class_id":id,
+                    "faq_id":id,
                     "status":"1"
                 },
                 success : function(data) {
