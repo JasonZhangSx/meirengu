@@ -43,6 +43,12 @@
                 </div>
             </div>
             <div class="row cl">
+                <label class="form-label col-xs-3"></label>
+                <div class="formControls col-xs-8" style="color:red">
+                    ${msg}
+                </div>
+            </div>
+            <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
                     <input name="" type="submit" class="btn btn-success radius size-L"
                            value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
