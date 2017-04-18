@@ -2,10 +2,7 @@ package com.meirengu.cf.controller;
 
 import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.model.Item;
-import com.meirengu.cf.service.ItemInterestedService;
-import com.meirengu.cf.service.ItemOperateRecordService;
-import com.meirengu.cf.service.ItemService;
-import com.meirengu.cf.service.PartnerService;
+import com.meirengu.cf.service.*;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -40,6 +37,8 @@ public class ItemController extends BaseController {
     ItemOperateRecordService itemOperateRecordService;
     @Autowired
     PartnerService partnerService;
+    @Autowired
+    OtherService otherService;
 
     /**
      * 获取项目列表
@@ -84,9 +83,15 @@ public class ItemController extends BaseController {
                 List<Map<String, Object>> list = page.getList();
                 List<Map<String, Object>> resultList = new ArrayList<>();
                 for (Map<String, Object> resultMap : list){
-                    resultMap.put("privince", "北京市");
-                    resultMap.put("city", "朝阳区");
-                    resultList.add(resultMap);
+                    Integer areaId = StringUtil.isEmpty(resultMap.get("areaId")) ? null : Integer.parseInt(resultMap.get("areaId").toString());
+                    Map<String, Object> areaMap = otherService.getAreasByLastLevel(areaId);
+                    if(areaMap != null){
+                        String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
+                        String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                        resultMap.put("privince", privince);
+                        resultMap.put("city", city);
+                        resultList.add(resultMap);
+                    }
                 }
                 page.setList(resultList);
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -94,9 +99,15 @@ public class ItemController extends BaseController {
                 List<Map<String, Object>> list = itemService.getList(map);
                 List<Map<String, Object>> resultList = new ArrayList<>();
                 for (Map<String, Object> resultMap : list){
-                    resultMap.put("privince", "北京市");
-                    resultMap.put("city", "朝阳区");
-                    resultList.add(resultMap);
+                    Integer areaId = StringUtil.isEmpty(resultMap.get("areaId")) ? null : Integer.parseInt(resultMap.get("areaId").toString());
+                    Map<String, Object> areaMap = otherService.getAreasByLastLevel(areaId);
+                    if(areaMap != null){
+                        String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
+                        String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                        resultMap.put("privince", privince);
+                        resultMap.put("city", city);
+                        resultList.add(resultMap);
+                    }
                 }
                 return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
             }
@@ -413,6 +424,18 @@ public class ItemController extends BaseController {
         }
 
     }
+
+    /*@ResponseBody
+    @RequestMapping(value = "/more_detail", method = RequestMethod.GET)
+    public Result getMoreDetail(@PathVariable(value = "item_id", required = false)Integer itemId){
+
+        if(itemId == null || itemId == 0){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+
+        return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+    }*/
 
     public Item setEntity(Integer itemId, String itemName, String itemProfile, Integer typeId, Integer classId,
                           BigDecimal targetAmount, BigDecimal appointAmount, BigDecimal completedAmount,

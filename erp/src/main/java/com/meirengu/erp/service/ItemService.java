@@ -84,7 +84,7 @@ public interface ItemService {
      * @param itemId
      * @return
      */
-    Item itemDetail(Integer itemId);
+    Map itemDetail(Integer itemId);
 
     /**
      * 获取内容列表
@@ -118,4 +118,11 @@ public interface ItemService {
      * @return
      */
     boolean review(Integer itemId, Integer operateStatus, String operateRemark);
+
+    /**
+     * 获取审核记录列表
+     * @param itemId
+     * @return
+     */
+    List getOperateRecordList(Integer itemId);
 }
