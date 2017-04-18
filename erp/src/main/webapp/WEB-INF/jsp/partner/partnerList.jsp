@@ -38,7 +38,7 @@
   				<span class="l">
             <a class="btn btn-primary radius" href="javascript:;"><i class="Hui-iconfont">&#xe634;</i> 导出</a>
             <a class="btn btn-primary radius" href="javascript:;"
-               onClick="project_edit('合作方-合作方列表-添加','合作方-合作方列表-添加.html','10001')" href="javascript:;" title="添加合作方"><i
+               onClick="project_edit('合作方-合作方列表-添加','to_add','10001')" href="javascript:;" title="添加合作方"><i
                     class="Hui-iconfont">&#xe600;</i> 添加合作方</a>
           </span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>

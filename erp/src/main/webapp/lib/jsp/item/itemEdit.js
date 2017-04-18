@@ -18,6 +18,7 @@ function contentAdd(){
             if(data.code == '200'){
                 var content = data.data;
                 $("#contentId"+contentIndex).val(content.contentId);
+                $('content_tab_menu span[cnum='+contentIndex+'] sa' ).text(content.levelName);
                 alert("内容添加成功");
             }
         }
@@ -305,12 +306,48 @@ $(function () {
         }
     })
     $('.content_tab_menu em').on('click', function () {
-        var aObj = $('.hide_content_item').find('.item').eq(0).clone();
-        var a = confirm('要新增一项吗'),
+        //var aObj = $('.hide_content_item').find('.item').eq(0).clone();
+        var itemId = $("#itemId").val();
+        var aObj = '<form action="content/add" method="post" id="contentAddForm#1">'+
+            '<input type="hidden" name="itemId" id="itemId#1" value="'+itemId+'">'+
+            '<input type="hidden" name="contentType" value="1">'+
+            '<input type="hidden" id="contentId#1" name="contentId" value="0">'+
+            '<div class="item">'+
+            '<div class="row cl">'+
+            '<label class="form-label col-xs-4 col-sm-2">主标题：</label>'+
+        '<div class="formControls col-xs-8 col-sm-8">'+
+            '<input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle#1"'+
+        'name="contentTitle">'+
+            '</div>'+
+            '</div>'+
+            '<div class="row cl">'+
+            '<label class="form-label col-xs-4 col-sm-2">内容：</label>'+
+        '<div class="formControls col-xs-8 col-sm-8">'+
+            '<textarea name="contentInfo" id="contentInfo#1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"'+
+        'dragonfly="true" nullmsg="备注不能为空！"'+
+        'onKeyUp="$.Huitextarealength(this,200)"></textarea>'+
+            '<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>'+
+            '</div>'+
+            '</div>'+
+
+            '<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">'+
+            '<button class="btn btn-primary radius" id="contentAddBtn#1" type="button"  onclick="contentAdd()"><i'+
+        'class="Hui-iconfont">&#xe632;</i> 保存</button>'+
+        '</div>'+
+        '</div>'+
+        '</form>';
+
+        alert(aObj);
+        var cnum = $('.content_tab_menu .wrapper span:last-child').attr("cnum");
+        console.log("cnum:"+cnum);
+        cnum = parseInt(cnum)+1;
+        aObj = aObj.replace(/#1/g,cnum);
+        var a = confirm('要新增内容页吗'),
             menu = $('.content_tab_menu .wrapper span');
         if (a) {
-            $('.content_tab_menu .wrapper').append('<span>未命名<var></var></span>');
+            $('.content_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current"><sa>内容</sa><var></var></span>');
             sortName($('.content_tab_menu .wrapper span'));
+            $('.content_set').children().hide();
             $('.content_set').append(aObj);
         }
     })
@@ -331,8 +368,12 @@ $(function () {
     })
     $('.content_tab_menu').on('click', 'span var', function (event) {
         event.stopPropagation();
-        var index = $(event.target).parent().index(),
-            a = confirm('要删除此项吗');
+        var index = $(event.target).parent().index();
+        if(index == 0){
+            alert("内容至少有一个");
+            return;
+        }
+        var a = confirm('要删除此项吗');
         if (a) {
             $(event.target).parent().remove();
             $('.content_set .item').eq(index).remove();

@@ -3,12 +3,14 @@ package com.meirengu.erp.controller.partner;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.erp.service.PartnerService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +33,10 @@ import java.util.Map;
 public class PartnerController extends BaseController{
 
     private static Logger logger = LoggerFactory.getLogger(PartnerController.class);
+
+    @Autowired
+    PartnerService partnerService;
+
 
     @RequestMapping("list")
     public ModelAndView partnerList(){
@@ -146,6 +153,22 @@ public class PartnerController extends BaseController{
             e.printStackTrace();
         }
         return new ModelAndView("redirect:/partner/class/list");
+    }
+
+    @RequestMapping("to_add")
+    public ModelAndView toAdd(){
+        Map<String, Object> map = new HashMap<>();
+        List classList = partnerService.getPartnerClassList();
+        map.put("classList", classList);
+        return new ModelAndView("/partner/partnerAdd", map);
+    }
+
+    @RequestMapping("add")
+    public ModelAndView add(){
+        Map<String, Object> map = new HashMap<>();
+        List classList = partnerService.getPartnerClassList();
+        map.put("classList", classList);
+        return new ModelAndView("/partner/partnerAdd", map);
     }
 }
 

@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="add" method="post" class="form form-horizontal" id="form-article-add">
         <style>
             .select-box1 {
                 padding-left: 0;
@@ -44,16 +44,17 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">合作方名称：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="partnerName" name="partnerName" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="" class="select">
-					<option value="0">公司</option>
-					<option value="1">个人</option>
+				<select name="typeId" id="typeId" class="select">
+                    <c:forEach items="${classList}" var="class">
+                        <option value="${class.classId}">${class.className}</option>
+                    </c:forEach>
 				</select>
 				</span>
             </div>
@@ -73,15 +74,15 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">企业名称：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="enterpriseName" name="enterpriseName" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">证件号：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="idNumber" name="idNumber" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
@@ -89,11 +90,12 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+                        <input type="text" class="input-text" name="enterpriseAddress" id="enterpriseAddress">
+						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
 						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -105,25 +107,25 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">负责人姓名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="principalName" name="principalName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="principalIdcard" name="principalIdcard">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="principalTelephone" name="principalTelephone" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="principalFax" name="principalFax" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
@@ -131,11 +133,12 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+                        <input type="text" class="input-text" name="principalAddress" id="principalAddress">
+						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
 						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -147,25 +150,25 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系人姓名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="contactsName" name="contactsName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="contactsIdcard" name="contactsIdcard">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="contactsTelephone" name="contactsTelephone" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="contactsax" name="contacts_fax" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
@@ -173,11 +176,12 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-						<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
+                        <input type="text" class="input-text" name="contactsAddress" id="contactsAddress">
+						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
 						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
 						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -189,18 +193,18 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">开户行名称：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="bankName" name="bankName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">账户名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="" id="bankAccount" name="bankAccount">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">银行账号：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                       placeholder="项目标题最多30字" id="" name="">
+                <input type="text" class="input-text" value="" id="bankCard" name="bankCard" maxlength="30"
+                       placeholder="项目标题最多30字">
             </div>
         </div>
 
@@ -234,7 +238,7 @@
                     <td>营业执照
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
-                    <td class="text-l">北京玉之光众筹
+                    <td class="text-l">
                         <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
                     </td>
                 </tr>
@@ -242,7 +246,7 @@
                     <td>开户行
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
-                    <td class="text-l">北京玉之光众筹
+                    <td class="text-l">
                         <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
                     </td>
                 </tr>
@@ -250,7 +254,7 @@
                     <td>医疗机构执业许可证
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
-                    <td class="text-l">北京玉之光众筹
+                    <td class="text-l">
                         <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
                     </td>
                 </tr>
