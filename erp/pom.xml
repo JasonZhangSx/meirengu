@@ -325,7 +325,11 @@
             <artifactId>shiro-spring</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.meirengu</groupId>
+            <artifactId>commons-authority</artifactId>
+            <version>${commons-meirengu.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.meirengu</groupId>
             <artifactId>commons-meirengu</artifactId>
@@ -353,10 +357,11 @@
 
         <!-- https://mvnrepository.com/artifact/com.github.darrachequesne/spring-data-jpa-datatables -->
         <dependency>
-        <groupId>com.github.darrachequesne</groupId>
-        <artifactId>spring-data-jpa-datatables</artifactId>
-        <version>4.1</version>
-    </dependency>
+            <groupId>com.github.darrachequesne</groupId>
+            <artifactId>spring-data-jpa-datatables</artifactId>
+            <version>4.1</version>
+        </dependency>
+
 
     </dependencies>
 
