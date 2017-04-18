@@ -42,7 +42,7 @@
                     <thead>
                     <tr class="text-c">
                         <th width="40">序号</th>
-                        <th>常见问题分类</th>
+                        <th width="70">常见问题分类</th>
                         <th width="100">常见问题</th>
                         <th width="100">常见问题答案</th>
                         <th width="100">添加时间</th>
@@ -114,10 +114,11 @@
                         return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
                     }
                 },
-                { "data": "status",
+                { "data": null,
+                    "className":"f-14 td-status",
                     render: function(data, type, row, meta) {
                         if(row.status==1){
-                            return '<label>上架中</lable>';
+                            return '<label>已发布</lable>';
                         }
                         if(row.status==0){
                             return '<label>已下架</lable>';
@@ -228,6 +229,7 @@
                     if(data.code==200){
                         console.log(data);
                         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onclick="project_start(this,'+id+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span>已下架</span>');
                         $(obj).remove();
                         layer.msg('已下架!', {icon: 5, time: 1000});
                     }else{
@@ -252,6 +254,7 @@
                     if(data.code==200){
                         console.log(data);
                         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span>已发布</span>');
                         $(obj).remove();
                         layer.msg('已发布!', {icon: 6, time: 1000});
                     }else{
