@@ -15,10 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by huoyan403 on 4/6/2017.
@@ -29,22 +26,34 @@ public class FaqController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(FaqController.class);
 
-
     @RequestMapping("toadd")
     public ModelAndView toadd(){
-        return new ModelAndView("/cms/addfaq");
-    }
-    @RequestMapping("toedit")
-    public ModelAndView toedit(@RequestParam(value="class_id", required = false ,defaultValue = "") String classId){
-
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("news.faq.detail");
-        String urlAppend = url+"?class_id="+classId;
+        List<Map<String, Object>> list = new ArrayList<>();
+        String url = ConfigUtil.getConfig("news.faqclass.listall");
         try {
-            map = ( Map<String, Object>)super.httpGet(urlAppend);
+            list = ( List<Map<String, Object>>)super.httpGet(url+"?status=");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Map map = new HashMap();
+        map.put("list",list);
+        return new ModelAndView("/cms/addfaq", map);
+    }
+    @RequestMapping("toedit")
+    public ModelAndView toedit(@RequestParam(value="faq_id", required = false ,defaultValue = "") String faqId){
+        Map map = new HashMap();
+        List<Map<String, Object>> list = new ArrayList<>();
+        try {
+            String urlDetail = ConfigUtil.getConfig("news.faq.detail");
+            String urlAppend = urlDetail+"?faq_id="+faqId;
+            map = ( Map<String, Object>)super.httpGet(urlAppend);
+
+            String url = ConfigUtil.getConfig("news.faqclass.listall");
+            list = ( List<Map<String, Object>>)super.httpGet(url+"?status=");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        map.put("list",list);
         return new ModelAndView("/cms/editfaq", map);
     }
     @RequestMapping("tolist")
@@ -52,14 +61,25 @@ public class FaqController extends BaseController{
         return new ModelAndView("/cms/faq");
     }
 
+    /**
+     * 添加常见问题
+     * @param className
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.POST})
-    public ModelAndView insert(@RequestParam(value = "class_name")String className
+    public ModelAndView insert(@RequestParam(value = "class_id")String classId,
+                               @RequestParam(value = "class_name")String className,
+                               @RequestParam(value = "faq_question")String faqQuestion,
+                               @RequestParam(value = "faq_answer")String faqAnswer
 //                             @RequestParam(value = "operate_account")String operateAccount
                                ){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account","admin");
+            paramsMap.put("class_id",classId);
             paramsMap.put("class_name",className);
+            paramsMap.put("faq_question",faqQuestion);
+            paramsMap.put("faq_answer",faqAnswer);
             String url = ConfigUtil.getConfig("news.faq.insert");
             Object obj = super.httpPost(url,paramsMap);
             //todo 做返回处理
@@ -103,13 +123,13 @@ public class FaqController extends BaseController{
 
     @RequestMapping("update")
     @ResponseBody
-    public Map update( @RequestParam(value="class_id", required = true ) String classId,
+    public Map update( @RequestParam(value="faq_id", required = true ) String faqId,
                        @RequestParam(value = "status" , required = false)String status){
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
-            paramsMap.put("class_id",classId);
+            paramsMap.put("faq_id",faqId);
             paramsMap.put("operate_account","admin");
             if(status!=null){
                 paramsMap.put("status",status);
@@ -123,23 +143,26 @@ public class FaqController extends BaseController{
         return map;
     }
     @RequestMapping("edit")
-    public ModelAndView edit( @RequestParam(value="class_id", required = true ) String classId,
-                       @RequestParam(value = "class_name" , required = false)String className){
+    public ModelAndView edit(@RequestParam(value = "class_id")String classId,
+                             @RequestParam(value = "class_name")String className,
+                             @RequestParam(value = "faq_id")String faqId,
+                             @RequestParam(value = "faq_question")String faqQuestion,
+                             @RequestParam(value = "faq_answer")String faqAnswer){
 
-        Map<String,Object> map = new HashedMap();
-        Map<String,String> paramsMap = new HashedMap();
         try {
+            Map<String,Object> map = new HashedMap();
+            Map<String,String> paramsMap = new HashedMap();
+            paramsMap.put("faq_id",faqId);
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account","admin");
-            if(className!=null){
-                paramsMap.put("class_name",className);
-            }
+            paramsMap.put("class_name",className);
+            paramsMap.put("faq_question",faqQuestion);
+            paramsMap.put("faq_answer",faqAnswer);
             String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             if(hr.getStatusCode()==200){
                 return new ModelAndView("/cms/faq");
             }else{
-                return new ModelAndView("redirect:/faq/toedit?class_id="+classId);
+                return new ModelAndView("redirect:/faq/toedit?faq_id="+faqId);
             }
         } catch (Exception e) {
             e.printStackTrace();

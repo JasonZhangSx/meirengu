@@ -119,12 +119,12 @@ public class FaqController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "update", method = {RequestMethod.PUT})
     public Result updateStatus(@RequestParam(value="faq_id", required = true) Integer faqId,
-                                            @RequestParam(value="status", required = true) Byte status,
-                                            @RequestParam(value="faq_question", required = true) String faqQuestion,
-                                            @RequestParam(value="faq_answer", required = true) String faqAnswer,
-                                            @RequestParam(value="class_id", required = true) Integer classId,
-                                            @RequestParam(value="class_name", required = true) String className,
-                                            @RequestParam(value="operate_account", required = true) String operateAccount){
+                                            @RequestParam(value="status", required = false) Byte status,
+                                            @RequestParam(value="faq_question", required = false) String faqQuestion,
+                                            @RequestParam(value="faq_answer", required = false) String faqAnswer,
+                                            @RequestParam(value="class_id", required = false) Integer classId,
+                                            @RequestParam(value="class_name", required = false) String className,
+                                            @RequestParam(value="operate_account", required = false) String operateAccount){
         Faq faq = new Faq();
         faq.setFaqId(faqId);
         faq.setOperateAccount(operateAccount);

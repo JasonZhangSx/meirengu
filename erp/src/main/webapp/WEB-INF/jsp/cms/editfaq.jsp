@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/faq" id="form" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
+    <form action="/erp/faq/edit" id="form" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -29,7 +29,7 @@
             }
         </style>
         <!-- 基本信息 -->
-
+            <input type="hidden" name="faq_id" value="${faqId}">
         <div>
             <div class="row cl">
                 <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添 加</h3>
@@ -38,27 +38,28 @@
                 <label class="form-label col-xs-4 col-sm-2">问题分类：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 				<select id="selected" name="class_id" class="select" onchange="changeValue()">
-                    <option value="">请选择分类</option>
                     <c:forEach items="${list}" var="list">
-					    <option value="${list.classId}">${list.className}</option>
+					    <option value="${list.classId}"
+                        <c:if test="${list.classId==classId}" >selected</c:if>
+                        >${list.className}</option>
                     </c:forEach>
 				</select>
 				</span>
                 </div>
             </div>
-            <input type="hidden" id="className" name="class_name" />
+            <input type="hidden" id="className" name="class_name" value="${className}"/>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">问题：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="faq_question" name="faq_question" minlength="1" maxlength="30"
+                    <input type="text" class="input-text" value="${faqQuestion}" id="faq_question" name="faq_question" minlength="1" maxlength="30"
                            placeholder="问题名称最多30字">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">答案：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <textarea id="faq_answer" name="faq_answer" cols="" rows="" minlength="1" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                    <textarea id="faq_answer" name="faq_answer" cols="" rows="" minlength="1" class="textarea" placeholder="${faqAnswer}" datatype="*10-100"
+                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)">${faqAnswer}</textarea>
                     <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
                 </div>
             </div>

@@ -135,8 +135,8 @@
                 <ul>
                     <li><a href=javascript:void(0) data-href=CMS-轮播图管理.html title=轮播图管理>CMS-轮播图管理</a></li>
                     <li><a href=javascript:void(0) data-href="bulletin/view" title=公告列表>CMS-公告列表</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-常见问题分类.html title=常见问题分类>CMS-常见问题分类</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-常见问题列表.html title=常见问题列表>CMS-常见问题列表</a></li>
+                    <li><a href=javascript:void(0) data-href=faqclass/tolist title=常见问题分类>CMS-常见问题分类</a></li>
+                    <li><a href=javascript:void(0) data-href=faq/tolist title=常见问题列表>CMS-常见问题列表</a></li>
                     <li><a href=javascript:void(0) data-href="feedback/view" title=意见反馈列表>CMS-意见反馈列表</a></li>
                 </ul>
             </dd>

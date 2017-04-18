@@ -7,8 +7,9 @@
        default-lazy-init="true">
 
     <description>Spring公共配置</description>
-    <import resource="classpath:applicationContext-datasource.xml"/>
+
     <import resource="classpath:applicationContext-mybatis.xml"/>
+    <import resource="classpath:applicationContext-shiro.xml"/>
 
     <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
     <!-- 加入定制化包路径com.sample -->
@@ -18,5 +19,10 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="10485760000"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+    </bean>
 </beans>
