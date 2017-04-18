@@ -20,7 +20,7 @@
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
-    <title>xxxxx</title>
+    <title>美人谷erp管理系统登录页</title>
     <meta name="keywords" content="xxxxxx"/>
     <meta name="description" content="xxxxxx。"/>
 </head>
