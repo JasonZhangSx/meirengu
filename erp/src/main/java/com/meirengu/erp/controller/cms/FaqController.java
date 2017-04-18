@@ -26,7 +26,6 @@ public class FaqController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(FaqController.class);
 
-
     @RequestMapping("toadd")
     public ModelAndView toadd(){
         List<Map<String, Object>> list = new ArrayList<>();
@@ -41,16 +40,20 @@ public class FaqController extends BaseController{
         return new ModelAndView("/cms/addfaq", map);
     }
     @RequestMapping("toedit")
-    public ModelAndView toedit(@RequestParam(value="class_id", required = false ,defaultValue = "") String classId){
-
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("news.faq.detail");
-        String urlAppend = url+"?class_id="+classId;
+    public ModelAndView toedit(@RequestParam(value="faq_id", required = false ,defaultValue = "") String faqId){
+        Map map = new HashMap();
+        List<Map<String, Object>> list = new ArrayList<>();
         try {
+            String urlDetail = ConfigUtil.getConfig("news.faq.detail");
+            String urlAppend = urlDetail+"?faq_id="+faqId;
             map = ( Map<String, Object>)super.httpGet(urlAppend);
+
+            String url = ConfigUtil.getConfig("news.faqclass.listall");
+            list = ( List<Map<String, Object>>)super.httpGet(url+"?status=");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        map.put("list",list);
         return new ModelAndView("/cms/editfaq", map);
     }
     @RequestMapping("tolist")
@@ -128,10 +131,6 @@ public class FaqController extends BaseController{
         try {
             paramsMap.put("faq_id",faqId);
             paramsMap.put("operate_account","admin");
-            paramsMap.put("faq_question","");
-            paramsMap.put("faq_answer","");
-            paramsMap.put("class_id","");
-            paramsMap.put("class_name","");
             if(status!=null){
                 paramsMap.put("status",status);
             }
@@ -144,17 +143,20 @@ public class FaqController extends BaseController{
         return map;
     }
     @RequestMapping("edit")
-    public ModelAndView edit( @RequestParam(value="faq_id", required = true ) String faqId,
-                       @RequestParam(value = "class_name" , required = false)String className){
+    public ModelAndView edit(@RequestParam(value = "class_id")String classId,
+                             @RequestParam(value = "class_name")String className,
+                             @RequestParam(value = "faq_id")String faqId,
+                             @RequestParam(value = "faq_question")String faqQuestion,
+                             @RequestParam(value = "faq_answer")String faqAnswer){
 
-        Map<String,Object> map = new HashedMap();
-        Map<String,String> paramsMap = new HashedMap();
         try {
+            Map<String,Object> map = new HashedMap();
+            Map<String,String> paramsMap = new HashedMap();
             paramsMap.put("faq_id",faqId);
-            paramsMap.put("operate_account","admin");
-            if(className!=null){
-                paramsMap.put("class_name",className);
-            }
+            paramsMap.put("class_id",classId);
+            paramsMap.put("class_name",className);
+            paramsMap.put("faq_question",faqQuestion);
+            paramsMap.put("faq_answer",faqAnswer);
             String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             if(hr.getStatusCode()==200){

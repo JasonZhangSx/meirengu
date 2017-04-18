@@ -33,7 +33,8 @@
                 <span class="l" style="margin-right:20px"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  -->
                     <a class="btn btn-primary radius"  onClick="project_edit('添加活动','/erp/activity/toadd','10001')" href="javascript:;">
                         <i class="Hui-iconfont">&#xe600;</i> 添加活动</a></span>
-                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
+                <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
+            </div>
             <div class="mt-20">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
