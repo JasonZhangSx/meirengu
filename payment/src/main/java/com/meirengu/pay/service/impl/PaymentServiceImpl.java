@@ -20,6 +20,7 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.OrderSNUtils;
 import com.meirengu.utils.RequestUtil;
 import com.meirengu.utils.StringUtil;
+import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -467,30 +468,24 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         }
         paymentRecord.setPaymentId(paymentRecordVo.getPaymentId());
         paymentRecord.setStatus(PaymentTypeUtil.PaymentStatus_Success);
+        paymentRecord.setPaymentFrontBalance(paymentAccount.getAccountBalance());
+        BigDecimal paymentBackBalance = paymentAccount.getAccountBalance().add(paymentRecordVo.getPaymentAmount()).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+        paymentRecord.setPaymentBackBalance(paymentBackBalance);
+        paymentRecord.setChannelResponseTime(new Date());
+        paymentRecord.setReturnMsg(map.get("returnContent"));
+        paymentRecordDao.updatePaymentRecord(paymentRecord);
+        if (super.url==null){
+            try {
+                projectValue();
+            } catch (DocumentException e) {
+                LOGGER.error("Send message Error:{}",e.getMessage());
+            }
+        }
         if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Recharge){
-            paymentRecord.setPaymentFrontBalance(paymentAccount.getAccountBalance());
-            BigDecimal paymentBackBalance = paymentAccount.getAccountBalance().add(paymentRecordVo.getPaymentAmount()).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
-            paymentRecord.setPaymentBackBalance(paymentBackBalance);
-            paymentRecord.setChannelResponseTime(new Date());
-            paymentRecord.setReturnMsg(map.get("returnContent"));
             LOGGER.info("payment baofuCallback message : Update Account Balance Start,FrontBalance:{}",paymentRecord.getPaymentFrontBalance());
-            paymentRecordDao.updatePaymentRecord(paymentRecord);
             paymentAccountDao.updateBalance(paymentRecordVo.getAccountId(),paymentRecord.getPaymentBackBalance());
             LOGGER.info("payment baofuCallback message : Update Account Balance End,BackBalance:{}",paymentRecord.getPaymentBackBalance());
-            Map<String,String> postParameter = new HashMap<>();
-            postParameter.put("tpl_id","1790349");
-            postParameter.put("mobile",paymentRecordVo.getUserPhone());
-            postParameter.put("datetime",new SimpleDateFormat("yyyy年MM月dd日HH时mm分").format(new Date()));
-            postParameter.put("money",String.valueOf(paymentRecordVo.getPaymentAmount()));
-            LOGGER.info("payment baofuCallback message : Send message Start:{}",map.toString());
-            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/sms/single_send_tpl",postParameter,"UTF-8");
-            // 发送消息提醒用户
-            postParameter.put("sender", Integer.toString(0));// 0默认为系统发送
-            postParameter.put("tpl_id", Integer.toString(14986211));
-            postParameter.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
-            postParameter.put("receiver", String.valueOf(paymentRecordVo.getUserId()));
-            com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/uc/notify/tpl_send",postParameter,"UTF-8");
-            LOGGER.info("payment baofuCallback message : Send message End");
+            rechargeSuccessNotice(paymentRecordVo);
         }else if (paymentRecordVo.getPaymentType()==PaymentTypeUtil.PaymentType_Payment){
             paySuccessNotice(paymentRecordVo);
         }
@@ -503,6 +498,22 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         postParameter.put("payment_method",paymentRecordVo.getPaymentMethod().toString());
         postParameter.put("out_sn",paymentRecordVo.getTransactionSn());
         com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+super.tradeUrl+"/payment",postParameter,"UTF-8");
+    }
+    private void rechargeSuccessNotice(PaymentRecordVo paymentRecordVo)  {
+        Map<String,String> postParameter = new HashMap<>();
+        postParameter.put("tpl_id","1790349");
+        postParameter.put("mobile",paymentRecordVo.getUserPhone());
+        postParameter.put("datetime",new SimpleDateFormat("yyyy年MM月dd日HH时mm分").format(new Date()));
+        postParameter.put("money",String.valueOf(paymentRecordVo.getPaymentAmount()));
+        LOGGER.info("payment baofuCallback rechargeSuccessNotice message : Send message Start:{}",postParameter.toString( ));
+        com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/sms/single_send_tpl",postParameter,"UTF-8");
+        // 发送消息提醒用户
+        postParameter.put("sender", Integer.toString(0));// 0默认为系统发送
+        postParameter.put("tpl_id", Integer.toString(14986211));
+        postParameter.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
+        postParameter.put("receiver", String.valueOf(paymentRecordVo.getUserId()));
+        com.meirengu.pay.utils.HttpUtil.httpPostForm(super.url+"/uc/notify/tpl_send",postParameter,"UTF-8");
+        LOGGER.info("payment baofuCallback rechargeSuccessNotice message : Send message End");
     }
     /**
      * 根据用户id查询交易记录
@@ -526,13 +537,33 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             if (list==null){
                 throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_SELECT_IS_NULL);
             }
-            map.put("paymentList",list);
+            map.put("paymentList",mySort(list));
             LOGGER.info("getPaymentRecord prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_SELECT));
             return ResultUtil.getResult(StatusCode.OK,map);
         } catch (Exception e) {
             LOGGER.error("Capture getChannelBank ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_SELECT), e.getMessage());
             return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_SELECT,null);
         }
+    }
+
+    private List<PaymentRecordVo> mySort(List<PaymentRecordVo> arr) { // 交换排序->冒泡排序
+        PaymentRecordVo temp = null;
+        boolean exchange = false;
+        for (int i = 0; i < arr.size(); i++) {
+            exchange = false;
+            for (int j = arr.size() - 2; j >= i; j--) {
+                if ((arr.get(j + 1)).getCreateTime().compareTo(
+                        (arr.get(j)).getCreateTime()) >= 0) {
+                    temp =  arr.get(j + 1);
+                    arr.set(j + 1, arr.get(j));
+                    arr.set(j, temp);
+                    exchange = true;
+                }
+            }
+            if (!exchange)
+                break;
+        }
+        return arr;
     }
     /**
      * 根据用户id查询提现金额
