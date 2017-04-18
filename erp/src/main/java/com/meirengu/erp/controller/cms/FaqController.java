@@ -24,32 +24,32 @@ import java.util.Map;
  * Created by huoyan403 on 4/6/2017.
  */
 @RestController
-@RequestMapping("faqclass")
-public class FaqClassController extends BaseController{
+@RequestMapping("faq")
+public class FaqController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(FaqClassController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FaqController.class);
 
 
     @RequestMapping("toadd")
     public ModelAndView toadd(){
-        return new ModelAndView("/cms/addfaqclass");
+        return new ModelAndView("/cms/addfaq");
     }
     @RequestMapping("toedit")
     public ModelAndView toedit(@RequestParam(value="class_id", required = false ,defaultValue = "") String classId){
 
         Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("news.faqclass.detail");
+        String url = ConfigUtil.getConfig("news.faq.detail");
         String urlAppend = url+"?class_id="+classId;
         try {
             map = ( Map<String, Object>)super.httpGet(urlAppend);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ModelAndView("/cms/editfaqclass", map);
+        return new ModelAndView("/cms/editfaq", map);
     }
     @RequestMapping("tolist")
     public ModelAndView tolist(){
-        return new ModelAndView("/cms/faqclass");
+        return new ModelAndView("/cms/faq");
     }
 
     @RequestMapping(method = {RequestMethod.POST})
@@ -60,33 +60,33 @@ public class FaqClassController extends BaseController{
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account","admin");
             paramsMap.put("class_name",className);
-            String url = ConfigUtil.getConfig("news.faqclass.insert");
+            String url = ConfigUtil.getConfig("news.faq.insert");
             Object obj = super.httpPost(url,paramsMap);
             //todo 做返回处理
-            return new ModelAndView("/cms/faqclass");
+            return new ModelAndView("/cms/faq");
         }catch (Exception e){
             logger.info("throw exception:", e);
-            return new ModelAndView("/cms/faqclass");
+            return new ModelAndView("/cms/faq");
         }
     }
 
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
-                                 @RequestParam(value="class_id", required = false) String classId,
+                                 @RequestParam(value="faq_id", required = false) String faqId,
                                  @RequestParam(value="start", required = false) Integer start,
                                  @RequestParam(value="length", required = false) Integer length){
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         try {
             Map<String, Object> map = new HashMap<>();
-            String url = ConfigUtil.getConfig("news.faqclass.list");
+            String url = ConfigUtil.getConfig("news.faq.list");
             //查询参数
             /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
             int page = start/length + 1;
             String urlAppend = url+"?page="+page+"&per_page="+length;
-            if(classId!=null){
-                urlAppend = "&class_id="+classId;
+            if(faqId!=null){
+                urlAppend = "&faq_id="+faqId;
             }
             map = (Map<String,Object>)super.httpGet(urlAppend);
             //封装返回集合
@@ -96,7 +96,7 @@ public class FaqClassController extends BaseController{
             view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
             view.setAaData(activityList);
         } catch (IOException e) {
-            logger.info("FaqClass list page throws Exception :{}" ,e);
+            logger.info("faq list page throws Exception :{}" ,e);
         }
         return view;
     }
@@ -114,7 +114,7 @@ public class FaqClassController extends BaseController{
             if(status!=null){
                 paramsMap.put("status",status);
             }
-            String url = ConfigUtil.getConfig("news.faqclass.update");
+            String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
         } catch (Exception e) {
@@ -134,12 +134,12 @@ public class FaqClassController extends BaseController{
             if(className!=null){
                 paramsMap.put("class_name",className);
             }
-            String url = ConfigUtil.getConfig("news.faqclass.update");
+            String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             if(hr.getStatusCode()==200){
-                return new ModelAndView("/cms/faqclass");
+                return new ModelAndView("/cms/faq");
             }else{
-                return new ModelAndView("redirect:/faqclass/toedit?class_id="+classId);
+                return new ModelAndView("redirect:/faq/toedit?class_id="+classId);
             }
         } catch (Exception e) {
             e.printStackTrace();

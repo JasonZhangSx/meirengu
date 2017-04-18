@@ -81,10 +81,14 @@ public class PartnerServiceImpl extends BaseServiceImpl<Partner> implements Part
             Date partnerCreateDay = partner.getPartnerCreateDay();
             returnMap.put("projectOwner", partner.getPartnerName());
             returnMap.put("projectCompany", partner.getPartnerName());
-            returnMap.put("manageMoney", partner.getPartnerValuation());
+            returnMap.put("manageMoney", partner.getPartnerRegistCapital());
             returnMap.put("manageYear", partnerCreateDay.getYear()+1900);
             returnMap.put("manageMonth", partnerCreateDay.getMonth()+1);
             returnMap.put("manageDay", partnerCreateDay.getDate());
+            returnMap.put("projectSideValuation", partner.getPartnerValuation());
+            returnMap.put("manageCompanyValuation", partner.getPartnerValuation());
+            returnMap.put("projectCompanyArea", partner.getEnterpriseAddress());
+            returnMap.put("legalRepresentative", partner.getPrincipalName());
 
             ItemCooperation itemCooperation = itemCooperationService.getByItemId(itemId);
             if(itemCooperation == null){

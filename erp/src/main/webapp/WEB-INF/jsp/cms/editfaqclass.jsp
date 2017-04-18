@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/faqclass/edit" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="/erp/faqclass/edit" method="post" class="form form-horizontal" enctype="multipart/form-data"id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -46,7 +46,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">提 交
                     </button>
                 </div>
             </div>

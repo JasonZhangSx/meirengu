@@ -52,8 +52,8 @@ public class TypeController extends BaseController{
                        @RequestParam(value = "is_page", required = false) boolean isPage,
                        @RequestParam(value = "type_name", required = false) String typeName,
                        @RequestParam(value = "flag", required = false) Integer flag,
-                       @RequestParam(value = "sortby", required = false, defaultValue = "create_time") String sortBy,
-                       @RequestParam(value = "order", required = false, defaultValue = "desc") String order){
+                       @RequestParam(value = "sortby", required = false) String sortBy,
+                       @RequestParam(value = "order", required = false) String order){
 
         //默认不分页
         if(StringUtil.isEmpty(isPage)){

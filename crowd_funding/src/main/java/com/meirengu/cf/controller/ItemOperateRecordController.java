@@ -41,7 +41,7 @@ public class ItemOperateRecordController extends BaseController{
             return super.setResult(StatusCode.INVALID_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("item_id", itemId);
+        params.put("itemId", itemId);
 
         try {
             List list = itemOperateRecordService.getList(params);

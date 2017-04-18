@@ -139,9 +139,11 @@
 	<select id="moreDetail" parameterType="integer" resultType="Map">
 		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
-		t1.type_name as typeName
+		t1.type_name as typeName, t2.class_name as className, t3.partner_name as partnerName
 		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
+		LEFT JOIN `item_class` t2 ON t2.class_id=t.class_id
+		LEFT JOIN `partner` t3 ON t3.partner_id=t.partner_id
 		where item_id=#{id}
 	</select>
 
@@ -181,7 +183,7 @@
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			#{sortBy} #{order},
+			${sortBy} ${order},
 		</if>
 		t.create_time desc
 	</select>
