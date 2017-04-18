@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ include file="../common/common.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,27 +12,12 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="lib/html5.js"></script>
-    <script type="text/javascript" src="lib/respond.min.js"></script>
-    <![endif]-->
-    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
-    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
-    <!--[if IE 6]>
-    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
-    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+   </head>
 </html>
-<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="/erp/faqclass/edit" method="post" class="form form-horizontal" enctype="multipart/form-data"id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -45,36 +32,21 @@
 
         <div>
             <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添加活动</h3>
+                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">修 改</h3>
             </div>
+            <input type="hidden" name="class_id" value="${classId}">
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">公告名称：</label>
+                <label class="form-label col-xs-4 col-sm-2">分类名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                           placeholder="项目标题最多30字" id="" name="">
+                    <input type="text" class="input-text" value="${className}" id="articletitle" name="class_name" maxlength="30"
+                           placeholder="项目标题最多30字">
                 </div>
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">发布时间：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" id="datetimepicker2" placeholder="" name="">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">项目简介：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
-            </div>
-
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="button">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">提 交
                     </button>
                 </div>
             </div>
@@ -85,24 +57,11 @@
 
     </form>
 </div>
-
-<script src=lib/jquery/1.9.1/jquery.min.js></script>
-<script src=lib/layer/2.4/layer.js></script>
-<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
-<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
-<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
-<script src=static/h-ui/js/H-ui.js></script>
-<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-<!-- 时间插件 -->
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
-
 <script>
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({

@@ -48,6 +48,12 @@ public class PaymentController extends BaseController {
         super.httpPost(url.toString()+"/capital/withdrawals",map);
         return withdrawalsRecord();
     }
+    @RequestMapping("withdrawalsError")
+    public ModelAndView withdrawalsError(String orderSn){
+        Map map = new HashMap<>();
+        map.put("orderSn",orderSn);
+        return new ModelAndView("/payment/withdrawalsErrorMsg", map);
+    }
     protected Map<String,Object> recordList(String condition){
         if (url==null){
             setUrl();

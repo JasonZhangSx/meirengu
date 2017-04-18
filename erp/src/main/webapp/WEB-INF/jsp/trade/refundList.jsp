@@ -12,18 +12,26 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>候补预约列表</title>
+    <title>退款订单列表</title>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 候补预约列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
+                订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
                 用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">　
+                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">
+                订单状态：　　
+                        <span class="select-box mr-20" style="width:120px" >
+                            <select id="refundState" class="select">
+                                <option value="4" selected>待审核</option>
+                                <option value="6">已退款</option>
+                            </select>
+                        </span>
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -36,14 +44,19 @@
                     <thead>
                     <tr class="text-c">
                         <th></th>
+                        <th>退款单号</th>
+                        <th>原订单号</th>
                         <th>账号</th>
                         <th>项目名称</th>
                         <th>回报档位</th>
+                        <th>是否分红档</th>
                         <th>数量</th>
                         <th>订单总额</th>
-                        <th>微信号</th>
-                        <th>预约时间</th>
+                        <th>退款金额</th>
+                        <th>退款原因</th>
+                        <th>备注</th>
                         <th>状态</th>
+                        <th>申请时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -54,6 +67,7 @@
 </section>
 <input type="hidden" id="errcode">
 <input type="hidden" id="errmsg">
+
 
 <!--定义操作列按钮模板-->
 <!--说下这里使用模板的作用，除了显示和数据分离好维护以外，绑定事件和传值也比较方便，希望大家能不拼接html则不拼接-->
@@ -66,6 +80,7 @@
 <script type="text/javascript">
 
     var table;
+
     $(function () {
         var tpl = $("#tpl").html();
         //预编译模板
@@ -74,7 +89,7 @@
 
             'ajax': {
                 'contentType': 'application/json',
-                'url': '<%=basePath %>/order_candidate',
+                'url': '<%=basePath %>/refund',
                 'type': 'POST',
                 'data': function(d) {
                     return JSON.stringify(d);
@@ -90,30 +105,28 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "refundSn"},
+                {"data": "orderSn"},
                 {"data": "userPhone"},
                 {"data": "itemName"},
                 {"data": "itemLevelName"},
                 {"data": "itemNum"},
                 {"data": "orderAmount"},
-                {"data": "userWeixin"},
+                {"data": "orderRefund"},
+                {"data": "user_message"},
+                {"data": "refund_message"},
+                {
+                    "data": "refundState",
+                    "render": function (data, type, row, meta) {
+                        return "待审核";
+                    }
+                },
                 {
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
                         return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                     }
                 },
-                {
-                    "data": "status",
-                    "render": function (data, type, row, meta) {
-                        if (data == 0) {
-                            return "未处理";
-                        } else if (data == 1) {
-                            return "已处理";
-                        }
-                        return "数据错误";
-                    }
-                },
-
                 {"data": null}
             ],
             "columnDefs": [
@@ -122,25 +135,22 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-                { "name": "userPhone",  "targets": 1 },
-                { "name": "itemName", "targets": 2 },
+                { "name": "orderSn",   "targets": 2 },
+                { "name": "userPhone",  "targets": 2 },
+                { "name": "itemName", "targets": 4 },
+                { "name": "refundState", "targets": 12 },
                 {
-                    "targets": 9,
+                    "targets": 14,
                     "render": function (data, type, row, meta) {
-                        var status = row.status;
-                        if (status == 0) {
-                            var context =
-                                {
-                                    func: [
-                                        {"name": "处理", "fn": "edit(\'" + row.id + "\')", "type": "primary"},
-                                    ]
-                                };
-                            var html = template(context);
-                            return html;
-                        } else if (status == 1) {
-                            return "已处理";
-                        }
-
+                        var context =
+                            {
+                                func: [
+                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"},
+                                    {"name": "审核", "fn": "edit(\'" + row.refundId + "\')", "type": "primary"},
+                                ]
+                            };
+                        var html = template(context);
+                        return html;
                     }
                 }
 
@@ -193,51 +203,90 @@
      * 检索
      **/
     function search(){
+        var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
         var itemName = $("#itemName").val();
-        table.column(1).search(userPhone).column(2).search(itemName).draw();
+        var refundState =  $("#refundState").val();
+        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).column(14).search(refundState).draw();
     }
 
-    /*候补预约订单处理*/
-    function edit(id) {
-        layer.confirm('是否处理完成？', {
-                btn: ['完成', '取消'],
+    /**
+     * 编辑方法
+     **/
+    function edit(orderId) {
+        console.log(orderId);
+        layer.confirm('是否通过？', {
+                btn: ['通过', '不通过', '取消'],
                 shade: false,
                 closeBtn: 0
             },
-            //state 处理完成为1
+            //order_state 通过是2，不通过是3
             function () {
-                if (candidateHandleAjax(id, 1)) {
-                    layer.msg('已处理', {icon: 5, time: 1000});
+                if (appointmentAduitAjax(orderId, 2)) {
+                    layer.msg('已通过', {icon: 6, time: 1000});
+                    table.ajax.reload();
+                } else {
+                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
+                }
+            },
+            function () {
+                if (appointmentAduitAjax(orderId, 3)) {
+                    layer.msg('未通过', {icon: 5, time: 1000});
                     table.ajax.reload();
                 } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
             });
     }
-
-    function candidateHandleAjax(id, status) {
-        var url = "<%=basePath %>/order_candidate/handle/"+id;
-        var flag=false;
-        $.ajax({
-            type: "post",
-            url: url,
-            cache:false,
-            async:false,
-            data:{status:status},
-            dataType:"json",
-            success: function(data){
-                var code = data.code;//200 is success，other is fail
-                if(code=="200"){
-                    flag=true;
-                }else{
-                    $("#errcode").val(data.code);
-                    $("#errmsg").val(data.msg);
-                    flag=false;
-                }
-            }
+    /*项目-删除*/
+    function project_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $.ajax({
+                type: 'POST',
+                url: '',
+                dataType: 'json',
+                success: function (data) {
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!', {icon: 1, time: 1000});
+                },
+                error: function (data) {
+                    console.log(data.msg);
+                },
+            });
         });
-        return flag;
+    }
+    /*项目-下架*/
+    function project_stop(obj, id) {
+        layer.confirm('确认要下架吗？', function (index) {
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+            $(obj).remove();
+            layer.msg('已下架!', {icon: 5, time: 1000});
+        });
+    }
+
+    /*项目-发布*/
+    function project_start(obj, id) {
+        layer.confirm('确认要发布吗？', function (index) {
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="picture_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+            $(obj).remove();
+            layer.msg('已发布!', {icon: 6, time: 1000});
+        });
+    }
+    /*项目-申请上线*/
+    function project_shenqing(obj, id) {
+        $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
+        $(obj).parents("tr").find(".td-manage").html("");
+        layer.msg('已提交申请，耐心等待审核!', {icon: 1, time: 2000});
+    }
+
+    /*项目-删除*/
+    function project_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!', {icon: 1, time: 1000});
+        });
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

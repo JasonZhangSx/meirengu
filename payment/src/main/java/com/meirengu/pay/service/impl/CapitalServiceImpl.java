@@ -88,6 +88,7 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
             if (record==null){
                 throw new PaymentException(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM_ISNULL);
             }
+            String msg = paymentRecord.getReturnMsg();
             paymentAccount = paymentAccountDao.selectByUserId(record.getUserId());
             if (paymentAccount == null) {
                 throw new PaymentException(StatusCode.PAYMENT_ACCOUNT_ERROR_SELECT_ISNULL);
@@ -95,8 +96,9 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
             paymentRecord = new PaymentRecordVo();
             paymentRecord.setPaymentId(record.getPaymentId());
             paymentRecord.setStatus(status);
+            paymentRecord.setReturnMsg(msg);
             paymentRecordDao.updatePaymentRecord(paymentRecord);
-            sendMsg(paymentRecord);
+            sendMsg(record);
             return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_CONFIRM,null);
         } catch (Exception e) {
             logger.error("Capture confirmRefund ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM), e.getMessage());

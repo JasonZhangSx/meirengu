@@ -41,7 +41,7 @@ public class Consumer {
         // 注意：ConsumerGroupName需要由应用来保证唯一
         defaultMQPushConsumer = new DefaultMQPushConsumer(consumerGroup);
         defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
-//        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 
         // 订阅指定MyTopic下tags等于MyTag
 
@@ -52,7 +52,7 @@ public class Consumer {
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         // 设置为集群消费(区别于广播消费)
-//        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 
         defaultMQPushConsumer.registerMessageListener(new MessageListenerConcurrently() {
 

@@ -2,6 +2,7 @@ package com.meirengu.utils;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.Callback;
+import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import org.slf4j.Logger;
@@ -85,4 +86,14 @@ public class OSSFileUtils {
         // 一定要close，否则会造成连接资源泄漏
         putObjectResult.getCallbackResponseBody().close();
     }
+
+    public InputStream download(String filePath,String fileName){
+        ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSObject ossObject = ossClient.getObject(bucketName, filePath+"/"+fileName);
+        return ossObject.getObjectContent();
+    }
+
+
+
+
 }

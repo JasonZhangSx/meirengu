@@ -1,7 +1,5 @@
-package com.meirengu.trade.controller;
+package com.meirengu.uc.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.meirengu.common.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +51,7 @@ public class TestController {
 
     @RequestMapping(value = "/testRedis")
     public String testRedis(){
-        redisClient.set("meirengu","123");
+        redisClient.set("meirengu","user_center");
         logger.debug(redisClient.get("meirengu"));
         return redisClient.get("meirengu");
     }

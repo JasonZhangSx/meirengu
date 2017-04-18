@@ -18,7 +18,7 @@ import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.OSSFileUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.mapu.themis.api.common.PersonalIdentifer;
 import org.mapu.themis.api.common.StampType;
 import org.mapu.themis.api.request.contract.ContactHtmlCreateFileRequest;
@@ -35,7 +35,6 @@ import rop.request.UploadFile;
 import rop.thirdparty.com.alibaba.fastjson.JSONArray;
 import rop.thirdparty.com.alibaba.fastjson.JSONObject;
 
-import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -102,8 +101,20 @@ public class ContactServiceImpl implements ContactService {
                     request.setTplType(ContactHtmlCreateFileRequest.TPL_TYPE_HTML);//使用html内容上传方式
                     /**html内容*/
 
-                    String contractTemplate = ConfigUtil.getConfig("CONTRACTTEMPLATE");
-                    String html = FileUtils.readFileToString(new File(contractTemplate),"UTF-8");
+                    //oss配置信息  从oss读取文件
+                    String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+                    String endpoint = ConfigUtil.getConfig("endpoint");
+                    String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+                    String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+                    String bucketName = ConfigUtil.getConfig("bucketName");
+                    String callback = "";
+
+                    OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+
+//                    String contractTemplate = ConfigUtil.getConfig("CONTRACTTEMPLATE");
+
+                    String html = IOUtils.toString(fileUtils.download("contract","contract001.html"),"UTF-8");
+//                    String html = FileUtils.readFileToString(new File(contractTemplate),"UTF-8");
                     //合同内容替换
                     html = html.replace("{signatureDate}","<em>"+ DateUtils.getPrintDate()+"</em>");//签署日期
                     html = html.replace("{signatureArea}", ConfigUtil.getConfig("SIGNATUREAREA"));//签署地点
@@ -226,16 +237,11 @@ public class ContactServiceImpl implements ContactService {
                                 InputStream inputStream = conn.getInputStream();
 
                                 //获取文件IO流 并将文件保存到oss
-                                String contractFolderName = ConfigUtil.getConfig("contractFolderName");
-                                String endpoint = ConfigUtil.getConfig("endpoint");
-                                String accessKeyId = ConfigUtil.getConfig("accessKeyId");
-                                String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
-                                String bucketName = ConfigUtil.getConfig("bucketName");
                                 String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
 //                                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+preservationCreateResponse.getPreservationId();
 
-                                OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
-                                fileUtils.upload(inputStream,fileName,contractFolderName);
+                                OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
+                                fileUpload.upload(inputStream,fileName,contractFolderName);
 
                                 //更新用户合同表
                                 Contract contract = new Contract();

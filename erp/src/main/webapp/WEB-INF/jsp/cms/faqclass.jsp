@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ include file="../common/common.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,18 +12,7 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="lib/html5.js"></script>
-    <script type="text/javascript" src="lib/respond.min.js"></script>
-    <![endif]-->
-    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
-    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
-    <!--[if IE 6]>
-    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
-    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+   </head>
 </html>
 
 <title>图片列表</title>
@@ -164,13 +155,13 @@
         <article class="cl pd-20">
             <div class="text-c">
                 编号：<input type="text" class="input-text" style="width:120px;">　
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                <button name="" id="" class="btn btn-success radius" onclick="search()" type="button"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
-            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题列表-添加','CMS-常见问题列表-添加.html','10001')"
+            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题分类-添加','/erp/faqclass/toadd','10001')"
                href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添 加</a>
           </span>
                 <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
@@ -180,31 +171,11 @@
                     <thead>
                     <tr class="text-c">
                         <th width="40">序号</th>
-                        <th width="100">位置</th>
-                        <th width="100">轮播图名称</th>
-                        <th>链接</th>
-                        <th width="80">状态</th>
+                        <th width="100">分类名称</th>
                         <th width="70">添加时间</th>
                         <th width="100">操作</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr class="text-c">
-                        <td>1</td>
-                        <td>北京玉之光众筹</td>
-                        <td>收益权众筹</td>
-                        <td>医美</td>
-                        <td>100万</td>
-                        <td>3</td>
-                        <td class="f-14 td-manage">
-                            <a style="text-decoration:none" class="ml-5"
-                               onClick="project_edit('CMS-常见问题列表-添加','CMS-常见问题列表-添加.html','10001')" href="javascript:;"
-                               title="查看"><i class="Hui-iconfont">&#xe725;</i></a>
-                            <a style="text-decoration:none" onClick="project_stop(this,'10001')" href="javascript:;"
-                               title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
-                        </td>
-                    </tr>
-                    </tbody>
                 </table>
             </div>
 
@@ -213,29 +184,140 @@
     </div>
 </section>
 
-<script src=lib/jquery/1.9.1/jquery.min.js></script>
-<script src=lib/layer/2.4/layer.js></script>
-<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
-<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
-<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
-<script src=static/h-ui/js/H-ui.js></script>
-<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
 <!-- 时间插件 -->
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
+<link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
 <script>
+
+    var table;
+    $(function () {
+
+        table = $('.table-sort').DataTable({
+            "serverSide": true,  //启用服务器端分页
+            "ajax": {
+                url: "/erp/faqclass/list",
+                "dataSrc": "aaData"
+            },
+//            "order": [[1, 'asc']],// dt默认是第一列升序排列 这里第一列为序号列，所以设置为不排序，并把默认的排序列设置到后面
+
+            "columns": [
+                {"data": "classId"}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "className"},
+                { "data": "createTime",
+                    render: function(data, type, row, meta) {
+                        //先讲 时间格式化
+                        //这类问题主要给大家讲逻辑，因为都是类似的问题，类似的解决方案
+                        //最基础的解决方案： 一、直接在数据源就格式化为常见的格式（sql或者后台代码格式化）;二、在dt里面格式化;
+                        //在js格式化时间的三种方式，我这里示范一种
+                        //具体方法的链接：http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                        return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
+                    }
+                },
+                { "data": null,
+                    "className":"f-14 td-manage",
+                    render: function(data, type, row, meta) {
+
+                        if(row.status=='0'){
+                            return '<td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.classId+'" onclick="project_start(this,'+row.classId+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>' +
+                                    '<a style="text-decoration:none" class="ml-5" ' +
+                                    'onclick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;" title="项目编辑">' +
+                                    '<i class="Hui-iconfont"></i></a> </td>'
+                        }
+                        if(row.status=='1'){
+                            return ' <td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.classId+'" onClick="project_stop(this,'+row.classId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
+                                    '<a style="text-decoration:none" class="ml-5"' +
+                                    'onClick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
+                                    '</i></a>' +
+                                    '</td>';
+                        }else{
+                            return ' <td class="f-14 td-manage"></td>';
+                        }
+                    }
+                }
+            ],
+            "columnDefs": [
+                {
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": [0.-1]
+                }
+
+            ],
+            "language": {
+                "lengthMenu": "每页_MENU_ 条记录",
+                "zeroRecords": "没有找到记录",
+                "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
+                "infoEmpty": "无记录",
+                "search": "搜索：",
+                "infoFiltered": "(从 _MAX_ 条记录过滤)",
+                "paginate": {
+                    "previous": "上一页",
+                    "next": "下一页"
+                }
+            }
+        });
+
+        //添加序号
+        //不管是排序，还是分页，还是搜索最后都会重画，这里监听draw事件即可
+        table.on('draw.dt',function() {
+            table.column(0, {
+                search: 'applied',
+                order: 'applied'
+            }).nodes().each(function(cell, i) {
+                //i 从0开始，所以这里先加1
+                i = i+1;
+                //服务器模式下获取分页信息
+                var page = table.page.info();
+                //当前第几页，从0开始
+                var pageno = page.page;
+                //每页数据
+                var length = page.length;
+                //行号等于 页数*每页数据长度+行号
+                var columnIndex = (i+pageno*length);
+                cell.innerHTML = columnIndex;
+            });
+        }).draw();
+    });
+
+    function search()
+    {
+        table.ajax.reload();
+    }
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    }
 
     //*项目-编辑*/
     function project_edit(title, url, id, w, h) {
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url+"?class_id="+id
         });
         layer.full(index);
     }
@@ -250,20 +332,47 @@
     /*资讯-下架*/
     function project_stop(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
-            $(obj).remove();
-            layer.msg('已下架!', {icon: 5, time: 1000});
+            $.ajax({
+                url:"/erp/faqclass/update",
+                data:{
+                    "class_id":id,
+                    "status":"0"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onclick="project_start(this,'+id+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>');
+                        $(obj).remove();
+                        layer.msg('已下架!', {icon: 5, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
+
         });
     }
 
-    /*资讯-发布*/
+    /*项目-发布*/
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-            $(obj).remove();
-            layer.msg('已发布!', {icon: 6, time: 1000});
+            $.ajax({
+                url:"/erp/faqclass/update",
+                data:{
+                    "class_id":id,
+                    "status":"1"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                        $(obj).remove();
+                        layer.msg('已发布!', {icon: 6, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
         });
     }
 </script>

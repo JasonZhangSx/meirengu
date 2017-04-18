@@ -78,9 +78,10 @@ public class FaqClassServiceImpl implements FaqClassService {
     }
 
     @Override
-    public Integer updateStatus(Integer classId, Byte status, String operateAccount) {
+    public Integer updateStatus(Integer classId, Byte status, String operateAccount,String className) {
         FaqClass faqClass = new FaqClass();
         faqClass.setClassId(classId);
+        faqClass.setClassName(className);
         faqClass.setStatus(status);
         faqClass.setUpdateTime(new Date());
         faqClass.setOperateAccount(operateAccount);

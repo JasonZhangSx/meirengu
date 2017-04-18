@@ -73,10 +73,10 @@
                 &#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href=javascript:void(0) data-href="order_appointment" title=待审核预约订单>待审核预约订单</a></li>
-                    <li><a href=javascript:void(0) data-href="order_candidate" title=候补预约列表>候补预约列表</a></li>
-                    <li><a href=javascript:void(0) data-href="order" title=订单列表>订单列表</a></li>
-                    <li><a href=javascript:void(0) data-href=订单-待审核退款订单.html title=待审核退款订单>待审核退款订单</a></li>
+                    <li><a href=javascript:void(0) data-href="order_appointment/view" title=待审核预约订单>待审核预约订单</a></li>
+                    <li><a href=javascript:void(0) data-href="order_candidate/view" title=候补预约列表>候补预约列表</a></li>
+                    <li><a href=javascript:void(0) data-href="order/view" title=订单列表>订单列表</a></li>
+                    <li><a href=javascript:void(0) data-href="refund/view" title=待审核退款订单>待审核退款订单</a></li>
                     <li><a href=javascript:void(0) data-href=订单-退款订单列表.html title=退款订单列表>退款订单列表</a></li>
                 </ul>
             </dd>
