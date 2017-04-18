@@ -16,7 +16,7 @@
 <title>图片列表</title>
 </head>
 <body>
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目 <span class="c-gray en">&gt;</span> 新建项目列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 用户管理 <span class="c-gray en">&gt;</span> 邀请记录 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -33,7 +33,8 @@
                 <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
                         class="btn btn-primary radius" href="javascript:;"><i
                         class="Hui-iconfont">&#xe634;</i> 导出</a></span>
-                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span></div>
+                <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
+            </div>
             <div class="mt-20">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>

@@ -77,7 +77,7 @@
                     <li><a href=javascript:void(0) data-href="order_candidate/view" title=候补预约列表>候补预约列表</a></li>
                     <li><a href=javascript:void(0) data-href="order/view" title=订单列表>订单列表</a></li>
                     <li><a href=javascript:void(0) data-href="refund/view" title=待审核退款订单>待审核退款订单</a></li>
-                    <li><a href=javascript:void(0) data-href=订单-退款订单列表.html title=退款订单列表>退款订单列表</a></li>
+                    <li><a href=javascript:void(0) data-href="refund/received/view" title=退款订单列表>退款订单列表</a></li>
                 </ul>
             </dd>
         </dl>
@@ -97,7 +97,7 @@
             <dd>
                 <ul>
                     <li><a href=javascript:void(0) data-href=activity/tolist title=活动列表>活动列表</a></li>
-                    <li><a href=javascript:void(0) data-href=运营-抵扣券查询.html title=抵扣券查询>抵扣券查询</a></li>
+                    <li><a href=javascript:void(0) data-href="rebate/view" title=抵扣券查询>抵扣券查询</a></li>
                 </ul>
             </dd>
         </dl>
@@ -134,10 +134,10 @@
             <dd>
                 <ul>
                     <li><a href=javascript:void(0) data-href=CMS-轮播图管理.html title=轮播图管理>CMS-轮播图管理</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-公告列表.html title=公告列表>CMS-公告列表</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-常见问题分类.html title=常见问题分类>CMS-常见问题分类</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-常见问题列表.html title=常见问题列表>CMS-常见问题列表</a></li>
-                    <li><a href=javascript:void(0) data-href=CMS-意见反馈列表.html title=意见反馈列表>CMS-意见反馈列表</a></li>
+                    <li><a href=javascript:void(0) data-href="bulletin/view" title=公告列表>CMS-公告列表</a></li>
+                    <li><a href=javascript:void(0) data-href=faqclass/tolist title=常见问题分类>CMS-常见问题分类</a></li>
+                    <li><a href=javascript:void(0) data-href=faq/tolist title=常见问题列表>CMS-常见问题列表</a></li>
+                    <li><a href=javascript:void(0) data-href="feedback/view" title=意见反馈列表>CMS-意见反馈列表</a></li>
                 </ul>
             </dd>
         </dl>
