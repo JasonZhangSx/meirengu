@@ -87,7 +87,7 @@
                                 <c:when test="${withdrawals.status==1}">
                                     <td>
                                         <a style="text-decoration:none" class="ml-5" href="javascript:;" onClick="withdrawals_ok(${withdrawals.orderSn})"  title="通过">通过</a>
-                                        <a style="text-decoration:none" class="ml-5" href="javascript:;"  onClick="project_edit('财务-用户提现记录-不通过','<%=basePath %>withdrawalsErrorMsg.jsp','10001','600','270')"  title="不通过">不通过</a>
+                                        <a style="text-decoration:none" class="ml-5" href="javascript:;"  onClick="withdrawals_error(${withdrawals.orderSn})"  title="不通过">不通过</a>
                                     </td>
                                 </c:when>
                                 <c:otherwise>
@@ -135,7 +135,7 @@
         if(confirm("是否确认提现不通过"))
         {
             //如果是true ，那么就把页面转向thcjp.cnblogs.com
-            location.href="confirmWithdrawals?orderSn="+id+"&status=3";
+            location.href="withdrawalsError?orderSn="+id+"&status=3";
         }
     }
 </script>

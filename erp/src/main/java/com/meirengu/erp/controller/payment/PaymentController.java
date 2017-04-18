@@ -8,11 +8,13 @@ import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +56,18 @@ public class PaymentController extends BaseController {
         map.put("orderSn",orderSn);
         return new ModelAndView("/payment/withdrawalsErrorMsg", map);
     }
+    @RequestMapping(value = "withdrawalsErrorConfirm", method = RequestMethod.POST)
+    public ModelAndView withdrawalsErrorConfirm(HttpServletRequest request,String orderSn,String msg) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
+        Map map = new HashMap<>();
+        map.put("orderSn",orderSn);
+        map.put("returnMsg",msg);
+        map.put("status","3");
+        map.put("content",JSONObject.toJSONString(map));
+        super.httpPost(url.toString()+"/capital/withdrawals",map);
+        return withdrawalsRecord();
+    }
+
     protected Map<String,Object> recordList(String condition){
         if (url==null){
             setUrl();
