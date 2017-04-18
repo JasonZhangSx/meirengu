@@ -86,13 +86,13 @@
 					<constructor-arg index="0" value="${redis.slaver.host}" />
 					<constructor-arg index="1" value="${redis.slaver.port}"
 									 type="int" />
-					<property name="password" value="${redis.slaver.password}"></property>
+					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
 				</bean>
 				<bean name="master" class="redis.clients.jedis.JedisShardInfo">
 					<constructor-arg index="0" value="${redis.master.host}" />
 					<constructor-arg index="1" value="${redis.master.port}"
 									 type="int" />
-					<property name="password" value="${redis.master.password}"></property>
+					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
 				</bean>
 			</list>
 		</constructor-arg>
