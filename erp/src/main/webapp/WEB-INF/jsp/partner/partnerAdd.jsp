@@ -1,8 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
-<%@ include file="../common/common.jsp"%>
+<%@ include file="../common/common.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <base href="<%=basePath %>">
     <meta charset=utf-8>
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
@@ -12,10 +13,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>行业分类添加</title>
+    <title>行业添加</title>
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
     <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <%--<script src="static/js/ajaxfileupload.js"/>--%>
 
 </head>
 <body>
@@ -52,8 +54,8 @@
             <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 				<select name="typeId" id="typeId" class="select">
-                    <c:forEach items="${classList}" var="class">
-                        <option value="${class.classId}">${class.className}</option>
+                    <c:forEach items="${classList}" var="classList">
+                        <option value="${classList.classId}">${classList.className}</option>
                     </c:forEach>
 				</select>
 				</span>
@@ -111,13 +113,15 @@
             </div>
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="principalIdcard" name="principalIdcard">
+                <input type="text" class="input-text" value="" placeholder="" id="principalIdcard"
+                       name="principalIdcard">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="principalTelephone" name="principalTelephone" maxlength="30"
+                <input type="text" class="input-text" value="" id="principalTelephone" name="principalTelephone"
+                       maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -160,7 +164,8 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="contactsTelephone" name="contactsTelephone" maxlength="30"
+                <input type="text" class="input-text" value="" id="contactsTelephone" name="contactsTelephone"
+                       maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -238,8 +243,17 @@
                     <td>营业执照
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
-                    <td class="text-l">
-                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                    <td class="text-l"><!-- upload?foldName=item-->
+                        <div class="portfoliobox">
+                            <div class="picbox">
+                                <a href="" data-lightbox="gallery" data-title="项目头图"><img
+                                        src="?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
+                            </div>
+                        </div>
+                        <input type="hidden" id="imageBusinessLicence" name="imageBusinessLicence">
+                        <input type="file" id="file1" name="file">
+                        <button class="btn r va-m btn-secondary radius ml-10" id="btn1" type="button">上传</button>
+                        <p><img id="img1" alt="上传成功啦" src="" /></p>
                     </td>
                 </tr>
                 <tr class="text-c">
@@ -272,10 +286,10 @@
     </form>
 </div>
 <!-- 省市区 -->
-<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
-<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>
-
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+<%--<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
+<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>--%>
+<%--
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>--%>
 
 <script>
 
@@ -283,109 +297,35 @@
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     });
 
-    //补充资料-收益权股权类  图片上传demo
-    $(function () {
-        $list = $("#fileList"),
-                $btn = $("#btn-star"),
-                state = "pending",
-                uploader;
+    /*$(function () {
+        $("#btn1").click(function () {
+            ajaxFileUpload();
+        })
+    })
 
-        var uploader = WebUploader.create({
-            auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
-
-            // 文件接收服务端。
-            server: 'fileupload.php',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            // 只允许选择图片文件。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-        uploader.on('fileQueued', function (file) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="item">' +
-                            '<div class="pic-box"><img></div>' +
-                            '<div class="info">' + file.name + '</div>' +
-                            '<p class="state">等待上传...</p>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
-            $list.append($li);
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb(file, function (error, src) {
-                if (error) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
+    function ajaxFileUpload() {
+        $.ajaxFileUpload({
+            url: 'upload?foldName=item', //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'file1', //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data, status){  //服务器成功响应处理函数
+                console.log(data);
+                $("#img1").attr("src", data.imgurl);
+                if (typeof (data.error) != 'undefined'){
+                    if (data.error != '') {
+                        alert(data.error);
+                    } else {
+                        alert(data.msg);
+                    }
                 }
-
-                $img.attr('src', src);
-            }, thumbnailWidth, thumbnailHeight);
-        });
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function (file, percentage) {
-            var $li = $('#' + file.id),
-                    $percent = $li.find('.progress-box .sr-only');
-
-            // 避免重复创建
-            if (!$percent.length) {
-                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
+            },
+            error: function (data, status, e){//服务器响应失败处理函数
+                alert(e);
             }
-            $li.find(".state").text("上传中");
-            $percent.css('width', percentage * 100 + '%');
-        });
-
-        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file) {
-            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        });
-
-        // 文件上传失败，显示上传出错。
-        uploader.on('uploadError', function (file) {
-            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
-        });
-
-        // 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on('uploadComplete', function (file) {
-            $('#' + file.id).find('.progress-box').fadeOut();
-        });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
-
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
-            } else {
-                $btn.text('开始上传');
-            }
-        });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
-        });
-
-    });
-
+        })
+        return false;
+    }*/
 
 </script>
 </body>
