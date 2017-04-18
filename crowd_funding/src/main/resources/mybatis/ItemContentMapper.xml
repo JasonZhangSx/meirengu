@@ -75,7 +75,7 @@
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			#{sortBy} #{order},
+			${sortBy} ${order},
 		</if>
 		content_sort asc, create_time desc
 	</select>
@@ -91,7 +91,7 @@
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			#{sortBy} #{order},
+			${sortBy} ${order},
 		</if>
 		content_sort asc, create_time desc
 	</select>
