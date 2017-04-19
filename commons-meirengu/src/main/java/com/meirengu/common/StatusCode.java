@@ -382,7 +382,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.RECORD_NOT_EXISTED, "记录不存在");
 
         //50100-50200//user_center
-        codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码每小时限制发送三次");
+        codeMsgMap.put(StatusCode.CHECK_CODE_SEND_ERROR, "动态密码获取失败！请重新获取");
         codeMsgMap.put(StatusCode.USER_NOT_EXITS, "用户不存在");
         codeMsgMap.put(StatusCode.USER_IS_EXITS, "用户已存在");
         codeMsgMap.put(StatusCode.USER_PASSWORD_IS_EXITS, "用户密码已存在");
