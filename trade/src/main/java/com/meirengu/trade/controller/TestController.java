@@ -1,5 +1,9 @@
 package com.meirengu.trade.controller;
 
+import com.meirengu.trade.rocketmq.Producer;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.meirengu.common.RedisClient;
@@ -24,6 +28,11 @@ public class TestController {
 
     @Autowired
     private RedisClient redisClient;
+
+    @Autowired
+    private Producer producer;
+
+
 
     @RequestMapping("redis")
     public String redis(){
@@ -56,5 +65,24 @@ public class TestController {
         redisClient.set("meirengu","123");
         logger.debug(redisClient.get("meirengu"));
         return redisClient.get("meirengu");
+    }
+
+    @RequestMapping(value = "/testMq")
+    public void  testMq(){
+        String str = Long.toString(System.currentTimeMillis());
+        Message msg = new Message("deploy", "testMq", str.getBytes());
+        msg.setKeys("testMq" + str);
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        msg.setDelayTimeLevel(1);
+        SendResult sendResult = null;
+        try {
+            logger.debug("发送消息：tag:testMq: {}", msg);
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info("sendResult: {}", sendResult);
+        } catch (MQClientException e) {
+            logger.error(e.getMessage() + String.valueOf(sendResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
