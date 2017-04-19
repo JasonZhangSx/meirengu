@@ -86,11 +86,15 @@
 					<constructor-arg index="0" value="${redis.slaver.host}" />
 					<constructor-arg index="1" value="${redis.slaver.port}"
 									 type="int" />
+					<!--表示当redis.password不为空时，那么返回redis.password，否则返回null -->
+					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
 				</bean>
 				<bean name="master" class="redis.clients.jedis.JedisShardInfo">
 					<constructor-arg index="0" value="${redis.master.host}" />
 					<constructor-arg index="1" value="${redis.master.port}"
 									 type="int" />
+					<!--表示当redis.password不为空时，那么返回redis.password，否则返回null -->
+					<property name="password" value="#{'${redis.master.password}'?:null}"></property>
 				</bean>
 			</list>
 		</constructor-arg>
