@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset=utf-8>
@@ -53,105 +54,19 @@
 </header>
 <aside class=Hui-aside><input runat=server id=divScrollValue type=hidden value=""/>
     <div class="menu_dropdown bk_2">
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe63a;</i> 众筹项目<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href="item/create_list" title=新建项目列表>新建项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/verify_list" title=待初审项目>待初审项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/cooperate_list" title=待合作项目>待合作项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/review_list" title=待复审项目>待复审项目</a></li>
-                    <li><a href=javascript:void(0) data-href="item/publish_list" title=待发布项目列表>待发布项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/published_list" title=已发布项目列表>已发布项目列表</a></li>
-                    <li><a href=javascript:void(0) data-href="item/completed_list" title=已完成项目>已完成项目</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe687;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href="order_appointment/view" title=待审核预约订单>待审核预约订单</a></li>
-                    <li><a href=javascript:void(0) data-href="order_candidate/view" title=候补预约列表>候补预约列表</a></li>
-                    <li><a href=javascript:void(0) data-href="order/view" title=订单列表>订单列表</a></li>
-                    <li><a href=javascript:void(0) data-href="refund/view" title=待审核退款订单>待审核退款订单</a></li>
-                    <li><a href=javascript:void(0) data-href="refund/received/view" title=退款订单列表>退款订单列表</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe607;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href=user/tolist title=项目列表>用户列表</a></li>
-                    <li><a href=javascript:void(0) data-href=inviter/tolist title=项目列表>邀请记录</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe607;</i> 运营管理<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href=activity/tolist title=活动列表>活动列表</a></li>
-                    <li><a href=javascript:void(0) data-href="rebate/view" title=抵扣券查询>抵扣券查询</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe62b;</i> 合作方管理<i
-                    class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href="partner/class/list" title=项目列表>行业分类管理</a></li>
-                    <li><a href=javascript:void(0) data-href="partner/list" title=项目列表>合作方列表</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe6b5;</i> 财务管理<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href=财务-待打款列表.html title=待打款列表>待打款列表</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-打款记录.html title=打款记录>打款记录</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-待收款项列表.html title=代收款项列表>待收款项列表</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-收款记录.html title=收款记录>收款记录</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-放款分红记录.html title=放款分红记录>放款分红记录</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-支付通道管理.html title=放款分红记录>支付通道管理</a></li>
-                    <li><a href=javascript:void(0) data-href=record/rechargeRecord title=用户充值记录>用户充值记录</a></li>
-                    <li><a href=javascript:void(0) data-href=record/withdrawalsRecord title=用户提现记录>用户提现记录</a></li>
-                    <li><a href=javascript:void(0) data-href=财务-抵扣券核销.html title=放款分红记录>抵扣券核销</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe60c;</i> CMS管理系统<i
-                    class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href=CMS-轮播图管理.html title=轮播图管理>CMS-轮播图管理</a></li>
-                    <li><a href=javascript:void(0) data-href="bulletin/view" title=公告列表>CMS-公告列表</a></li>
-                    <li><a href=javascript:void(0) data-href=faqclass/tolist title=常见问题分类>CMS-常见问题分类</a></li>
-                    <li><a href=javascript:void(0) data-href=faq/tolist title=常见问题列表>CMS-常见问题列表</a></li>
-                    <li><a href=javascript:void(0) data-href="feedback/view" title=意见反馈列表>CMS-意见反馈列表</a></li>
-                </ul>
-            </dd>
-        </dl>
-        <dl id=menu-article>
-            <dt><i class=Hui-iconfont style=font-size:20px>&#xe61d;</i> 系统设置<i class="Hui-iconfont menu_dropdown-arrow">
-                &#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href=javascript:void(0) data-href=系统-操作员管理.html title=操作员管理>操作员管理</a></li>
-                    <li><a href=javascript:void(0) data-href=系统-角色管理.html title=角色管理>角色管理</a></li>
-                    <li><a href=javascript:void(0) data-href=系统-部门管理.html title=部门管理>部门管理</a></li>
-                </ul>
-            </dd>
-        </dl>
+        <c:forEach var="item" items="${accounts.permissionsList}" varStatus="status">
+            <dl id=menu-article>
+                <dt><i class=Hui-iconfont style=font-size:20px>&#xe63a;</i> ${item.name}<i class="Hui-iconfont menu_dropdown-arrow">
+                    &#xe6d5;</i></dt>
+                <dd>
+                    <ul>
+                        <c:forEach var="itemList" items="${item.list}" varStatus="status">
+                            <li><a href=javascript:void(0) data-href="${itemList.value}" title= ${itemList.name}> ${itemList.name}</a></li>
+                        </c:forEach>
+                    </ul>
+                </dd>
+            </dl>
+        </c:forEach>
     </div>
 </aside>
 <div class="dislpayArrow hidden-xs"><a class=pngfix href=javascript:void(0) data-href=javascript:void(0);

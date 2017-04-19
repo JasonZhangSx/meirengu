@@ -20,7 +20,7 @@
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
-    <title>xxxxx</title>
+    <title>美人谷erp管理系统登录页</title>
     <meta name="keywords" content="xxxxxx"/>
     <meta name="description" content="xxxxxx。"/>
 </head>
@@ -40,6 +40,12 @@
                 <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
                 <div class="formControls col-xs-8">
                     <input id="password" name="password" type="password" placeholder="密码" class="input-text size-L">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3"></label>
+                <div class="formControls col-xs-8" style="color:red">
+                    ${msg}
                 </div>
             </div>
             <div class="row cl">

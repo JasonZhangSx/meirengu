@@ -35,7 +35,7 @@ public class AccountImpl implements AccountService {
         Account acc = new Account();
         acc.setUserName(account.getUserName());
         acc = iAccountService.findAccount(account);
-        if (account==null){
+        if (acc==null){
             return false;
         }
         if (account.getPassword().equals(acc.getPassword())){
