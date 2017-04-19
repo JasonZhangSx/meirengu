@@ -74,11 +74,10 @@ public class OSSFileUtils {
         Callback callback = new Callback();
         callback.setCallbackUrl(callbackUrl);
         callback.setCallbackBody("{\\\"mimeType\\\":${mimeType},\\\"size\\\":${size}}");
-        callback.setCalbackBodyType(Callback.CalbackBodyType.URL);
+        callback.setCalbackBodyType(Callback.CalbackBodyType.JSON);
         callback.addCallbackVar("x:var1", "value1");
         callback.addCallbackVar("x:var2", "value2");
         putObjectRequest.setCallback(callback);
-//        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
         PutObjectResult putObjectResult = ossClient.putObject(putObjectRequest);
         // 读取上传回调返回的消息内容
         byte[] buffer = new byte[1024];
