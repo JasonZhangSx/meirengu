@@ -16,16 +16,16 @@
 			<if test="orderSn != null and orderSn != ''">
 				order_sn=#{orderSn},
 			</if>
-			<if test="orderAmount != null and orderAmount != ''">
+			<if test="orderAmount != null">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="costAmount != null and costAmount != ''">
+			<if test="costAmount != null">
 				cost_amount=#{costAmount},
 			</if>
-			<if test="rebateAmount != null and rebateAmount != ''">
+			<if test="rebateAmount != null">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="userId != null and userId != ''">
+			<if test="userId != null">
 				user_id=#{userId},
 			</if>
 			<if test="userName != null and userName != ''">
@@ -37,13 +37,13 @@
 			<if test="userEmail != null and userEmail != ''">
 				user_email=#{userEmail},
 			</if>
-			<if test="userAddressId != null and userAddressId != ''">
+			<if test="userAddressId != null">
 				user_address_id=#{userAddressId},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time=#{createTime},
 			</if>
-			<if test="orderType != null and orderType != ''">
+			<if test="orderType != null">
 				order_type=#{orderType},
 			</if>
 			<if test="paymentMethod != null">
@@ -52,7 +52,7 @@
 			<if test="outSn != null and outSn != ''">
 				out_sn=#{outSn},
 			</if>
-			<if test="finishedTime != null and finishedTime != ''">
+			<if test="finishedTime != null">
 				finished_time=#{finishedTime},
 			</if>
 			<if test="receipt != null and receipt != ''">
@@ -70,7 +70,7 @@
 			<if test="orderFrom != null and orderFrom != ''">
 				order_from=#{orderFrom},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">
