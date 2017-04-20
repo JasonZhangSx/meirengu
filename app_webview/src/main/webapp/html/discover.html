@@ -112,6 +112,12 @@
 				window.AndroidWebView.appLogin();
 			}
 		}else{
+			if(user_name == null || user_name == ''){
+				user_name = "default";
+			}
+			if(user_phone == null || user_phone == ''){
+				user_phone = "0";
+			}
 			window.location.href = "../feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
 		}
 		/*window.location.href = "../feedback?userId=1&userName=123&userPhone=";*/

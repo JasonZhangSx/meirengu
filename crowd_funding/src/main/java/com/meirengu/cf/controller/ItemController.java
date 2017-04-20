@@ -175,8 +175,14 @@ public class ItemController extends BaseController {
                 beanMap.put("isInterested", null);
             }
             if(beanMap != null){
-                beanMap.put("privince", "北京市");
-                beanMap.put("city", "朝阳区");
+                Integer areaId = StringUtil.isEmpty(beanMap.get("areaId")) ? null : Integer.parseInt(beanMap.get("areaId").toString());
+                Map<String, Object> areaMap = otherService.getAreasByLastLevel(areaId);
+                if(areaMap != null){
+                    String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
+                    String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                    beanMap.put("privince", privince);
+                    beanMap.put("city", city);
+                }
             }
 
             return super.setResult(StatusCode.OK, beanMap, StatusCode.codeMsgMap.get(StatusCode.OK));
