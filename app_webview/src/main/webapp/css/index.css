@@ -192,3 +192,8 @@ img{vertical-align: top}
 .rule.no_indent p,.rule.no_indent b{text-indent: 0;}
 .rule table{border-color:#eee}
 .rule table td{box-sizing: border-box;padding:.1rem;font-size:.2rem;vertical-align: top;}
+
+.no_date{text-align: center;font-size:.3rem;color:#ccc;line-height: .36rem;}
+.no_date b{display: block;text-align: center;margin-bottom: .24rem;font-size: .4rem;color:#6b6868;}
+.no_date a{display: block;text-align: center;background-color: #3f9041;color:#fff;width:2.4rem;letter-spacing: .01rem;line-height: .72rem;font-size:.32rem;margin:.54rem auto 0;border-radius: .12rem;}
+.no_date img{display: block;margin:2rem auto .6rem;}

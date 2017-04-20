@@ -23,4 +23,9 @@ public class UserNotifyServiceImpl extends BaseServiceImpl<UserNotify> implement
     public int insertBatch(List<UserNotify> unList) {
         return userNotifyDao.insertBatch(unList);
     }
+
+    @Override
+    public int getNotReadCount(int userId) {
+        return userNotifyDao.getNotReadCount(userId);
+    }
 }

@@ -17,4 +17,11 @@ public interface UserNotifyDao extends BaseDao<UserNotify>{
      * @return
      */
     int insertBatch(@Param("list") List<UserNotify> unList);
+
+    /**
+     * 根据用户id获取未读消息总数
+     * @param userId
+     * @return
+     */
+    int getNotReadCount(int userId);
 }

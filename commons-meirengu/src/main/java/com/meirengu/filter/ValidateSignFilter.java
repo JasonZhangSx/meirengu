@@ -55,8 +55,8 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             //timestamp, key, sign 为验签必传参数
             if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
                 PrintWriter out = httpServletResponse.getWriter();
-                map.put("code", StatusCode.MISSING_ARGUMENT);
-                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                map.put("code", StatusCode.SIGN_MISSING_ARGUMENT);
+                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.SIGN_MISSING_ARGUMENT));
                 out.print(JSON.toJSON(map));
                 out.flush();
                 out.close();
@@ -75,8 +75,8 @@ public class ValidateSignFilter extends OncePerRequestFilter{
 
                 if(StringUtil.isEmpty(tsp)){
                     PrintWriter out = httpServletResponse.getWriter();
-                    map.put("code", StatusCode.MISSING_ARGUMENT);
-                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                    map.put("code", StatusCode.TIMESTAMP_MISSING);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.TIMESTAMP_MISSING));
                     out.print(JSON.toJSON(map));
                     out.flush();
                     out.close();

@@ -170,6 +170,22 @@ public class NotifyController extends BaseController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "notread/count", method = RequestMethod.POST)
+    public Result getNotReadCount(@RequestParam(value = "user_id", required = false) Integer userId){
+
+        if(userId == null || userId == 0){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try {
+            int count = userNotifyService.getNotReadCount(userId);
+            return super.setResult(StatusCode.OK, String.valueOf(count), StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">> NotifyController.getNotReadCount throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
 
     public List<String> extractMessageByRegular(String msg){
         List<String> list=new ArrayList<String>();
