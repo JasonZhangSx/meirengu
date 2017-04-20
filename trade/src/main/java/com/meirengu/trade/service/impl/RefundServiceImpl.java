@@ -57,7 +57,6 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setUserId(order.getUserId());
             refund.setUserName(order.getUserName());
             refund.setUserPhone(order.getUserPhone());
-            refund.setCreateTime(new Date());
             refund.setOrderAmount(order.getOrderAmount());
             refund.setOrderRefund(order.getCostAmount());
             refund.setRefundPaymentcode("");//支付方式名称申请时为空
@@ -72,7 +71,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             Order updateOrder = new Order();
             updateOrder.setOrderId(orderId);
             updateOrder.setOrderState(OrderStateEnum.REFUND_APPLY.getValue());
-            int j = orderService.update(order);
+            int j = orderService.update(updateOrder);
             if (!(i == 1 && j == 1 )) {
                 throw new OrderException("退款申请失败，请重试", StatusCode.REFUND_APPLY_ERROR);
             }

@@ -51,16 +51,8 @@ public class TemplateConfigUtil {
 		if (lastModified != configFile.lastModified()) {
 			load();
 		}
-		try {
-			String value = props.getProperty(key);
-			if(StringUtil.isEmpty(value)){
-				return null;
-			}
-			return new String(value.getBytes("ISO-8859-1"),"UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		return props.getProperty(key);
 	}
 
 }
