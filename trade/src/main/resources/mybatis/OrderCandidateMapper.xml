@@ -13,10 +13,10 @@
 	<update id="update" parameterType="orderCandidate">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
+			<if test="id != null">
 				id=#{id},
 			</if>
-			<if test="userId != null and userId != ''">
+			<if test="userId != null">
 				user_id=#{userId},
 			</if>
 			<if test="userName != null and userName != ''">
@@ -28,31 +28,28 @@
 			<if test="userWeixin != null and userWeixin != ''">
 				user_weixin=#{userWeixin},
 			</if>
-			<if test="itemId != null and itemId != ''">
+			<if test="itemId != null">
 				item_id=#{itemId},
 			</if>
 			<if test="itemName != null and itemName != ''">
 				item_name=#{itemName},
 			</if>
-			<if test="itemLevelId != null and itemLevelId != ''">
+			<if test="itemLevelId != null">
 				item_level_id=#{itemLevelId},
 			</if>
 			<if test="itemLevelName != null and itemLevelName != ''">
 				item_level_name=#{itemLevelName},
 			</if>
-			<if test="itemNum != null and itemNum != ''">
+			<if test="itemNum != null">
 				item_num=#{itemNum},
 			</if>
-			<if test="orderAmount != null and orderAmount != ''">
+			<if test="orderAmount != null">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null and">
 				status=#{status},
 			</if>
-			<if test="createTime != null and createTime != ''">
-				create_time=#{createTime},
-			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">

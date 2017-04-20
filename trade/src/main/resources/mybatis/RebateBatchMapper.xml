@@ -39,7 +39,7 @@
 	<update id="update" parameterType="rebateBatch">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="batchId != null and batchId != ''">
+			<if test="batchId != null and batchId != 0">
 				batch_id=#{batchId},
 			</if>
 			<if test="rebateType != null">
@@ -60,37 +60,37 @@
 			<if test="rebateLimit != null">
 				rebate_limit=#{rebateLimit},
 			</if>
-			<if test="validDays != null and validDays != ''">
+			<if test="validDays != null and validDays != 0">
 				valid_days=#{validDays},
 			</if>
-			<if test="validStartTime != null and validStartTime != ''">
+			<if test="validStartTime != null">
 				valid_start_time=#{validStartTime},
 			</if>
-			<if test="validEndTime != null and validEndTime != ''">
+			<if test="validEndTime != null">
 				valid_end_time=#{validEndTime},
 			</if>
-			<if test="validType != null and validType != ''">
+			<if test="validType != null and validType != 0">
 				valid_type=#{validType},
 			</if>
-			<if test="batchStatue != null and batchStatue != ''">
+			<if test="batchStatue != null">
 				batch_statue=#{batchStatue},
 			</if>
-			<if test="batchCount != null and batchCount != ''">
+			<if test="batchCount != null and batchCount != 0">
 				batch_count=#{batchCount},
 			</if>
 			<if test="channel != null and channel != ''">
 				channel=#{channel},
 			</if>
-			<if test="budgetAmount != null and budgetAmount != ''">
+			<if test="budgetAmount != null">
 				budget_amount=#{budgetAmount},
 			</if>
 			<if test="remarks != null and remarks != ''">
 				remarks=#{remarks},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time=#{createTime},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">

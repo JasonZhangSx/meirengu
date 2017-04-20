@@ -57,7 +57,6 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setUserId(order.getUserId());
             refund.setUserName(order.getUserName());
             refund.setUserPhone(order.getUserPhone());
-            refund.setCreateTime(new Date());
             refund.setOrderAmount(order.getOrderAmount());
             refund.setOrderRefund(order.getCostAmount());
             refund.setRefundPaymentcode("");//支付方式名称申请时为空

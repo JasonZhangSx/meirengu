@@ -45,22 +45,22 @@
 		<if test="rebateSn != null and rebateSn != ''">
 			rebate_sn=#{rebateSn},
 		</if>
-		<if test="rebateBatch != null and rebateBatch != ''">
+		<if test="rebateBatch != null and rebateBatch != 0">
 			rebate_batch=#{rebateBatch},
 		</if>
 		<if test="channel != null and channel != ''">
 			channel=#{channel},
 		</if>
-		<if test="validStartTime != null and validStartTime != ''">
+		<if test="validStartTime != null">
 			valid_start_time=#{validStartTime},
 		</if>
-		<if test="validEndTime != null and validEndTime != ''">
+		<if test="validEndTime != null">
 			valid_end_time=#{validEndTime},
 		</if>
-		<if test="createTime != null and createTime != ''">
+		<if test="createTime != null">
 			create_time=#{createTime},
 		</if>
-		<if test="updateTime != null and updateTime != ''">
+		<if test="updateTime != null">
 			update_time=#{updateTime},
 		</if>
 		<if test="operateAccount != null and operateAccount != ''">
