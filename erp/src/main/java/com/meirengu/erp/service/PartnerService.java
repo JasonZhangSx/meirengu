@@ -1,5 +1,7 @@
 package com.meirengu.erp.service;
 
+import com.meirengu.erp.model.Partner;
+
 import java.util.List;
 
 /**
@@ -14,5 +16,6 @@ public interface PartnerService {
 
     List getPartnerClassList();
 
+    boolean partnerAdd(Partner partner);
 
 }

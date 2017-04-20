@@ -47,4 +47,9 @@ public class UploadController extends BaseController{
         return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
 
     }
+
+    @RequestMapping(value = "to_upload")
+    public String upload(){
+        return "upload";
+    }
 }
