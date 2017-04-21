@@ -36,7 +36,7 @@ public class IdentityCardModel {
     @SuppressWarnings("unchecked")
     public static String IDCardValidate(String IDStr) throws ParseException {
         String errorInfo = "-1";// 记录错误信息
-        String[] ValCodeArr = { "1", "0", "x", "9", "8", "7", "6", "5", "4",
+        String[] ValCodeArr = { "1", "0", "X", "9", "8", "7", "6", "5", "4",
                 "3", "2" };
         String[] Wi = { "7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7",
                 "9", "10", "5", "8", "4", "2" };
@@ -210,7 +210,7 @@ public class IdentityCardModel {
     public static void main(String[] args) throws ParseException {
         // String IDCardNum="210102820826411";
         // String IDCardNum="210102198208264114";
-        String IDCardNum = "13112719910820095x";
+        String IDCardNum = "13112719910820095X";
         IDCard cc = new IDCard();
         System.out.println(cc.IDCardValidate(IDCardNum)+"\n");
         System.out.println(cc.IDCardValidate(IDCardNum)+IDCardNum+"\n");
