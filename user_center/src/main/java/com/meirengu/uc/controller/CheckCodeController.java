@@ -93,7 +93,7 @@ public class CheckCodeController extends BaseController {
                         checkCode.setUse(false);
                         int createResult = checkCodeService.create(checkCode);
                         logger.info("checkCodeService.create result <==={}", createResult);
-                        return super.setResult(StatusCode.OK, code, StatusCode.codeMsgMap.get(StatusCode.OK));
+                        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                     }
                 }
 

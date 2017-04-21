@@ -16,4 +16,10 @@ public interface UserNotifyService extends BaseService<UserNotify>{
      * @return
      */
     int insertBatch(List<UserNotify> unList);
+    /**
+     * 根据用户id获取未读消息总数
+     * @param userId
+     * @return
+     */
+    int getNotReadCount(int userId);
 }

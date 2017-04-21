@@ -42,6 +42,8 @@ public class StatusCode {
     public static final int MOBILE_IS_NOT_EXITS = 40017;
     public static final int PASSWORD_IS_ERROR = 40018;
     public static final int MOBILE_IS_EXITS = 40019;
+    public static final int SIGN_MISSING_ARGUMENT = 40020;
+    public static final int TIMESTAMP_MISSING = 40021;
     //40100-40200//user_center
     public static final int TOKEN_IS_TIMEOUT = 40101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 40102;
@@ -329,6 +331,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.MOBILE_IS_NOT_EXITS, "手机号码不存在");
         codeMsgMap.put(StatusCode.MOBILE_IS_EXITS, "手机号码已注册");
         codeMsgMap.put(StatusCode.PASSWORD_IS_ERROR, "手机密码错误");
+        codeMsgMap.put(StatusCode.SIGN_MISSING_ARGUMENT, "签名参数缺失");
+        codeMsgMap.put(StatusCode.TIMESTAMP_MISSING, "时间戳缺失");
+
         //40100-40200//user_center
         codeMsgMap.put(StatusCode.TOKEN_IS_TIMEOUT, "token已失效 ");
         codeMsgMap.put(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, "动态密码和登录密码不能同时为空");

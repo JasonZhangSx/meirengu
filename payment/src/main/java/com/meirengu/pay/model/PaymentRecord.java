@@ -25,7 +25,7 @@ public class PaymentRecord implements AnnotationValidable {
 
     private Integer paymentChannel;
 
-    @ValidateSize(attributeValue = "银行代码",minSize = "3",maxSize = "4")
+    @ValidateSize(attributeValue = "银行代码",minSize = "3",maxSize = "5")
     private String paymentBankType;
 //    @ValidateNotNull(attributeValue = "支付类型")
 //    @ValidateInt(attributeValue = "支付类型",min = 1,max = 4)
