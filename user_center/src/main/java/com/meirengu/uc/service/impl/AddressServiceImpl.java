@@ -4,7 +4,7 @@ import com.meirengu.common.RedisClient;
 import com.meirengu.uc.dao.AreasMapper;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Area;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.thread.AddressToRedisThread;
 import com.meirengu.uc.utils.ConfigUtil;
@@ -66,35 +66,35 @@ public class AddressServiceImpl implements AddressService {
         return areaList;
     }
 
-    public AddressPO showAddress(Integer area_id) {
+    public AddressVO showAddress(Integer area_id) {
 
         if(redisClient.existsObject("area_"+area_id)){
             Area area = JacksonUtil.readValue((String) redisClient.getObject("area_"+area_id),Area.class);
-            AddressPO addressPO = new AddressPO();
+            AddressVO addressVO = new AddressVO();
             if(area.getAreaDeep()==3){
-                addressPO.setAreaId(area_id);
-                addressPO.setArea(area.getAreaName());
+                addressVO.setAreaId(area_id);
+                addressVO.setArea(area.getAreaName());
 
                 Area city = JacksonUtil.readValue((String) redisClient.getObject("area_"+area.getAreaParentId()),Area.class);
-                addressPO.setCity(city.getAreaName());
-                addressPO.setCityId(city.getAreaId());
+                addressVO.setCity(city.getAreaName());
+                addressVO.setCityId(city.getAreaId());
 
                 Area province = JacksonUtil.readValue((String) redisClient.getObject("area_"+city.getAreaParentId()),Area.class);
-                addressPO.setProvince(province.getAreaName());
-                addressPO.setProvinceId(province.getAreaId());
-                return  addressPO;
+                addressVO.setProvince(province.getAreaName());
+                addressVO.setProvinceId(province.getAreaId());
+                return addressVO;
             }else if(area.getAreaDeep()==2){
-                addressPO.setCityId(area_id);
-                addressPO.setCity(area.getAreaName());
+                addressVO.setCityId(area_id);
+                addressVO.setCity(area.getAreaName());
 
                 Area province = JacksonUtil.readValue((String) redisClient.getObject("area_"+area.getAreaParentId()),Area.class);
-                addressPO.setProvince(province.getAreaName());
-                addressPO.setProvinceId(province.getAreaId());
-                return  addressPO;
+                addressVO.setProvince(province.getAreaName());
+                addressVO.setProvinceId(province.getAreaId());
+                return addressVO;
             }else if(area.getAreaDeep()==1){
-                addressPO.setProvince(area.getAreaName());
-                addressPO.setProvinceId(area.getAreaId());
-                return  addressPO;
+                addressVO.setProvince(area.getAreaName());
+                addressVO.setProvinceId(area.getAreaId());
+                return addressVO;
             }
         }else{
             //异步存储redis
@@ -104,34 +104,34 @@ public class AddressServiceImpl implements AddressService {
             addressToRedisThread.run();
 
             if(!StringUtil.isEmpty(area_id)){
-                AddressPO addressPO = new AddressPO();
+                AddressVO addressVO = new AddressVO();
 
                 Area area = areasMapper.getArea(area_id);
                 if(area!=null && area.getAreaDeep() == 3){
-                    addressPO.setAreaId(area_id);
-                    addressPO.setArea(area.getAreaName());
+                    addressVO.setAreaId(area_id);
+                    addressVO.setArea(area.getAreaName());
 
                     Area city = areasMapper.getArea(area.getAreaParentId());
-                    addressPO.setCityId(city.getAreaId());
-                    addressPO.setCity(city.getAreaName());
+                    addressVO.setCityId(city.getAreaId());
+                    addressVO.setCity(city.getAreaName());
 
                     Area province = areasMapper.getArea(city.getAreaParentId());
-                    addressPO.setProvinceId(city.getAreaParentId());
-                    addressPO.setProvince(province.getAreaName());
-                    return  addressPO;
+                    addressVO.setProvinceId(city.getAreaParentId());
+                    addressVO.setProvince(province.getAreaName());
+                    return addressVO;
                 }else if(area!=null && area.getAreaDeep()== 2){
 
-                    addressPO.setCityId(area_id);
-                    addressPO.setCity(area.getAreaName());
+                    addressVO.setCityId(area_id);
+                    addressVO.setCity(area.getAreaName());
 
                     Area province = areasMapper.getArea(area.getAreaParentId());
-                    addressPO.setProvinceId(area.getAreaParentId());
-                    addressPO.setProvince(province.getAreaName());
-                    return  addressPO;
+                    addressVO.setProvinceId(area.getAreaParentId());
+                    addressVO.setProvince(province.getAreaName());
+                    return addressVO;
                 }else if(area!=null && area.getAreaDeep()==1){
-                    addressPO.setProvinceId(area_id);
-                    addressPO.setProvince(area.getAreaName());
-                    return  addressPO;
+                    addressVO.setProvinceId(area_id);
+                    addressVO.setProvince(area.getAreaName());
+                    return addressVO;
                 }
             }
         }

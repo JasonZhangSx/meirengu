@@ -8,13 +8,12 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.vo.LegalizeVO;
-import com.meirengu.uc.vo.UserVO;
+import com.meirengu.uc.vo.request.UserVO;
+import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -122,13 +121,17 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
             }else if(!StringUtil.isEmpty(phone)){
                 User user = userService.retrieveByPhone(phone);
-                Map map = ApacheBeanUtils.objectToMap(user);
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
+                if(user == null){
+                    return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+                }else{
+                    Map map = ApacheBeanUtils.objectToMap(user);
+                    userService.getUserRestMoney(map);
+                    userService.getUserTotalInvestMoney(map);
 
-                userService.getWithdrawalsAmount(map);
-                userService.getBankName(map);
-                return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
+                    userService.getWithdrawalsAmount(map);
+                    userService.getBankName(map);
+                    return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }
             }else{
                 return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
@@ -414,19 +417,6 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 判断认证进行到哪一步
-     * @param legalizeVO
-     * @return
-     */
-    @RequestMapping(value = "legalize", method = RequestMethod.POST)
-    public Result legalize(LegalizeVO legalizeVO) {
-
-
-
-        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
-    }
-
-    /**
      * 获取头像
      * @param userIds
      * @return
@@ -439,7 +429,7 @@ public class UserController extends BaseController{
             for (String id :userId){
                 listUserIds.add(id);
             }
-            List<AvatarPO> user = userService.listUserAvatar(listUserIds);
+            List<AvatarVO> user = userService.listUserAvatar(listUserIds);
            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
@@ -501,7 +491,11 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
                             .USER_NOT_EXITS));
                 }
-                //// TODO: 4/1/2017 需增加外部验证oldpassword是否正确 
+                if(usr.getIsAuth()==0){
+                    return super.setResult(StatusCode.USER_NOT_AUTH, null, StatusCode.codeMsgMap.get(StatusCode
+                            .USER_NOT_AUTH));
+                }
+                //// TODO: 4/1/2017 需增加外部验证oldpassword是否正确
                 int result = userService.modifyPayPassword(usr.getUserId(),mobile,oldPassword,newPassword);
                 if(result != 0){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
@@ -542,8 +536,12 @@ public class UserController extends BaseController{
             }
             //验证手机号是否注册
             User user = userService.retrieveByPhone(mobile);
-            if(StringUtil.isEmpty(user)){
+            if(user == null){
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            if(user.getIsAuth()==0){
+                return super.setResult(StatusCode.USER_NOT_AUTH, null, StatusCode.codeMsgMap.get(StatusCode
+                        .USER_NOT_AUTH));
             }
             if(type==1){
                 //验证验证码是否有效

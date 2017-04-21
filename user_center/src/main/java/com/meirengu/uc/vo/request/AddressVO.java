@@ -1,9 +1,9 @@
-package com.meirengu.uc.po;
+package com.meirengu.uc.vo.request;
 
 /**
  * Created by huoyan403 on 3/21/2017.
  */
-public class AddressPO {
+public class AddressVO {
 
     private Integer provinceId;
     private String province;

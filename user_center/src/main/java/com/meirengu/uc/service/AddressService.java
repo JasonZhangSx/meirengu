@@ -1,7 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.uc.model.Area;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ public interface AddressService {
 
     List<Area> showAreaListBycid(int cid);
 
-    AddressPO showAddress(Integer area_id);
+    AddressVO showAddress(Integer area_id);
 }

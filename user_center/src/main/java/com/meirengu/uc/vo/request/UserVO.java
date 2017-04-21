@@ -1,4 +1,4 @@
-package com.meirengu.uc.vo;
+package com.meirengu.uc.vo.request;
 
 import com.meirengu.model.BaseObject;
 
@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class UserVO extends BaseObject implements Serializable{
 
-    private String apikey;
     private String token;
     /**
      * 会员id
@@ -68,14 +67,6 @@ public class UserVO extends BaseObject implements Serializable{
     /**
      * 会员注册来源
      **/
-
-    public String getApikey() {
-        return apikey;
-    }
-
-    public void setApikey(String apikey) {
-        this.apikey = apikey;
-    }
 
     public String getToken() {
         return token;

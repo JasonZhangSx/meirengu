@@ -47,7 +47,11 @@ public class ObjectToFile {
      */
     public static void writeObject( List<Map<String,String>> list,String filePath) {
         try {
-
+            File file = new File(filePath.substring(0, filePath.lastIndexOf("/")));
+            if(!file.exists()){
+                file.mkdirs();
+                System.err.print(file.getPath());
+            }
             FileOutputStream outStream = new FileOutputStream(filePath);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outStream);
 
@@ -68,7 +72,11 @@ public class ObjectToFile {
      */
     public static void writeArray(List<String[]> list,String filePath) {
         try {
-
+            File file = new File(filePath.substring(0, filePath.lastIndexOf("/")));
+            if(!file.exists()){
+                file.mkdirs();
+                System.err.print(file.getPath());
+            }
             FileOutputStream outStream = new FileOutputStream(filePath);
             StringBuffer sb = new StringBuffer();
             for(int i=0;i<list.size();i++){
@@ -94,6 +102,4 @@ public class ObjectToFile {
             logger.info("ObjectToFile.writeObject failed:{}",e.getMessage());
         }
     }
-
-
 }

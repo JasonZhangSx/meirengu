@@ -3,9 +3,9 @@ package com.meirengu.uc.service;
 import com.meirengu.model.Page;
 import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.AvatarPO;
-import com.meirengu.uc.vo.RegisterVO;
-import com.meirengu.uc.vo.UserVO;
+import com.meirengu.uc.vo.response.AvatarVO;
+import com.meirengu.uc.vo.request.RegisterVO;
+import com.meirengu.uc.vo.request.UserVO;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +93,7 @@ public interface UserService extends BaseService<User>{
      * @param listUserIds
      * @return
      */
-    List<AvatarPO> listUserAvatar(List<String> listUserIds);
+    List<AvatarVO> listUserAvatar(List<String> listUserIds);
 
     /**
      * 调用支付系统获取余额信息
