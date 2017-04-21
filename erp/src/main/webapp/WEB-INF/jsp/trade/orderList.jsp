@@ -59,7 +59,8 @@
                         <th>收货人</th>
                         <th>收货地址</th>
                         <th>状态</th>
-                        <th>时间</th>
+                        <th>创建时间</th>
+                        <th>支付回调时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -207,6 +208,16 @@
                         return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                     }
                 },
+                {
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var orderState = row.orderState;
+                        if (orderState == 6) {
+                            var finishedTime = row.finishedTime;
+                            return new Date(finishedTime).Format("yyyy-MM-dd HH:mm:ss");
+                        }
+                    }
+                },
                 {"data": null}
             ],
             "columnDefs": [
@@ -222,13 +233,34 @@
                 {
                     "targets": 17,
                     "render": function (data, type, row, meta) {
-                        var context =
-                            {
-                                func: [
-                                    {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"},
-                                    {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"},
-                                ]
-                            };
+                        var context;
+                        var flag;
+                        //如果已支付大于72小时，不显示申请退款按钮
+                        var orderState = row.orderState;
+                        if (orderState == 6) {
+                            var finishedTime = row.finishedTime;
+                            var cuttentTimeMills = new Date().getTime();
+                            var time_different = cuttentTimeMills - finishedTime;
+                            if (time_different > 1000*60*60*72) {
+                                flag = true;
+                            }
+                        }
+                        if (flag) {
+                            context =
+                                {
+                                    func: [
+                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"}
+                                    ]
+                                };
+                        } else {
+                            context =
+                                {
+                                    func: [
+                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"},
+                                        {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"},
+                                    ]
+                                };
+                        }
                         var html = template(context);
                         return html;
                     }
@@ -326,6 +358,10 @@
                     $('.zd_div').fadeOut();
                     layer.msg('已处理', {icon: 5, time: 1000});
                     table.ajax.reload();
+                    //清空退款表单提交
+                    $("#orderId").val("");
+                    $("#userMessage").empty();
+                    $("#refundMessage").val("");
                 }else{
                     $('.zd_div').fadeOut();
                     $("#errcode").val(data.code);

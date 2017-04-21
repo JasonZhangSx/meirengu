@@ -23,12 +23,14 @@ public interface RefundService extends BaseService<Refund>{
 
     /**
      * 退款审核
-     * @param refund
-     * @param order
+     * @param refundId
+     * @param orderId
+     * @param refundState
+     * @param adminMessage
      * @return
      * @throws Exception
      */
-    Result refundAudit(Refund refund, Order order)throws Exception;
+    Result refundAudit(int refundId, int orderId, int refundState, String adminMessage)throws Exception;
 
     /**
      * 退款回调

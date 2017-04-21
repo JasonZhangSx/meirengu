@@ -40,9 +40,15 @@ public class UuidTest {
 //        long c = (mingnian.getTime()-date.getTime()) << 16L;
 //        System.out.println(Long.toBinaryString(c));
 //        System.out.println( java.util.UUID.randomUUID());
-        String s = "1";
-        Random random = new Random(47);
-        int g = random.nextInt(10);
-        System.out.println(s.replaceFirst(g+"","a"));
+//        String s = "1";
+//        Random random = new Random(47);
+//        int g = random.nextInt(10);
+//        System.out.println(s.replaceFirst(g+"","a"));
+        StringBuffer sb = new StringBuffer();
+        sb.append("page_num=" + 1);
+        sb.append("&");
+        sb.substring(0, sb.length()-2);
+        System.out.println(sb.length());
+        System.out.print(sb.toString());
     }
 }

@@ -261,6 +261,9 @@ public class StatusCode {
     public static final int ORDER_NOT_EXIST = 50762;
     public static final int ORDER_CANDIDATE_HANDLE_ERROR = 50763;
     public static final int REFUND_APPLY_ERROR = 50764;
+    public static final int REFUND_ADUIT_ERROR = 50765;
+    public static final int REFUND_PERIOD_EXPIRED = 50766;
+
 
 
 
@@ -545,6 +548,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ORDER_NOT_EXIST, "该订单不存在");
         codeMsgMap.put(StatusCode.ORDER_CANDIDATE_HANDLE_ERROR, "候补预约订单处理失败");
         codeMsgMap.put(StatusCode.REFUND_APPLY_ERROR, "退款申请失败，请重试");
+        codeMsgMap.put(StatusCode.REFUND_ADUIT_ERROR, "退款审核失败，请重试");
+        codeMsgMap.put(StatusCode.REFUND_PERIOD_EXPIRED, "退款期限已过");
+
 
 
 
