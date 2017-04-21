@@ -16,7 +16,7 @@
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 待审核退款订单列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 退款订单列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -47,8 +47,9 @@
                         <th>退款金额</th>
                         <th>退款原因</th>
                         <th>备注</th>
+                        <th>管理员处理原因</th>
                         <th>状态</th>
-                        <th>申请时间</th>
+                        <th>退款时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -59,36 +60,6 @@
 </section>
 <input type="hidden" id="errcode">
 <input type="hidden" id="errmsg">
-<input type="hidden" id="orderId">
-<div class="zd_div" style="display:none">
-    <article class="cl pd-20">
-        <div class="row cl">
-            <label class="form-label col-xs-2 col-sm-2">审核：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                  <span class="select-box">
-                      <select id="refundState" class="select">
-                            <option value="2">同意</option>
-                            <option value="3">拒绝</option>
-                      </select>
-                  </span>
-            </div>
-        </div>
-        <div class="row cl pt-10">
-            <label class="form-label col-xs-2 col-sm-2">备注：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                <textarea id="adminMessage" cols="" rows="" class="textarea"  placeholder="请输入处理原因" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-            </div>
-        </div>
-
-        <div class="row cl pt-10">
-            <div class="text-c">
-                <input ONCLICK="refundAuditAjax()" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;确定&nbsp;&nbsp;">
-            </div>
-        </div>
-    </article>
-</div>
-
 
 <!--定义操作列按钮模板-->
 <!--说下这里使用模板的作用，除了显示和数据分离好维护以外，绑定事件和传值也比较方便，希望大家能不拼接html则不拼接-->
@@ -136,20 +107,25 @@
                 {"data": "orderRefund"},
                 {"data": "userMessage"},
                 {"data": "refundMessage"},
+                {"data": "adminMessage"},
                 {
-                    "data": "refundState",
+                    "data": "userConfirm",
                     "render": function (data, type, row, meta) {
                         if (data == 1) {
-                            return "待审核";
+                            return "退款中";
                         } else if (data == 2){
-                            return "已通过";
+                            return "已退款";
                         }
+
                     }
                 },
                 {
-                    "data": "createTime",
+                    "data": null,
                     "render": function (data, type, row, meta) {
-                        return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
+                        if (data == 2) {
+                            var confirmTime = row.confirmTime;
+                            return new Date(confirmTime).Format("yyyy-MM-dd HH:mm:ss");
+                        }
                     }
                 },
                 {"data": null}
@@ -165,17 +141,13 @@
                 { "name": "itemName", "targets": 4 },
                 { "name": "refundState", "targets": 12 },
                 {
-                    "targets": 14,
+                    "targets": 15,
                     "render": function (data, type, row, meta) {
                         var context =
                             {
                                 func: [
-                                    {"name": "修改", "fn": "edit(\'" + c.name + "\',\'" + c.position + "\',\'" + c.salary + "\',\'" + c.start_date + "\',\'" + c.office + "\',\'" + c.extn + "\')", "type": "primary"},
+                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"}                             ]
 
-
-                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"},
-                                    {"name": "审核", "fn": "edit(\'" + row.refundId + "\',\'" + row.orderId + "\')", "type": "primary"},
-                                ]
                             };
                         var html = template(context);
                         return html;
@@ -239,61 +211,33 @@
     }
 
     /**
-     * 浮层
-     **/
-    function zd_alert(){
-        $('.zd_div').show();
-    }
-    $('.zd_div').on('click',function(){
-        $('.zd_div').fadeOut();
-    })
-    $('.zd_div article').on('click',function(event){
-        event.stopPropagation();
-    })
-
-
-    /**
      * 编辑方法
      **/
-    function edit(refundId, orderId) {
-        $("#refundId").val(refundId);
-        $("#orderId").val(orderId);
-        zd_alert();
-    }
-    function refundAuditAjax() {
-        var refundId = $("#refundId").val();
-        var orderId = $("#orderId").val();
-        var refundState = $("#refundState").find("option:selected").text();
-        var adminMessage = $("#adminMessage").val();
-        var url = "<%=basePath %>order/refund/audit";
-        $.ajax({
-            type: "post",
-            url: url,
-            cache:false,
-            async:false,
-            data:{orderId:orderId,userMessage:userMessage,refundMessage:refundMessage},
-            dataType:"json",
-            success: function(data){
-                var code = data.code;//200 is success，other is fail
-                if(code=="200"){
-                    $('.zd_div').fadeOut();
-                    layer.msg('已处理', {icon: 5, time: 1000});
+    function edit(orderId) {
+        console.log(orderId);
+        layer.confirm('是否通过？', {
+                btn: ['通过', '不通过', '取消'],
+                shade: false,
+                closeBtn: 0
+            },
+            //order_state 通过是2，不通过是3
+            function () {
+                if (appointmentAduitAjax(orderId, 2)) {
+                    layer.msg('已通过', {icon: 6, time: 1000});
                     table.ajax.reload();
-                    //清空退款表单提交
-                    $("#refundId").val("");
-                    $("#orderId").val("");
-                    $("#refundState").empty();
-                    $("#adminMessage").val("");
-                }else{
-                    $('.zd_div').fadeOut();
-                    $("#errcode").val(data.code);
-                    $("#errmsg").val(data.msg);
+                } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
-            }
-        });
+            },
+            function () {
+                if (appointmentAduitAjax(orderId, 3)) {
+                    layer.msg('未通过', {icon: 5, time: 1000});
+                    table.ajax.reload();
+                } else {
+                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
+                }
+            });
     }
-
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

@@ -6,6 +6,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Refund;
@@ -59,8 +60,15 @@ public class RefundController extends BaseController{
             Result result = refundService.refundApply(orderId, refundMessage, userMessage);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
+        }  catch (OrderException oe){
+            logger.error("throw OrderException: {}", oe);
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
         } catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -84,28 +92,19 @@ public class RefundController extends BaseController{
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
-        //退款申请记录表修改信息
-        Refund refund = new Refund();
-        refund.setRefundId(refundId);
-        refund.setAdminMessage(adminMessage);
-        refund.setAdminTime(new Date());
-        refund.setRefundState(refundState);
-
-        //订单表修改信息
-        Order order = new Order();
-        order.setOrderId(orderId);
-        if (refundState == Constant.REFUND_STATE_AGREE) {
-            order.setOrderState(OrderStateEnum.REFUND_CONFIRM.getValue());
-        } else if (refundState == Constant.REFUND_STATE_REFUSE) {
-            order.setOrderState(OrderStateEnum.REFUND_REFUSE.getValue());
-        }
-
         try {
-            Result result = refundService.refundAudit(refund, order);
+            Result result = refundService.refundAudit(refundId, orderId, refundState, adminMessage);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
+        } catch (OrderException oe){
+            logger.error("throw OrderException: {}", oe);
+            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -145,7 +144,7 @@ public class RefundController extends BaseController{
             page = refundService.getListByPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -168,7 +167,7 @@ public class RefundController extends BaseController{
             Result result = refundService.paymentCallBack(refundSn, thirdRefundSn, paymentStatus);
             return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
