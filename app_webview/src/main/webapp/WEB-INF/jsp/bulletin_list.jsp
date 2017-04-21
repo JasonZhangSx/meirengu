@@ -21,7 +21,7 @@
             <c:forEach items="${list}" var="bulletin">
               <a href="<%=request.getContextPath()%>/bulletins/${bulletin.bulletinId}" class="item border_b1">
                 <div class="tit clearfix">
-                    <h4>${bulletin.bulletinTitle}</h4><em></em>
+                    <h4>${bulletin.bulletinTitle}</h4>
                 </div>
                 <div class="txt">
                     ${bulletin.bulletinContent}

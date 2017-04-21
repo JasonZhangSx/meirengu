@@ -194,6 +194,7 @@ public class TradeQuery implements Serializable {
 
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
+		String paramsStr = sb.toString();
 		if (this.getPageNum() != null) {
 			sb.append("page_num=" + this.getPageNum());
 			sb.append("&");
@@ -236,9 +237,9 @@ public class TradeQuery implements Serializable {
 		}
 		//去掉最后一个&
 		if (sb.length() != 0) {
-			sb.substring(0, sb.length()-2);
+			paramsStr = sb.substring(0, sb.length()-1);
 		}
-		return sb.toString();
+		return paramsStr;
 	}
 
 	public String toString() {

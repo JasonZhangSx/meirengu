@@ -29,10 +29,7 @@
 	<update id="update" parameterType="rebateUsed">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
-				id=#{id},
-			</if>
-			<if test="userId != null and userId != ''">
+			<if test="userId != null and userId != 0">
 				user_id=#{userId},
 			</if>
 			<if test="userPhone != null and userPhone != ''">
@@ -41,7 +38,7 @@
 			<if test="rebateSn != null and rebateSn != ''">
 				rebate_sn=#{rebateSn},
 			</if>
-			<if test="rebateBatchId != null and rebateBatchId != ''">
+			<if test="rebateBatchId != null and rebateBatchId != 0">
 				rebate_batch_id=#{rebateBatchId},
 			</if>
 			<if test="activityIdentification != null and activityIdentification != ''">
@@ -50,10 +47,10 @@
 			<if test="orderSn != null and orderSn != ''">
 				order_sn=#{orderSn},
 			</if>
-			<if test="rebateAmount != null and rebateAmount != ''">
+			<if test="rebateAmount != null">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="usedTime != null and usedTime != ''">
+			<if test="usedTime != null">
 				used_time=#{usedTime},
 			</if>
 		</set>

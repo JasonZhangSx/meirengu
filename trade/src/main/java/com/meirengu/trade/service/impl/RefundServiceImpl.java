@@ -1,5 +1,6 @@
 package com.meirengu.trade.service.impl;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
@@ -11,12 +12,20 @@ import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RefundService;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.trade.utils.ConfigUtil;
+import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.OrderSNUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Refund服务实现层 
@@ -25,6 +34,8 @@ import java.util.Date;
  */
 @Service
 public class RefundServiceImpl extends BaseServiceImpl<Refund> implements RefundService{
+
+    private static final Logger logger = LoggerFactory.getLogger(RefundServiceImpl.class);
 
     @Autowired
     private OrderService orderService;
@@ -42,10 +53,17 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
     @Transactional
     public Result refundApply(int orderId, String refundMessage, String userMessage) throws Exception{
         Result result = new Result();
-        result.setCode(StatusCode.OK);
         //查询该订单记录
         Order order = orderService.detail(orderId);
         if (order != null && order.getOrderId() != null) {
+            //判断订单是否在支付完成后72小时之内
+            Date finishTime = order.getFinishedTime();
+            long time = System.currentTimeMillis() - finishTime.getTime();
+            if (time > 1000*60*60*72) {
+                result.setCode(StatusCode.REFUND_PERIOD_EXPIRED);
+                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REFUND_PERIOD_EXPIRED));
+                return result;
+            }
             //新增退款记录表
             Refund refund = new Refund();
             refund.setRefundSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_REFUND_SN_PREFIX));
@@ -57,7 +75,6 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setUserId(order.getUserId());
             refund.setUserName(order.getUserName());
             refund.setUserPhone(order.getUserPhone());
-            refund.setCreateTime(new Date());
             refund.setOrderAmount(order.getOrderAmount());
             refund.setOrderRefund(order.getCostAmount());
             refund.setRefundPaymentcode("");//支付方式名称申请时为空
@@ -72,28 +89,82 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             Order updateOrder = new Order();
             updateOrder.setOrderId(orderId);
             updateOrder.setOrderState(OrderStateEnum.REFUND_APPLY.getValue());
-            int j = orderService.update(order);
-            if (!(i == 1 && j == 1 )) {
-                throw new OrderException("退款申请失败，请重试", StatusCode.REFUND_APPLY_ERROR);
+            int j = orderService.update(updateOrder);
+            if (i == 1 && j == 1) {
+                result.setCode(StatusCode.OK);
+                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                logger.error("退款申请保存失败：订单ID {} ,新增退款表 {} 条，跟新订单表 {} 条", orderId, i, j);
+                throw new OrderException("退款申请失败, 订单ID ", StatusCode.REFUND_APPLY_ERROR);
             }
+        } else {
+            logger.error("退款申请保存失败：订单ID {} ,没有该订单记录", orderId);
+            throw new OrderException("退款申请保存失败：没有该订单记录, 订单ID:  " + orderId, StatusCode.ORDER_NOT_EXIST);
         }
         return result;
     }
 
     /**
      * 退款审核
-     * @param refund
-     * @param order
+     * @param refundId
+     * @param orderId
+     * @param refundState
+     * @param adminMessage
      * @return
+     * @throws Exception
      */
     @Transactional
-    public Result refundAudit(Refund refund, Order order) throws Exception{
+    public Result refundAudit(int refundId, int orderId, int refundState, String adminMessage) throws Exception{
         Result result = new Result();
+        //退款申请记录表修改信息
+        Refund refund = new Refund();
+        refund.setRefundId(refundId);
+        refund.setAdminMessage(adminMessage);
+        refund.setAdminTime(new Date());
+        refund.setRefundState(refundState);
         int i = update(refund);
-        int j = orderService.update(order);
+
+        //订单表修改信息
+        Order updateOrder = new Order();
+        updateOrder.setOrderId(orderId);
+        if (refundState == Constant.REFUND_STATE_AGREE) {
+            updateOrder.setOrderState(OrderStateEnum.REFUND_CONFIRM.getValue());
+        } else if (refundState == Constant.REFUND_STATE_REFUSE) {
+            updateOrder.setOrderState(OrderStateEnum.REFUND_REFUSE.getValue());
+        }
+        int j = orderService.update(updateOrder);
         if (i == 1 && j == 1 ) {
             result.setCode(StatusCode.OK);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+        } else {
+            logger.error("退款审核保存失败：退款ID {} ，订单ID {} ,更新退款表 {} 条，跟新订单表 {} 条", refundId, orderId, i, j);
+            throw new OrderException("退款审核保存失败 -- StatusCode: " + StatusCode.REFUND_ADUIT_ERROR, StatusCode.REFUND_ADUIT_ERROR);
+        }
+        //请求支付系统退款
+        //请求成功执行记录修改，否则返回给erp系统错误，操作员重新操作
+        Map<String, String> paramsMap = new HashMap<String, String>();
+        Order order = orderService.detail(orderId);
+        JSONObject content = new JSONObject();
+        content.put("orderAmount", order.getOrderAmount());
+        content.put("orderSn", order.getOrderSn());
+        content.put("paymentAmount", order.getCostAmount());
+        content.put("paymentMethod", order.getPaymentMethod());
+        content.put("paymentType", 2);//支付类型 1 支付 2 退款 3充值 4提现
+        content.put("userId", order.getUserId());
+        paramsMap.put("content", content.toString());
+        String url = ConfigUtil.getConfig("pay.refund.url");
+        HttpUtil.HttpResult applyRefundResult = HttpUtil.doPostForm(url, paramsMap);
+        logger.debug("Request: {} getResponse: {}", url, applyRefundResult);
+        if (applyRefundResult.getStatusCode() == HttpStatus.SC_OK) {
+            JSONObject resultJson = JSON.parseObject(applyRefundResult.getContent());
+            int code = resultJson.getIntValue("code");
+            if (code != StatusCode.OK) {
+                logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
+                throw new OrderException("请求支付网关服务申请退款接口异常 -- StatusCode: " + code, code);
+            }
+        } else {
+            logger.error("httpcode: {}--httpcontent: {}" , applyRefundResult.getStatusCode(), applyRefundResult.getContent());
+            throw new OrderException("请求支付网关服务异常 -- httpCode: " + applyRefundResult.getStatusCode(), applyRefundResult.getStatusCode());
         }
         return result;
     }
@@ -116,7 +187,8 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             Refund updateRefund = new Refund();
             updateRefund.setRefundId(refund.getRefundId());
             updateRefund.setThirdRefundSn(thirdRefundSn);
-            updateRefund.setUserConfirm(Constant.REFUND_USER_WAIT);//平台已打款成功，用户待确认
+            updateRefund.setUserConfirm(Constant.REFUND_USER_CONFIRM);//平台已打款成功，用户已确认
+            updateRefund.setConfirmTime(new Date());
             update(updateRefund);
         }
         return result;

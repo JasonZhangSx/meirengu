@@ -28,7 +28,6 @@ public class FeedbackController {
         return "feedback";
     }
 
-    @ResponseBody
     @RequestMapping(value = "feedback", method = RequestMethod.POST)
     public String feedback(@RequestParam(value = "feedback_content") String feedbackContent,
                            @RequestParam(value = "user_id") Integer userId,
@@ -41,9 +40,9 @@ public class FeedbackController {
         feedback.setUserPhone(userPhone);
         boolean result = feedbackService.feedback(feedback);
         if (result){
-            return "谢谢您宝贵的意见,我们会第一时间为您解决。";
+            return "submit_success";
         }else {
-            return "服务器开小差了,请稍后再试!";
+            return "submit_fail";
         }
     }
 

@@ -73,13 +73,13 @@
 			<if test="confirmTime != null ">
 				confirm_time=#{confirmTime},
 			</if>
-			<if test="refundType != null and refundType != ''">
+			<if test="refundType != null">
 				refund_type=#{refundType},
 			</if>
-			<if test="refundState != null and refundState != ''">
+			<if test="refundState != null">
 				refund_state=#{refundState},
 			</if>
-			<if test="userConfirm != null and userConfirm != ''">
+			<if test="userConfirm != null">
 				user_confirm=#{userConfirm},
 			</if>
 		</set>
@@ -168,13 +168,13 @@
 			<if test="confirmTimeEnd != null">
 				AND tb.confirm_time &lt;= #{confirmTimeBegin}
 			</if>
-			<if test="refundType != null and refundType != ''">
+			<if test="refundType != null">
 				AND tb.refund_type=#{refundType}
 			</if>
-			<if test="refundState != null and refundState != ''">
+			<if test="refundState != null">
 				AND tb.refund_state=#{refundState}
 			</if>
-			<if test="userConfirm != null and userConfirm != ''">
+			<if test="userConfirm != null">
 				AND tb.user_confirm=#{userConfirm}
 			</if>
 		</where>

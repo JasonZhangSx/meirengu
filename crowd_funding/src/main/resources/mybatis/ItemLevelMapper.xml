@@ -154,7 +154,7 @@
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
 			${sortBy} ${order},
 		</if>
-		create_time desc
+		level_sort asc,create_time desc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
@@ -170,7 +170,7 @@
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
 			${sortBy} ${order},
 		</if>
-		create_time desc
+		level_sort asc, create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

@@ -16,10 +16,7 @@
 		<div class="swiper-container head_swiper" style="height:4.8rem;overflow:hidden;">
 			<div class="swiper-wrapper">
 				<div class="swiper-slide">
-					<img src="https://img.meirenguvip.com/test.jpg" width="100%" alt="" />
-				</div>
-				<div class="swiper-slide">
-					<img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
+					<img src="https://img.meirenguvip.com/slideshow/1492602770444.png" width="100%" alt="" />
 				</div>
 			</div>
 			<div class="pagination"></div>
@@ -28,17 +25,17 @@
 	<div class="find_cont">
 		<div class="wrapper">
 			<div>
-				<a href="http://test.api.meirenguvip.com/webview/activities">
+				<a href="../activities">
 					<img src="./../img/find_icon1.png" alt="" style="width:.36rem" /><br/>
 					热门活动
 				</a>
-				<a href="http://test.api.meirenguvip.com/webview/bulletins">
+				<a href="../bulletins">
 					<img src="./../img/find_icon2.png" alt="" style="width:.29rem" /><br/>
 					平台公告
 				</a>
 			</div>
 			<div>
-				<a href="http://test.api.meirenguvip.com/webview/faqs">
+				<a href="../faqs">
 					<img src="./../img/find_icon3.png" alt="" style="width:.36rem" /><br/>
 					常见问题
 				</a>
@@ -115,8 +112,15 @@
 				window.AndroidWebView.appLogin();
 			}
 		}else{
-			window.location.href = "http://test.api.meirenguvip.com/webview/feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
+			if(user_name == null || user_name == ''){
+				user_name = "default";
+			}
+			if(user_phone == null || user_phone == ''){
+				user_phone = "0";
+			}
+			window.location.href = "../feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
 		}
+		/*window.location.href = "../feedback?userId=1&userName=123&userPhone=";*/
 	}
 
 </script>

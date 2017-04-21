@@ -42,6 +42,10 @@ public class ValidateSignFilter extends OncePerRequestFilter{
         LOGGER.info("request api filter >> ip: {}, url: {}, params: {}", new Object[]{ip, requestURL, JSON.toJSON(httpServletRequest.getParameterMap())});
         //ip过滤
         if(ConfigUtil.getConfig("api.filter.ip").contains(ip)){
+            LOGGER.warn(">> {} is in white list...",ip);
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        }else if(ConfigUtil.getConfig("api.filter.partner.ip").contains(ip)){
+            LOGGER.warn(">> {} is in our white list of partner...",ip);
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }else {
             Map<String , Object> map = new HashMap<>();
@@ -55,8 +59,9 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             //timestamp, key, sign 为验签必传参数
             if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
                 PrintWriter out = httpServletResponse.getWriter();
-                map.put("code", StatusCode.MISSING_ARGUMENT);
-                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                LOGGER.warn(">> sign is {} and appKey is {}",sign, appKey);
+                map.put("code", StatusCode.SIGN_MISSING_ARGUMENT);
+                map.put("msg", StatusCode.codeMsgMap.get(StatusCode.SIGN_MISSING_ARGUMENT));
                 out.print(JSON.toJSON(map));
                 out.flush();
                 out.close();
@@ -75,8 +80,9 @@ public class ValidateSignFilter extends OncePerRequestFilter{
 
                 if(StringUtil.isEmpty(tsp)){
                     PrintWriter out = httpServletResponse.getWriter();
-                    map.put("code", StatusCode.MISSING_ARGUMENT);
-                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+                    LOGGER.warn(">> timestamp is {}",tsp);
+                    map.put("code", StatusCode.TIMESTAMP_MISSING);
+                    map.put("msg", StatusCode.codeMsgMap.get(StatusCode.TIMESTAMP_MISSING));
                     out.print(JSON.toJSON(map));
                     out.flush();
                     out.close();
@@ -90,6 +96,7 @@ public class ValidateSignFilter extends OncePerRequestFilter{
                 //当前请求时间大于api限制的请求时间
                 if(interval > apiInterval){
                     PrintWriter out = httpServletResponse.getWriter();
+                    LOGGER.warn(">> request timeout....");
                     map.put("code", StatusCode.REQUEST_TIMEOUT);
                     map.put("msg", StatusCode.codeMsgMap.get(StatusCode.REQUEST_TIMEOUT));
                     out.print(JSON.toJSON(map));
@@ -119,6 +126,7 @@ public class ValidateSignFilter extends OncePerRequestFilter{
                 LOGGER.info("requet api platform is weixin.");
             }else {
                 PrintWriter out = httpServletResponse.getWriter();
+                LOGGER.warn(">> invalid appkey....");
                 map.put("code", StatusCode.BAD_API_KEY);
                 map.put("msg", StatusCode.codeMsgMap.get(StatusCode.BAD_API_KEY));
                 out.print(JSON.toJSON(map));
@@ -128,9 +136,11 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             }
 
             if(SignParamsUtils.verify(params, appSecret)){
+                LOGGER.warn(">> validate sign is success");
                 filterChain.doFilter(httpServletRequest, httpServletResponse);
             }else{
                 PrintWriter out = httpServletResponse.getWriter();
+                LOGGER.warn(">> validate sign is fail");
                 out.print(JSON.toJSON(map));
                 out.flush();
                 out.close();

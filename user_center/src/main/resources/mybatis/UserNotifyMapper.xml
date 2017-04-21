@@ -39,6 +39,10 @@
 		where id=#{id}
 	</select>
 
+	<select id="getNotReadCount" parameterType="Integer" resultType="Integer">
+		select count(1) FROM <include refid="table_name" /> where user_id=#{userId} and is_read=0;
+	</select>
+
 	<insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true">
 		INSERT INTO <include refid="table_name" />
 		(notify_id, user_id, is_read, create_time)

@@ -552,6 +552,12 @@
                 <version>${logback.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
             <!-- 代码直接调用log4j会被桥接到slf4j -->
             <dependency>
                 <groupId>org.slf4j</groupId>

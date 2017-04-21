@@ -3,6 +3,7 @@ package com.meirengu.erp.controller.partner;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.erp.model.Partner;
 import com.meirengu.erp.service.PartnerService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -164,11 +165,9 @@ public class PartnerController extends BaseController{
     }
 
     @RequestMapping("add")
-    public ModelAndView add(){
-        Map<String, Object> map = new HashMap<>();
-        List classList = partnerService.getPartnerClassList();
-        map.put("classList", classList);
-        return new ModelAndView("/partner/partnerAdd", map);
+    public ModelAndView add(Partner partner){
+        partnerService.partnerAdd(partner);
+        return new ModelAndView("redirect:/partner/list");
     }
 }
 

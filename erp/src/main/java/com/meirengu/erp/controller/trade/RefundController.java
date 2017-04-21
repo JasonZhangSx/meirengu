@@ -80,9 +80,9 @@ public class RefundController extends BaseController{
      * @param adminMessage
      * @return
      */
-    @RequestMapping(value = "/audit/{refund_id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/audit", method = RequestMethod.POST)
     @ResponseBody
-    public Result refundAudit(@PathVariable("refundId") int refundId,
+    public Result refundAudit(@RequestParam(value = "refundId", required = false) int refundId,
                               @RequestParam(value = "orderId", required = false) Integer orderId,
                               @RequestParam(value = "refundState", required = false) Integer refundState,
                               @RequestParam(value = "adminMessage", required = false) String adminMessage) {
