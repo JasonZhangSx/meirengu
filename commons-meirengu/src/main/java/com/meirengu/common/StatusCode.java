@@ -43,7 +43,7 @@ public class StatusCode {
     public static final int PASSWORD_IS_ERROR = 40018;
     public static final int MOBILE_IS_EXITS = 40019;
     public static final int SIGN_MISSING_ARGUMENT = 40020;
-    public static final int TIMESTAMP_MISSING = 40020;
+    public static final int TIMESTAMP_MISSING = 40021;
     //40100-40200//user_center
     public static final int TOKEN_IS_TIMEOUT = 40101;
     public static final int CHECK_CODE_AND_PASSWORD_NOT_EMPTY = 40102;
