@@ -452,6 +452,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                                 }else{
                                     return 1;
                                 }
+                            }else{
+                                return 0;
                             }
                         }
                     }
@@ -477,16 +479,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             paramsModify.put("content", JacksonUtil.toJSon(payAccount));
             String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
             hr = HttpUtil.doPostForm(urlModify,paramsModify);
-            if(hr.getStatusCode()!=200) {
-                hr = HttpUtil.doPostForm(urlModify, paramsModify);
+            if(hr.getStatusCode()==200) {
                 return 1;
             }else{
-                return 1;
+                hr = HttpUtil.doPostForm(urlModify, paramsModify);
+                if(hr.getStatusCode()==200){
+                    return 1;
+                }else{
+                    return 0;
+                }
             }
         }catch (Exception e){
             logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
+            return 0;
         }
-        return 0;
     }
 
     @Override
