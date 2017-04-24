@@ -94,6 +94,7 @@
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
+            ordering:false,
             aLengthMenu:[10],//设置一页展示10条记录
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
