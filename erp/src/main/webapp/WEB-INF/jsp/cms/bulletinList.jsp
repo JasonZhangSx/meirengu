@@ -26,6 +26,8 @@
         <article class="cl pd-20">
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
+                <span class="l"><a class="btn btn-primary radius" onClick="bulletin_insert('添加公告','/erp/bulletin/toAdd')"
+                        href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加项目</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
@@ -173,14 +175,6 @@
         $("#totalCount").html(totalCount);
     }
 
-    /**
-     * 检索
-     **/
-    function search(){
-        var userPhone = $("#userPhone").val();
-        var itemName = $("#itemName").val();
-        table.column(1).search(userPhone).column(2).search(itemName).draw();
-    }
 
     /*上，下架处理*/
     function edit(bulletinId, status) {
@@ -202,6 +196,15 @@
                 }
             }
         });
+    }
+    //*项目-编辑*/
+    function bulletin_insert(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url
+        });
+        layer.full(index);
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

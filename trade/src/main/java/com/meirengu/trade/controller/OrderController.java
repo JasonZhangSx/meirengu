@@ -258,7 +258,7 @@ public class OrderController extends BaseController{
      * @param orderId
      * @return
      */
-    @RequestMapping(value = "/{order_id}",  method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{order_id}",  method = RequestMethod.POST)
     public Result delete(@PathVariable("order_id") int orderId,
                          @RequestParam(value = "token", required = false) String token){
 
