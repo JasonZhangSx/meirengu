@@ -29,7 +29,7 @@ public class AddressController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(AddressController.class);
 
     @Autowired
-    AddressService service;// 调用业务层方法
+    AddressService service;
 
     /**
      *查询所有省
@@ -40,7 +40,7 @@ public class AddressController extends BaseController {
         try {
             return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("AddressController.redis get token result:{}",e.getMessage());
+            logger.error("AddressController.redis get token result:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -53,7 +53,7 @@ public class AddressController extends BaseController {
         try {
             return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("AddressController.showCityListByPid:{}",e.getMessage());
+            logger.error("AddressController.showCityListByPid:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -71,7 +71,7 @@ public class AddressController extends BaseController {
                 return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("AddressController.showAreasByCityId:{}",e.getMessage());
+            logger.error("AddressController.showAreasByCityId:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
@@ -84,19 +84,14 @@ public class AddressController extends BaseController {
        try {
             AddressVO addressVO = service.showAddress(area_id);
            if(addressVO !=null){
-            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(addressVO,AddressVO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+               return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(addressVO,AddressVO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
            }else{
                return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
            }
        }catch (Exception e){
-           logger.info("AddressController.showProByCityId:{}",e.getMessage());
+           logger.error("AddressController.showProByCityId:{}",e.getMessage());
            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
        }
 
     }
-
-     /*@RequestMapping("/showProCityByAreaId")
-    public Result showProCityByAreaId(HttpServletRequest request, HttpServletResponse response, Integer citysId) throws IOException {
-        return setResult(StatusCode.OK, service.showProCityByAreaId(citysId), StatusCode.codeMsgMap.get(StatusCode.OK));
-    }*/
 }

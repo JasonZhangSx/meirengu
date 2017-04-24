@@ -25,8 +25,6 @@ import java.util.Map;
 @RequestMapping("contact")
 public class ContactController extends BaseController{
 
-//    CreateHtmlContractFile
-
     private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
     @Autowired
@@ -43,6 +41,7 @@ public class ContactController extends BaseController{
     public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
                                     @RequestParam(value = "user_id",required = true) String userId) {
+        logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
         try {
             Map<String,String> map = new HashMap();
             map.put("itemId",itemId);
@@ -50,7 +49,7 @@ public class ContactController extends BaseController{
             map.put("userId",userId);
             return contactService.CreateContactFile(map);
         }catch (Exception e){
-            logger.info("AddressController.showCityListByPid:{}",e.getMessage());
+            logger.error("ContactController createContactFile throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -66,6 +65,7 @@ public class ContactController extends BaseController{
     public Result ViewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
                                     @RequestParam(value = "user_id",required = true) String userId) {
+        logger.info("ContactController ViewContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
         try {
             Map<String,String> map = new HashMap();
             map.put("itemId",itemId);
@@ -74,7 +74,7 @@ public class ContactController extends BaseController{
             List<String> viewUrl =  contactService.ViewContactFile(map);
             return super.setResult(StatusCode.OK, viewUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("AddressController.showCityListByPid:{}",e.getMessage());
+            logger.error("ContactController ViewContactFile throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -90,6 +90,7 @@ public class ContactController extends BaseController{
         public Result DownContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                         @RequestParam(value = "level_id",required = true) String levelId,
                                         @RequestParam(value = "user_id",required = true) String userId) {
+         logger.info("ContactController DownContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
             try {
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
@@ -98,7 +99,7 @@ public class ContactController extends BaseController{
                 List<String> downUrl =  contactService.DownContactFile(map);
                 return super.setResult(StatusCode.OK, downUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
             }catch (Exception e){
-                logger.info("AddressController.showCityListByPid:{}",e.getMessage());
+                logger.info("ContactController DownContactFile throws Exception :{}",e.getMessage());
                 return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }
