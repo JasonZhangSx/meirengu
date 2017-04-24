@@ -41,6 +41,16 @@ public class BulletinController extends BaseController{
         return "/cms/bulletinList";
     }
 
+    /**
+     * 公告新增
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
+    public String bulletinAddView() throws IOException {
+        return "/cms/bulletinAdd";
+    }
+
 
     /**
      * 公告列表数据请求
