@@ -53,13 +53,13 @@ public class User extends BaseObject {
     @ExcelField(title="用户投资条件",align=2, sort=100)
     public String getInvestConditions() {
         if(investConditions==1){
-            return "专业投资人";
+            return "专业机构投资⼈人";
         }
         if(investConditions==2){
-            return "投资30万";
+            return "近三年年年年均收⼊入不不 低于30万元";
         }
         if(investConditions==3){
-            return "投资100万";
+            return "⾦金金融资产不不低于100万元";
         }
         return "未选择";
     }

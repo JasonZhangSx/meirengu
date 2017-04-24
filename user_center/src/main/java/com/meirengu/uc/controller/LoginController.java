@@ -196,7 +196,8 @@ public class LoginController extends BaseController {
      * @return
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public Result register(RegisterVO registerVO){//inviter_phone
+    public Result register(RegisterVO registerVO){
+        logger.info("LoginController.register params >> registerVO:{}",registerVO.toString());
         try {
             //手机注册校验
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
@@ -248,7 +249,7 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
             }
         }catch (Exception e){
-            logger.info("LoginController register throws Exception :{}",e.getMessage());
+            logger.error("LoginController register throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
