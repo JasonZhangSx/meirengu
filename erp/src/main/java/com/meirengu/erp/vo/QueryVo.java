@@ -16,9 +16,9 @@ import java.util.List;
 /**
  * 订单管理模块列表查询字段VO
  */
-public class TradeQuery implements Serializable {
+public class QueryVo implements Serializable {
 
-	private static final Logger logger = LoggerFactory.getLogger(TradeQuery.class);
+	private static final Logger logger = LoggerFactory.getLogger(QueryVo.class);
     
 	private static final long serialVersionUID = -8836010001713826972L;
 
@@ -47,15 +47,14 @@ public class TradeQuery implements Serializable {
 	/** 退款订单状态 */
 	private Integer refundState;
 
-
-	public TradeQuery(int pageNum, int pageSize, String sortColumn, String order){
+	public QueryVo(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
 		this.pageSize = pageSize;
 		this.sortColumn = sortColumn;
 		this.order = order;
 	}
 
-	public TradeQuery(DataTablesInput input){
+	public QueryVo(DataTablesInput input){
 		// 分页字段
 		int start = input.getStart();
 		int length = input.getLength();
@@ -191,6 +190,8 @@ public class TradeQuery implements Serializable {
 	public void setRefundState(Integer refundState) {
 		this.refundState = refundState;
 	}
+
+
 
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();

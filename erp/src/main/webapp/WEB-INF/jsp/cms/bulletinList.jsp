@@ -12,26 +12,18 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>退款订单列表</title>
+    <title>公告列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
     </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 退款订单列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> CMS管理 <span class="c-gray en">&gt;</span> 平台公告列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-                订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
-                用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">
-                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
-                    查 询
-                </button>
-            </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
@@ -40,20 +32,9 @@
                     <thead>
                     <tr class="text-c">
                         <th></th>
-                        <th>退款单号</th>
-                        <th>原订单号</th>
-                        <th>账号</th>
-                        <th>项目名称</th>
-                        <th>回报档位</th>
-                        <th>数量</th>
-                        <th>订单总额</th>
-                        <th>退款金额</th>
-                        <th>退款原因</th>
-                        <th>备注</th>
-                        <th>管理员处理原因</th>
+                        <th>标题</th>
                         <th>状态</th>
-                        <th>处理状态</th>
-                        <th>退款时间</th>
+                        <th>添加时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -62,8 +43,6 @@
         </article>
     </div>
 </section>
-<input type="hidden" id="errcode">
-<input type="hidden" id="errmsg">
 
 <!--定义操作列按钮模板-->
 <!--说下这里使用模板的作用，除了显示和数据分离好维护以外，绑定事件和传值也比较方便，希望大家能不拼接html则不拼接-->
@@ -76,7 +55,6 @@
 <script type="text/javascript">
 
     var table;
-
     $(function () {
         var tpl = $("#tpl").html();
         //预编译模板
@@ -84,10 +62,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>refund',
-                'data': {
-                    refundState : 2
-                }
+                'url': '<%=basePath %>bulletin'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -99,38 +74,21 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
-                {"data": "refundSn"},
-                {"data": "orderSn"},
-                {"data": "userPhone"},
-                {"data": "itemName"},
-                {"data": "itemLevelName"},
-                {"data": "itemNum"},
-                {"data": "orderAmount"},
-                {"data": "orderRefund"},
-                {"data": "userMessage"},
-                {"data": "refundMessage"},
-                {"data": "adminMessage"},
+                {"data": "bulletinTitle"},
                 {
-                    "data": "userConfirm",
+                    "data": "status",
                     "render": function (data, type, row, meta) {
-                        if (data == 1) {
-                            return "退款中";
-                        } else if (data == 2){
-                            return "已退款";
+                        if (data == 0) {
+                            return "下架";
+                        } else if (data == 1) {
+                            return "上架";
                         }
-
                     }
                 },
                 {
-                    "data": "refundState"
-                },
-                {
-                    "data": null,
+                    "data": "createTime",
                     "render": function (data, type, row, meta) {
-                        if (data == 2) {
-                            var confirmTime = row.confirmTime;
-                            return new Date(confirmTime).Format("yyyy-MM-dd HH:mm:ss");
-                        }
+                        return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                     }
                 },
                 {"data": null}
@@ -141,19 +99,30 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-                { "visible": false, "targets": 13 },
-                { "name": "orderSn",   "targets": 2 },
-                { "name": "userPhone",  "targets": 3 },
-                { "name": "itemName", "targets": 4 },
-//                { "name": "refundState", "targets": 12 },
                 {
-                    "targets": 15,
+                    "targets": 4,
                     "render": function (data, type, row, meta) {
-                        var context =
-                            {
-                                func: [
-                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"}                             ]
-                            };
+                        var status = row.status;
+                        var context;
+                        if (status == 0) {
+                            context =
+                                {
+                                    func: [
+                                        {"name": "上架", "fn": "edit(\'" + row.bulletinId + "\',1)", "type": "primary"},
+                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
+
+                                    ]
+                                };
+                        } else if (status == 1) {
+                            context =
+                                {
+                                    func: [
+                                        {"name": "下架", "fn": "edit(\'" + row.bulletinId + "\',0)", "type": "primary"},
+                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
+
+                                    ]
+                                };
+                        }
                         var html = template(context);
                         return html;
                     }
@@ -208,10 +177,31 @@
      * 检索
      **/
     function search(){
-        var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
         var itemName = $("#itemName").val();
-        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).draw();
+        table.column(1).search(userPhone).column(2).search(itemName).draw();
+    }
+
+    /*上，下架处理*/
+    function edit(bulletinId, status) {
+        var url = "<%=basePath %>bulletin/update/"+bulletinId;
+        $.ajax({
+            type: "post",
+            url: url,
+            cache:false,
+            async:false,
+            data:{status:status},
+            dataType:"json",
+            success: function(data){
+                var code = data.code;//200 is success，other is fail
+                if(code=="200"){
+                    layer.msg('已处理', {icon: 5, time: 1000});
+                    table.ajax.reload();
+                }else{
+                    layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 6, time: 5000});
+                }
+            }
+        });
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
