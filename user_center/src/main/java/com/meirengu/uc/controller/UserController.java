@@ -50,7 +50,7 @@ public class UserController extends BaseController{
     private RedisClient redisClient;
 
 
-    /**
+    /**邀请人分页查询 cms使用
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
      * @param sortBy 排序字段
@@ -59,18 +59,20 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "inviter",method = {RequestMethod.POST})
     public Result inviter(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                       @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(value="invest_conditions", required = false) Integer investConditions,
-                       @RequestParam(value="is_auth", required = false) Integer isAuth,
-                       @RequestParam(value="phone", required = false) String phone,
-                       @RequestParam(value="invite_phone", required = false) String invitePhone,
-                       @RequestParam(value="realname", required = false) String realname,
-                       @RequestParam(value="invite_realname", required = false) String inviteRealname,
-                       @RequestParam(value="idcard", required = false) String idcard,
-                       @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
-                       @RequestParam(value="sortby", required = false) String sortBy,
-                       @RequestParam(value="order", required = false) String order){
+                          @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                          @RequestParam(value="invest_conditions", required = false) Integer investConditions,
+                          @RequestParam(value="is_auth", required = false) Integer isAuth,
+                          @RequestParam(value="phone", required = false) String phone,
+                          @RequestParam(value="invite_phone", required = false) String invitePhone,
+                          @RequestParam(value="realname", required = false) String realname,
+                          @RequestParam(value="invite_realname", required = false) String inviteRealname,
+                          @RequestParam(value="idcard", required = false) String idcard,
+                          @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
+                          @RequestParam(value="sortby", required = false) String sortBy,
+                          @RequestParam(value="order", required = false) String order){
         try {
+            logger.info("cms user/inviter  init   phone:{},invitePhone:{},realname:{},inviteRealname:{},idcard:{},inviteIdcard:{}",
+                    phone,invitePhone,realname,inviteRealname,idcard,inviteIdcard);
             Map paramMap = new HashMap<String, Object>();
             Page<User> page = super.setPageParams(pageNum,pageSize);
             paramMap.put("investConditions", investConditions);
@@ -86,8 +88,11 @@ public class UserController extends BaseController{
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
             for(Map map:list){
+                //获取余额信息
                 userService.getUserRestMoney(map);
+                //取累计投资额
                 userService.getUserTotalInvestMoney(map);
+                Thread.sleep(30L);//减小http访问   减小订单系统和支付系统http压力
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -95,8 +100,8 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("UserController inviter throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
@@ -109,35 +114,31 @@ public class UserController extends BaseController{
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public Result getUserInfo(@RequestParam(value="token", required = false) String token,
                               @RequestParam(value="phone", required = false) String phone){
+        logger.info("UserController detail params token:{} phone:{}",token,phone);
         try {
-            if(!StringUtil.isEmpty(token) && redisClient.existsObject(token)){
-                User user = (User)redisClient.getObject(token);
-                Map map = ApacheBeanUtils.objectToMap(user);
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
-
-                userService.getWithdrawalsAmount(map);
-                userService.getBankName(map);
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else if(!StringUtil.isEmpty(phone)){
-                User user = userService.retrieveByPhone(phone);
-                if(user == null){
-                    return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
-                }else{
-                    Map map = ApacheBeanUtils.objectToMap(user);
-                    userService.getUserRestMoney(map);
-                    userService.getUserTotalInvestMoney(map);
-
-                    userService.getWithdrawalsAmount(map);
-                    userService.getBankName(map);
-                    return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
-                }
-            }else{
-                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-            }
+           if(StringUtil.isEmpty(phone) && StringUtil.isEmpty(token)){
+               return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+           }
+           Map map = new HashMap();
+           if(!StringUtil.isEmpty(phone)){
+               User user = userService.retrieveByPhone(phone);
+               map = ApacheBeanUtils.objectToMap(user);
+           }else{
+               if(!redisClient.existsObject(token)){
+                   return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+               }
+               User user = (User)redisClient.getObject(token);
+               user = userService.retrieveByPhone(user.getPhone());
+               map = ApacheBeanUtils.objectToMap(user);
+           }
+            userService.getUserRestMoney(map);//获取支付账户余额
+            userService.getUserTotalInvestMoney(map);//获取累计投资额
+            userService.getWithdrawalsAmount(map);//获取体现中金额
+            userService.getBankName(map);//获取银行名称
+            return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("UserController detail  throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
     /**

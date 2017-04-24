@@ -170,6 +170,9 @@ public class StatusCode {
     public static final int FAILED_GET_DOWNLOAD_LINK = 50125;
     public static final int USER_NOT_AUTH = 50126;
     public static final int ID_CARD_IS_EXITS = 50127;
+    public static final int LOGIN_FAILED = 50128;
+    public static final int UPDATE_ADDRESS_FAILED = 50129;
+    public static final int DELETE_ADDRESS_FAILED = 50130;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -419,6 +422,9 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.FAILED_GET_DOWNLOAD_LINK, "获取合同下载链接失败! ");
 
         codeMsgMap.put(StatusCode.ID_CARD_IS_EXITS, "该身份证已绑定! ");
+        codeMsgMap.put(StatusCode.LOGIN_FAILED, "登陆失败! ");
+        codeMsgMap.put(StatusCode.UPDATE_ADDRESS_FAILED, "修改地址失败! ");
+        codeMsgMap.put(StatusCode.DELETE_ADDRESS_FAILED, "删除地址失败! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

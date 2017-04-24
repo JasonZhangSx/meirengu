@@ -5,6 +5,8 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.OSSFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,8 @@ import java.util.Map;
 @RequestMapping("upload")
 public class UploadController extends BaseController{
 
+    private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
+
     @RequestMapping(value = "portrait", method = RequestMethod.POST)
     @ResponseBody
     public Result portrait(MultipartHttpServletRequest request){
@@ -35,7 +39,7 @@ public class UploadController extends BaseController{
         String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
         String bucketName = ConfigUtil.getConfig("bucketName");
         String callbackUrl = ConfigUtil.getConfig("callbackUrl");
-
+        logger.info("uc upload init :{}");
         try {
             OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
             Map<String, String> map = fileUtils.upload(request, file, foldName);
