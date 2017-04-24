@@ -165,11 +165,11 @@ public class StatusCode {
     public static final int RETRIEVE_PROJECT_GET_MESSAGE_FAILED = 50120;
     public static final int RETRIEVE_PAYMENT_GET_MESSAGE_FAILED = 50121;
     public static final int ID_CARD_IS_ERROR = 50122;
-
     public static final int UPLOAD_HTML_STAMP_FAILED = 50123;
     public static final int UPLOAD_PDF_FIX_FAILED = 50124;
     public static final int FAILED_GET_DOWNLOAD_LINK = 50125;
-
+    public static final int USER_NOT_AUTH = 50126;
+    public static final int ID_CARD_IS_EXITS = 50127;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -412,10 +412,13 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, "调取项目模块获取项目信息失败! ");
         codeMsgMap.put(StatusCode.RETRIEVE_PAYMENT_GET_MESSAGE_FAILED, "调取支付模块获取认证信息失败! ");
         codeMsgMap.put(StatusCode.ID_CARD_IS_ERROR, "身份证号不存在! ");
+        codeMsgMap.put(StatusCode.USER_NOT_AUTH, "用户未认证! ");
 
         codeMsgMap.put(StatusCode.UPLOAD_HTML_STAMP_FAILED, "上传html 盖章失败! ");
         codeMsgMap.put(StatusCode.UPLOAD_PDF_FIX_FAILED, "上传pdf 保全失败! ");
         codeMsgMap.put(StatusCode.FAILED_GET_DOWNLOAD_LINK, "获取合同下载链接失败! ");
+
+        codeMsgMap.put(StatusCode.ID_CARD_IS_EXITS, "该身份证已绑定! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

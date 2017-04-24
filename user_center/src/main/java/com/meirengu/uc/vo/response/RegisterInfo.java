@@ -1,11 +1,11 @@
-package com.meirengu.uc.po;
+package com.meirengu.uc.vo.response;
 
 import com.meirengu.uc.model.User;
 
 /**
  * Created by huoyan403 on 3/14/2017.
  */
-public class RegisterPO {
+public class RegisterInfo {
 
     public User user;
     public String token;

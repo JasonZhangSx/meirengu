@@ -9,14 +9,14 @@ import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.AvatarPO;
+import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.vo.RegisterVO;
-import com.meirengu.uc.vo.UserVO;
+import com.meirengu.uc.vo.request.RegisterVO;
+import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.JacksonUtil;
@@ -268,17 +268,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public List<AvatarPO> listUserAvatar(List<String> listUserIds) {
+    public List<AvatarVO> listUserAvatar(List<String> listUserIds) {
 
         List<User> list =  userDao.listUserAvatar(listUserIds);
-        List<AvatarPO> avatarPOs = new ArrayList<>();
+        List<AvatarVO> avatarVOs = new ArrayList<>();
         for(User user :list){
-            AvatarPO avatarPO = new AvatarPO();
-            avatarPO.setUserId(user.getUserId());
-            avatarPO.setAvatar(user.getAvatar());
-            avatarPOs.add(avatarPO);
+            AvatarVO avatarVO = new AvatarVO();
+            avatarVO.setUserId(user.getUserId());
+            avatarVO.setAvatar(user.getAvatar());
+            avatarVOs.add(avatarVO);
         }
-        return avatarPOs;
+        return avatarVOs;
     }
 
     @Override
@@ -493,6 +493,15 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public boolean getBankIdCard(String bankIdcard) {
         Boolean flag = false;
         if(userDao.getBankIdCard(bankIdcard)==1){
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean getIdCard(String idcard) {
+        Boolean flag = false;
+        if(userDao.getIdCard(idcard)==1){
             flag = true;
         }
         return flag;

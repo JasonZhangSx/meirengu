@@ -7,12 +7,12 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.RegisterPO;
+import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.vo.RegisterVO;
+import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -80,8 +80,8 @@ public class LoginController extends BaseController {
                 //判断token是否有效
                 if(redisClient.existsObject(token)){
                     //获取新的token
-                    RegisterPO registerPO = loginService.getNewToken(token,redisClient.getObject(token));
-                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                    RegisterInfo registerInfo = loginService.getNewToken(token,redisClient.getObject(token));
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     //无效token返回登陆
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
@@ -114,8 +114,8 @@ public class LoginController extends BaseController {
 
                     if(user != null && validatePassword(password,user)){
                         userService.updateUserInfo(user, mobile, ip, from);
-                        RegisterPO registerPO = loginService.setUserToRedis(user);
-                        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                        RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                     }else{
                         return super.setResult(StatusCode.INVALID_USERNAME_OR_PASSWORD, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_USERNAME_OR_PASSWORD));
                     }
@@ -140,8 +140,8 @@ public class LoginController extends BaseController {
                             //用户为空则注册一个
                             User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
                             if (usr != null){
-                                RegisterPO registerPO = loginService.setUserToRedis(usr);
-                                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                                RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                             }else {
                                 return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
                             }
@@ -166,8 +166,8 @@ public class LoginController extends BaseController {
 
                     logger.info("LoginController.login update code result:{}", updateResult);
                     userService.updateUserInfo(user,mobile,ip,from);
-                    RegisterPO registerPO = loginService.setUserToRedis(user);
-                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
             }
         }catch (Exception e){
@@ -242,8 +242,8 @@ public class LoginController extends BaseController {
             //注册
             User usr = userService.createUserInfo(registerVO);
             if (usr != null){
-                RegisterPO registerPO = loginService.setUserToRedis(usr);
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerPO,RegisterPO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
             }

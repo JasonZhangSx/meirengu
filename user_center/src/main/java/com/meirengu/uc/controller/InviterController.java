@@ -44,40 +44,42 @@ public class InviterController extends BaseController{
                        @RequestParam(value="invited_user_id", required = false) Integer invitedUserId,
                        @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="order", required = false) String order){
+        logger.info("邀请人奖励分页查询 userId:{} invitedUserId:{}" ,userId,invitedUserId);
         try {
             Map paramMap = new HashMap<String, Object>();
-            Page<Inviter> page = super.setPageParams(pageNum,pageSize);
+            paramMap.put("sortBy", sortBy);
+            paramMap.put("order", order);
             if(!StringUtil.isEmpty(userId)){
                 paramMap.put("userId", userId);
             }
             if(!StringUtil.isEmpty(invitedUserId)){
                 paramMap.put("invitedUserId", invitedUserId);
             }
-            paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
-
+            Page<Inviter> page = super.setPageParams(pageNum,pageSize);
             page = inviterService.getListByPage(page, paramMap);
             if(page.getList().size() != 0){
-
-
-
-                // TODO: 4/7/2017  查看邀请人邀请分红
+                // 查看邀请人邀请分红
                 inviterService.getReward(page.getList());
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("InviterController list throw exception:{}", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
-
+    /**
+     * 获取邀请人详情
+     * @param id
+     * @param invitedUserId
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.GET})
     public Result detail(@RequestParam(value="id", required = false) Integer id,
                          @RequestParam(value="invited_user_id", required = false) Integer invitedUserId){
-
+        logger.info("邀请人详情查询 userId:{} invitedUserId:{}" ,id,invitedUserId);
         try {
             if(StringUtil.isEmpty(id) && StringUtil.isEmpty(invitedUserId)){
                 return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -92,18 +94,27 @@ public class InviterController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
+            logger.error("InviterController detail throw exception:{}", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
-
+    /**
+     * 修改邀请信息
+     * @param id
+     * @param invitedUserId
+     * @param invitedUserPhone
+     * @param investTime
+     * @param reward
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.PUT})
     public Result update(@RequestParam(value = "id", required = false)Integer id,
                          @RequestParam(value = "invited_user_id", required = false)Integer invitedUserId,
                          @RequestParam(value = "invited_user_phone", required = false)String invitedUserPhone,
                          @RequestParam(value = "invest_time", required = false)Date investTime,
                          @RequestParam(value = "reward", required = false)BigDecimal reward){
+        logger.info("邀请人信息修改 id:{} invitedUserId:{} invitedUserPhone：{} investTime:{}" ,id,invitedUserId,invitedUserPhone,investTime);
         try {
             if(StringUtil.isEmpty(id)  && StringUtil.isEmpty(invitedUserId) && StringUtil.isEmpty(invitedUserPhone)){
                 return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -121,13 +132,14 @@ public class InviterController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
+            logger.error("inviterController update throw exception:{}", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
     @RequestMapping(value = "/{id}",method = {RequestMethod.DELETE})
     public Result delete(@PathVariable Integer id){
+        logger.info("邀请人信息删除 id:{}" ,id);
         try {
             int result  = inviterService.delete(id);
             if(result != 0){
@@ -136,7 +148,7 @@ public class InviterController extends BaseController{
                 return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
+            logger.error("inviterController delete throw exception:", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }

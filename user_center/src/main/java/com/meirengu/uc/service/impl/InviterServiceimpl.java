@@ -44,7 +44,7 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
 
     @Override
     public void getReward(List<Map<String, Object>> list) {
-
+        //拼接被邀请人id
         StringBuffer sb = new StringBuffer();
         for(int i = 0; i<list.size();i++){
 
@@ -57,11 +57,11 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
         HttpResult hr = null;
         String url = ConfigUtil.getConfig("URI_GET_USER_REWARD");
         String urlAppend = url+"?userId="+ sb.toString();
-        logger.info("InviterServiceimpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+        logger.info("InviterServiceimpl.send get >> uri :{} ", urlAppend);
         try {
             hr = HttpUtil.doGet(urlAppend);
         } catch (Exception e) {
-            logger.error("InviterServiceimpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
+            logger.error("InviterServiceimpl.send error >> uri:{}, exception:{}", new Object[]{urlAppend, e});
         }
         if(hr.getStatusCode()==200){
             Map<String,Object> message = new HashedMap();

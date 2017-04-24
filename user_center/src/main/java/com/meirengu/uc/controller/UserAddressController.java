@@ -6,7 +6,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
@@ -191,13 +191,13 @@ public class UserAddressController extends BaseController{
             List<Map<String, Object>> list = page.getList();
             for (Map<String, Object> list1:list){
                 if(!StringUtil.isEmpty(list1.get("areaId"))){
-                    AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
-                    list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
-                    list1.put("provinceId",addressPO.getProvinceId()+"");//加空字符串 非空不报错
-                    list1.put("city",addressPO.getCity()+"");
-                    list1.put("cityId",addressPO.getCityId()+"");
-                    list1.put("areaId",addressPO.getAreaId()+"");
-                    list1.put("area",addressPO.getArea()+"");
+                    AddressVO addressVO = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
+                    list1.put("province", addressVO.getProvince()+"");//加空字符串 非空不报错
+                    list1.put("provinceId", addressVO.getProvinceId()+"");//加空字符串 非空不报错
+                    list1.put("city", addressVO.getCity()+"");
+                    list1.put("cityId", addressVO.getCityId()+"");
+                    list1.put("areaId", addressVO.getAreaId()+"");
+                    list1.put("area", addressVO.getArea()+"");
                 }
             }
             if(page.getList().size() != 0){
@@ -225,11 +225,11 @@ public class UserAddressController extends BaseController{
 
 
             if(userAddressPO != null){
-                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
-                if(addressPO!=null){
-                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
-                    userAddressPO.setCity(addressPO.getCity()+"");
-                    userAddressPO.setAreas(addressPO.getArea()+"");
+                AddressVO addressVO = service.showAddress(userAddressPO.getAreaId());
+                if(addressVO !=null){
+                    userAddressPO.setProvince(addressVO.getProvince()+"");//加空字符串 非空不报错
+                    userAddressPO.setCity(addressVO.getCity()+"");
+                    userAddressPO.setAreas(addressVO.getArea()+"");
                 }
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

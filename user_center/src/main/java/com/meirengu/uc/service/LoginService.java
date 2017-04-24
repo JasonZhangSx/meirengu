@@ -2,7 +2,7 @@ package com.meirengu.uc.service;
 
 
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.RegisterPO;
+import com.meirengu.uc.vo.response.RegisterInfo;
 
 /**
  * 登录服务接口类
@@ -13,7 +13,7 @@ import com.meirengu.uc.po.RegisterPO;
 public interface LoginService {
 
 
-    RegisterPO getNewToken(String token,Object object);
+    RegisterInfo getNewToken(String token, Object object);
 
-    RegisterPO setUserToRedis(User usr);
+    RegisterInfo setUserToRedis(User usr);
 }

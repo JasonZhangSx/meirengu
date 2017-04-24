@@ -9,7 +9,7 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.NumberToCN;
@@ -89,10 +89,10 @@ public class ContactServiceImpl implements ContactService {
                 userAddress.setUserId(Integer.parseInt(map.get("userId")));
                 userAddress.setIsDefault(1);
                 userAddress = userAddressDao.selectByUserAddress(userAddress);
-                AddressPO addressPO = addressServiceImpl.showAddress(userAddress.getAreaId());
+                AddressVO addressVO = addressServiceImpl.showAddress(userAddress.getAreaId());
                 data.put("investors",user.getRealname());
                 data.put("investorIdCard",user.getIdCard());
-                data.put("investorArea",addressPO.getProvince() +" "+addressPO.getCity()+" "+addressPO.getArea()+" "+userAddress.getUserAddress());
+                data.put("investorArea", addressVO.getProvince() +" "+ addressVO.getCity()+" "+ addressVO.getArea()+" "+userAddress.getUserAddress());
 
                 try {
                     //生成盖章合同
