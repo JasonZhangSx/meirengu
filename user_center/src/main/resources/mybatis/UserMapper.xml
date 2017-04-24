@@ -227,6 +227,13 @@
         WHERE  bank_idcard = #{bankIdcard}
 
     </select>
+    <select id="getIdCard" parameterType="Map" resultType="Integer">
+        select count(*)
+        from
+        <include refid="table_name" />
+        WHERE  idcard = #{idcard}
+
+    </select>
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
         select

@@ -498,5 +498,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return flag;
     }
 
+    @Override
+    public boolean getIdCard(String idcard) {
+        Boolean flag = false;
+        if(userDao.getIdCard(idcard)==1){
+            flag = true;
+        }
+        return flag;
+    }
+
 
 }

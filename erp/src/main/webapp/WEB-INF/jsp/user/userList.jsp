@@ -133,10 +133,10 @@
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.isAuth=='0'){
-                            return '<label> 是 </label>';
+                            return '<label> 否 </label>';
                         }
                         if(row.isAuth=='1'){
-                            return '<label> 否 </label>';
+                            return '<label> 是 </label>';
                         }
                     }
                 },
@@ -145,16 +145,16 @@
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.investConditions=='0'){
-                            return '<label> 未选择 </label>';
+                            return '<label> 用户未认证 </label>';
                         }
                         if(row.investConditions=='1'){
                             return '<label>  专业投资人  </label>';
                         }
                         if(row.investConditions=='2'){
-                            return '<label>  投资金额30万  </label>';
+                            return '<label>  近三年年收入不低于30万元  </label>';
                         }
                         if(row.investConditions=='3'){
-                            return '<label>  投资金额100万 </label>';
+                            return '<label>  金融资产不低于100万元 </label>';
                         }
                     }
                 },
