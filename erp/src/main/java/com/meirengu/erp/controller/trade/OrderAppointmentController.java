@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.erp.vo.TradeQuery;
+import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
@@ -48,15 +48,15 @@ public class OrderAppointmentController extends BaseController{
      * @return
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput orderAppointmentList(@Valid @RequestBody DataTablesInput input) throws IOException {
+    public DataTablesOutput orderAppointmentList(@Valid DataTablesInput input) throws IOException {
         // 组装请求参数
-        TradeQuery tradeQuery = new TradeQuery(input);
+        QueryVo queryVo = new QueryVo(input);
         //查询预约状态的订单
-        tradeQuery.setOrderState(1);
+        queryVo.setOrderState(1);
 
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + tradeQuery.getParamsStr();
+        String url = ConfigUtil.getConfig("order.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;

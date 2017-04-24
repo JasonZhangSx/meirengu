@@ -12,11 +12,14 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>退款订单列表</title>
+    <title>订单列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+    </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 待审核退款订单列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 待审核订单列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -25,6 +28,7 @@
                 订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
                 用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
                 项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">
+
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -60,6 +64,7 @@
 <input type="hidden" id="errcode">
 <input type="hidden" id="errmsg">
 <input type="hidden" id="orderId">
+<input type="hidden" id="refundId">
 <div class="zd_div" style="display:none">
     <article class="cl pd-20">
         <div class="row cl">
@@ -89,6 +94,11 @@
     </article>
 </div>
 
+<style media="screen">
+    .zd_div{position: fixed;z-index:9999;left:0;bottom:0;right:0;top:0;background-color: rgba(0,0,0,0.4);}
+    .zd_div article{position: absolute;z-index: 19891015;width:600px;top:50%;left:50%;transform: translate3D(-300px,-50%,0);background-color: #fff;}
+
+</style>
 
 <!--定义操作列按钮模板-->
 <!--说下这里使用模板的作用，除了显示和数据分离好维护以外，绑定事件和传值也比较方便，希望大家能不拼接html则不拼接-->
@@ -109,12 +119,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'contentType': 'application/json',
-                'url': '<%=basePath %>/refund',
-                'type': 'POST',
-                'data': function(d) {
-                    return JSON.stringify(d);
-                }
+                'url': '<%=basePath %>refund'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -161,20 +166,16 @@
                     "targets": [0.-1]
                 },
                 { "name": "orderSn",   "targets": 2 },
-                { "name": "userPhone",  "targets": 2 },
+                { "name": "userPhone",  "targets": 3 },
                 { "name": "itemName", "targets": 4 },
-                { "name": "refundState", "targets": 12 },
                 {
-                    "targets": 14,
+                    "targets": 13,
                     "render": function (data, type, row, meta) {
                         var context =
                             {
                                 func: [
-                                    {"name": "修改", "fn": "edit(\'" + c.name + "\',\'" + c.position + "\',\'" + c.salary + "\',\'" + c.start_date + "\',\'" + c.office + "\',\'" + c.extn + "\')", "type": "primary"},
-
-
                                     {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"},
-                                    {"name": "审核", "fn": "edit(\'" + row.refundId + "\',\'" + row.orderId + "\')", "type": "primary"},
+                                    {"name": "审核", "fn": "edit(\'" + row.refundId + "\',\'" + row.orderId + "\')", "type": "primary"}
                                 ]
                             };
                         var html = template(context);
@@ -234,13 +235,9 @@
         var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
         var itemName = $("#itemName").val();
-        var refundState =  $("#refundState").val();
-        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).column(14).search(refundState).draw();
+        table.column(2).search(orderSn).column(3).search(userPhone).column(4).search(itemName).draw();
     }
 
-    /**
-     * 浮层
-     **/
     function zd_alert(){
         $('.zd_div').show();
     }
@@ -263,37 +260,36 @@
     function refundAuditAjax() {
         var refundId = $("#refundId").val();
         var orderId = $("#orderId").val();
-        var refundState = $("#refundState").find("option:selected").text();
+        var refundState = $("#refundState").val();
         var adminMessage = $("#adminMessage").val();
-        var url = "<%=basePath %>order/refund/audit";
+        var url = "<%=basePath %>refund/audit";
         $.ajax({
             type: "post",
             url: url,
-            cache:false,
-            async:false,
-            data:{orderId:orderId,userMessage:userMessage,refundMessage:refundMessage},
-            dataType:"json",
-            success: function(data){
+            cache: false,
+            async: false,
+            data:{refundId:refundId,orderId:orderId,refundState:refundState,adminMessage:adminMessage},
+            dataType: "json",
+            success: function (data) {
                 var code = data.code;//200 is success，other is fail
-                if(code=="200"){
+                if (code == "200") {
                     $('.zd_div').fadeOut();
                     layer.msg('已处理', {icon: 5, time: 1000});
                     table.ajax.reload();
-                    //清空退款表单提交
-                    $("#refundId").val("");
-                    $("#orderId").val("");
-                    $("#refundState").empty();
-                    $("#adminMessage").val("");
-                }else{
+                } else {
                     $('.zd_div').fadeOut();
                     $("#errcode").val(data.code);
                     $("#errmsg").val(data.msg);
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
+                //清空退款表单提交
+                $("#refundId").val("");
+                $("#orderId").val("");
+                $("#refundState").val("");
+                $("#adminMessage").val("");
             }
         });
     }
-
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

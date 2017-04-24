@@ -33,4 +33,5 @@
 <script type="text/javascript" src="<%=basePath %>lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="<%=basePath %>lib/laypage/1.2/laypage.js"></script>
 <script src="<%=basePath %>static/js/handlebars-v3.0.1.js"></script>
+<script src="<%=basePath %>static/js/jquery.spring-friendly.js"></script>
 <script src="<%=basePath %>static/js/common.js"></script>

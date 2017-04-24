@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.erp.vo.TradeQuery;
+import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +40,15 @@ public class RefundController extends BaseController{
     public String refundView() throws IOException {
         return "/trade/refundList";
     }
+    /**
+     * 跳转到退款订单列表页面
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/received/view", method = RequestMethod.GET)
+    public String receivedView() throws IOException {
+        return "/trade/refundedList";
+    }
 
     /**
      * 退款订单列表数据请求
@@ -47,17 +56,19 @@ public class RefundController extends BaseController{
      * @return
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput refundList(@Valid @RequestBody DataTablesInput input) throws IOException {
+    public DataTablesOutput refundList(@Valid DataTablesInput input,
+                                       @RequestParam(value = "refundState", required = false) Integer refundState) throws IOException {
         // 组装请求参数
-        TradeQuery tradeQuery = new TradeQuery(input);
+        QueryVo queryVo = new QueryVo(input);
+        queryVo.setRefundState(refundState);
         //查询退款待审核状态的订单
-        if (tradeQuery.getRefundState() == null) {
-            tradeQuery.setRefundState(1);
+        if (queryVo.getRefundState() == null) {
+            queryVo.setRefundState(1);
         }
 
-        String url = ConfigUtil.getConfig("refund.list.url") + "?" + tradeQuery.getParamsStr();
+        String url = ConfigUtil.getConfig("refund.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;

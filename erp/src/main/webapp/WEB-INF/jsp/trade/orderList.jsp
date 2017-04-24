@@ -13,6 +13,9 @@
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
     <title>订单列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+    </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
@@ -127,12 +130,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'contentType': 'application/json',
-                'url': '<%=basePath %>/order',
-                'type': 'POST',
-                'data': function(d) {
-                    return JSON.stringify(d);
-                }
+                'url': '<%=basePath %>order'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -229,19 +227,19 @@
                 { "name": "orderSn",   "targets": 1 },
                 { "name": "userPhone",  "targets": 2 },
                 { "name": "itemName", "targets": 3 },
-                { "name": "orderState", "targets": 3 },
+                { "name": "orderState", "targets": 15 },
                 {
-                    "targets": 17,
+                    "targets": 18,
                     "render": function (data, type, row, meta) {
                         var context;
-                        var flag;
+                        var flag = false;
                         //如果已支付大于72小时，不显示申请退款按钮
                         var orderState = row.orderState;
                         if (orderState == 6) {
                             var finishedTime = row.finishedTime;
                             var cuttentTimeMills = new Date().getTime();
                             var time_different = cuttentTimeMills - finishedTime;
-                            if (time_different > 1000*60*60*72) {
+                            if (time_different < 1000*60*60*72) {
                                 flag = true;
                             }
                         }
@@ -249,15 +247,15 @@
                             context =
                                 {
                                     func: [
-                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"}
+                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"},
+                                        {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"}
                                     ]
                                 };
                         } else {
                             context =
                                 {
                                     func: [
-                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"},
-                                        {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"},
+                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"}
                                     ]
                                 };
                         }
@@ -358,16 +356,16 @@
                     $('.zd_div').fadeOut();
                     layer.msg('已处理', {icon: 5, time: 1000});
                     table.ajax.reload();
-                    //清空退款表单提交
-                    $("#orderId").val("");
-                    $("#userMessage").empty();
-                    $("#refundMessage").val("");
                 }else{
                     $('.zd_div').fadeOut();
                     $("#errcode").val(data.code);
                     $("#errmsg").val(data.msg);
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
+                //清空退款表单提交
+                $("#orderId").val("");
+                $("#userMessage").val("");
+                $("#refundMessage").val("");
             }
         });
     }
