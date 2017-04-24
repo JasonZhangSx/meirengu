@@ -1,4 +1,6 @@
-<%--
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Locale" %><%--
   Created by IntelliJ IDEA.
   User: xiaoyang
   Date: 2017/3/31
@@ -71,7 +73,10 @@
                             <td>${withdrawals.userId}</td>
                             <td>${withdrawals.userName}</td>
                             <td>${withdrawals.orderAmount}</td>
-                            <td>${withdrawals.createTime}</td>
+                            <td>
+                                <c:set var="withdrawalsDate" value="${withdrawals.createTime}" scope="session"/>
+                                <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(String.valueOf(session.getAttribute("withdrawalsDate"))))%>
+                            </td>
                             <c:choose>
                                 <c:when test="${withdrawals.status==1}">
                                     <td>提现中</td>
@@ -120,6 +125,10 @@
 <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
+    $('.table-sort').dataTable({
+        "aaSorting": [[4, "desc"]],
+        "bStateSave": true,
+    });
     function withdrawals_ok(id) {
         if(confirm("是否提现通过"))
         {
