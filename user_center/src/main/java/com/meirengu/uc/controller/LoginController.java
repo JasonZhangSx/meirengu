@@ -28,8 +28,8 @@ import java.util.Date;
 
 /**
  * 登录控制类
- *
- * @author Marvin
+ * 登陆、注册、退出接口
+ * @author huoyan403
  * @create 2017-01-12 下午12:37
  */
 @RestController
@@ -74,8 +74,8 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "ip", required = true) String ip) {
         logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{}", new
                 Object[]{mobile, checkCode, password, from, ip});
-        //判断有无token
         try{
+            //token自动登陆
             if(!StringUtil.isEmpty(token)){
                 //判断token是否有效
                 if(redisClient.existsObject(token)){
@@ -86,79 +86,75 @@ public class LoginController extends BaseController {
                     //无效token返回登陆
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
-            }else{
-                //没有token 判断是否有openId
-                if(!StringUtil.isEmpty(wxOpenId)){
-                    //如果有该用户直接登陆  没有的话返回code 去注册页面
+            }
+            //第三方登录
+            if(!StringUtil.isEmpty(wxOpenId)){
+                //如果有该用户直接登陆  没有的话返回code 去注册页面
 
-                }
-                if(!StringUtil.isEmpty(qqOpenId)){
+            }
+            if(!StringUtil.isEmpty(qqOpenId)){
 
-                }
-                if(!StringUtil.isEmpty(sinaOpenId)){
+            }
+            if(!StringUtil.isEmpty(sinaOpenId)){
 
-                }
-                //verify params
-                if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
-                }
-                if (checkCode == null && password == null) {
-                    return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get
-                            (StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
-                }
-                User user = userService.retrieveByPhone(mobile);
-                if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
-                    //todo 手机密码方式登录TO-DO   对用户输入密码加密后
-                    //User usr = userService.verifyByPasswordAndPhone(mobile,password);
+            }
 
-                    if(user != null && validatePassword(password,user)){
-                        userService.updateUserInfo(user, mobile, ip, from);
-                        RegisterInfo registerInfo = loginService.setUserToRedis(user);
-                        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
-                    }else{
-                        return super.setResult(StatusCode.INVALID_USERNAME_OR_PASSWORD, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_USERNAME_OR_PASSWORD));
-                    }
-                }
-                if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
-                    if(user==null || StringUtil.isEmpty(user.getUserId())){
-                        try {
-                            CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-                            if (code == null) {
-                                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                                        .CAPTCHA_INVALID));
-                            }
-                            if (code.getExpireTime().compareTo(new Date()) < 0) {
-                                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                                        .CAPTCHA_EXPIRE));
-                            }
-                            code.setUse(true);
-                            code.setUsingTime(new Date());
-                            int updateResult = checkCodeService.update(code);
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
+            }
+            if (checkCode == null && password == null) {
+                return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
+            }
+            User user = userService.retrieveByPhone(mobile);
 
-                            logger.info("LoginController.login update code result:{}", updateResult);
-                            //用户为空则注册一个
-                            User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
-                            if (usr != null){
-                                RegisterInfo registerInfo = loginService.setUserToRedis(usr);
-                                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-                            }else {
-                                return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
-                            }
-                        }catch (Exception e){
-                            logger.info(e.getMessage());
-                            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            //密码登陆
+            if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
+                if(user != null && validatePassword(password,user)){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.INVALID_USERNAME_OR_PASSWORD, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_USERNAME_OR_PASSWORD));
+                }
+            }
+
+            //验证码登陆
+            if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
+                //如果没有注册 给用户注册一个用户
+                if(user==null || StringUtil.isEmpty(user.getUserId())){
+                    try {
+                        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+                        if (code == null) {
+                            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
                         }
+                        if (code.getExpireTime().compareTo(new Date()) < 0) {
+                            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
+                        }
+                        code.setUse(true);
+                        code.setUsingTime(new Date());
+                        int updateResult = checkCodeService.update(code);
+                        logger.info("LoginController.login update code result:{}", updateResult);
+
+                        User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
+                        if (usr != null){
+                            RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                        }else {
+                            return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                        }
+                    }catch (Exception e){
+                        logger.error("LoginController login createUser throws Exception :{}",e.getMessage());
+                        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
                     }
+                }else{//如果用户存在
                     //手机动态密码方式登录
                     CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
                     if (code == null) {
-                        return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                                .CAPTCHA_INVALID));
+                        return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
                     }
                     if (code.getExpireTime().compareTo(new Date()) < 0) {
-                        return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                                .CAPTCHA_EXPIRE));
+                        return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
                     }
                     code.setUse(true);
                     code.setUsingTime(new Date());
@@ -169,26 +165,29 @@ public class LoginController extends BaseController {
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
+            }else{
+                return super.setResult(StatusCode.LOGIN_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.LOGIN_FAILED));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.error("LoginController.login throws Exception:{}",e.getMessage());
             return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
         }
-            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
-
+    //退出
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     public Result logout(@RequestParam(value = "token", required = false) String token,
                          @RequestParam(value = "registration_id", required = false) String registrationId){
+        try {
+            redisClient.delkeyObject(token);
+            //清空token
+            //清空redis
+            //清空推送别名
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch(Exception e){
 
-        redisClient.delkeyObject(token);
-        //清空token
-        //清空redis
-        //清空推送别名
-
-
-        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
     }
 
     /**
@@ -237,6 +236,7 @@ public class LoginController extends BaseController {
                 code.setUse(true);
                 code.setUsingTime(new Date());
                 int updateResult = checkCodeService.update(code);
+                logger.info("LoginController.register update code result:{}", updateResult);
             }
 
             //注册
@@ -248,11 +248,11 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
             }
         }catch (Exception e){
-            logger.info(e.getMessage());
+            logger.info("LoginController register throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
+    //用户密码校验
     private Boolean validatePassword(String password,User user){
         try {
             return  PasswordEncryption.validatePassword(password,user.getPassword());
