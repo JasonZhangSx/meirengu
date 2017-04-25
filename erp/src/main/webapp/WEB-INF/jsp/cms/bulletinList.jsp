@@ -15,6 +15,8 @@
     <title>公告列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
+        /*.myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}*/
     </style>
 </head>
 <body>
@@ -27,7 +29,7 @@
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><a class="btn btn-primary radius" onClick="bulletin_insert('添加公告','/erp/bulletin/toAdd')"
-                        href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加项目</a></span>
+                        href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加公告</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
@@ -132,6 +134,7 @@
 
             ],
             "language": {
+                "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
                 "lengthMenu": "每页_MENU_ 条记录",
                 "zeroRecords": "没有找到记录",
                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",
@@ -178,13 +181,13 @@
 
     /*上，下架处理*/
     function edit(bulletinId, status) {
-        var url = "<%=basePath %>bulletin/update/"+bulletinId;
+        var url = "<%=basePath %>bulletin/update";
         $.ajax({
             type: "post",
             url: url,
             cache:false,
             async:false,
-            data:{status:status},
+            data:{bulletinId:bulletinId,status:status},
             dataType:"json",
             success: function(data){
                 var code = data.code;//200 is success，other is fail
