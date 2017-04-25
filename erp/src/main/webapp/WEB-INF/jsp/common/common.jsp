@@ -4,6 +4,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
     /*String basePath = "http://192.168.0.135/erp/";*/
+    String imgPath = "https://test.img.meirenguvip.com/";
 
 %>
 
@@ -17,9 +18,11 @@
 <link rel=stylesheet type=text/css href="<%=basePath %>lib/Hui-iconfont/1.0.8/iconfont.css"/>
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/skin/default/skin.css" id=skin/>
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>static/upload-file/upload.css" />
 <link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css" />
 <link href="<%=basePath %>lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
 <link href="<%=basePath %>lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
 <script>DD_belatedPNG.fix('*');</script><![endif]-->

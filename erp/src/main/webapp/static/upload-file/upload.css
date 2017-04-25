@@ -1,0 +1,52 @@
+.img-box {
+    margin-top: 40px;
+}
+
+.full {
+    width: 1210px;
+    min-width: 1210px;
+    margin: 0 auto;
+}
+
+.z_photo {
+    padding: 18px;
+    border: 2px dashed #E7E6E6;
+    /* padding: 18px; */
+}
+
+.clear {
+    clear: both;
+}
+
+.img-box .upimg-div .z_file {
+    width: 190px;
+    height: 180px;
+}
+
+.z_photo .z_file {
+    position: relative;
+}
+
+.fl {
+    float: left;
+}
+
+.z_file .add-img {
+    display: block;
+    width: 190px;
+    height: 180px;
+}
+
+img {
+    border: none;
+}
+
+.z_file .file {
+    width: 190px;
+    height: 180px;
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}

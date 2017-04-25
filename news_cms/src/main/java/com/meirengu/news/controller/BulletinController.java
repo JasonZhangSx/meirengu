@@ -2,6 +2,7 @@ package com.meirengu.news.controller;
 
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
+import com.meirengu.news.common.Constants;
 import com.meirengu.news.model.Bulletin;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.BulletinService;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,8 +46,14 @@ public class BulletinController extends BaseController {
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
+        Bulletin bulletin = new Bulletin();
+        bulletin.setBulletinTitle(bulletinTitle);
+        bulletin.setBulletinContent(bulletinContent);
+        bulletin.setOperateAccount(operateAccount);
+        bulletin.setStatus(Constants.BULLETIN_HIDE);//默认下架
+        bulletin.setCreateTime(new Date());
         try{
-            int i = blletinService.insert(bulletinTitle,bulletinContent,operateAccount);
+            int i = blletinService.insert(bulletin);
             if(i > 0){
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

@@ -16,6 +16,7 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="lib/html5.js"></script>
     <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script src="static/upload-file/ajaxfileupload.js" />
     <![endif]-->
     <link rel=stylesheet type=text/css href="static/h-ui/css/H-ui.min.css"/>
     <link rel=stylesheet type=text/css href="static/h-ui.admin/css/H-ui.admin.css"/>
@@ -188,28 +189,35 @@
 
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">项目头图：</label>
-                    <input type="hidden" id="headerImage" name="headerImage">
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <!-- 图片上传模块 -->
-                        <div class="uploader-list-container">
-                            <div class="queueList">
-                                <div id="dndArea" class="placeholder">
-                                    <div id="filePicker-2"></div>
-                                    <p>或将照片拖到这里，单次最多可选300张</p>
-                                </div>
-                            </div>
-                            <div class="statusBar" style="display:none;">
-                                <div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>
-                                <div class="info"></div>
-                                <div class="btns">
-                                    <div id="filePicker2"></div>
-                                    <div class="uploadBtn">开始上传</div>
-                                </div>
-                            </div>
-                        </div>
-                        <%--<input type="file" name="file" id="file"> <input type="button" id="uploadButton" value="开始上传">--%>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <section class="z_file fl">
+                            <img src="static/upload-file/a11.png" class="add-img">
+                            <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="" onchange="upload()">
+                        </section>
                     </div>
                 </div>
+                <script>
+                     function upload(){
+                         alert("上传");
+                         $.ajaxFileUpload({
+                             url: 'upload',
+                             type: 'post',
+                             data : {
+                                 foldName : 'item'
+                             },
+                             secureuri: false, //一般设置为false
+                             fileElementId: 'file', // 上传文件的id、name属性名
+                             dataType: 'JSON', //返回值类型，一般设置为json、application/json  这里要用大写  不然会取不到返回的数据
+                             success: function(data, status){
+                                 alert(data);
+                             },
+                             error: function(data, status, e){
+                                 alert(e);
+                             }
+                         });
+                     }
+
+                </script>
 
                 <div class="row cl">
                     <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">

@@ -130,13 +130,14 @@ public class BulletinController extends BaseController{
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Result update(@RequestParam(value = "bulletinTitle", required = false)String bulletinTitle,
+    public Result update(@RequestParam(value = "bulletinId", required = true)Integer bulletinId,
+                         @RequestParam(value = "bulletinTitle", required = false)String bulletinTitle,
                          @RequestParam(value = "bulletinContent", required = false)String  bulletinContent,
                          @RequestParam(value = "status", required = false)Integer  status) {
         if (StringUtils.isEmpty(bulletinTitle) && StringUtils.isEmpty(bulletinContent) && status == null) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        String url = ConfigUtil.getConfig("news.bulletin.update");
+        String url = ConfigUtil.getConfig("news.bulletin.update") + "/" + bulletinId;
         Map<String, String> params = new HashMap<String, String>();
         params.put("bulletin_title", bulletinTitle);
         params.put("bulletin_content", bulletinContent);

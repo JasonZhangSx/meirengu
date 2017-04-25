@@ -41,7 +41,7 @@
         	#{bulletinContent} ,
         	#{status} ,
         	#{createTime} ,
-        	#{operateAccount} 
+        	#{operateAccount}
         )
     ]]>
 	</insert>
