@@ -54,9 +54,8 @@ public class UploadController extends BaseController{
             }
             return super.setResult(StatusCode.OK, foldName+"/"+pictureName, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("upload throws Exception :{}",e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
-        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-
     }
 }

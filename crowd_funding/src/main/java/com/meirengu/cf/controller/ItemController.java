@@ -88,8 +88,13 @@ public class ItemController extends BaseController {
                     if(areaMap != null){
                         String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
                         String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                        String area = areaMap.get("area") == null ? "" : areaMap.get("area").toString();
                         resultMap.put("privince", privince);
-                        resultMap.put("city", city);
+                        if(city.trim().equals("市辖区") || city.trim().equals("县")){
+                            resultMap.put("city", area);
+                        }else{
+                            resultMap.put("city", city);
+                        }
                         resultList.add(resultMap);
                     }
                 }
@@ -104,8 +109,13 @@ public class ItemController extends BaseController {
                     if(areaMap != null){
                         String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
                         String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                        String area = areaMap.get("area") == null ? "" : areaMap.get("area").toString();
                         resultMap.put("privince", privince);
-                        resultMap.put("city", city);
+                        if(city.trim().equals("市辖区") || city.trim().equals("县")){
+                            resultMap.put("city", area);
+                        }else{
+                            resultMap.put("city", city);
+                        }
                         resultList.add(resultMap);
                     }
                 }
@@ -180,8 +190,13 @@ public class ItemController extends BaseController {
                 if(areaMap != null){
                     String privince = areaMap.get("province") == null ? "" : areaMap.get("province").toString();
                     String city = areaMap.get("city") == null ? "" : areaMap.get("city").toString();
+                    String area = areaMap.get("area") == null ? "" : areaMap.get("area").toString();
                     beanMap.put("privince", privince);
-                    beanMap.put("city", city);
+                    if(city.trim().equals("市辖区") || city.trim().equals("县")){
+                        beanMap.put("city", area);
+                    }else{
+                        beanMap.put("city", city);
+                    }
                 }
             }
 

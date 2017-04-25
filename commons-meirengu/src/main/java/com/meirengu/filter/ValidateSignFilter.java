@@ -9,6 +9,7 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -55,6 +56,14 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             String tsp = httpServletRequest.getParameter("timestamp");
             String appKey = httpServletRequest.getParameter("key");
             String sign = httpServletRequest.getParameter("sign");
+
+            if(httpServletRequest instanceof MultipartHttpServletRequest){
+                MultipartHttpServletRequest req = (MultipartHttpServletRequest) httpServletRequest;
+                tsp = req.getParameter("timestamp");
+                appKey = req.getParameter("key");
+                sign = req.getParameter("sign");
+                LOGGER.warn(">>multipartHttpservletRequest timestamp is {}, appKey is {}, sign is {} ",tsp, appKey, sign);
+            }
 
             //timestamp, key, sign 为验签必传参数
             if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){

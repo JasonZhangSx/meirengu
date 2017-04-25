@@ -38,6 +38,29 @@ public class VerifyController extends BaseController {
 
 
     /*认证接口*/
+    @RequestMapping(value = "idcard",method = {RequestMethod.POST})
+    public Result vetifyIdCard(
+                         @RequestParam(value = "idcard", required = true)String idcard,
+                         @RequestParam(value = "token", required = true)String token) {
+        logger.info("校验身份证号是否认证 ",idcard);
+        try {
+            //校验参数合法性
+            if(StringUtil.isEmpty(token) ||!redisClient.existsObject(token)){
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
+            if(StringUtil.isEmpty(idcard) || !"".equals(IdentityCardModel.IDCardValidate(idcard))){
+                return super.setResult(StatusCode.ID_CARD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_ERROR));
+            }
+            if(userService.getIdCard(idcard)){
+                return super.setResult(StatusCode.ID_CARD_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_EXITS));
+            }
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("VerifyController.vetify throws Exception:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+    /*认证接口*/
     @RequestMapping(method = {RequestMethod.POST})
     public Result vetify(@RequestParam(value = "user_id", required = true)Integer userId,
                          @RequestParam(value = "bank_code", required = true)String bankCode,

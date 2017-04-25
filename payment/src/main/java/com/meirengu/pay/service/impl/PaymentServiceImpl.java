@@ -384,7 +384,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
             paymentRecord.setChannelRequestTime(new Date());
             String transactionSn = OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
             paymentRecord.setTransactionSn(transactionSn);
-            paymentRecord.setOrderSn(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX);
+            paymentRecord.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_RECHARGE_SN_PREFIX));
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             map.put("tradeNo",BaoFuUtil.pay(paymentRecord.getPaymentBankType(),paymentRecord.getBankNo(),paymentRecord.getIdentityNumber(),paymentRecord.getRealName(),paymentRecord.getMobile(),transactionSn,
                     paymentRecord.getPaymentAmount().multiply(BigDecimal.valueOf(100)).setScale(BigDecimal.ROUND_UP).toString()));
