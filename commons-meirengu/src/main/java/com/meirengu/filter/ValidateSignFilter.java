@@ -42,7 +42,7 @@ public class ValidateSignFilter extends OncePerRequestFilter{
 
         LOGGER.info("request api filter >> ip: {}, url: {}, params: {}", new Object[]{ip, requestURL, JSON.toJSON(httpServletRequest.getParameterMap())});
         //ip过滤
-        if(false){
+        if(ConfigUtil.getConfig("api.filter.ip").contains(ip)){
             LOGGER.warn(">> {} is in white list...",ip);
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }else if(ConfigUtil.getConfig("api.filter.partner.ip").contains(ip)){
