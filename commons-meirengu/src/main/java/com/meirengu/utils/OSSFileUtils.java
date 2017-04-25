@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -66,6 +67,9 @@ public class OSSFileUtils {
     }
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+    }
+    public void upload(String content, String fileName, String folderName) throws IOException {
+        ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
     }
 
     public InputStream download(String filePath,String fileName){

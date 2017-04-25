@@ -91,7 +91,7 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
      */
     @Override
     @Async
-    @Retryable(value=RemoteAccessException.class,maxAttempts=0,backoff = @Backoff(delay = 5000,multiplier=1.5))
+    @Retryable(value=RemoteAccessException.class,maxAttempts=3,backoff = @Backoff(delay = 5000,multiplier=1.5))
     public void noticePayment() {
 
         HttpResult hr = null;
