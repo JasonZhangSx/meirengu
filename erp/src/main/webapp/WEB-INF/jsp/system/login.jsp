@@ -20,13 +20,13 @@
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
-    <title>美人谷erp管理系统登录页</title>
+    <title>美人谷管理系统登录页</title>
     <meta name="keywords" content="xxxxxx"/>
     <meta name="description" content="xxxxxx。"/>
 </head>
 <body>
 <input type="hidden" id="TenantId" name="TenantId" value=""/>
-<div class="header">美人谷ERP后台管理系统</div>
+<div class="header">美人谷管理系统</div>
 <div class="loginWraper">
     <div id="loginform" class="loginBox">
         <form class="form form-horizontal" action="login" method="post">
@@ -59,7 +59,7 @@
         </form>
     </div>
 </div>
-<div class="footer">Copyright 你的公司名称 by H-ui.admin.page.v3.0</div>
+<div class="footer">Copyright 北京美融城医疗科技有限公司</div>
 
 <script>
     var _hmt = _hmt || [];
