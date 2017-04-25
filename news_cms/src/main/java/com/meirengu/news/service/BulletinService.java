@@ -18,18 +18,15 @@ public interface BulletinService extends PageBaseService<Bulletin>{
      * @return
      * @throws Exception
      */
-    int insert(String bulletinTitle,String bulletinContent,int operateAccount) throws Exception;
+    int insert(String bulletinTitle,String bulletinContent,String operateAccount);
 
     /**
      * 修改公告
-     * @param bulletinId
-     * @param bulletinTitle
-     * @param bulletinContent
-     * @param status
+     * @param bulletin
      * @return
      * @throws Exception
      */
-    int update(int bulletinId,String bulletinTitle,String bulletinContent,int status) throws Exception;
+    int update(Bulletin bulletin);
 
     /**
      * 通过公共ID获取详情

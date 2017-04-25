@@ -51,6 +51,7 @@ public class StatusCode {
     public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
     public static final int PASSWORD_IS_MALFORMED = 40105;
     public static final int MSG_TEMPLATE_INVALID = 40106;
+    public static final int UPLOAD_SIZE_ERROR = 40107;
 
     //40200-40300//news_cms
 
@@ -345,6 +346,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
         codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
         codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
+        codeMsgMap.put(StatusCode.UPLOAD_SIZE_ERROR, "上传文件大小超过限制！");
 
 
         //40200-40300//news_cms

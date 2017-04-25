@@ -8,8 +8,8 @@
         <result column="user_id" property="userId" jdbcType="INTEGER" javaType="int"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR" javaType="string"/>
         <result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="string"/>
-        <result column="status" property="status" jdbcType="TINYINT" javaType="int"/>
-        <result column="create_time" property="time" jdbcType="DATE" javaType="Date"/>
+        <result column="status" property="status" jdbcType="TINYINT" javaType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
     </resultMap>
 
     <sql id='table_name'>feedback</sql>
@@ -27,19 +27,19 @@
     <update id="update" parameterType="Feedback">
         update <include refid="table_name" />
         <set>
-            <if test="feedbackContent != null and feedbackContent != ''">
+            <if test="@Ognl@isNotEmpty(feedbackContent)">
                 feedback_content=#{feedbackContent},
             </if>
-            <if test="userId != null and userId != '' userId!=0">
+            <if test="@Ognl@isNotEmpty(userId)">
                 user_id=#{userId},
             </if>
-            <if test="userName != null and userName != ''">
+            <if test="@Ognl@isNotEmpty(userName)">
                 user_name=#{userName},
             </if>
-            <if test="userPhone != null and userPhone != ''">
+            <if test="@Ognl@isNotEmpty(userPhone)">
                 user_phone=#{userPhone},
             </if>
-            <if test="status != null and status != ''">
+            <if test="@Ognl@isNotEmpty(status)">
                 status=#{status},
             </if>
         </set>

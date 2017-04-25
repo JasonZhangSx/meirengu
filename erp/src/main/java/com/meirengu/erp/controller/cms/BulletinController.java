@@ -87,7 +87,7 @@ public class BulletinController extends BaseController{
      * @param bulletinContent
      * @return
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Result insert(@RequestParam(value = "bulletinTitle", required = true)String bulletinTitle,
                          @RequestParam(value = "bulletinContent", required = true)String  bulletinContent) {
@@ -101,6 +101,7 @@ public class BulletinController extends BaseController{
         params.put("operate_account", "admin");//稍后修改
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
+            logger.debug("Request: {} getResponse: {}", url, hr);
             int statusCode = hr.getStatusCode();
             if(statusCode == StatusCode.OK){
                 String content = hr.getContent();
