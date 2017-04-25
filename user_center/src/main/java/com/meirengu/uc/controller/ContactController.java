@@ -103,28 +103,4 @@ public class ContactController extends BaseController{
                 return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
             }
         }
-    /**
-     * 处理oss上传pdf回调
-     * @return
-     */
-     @RequestMapping(value = "/review",method = RequestMethod.GET)
-        public String ReviewContactFile(HttpServletRequest request,@RequestParam(value = "preservation_id") String preservationId) {
-            try {
-                //判断文件是否上传成功
-                logger.info("call back review ip :{}",GetIPUtil.getRemoteIp(request));
-                logger.info("call back review ip :{}",request.getParameter("mimeType"));
-                logger.info("call back review ip :{}",request.getParameter("size"));
-                logger.info("call back review ip :{}",request.getParameter("var1"));
-                logger.info("call back review ip :{}",request.getParameter("var2"));
-
-                Map<String,String> map = new HashMap();
-                map.put("preservationId",preservationId);
-                return contactService.ReviewContactFile(map);
-            }catch (Exception e){
-                logger.info("AddressController.showCityListByPid:{}",e.getMessage());
-                return "FAILED!";
-            }
-        }
-
-
 }
