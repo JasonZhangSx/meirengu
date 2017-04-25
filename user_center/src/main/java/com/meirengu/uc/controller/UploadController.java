@@ -39,8 +39,13 @@ public class UploadController extends BaseController{
         String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
         String bucketName = ConfigUtil.getConfig("bucketName");
         String callbackUrl = ConfigUtil.getConfig("callbackUrl");
+        String fileSize = ConfigUtil.getConfig("fileSize");
         logger.info("uc upload init :{}");
         try {
+            if( request.getFile("file").getSize() > Integer.parseInt(fileSize)){
+                return super.setResult(StatusCode.UPLOAD_SIZE_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_SIZE_ERROR));
+            }
+
             OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
             Map<String, String> map = fileUtils.upload(request, file, foldName);
             String pictureName = "";
