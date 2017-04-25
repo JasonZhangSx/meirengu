@@ -13,12 +13,10 @@ public interface BulletinService extends PageBaseService<Bulletin>{
 
     /**
      * 新增公告
-     * @param bulletinTitle
-     * @param bulletinContent
+     * @param bulletin
      * @return
-     * @throws Exception
      */
-    int insert(String bulletinTitle,String bulletinContent,String operateAccount);
+    int insert(Bulletin bulletin);
 
     /**
      * 修改公告

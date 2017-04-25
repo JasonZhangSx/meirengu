@@ -33,15 +33,13 @@
         	bulletin_title ,
         	bulletin_content ,
         	status ,
-        	create_time ,
         	operate_account
         ) VALUES (
         	#{bulletinId} ,
         	#{bulletinTitle} ,
         	#{bulletinContent} ,
         	#{status} ,
-        	#{createTime} ,
-        	#{operateAccount} 
+        	#{operateAccount}
         )
     ]]>
 	</insert>

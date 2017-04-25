@@ -30,19 +30,11 @@ public class BulletinServiceImpl implements BulletinService{
 
     /**
      * 新增公告
-     * @param bulletinTitle
-     * @param bulletinContent
-     * @param operateAccount
+     * @param bulletin
      * @return
-     * @throws Exception
      */
     @Override
-    public int insert(String bulletinTitle,String bulletinContent,String operateAccount){
-        Bulletin bulletin = new Bulletin();
-        bulletin.setBulletinTitle(bulletinTitle);
-        bulletin.setBulletinContent(bulletinContent);
-        bulletin.setOperateAccount(operateAccount);
-        bulletin.setCreateTime(new Date());
+    public int insert(Bulletin bulletin){
         return bulletinDao.insert(bulletin);
     }
 

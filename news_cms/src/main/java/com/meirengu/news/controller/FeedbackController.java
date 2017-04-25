@@ -1,6 +1,7 @@
 package com.meirengu.news.controller;
 
 import com.meirengu.common.StatusCode;
+import com.meirengu.news.common.Constants;
 import com.meirengu.news.model.Page;
 import com.meirengu.news.service.FeedbackService;
 import com.meirengu.utils.DateUtils;
@@ -66,7 +67,7 @@ public class FeedbackController extends BaseController {
         feedback.setUserId(userId);
         feedback.setUserName(userName);
         feedback.setUserPhone(userPhone);
-
+        feedback.setStatus(Constants.FEEDBACK_UNTREATED);//默认未处理
         try{
             int i = feedbackService.insert(feedback);
             if(i == 1){
