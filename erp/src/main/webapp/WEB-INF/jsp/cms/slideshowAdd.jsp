@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+<%--
+  Created by IntelliJ IDEA.
+  User: xiaoyang
+  Date: 2017/4/20
+  Time: 18:21
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../common/common.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <meta charset=utf-8>
@@ -10,27 +20,13 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="lib/html5.js"></script>
-    <script type="text/javascript" src="lib/respond.min.js"></script>
-    <![endif]-->
-    <link rel=stylesheet type=text/css href=static/h-ui/css/H-ui.min.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/H-ui.admin.css/>
-    <link rel=stylesheet type=text/css href=lib/Hui-iconfont/1.0.8/iconfont.css/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/skin/default/skin.css id=skin/>
-    <link rel=stylesheet type=text/css href=static/h-ui.admin/css/style.css/>
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
-
-<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-
 </head>
 <body>
 <div class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="addData" method="post" enctype="multipart/form-data" class="form form-horizontal" id="slideshowDataForm"  onsubmit="return saveReport();">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -50,46 +46,51 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">轮播图名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                           placeholder="项目标题最多30字" id="" name="">
+                    <input type="text" class="input-text" value=""  maxlength="30"
+                           placeholder="项目标题最多30字" id="slideshowName" name="slideshowName">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">轮播图位置：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="" class="select">
-					<option value="0">pc</option>
-				</select>
+				<select name="slideshowPosition" class="select">
+                    <option value="1">PC</option>
+                    <option value="2">APP</option>
+                    <option value="3">H5</option>
+                </select>
 				</span>
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">链接地址：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="articletitle" maxlength="30"
-                           placeholder="项目标题最多30字" id="" name="">
+                    <input type="text" class="input-text" value="" maxlength="30"
+                           placeholder="项目标题最多30字" id="slideshowLink" name="slideshowLink">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">轮播图片：</label>
                 <div class="formControls col-xs-8 col-sm-8">
+
+                    <input type="file" name="file"   accept="image/*"  class="form-control input-sm"/>
+
                     <!-- 图片上传模块 -->
-                    <div class="uploader-list-container">
-                        <div class="queueList">
-                            <div id="dndArea" class="placeholder">
-                                <div id="filePicker-2"></div>
-                                <p>或将照片拖到这里，单次最多可选300张</p>
-                            </div>
-                        </div>
-                        <div class="statusBar" style="display:none;">
-                            <div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>
-                            <div class="info"></div>
-                            <div class="btns">
-                                <div id="filePicker2"></div>
-                                <div class="uploadBtn">开始上传</div>
-                            </div>
-                        </div>
-                    </div>
+                    <%--<div class="uploader-list-container">--%>
+                        <%--<div class="queueList">--%>
+                            <%--<div id="dndArea" class="placeholder">--%>
+                                <%--<div id="filePicker-2"></div>--%>
+                                <%--<p>或将照片拖到这里，单次最多可选300张</p>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--<div class="statusBar" style="display:none;">--%>
+                            <%--<div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>--%>
+                            <%--<div class="info"></div>--%>
+                            <%--<div class="btns">--%>
+                                <%--<div id="filePicker2"></div>--%>
+                                <%--<div class="uploadBtn">开始上传</div>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
                 </div>
             </div>
 
@@ -97,7 +98,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="button">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">添 加
                     </button>
                 </div>
             </div>
@@ -108,23 +109,14 @@
 
     </form>
 </div>
-
-<script src=lib/jquery/1.9.1/jquery.min.js></script>
-<script src=lib/layer/2.4/layer.js></script>
-<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
-<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
-<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
-<script src=static/h-ui/js/H-ui.js></script>
-<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-<!-- 时间插件 -->
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
+
+<script>$(function(){$(".Hui-aside ul a").on("click",function(){console.log($(this).attr("data-href")),$(".content_iframe").attr("src",$(this).attr("data-href"))})}),$(".toTop").show()</script>
+
 
 <script>
     // 时间
@@ -282,14 +274,14 @@
                     label: '点击选择图片'
                 },
                 formData: {
-                    uid: 123
+                    foldName:"slideshow"
                 },
                 dnd: '#dndArea',
                 paste: '#uploader',
                 swf: 'lib/webuploader/0.1.5/Uploader.swf',
                 chunked: false,
                 chunkSize: 512 * 1024,
-                server: 'http://lib.h-ui.net/webuploader/0.1.5/server/fileupload.php',
+                server: '/erp/upload',
                 // runtimeOrder: 'flash',
 
                 // accept: {
@@ -712,6 +704,26 @@
 
 
 </script>
+<script>
+    function saveReport() {
+// jquery 表单提交
+        $("#slideshowDataForm").ajaxSubmit(function(result) {
+            if (result==""){
+                layer.msg('添加失败!', {icon: 5, time: 1000});
+            }else {
+                var map = eval("("+result+")");
+                if(confirm("添加成功,是否进入轮播图列表"))
+                {
+                    //如果是true ，那么就把页面转向thcjp.cnblogs.com
+                    parent.location.href="/erp/slideshow";
+                }
+            }
+// 对于表单提交成功后处理，message为提交页面saveReport.htm的返回内容
+        });
 
+        return false; // 必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
+    }
+
+</script>
 </body>
 </html>

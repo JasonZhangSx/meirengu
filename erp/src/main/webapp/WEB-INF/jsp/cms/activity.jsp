@@ -31,7 +31,7 @@
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l" style="margin-right:20px"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  -->
-                    <a class="btn btn-primary radius"  onClick="project_edit('添加活动','/erp/activity/toadd','10001')" href="javascript:;">
+                    <a class="btn btn-primary radius"  onClick="project_toadd('添加活动','/erp/activity/toadd')" href="javascript:;">
                         <i class="Hui-iconfont">&#xe600;</i> 添加活动</a></span>
                 <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
             </div>
@@ -81,6 +81,7 @@
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
+            ordering:false,
             aLengthMenu:[10],//设置一页展示10条记录
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
@@ -230,6 +231,17 @@
 
 })</script>
 <script>
+
+    //*项目-编辑*/
+    function project_toadd(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
+    }
+
     //*项目-编辑*/
     function project_edit(title, url, id, w, h) {
         var index = layer.open({

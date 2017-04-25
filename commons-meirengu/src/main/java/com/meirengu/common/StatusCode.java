@@ -51,6 +51,7 @@ public class StatusCode {
     public static final int INVALID_USERNAME_OR_PASSWORD = 40104;
     public static final int PASSWORD_IS_MALFORMED = 40105;
     public static final int MSG_TEMPLATE_INVALID = 40106;
+    public static final int UPLOAD_SIZE_ERROR = 40107;
 
     //40200-40300//news_cms
 
@@ -173,6 +174,7 @@ public class StatusCode {
     public static final int LOGIN_FAILED = 50128;
     public static final int UPDATE_ADDRESS_FAILED = 50129;
     public static final int DELETE_ADDRESS_FAILED = 50130;
+    public static final int MODIFY_PASSWORD_FAILED = 50131;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -344,6 +346,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.INVALID_USERNAME_OR_PASSWORD, "无效的用户名或密码");
         codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
         codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
+        codeMsgMap.put(StatusCode.UPLOAD_SIZE_ERROR, "上传文件大小超过限制！");
 
 
         //40200-40300//news_cms
@@ -425,6 +428,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.LOGIN_FAILED, "登陆失败! ");
         codeMsgMap.put(StatusCode.UPDATE_ADDRESS_FAILED, "修改地址失败! ");
         codeMsgMap.put(StatusCode.DELETE_ADDRESS_FAILED, "删除地址失败! ");
+        codeMsgMap.put(StatusCode.MODIFY_PASSWORD_FAILED, "修改密码失败! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

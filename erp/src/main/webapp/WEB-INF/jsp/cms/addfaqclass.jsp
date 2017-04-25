@@ -32,7 +32,7 @@
 
         <div>
             <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添 加</h3>
+                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添 加 分 类</h3>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">分类名称：</label>

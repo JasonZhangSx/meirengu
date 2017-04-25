@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %><%--
   Created by IntelliJ IDEA.
   User: xiaoyang
   Date: 2017/3/31
@@ -81,8 +82,9 @@
                                     <td>充值失败</td>
                                 </c:when>
                             </c:choose>
-                            <td>${recharge.createTime}</td>
-                            <%--<td><fmt:formatDate value="${recharge.createTime}" pattern="yyyy-MM-dd"/></td>--%>
+                            <td>
+                                <c:set var="withdrawalsDate" value="${recharge.createTime}" scope="session"/>
+                                <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(String.valueOf(session.getAttribute("withdrawalsDate"))))%></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -129,7 +131,10 @@
 <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
-
+    $('.table-sort').dataTable({
+        "aaSorting": [[5, "desc"]],
+        "bStateSave": true,
+    });
     //*项目-编辑*/
     function project_edit(title, url, id, w, h) {
         var index = layer.open({
