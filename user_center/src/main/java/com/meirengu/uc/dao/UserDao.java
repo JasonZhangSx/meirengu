@@ -75,4 +75,6 @@ public interface UserDao extends BaseDao<User>{
     int getUserCount(Map paramMap);
 
     int getBankIdCard(String bankIdcard);
+
+    int getIdCard(String idcard);
 }

@@ -94,6 +94,7 @@
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
+            ordering:false,
             aLengthMenu:[10],//设置一页展示10条记录
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
@@ -133,10 +134,10 @@
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.isAuth=='0'){
-                            return '<label> 是 </label>';
+                            return '<label> 否 </label>';
                         }
                         if(row.isAuth=='1'){
-                            return '<label> 否 </label>';
+                            return '<label> 是 </label>';
                         }
                     }
                 },
@@ -145,16 +146,16 @@
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.investConditions=='0'){
-                            return '<label> 未选择 </label>';
+                            return '<label> 用户未认证 </label>';
                         }
                         if(row.investConditions=='1'){
                             return '<label>  专业投资人  </label>';
                         }
                         if(row.investConditions=='2'){
-                            return '<label>  投资金额30万  </label>';
+                            return '<label>  近三年年收入不低于30万元  </label>';
                         }
                         if(row.investConditions=='3'){
-                            return '<label>  投资金额100万 </label>';
+                            return '<label>  金融资产不低于100万元 </label>';
                         }
                     }
                 },

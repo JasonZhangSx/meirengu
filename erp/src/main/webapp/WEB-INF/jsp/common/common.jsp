@@ -19,6 +19,10 @@
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/skin/default/skin.css" id=skin/>
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/css/style.css"/>
 <link rel="stylesheet" type="text/css" href="<%=basePath %>static/upload-file/upload.css" />
+<link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css" />
+<link href="<%=basePath %>lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
+<link href="<%=basePath %>lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
 <script>DD_belatedPNG.fix('*');</script><![endif]-->
@@ -30,9 +34,12 @@
 <script src="<%=basePath %>lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script src="<%=basePath %>static/h-ui/js/H-ui.js"></script>
 <script src="<%=basePath %>static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/datetimepicker/datetimepicker.js"></script>
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="<%=basePath %>lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="<%=basePath %>lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="<%=basePath %>lib/laypage/1.2/laypage.js"></script>
 <script src="<%=basePath %>static/js/handlebars-v3.0.1.js"></script>
+<script src="<%=basePath %>static/js/jquery.spring-friendly.js"></script>
 <script src="<%=basePath %>static/js/common.js"></script>

@@ -31,8 +31,8 @@
             </div>--%>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
-            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题分类-添加','/erp/faqclass/toadd','10001')"
-               href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添 加</a>
+            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题分类-添加分类','/erp/faqclass/toadd','10001')"
+               href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添 加 分 类</a>
           </span>
                 <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
             </div>
@@ -72,6 +72,7 @@
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
             aLengthMenu:[10],//设置一页展示10条记录
+            ordering:false,
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
                 "sLengthMenu": "每页显示 _MENU_条",

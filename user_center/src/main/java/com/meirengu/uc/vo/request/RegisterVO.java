@@ -1,4 +1,4 @@
-package com.meirengu.uc.vo;
+package com.meirengu.uc.vo.request;
 
 /**
  * Created by huoyan403 on 3/17/2017.

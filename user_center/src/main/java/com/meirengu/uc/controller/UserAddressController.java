@@ -6,7 +6,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserAddressService;
 import com.meirengu.uc.utils.ObjectUtils;
@@ -49,7 +49,8 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", defaultValue = "0",required = false) Integer isDefault){
 
-        logger.info("UserAddressController insert UserAddress" ,mobile,token,userAddress,userId,areaId,isDefault);
+        logger.info("UserAddressController insert UserAddress ,mobile:{},token:{},userAddress:{},userId:{},areaId:{},isDefault:{}"
+                ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
             if(redisClient.existsObject(token)){
                 //verify params
@@ -80,12 +81,10 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
         }catch (Exception e){
-            logger.info("UserAddressController. insert UserAddress throws Exception ",e.getMessage());
+            logger.error("UserAddressController. insert UserAddress throws Exception:{} ",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
-
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
     public Result updateAddress(@RequestParam(value = "mobile", required = true) String mobile,
@@ -96,46 +95,48 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_address", required = false) String userAddress,
                                 @RequestParam(value = "area_id", required = false) Integer areaId,
                                 @RequestParam(value = "is_default", required = false) Integer isDefault){
-
+        logger.info("UserAddressController update UserAddress ,mobile:{},token:{},userAddress:{},userId:{},addressId:{},areaId:{},isDefault:{}"
+                ,mobile,token,userAddress,userId,addressId,areaId,isDefault);
         try{
-            if(redisClient.existsObject(token)){
-                //verify params
-                if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
-                }
-                UserAddress address = new UserAddress();
-                address.setAddressId(addressId);
-                UserAddress userAddress1 = userAddressService.selectByUserAddress(address);
-                if(userAddress1 !=null && StringUtil.isEmpty(userAddress1.getUserId())){
-                    return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode
-                            .ADDRESS_ID_NOT_EMPTY));
-                }
-                if(userAddress1 !=null && !userAddress1.getUserId().equals(userId)){
-                    return super.setResult(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, null, StatusCode.codeMsgMap.get(StatusCode
-                            .ADDRESS_ID_AND_USER_ID_MISMATCH));
-                }
-                UserAddress userAddressBean = new UserAddress();
-                userAddressBean.setUpdateTime(new Date());
-                userAddressBean.setUserAddress(userAddress);
-                userAddressBean.setAddressId(addressId);
-                userAddressBean.setUserId(userId);
-                userAddressBean.setUserPhone(mobile);
-                userAddressBean.setUserName(userName);
-                userAddressBean.setIsDefault(isDefault);
-                userAddressBean.setAreaId(areaId);
-                int res = userAddressService.updateByAdressId(userAddressBean);
-                if(res == 0){
-                    userAddressBean.setAddressId(UuidUtils.getShortUuid());
-                    userAddressService.updateByAdressId(userAddressBean);
-                }
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                //无效token返回登陆
+            if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
+            //verify params
+            if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
+            }
+            UserAddress address = new UserAddress();
+            address.setAddressId(addressId);
+            UserAddress userAddress1 = userAddressService.selectByUserAddress(address);
+            if(userAddress1 !=null && StringUtil.isEmpty(userAddress1.getUserId())){
+                return super.setResult(StatusCode.ADDRESS_ID_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_ID_NOT_EMPTY));
+            }
+            if(userAddress1 !=null && !userAddress1.getUserId().equals(userId)){
+                return super.setResult(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_ID_AND_USER_ID_MISMATCH));
+            }
+            UserAddress userAddressBean = new UserAddress();
+            userAddressBean.setUpdateTime(new Date());
+            userAddressBean.setUserAddress(userAddress);
+            userAddressBean.setAddressId(addressId);
+            userAddressBean.setUserId(userId);
+            userAddressBean.setUserPhone(mobile);
+            userAddressBean.setUserName(userName);
+            userAddressBean.setIsDefault(isDefault);
+            userAddressBean.setAreaId(areaId);
+            int res = userAddressService.updateByAdressId(userAddressBean);
+            if(res == 0){//重试一次
+                userAddressBean.setAddressId(UuidUtils.getShortUuid());
+                res = userAddressService.updateByAdressId(userAddressBean);
+            }
+            if(res==1){//结果返回逻辑
+                logger.info("UserAddressController.update result：{} ",res);
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                logger.error("UserAddressController.update result:{} ",res);
+                return super.setResult(StatusCode.UPDATE_ADDRESS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPDATE_ADDRESS_FAILED));
+            }
         }catch (Exception e){
-            logger.info("UserAddressController.update throws Exception ",e.getMessage());
+            logger.error("UserAddressController.update throws Exception ",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -148,23 +149,30 @@ public class UserAddressController extends BaseController{
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result deleteAddress(@RequestParam(value = "address_id", required = true) Integer addressId,
                                 @RequestParam(value = "token", required = true) String token){
-
+        logger.info("delete address params addressId:{}",addressId);
         try{
-            if(redisClient.existsObject(token)){
-                //默认地址不允许删除
-                UserAddress userAddress = new UserAddress();
-                userAddress.setAddressId(addressId);
-                userAddressService.selectByUserAddress(userAddress);
-                if(!StringUtil.isEmpty(userAddress.getIsDefault())){
-                    return super.setResult(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, null, StatusCode.codeMsgMap.get(StatusCode
-                        .ADDREAA_IS_NOT_ALLOWED_DELETE));
-                }
-                userAddress.setDelFlag(1);
-                userAddressService.updateByAdressId(userAddress);
+            if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
+            //默认地址不允许删除
+            UserAddress userAddress = new UserAddress();
+            userAddress.setAddressId(addressId);
+            userAddressService.selectByUserAddress(userAddress);
+            if(!StringUtil.isEmpty(userAddress.getIsDefault())){
+                return super.setResult(StatusCode.ADDREAA_IS_NOT_ALLOWED_DELETE, null, StatusCode.codeMsgMap.get(StatusCode
+                    .ADDREAA_IS_NOT_ALLOWED_DELETE));
+            }
+            userAddress.setDelFlag(1);
+            int result = userAddressService.updateByAdressId(userAddress);
+            if(result == 0){//重试一次
+                result = userAddressService.updateByAdressId(userAddress);
+            }
+            if(result==1){//结果返回逻辑
+                logger.info("UserAddressController.delete result：{} ",result);
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
-                //无效token返回登陆
-                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+                logger.error("UserAddressController.delete result:{} ",result);
+                return super.setResult(StatusCode.DELETE_ADDRESS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.DELETE_ADDRESS_FAILED));
             }
         }catch (Exception e){
             logger.info("UserAddressController.delete throws Exception:{}",e.getMessage());
@@ -183,6 +191,7 @@ public class UserAddressController extends BaseController{
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value="user_id", required = true) int userId){
+        logger.info("list address params userId:{}",userId);
         try{
             Map paramMap = new HashMap<String, Object>();
             paramMap.put("userId",userId);
@@ -191,13 +200,13 @@ public class UserAddressController extends BaseController{
             List<Map<String, Object>> list = page.getList();
             for (Map<String, Object> list1:list){
                 if(!StringUtil.isEmpty(list1.get("areaId"))){
-                    AddressPO addressPO  = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
-                    list1.put("province",addressPO.getProvince()+"");//加空字符串 非空不报错
-                    list1.put("provinceId",addressPO.getProvinceId()+"");//加空字符串 非空不报错
-                    list1.put("city",addressPO.getCity()+"");
-                    list1.put("cityId",addressPO.getCityId()+"");
-                    list1.put("areaId",addressPO.getAreaId()+"");
-                    list1.put("area",addressPO.getArea()+"");
+                    AddressVO addressVO = service.showAddress(Integer.parseInt(list1.get("areaId")+""));
+                    list1.put("province", addressVO.getProvince()+"");//加空字符串 非空不报错
+                    list1.put("provinceId", addressVO.getProvinceId()+"");//加空字符串 非空不报错
+                    list1.put("city", addressVO.getCity()+"");
+                    list1.put("cityId", addressVO.getCityId()+"");
+                    list1.put("areaId", addressVO.getAreaId()+"");
+                    list1.put("area", addressVO.getArea()+"");
                 }
             }
             if(page.getList().size() != 0){
@@ -206,9 +215,8 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("UserAddressController.listUseraddress throws Exception:{}",e.getMessage());
-            Page<UserAddress> page = new Page<>();
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, page, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            logger.error("UserAddressController.listUseraddress throws Exception:{}",e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -216,20 +224,19 @@ public class UserAddressController extends BaseController{
     @RequestMapping(value = "detail", method = {RequestMethod.POST})
     public Result detail(@RequestParam(value="address_id", required = true) int addressId,
                        @RequestParam(value="user_id", required = true) int userId){
-
+        logger.info("address detail params addressId:{} userId:{}",addressId,userId);
         try{
             UserAddress userAddress = new UserAddress();
             userAddress.setUserId(userId);
             userAddress.setAddressId(addressId);
             UserAddress userAddressPO = userAddressService.selectByUserAddress(userAddress);
 
-
             if(userAddressPO != null){
-                AddressPO addressPO  = service.showAddress(userAddressPO.getAreaId());
-                if(addressPO!=null){
-                    userAddressPO.setProvince(addressPO.getProvince()+"");//加空字符串 非空不报错
-                    userAddressPO.setCity(addressPO.getCity()+"");
-                    userAddressPO.setAreas(addressPO.getArea()+"");
+                AddressVO addressVO = service.showAddress(userAddressPO.getAreaId());
+                if(addressVO !=null){
+                    userAddressPO.setProvince(addressVO.getProvince()+"");//加空字符串 非空不报错
+                    userAddressPO.setCity(addressVO.getCity()+"");
+                    userAddressPO.setAreas(addressVO.getArea()+"");
                 }
                 return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressPO,UserAddress.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -249,6 +256,7 @@ public class UserAddressController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "listAddress", method = {RequestMethod.GET})
     public Result listAddress(@RequestParam(value="address_id", required = true) String addressId){
+        logger.info("订单系统查询地址 addressId:{}",addressId);
         try {
             List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
             if(userAddressList != null && userAddressList.size() > 0){
@@ -257,7 +265,7 @@ public class UserAddressController extends BaseController{
                 return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.error("订单系统查询地址 throws exception:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

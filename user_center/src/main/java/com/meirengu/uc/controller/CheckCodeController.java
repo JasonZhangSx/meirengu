@@ -62,7 +62,6 @@ public class CheckCodeController extends BaseController {
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
                 return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
-            //注册  登陆
             // 找回登陆密码  找回交易密码 需要判断用户是否注册
             String codeType = ConfigUtil.getConfig("BACK_CODE_FOR_LOGIN");
             if(codeType.equals(type)){
@@ -75,8 +74,7 @@ public class CheckCodeController extends BaseController {
             int code = checkCodeService.generate();
             HttpResult hr = checkCodeService.send(mobile, code, ip,type);
             if (hr != null) {
-                logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr
-                        .getContent(), hr.getResponse());
+                logger.info("checkCodeService.send <===StatusCode:{}, Content:{}, Response:{}", hr.getStatusCode(), hr.getContent(), hr.getResponse());
                 if (hr.getStatusCode() == StatusCode.OK) {
                     JSONObject resultObj = JSON.parseObject(hr.getContent());
                     if ("200".equals(resultObj.getString("code"))) {
@@ -102,40 +100,38 @@ public class CheckCodeController extends BaseController {
                     .CHECK_CODE_SEND_ERROR));
 
         }catch (Exception e){
-            logger.info("checkCodeService.send check_code throws Exceprion :{}",e.getMessage());
+            logger.error("checkCodeService.send check_code throws Exceprion :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
     }
 
-
-
-
-
+    /**
+     * 校验验证码有效性
+     * @param mobile
+     * @param checkCode
+     * @return
+     */
     @RequestMapping(value = "vitifyCode", method = RequestMethod.POST)
     public Result vitifyCode(@RequestParam(value = "mobile", required = true) String mobile,
                          @RequestParam(value = "check_code", required = true) String checkCode) {
-        logger.info("CheckCodeController.vitifyCode params >> mobile:{}", mobile ,checkCode);
+        logger.info("CheckCodeController.vitifyCode params >> mobile:{} checkCode:{}", mobile ,checkCode);
         try{
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                        .MOBILE_FORMAT_ERROR));
+                return setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
             CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
             if (code == null) {
-                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_INVALID));
+                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
             }
             if (code.getExpireTime().compareTo(new Date()) < 0) {
-                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_EXPIRE));
+                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
             }
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.error("LogCheckCodeController.vitifyCode throws Exception :{} ",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
     }
 }

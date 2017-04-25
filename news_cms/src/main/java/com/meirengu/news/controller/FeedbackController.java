@@ -41,8 +41,7 @@ public class FeedbackController extends BaseController {
     public Result insert (@RequestParam(value = "feedback_content", required = false) String feedbackContent,
                                       @RequestParam(value = "user_id", required = false) Integer userId,
                                       @RequestParam(value = "user_name", required = false) String userName,
-                                      @RequestParam(value = "user_phone", required = false) String userPhone
-                                      ){
+                                      @RequestParam(value = "user_phone", required = false) String userPhone){
         if(StringUtils.isEmpty(feedbackContent) || userId==null || userId==0
                 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -62,15 +61,74 @@ public class FeedbackController extends BaseController {
             return setResult(StatusCode.FEEDBACK_CONTENT_OUTOF, null, StatusCode.codeMsgMap.get(StatusCode.FEEDBACK_CONTENT_OUTOF));
         }
 
+        Feedback feedback = new Feedback();
+        feedback.setFeedbackContent(feedbackContent);
+        feedback.setUserId(userId);
+        feedback.setUserName(userName);
+        feedback.setUserPhone(userPhone);
+
         try{
-            int i = feedbackService.insert(feedbackContent,userId,userName,userPhone);
+            int i = feedbackService.insert(feedback);
             if(i == 1){
                 return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return setResult(StatusCode.FEEDBACK_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.FEEDBACK_ERROR_INSERT));
             }
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 意见反馈修改
+     * @param feedbackId
+     * @param feedbackContent
+     * @param userId
+     * @param userName
+     * @param userPhone
+     * @param status
+     * @return
+     */
+    @RequestMapping(value = "/{feedback_id}", method = RequestMethod.POST)
+    public Result insert (@PathVariable("feedback_id") Integer feedbackId ,
+                          @RequestParam(value = "feedback_content", required = false) String feedbackContent,
+                          @RequestParam(value = "user_id", required = false) Integer userId,
+                          @RequestParam(value = "user_name", required = false) String userName,
+                          @RequestParam(value = "user_phone", required = false) String userPhone,
+                          @RequestParam(value = "status", required = false) Integer status){
+        if(StringUtils.isEmpty(feedbackContent) && userId == null && StringUtils.isEmpty(userName)
+                && StringUtils.isEmpty(userPhone) && status == null){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+
+        Feedback feedback = new Feedback();
+        feedback.setFeedbackId(feedbackId);
+        if (StringUtils.isNotBlank(feedbackContent)) {
+            feedback.setFeedbackContent(feedbackContent);
+        }
+        if (userId != null) {
+            feedback.setUserId(userId);
+        }
+        if (StringUtils.isNotBlank(userName)) {
+            feedback.setUserName(userName);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            feedback.setUserPhone(userPhone);
+        }
+        if (status != null) {
+            feedback.setStatus(status);
+        }
+
+        try{
+            int i = feedbackService.update(feedback);
+            if(i == 1){
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return setResult(StatusCode.FEEDBACK_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.FEEDBACK_ERROR_INSERT));
+            }
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -105,7 +163,7 @@ public class FeedbackController extends BaseController {
             page = feedbackService.getPageList(page, paramMap);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 

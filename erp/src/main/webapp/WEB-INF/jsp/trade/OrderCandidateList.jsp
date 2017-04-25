@@ -13,6 +13,9 @@
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
     <title>候补预约列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+    </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
@@ -73,12 +76,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'contentType': 'application/json',
-                'url': '<%=basePath %>/order_candidate',
-                'type': 'POST',
-                'data': function(d) {
-                    return JSON.stringify(d);
-                }
+                'url': '<%=basePath %>order_candidate'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -217,7 +215,7 @@
     }
 
     function candidateHandleAjax(id, status) {
-        var url = "<%=basePath %>/order_candidate/handle/"+id;
+        var url = "<%=basePath %>order_candidate/handle/"+id;
         var flag=false;
         $.ajax({
             type: "post",

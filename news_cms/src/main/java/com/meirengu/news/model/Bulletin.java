@@ -9,25 +9,25 @@ import java.util.Date;
 public class Bulletin extends BaseEntity{
 
     /** 公告索引Id **/
-    private int bulletinId;
+    private Integer bulletinId;
     /** 公告标题 **/
     private String bulletinTitle;
     /** 公告内容 **/
     private String bulletinContent;
     /** 状态：1、上架；0、下架 **/
-    private int status;
+    private Integer status;
     /** 创建时间 **/
     private Date createTime;
     /** 修改时间 **/
     private Date updateTime;
     /** 操作人账号 **/
-    private int operateAccount;
+    private String operateAccount;
 
-    public int getBulletinId() {
+    public Integer getBulletinId() {
         return bulletinId;
     }
 
-    public void setBulletinId(int bulletinId) {
+    public void setBulletinId(Integer bulletinId) {
         this.bulletinId = bulletinId;
     }
 
@@ -47,11 +47,11 @@ public class Bulletin extends BaseEntity{
         this.bulletinContent = bulletinContent;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -71,11 +71,11 @@ public class Bulletin extends BaseEntity{
         this.updateTime = updateTime;
     }
 
-    public int getOperateAccount() {
+    public String getOperateAccount() {
         return operateAccount;
     }
 
-    public void setOperateAccount(int operateAccount) {
+    public void setOperateAccount(String operateAccount) {
         this.operateAccount = operateAccount;
     }
 }

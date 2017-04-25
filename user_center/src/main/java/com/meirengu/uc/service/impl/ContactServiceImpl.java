@@ -9,7 +9,7 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.po.AddressPO;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.NumberToCN;
@@ -89,10 +89,10 @@ public class ContactServiceImpl implements ContactService {
                 userAddress.setUserId(Integer.parseInt(map.get("userId")));
                 userAddress.setIsDefault(1);
                 userAddress = userAddressDao.selectByUserAddress(userAddress);
-                AddressPO addressPO = addressServiceImpl.showAddress(userAddress.getAreaId());
+                AddressVO addressVO = addressServiceImpl.showAddress(userAddress.getAreaId());
                 data.put("investors",user.getRealname());
                 data.put("investorIdCard",user.getIdCard());
-                data.put("investorArea",addressPO.getProvince() +" "+addressPO.getCity()+" "+addressPO.getArea()+" "+userAddress.getUserAddress());
+                data.put("investorArea", addressVO.getProvince() +" "+ addressVO.getCity()+" "+ addressVO.getArea()+" "+userAddress.getUserAddress());
 
                 try {
                     //生成盖章合同
@@ -107,7 +107,7 @@ public class ContactServiceImpl implements ContactService {
                     String accessKeyId = ConfigUtil.getConfig("accessKeyId");
                     String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
                     String bucketName = ConfigUtil.getConfig("bucketName");
-                    String callback = "";
+                    String callback = ConfigUtil.getConfig("callbackUrl");
 
                     OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
 
@@ -237,10 +237,7 @@ public class ContactServiceImpl implements ContactService {
                                 InputStream inputStream = conn.getInputStream();
 
                                 //获取文件IO流 并将文件保存到oss
-                                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
-//                                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+preservationCreateResponse.getPreservationId();
-
-                                OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
+                                OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
                                 fileUpload.upload(inputStream,fileName,contractFolderName);
 
                                 //更新用户合同表
@@ -345,50 +342,6 @@ public class ContactServiceImpl implements ContactService {
         }
         return  downUrl;
     }
-
-    @Override
-    public String ReviewContactFile(Map<String, String> map) {
-
-        try {
-
-            ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
-            contractFileDownloadUrlRequest.setPreservationId(new Long(map.get("preservationId")));
-            ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
-            //根据下载url 获取文件流 并上传oss服务器
-            if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
-                logger.info("get download link success", contractFileDownloadUrlResponse.getDownUrl());
-                URL downUrl = new URL(contractFileDownloadUrlResponse.getDownUrl());
-                HttpURLConnection conn = (HttpURLConnection) downUrl.openConnection();
-                conn.setConnectTimeout(3 * 1000);   //设置超时间为3秒
-                conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");//防止屏蔽程序抓取而返回403错误
-                InputStream inputStream = conn.getInputStream();
-
-                //获取文件IO流 并将文件保存到oss
-                String contractFolderName = ConfigUtil.getConfig("contractFolderName");
-                String endpoint = ConfigUtil.getConfig("endpoint");
-                String accessKeyId = ConfigUtil.getConfig("accessKeyId");
-                String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
-                String bucketName = ConfigUtil.getConfig("bucketName");
-//                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl");
-                String callbackUrl = ConfigUtil.getConfig("uploadContractCallBackUrl")+"?preservation_id="+map.get("preservationId");
-
-                logger.info("call back Url :{}",callbackUrl);
-
-
-                String fileName = "contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf";
-
-                OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
-                fileUtils.upload(inputStream, fileName, contractFolderName);
-                return "SUCCESS";
-            }else{
-                return "SUCCESS";
-            }
-        }catch (Exception e){
-            logger.info("ReviewContactFile throws Exception " ,e);
-            return "FAILED";
-        }
-    }
-
 
     public Result setResult(int code, Object data, String msg){
         Result result = new Result();

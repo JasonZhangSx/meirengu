@@ -210,7 +210,7 @@ public class IdentityCardModel {
     public static void main(String[] args) throws ParseException {
         // String IDCardNum="210102820826411";
         // String IDCardNum="210102198208264114";
-        String IDCardNum = "13112719910820095x";
+        String IDCardNum = "13112719910820095X";
         IDCard cc = new IDCard();
         System.out.println(cc.IDCardValidate(IDCardNum)+"\n");
         System.out.println(cc.IDCardValidate(IDCardNum)+IDCardNum+"\n");

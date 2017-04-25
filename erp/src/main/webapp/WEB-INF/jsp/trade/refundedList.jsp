@@ -13,6 +13,9 @@
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
     <title>退款订单列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+    </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
@@ -49,6 +52,7 @@
                         <th>备注</th>
                         <th>管理员处理原因</th>
                         <th>状态</th>
+                        <th>处理状态</th>
                         <th>退款时间</th>
                         <th>操作</th>
                     </tr>
@@ -80,11 +84,9 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'contentType': 'application/json',
-                'url': '<%=basePath %>/refund',
-                'type': 'POST',
-                'data': function(d) {
-                    return JSON.stringify(d);
+                'url': '<%=basePath %>refund',
+                'data': {
+                    refundState : 2
                 }
             },
             "rowCallback": function( row, data, index ) {
@@ -120,6 +122,9 @@
                     }
                 },
                 {
+                    "data": "refundState"
+                },
+                {
                     "data": null,
                     "render": function (data, type, row, meta) {
                         if (data == 2) {
@@ -136,10 +141,11 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                { "visible": false, "targets": 13 },
                 { "name": "orderSn",   "targets": 2 },
-                { "name": "userPhone",  "targets": 2 },
+                { "name": "userPhone",  "targets": 3 },
                 { "name": "itemName", "targets": 4 },
-                { "name": "refundState", "targets": 12 },
+//                { "name": "refundState", "targets": 12 },
                 {
                     "targets": 15,
                     "render": function (data, type, row, meta) {
@@ -147,7 +153,6 @@
                             {
                                 func: [
                                     {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"}                             ]
-
                             };
                         var html = template(context);
                         return html;
@@ -206,37 +211,7 @@
         var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
         var itemName = $("#itemName").val();
-        var refundState =  $("#refundState").val();
-        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).column(14).search(refundState).draw();
-    }
-
-    /**
-     * 编辑方法
-     **/
-    function edit(orderId) {
-        console.log(orderId);
-        layer.confirm('是否通过？', {
-                btn: ['通过', '不通过', '取消'],
-                shade: false,
-                closeBtn: 0
-            },
-            //order_state 通过是2，不通过是3
-            function () {
-                if (appointmentAduitAjax(orderId, 2)) {
-                    layer.msg('已通过', {icon: 6, time: 1000});
-                    table.ajax.reload();
-                } else {
-                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
-                }
-            },
-            function () {
-                if (appointmentAduitAjax(orderId, 3)) {
-                    layer.msg('未通过', {icon: 5, time: 1000});
-                    table.ajax.reload();
-                } else {
-                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
-                }
-            });
+        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).draw();
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

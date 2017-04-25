@@ -4,22 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.erp.vo.TradeQuery;
+import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.propertyeditors.URIEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +47,13 @@ public class OrderCandidateController extends BaseController{
      * @return
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput orderCandidateList(@Valid @RequestBody DataTablesInput input) throws IOException {
+    public DataTablesOutput orderCandidateList(@Valid DataTablesInput input) throws IOException {
         // 组装请求参数
-        TradeQuery tradeQuery = new TradeQuery(input);
+        QueryVo queryVo = new QueryVo(input);
 
-        String url = ConfigUtil.getConfig("order.candidate.list.url") + "?" + tradeQuery.getParamsStr();
+        String url = ConfigUtil.getConfig("order.candidate.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;

@@ -1,9 +1,9 @@
-package com.meirengu.uc.po;
+package com.meirengu.uc.vo.response;
 
 /**
  * Created by huoyan403 on 3/20/2017.
  */
-public class AvatarPO {
+public class AvatarVO {
     private Integer userId;
     private String avatar;
 

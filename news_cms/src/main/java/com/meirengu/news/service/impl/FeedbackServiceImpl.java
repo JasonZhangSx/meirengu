@@ -30,35 +30,22 @@ public class FeedbackServiceImpl implements FeedbackService{
     private PageService<Feedback> pageService;
 
     /**
-     *新增意见反馈
-     * @param feedbackContent
-     * @param userId
-     * @param userName
-     * @param userPhone
+     * 新增意见反馈
+     * @param feedback
      * @return
-     * @throws Exception
      */
     @Override
-    public int insert(String feedbackContent,Integer userId,String userName,String userPhone) throws Exception{
-        Feedback feedback = new Feedback();
-        feedback.setFeedbackContent(feedbackContent);
-        feedback.setUserId(userId);
-        feedback.setUserName(userName);
-        feedback.setUserPhone(userPhone);
-        try{
-            return feedbackDao.insert(feedback);
-        }catch (Exception e){
-            throw new Exception("insert article faile:", e);
-        }
+    public int insert(Feedback feedback){
+        return feedbackDao.insert(feedback);
+    }
+
+    public int update(Feedback feedback){
+        return feedbackDao.update(feedback);
     }
 
     @Override
-    public int updateStatus(int feedbackId) throws Exception {
-        try{
-            return feedbackDao.updateStatus(feedbackId);
-        }catch (Exception e){
-            throw new Exception("update article faile:", e);
-        }
+    public int updateStatus(int feedbackId){
+        return feedbackDao.updateStatus(feedbackId);
     }
 
     @Override

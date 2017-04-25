@@ -8,13 +8,12 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.AvatarPO;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ObjectUtils;
-import com.meirengu.uc.vo.LegalizeVO;
-import com.meirengu.uc.vo.UserVO;
+import com.meirengu.uc.vo.request.UserVO;
+import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -51,7 +50,7 @@ public class UserController extends BaseController{
     private RedisClient redisClient;
 
 
-    /**
+    /**邀请人分页查询 cms使用
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
      * @param sortBy 排序字段
@@ -60,18 +59,20 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "inviter",method = {RequestMethod.POST})
     public Result inviter(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
-                       @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(value="invest_conditions", required = false) Integer investConditions,
-                       @RequestParam(value="is_auth", required = false) Integer isAuth,
-                       @RequestParam(value="phone", required = false) String phone,
-                       @RequestParam(value="invite_phone", required = false) String invitePhone,
-                       @RequestParam(value="realname", required = false) String realname,
-                       @RequestParam(value="invite_realname", required = false) String inviteRealname,
-                       @RequestParam(value="idcard", required = false) String idcard,
-                       @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
-                       @RequestParam(value="sortby", required = false) String sortBy,
-                       @RequestParam(value="order", required = false) String order){
+                          @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
+                          @RequestParam(value="invest_conditions", required = false) Integer investConditions,
+                          @RequestParam(value="is_auth", required = false) Integer isAuth,
+                          @RequestParam(value="phone", required = false) String phone,
+                          @RequestParam(value="invite_phone", required = false) String invitePhone,
+                          @RequestParam(value="realname", required = false) String realname,
+                          @RequestParam(value="invite_realname", required = false) String inviteRealname,
+                          @RequestParam(value="idcard", required = false) String idcard,
+                          @RequestParam(value="invite_idcard", required = false) String inviteIdcard,
+                          @RequestParam(value="sortby", required = false) String sortBy,
+                          @RequestParam(value="order", required = false) String order){
         try {
+            logger.info("cms user/inviter  init   phone:{},invitePhone:{},realname:{},inviteRealname:{},idcard:{},inviteIdcard:{}",
+                    phone,invitePhone,realname,inviteRealname,idcard,inviteIdcard);
             Map paramMap = new HashMap<String, Object>();
             Page<User> page = super.setPageParams(pageNum,pageSize);
             paramMap.put("investConditions", investConditions);
@@ -87,8 +88,11 @@ public class UserController extends BaseController{
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
             for(Map map:list){
+                //获取余额信息
                 userService.getUserRestMoney(map);
+                //取累计投资额
                 userService.getUserTotalInvestMoney(map);
+                Thread.sleep(30L);//减小http访问   减小订单系统和支付系统http压力
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -96,8 +100,8 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("UserController inviter throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
@@ -110,31 +114,31 @@ public class UserController extends BaseController{
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public Result getUserInfo(@RequestParam(value="token", required = false) String token,
                               @RequestParam(value="phone", required = false) String phone){
+        logger.info("UserController detail params token:{} phone:{}",token,phone);
         try {
-            if(!StringUtil.isEmpty(token) && redisClient.existsObject(token)){
-                User user = (User)redisClient.getObject(token);
-                Map map = ApacheBeanUtils.objectToMap(user);
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
-
-                userService.getWithdrawalsAmount(map);
-                userService.getBankName(map);
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else if(!StringUtil.isEmpty(phone)){
-                User user = userService.retrieveByPhone(phone);
-                Map map = ApacheBeanUtils.objectToMap(user);
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
-
-                userService.getWithdrawalsAmount(map);
-                userService.getBankName(map);
-                return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-            }
+           if(StringUtil.isEmpty(phone) && StringUtil.isEmpty(token)){
+               return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+           }
+           Map map = new HashMap();
+           if(!StringUtil.isEmpty(phone)){
+               User user = userService.retrieveByPhone(phone);
+               map = ApacheBeanUtils.objectToMap(user);
+           }else{
+               if(!redisClient.existsObject(token)){
+                   return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+               }
+               User user = (User)redisClient.getObject(token);
+               user = userService.retrieveByPhone(user.getPhone());
+               map = ApacheBeanUtils.objectToMap(user);
+           }
+            userService.getUserRestMoney(map);//获取支付账户余额
+            userService.getUserTotalInvestMoney(map);//获取累计投资额
+            userService.getWithdrawalsAmount(map);//获取体现中金额
+            userService.getBankName(map);//获取银行名称
+            return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("UserController detail  throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
     /**
@@ -161,6 +165,8 @@ public class UserController extends BaseController{
                        @RequestParam(value="idcard", required = false) String idcard,
                        @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="order", required = false) String order){
+        logger.info("UserController list params investConditions:{} ,realname:{},idcard:{},phone:{}",
+                investConditions,realname,idcard,phone);
         try {
             Map paramMap = new HashMap<String, Object>();
             Page<User> page = new Page<User>();
@@ -191,8 +197,8 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, page, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+            logger.error("UserController list throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
     /**
@@ -202,20 +208,19 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result updateUserInfo(UserVO userVO) {
+        logger.info("UserController update params :{}",userVO.toString());
         try {
             if(!StringUtil.isEmpty(userVO.getToken()) && !redisClient.existsObject(userVO.getToken())){
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
             if (!StringUtils.isEmpty(userVO.getPhone())) {
                 if(!ValidatorUtil.isMobile(userVO.getPhone())) {
-                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .MOBILE_FORMAT_ERROR));
+                    return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
                 }
             }
             if(!StringUtil.isEmpty(userVO.getEmail())){
                 if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
-                    return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                            .EMAIL_FORMAT_ERROR));
+                    return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.EMAIL_FORMAT_ERROR));
                 }
             }
             int result = userService.updateUserInfo(userVO);
@@ -226,8 +231,8 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                .INTERNAL_SERVER_ERROR));
+            logger.error("UserController update throw exception:", e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -245,12 +250,10 @@ public class UserController extends BaseController{
         try {
             //verify params
             if (StringUtils.isEmpty(mobile) || !ValidatorUtil.isMobile(mobile)) {
-                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                        .MOBILE_FORMAT_ERROR));
+                return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
             if (newPassword == null) {
-                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                        (StatusCode.PASSWORD_IS_MALFORMED));
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_MALFORMED));
             }
             //验证手机号是否注册
             User user = userService.retrieveByPhone(mobile);
@@ -260,12 +263,10 @@ public class UserController extends BaseController{
             //验证验证码是否有效
             CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
             if (code == null) {
-                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_INVALID));
+                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
             }
             if (code.getExpireTime().compareTo(new Date()) < 0) {
-                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode
-                        .CAPTCHA_EXPIRE));
+                return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
             }
             code.setUse(true);
             code.setUsingTime(new Date());
@@ -275,16 +276,15 @@ public class UserController extends BaseController{
             usr.setPhone(mobile);
             usr.setPassword(PasswordEncryption.createHash(newPassword));
             int result = userService.updatePasswordByPhone(usr);
-            if(result != 0){
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OK));
+            if(result == 1){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .INTERNAL_SERVER_ERROR));
+            logger.error("UserController password/retrieve throw exception:", e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                .INTERNAL_SERVER_ERROR));
     }
 
     /**
@@ -301,13 +301,11 @@ public class UserController extends BaseController{
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
         try{
-            if(!redisClient.existsObject(token)){
-                //无效token返回登陆
+            if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
             if (newPassword == null || oldPassword ==null) {
-                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                        (StatusCode.PASSWORD_IS_MALFORMED));
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_MALFORMED));
             }
             //验证手机号是否注册
             User user = userService.retrieveByPhone(mobile);
@@ -315,28 +313,26 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }
             if (oldPassword == null) {
-                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                        (StatusCode.PASSWORD_IS_MALFORMED));
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_MALFORMED));
             }
             User usr = userService.retrieveByPhone(mobile);
             if(usr == null){
-                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
-                        .USER_NOT_EXITS));
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }
             if(!validatePassword(oldPassword,usr)){
-                return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OLD_PASSWORD_IS_ERROR));
+                return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.OLD_PASSWORD_IS_ERROR));
             }
             usr.setPassword(PasswordEncryption.createHash(newPassword));
             int result = userService.updatePasswordByPhone(usr);
-            if(result != 0){
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OK));
+            if(result == 1){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.error("UserController password/modify throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
-        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
     /**
@@ -371,8 +367,8 @@ public class UserController extends BaseController{
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .INTERNAL_SERVER_ERROR));
+            logger.error("UserController verifyUser throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
@@ -387,11 +383,8 @@ public class UserController extends BaseController{
     public Result setPassword (@RequestParam(value = "token", required = true) String token,
                                @RequestParam(value = "user_id", required = true) Integer userId,
                                @RequestParam(value = "password", required = true) String password){
-        if(!StringUtil.isEmpty(token)){
-            //判断token是否有效
             try{
-                if(!redisClient.existsObject(token)){
-                    //无效token返回登陆
+                if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
                 User user = userService.retrieveByUserId(userId);
@@ -407,23 +400,9 @@ public class UserController extends BaseController{
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }
             }catch (Exception e){
-                logger.info("LoginController.redis get token result:{}",e.getMessage());
+                logger.error("UserController setPassword throw exception:", e.getMessage());
+                return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
             }
-        }
-        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
-    }
-
-    /**
-     * 判断认证进行到哪一步
-     * @param legalizeVO
-     * @return
-     */
-    @RequestMapping(value = "legalize", method = RequestMethod.POST)
-    public Result legalize(LegalizeVO legalizeVO) {
-
-
-
-        return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
     }
 
     /**
@@ -439,11 +418,11 @@ public class UserController extends BaseController{
             for (String id :userId){
                 listUserIds.add(id);
             }
-            List<AvatarPO> user = userService.listUserAvatar(listUserIds);
+            List<AvatarVO> user = userService.listUserAvatar(listUserIds);
            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .INTERNAL_SERVER_ERROR));
+            logger.error("UserController listUserAvatar throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
     /**
@@ -472,8 +451,8 @@ public class UserController extends BaseController{
             map.put("isAllowTalk",user.getIsAllowTalk());
             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .INTERNAL_SERVER_ERROR));
+            logger.error("UserController auth throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
     /**
@@ -490,31 +469,31 @@ public class UserController extends BaseController{
                                    @RequestParam(value = "token", required = true) String token) {
         //判断token是否有效
         try{
-            if(redisClient.existsObject(token)){
-                if (oldPassword ==null) {
-                    return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get
-                            (StatusCode.PASSWORD_IS_MALFORMED));
-                }
-                //验证手机号是否注册
-                User usr = userService.retrieveByPhone(mobile);
-                if(usr == null){
-                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode
-                            .USER_NOT_EXITS));
-                }
-                //// TODO: 4/1/2017 需增加外部验证oldpassword是否正确 
-                int result = userService.modifyPayPassword(usr.getUserId(),mobile,oldPassword,newPassword);
-                if(result != 0){
-                    return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                            .OK));
-                }
-            }else{
-                //无效token返回登陆
+            if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
+            if (oldPassword ==null) {
+                return super.setResult(StatusCode.PASSWORD_IS_MALFORMED, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_MALFORMED));
+            }
+            //验证手机号是否注册
+            User usr = userService.retrieveByPhone(mobile);
+            if(usr == null){
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            if(usr.getIsAuth()==0){
+                return super.setResult(StatusCode.USER_NOT_AUTH, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_AUTH));
+            }
+            //修改支付密码
+            int result = userService.modifyPayPassword(usr.getUserId(),mobile,oldPassword,newPassword);
+            if(result == 1){
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.MODIFY_PASSWORD_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.MODIFY_PASSWORD_FAILED));
+            }
         }catch (Exception e){
-            logger.info("LoginController.redis get token result:{}",e.getMessage());
+            logger.error("UserController paypassword/modify throw exception:", e.getMessage());
+            return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.OLD_PASSWORD_IS_ERROR));
         }
-        return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.OLD_PASSWORD_IS_ERROR));
     }
 
 
@@ -542,8 +521,12 @@ public class UserController extends BaseController{
             }
             //验证手机号是否注册
             User user = userService.retrieveByPhone(mobile);
-            if(StringUtil.isEmpty(user)){
+            if(user == null){
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            if(user.getIsAuth()==0){
+                return super.setResult(StatusCode.USER_NOT_AUTH, null, StatusCode.codeMsgMap.get(StatusCode
+                        .USER_NOT_AUTH));
             }
             if(type==1){
                 //验证验证码是否有效
@@ -561,14 +544,15 @@ public class UserController extends BaseController{
                 int updateResult = checkCodeService.update(code);
             }
             int result = userService.setPayPassword(user.getUserId(),newPassword);
-            if(result != 0){
+            if(result == 1){
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.MODIFY_PASSWORD_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.MODIFY_PASSWORD_FAILED));
             }
         }catch (Exception e){
-            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode
-                    .INTERNAL_SERVER_ERROR));
+            logger.error("UserController paypassword/retrieve throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
-        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
     }
 
     /**
@@ -582,7 +566,7 @@ public class UserController extends BaseController{
             Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
             return  result;
         }catch (Exception e){
-            logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
+            logger.error("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
             return  false;
         }
     }

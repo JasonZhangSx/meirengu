@@ -9,7 +9,7 @@
         <result property="status" column="status" javaType="int" jdbcType="INTEGER" />
         <result property="createTime" column="create_time" javaType="Date" jdbcType="DATE" />
         <result property="updateTime" column="update_time" javaType="Date" jdbcType="TIMESTAMP" />
-        <result property="operateAccount" column="operate_account" javaType="int" jdbcType="INTEGER" />
+        <result property="operateAccount" column="operate_account" javaType="string" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<!-- 用于select查询公用抽取的列 -->
@@ -47,17 +47,20 @@
 	</insert>
     
 	<update id="update" >
-    <![CDATA[
-        UPDATE bulletin SET
-	        bulletin_title = #{bulletinTitle} ,
-	        bulletin_content = #{bulletinContent} ,
-	        status = #{status} ,
-	        create_time = #{createTime} ,
-	        update_time = #{updateTime} ,
-	        operate_account = #{operateAccount} 
-        WHERE 
+        UPDATE bulletin
+		<set>
+        	<if test="@Ognl@isNotEmpty(bulletinTitle)">
+				bulletin_title = #{bulletinTitle} ,
+			</if>
+			<if test="@Ognl@isNotEmpty(bulletinContent)">
+				bulletin_content = #{bulletinContent} ,
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				status = #{status} ,
+			</if>
+		</set>
+        WHERE
 	        bulletin_id = #{bulletinId} 
-    ]]>
 	</update>
 
     

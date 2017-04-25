@@ -3,7 +3,7 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.TokenProccessor;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.po.RegisterPO;
+import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
 import org.slf4j.Logger;
@@ -25,30 +25,30 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RedisClient redisClient;
     @Override
-    public RegisterPO getNewToken(String token,Object userRedis) {
+    public RegisterInfo getNewToken(String token, Object userRedis) {
 
         //删除本次token  建立一个新的有效token
         redisClient.delkeyObject(token);
         String newToken = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
         redisClient.setObject(newToken,userRedis,tokenTime);
-        RegisterPO registerPO = new RegisterPO();
-        registerPO.setToken(newToken);
-        registerPO.setUser((User) userRedis);
-        registerPO.getUser().setPassword("");
-        return registerPO;
+        RegisterInfo registerInfo = new RegisterInfo();
+        registerInfo.setToken(newToken);
+        registerInfo.setUser((User) userRedis);
+        registerInfo.getUser().setPassword("");
+        return registerInfo;
     }
 
     @Override
-    public RegisterPO setUserToRedis(User usr) {
+    public RegisterInfo setUserToRedis(User usr) {
 
-        RegisterPO registerPO = new RegisterPO();
-        registerPO.setUser(usr);
+        RegisterInfo registerInfo = new RegisterInfo();
+        registerInfo.setUser(usr);
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
         redisClient.setObject(token,usr,tokenTime);
-        registerPO.setToken(token);
-        registerPO.getUser().setPassword("");
-        return registerPO;
+        registerInfo.setToken(token);
+        registerInfo.getUser().setPassword("");
+        return registerInfo;
     }
 }

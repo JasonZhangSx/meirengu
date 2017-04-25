@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.erp.vo.TradeQuery;
+import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -49,17 +47,17 @@ public class OrderController extends BaseController{
      * @return
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput orderList(@Valid @RequestBody DataTablesInput input) throws IOException {
+    public DataTablesOutput orderList(@Valid DataTablesInput input) throws IOException {
         // 组装请求参数
-        TradeQuery tradeQuery = new TradeQuery(input);
+        QueryVo queryVo = new QueryVo(input);
         //查询预约状态的订单
-        if (tradeQuery.getOrderState() == null) {
-            tradeQuery.setOrderState(4);
+        if (queryVo.getOrderState() == null) {
+            queryVo.setOrderState(4);
         }
 
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + tradeQuery.getParamsStr();
+        String url = ConfigUtil.getConfig("order.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;
