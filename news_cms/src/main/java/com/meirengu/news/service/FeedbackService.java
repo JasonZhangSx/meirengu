@@ -14,20 +14,23 @@ public interface FeedbackService extends PageBaseService<Feedback>{
 
     /**
      * 新增反馈
-     * @param feedbackContent
-     * @param userId
-     * @param userName
-     * @param userPhone
+     * @param feedback
      * @return
      */
-    int insert(String feedbackContent,Integer userId,String userName,String userPhone) throws Exception;
+    int insert(Feedback feedback);
+    /**
+     * 更新意见反馈
+     * @param feedback
+     * @return
+     */
+    public int update(Feedback feedback);
 
     /**
-     * 修改反馈
+     * 修改反馈状态
      * @param feedbackId
      * @return
      */
-    int updateStatus(int feedbackId) throws Exception;
+    int updateStatus(int feedbackId);
 
     /**
      * 根据条件获取总条数

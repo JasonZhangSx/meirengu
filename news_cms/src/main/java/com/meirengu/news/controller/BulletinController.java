@@ -29,26 +29,18 @@ public class BulletinController extends BaseController {
 
     /**
      * 新增公告
-     * @param bulletin_title    公告标题
-     * @param bulletin_content  公告内容
-     * @param operate_account   操作人账号
+     * @param bulletinTitle
+     * @param bulletinContent
+     * @param operateAccount
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public Result insert (@RequestParam(value = "bulletin_title", required = false) String bulletinTitle,
                                       @RequestParam(value = "bulletin_content", required = false) String bulletinContent,
-                                      @RequestParam(value = "operate_account", required = false) Integer operateAccount
+                                      @RequestParam(value = "operate_account", required = false) String operateAccount
                                       ){
-        if(StringUtils.isEmpty(bulletinTitle)){
-            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-        }
-
-        if(StringUtils.isEmpty(bulletinContent)){
-            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-        }
-
-        if(operateAccount==null && operateAccount==0){
+        if(StringUtils.isEmpty(bulletinTitle) || StringUtils.isEmpty(bulletinContent) || StringUtils.isEmpty(operateAccount)){
             return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
@@ -60,17 +52,59 @@ public class BulletinController extends BaseController {
                 return setResult(StatusCode.BULLETIN_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_INSERT));
             }
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
     /**
+     * 修改公告
+     * @param bulletinTitle
+     * @param bulletinContent
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/{bulletin_id}", method = RequestMethod.POST)
+    public Result insert (@PathVariable("bulletin_id") Integer bulletinId ,
+                          @RequestParam(value = "bulletin_title", required = false) String bulletinTitle,
+                          @RequestParam(value = "bulletin_content", required = false) String bulletinContent,
+                          @RequestParam(value = "status", required = false) Integer status){
+        if(StringUtils.isEmpty(bulletinTitle) && StringUtils.isEmpty(bulletinContent) && status == null){
+            return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        Bulletin bulletin = new Bulletin();
+        bulletin.setBulletinId(bulletinId);
+        if (StringUtils.isNotBlank(bulletinTitle)) {
+            bulletin.setBulletinTitle(bulletinTitle);
+        }
+        if (StringUtils.isNotBlank(bulletinContent)) {
+            bulletin.setBulletinContent(bulletinContent);
+        }
+        if (status != null) {
+            bulletin.setStatus(status);
+        }
+        try{
+            int i = blletinService.update(bulletin);
+            if(i > 0){
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return setResult(StatusCode.BULLETIN_ERROR_INSERT, null, StatusCode.codeMsgMap.get(StatusCode.BULLETIN_ERROR_INSERT));
+            }
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
+
+    /**
      * 获取公告列表
-     * @param page
-     * @param per_page
-     * @param sortby
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
      * @param order
+     * @param status
      * @return
      */
     @ResponseBody
@@ -89,7 +123,7 @@ public class BulletinController extends BaseController {
             page = blletinService.getPageList(page, paramMap);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -100,7 +134,7 @@ public class BulletinController extends BaseController {
             Map<String, Object> bulletinMap = blletinService.detail(bulletinId);
             return setResult(StatusCode.OK, bulletinMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            logger.error("throw exception:", e);
+            logger.error("throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
