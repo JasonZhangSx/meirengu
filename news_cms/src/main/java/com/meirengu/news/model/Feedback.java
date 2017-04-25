@@ -9,25 +9,25 @@ import java.util.Date;
 public class Feedback extends BaseEntity{
 
     /** 意见反馈索引id **/
-    private int feedbackId;
+    private Integer feedbackId;
     /** 反馈内容 **/
     private String feedbackContent;
     /** 提交用户id **/
-    private int userId;
+    private Integer userId;
     /** 提交用户名称(降级 真实姓名--昵称) **/
     private String userName;
     /** 提交用户手机号 **/
     private String userPhone;
     /** 状态：0、未处理；1、已处理 **/
-    private int status;
+    private Integer status;
     /** 创建时间 **/
     private Date createTime;
 
-    public int getFeedbackId() {
+    public Integer getFeedbackId() {
         return feedbackId;
     }
 
-    public void setFeedbackId(int feedbackId) {
+    public void setFeedbackId(Integer feedbackId) {
         this.feedbackId = feedbackId;
     }
 
@@ -39,11 +39,11 @@ public class Feedback extends BaseEntity{
         this.feedbackContent = feedbackContent;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -63,11 +63,11 @@ public class Feedback extends BaseEntity{
         this.userPhone = userPhone;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
