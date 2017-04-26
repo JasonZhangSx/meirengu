@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class ObjectToFile {
             byte[] contentInBytes = sb.toString().getBytes();
             outStream.write(contentInBytes);
             outStream.close();
-            logger.info("ObjectToFile.writeObject successful:{}");
+            logger.info("ObjectToFile.writeObject successful:{}",new Date());
         } catch (FileNotFoundException e) {
             logger.info("ObjectToFile.writeObject failed:{}",e.getMessage());
         } catch (IOException e) {

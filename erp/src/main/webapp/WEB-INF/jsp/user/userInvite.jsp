@@ -11,9 +11,7 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-</head>
-</html>
-<title>图片列表</title>
+    <title>图片列表</title>
 </head>
 <body>
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 用户管理 <span class="c-gray en">&gt;</span> 邀请记录 <a
@@ -30,7 +28,7 @@
                 </button>
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
+                <span class="l"  onclick="export1()" ><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
                         class="btn btn-primary radius" href="javascript:;"><i
                         class="Hui-iconfont">&#xe634;</i> 导出</a></span>
                 <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
@@ -80,6 +78,7 @@
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
             ordering:false,
+            "scrollX": true, //允许水平滚动
             aLengthMenu:[10],//设置一页展示10条记录
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
@@ -192,6 +191,11 @@
             }
         }
         return fmt;
+    }
+    function export1()
+    {
+        var count =
+        window.location.href="/erp/inviter/export";
     }
 </script>
 </body>

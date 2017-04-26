@@ -1,6 +1,5 @@
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.Locale" %><%--
+<%@ page import="java.util.Date" %><%--
   Created by IntelliJ IDEA.
   User: xiaoyang
   Date: 2017/3/31
@@ -32,21 +31,17 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-                项目名称：<input type="text" class="input-text" style="width:120px;">　
-                合作方名称：<input type="text" class="input-text" style="width:120px;">　
-                分类：<span class="select-box mr-20" style="width:120px">
-      					<select name="" class="select">
-                            <option value="0">首款</option>
-                            <option value="13">尾款</option>
-                        </select>
-      					</span>　
-                创建时间：<input type="text" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
-                    type="text" class="input-text" style="width:120px;" id="datetimepicker3"/>
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
-                    查 询
-                </button>
-            </div>
+            <form action="withdrawalsRecord" method="get">
+                <div class="text-c">
+                    提现单号：<input name="orderSn" type="text" class="input-text" style="width:120px;">　
+                    手机号：<input name="userPhone" type="text" class="input-text" style="width:120px;">　
+                    提现时间：<input type="text" name="startDate" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
+                        type="text" name="endDate" class="input-text" style="width:120px;" id="datetimepicker3"/>
+                    <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                        查 询
+                    </button>
+                </div>
+            </form>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
             <a class="btn btn-primary radius" href="javascript:;"><i class="Hui-iconfont">&#xe634;</i> 导出</a>
@@ -147,6 +142,14 @@
             location.href="withdrawalsError?orderSn="+id+"&status=3";
         }
     }
+    // 时间
+    $('#datetimepicker2,#datetimepicker3').datetimepicker({
+        yearOffset: 0,
+        lang: $.datetimepicker.setLocale('ch'),
+        timepicker: false,
+        format: 'Y-m-d',
+        formatDate: 'Y/m/d',
+    });
 </script>
 </body>
 </html>

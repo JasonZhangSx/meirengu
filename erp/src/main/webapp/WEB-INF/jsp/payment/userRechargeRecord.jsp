@@ -22,7 +22,7 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>待初审项目列表</title>
+    <title>用户充值记录</title>
 </head>
 <body>
 <section class="Hui-article-box" style="top: 0; left: 0">
@@ -31,21 +31,17 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-                项目名称：<input type="text" class="input-text" style="width:120px;">　
-                合作方名称：<input type="text" class="input-text" style="width:120px;">　
-                分类：<span class="select-box mr-20" style="width:120px">
-      					<select name="" class="select">
-                            <option value="0">首款</option>
-                            <option value="13">尾款</option>
-                        </select>
-      					</span>　
-                创建时间：<input type="text" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
-                    type="text" class="input-text" style="width:120px;" id="datetimepicker3"/>
-                <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
-                    查 询
-                </button>
-            </div>
+            <form action="rechargeRecord" method="get">
+                <div class="text-c">
+                    充值单号：<input name="orderSn" type="text" class="input-text" style="width:120px;">　
+                    手机号：<input name="userPhone" type="text" class="input-text" style="width:120px;">　
+                    充值时间：<input type="text" name="startDate" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
+                        type="text" name="endDate" class="input-text" style="width:120px;" id="datetimepicker3"/>
+                    <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
+                        查 询
+                    </button>
+                </div>
+            </form>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
             <a class="btn btn-primary radius" href="javascript:;"><i class="Hui-iconfont">&#xe634;</i> 导出</a>
@@ -56,6 +52,7 @@
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
+                        <th>平台单号</th>
                         <th>第三方单号</th>
                         <th>账号</th>
                         <th>用户</th>
@@ -67,6 +64,7 @@
                     <tbody>
                     <c:forEach items="${paymentList}" var="recharge">
                         <tr class="text-c">
+                            <td>${recharge.orderSn}</td>
                             <td>${recharge.transactionSn}</td>
                             <td>${recharge.userId}</td>
                             <td>${recharge.userName}</td>

@@ -37,7 +37,6 @@ public class VerifyController extends BaseController {
     private RedisClient redisClient;
 
 
-    /*认证接口*/
     @RequestMapping(value = "idcard",method = {RequestMethod.POST})
     public Result vetifyIdCard(
                          @RequestParam(value = "idcard", required = true)String idcard,
@@ -154,7 +153,7 @@ public class VerifyController extends BaseController {
                 if(user!=null && user.getIdCard().equals(idcard)){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
-                    return super.setResult(StatusCode.ID_CARD_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_NOT_EXITS));
+                    return super.setResult(StatusCode.ID_CARD_IS_NOT_MATCH, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_NOT_MATCH));
                 }
             }else{
                 return super.setResult(StatusCode.PARAMETER_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.PARAMETER_FORMAT_ERROR));
