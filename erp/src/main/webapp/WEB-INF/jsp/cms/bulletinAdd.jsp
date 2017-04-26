@@ -108,10 +108,12 @@
         var data = responseText;
         var code = data.code;//200 is success，other is fail
         if(code=="200"){
-            layer.msg('保存成功', {icon: 5, time: 1000});
-            layer_close();
+            layer.msg('保存成功', {icon: 1, time: 1000});
+            setTimeout(function() {
+                layer_close();
+            }, 2000);
         }else{
-            layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 6, time: 5000});
+            layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
         }
     }
     function bulletinAdd() {

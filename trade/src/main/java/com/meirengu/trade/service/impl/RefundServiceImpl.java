@@ -145,12 +145,19 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
         Map<String, String> paramsMap = new HashMap<String, String>();
         Order order = orderService.detail(orderId);
         JSONObject content = new JSONObject();
-        content.put("orderAmount", order.getOrderAmount());
-        content.put("orderSn", order.getOrderSn());
-        content.put("paymentAmount", order.getCostAmount());
-        content.put("paymentMethod", order.getPaymentMethod());
-        content.put("paymentType", 2);//支付类型 1 支付 2 退款 3充值 4提现
         content.put("userId", order.getUserId());
+        content.put("mobile", order.getUserPhone());
+        content.put("realName", order.getUserName());
+        content.put("partnerId", order.getUserId());
+        content.put("paymentMethod", order.getPaymentMethod());
+        content.put("orderSn", order.getOrderSn());
+        content.put("itemId", order.getItemId());
+        content.put("itemName", order.getItemName());
+        content.put("itemLevelId", order.getItemLevelId());
+        content.put("itemLevelName", order.getItemLevelName());
+        content.put("orderAmount", order.getOrderAmount());
+        content.put("paymentAmount", order.getCostAmount());
+        content.put("rebateAmount", order.getRebateAmount());
         paramsMap.put("content", content.toString());
         String url = ConfigUtil.getConfig("pay.refund.url");
         HttpUtil.HttpResult applyRefundResult = HttpUtil.doPostForm(url, paramsMap);

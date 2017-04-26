@@ -12,7 +12,7 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>候补预约列表</title>
+    <title>意见反馈列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
         .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
@@ -20,18 +20,11 @@
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 候补预约列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> CMS管理 <span class="c-gray en">&gt;</span> 意见反馈列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-                用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">　
-                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
-                    查 询
-                </button>
-            </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
@@ -40,13 +33,9 @@
                     <thead>
                     <tr class="text-c">
                         <th></th>
-                        <th>账号</th>
-                        <th>项目名称</th>
-                        <th>回报档位</th>
-                        <th>数量</th>
-                        <th>订单总额</th>
-                        <th>微信号</th>
-                        <th>预约时间</th>
+                        <th>问题内容</th>
+                        <th>提交人</th>
+                        <th>提交时间</th>
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
@@ -56,8 +45,6 @@
         </article>
     </div>
 </section>
-<input type="hidden" id="errcode">
-<input type="hidden" id="errmsg">
 
 <!--定义操作列按钮模板-->
 <!--说下这里使用模板的作用，除了显示和数据分离好维护以外，绑定事件和传值也比较方便，希望大家能不拼接html则不拼接-->
@@ -77,7 +64,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>order_candidate'
+                'url': '<%=basePath %>feedback'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -89,12 +76,8 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "feedbackContent"},
                 {"data": "userPhone"},
-                {"data": "itemName"},
-                {"data": "itemLevelName"},
-                {"data": "itemNum"},
-                {"data": "orderAmount"},
-                {"data": "userWeixin"},
                 {
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
@@ -109,7 +92,6 @@
                         } else if (data == 1) {
                             return "已处理";
                         }
-                        return "数据错误";
                     }
                 },
 
@@ -121,25 +103,30 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-                { "name": "userPhone",  "targets": 1 },
-                { "name": "itemName", "targets": 2 },
                 {
-                    "targets": 9,
+                    "targets": 5,
                     "render": function (data, type, row, meta) {
                         var status = row.status;
+                        var context;
                         if (status == 0) {
-                            var context =
+                            context =
                                 {
                                     func: [
-                                        {"name": "处理", "fn": "edit(\'" + row.id + "\')", "type": "primary"},
+                                        {"name": "处理", "fn": "edit(\'" + row.feedbackId + "\')", "type": "primary"},
+                                        {"name": "查看", "fn": "detail(\'" + row.feedbackId + "\')", "type": "default"}
+
                                     ]
                                 };
-                            var html = template(context);
-                            return html;
                         } else if (status == 1) {
-                            return "已处理";
+                            context =
+                                {
+                                    func: [
+                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
+                                    ]
+                                };
                         }
-
+                        var html = template(context);
+                        return html;
                     }
                 }
 
@@ -189,55 +176,27 @@
         $("#totalCount").html(totalCount);
     }
 
-    /**
-     * 检索
-     **/
-    function search(){
-        var userPhone = $("#userPhone").val();
-        var itemName = $("#itemName").val();
-        table.column(1).search(userPhone).column(2).search(itemName).draw();
-    }
 
-    /*候补预约订单处理*/
-    function edit(id) {
-        layer.confirm('是否处理完成？', {
-                btn: ['完成', '取消'],
-                shade: false,
-                closeBtn: 0
-            },
-            //state 处理完成为1
-            function () {
-                if (candidateHandleAjax(id, 1)) {
-                    layer.msg('已处理', {icon: 5, time: 1000});
-                    table.ajax.reload();
-                } else {
-                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
-                }
-            });
-    }
-
-    function candidateHandleAjax(id, status) {
-        var url = "<%=basePath %>order_candidate/handle/"+id;
-        var flag=false;
+    /*处理*/
+    function edit(feedbackId) {
+        var url = "<%=basePath %>feedback/update";
         $.ajax({
             type: "post",
             url: url,
             cache:false,
             async:false,
-            data:{status:status},
+            data:{feedbackId:feedbackId,status:1},
             dataType:"json",
             success: function(data){
                 var code = data.code;//200 is success，other is fail
                 if(code=="200"){
-                    flag=true;
+                    layer.msg('已处理', {icon: 1, time: 1000});
+                    table.ajax.reload();
                 }else{
-                    $("#errcode").val(data.code);
-                    $("#errmsg").val(data.msg);
-                    flag=false;
+                    layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 6, time: 5000});
                 }
             }
         });
-        return flag;
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
