@@ -48,39 +48,39 @@
         </where>
     </update>
 
-    <update id="updateStatus" parameterType="INTEGER">
-        update <include refid="table_name" /> set status=1 WHERE feedback_id=#{feedbackId}
-    </update>
 
+    <sql id="findPage_where">
+        <where>
+            <if test="@Ognl@isNotEmpty(feedbackId)">
+                AND tb.feedback_id=#{id}
+            </if>
+            <if test="@Ognl@isNotEmpty(userId)">
+                AND tb.user_id=#{userId}
+            </if>
+            <if test="@Ognl@isNotEmpty(userPhone)">
+                AND tb.user_phone=#{userPhone}
+            </if>
+            <if test="@Ognl@isNotEmpty(userName)">
+                AND tb.user_name=#{userName}
+            </if>
+            <if test="@Ognl@isNotEmpty(status)">
+                AND tb.status=#{status}
+            </if>
+            <if test="@Ognl@isNotEmpty(createTimeBegin)">
+                AND tb.create_time >= #{createTimeBegin}
+            </if>
+            <if test="@Ognl@isNotEmpty(createTimeEnd)">
+                AND tb.create_time &lt;= #{createTimeEnd}
+            </if>
+        </where>
+    </sql>
     <!-- 分页相关开始 -->
     <select id="getByPage" resultType="Map" parameterType="Map">
         select <include refid="select_columns" />
         from
-        <include refid="table_name" />
-        <where>
-        <if test="feedbackId != null">
-            AND feedback_id=#{id}
-        </if>
-        <if test="userId != null">
-            AND user_id=#{userId}
-        </if>
-        <if test="userPhone != null and userPhone != ''">
-            AND user_phone=#{userPhone}
-        </if>
-        <if test="userName != null and userName != ''">
-            AND user_name=#{userName}
-        </if>
-        <if test="status != null">
-            AND status=#{status}
-        </if>
-        <if test="createTimeBegin != null">
-            AND create_time >= #{createTimeBegin}
-        </if>
-        <if test="createTimeEnd != null">
-            AND create_time &lt;= #{createTimeEnd}
-        </if>
-        </where>
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
+        <include refid="table_name" /> tb
+        <include refid="findPage_where"/>
+        <if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
             order by ${sortBy} ${order}
         </if>
     </select>
@@ -88,30 +88,8 @@
     <select id="getTotalCount" parameterType="Map" resultType="Integer">
         select count(1)
         from
-        <include refid="table_name" />
-        <where>
-            <if test="feedbackId != null">
-                AND feedback_id=#{id}
-            </if>
-            <if test="userId != null">
-                AND user_id=#{userId}
-            </if>
-            <if test="userPhone != null and userPhone != ''">
-                AND user_phone=#{userPhone}
-            </if>
-            <if test="userName != null and userName != ''">
-                AND user_name=#{userName}
-            </if>
-            <if test="status != null">
-                AND status=#{status}
-            </if>
-            <if test="createTimeBegin != null">
-                AND create_time >= #{createTimeBegin}
-            </if>
-            <if test="createTimeEnd != null">
-                AND create_time &lt;= #{createTimeEnd}
-            </if>
-        </where>
+        <include refid="table_name" /> tb
+        <include refid="findPage_where"/>
     </select>
     <!-- 分页相关结束 -->
 </mapper>

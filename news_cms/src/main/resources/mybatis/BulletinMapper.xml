@@ -131,7 +131,7 @@
 		SELECT <include refid="Bulletin_tbcolumns" />
 		FROM bulletin tb
 		<include refid="Bulletin_findPage_where"/>
-		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
 			order by ${sortBy} ${order}
 		</if>
 	</select>

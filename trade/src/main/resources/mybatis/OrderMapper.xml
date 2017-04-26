@@ -2,81 +2,84 @@
          <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
          <mapper namespace="com.meirengu.trade.dao.OrderDao" >
 	<sql id="table_name">`order`</sql>
-	<sql id="select_columns">order_id as orderId, order_sn as orderSn, item_id as itemId, item_name as itemName, item_level_id as itemLevelId, item_level_name as itemLevelName, item_level_amount as itemLevelAmount, item_num as itemNum, order_amount as orderAmount, cost_amount as costAmount, rebate_amount as rebateAmount, user_id as userId, user_name as userName, user_phone as userPhone, user_email as userEmail, user_address_id as userAddressId, create_time as createTime, order_type as orderType, payment_method as paymentMethod, out_sn as outSn, finished_time as finishedTime, receipt as receipt, order_message as orderMessage, order_state as orderState, flag as flag, order_from as orderFrom, update_time as updateTime, operate_account as operateAccount, user_weixin as userWeixin
+	<sql id="select_columns">order_id as orderId, order_sn as orderSn, item_id as itemId, item_name as itemName, item_level_id as itemLevelId, item_level_name as itemLevelName, item_level_amount as itemLevelAmount, item_num as itemNum, partner_id as partnerId, order_amount as orderAmount, cost_amount as costAmount, rebate_amount as rebateAmount, user_id as userId, user_name as userName, user_phone as userPhone, user_email as userEmail, user_address_id as userAddressId, create_time as createTime, order_type as orderType, payment_method as paymentMethod, out_sn as outSn, finished_time as finishedTime, receipt as receipt, order_message as orderMessage, order_state as orderState, flag as flag, order_from as orderFrom, update_time as updateTime, operate_account as operateAccount, user_weixin as userWeixin
 	</sql>
 	<insert id="insert" parameterType="order" useGeneratedKeys="true" keyProperty="orderId" >
 		INSERT INTO <include refid="table_name" />
-			(order_id, order_sn, item_id, item_name, item_level_id, item_level_name, item_level_amount, item_num, order_amount, cost_amount, rebate_amount, user_id, user_name, user_phone, user_email, user_address_id, order_type, payment_method, out_sn, finished_time, receipt, order_message, order_state, order_from, operate_account, user_weixin)
+			(order_id, order_sn, item_id, item_name, item_level_id, item_level_name, item_level_amount, item_num, partner_id, order_amount, cost_amount, rebate_amount, user_id, user_name, user_phone, user_email, user_address_id, order_type, payment_method, out_sn, finished_time, receipt, order_message, order_state, order_from, operate_account, user_weixin)
 		VALUES
-			(#{orderId}, #{orderSn}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemLevelAmount}, #{itemNum}, #{orderAmount}, #{costAmount}, #{rebateAmount}, #{userId}, #{userName}, #{userPhone}, #{userEmail}, #{userAddressId}, #{orderType}, #{paymentMethod}, #{outSn}, #{finishedTime}, #{receipt}, #{orderMessage}, #{orderState}, #{orderFrom}, #{operateAccount}, #{userWeixin})
+			(#{orderId}, #{orderSn}, #{itemId}, #{itemName}, #{itemLevelId}, #{itemLevelName}, #{itemLevelAmount}, #{itemNum}, #{partnerId}, #{orderAmount}, #{costAmount}, #{rebateAmount}, #{userId}, #{userName}, #{userPhone}, #{userEmail}, #{userAddressId}, #{orderType}, #{paymentMethod}, #{outSn}, #{finishedTime}, #{receipt}, #{orderMessage}, #{orderState}, #{orderFrom}, #{operateAccount}, #{userWeixin})
 	</insert>
 	<update id="update" parameterType="order">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="@Ognl@isNotEmpty(orderSn)">
 				order_sn=#{orderSn},
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(partnerId)">
+				partner_id=#{partnerId},
+			</if>
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="costAmount != null">
+			<if test="@Ognl@isNotEmpty(costAmount)">
 				cost_amount=#{costAmount},
 			</if>
-			<if test="rebateAmount != null">
+			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				user_id=#{userId},
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				user_name=#{userName},
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				user_phone=#{userPhone},
 			</if>
-			<if test="userEmail != null and userEmail != ''">
+			<if test="@Ognl@isNotEmpty(userEmail)">
 				user_email=#{userEmail},
 			</if>
-			<if test="userAddressId != null">
+			<if test="@Ognl@isNotEmpty(userAddressId)">
 				user_address_id=#{userAddressId},
 			</if>
-			<if test="createTime != null">
+			<if test="@Ognl@isNotEmpty(createTime)">
 				create_time=#{createTime},
 			</if>
-			<if test="orderType != null">
+			<if test="@Ognl@isNotEmpty(orderType)">
 				order_type=#{orderType},
 			</if>
-			<if test="paymentMethod != null">
+			<if test="@Ognl@isNotEmpty(paymentMethod)">
 				payment_method=#{paymentMethod},
 			</if>
-			<if test="outSn != null and outSn != ''">
+			<if test="@Ognl@isNotEmpty(outSn)">
 				out_sn=#{outSn},
 			</if>
-			<if test="finishedTime != null">
+			<if test="@Ognl@isNotEmpty(finishedTime)">
 				finished_time=#{finishedTime},
 			</if>
-			<if test="receipt != null and receipt != ''">
+			<if test="@Ognl@isNotEmpty(receipt)">
 				receipt=#{receipt},
 			</if>
-			<if test="orderMessage != null and orderMessage != ''">
+			<if test="@Ognl@isNotEmpty(orderMessage)">
 				order_message=#{orderMessage},
 			</if>
-			<if test="orderState != null">
+			<if test="@Ognl@isNotEmpty(orderState)">
 				order_state=#{orderState},
 			</if>
-			<if test="flag != null">
+			<if test="@Ognl@isNotEmpty(flag)">
 				flag=#{flag},
 			</if>
-			<if test="orderFrom != null and orderFrom != ''">
+			<if test="@Ognl@isNotEmpty(orderFrom)">
 				order_from=#{orderFrom},
 			</if>
-			<if test="updateTime != null">
+			<if test="@Ognl@isNotEmpty(updateTime)">
 				update_time=#{updateTime},
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				operate_account=#{operateAccount},
 			</if>
-			<if test="userWeixin != null and userWeixin != ''">
+			<if test="@Ognl@isNotEmpty(userWeixin)">
 				user_weixin=#{userWeixin},
 			</if>
 		</set>
@@ -88,67 +91,70 @@
 	<update id="updateBySn" parameterType="order">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(partnerId)">
+				partner_id=#{partnerId},
+			</if>
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="costAmount != null">
+			<if test="@Ognl@isNotEmpty(costAmount)">
 				cost_amount=#{costAmount},
 			</if>
-			<if test="rebateAmount != null">
+			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				user_id=#{userId},
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				user_name=#{userName},
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				user_phone=#{userPhone},
 			</if>
-			<if test="userEmail != null and userEmail != ''">
+			<if test="@Ognl@isNotEmpty(userEmail)">
 				user_email=#{userEmail},
 			</if>
-			<if test="userAddressId != null">
+			<if test="@Ognl@isNotEmpty(userAddressId)">
 				user_address_id=#{userAddressId},
 			</if>
-			<if test="createTime != null">
+			<if test="@Ognl@isNotEmpty(createTime)">
 				create_time=#{createTime},
 			</if>
-			<if test="orderType != null">
+			<if test="@Ognl@isNotEmpty(orderType)">
 				order_type=#{orderType},
 			</if>
-			<if test="paymentMethod != null">
+			<if test="@Ognl@isNotEmpty(paymentMethod)">
 				payment_method=#{paymentMethod},
 			</if>
-			<if test="outSn != null and outSn != ''">
+			<if test="@Ognl@isNotEmpty(outSn)">
 				out_sn=#{outSn},
 			</if>
-			<if test="finishedTime != null">
+			<if test="@Ognl@isNotEmpty(finishedTime)">
 				finished_time=#{finishedTime},
 			</if>
-			<if test="receipt != null and receipt != ''">
+			<if test="@Ognl@isNotEmpty(receipt)">
 				receipt=#{receipt},
 			</if>
-			<if test="orderMessage != null and orderMessage != ''">
+			<if test="@Ognl@isNotEmpty(orderMessage)">
 				order_message=#{orderMessage},
 			</if>
-			<if test="orderState != null">
+			<if test="@Ognl@isNotEmpty(orderState)">
 				order_state=#{orderState},
 			</if>
-			<if test="flag != null">
+			<if test="@Ognl@isNotEmpty(flag)">
 				flag=#{flag},
 			</if>
-			<if test="orderFrom != null and orderFrom != ''">
+			<if test="@Ognl@isNotEmpty(orderFrom)">
 				order_from=#{orderFrom},
 			</if>
-			<if test="updateTime != null">
+			<if test="@Ognl@isNotEmpty(updateTime)">
 				update_time=#{updateTime},
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				operate_account=#{operateAccount},
 			</if>
-			<if test="userWeixin != null and userWeixin != ''">
+			<if test="@Ognl@isNotEmpty(userWeixin)">
 				user_weixin=#{userWeixin},
 			</if>
 		</set>
@@ -170,103 +176,106 @@
 	</select>
 	<sql id="findPage_where">
 		<where>
-			<if test="orderId != null">
+			<if test="@Ognl@isNotEmpty(orderId)">
 				AND order_id=#{orderId}
 			</if>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="@Ognl@isNotEmpty(orderSn)">
 				AND order_sn=#{orderSn}
 			</if>
-			<if test="itemId != null">
+			<if test="@Ognl@isNotEmpty(itemId)">
 				AND item_id=#{itemId}
 			</if>
-			<if test="itemName != null and itemName != ''">
+			<if test="@Ognl@isNotEmpty(itemName)">
 				AND item_name=#{itemName}
 			</if>
-			<if test="itemLevelId != null">
+			<if test="@Ognl@isNotEmpty(itemLevelId)">
 				AND item_level_id=#{itemLevelId}
 			</if>
-			<if test="itemLevelName != null and itemLevelName != ''">
+			<if test="@Ognl@isNotEmpty(itemLevelName)">
 				AND item_level_name=#{itemLevelName}
 			</if>
-			<if test="itemLevelAmount != null">
+			<if test="@Ognl@isNotEmpty(itemLevelAmount)">
 				AND item_level_amount=#{itemLevelAmount}
 			</if>
-			<if test="itemNum != null">
+			<if test="@Ognl@isNotEmpty(itemNum)">
 				AND item_num=#{itemNum}
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(partnerId)">
+				AND partner_id=#{partnerId}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				AND order_amount=#{orderAmount}
 			</if>
-			<if test="costAmount != null">
+			<if test="@Ognl@isNotEmpty(costAmount)">
 				AND cost_amount=#{costAmount}
 			</if>
-			<if test="rebateAmount != null">
+			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				AND rebate_amount=#{rebateAmount}
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				AND user_id=#{userId}
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				AND user_name=#{userName}
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				AND user_phone=#{userPhone}
 			</if>
-			<if test="userEmail != null and userEmail != ''">
+			<if test="@Ognl@isNotEmpty(userEmail)">
 				AND user_email=#{userEmail}
 			</if>
-			<if test="userAddressId != null">
+			<if test="@Ognl@isNotEmpty(userAddressId)">
 				AND user_address_id=#{userAddressId}
 			</if>
-			<if test="createTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
 				AND create_time >= #{createTimeBegin}
 			</if>
-			<if test="createTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
 				AND create_time &lt;= #{createTimeEnd}
 			</if>
-			<if test="updateTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(updateTimeBegin)">
 				AND update_time >= #{updateTimeBegin}
 			</if>
-			<if test="updateTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(updateTimeEnd)">
 				AND update_time &lt;= #{updateTimeEnd}
 			</if>
-			<if test="orderType != null">
+			<if test="@Ognl@isNotEmpty(orderType)">
 				AND order_type=#{orderType}
 			</if>
-			<if test="paymentMethod != null">
+			<if test="@Ognl@isNotEmpty(paymentMethod)">
 				AND payment_method=#{paymentMethod}
 			</if>
-			<if test="outSn != null and outSn != ''">
+			<if test="@Ognl@isNotEmpty(outSn)">
 				AND out_sn=#{outSn}
 			</if>
-			<if test="finishedTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(finishedTimeBegin)">
 				AND finished_time >= #{finishedTimeBegin}
 			</if>
-			<if test="finishedTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(finishedTimeEnd)">
 				AND finished_time &lt;= #{finishedTimeEnd}
 			</if>
-			<if test="receipt != null and receipt != ''">
+			<if test="@Ognl@isNotEmpty(receipt)">
 				AND receipt=#{receipt}
 			</if>
-			<if test="orderMessage != null and orderMessage != ''">
+			<if test="@Ognl@isNotEmpty(orderMessage)">
 				AND order_message=#{orderMessage}
 			</if>
-			<if test="orderState != null and orderState != 0">
+			<if test="@Ognl@isNotEmpty(orderState)">
 				AND order_state=#{orderState}
 			</if>
-			<if test="flag != null">
+			<if test="@Ognl@isNotEmpty(flag)">
 				AND flag=#{flag}
 			</if>
-			<if test="orderFrom != null">
+			<if test="@Ognl@isNotEmpty(orderFrom)">
 				AND order_from=#{orderFrom}
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				AND operate_account=#{operateAccount}
 			</if>
-			<if test="userWeixin != null and userWeixin != ''">
+			<if test="@Ognl@isNotEmpty(userWeixin)">
 				AND user_weixin=#{userWeixin}
 			</if>
-			<if test="orderStateList != null">
+			<if test="@Ognl@isNotEmpty(orderStateList)">
 				AND order_state in
 				<foreach collection="orderStateList" index="index" item="item" open="(" separator="," close=")">
 					#{item}
@@ -280,9 +289,9 @@
 		FROM
 		<include refid="table_name" />
 		<include refid="findPage_where"/>
-		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			order by ${sortBy} ${order}
-		</if>
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
+		order by ${sortBy} ${order}
+	</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">

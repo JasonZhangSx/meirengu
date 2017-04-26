@@ -148,7 +148,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
         content.put("userId", order.getUserId());
         content.put("mobile", order.getUserPhone());
         content.put("realName", order.getUserName());
-        content.put("partnerId", order.getUserId());
+        content.put("partnerId", order.getPartnerId());
         content.put("paymentMethod", order.getPaymentMethod());
         content.put("orderSn", order.getOrderSn());
         content.put("itemId", order.getItemId());

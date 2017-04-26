@@ -29,28 +29,28 @@
 	<update id="update" parameterType="rebateUsed">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="userId != null and userId != 0">
+			<if test="@Ognl@isNotEmpty(userId)">
 				user_id=#{userId},
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				user_phone=#{userPhone},
 			</if>
-			<if test="rebateSn != null and rebateSn != ''">
+			<if test="@Ognl@isNotEmpty(rebateSn)">
 				rebate_sn=#{rebateSn},
 			</if>
-			<if test="rebateBatchId != null and rebateBatchId != 0">
+			<if test="@Ognl@isNotEmpty(rebateBatchId)">
 				rebate_batch_id=#{rebateBatchId},
 			</if>
-			<if test="activityIdentification != null and activityIdentification != ''">
+			<if test="@Ognl@isNotEmpty(activityIdentification)">
 				activity_identification=#{activityIdentification},
 			</if>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="@Ognl@isNotEmpty(orderSn)">
 				order_sn=#{orderSn},
 			</if>
-			<if test="rebateAmount != null">
+			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="usedTime != null">
+			<if test="@Ognl@isNotEmpty(usedTime)">
 				used_time=#{usedTime},
 			</if>
 		</set>
@@ -64,13 +64,57 @@
 		where id=#{id}
 	</select>
 
+	<!-- 查询条件 -->
+	<sql id="findPage_where">
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				AND tb.id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				AND tb.user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(userPhone)">
+				AND tb.user_phone=#{userPhone}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateSn)">
+				AND tb.rebate_sn=#{rebateSn}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateBatchId)">
+				AND tb.rebate_batch_id=#{rebateBatchId}
+			</if>
+			<if test="@Ognl@isNotEmpty(activityIdentification)">
+				AND tb.activity_identification = #{activityIdentification}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderSn)">
+				AND tb.order_sn=#{orderSn}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateAmount)">
+				AND tb.rebate_amount=#{rebateAmount}
+			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeBegin)">
+				AND tb.used_time>=#{usedTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeEnd)">
+				AND tb.used_time &lt;= #{usedTimeEnd}
+			</if>
+		</where>
+	</sql>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select <include refid="select_columns" />
+		FROM <include refid="table_name" />
+		<include refid="findPage_where"/>
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
+			order by ${sortBy} ${order}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1)
+		FROM
+		<include refid="table_name" />
+		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

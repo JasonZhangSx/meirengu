@@ -17,13 +17,6 @@ public interface FeedbackDao extends PageDao<Feedback>{
     public int insert(Feedback feedback);
 
     /**
-     * 更新反馈意见状态
-     * @param feedbackId
-     * @return
-     */
-    public int updateStatus(int feedbackId);
-
-    /**
      * 更新意见反馈
      * @param feedback
      * @return
