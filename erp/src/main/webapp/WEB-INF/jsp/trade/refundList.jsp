@@ -15,6 +15,7 @@
     <title>订单列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
     </style>
 </head>
 <body>
@@ -185,6 +186,7 @@
 
             ],
             "language": {
+                "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
                 "lengthMenu": "每页_MENU_ 条记录",
                 "zeroRecords": "没有找到记录",
                 "info": "第 _PAGE_ 页 ( 总共 _PAGES_ 页 )",

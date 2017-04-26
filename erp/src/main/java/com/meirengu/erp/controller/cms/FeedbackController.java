@@ -1,4 +1,4 @@
-package com.meirengu.erp.controller.trade;
+package com.meirengu.erp.controller.cms;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -22,42 +25,38 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 订单控制类
+ * CMS意见反馈控制类
  * Created by maoruxin on 2017/3/30.
  */
 @Controller
-@RequestMapping("/order")
-public class OrderController extends BaseController{
+@RequestMapping("/feedback")
+public class FeedbackController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
 
     /**
-     * 跳转到订单列表页面
+     * 跳转到意见反馈列表页面
      * @return
-     * @throws IOException
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String orderView() throws IOException {
-        return "/trade/orderList";
+    public String feedbackView() {
+        return "/cms/feedbackList";
     }
 
     /**
-     * 订单列表数据请求
+     * 意见反馈列表数据请求
      * @param input
      * @return
-     * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput orderList(@Valid DataTablesInput input) throws IOException {
+    public DataTablesOutput feedbackList(@Valid DataTablesInput input) throws IOException {
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
-        //查询预约状态的订单
-        if (queryVo.getOrderState() == null) {
-            queryVo.setOrderState(4);
-        }
+        String paramStr = queryVo.getParamsStr();
+        paramStr = paramStr.replace("pageNum", "page").replace("pageSize", "per_page").replace("sortColumn", "sortby");
 
-        String url = ConfigUtil.getConfig("order.list.url") + "?" + queryVo.getParamsStr();
+        String url = ConfigUtil.getConfig("news.feedback.list") + "?" + paramStr;
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;
@@ -72,26 +71,26 @@ public class OrderController extends BaseController{
         return setDataTablesOutput(input, list, totalCount);
     }
 
+
     /**
-     * 申请退款
-     * @param orderId
-     * @param userMessage
-     * @param refundMessage
+     * 意见反馈修改
+     * @param feedbackId
+     * @param feedbackContent
+     * @param status
      * @return
      */
-    @RequestMapping(value = "/refund/application", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public Result refundApply(@RequestParam(value = "orderId") Integer orderId ,
-                              @RequestParam(value = "userMessage") String userMessage,
-                              @RequestParam(value = "refundMessage") String refundMessage) {
-        if (orderId == null || orderId == 0 || StringUtils.isEmpty(userMessage) || StringUtils.isEmpty(refundMessage)) {
+    public Result update(@RequestParam(value = "feedbackId", required = true)Integer feedbackId,
+                         @RequestParam(value = "feedbackContent", required = false)String feedbackContent,
+                         @RequestParam(value = "status", required = false)Integer  status) {
+        if (StringUtils.isEmpty(feedbackContent) && status == null) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-        String url = ConfigUtil.getConfig("refund.application.url");
+        String url = ConfigUtil.getConfig("news.feedback.update") + "/" + feedbackId;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("order_id", orderId.toString());
-        params.put("user_message", userMessage);
-        params.put("refund_message", refundMessage);
+        params.put("feedback_content", feedbackContent);
+        params.put("status", status.toString());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
@@ -112,5 +111,4 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
-
 }
