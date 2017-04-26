@@ -201,7 +201,10 @@
         var index = layer.open({
             type: 2,
             title: title,
-            content: url+"?class_id="+id
+            content: url+"?class_id="+id,
+            end: function(){
+                table.ajax.reload();
+            }
         });
         layer.full(index);
     }

@@ -12,6 +12,10 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
+    </style>
     </head>
 </html>
 <title>图片列表</title>
@@ -238,6 +242,9 @@
             type: 2,
             title: title,
             content: url,
+            end: function(){
+                table.ajax.reload();
+            }
         });
         layer.full(index);
     }
@@ -248,6 +255,9 @@
             type: 2,
             title: title,
             content: url+'?activity_id='+id,
+            end: function(){
+                table.ajax.reload();
+            }
         });
         layer.full(index);
     }
