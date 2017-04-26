@@ -116,7 +116,7 @@ public class BulletinController extends BaseController{
                 return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

@@ -1,8 +1,11 @@
 package com.meirengu.erp.controller.cms;
 
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
+import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
@@ -67,10 +70,11 @@ public class FaqController extends BaseController{
      * @return
      */
     @RequestMapping(method = {RequestMethod.POST})
-    public ModelAndView insert(@RequestParam(value = "class_id")String classId,
-                               @RequestParam(value = "class_name")String className,
-                               @RequestParam(value = "faq_question")String faqQuestion,
-                               @RequestParam(value = "faq_answer")String faqAnswer
+    @ResponseBody
+    public Result insert(@RequestParam(value = "class_id")String classId,
+                         @RequestParam(value = "class_name")String className,
+                         @RequestParam(value = "faq_question")String faqQuestion,
+                         @RequestParam(value = "faq_answer")String faqAnswer
 //                             @RequestParam(value = "operate_account")String operateAccount
                                ){
         try {
@@ -81,12 +85,24 @@ public class FaqController extends BaseController{
             paramsMap.put("faq_question",faqQuestion);
             paramsMap.put("faq_answer",faqAnswer);
             String url = ConfigUtil.getConfig("news.faq.insert");
-            Object obj = super.httpPost(url,paramsMap);
-            //todo 做返回处理
-            return new ModelAndView("/cms/faq");
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, paramsMap);
+            logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
         }catch (Exception e){
-            logger.info("throw exception:", e);
-            return new ModelAndView("/cms/faq");
+            logger.info("FaqController insert  throw exception:", e.getMessage());
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -143,7 +159,8 @@ public class FaqController extends BaseController{
         return map;
     }
     @RequestMapping("edit")
-    public ModelAndView edit(@RequestParam(value = "class_id")String classId,
+    @ResponseBody
+    public Result edit(@RequestParam(value = "class_id")String classId,
                              @RequestParam(value = "class_name")String className,
                              @RequestParam(value = "faq_id")String faqId,
                              @RequestParam(value = "faq_question")String faqQuestion,
@@ -159,15 +176,24 @@ public class FaqController extends BaseController{
             paramsMap.put("faq_answer",faqAnswer);
             String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
-            if(hr.getStatusCode()==200){
-                return new ModelAndView("/cms/faq");
-            }else{
-                return new ModelAndView("redirect:/faq/toedit?faq_id="+faqId);
+            logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        return null;
     }
     /**
      * 格式化string类型时间

@@ -110,11 +110,7 @@ public class ContactServiceImpl implements ContactService {
                     String callback = ConfigUtil.getConfig("callbackUrl");
 
                     OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-
-//                    String contractTemplate = ConfigUtil.getConfig("CONTRACTTEMPLATE");
-
                     String html = IOUtils.toString(fileUtils.download("contract","contract001.html"),"UTF-8");
-//                    String html = FileUtils.readFileToString(new File(contractTemplate),"UTF-8");
                     //合同内容替换
                     html = html.replace("{signatureDate}","<em>"+ DateUtils.getPrintDate()+"</em>");//签署日期
                     html = html.replace("{signatureArea}", ConfigUtil.getConfig("SIGNATUREAREA"));//签署地点

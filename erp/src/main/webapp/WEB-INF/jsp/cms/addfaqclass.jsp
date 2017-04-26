@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/faqclass" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
+    <form action="/erp/faqclass" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -45,7 +45,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">添 加
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="tijiao()" type="button">添 加
                     </button>
                 </div>
             </div>
@@ -62,6 +62,63 @@
     })
 })</script>
 <script>
+
+    // prepare Options Object
+    var options = {
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        error : function() {
+            alert('error!');
+        },
+        timeout : 3000
+    };
+    // pre-submit callback
+    function showRequest(formData, jqForm, options) {
+        // formData is an array; here we use $.param to convert it to a string to display it
+        // but the form plugin does this for you automatically when it submits the data
+        var queryString = $.param(formData);
+
+        // jqForm is a jQuery object encapsulating the form element.  To access the
+        // DOM element for the form do this:
+        // var formElement = jqForm[0];
+
+//        alert('About to submit: \n\n' + queryString);
+
+        // here we could return false to prevent the form from being submitted;
+        // returning anything other than false will allow the form submit to continue
+        return true;
+    }
+    // post-submit callback
+    function showResponse(responseText, statusText, xhr, $form)  {
+        // for normal html responses, the first argument to the success callback
+        // is the XMLHttpRequest object's responseText property
+
+        // if the ajaxSubmit method was passed an Options Object with the dataType
+        // property set to 'xml' then the first argument to the success callback
+        // is the XMLHttpRequest object's responseXML property
+
+        // if the ajaxSubmit method was passed an Options Object with the dataType
+        // property set to 'json' then the first argument to the success callback
+        // is the json data object returned by the server
+
+//        alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +
+//            '\n\nThe output div should have already been updated with the responseText.');
+        var data = responseText;
+        var code = data.code;//200 is success，other is fail
+        if(code=="200"){
+            layer.msg('保存成功', {icon: 1, time: 1000});
+            setTimeout(function() {
+                layer_close();
+            }, 2000);
+        }else{
+            layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
+        }
+    }
+    function tijiao() {
+        $('#form-add').ajaxSubmit(options);
+    }
+
+
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({
         yearOffset: 0,

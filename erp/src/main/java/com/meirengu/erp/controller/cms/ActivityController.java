@@ -1,8 +1,11 @@
 package com.meirengu.erp.controller.cms;
 
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
+import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.model.Result;
 import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
@@ -43,6 +46,7 @@ public class ActivityController extends BaseController{
         String urlAppend = url+"?activity_id="+activityId;
         try {
             map = ( Map<String, Object>)super.httpGet(urlAppend);
+            map.put("activityId",activityId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,15 +58,16 @@ public class ActivityController extends BaseController{
     }
 
     @RequestMapping(method = {RequestMethod.POST})
-    public ModelAndView insert(@RequestParam(value = "activity_type")Integer activityType,
-                               @RequestParam(value = "activity_name")String activityName,
-                               @RequestParam(value = "activity_image")String activityImage,
-                               @RequestParam(value = "activity_link")String activityLink,
-                               @RequestParam(value = "activity_sort")Integer activitySort,
-                               @RequestParam(value = "remarks")String remarks,
-                               @RequestParam(value = "status")Integer status,
-                               @RequestParam(value = "start_time")String startTime,
-                               @RequestParam(value = "end_time")String endTime
+    @ResponseBody
+    public Result insert(@RequestParam(value = "activity_type")Integer activityType,
+                         @RequestParam(value = "activity_name")String activityName,
+                         @RequestParam(value = "activity_image")String activityImage,
+                         @RequestParam(value = "activity_link")String activityLink,
+                         @RequestParam(value = "activity_sort")Integer activitySort,
+                         @RequestParam(value = "remarks")String remarks,
+                         @RequestParam(value = "status")Integer status,
+                         @RequestParam(value = "start_time")String startTime,
+                         @RequestParam(value = "end_time")String endTime
 //                             @RequestParam(value = "operate_account")String operateAccount
                                ){
         try {
@@ -78,12 +83,25 @@ public class ActivityController extends BaseController{
             paramsMap.put("activity_sort",activitySort+"");
             paramsMap.put("remarks",remarks);
             String url = ConfigUtil.getConfig("news.activity.insert");
-            Object obj = super.httpPost(url,paramsMap);
-            //todo 做返回处理
-            return new ModelAndView("/cms/activity");
+
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, paramsMap);
+            logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
         }catch (Exception e){
             logger.info("throw exception:", e);
-            return new ModelAndView("/cms/activity");
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -126,7 +144,7 @@ public class ActivityController extends BaseController{
 
     @RequestMapping("update")
     @ResponseBody
-    public Map update( @RequestParam(value="activity_id", required = true ) String activityId,
+    public Result update( @RequestParam(value="activity_id", required = true ) String activityId,
                        @RequestParam(value = "activity_type" , required = false)Integer activityType,
                        @RequestParam(value = "activity_name", required = false)String activityName,
                        @RequestParam(value = "activity_image", required = false)String activityImage,
@@ -143,9 +161,9 @@ public class ActivityController extends BaseController{
             paramsMap.put("activity_id",activityId);
             paramsMap.put("operate_account","暂时保留");
             if(!StringUtil.isEmpty(endTime)){
-                paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,""));
+                paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,"yyyy-MM-dd HH:mm:ss"));
             }if(!StringUtil.isEmpty(startTime)){
-                paramsMap.put("start_time",DateAndTime.convertDateToString(startTime,""));
+                paramsMap.put("start_time",DateAndTime.convertDateToString(startTime,"yyyy-MM-dd HH:mm:ss"));
             }
             if(activityLink!=null){
                 paramsMap.put("activity_link",activityLink);
@@ -170,11 +188,24 @@ public class ActivityController extends BaseController{
             }
             String url = ConfigUtil.getConfig("news.activity.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
-            map.put("code",hr.getStatusCode());
+            logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        return map;
     }
 
     /**

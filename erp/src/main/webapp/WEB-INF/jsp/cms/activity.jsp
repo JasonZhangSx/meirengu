@@ -12,9 +12,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    </head>
-</html>
-<title>图片列表</title>
+    <title>图片列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
+    </style>
 </head>
 <body>
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 运营管理 <span class="c-gray en">&gt;</span> 活动列表 <a
@@ -82,6 +84,7 @@
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
             ordering:false,
+            "scrollX": true, //允许水平滚动
             aLengthMenu:[10],//设置一页展示10条记录
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
@@ -238,6 +241,9 @@
             type: 2,
             title: title,
             content: url,
+            end: function(){
+                table.ajax.reload();
+            }
         });
         layer.full(index);
     }
@@ -248,6 +254,9 @@
             type: 2,
             title: title,
             content: url+'?activity_id='+id,
+            end: function(){
+                table.ajax.reload();
+            }
         });
         layer.full(index);
     }
