@@ -2,6 +2,7 @@ package com.meirengu.webview.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.utils.RequestUtil;
 import com.meirengu.webview.service.InviteRegisterService;
+import com.meirengu.webview.utils.AESOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,12 @@ public class InviteRegisterController {
 
     @RequestMapping(value = "invite/{inviter_phone}")
     public ModelAndView invite(@PathVariable(value = "inviter_phone") String inviterPhone){
+
+        try {
+            inviterPhone = AESOperator.getInstance().decrypt(inviterPhone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.info("inviteRegister params  >> inviterPhone:{} ", inviterPhone);
         Map model = new HashMap();
         model.put("inviterPhone", inviterPhone);

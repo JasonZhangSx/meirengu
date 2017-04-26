@@ -46,6 +46,10 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             LOGGER.warn(">> {} is in white list...",ip);
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }else if(ConfigUtil.getConfig("api.filter.partner.ip").contains(ip)){
+            /*
+            if(ConfigUtil.getConfig("api.filter.partner.ip").contains(requestURL)){
+
+            }*/
             LOGGER.warn(">> {} is in our white list of partner...",ip);
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }else {
@@ -56,14 +60,6 @@ public class ValidateSignFilter extends OncePerRequestFilter{
             String tsp = httpServletRequest.getParameter("timestamp");
             String appKey = httpServletRequest.getParameter("key");
             String sign = httpServletRequest.getParameter("sign");
-
-            if(httpServletRequest instanceof MultipartHttpServletRequest){
-                MultipartHttpServletRequest req = (MultipartHttpServletRequest) httpServletRequest;
-                tsp = req.getParameter("timestamp");
-                appKey = req.getParameter("key");
-                sign = req.getParameter("sign");
-                LOGGER.warn(">>multipartHttpservletRequest timestamp is {}, appKey is {}, sign is {} ",tsp, appKey, sign);
-            }
 
             //timestamp, key, sign 为验签必传参数
             if(StringUtil.isEmpty(appKey) || StringUtil.isEmpty(sign)){
