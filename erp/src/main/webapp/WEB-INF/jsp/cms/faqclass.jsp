@@ -12,10 +12,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-   </head>
-</html>
-
-<title>图片列表</title>
+    <title>图片列表</title>
+    <style type="text/css">
+        th,td { white-space: nowrap; }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
+    </style>
 </head>
 <body>
     <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> CMS管理系统 <span class="c-gray en">&gt;</span> 常见问题分类列表 <a
@@ -73,6 +74,7 @@
             searching: false,//屏蔽datatales的查询框
             aLengthMenu:[10],//设置一页展示10条记录
             ordering:false,
+            "scrollX": true, //允许水平滚动
             "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
             "oLanguage": {  //对表格国际化
                 "sLengthMenu": "每页显示 _MENU_条",

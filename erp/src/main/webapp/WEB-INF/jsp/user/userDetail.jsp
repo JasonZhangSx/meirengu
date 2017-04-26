@@ -12,11 +12,9 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-</head>
-</html>
-<link href="/erp/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="/erp/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/erp/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+    <link href="/erp/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
