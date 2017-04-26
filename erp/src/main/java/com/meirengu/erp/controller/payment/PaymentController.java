@@ -30,13 +30,72 @@ public class PaymentController extends BaseController {
     protected static StringBuffer url;
 
     @RequestMapping("rechargeRecord")
-    public ModelAndView rechargeRecord(){
-        return new ModelAndView("/payment/userRechargeRecord", recordList("3"));
+    public ModelAndView rechargeRecord(String orderSn,String userPhone,String startDate,String endDate){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("3");
+        if (orderSn!=null&&!orderSn.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&orderSn="+orderSn);
+            }else {
+                stringBuffer.append("orderSn="+orderSn);
+            }
+        }
+        if (userPhone!=null&&!userPhone.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&userPhone="+userPhone);
+            }else {
+                stringBuffer.append("userPhone="+userPhone);
+            }
+        }
+        if (startDate!=null&&!startDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&startDate="+startDate);
+            }else {
+                stringBuffer.append("startDate="+startDate);
+            }
+        }
+        if (endDate!=null&&!endDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&endDate="+endDate);
+            }else {
+                stringBuffer.append("endDate="+endDate);
+            }
+        }
+        return new ModelAndView("/payment/userRechargeRecord", recordList(stringBuffer.toString()));
     }
-
     @RequestMapping("withdrawalsRecord")
-    public ModelAndView withdrawalsRecord(){
-        return new ModelAndView("/payment/userWithdrawalsRecord", recordList("4"));
+    public ModelAndView withdrawalsRecord(String orderSn,String userPhone,String startDate,String endDate){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("4");
+        if (orderSn!=null&&!orderSn.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&orderSn="+orderSn);
+            }else {
+                stringBuffer.append("orderSn="+orderSn);
+            }
+        }
+        if (userPhone!=null&&!userPhone.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&userPhone="+userPhone);
+            }else {
+                stringBuffer.append("userPhone="+userPhone);
+            }
+        }
+        if (startDate!=null&&!startDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&startDate="+startDate);
+            }else {
+                stringBuffer.append("startDate="+startDate);
+            }
+        }
+        if (endDate!=null&&!endDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&endDate="+endDate);
+            }else {
+                stringBuffer.append("endDate="+endDate);
+            }
+        }
+        return new ModelAndView("/payment/userWithdrawalsRecord", recordList(stringBuffer.toString()));
     }
     @RequestMapping("confirmWithdrawals")
     public ModelAndView confirmWithdrawals(HttpServletRequest reques,String orderSn, String status){
@@ -48,7 +107,7 @@ public class PaymentController extends BaseController {
         map.put("status",status);
         map.put("content",JSONObject.toJSONString(map));
         super.httpPost(url.toString()+"/capital/withdrawals",map);
-        return withdrawalsRecord();
+        return withdrawalsRecord(null,null,null,null);
     }
     @RequestMapping("withdrawalsError")
     public ModelAndView withdrawalsError(String orderSn){
@@ -65,7 +124,7 @@ public class PaymentController extends BaseController {
         map.put("status","3");
         map.put("content",JSONObject.toJSONString(map));
         super.httpPost(url.toString()+"/capital/withdrawals",map);
-        return withdrawalsRecord();
+        return withdrawalsRecord(null,null,null,null);
     }
 
     protected Map<String,Object> recordList(String condition){
