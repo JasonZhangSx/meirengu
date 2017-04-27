@@ -260,7 +260,7 @@ public class UserAddressController extends BaseController{
         try {
             List<Map<String, Object>> userAddressList= userAddressService.selectByAddIdArray(addressId);
             if(userAddressList != null && userAddressList.size() > 0){
-               return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+               return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(userAddressList,List.class,Map.class),StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null,StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
             }
