@@ -67,6 +67,7 @@ public class OSSFileUtils {
     }
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        inputStream.close();
     }
     public void upload(String content, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
