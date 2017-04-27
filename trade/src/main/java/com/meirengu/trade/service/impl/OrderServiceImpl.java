@@ -19,6 +19,7 @@ import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
+import com.meirengu.utils.NumberUtil;
 import com.meirengu.utils.ObjectToFile;
 import com.meirengu.utils.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +77,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param orderId
      * @return
      */
-    public Map<String, Object> orderDetail(int orderId) throws ParseException, IOException {
+    public Map<String, Object> orderDetail(Integer orderId) throws ParseException, IOException {
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
             //如果是待支付订单，返回剩余支付时长
@@ -101,8 +102,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             }
             //查询地址信息
             if (map.get("userAddressId") != null) {
-                int userAddressId = (int)((long)map.get("userAddressId"));
-                if (userAddressId != 0) {
+                Integer userAddressId = Integer.parseInt(map.get("userAddressId").toString());
+                if (!NumberUtil.isNullOrZero(userAddressId)) {
                     //请求user_center服务获取用户地址信息
                     String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ userAddressId;;
                     HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
@@ -129,8 +130,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
             }
             if (map.get("itemId") != null) {
-                int itemId = (int)((long)map.get("itemId"));
-                if (itemId != 0) {
+                Integer itemId = Integer.parseInt(map.get("itemId").toString());
+                if (!NumberUtil.isNullOrZero(itemId)) {
                     //查询项目头图
                     String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
                     HttpResult itemResult = HttpUtil.doGet(url);
@@ -172,9 +173,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             //临时存放档位信息的Map
             Map<Integer, Map<String, Object>> itemLevelListTemp = new HashMap<Integer, Map<String, Object>>();
             for (Map<String, Object> orderMap : aList){
-                int addressId = (int)((long)orderMap.get("userAddressId"));
+                Integer addressId = Integer.parseInt(orderMap.get("userAddressId").toString());
                 addressIdSet.add(addressId);
-                int itemLevelId = (int)((long)orderMap.get("itemLevelId"));
+                Integer itemLevelId = Integer.parseInt(orderMap.get("itemLevelId").toString());
                 itemLeavelIdSet.add(itemLevelId);
             }
             //请求user_center服务获取用户地址信息
@@ -230,12 +231,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
             }
             for (Map<String, Object> orderMap : aList){
-                int addressId = (int)((long)orderMap.get("userAddressId"));
+                Integer addressId = Integer.parseInt(orderMap.get("userAddressId").toString());
                 addressMap = addressListTemp.get(addressId);
                 if (addressMap != null) {
                     orderMap.putAll(addressMap);
                 }
-                int itemLevelId = (int)((long)orderMap.get("itemLevelId"));
+                Integer itemLevelId = Integer.parseInt(orderMap.get("itemLevelId").toString());
                 itemLevelMap = itemLevelListTemp.get(itemLevelId);
                 if (itemLevelMap != null) {
                     orderMap.putAll(itemLevelMap);
@@ -259,6 +260,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         if (orderDetail == null || orderDetail.getOrderId() == null) {
             result.setCode(StatusCode.ORDER_NOT_EXIST);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_NOT_EXIST));
+            return result;
+        }
+        if (orderDetail.getOrderState() != OrderStateEnum.BOOK.getValue()) {
+            result.setCode(StatusCode.ORDER_STATUS_NOT_MATCH);
+            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_STATUS_NOT_MATCH));
             return result;
         }
         /**----逻辑改为点击预约后立即改变档位状态，预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
@@ -303,11 +309,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws OrderException
      */
     @Transactional
-    public Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
+    public Result insertSubscriptions(Order order, Integer rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
 
         //首先校验优惠券是否有效
-        if (rebateReceiveId != 0) {
+        if (!NumberUtil.isNullOrZero(rebateReceiveId)) {
             result = rebateReceiveService.validateRebate(order, rebateReceiveId);
             if (result.getCode() != StatusCode.OK) {
                 return result;
@@ -329,7 +335,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         if (i == 1) {
             //3.订单生成后附属操作
             // 优惠券置为已使用状态
-            if (rebateReceiveId != 0) {
+            if (!NumberUtil.isNullOrZero(rebateReceiveId)) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
             // 修改项目档位信息
@@ -494,8 +500,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws IOException
      */
     public Page getPage(Page page, Map map)  throws IOException {
-        int needAvatar = (int)map.get("needAvatar");
-        int itemId = map.get("itemId")==null ?  0 : (int)map.get("itemId");
+        Integer needAvatar = Integer.parseInt(map.get("needAvatar").toString());
+        Integer itemId = Integer.parseInt(map.get("itemId").toString());
         if (needAvatar == Constant.YES){
             //该请求为支持人数列表的请求
             //1.查询项目状态
@@ -527,7 +533,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //临时存放用户信息的Map
                 Map<Integer, Map<String, Object>> userListTemp = new HashMap<Integer, Map<String, Object>>();
                 for (Map<String, Object> orderMap : aList){
-                    int userId = (int)((long)orderMap.get("userId"));
+                    Integer userId = Integer.parseInt(orderMap.get("userId").toString());
                     userIdsSet.add(userId);
                 }
                 //请求user_center服务获取用户地址信息
@@ -552,9 +558,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         }
                         //将获取的信息组装到原data中
                         for (Map<String, Object> orderMap : aList){
-                            int userId = (int)((long)orderMap.get("userId"));
+                            Integer userId = Integer.parseInt(orderMap.get("userId").toString());
                             avatarMap = userListTemp.get(userId);
-                            orderMap.putAll(avatarMap);
+                            if (avatarMap != null) {
+                                orderMap.putAll(avatarMap);
+                            }
                         }
                     }
                 }
@@ -568,7 +576,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 //临时存放用户信息的Map
                 Map<Integer, Map<String, Object>> itemsTemp = new HashMap<Integer, Map<String, Object>>();
                 for (Map<String, Object> orderMap : aList){
-                    int itemIds = (int)((long)orderMap.get("itemId"));
+                    Integer itemIds = Integer.parseInt(orderMap.get("itemId").toString());
                     itemIdsSet.add(itemIds);
                 }
                 String itemIdsStr = itemIdsSet.toString();
@@ -592,9 +600,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                         }
                         //将获取的信息组装到原data中
                         for (Map<String, Object> orderMap : aList){
-                            int itemIdVal = (int)((long)orderMap.get("itemId"));
+                            Integer itemIdVal = Integer.parseInt(orderMap.get("itemId").toString());
                             itemsMap = itemsTemp.get(itemIdVal);
-                            orderMap.putAll(itemsMap);
+                            if (itemsMap != null) {
+                                orderMap.putAll(itemsMap);
+                            }
                         }
                     }
                 }
@@ -613,10 +623,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @throws OrderException
      */
     @Transactional
-    public Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
+    public Result insertAppointment(Order order, Integer rebateReceiveId)  throws IllegalAccessException, IOException, OrderException {
         Result result = new Result();
         //首先校验优惠券是否有效
-        if (rebateReceiveId != 0) {
+        if (!NumberUtil.isNullOrZero(rebateReceiveId)) {
             result = rebateReceiveService.validateRebate(order, rebateReceiveId);
             if (result.getCode() != StatusCode.OK) {
                 return result;
@@ -628,7 +638,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         if (result.getCode() != StatusCode.OK){
             return result;
         }
-        //设置itemName
+        //填值itemName,partnerId
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
         order.setItemName(tempMap.get("itemName").toString());
         order.setPartnerId(Integer.parseInt(tempMap.get("partnerId").toString()));
@@ -637,7 +647,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         if (i == 1) {
             //3.订单生成后附属操作
             //优惠券置为已使用状态
-            if (rebateReceiveId != 0) {
+            if (!NumberUtil.isNullOrZero(rebateReceiveId)) {
                 rebateUsedService.rebateUse(rebateReceiveId, order.getOrderSn());
             }
 

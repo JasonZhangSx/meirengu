@@ -55,7 +55,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
         Result result = new Result();
         //查询该订单记录
         Order order = orderService.detail(orderId);
-        if (order != null && order.getOrderId() != null) {
+        if (order != null && (order.getOrderState() == OrderStateEnum.PAID.getValue())) {
             //判断订单是否在支付完成后72小时之内
             Date finishTime = order.getFinishedTime();
             long time = System.currentTimeMillis() - finishTime.getTime();
@@ -94,12 +94,12 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
                 result.setCode(StatusCode.OK);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
             } else {
-                logger.error("退款申请保存失败：订单ID {} ,新增退款表 {} 条，跟新订单表 {} 条", orderId, i, j);
+                logger.error("退款申请保存失败：订单ID {} ,新增退款表 {} 条，更新订单表 {} 条", orderId, i, j);
                 throw new OrderException("退款申请失败, 订单ID ", StatusCode.REFUND_APPLY_ERROR);
             }
         } else {
-            logger.error("退款申请保存失败：订单ID {} ,没有该订单记录", orderId);
-            throw new OrderException("退款申请保存失败：没有该订单记录, 订单ID:  " + orderId, StatusCode.ORDER_NOT_EXIST);
+            result.setCode(StatusCode.ORDER_STATUS_NOT_MATCH);
+            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_STATUS_NOT_MATCH));
         }
         return result;
     }

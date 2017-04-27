@@ -1,4 +1,5 @@
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
@@ -106,6 +107,5 @@ public class Ognl {
 		}
 		return true;
 	}
-
 
 }

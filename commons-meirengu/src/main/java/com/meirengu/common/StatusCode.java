@@ -268,6 +268,8 @@ public class StatusCode {
     public static final int REFUND_APPLY_ERROR = 50764;
     public static final int REFUND_ADUIT_ERROR = 50765;
     public static final int REFUND_PERIOD_EXPIRED = 50766;
+    public static final int ORDER_STATUS_NOT_MATCH = 50767;
+
 
 
 
@@ -563,6 +565,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.REFUND_APPLY_ERROR, "退款申请失败，请重试");
         codeMsgMap.put(StatusCode.REFUND_ADUIT_ERROR, "退款审核失败，请重试");
         codeMsgMap.put(StatusCode.REFUND_PERIOD_EXPIRED, "退款期限已过");
+        codeMsgMap.put(StatusCode.ORDER_STATUS_NOT_MATCH, "订单当前状态不能进行该操作，请刷新订单信息");
 
 
 

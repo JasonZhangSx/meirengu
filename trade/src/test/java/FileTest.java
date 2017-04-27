@@ -18,6 +18,9 @@ public class FileTest {
 //        }
 //        String s= "2017-04-07 11:50:32.0";
 //        System.out.println(s.substring(0,19));
-
+        int a = 6;
+        Float b = 0f;
+//        System.out.println(Ognl.NumIsNullOrZero(a));
+//        System.out.println(Ognl.NumIsNullOrZero(b));
     }
 }
