@@ -13,46 +13,46 @@
 	<update id="update" parameterType="orderCandidate">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null">
+			<if test="@Ognl@isNotEmpty(id)">
 				id=#{id},
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				user_id=#{userId},
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				user_name=#{userName},
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				user_phone=#{userPhone},
 			</if>
-			<if test="userWeixin != null and userWeixin != ''">
+			<if test="@Ognl@isNotEmpty(userWeixin)">
 				user_weixin=#{userWeixin},
 			</if>
-			<if test="itemId != null">
+			<if test="@Ognl@isNotEmpty(itemId)">
 				item_id=#{itemId},
 			</if>
-			<if test="itemName != null and itemName != ''">
+			<if test="@Ognl@isNotEmpty(itemName)">
 				item_name=#{itemName},
 			</if>
-			<if test="itemLevelId != null">
+			<if test="@Ognl@isNotEmpty(itemLevelId)">
 				item_level_id=#{itemLevelId},
 			</if>
-			<if test="itemLevelName != null and itemLevelName != ''">
+			<if test="@Ognl@isNotEmpty(itemLevelName)">
 				item_level_name=#{itemLevelName},
 			</if>
-			<if test="itemNum != null">
+			<if test="@Ognl@isNotEmpty(itemNum)">
 				item_num=#{itemNum},
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="status != null and">
+			<if test="@Ognl@isNotEmpty(status)">
 				status=#{status},
 			</if>
-			<if test="updateTime != null">
+			<if test="@Ognl@isNotEmpty(updateTime)">
 				update_time=#{updateTime},
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				operate_account=#{operateAccount},
 			</if>
 		</set>
@@ -67,58 +67,58 @@
 	<!-- 查询条件 -->
 	<sql id="findPage_where">
 		<where>
-			<if test="id != null">
+			<if test="@Ognl@isNotEmpty(id)">
 				AND id=#{id}
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				AND user_id=#{userId}
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				AND user_name=#{userName}
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				AND user_phone=#{userPhone}
 			</if>
-			<if test="userWeixin != null and userWeixin != ''">
+			<if test="@Ognl@isNotEmpty(userWeixin)">
 				AND user_weixin=#{userWeixin}
 			</if>
-			<if test="itemId != null">
+			<if test="@Ognl@isNotEmpty(itemId)">
 				AND item_id=#{itemId}
 			</if>
-			<if test="itemName != null and itemName != ''">
+			<if test="@Ognl@isNotEmpty(itemName)">
 				AND item_name=#{itemName}
 			</if>
-			<if test="itemLevelId != null">
+			<if test="@Ognl@isNotEmpty(itemLevelId)">
 				AND item_level_id=#{itemLevelId}
 			</if>
-			<if test="itemLevelName != null and itemLevelName != ''">
+			<if test="@Ognl@isNotEmpty(itemLevelName)">
 				AND item_level_name=#{itemLevelName}
 			</if>
-			<if test="itemLevelAmount != null">
+			<if test="@Ognl@isNotEmpty(itemLevelAmount)">
 				AND item_level_amount=#{itemLevelAmount}
 			</if>
-			<if test="itemNum != null">
+			<if test="@Ognl@isNotEmpty(itemNum)">
 				AND item_num=#{itemNum}
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				AND order_amount=#{orderAmount}
 			</if>
-			<if test="state != null">
+			<if test="@Ognl@isNotEmpty(state)">
 				AND state=#{state}
 			</if>
-			<if test="createTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
 				AND create_time >= #{createTimeBegin}
 			</if>
-			<if test="createTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
 				AND create_time &lt;= #{createTimeEnd}
 			</if>
-			<if test="updateTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(updateTimeBegin)">
 				AND update_time >= #{updateTimeBegin}
 			</if>
-			<if test="updateTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(updateTimeEnd)">
 				AND update_time &lt;= #{updateTimeEnd}
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				AND operate_account=#{operateAccount}
 			</if>
 		</where>
@@ -129,7 +129,7 @@
 		FROM
 		<include refid="table_name" />
 		<include refid="findPage_where"/>
-		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
 			order by ${sortBy} ${order}
 		</if>
 	</select>

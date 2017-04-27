@@ -26,13 +26,6 @@ public interface FeedbackService extends PageBaseService<Feedback>{
     public int update(Feedback feedback);
 
     /**
-     * 修改反馈状态
-     * @param feedbackId
-     * @return
-     */
-    int updateStatus(int feedbackId);
-
-    /**
      * 根据条件获取总条数
      * @param map
      * @return

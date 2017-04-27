@@ -44,11 +44,6 @@ public class FeedbackServiceImpl implements FeedbackService{
     }
 
     @Override
-    public int updateStatus(int feedbackId){
-        return feedbackDao.updateStatus(feedbackId);
-    }
-
-    @Override
     public Page<Feedback> getPageList(Page<Feedback> page, Map map) {
         return pageService.getListByPage(page, map, feedbackDao);
     }

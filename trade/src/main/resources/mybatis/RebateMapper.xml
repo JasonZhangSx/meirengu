@@ -42,28 +42,28 @@
 	<update id="update" parameterType="rebate">
 	UPDATE <include refid="table_name" />
 	<set>
-		<if test="rebateSn != null and rebateSn != ''">
+		<if test="@Ognl@isNotEmpty(rebateSn)">
 			rebate_sn=#{rebateSn},
 		</if>
-		<if test="rebateBatch != null and rebateBatch != 0">
+		<if test="@Ognl@isNotEmpty(rebateBatch)">
 			rebate_batch=#{rebateBatch},
 		</if>
-		<if test="channel != null and channel != ''">
+		<if test="@Ognl@isNotEmpty(channel)">
 			channel=#{channel},
 		</if>
-		<if test="validStartTime != null">
+		<if test="@Ognl@isNotEmpty(validStartTime)">
 			valid_start_time=#{validStartTime},
 		</if>
-		<if test="validEndTime != null">
+		<if test="@Ognl@isNotEmpty(validEndTime)">
 			valid_end_time=#{validEndTime},
 		</if>
-		<if test="createTime != null">
+		<if test="@Ognl@isNotEmpty(createTime)">
 			create_time=#{createTime},
 		</if>
-		<if test="updateTime != null">
+		<if test="@Ognl@isNotEmpty(updateTime)">
 			update_time=#{updateTime},
 		</if>
-		<if test="operateAccount != null and operateAccount != ''">
+		<if test="@Ognl@isNotEmpty(operateAccount)">
 			operate_account=#{operateAccount},
 		</if>
 	</set>
@@ -76,28 +76,25 @@
 	<update id="updateBySn" parameterType="rebate">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="rebateId != null">
-				rebate_id=#{rebateId},
-			</if>
-			<if test="rebateBatch != null">
+			<if test="@Ognl@isNotEmpty(rebateBatch)">
 				rebate_batch=#{rebateBatch},
 			</if>
-			<if test="channel != null and channel != ''">
+			<if test="@Ognl@isNotEmpty(channel)">
 				channel=#{channel},
 			</if>
-			<if test="validStartTime != null">
+			<if test="@Ognl@isNotEmpty(validStartTime)">
 				valid_start_time=#{validStartTime},
 			</if>
-			<if test="validEndTime != null">
+			<if test="@Ognl@isNotEmpty(validEndTime)">
 				valid_end_time=#{validEndTime},
 			</if>
-			<if test="createTime != null">
+			<if test="@Ognl@isNotEmpty(createTime)">
 				create_time=#{createTime},
 			</if>
-			<if test="updateTime != null">
+			<if test="@Ognl@isNotEmpty(updateTime)">
 				update_time=#{updateTime},
 			</if>
-			<if test="operateAccount != null and operateAccount != ''">
+			<if test="@Ognl@isNotEmpty(operateAccount)">
 				operate_account=#{operateAccount},
 			</if>
 		</set>
@@ -111,13 +108,59 @@
 		where rebate_id=#{id}
 	</select>
 
+	<!-- 查询条件 -->
+	<sql id="findPage_where">
+		<where>
+			<if test="@Ognl@isNotEmpty(rebateId)">
+				AND tb.rebate_id=#{rebateId}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateSn)">
+				AND tb.rebate_sn=#{rebateSn}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateBatch)">
+				AND tb.rebate_batch=#{rebateBatch}
+			</if>
+			<if test="@Ognl@isNotEmpty(channel)">
+				AND tb.channel=#{channel}
+			</if>
+			<if test="@Ognl@isNotEmpty(validStartTimeBegin)">
+				AND tb.valid_start_time>=#{validStartTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(validStartTimeEnd)">
+				AND tb.valid_start_time &lt;= #{validStartTimeEnd}
+			</if>
+			<if test="@Ognl@isNotEmpty(validEndTimeBegin)">
+				AND tb.valid_end_time>=#{validEndTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(validEndTimeEnd)">
+				AND tb.valid_end_time &lt;= #{validEndTimeEnd}
+			</if>
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND tb.create_time>=#{createTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND tb.create_time &lt;= #{createTimeEnd}
+			</if>
+			<if test="@Ognl@isNotEmpty(operateAccount)">
+				AND tb.operate_account=#{operateAccount}
+			</if>
+		</where>
+	</sql>
+
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select <include refid="select_columns" />
+		FROM <include refid="table_name" /> tb
+		<include refid="findPage_where"/>
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
+			order by ${sortBy} ${order}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
-		select count(1) FROM <include refid="table_name" />
+		select count(1)
+		FROM <include refid="table_name" /> tb
+		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

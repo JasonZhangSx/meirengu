@@ -304,30 +304,46 @@ public class OrderController extends BaseController{
                           @RequestParam(value = "order_sn", required = false) String orderSn,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
-                          @RequestParam(value = "user_id", required = false) String userId,
-                          @RequestParam(value = "order_state", required = false, defaultValue = "0") int orderState,
-                          @RequestParam(value = "need_avatar", required = false, defaultValue = "0") int needAvatar,
-                          @RequestParam(value = "item_id", required = false, defaultValue = "0") int itemId){
+                          @RequestParam(value = "user_id", required = false) Integer userId,
+                          @RequestParam(value = "order_state", required = false) Integer orderState,
+                          @RequestParam(value = "need_avatar", required = false, defaultValue = "0") Integer needAvatar,
+                          @RequestParam(value = "item_id", required = false) Integer itemId){
         //如果需要头像，则必传项目ID，因为此时需要去获取项目的最新状态，查出该项目的订单
         if (needAvatar != 0 ) {
-            if (itemId == 0) {
+            if (itemId == null || itemId == 0) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
         Map<String, Object> map = new HashMap<>();
         //前台不展示删除订单
         map.put("flag", Constant.NOT_DELETE);//逻辑删除状态 0为删除，1为未删除
-        map.put("orderSn", orderSn);
-        map.put("userPhone", userPhone);
-        map.put("itemName", itemName);
-        map.put("userId", userId);
-        map.put("orderState", orderState);
-        map.put("needAvatar", needAvatar);
-        if (itemId != 0) {
+        if (StringUtils.isNotBlank(orderSn)) {
+            map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            map.put("userPhone", userPhone);
+        }
+        if (StringUtils.isNotBlank(itemName)) {
+            map.put("itemName", itemName);
+        }
+        if (userId != null) {
+            map.put("userId", userId);
+        }
+        if (orderState != null) {
+            map.put("orderState", orderState);
+        }
+        if (needAvatar != null) {
+            map.put("needAvatar", needAvatar);
+        }
+        if (itemId != null) {
             map.put("itemId", itemId);
         }
-        map.put("sortBy", sortBy);
-        map.put("order", order);
+        if (StringUtils.isNotBlank(sortBy)) {
+            map.put("sortBy", sortBy);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            map.put("order", order);
+        }
         Page<Order> page = new Page<Order>();
         page.setPageNow(pageNum);
         page.setPageSize(pageSize);

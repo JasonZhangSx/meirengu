@@ -323,7 +323,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //2新增认购订单
         //设置itemName
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
-        order.setItemName((String) tempMap.get("itemName"));
+        order.setItemName(tempMap.get("itemName").toString());
+        order.setPartnerId(Integer.parseInt(tempMap.get("partnerId").toString()));
         int i = insert(order);
         if (i == 1) {
             //3.订单生成后附属操作
@@ -340,10 +341,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             sendRocketMQDeployQueue4Sms(order.getOrderSn());
 
             // 组织数据返回给客户端
-            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
-            orderMap.put("partnerId", tempMap.get("partnerId"));
             result.setCode(StatusCode.OK);
-            result.setData(orderMap);
+            result.setData(order);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
         } else {
             result.setCode(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT);
@@ -631,7 +630,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
         //设置itemName
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
-        order.setItemName((String) tempMap.get("itemName"));
+        order.setItemName(tempMap.get("itemName").toString());
+        order.setPartnerId(Integer.parseInt(tempMap.get("partnerId").toString()));
         //2.新增订单
         int i = insert(order);
         if (i == 1) {
@@ -645,8 +645,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             itemLevelUpdate(order);
 
             // 组织数据返回给客户端
-            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
-            result.setData(orderMap);
+            result.setData(order);
         } else {
             result.setCode(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
