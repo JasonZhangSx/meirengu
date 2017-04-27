@@ -89,6 +89,7 @@ public class ActivityController extends BaseController{
                           @RequestParam(value = "activity_sort", required = false)Integer activitySort,
                           @RequestParam(value = "start_time", required = false)Date startTime,
                           @RequestParam(value = "end_time", required = false)Date endTime,
+                          @RequestParam(value = "remarks", required = false ,defaultValue = "")String remarks,
                           @RequestParam(value = "operate_account", required = true)String operateAccount){
 
         try {
@@ -100,6 +101,7 @@ public class ActivityController extends BaseController{
             activity.setActivityName(activityName);
             activity.setActivityImage(activityImage);
             activity.setActivityLink(activityLink);
+            activity.setRemarks(remarks);
             if(!StringUtil.isEmpty(startTime)){
                 activity.setStartTime(startTime);
             }
