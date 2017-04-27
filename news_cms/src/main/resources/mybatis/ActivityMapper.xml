@@ -98,7 +98,10 @@
                 status=#{status},
             </if>
             <if test="operateAccount != null and operateAccount != ''">
-                operate_account=#{operateAccount},
+                operate_account = #{operateAccount},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
             </if>
             <if test="updateTime != null">
                 update_time=#{updateTime}
