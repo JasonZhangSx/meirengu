@@ -1,5 +1,3 @@
-import com.meirengu.uc.utils.SerializableUtil;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,13 +19,6 @@ public class Test {
     public void testGetByte(){
 
     }
-
-    public static byte[] getByte(String key) {
-        if (key instanceof String) {
-            return String.valueOf(key).getBytes();
-        } else {
-            return SerializableUtil.serialize(key);
-        }
-    }
+    
 
 }
