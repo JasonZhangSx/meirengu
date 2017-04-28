@@ -124,4 +124,6 @@ public interface UserService extends BaseService<User>{
     boolean getBankIdCard(String bankIdcard);
 
     boolean getIdCard(String idcard);
+
+    User retrieveByOpenId(String openId);
 }

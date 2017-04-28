@@ -15,9 +15,9 @@ public class Test {
         System.out.println(sdf.format(date));
     }
 
-
+    @org.junit.Test
     public void testGetByte(){
-
+        System.err.print((int)(Math.random()*2));
     }
     
 

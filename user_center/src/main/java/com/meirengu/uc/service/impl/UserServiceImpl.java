@@ -529,5 +529,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return flag;
     }
 
+    @Override
+    public User retrieveByOpenId(String openId) {
+        return userDao.retrieveByOpenId(openId);
+    }
+
 
 }
