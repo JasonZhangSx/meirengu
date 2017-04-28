@@ -76,6 +76,7 @@ public class OSSFileUtils {
     public void uploadUrl(String url, String folderName, String fileName) throws IOException {
         InputStream inputStream = new URL(url).openStream();
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        inputStream.close();
     }
 
     public InputStream download(String filePath,String fileName){
