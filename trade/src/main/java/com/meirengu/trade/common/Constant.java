@@ -95,5 +95,12 @@ public class Constant {
     public static final int ITEM_COMPLETED = 12;
     /** 13已下架 */
     public static final int ITEM_OFF = 13;
+    /** 众筹分类 */
+    /** 1 产品众筹 */
+    public static final int TYPE_PRODUCT = 1;
+    /** 2 收益权众筹 */
+    public static final int TYPE_PROFIT = 2;
+    /** 3 股权众筹 */
+    public static final int TYPE_SHARES = 3;
 
 }

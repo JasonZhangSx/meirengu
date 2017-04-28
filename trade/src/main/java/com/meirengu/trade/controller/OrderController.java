@@ -90,7 +90,6 @@ public class OrderController extends BaseController{
         }
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
-        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_BOOK_SN_PREFIX));
         order.setItemId(itemId);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
@@ -180,7 +179,6 @@ public class OrderController extends BaseController{
 
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
-        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_ORDER_SN_PREFIX));
         order.setItemId(itemId);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
