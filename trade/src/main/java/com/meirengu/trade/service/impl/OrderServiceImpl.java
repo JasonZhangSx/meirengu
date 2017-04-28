@@ -17,11 +17,8 @@ import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.ConfigUtil;
-import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
-import com.meirengu.utils.NumberUtil;
-import com.meirengu.utils.ObjectToFile;
-import com.meirengu.utils.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
@@ -331,6 +328,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
         order.setItemName(tempMap.get("itemName").toString());
         order.setPartnerId(Integer.parseInt(tempMap.get("partnerId").toString()));
+        // 根据众筹类型生成订单号
+        Integer typeId = Integer.parseInt(tempMap.get("typeId").toString());
+        String prefix = null;
+        switch (typeId) {
+            case Constant.TYPE_PRODUCT :
+                prefix = OrderSNUtils.CROWD_FUNDING_PRODUCT_ORDER_SN_PREFIX;
+                break;
+            case Constant.TYPE_PROFIT :
+                prefix = OrderSNUtils.CROWD_FUNDING_ROYALTY_BASED_ORDER_SN_PREFIX;
+                break;
+            case Constant.TYPE_SHARES :
+                prefix = OrderSNUtils.CROWD_FUNDING_EQUITY_ORDER_SN_PREFIX;
+                break;
+        }
+        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(prefix));
         int i = insert(order);
         if (i == 1) {
             //3.订单生成后附属操作
@@ -441,6 +453,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 Map<String, Object> tempMap = new HashMap<String, Object>();
                 tempMap.put("itemName", itemLevel.getString("itemName"));
                 tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
+                tempMap.put("typeId", itemLevel.getIntValue("typeId"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
@@ -642,6 +655,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> tempMap = (Map<String, Object>) result.getData();
         order.setItemName(tempMap.get("itemName").toString());
         order.setPartnerId(Integer.parseInt(tempMap.get("partnerId").toString()));
+        // 根据众筹类型生成订单号
+        Integer typeId = Integer.parseInt(tempMap.get("typeId").toString());
+        String prefix = null;
+        switch (typeId) {
+            case Constant.TYPE_PRODUCT :
+                prefix = OrderSNUtils.CROWD_FUNDING_PRODUCT_ORDER_SN_PREFIX;
+                break;
+            case Constant.TYPE_PROFIT :
+                prefix = OrderSNUtils.CROWD_FUNDING_ROYALTY_BASED_ORDER_SN_PREFIX;
+                break;
+            case Constant.TYPE_SHARES :
+                prefix = OrderSNUtils.CROWD_FUNDING_EQUITY_ORDER_SN_PREFIX;
+                break;
+        }
+        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(prefix));
         //2.新增订单
         int i = insert(order);
         if (i == 1) {
