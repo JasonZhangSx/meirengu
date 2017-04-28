@@ -9,7 +9,6 @@ import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
@@ -17,11 +16,9 @@ import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
-import com.meirengu.utils.HttpUtil;
+import com.meirengu.uc.vo.response.AvatarVO;
+import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
-import com.meirengu.utils.JacksonUtil;
-import com.meirengu.utils.StringUtil;
-import com.meirengu.utils.UuidUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -30,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
@@ -223,7 +221,25 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
             user.setAvatar(avatarDefault[(int) Math.random()*number]);
         }else{
-            user.setAvatar(registerVO.getAvatar());
+            try {
+                //上传头像到oss 并保存文件路径到user
+                //oss配置信息  从oss读取文件
+                String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+                String endpoint = ConfigUtil.getConfig("endpoint");
+                String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+                String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+                String bucketName = ConfigUtil.getConfig("bucketName");
+                String callback = ConfigUtil.getConfig("callbackUrl");
+
+                String foldName = ConfigUtil.getConfig("foldName");
+                String fileName = new Date().getTime() + new Random().nextInt(10000)+".jpg";
+                OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+                fileUtils.uploadUrl(registerVO.getAvatar(),foldName,fileName);
+
+                user.setAvatar(foldName+"/"+fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(registerVO.getFrom());

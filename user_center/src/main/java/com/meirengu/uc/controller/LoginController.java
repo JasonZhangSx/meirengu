@@ -61,11 +61,8 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
                         @RequestParam(value = "wx_openid", required = false) String wxOpenId,
-                        @RequestParam(value = "wx_info", required = false) String wxInfo,
                         @RequestParam(value = "qq_openid", required = false) String qqOpenId,
-                        @RequestParam(value = "qq_info", required = false) String qqInfo,
                         @RequestParam(value = "sina_openid", required = false) String sinaOpenId,
-                        @RequestParam(value = "sina_info", required = false) String sinaInfo,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
