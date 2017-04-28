@@ -98,7 +98,7 @@ public class FaqClassController extends BaseController{
         FaqClass faqClass = new FaqClass();
         faqClass.setStatus(status);
         List<ListAllFaqClassPo> listAllFaqClassPo = faqClassService.listAllFaqClass(faqClass);
-        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(listAllFaqClassPo,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(listAllFaqClassPo,List.class,ListAllFaqClassPo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     @RequestMapping(value = "update", method = {RequestMethod.PUT})

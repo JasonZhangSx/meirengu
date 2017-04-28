@@ -38,7 +38,7 @@ public class AddressController extends BaseController {
     public Result showProvinceList(HttpServletRequest request, HttpServletResponse respons) {
         logger.info("address/province run:{} ");
         try {
-            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showProvinceList(),List.class,Area.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("AddressController.redis get token result:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -51,7 +51,7 @@ public class AddressController extends BaseController {
     public Result showCityListByPid(int pid){
         logger.info("address/province run:{} params: ",pid);
         try {
-            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showCityListByPid(pid),List.class,Area.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("AddressController.showCityListByPid:{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -66,7 +66,7 @@ public class AddressController extends BaseController {
         try {
             List<Area> areaList = service.showAreaListBycid(citys_id);
             if(areaList.size()!=0){
-                return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                return setResult(StatusCode.OK, ObjectUtils.getNotNullObject(service.showAreaListBycid(citys_id),List.class,Area.class), StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
             }

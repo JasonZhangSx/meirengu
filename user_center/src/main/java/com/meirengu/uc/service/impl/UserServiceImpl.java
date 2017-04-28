@@ -315,7 +315,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserTotalInvestMoney(Map map) {
-        map.put("totalInvestMoney","100000");
+        map.put("totalInvestMoney","0.00");
     }
 
     @Override
