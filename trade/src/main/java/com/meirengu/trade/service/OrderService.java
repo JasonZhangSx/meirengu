@@ -7,6 +7,7 @@ import com.meirengu.trade.model.Order;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,5 +114,12 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     void orderRemindForPay(String orderSn) throws IOException ;
+
+    /**
+     * 根据用户id查询用户投资金额
+     * @param userIds
+     * @return
+     */
+    List<Map<String, Object>> getSumAmountByUserIds(String userIds);
 
 }
