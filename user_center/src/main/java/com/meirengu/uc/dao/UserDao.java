@@ -80,5 +80,5 @@ public interface UserDao extends BaseDao<User>{
 
     User retrieveByOpenId(String openId);
 
-    int updateByPhone(User user);
+
 }

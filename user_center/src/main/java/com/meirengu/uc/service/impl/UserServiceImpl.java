@@ -558,6 +558,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         } catch (Exception e) {
             logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
         }
-        return userDao.updateByPhone(user);
+        return userDao.update(user);
     }
 }
