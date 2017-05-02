@@ -238,7 +238,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
                 user.setAvatar(foldName+"/"+fileName);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.info("第三方头像上传失败！");
             }
         }
         user.setUserId(UuidUtils.getShortUuid());
@@ -252,18 +252,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if(!StringUtil.isEmpty(registerVO.getWx_openid())){
             user.setWxOpenid(registerVO.getWx_openid());
             user.setWxInfo(registerVO.getWx_info());
-            user.setWx(registerVO.getWx());
-            user.setNickname(registerVO.getWxNickName());
+            user.setWx(registerVO.getWx_name());
         }
         if(!StringUtil.isEmpty(registerVO.getQq_openid())) {
             user.setQqOpenid(registerVO.getQq_openid());
             user.setQqInfo(registerVO.getQq_info());
-            user.setQq(registerVO.getQq());
-            user.setNickname(registerVO.getQqNickName());
+            user.setQq(registerVO.getQq_name());
         }
         if(!StringUtil.isEmpty(registerVO.getSina_openid())) {
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
+            user.setSina(registerVO.getSina_name());
         }
         user.setLoginNum(1);
         user.setRegisterFrom(registerVO.getFrom());

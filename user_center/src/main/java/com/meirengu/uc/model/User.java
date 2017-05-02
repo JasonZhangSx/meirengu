@@ -75,6 +75,10 @@ public class User extends BaseObject {
      **/
     private String wx;
     /**
+     * 会员新浪昵称
+     */
+    private String sina;
+    /**
      * 会员区域id
      **/
     private Integer areaId;
@@ -451,5 +455,13 @@ public class User extends BaseObject {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
+    }
+
+    public String getSina() {
+        return sina;
+    }
+
+    public void setSina(String sina) {
+        this.sina = sina;
     }
 }
