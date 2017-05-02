@@ -69,8 +69,8 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
                         @RequestParam(value = "ip", required = true) String ip) {
-        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{}", new
-                Object[]{mobile, checkCode, password, from, ip});
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} time :{}", new
+                Object[]{mobile, checkCode, password, from, ip,new Date()});
         try{
             //token自动登陆
             if(!StringUtil.isEmpty(token)){
@@ -194,22 +194,6 @@ public class LoginController extends BaseController {
         }
     }
 
-    //退出
-    @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public Result logout(@RequestParam(value = "token", required = false) String token,
-                         @RequestParam(value = "registration_id", required = false) String registrationId){
-        try {
-            redisClient.delkeyObject(token);
-            //清空token
-            //清空redis
-            //清空推送别名
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }catch(Exception e){
-
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }
-    }
-
     /**
      * 注册
      * @param registerVO
@@ -217,7 +201,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public Result register(RegisterVO registerVO){
-        logger.info("LoginController.register params >> registerVO:{}",registerVO.toString());
+        logger.info("LoginController.register params >> registerVO:{} time:{}",registerVO.toString(),new Date());
         try {
             //手机注册校验
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
@@ -273,6 +257,23 @@ public class LoginController extends BaseController {
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    //退出
+    @RequestMapping(value = "logout", method = RequestMethod.POST)
+    public Result logout(@RequestParam(value = "token", required = false) String token,
+                         @RequestParam(value = "registration_id", required = false) String registrationId){
+        try {
+            redisClient.delkeyObject(token);
+            //清空token
+            //清空redis
+            //清空推送别名
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch(Exception e){
+
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
+    }
+
     //用户密码校验
     private Boolean validatePassword(String password,User user){
         try {
