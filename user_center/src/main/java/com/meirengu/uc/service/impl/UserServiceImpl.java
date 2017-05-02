@@ -537,6 +537,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public int updateUser(RegisterVO registerVO) {
 
         User user = new User();
+        user.setPhone(registerVO.getMobile());
         if(!StringUtil.isEmpty(registerVO.getWx_openid())){
             user.setWx(registerVO.getWx_name());
             user.setWxOpenid(registerVO.getWx_openid());
@@ -557,6 +558,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         } catch (Exception e) {
             logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
         }
-        return userDao.update(user);
+        return userDao.updateByPhone(user);
     }
 }

@@ -167,6 +167,113 @@
             user_id=#{userId} and state=1
         </where>
     </update>
+    <update id="updateByPhone" parameterType="User">
+        update <include refid="table_name"/>
+        <set>
+            <if test="nickname != null and nickname != ''">
+            nickname=#{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="realname != null and realname != ''">
+                realname=#{realname,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone=#{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                idcard=#{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''">
+                password=#{password,jdbcType=VARCHAR},
+            </if>
+            <if test="bankIdCard != null and bankIdCard != ''">
+                bank_idcard=#{bankIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCode != null and bankCode != ''">
+                bank_code=#{bankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bankPhone != null and bankPhone != ''">
+                bank_phone=#{bankPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar=#{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex=#{sex,jdbcType=TINYINT},
+            </if>
+            <if test="birthday != null">
+                birthday=#{birthday,jdbcType=DATE},
+            </if>
+            <if test="email != null and email != ''">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="qq != null and qq != ''">
+                qq=#{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="wx != null and wx != ''">
+                wx=#{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="sina != null and sina != ''">
+                sina=#{sina,jdbcType=VARCHAR},
+            </if>
+            <if test="areaId != null">
+                area_id=#{areaId,jdbcType=INTEGER},
+            </if>
+            <if test="registerFrom != null">
+                register_from=#{registerFrom,jdbcType=INTEGER},
+            </if>
+            <if test="registerTime != null">
+                register_time=#{registerTime,jdbcType=DATE},
+            </if>
+            <if test="loginTime != null">
+                login_time=#{loginTime,jdbcType=DATE},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time=#{lastLoginTime,jdbcType=DATE},
+            </if>
+            <if test="loginIp != null and loginIp !=''">
+                login_ip=#{loginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginIp != null and lastLoginIp != ''">
+                last_login_ip=#{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="loginFrom != null">
+                login_from=#{loginFrom,jdbcType=VARCHAR},
+            </if>
+            <if test="loginNum != null">
+                login_num=#{loginNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wxOpenid != null and wxOpenid != ''">
+                wx_openid=#{wxOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="wxInfo != null and wxInfo != ''">
+                wx_info=#{wxInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="qqOpenid != null and qqOpenid != ''">
+                qq_openid=#{qqOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="qqInfo != null and qqInfo != ''">
+                qq_info=#{qqInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="sinaOpenid != null and sinaOpenid != ''">
+                sina_openid=#{sinaOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="sinaInfo != null and sinaInfo != ''">
+                sina_info=#{sinaInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="isAuth != null and isAuth != ''">
+                is_auth=#{isAuth,jdbcType=INTEGER},
+            </if>
+            <if test="investConditions != null">
+                invest_conditions=#{investConditions,jdbcType=INTEGER},
+            </if>
+            phone=#{phone}
+        </set>
+        <where>
+            phone=#{phone} and state=1
+        </where>
+    </update>
+
+
     <update id="updatePasswordByPhone" parameterType="User">
         update <include refid="table_name"/>
         <set>
