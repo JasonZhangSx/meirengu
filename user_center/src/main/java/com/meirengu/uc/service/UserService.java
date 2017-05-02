@@ -127,4 +127,6 @@ public interface UserService extends BaseService<User>{
     User retrieveByOpenId(String openId);
 
     int updateUser(RegisterVO registerVO);
+
+    int unbund(String userId, Integer type);
 }

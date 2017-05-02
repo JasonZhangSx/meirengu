@@ -560,4 +560,26 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
         return userDao.update(user);
     }
+
+    @Override
+    public int unbund(String userId, Integer type) {
+        User user = new User();
+        user.setUserId(Integer.parseInt(userId));
+        if(type == 1){
+            user.setWxOpenid("");
+            user.setWx("");
+            user.setWxInfo("");
+        }
+        if(type == 2){
+            user.setQq("");
+            user.setQqInfo("");
+            user.setQqOpenid("");
+        }
+        if(type == 3){
+            user.setSina("");
+            user.setSinaOpenid("");
+            user.setSinaInfo("");
+        }
+        return userDao.update(user);
+    }
 }

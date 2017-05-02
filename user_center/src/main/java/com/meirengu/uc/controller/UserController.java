@@ -336,43 +336,6 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 验证用户是否存在
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
-    public Result verifyUser (@RequestParam(value = "user_id", required = false) Integer userId,
-                              @RequestParam(value = "phone", required = false) String phone){
-        try {
-            if(StringUtil.isEmpty(userId) && StringUtil.isEmpty(phone)){
-                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-            }
-            User user = new User();
-            if(!StringUtil.isEmpty(userId)){
-                user = userService.retrieveByUserId(userId);
-            }
-            if(!StringUtil.isEmpty(phone)){
-                user = userService.retrieveByPhone(phone);
-            }
-            if(user != null){
-                Map<String,Object> map = new HashedMap();
-                map.put("mobile",user.getPhone()+"");//加上空字符串 防止为空 json转换异常
-                map.put("realname",user.getRealname()+"");
-                map.put("idCard",user.getIdCard()+"");
-                map.put("bankIdCard",user.getBankIdCard()+"");
-                map.put("bankPhone",user.getBankPhone()+"");
-                map.put("bankCode",user.getBankCode()+"");
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-            }
-        }catch (Exception e){
-            logger.error("UserController verifyUser throw exception:", e.getMessage());
-            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-        }
-    }
-
-    /**
      * 用户使用动态密码登陆 设置密码接口
      * @param token
      * @param userId
@@ -562,6 +525,65 @@ public class UserController extends BaseController{
         }
     }
 
+    /**
+     * 解除绑定
+     * @param token
+     * @param userId
+     * @param type
+     * @return
+     */
+    public Result unbund(@RequestParam(value = "token", required = true) String token,
+                         @RequestParam(value = "user_id", required = false) String userId,
+                         @RequestParam(value = "type", required = true) Integer type){
+        try {
+            int result = userService.unbund(userId,type);
+            if(result == 1){
+                return super.setResult(StatusCode.OK,null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.UNBUND_IS_FAILED,null, StatusCode.codeMsgMap.get(StatusCode.UNBUND_IS_FAILED));
+            }
+        }catch (Exception e){
+            logger.error("UserController paypassword/retrieve throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
+
+    /**
+     * 验证用户是否存在
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "verifyUser" ,method = RequestMethod.GET)
+    public Result verifyUser (@RequestParam(value = "user_id", required = false) Integer userId,
+                              @RequestParam(value = "phone", required = false) String phone){
+        try {
+            if(StringUtil.isEmpty(userId) && StringUtil.isEmpty(phone)){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+            User user = new User();
+            if(!StringUtil.isEmpty(userId)){
+                user = userService.retrieveByUserId(userId);
+            }
+            if(!StringUtil.isEmpty(phone)){
+                user = userService.retrieveByPhone(phone);
+            }
+            if(user != null){
+                Map<String,Object> map = new HashedMap();
+                map.put("mobile",user.getPhone()+"");//加上空字符串 防止为空 json转换异常
+                map.put("realname",user.getRealname()+"");
+                map.put("idCard",user.getIdCard()+"");
+                map.put("bankIdCard",user.getBankIdCard()+"");
+                map.put("bankPhone",user.getBankPhone()+"");
+                map.put("bankCode",user.getBankCode()+"");
+                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+        }catch (Exception e){
+            logger.error("UserController verifyUser throw exception:", e.getMessage());
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
     /**
      * 校验密码方法提取
      * @param password
