@@ -241,7 +241,7 @@ public class LoginController extends BaseController {
             User user = userService.retrieveByPhone(registerVO.getMobile());
             if(user != null){
                 //第三方重新绑定账号 只需更改用户表信息 然后返回登陆
-                if(StringUtil.isEmpty(registerVO.getSina_openid()) || StringUtil.isEmpty(registerVO.getWx_openid()) || StringUtil.isEmpty(registerVO.getQq_openid())){
+                if(!StringUtil.isEmpty(registerVO.getSina_openid()) || !StringUtil.isEmpty(registerVO.getWx_openid()) || !StringUtil.isEmpty(registerVO.getQq_openid())){
                     return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
                 }
                 int result = userService.updateUser(registerVO);

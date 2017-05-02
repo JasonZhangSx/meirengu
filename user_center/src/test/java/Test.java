@@ -1,3 +1,5 @@
+import com.meirengu.utils.StringUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,9 +19,9 @@ public class Test {
 
     @org.junit.Test
     public void testGetByte(){
-        for(int i=0;i<1000;i++){
-            System.err.println((int)Math.random()*2);
-        }
+        System.err.print(!StringUtil.isEmpty("") || !StringUtil.isEmpty("") || !StringUtil.isEmpty(""));
+
+
     }
     
 
