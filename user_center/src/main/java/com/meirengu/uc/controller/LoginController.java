@@ -246,7 +246,8 @@ public class LoginController extends BaseController {
                 }
                 int result = userService.updateUser(registerVO);
                 if (result == 1){
-                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    User userInfo = userService.retrieveByPhone(registerVO.getMobile());
+                    RegisterInfo registerInfo = loginService.setUserToRedis(userInfo);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
