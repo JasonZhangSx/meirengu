@@ -57,8 +57,7 @@
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
             <a class="btn btn-primary radius" onClick="slideshow_add('CMS-轮播图管理-添加','slideshow/add','10001')"  href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添 加</a>
-          </span>
-                <span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span> </div>
+          </span></div>
 
             <div class="mt-20">
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -173,7 +172,7 @@
                 success : function(data) {
                     var map = eval("("+data+")");
                     if(map.code==200){
-                        layer.msg('已发布!', {icon: 5, time: 1000});
+                        layer.msg('已发布!',{icon: 6,time:1000});
                         location.href="slideshow";
                     }else{
                         layer.msg('操作失败! 请重试!', {icon: 5, time: 1000});

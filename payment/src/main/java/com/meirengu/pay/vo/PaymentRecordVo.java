@@ -27,6 +27,9 @@ public class PaymentRecordVo extends PaymentRecord {
     @ValidatePattern(attributeValue = "手机号",pattern="^[1][3,4,5,7,8][0-9]{9}$")
     private String mobile;
 
+    private String startDate;
+
+    private String endDate;
     public String getRealName() {
         return realName;
     }
@@ -59,6 +62,22 @@ public class PaymentRecordVo extends PaymentRecord {
         this.mobile = mobile;
     }
 
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
     @Override
     public String toString() {
         return "PaymentRecordVo{" +
@@ -66,6 +85,8 @@ public class PaymentRecordVo extends PaymentRecord {
                 ", identityNumber='" + identityNumber + '\'' +
                 ", bankNo='" + bankNo + '\'' +
                 ", mobile='" + mobile + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
                 "} " + super.toString();
     }
 }
