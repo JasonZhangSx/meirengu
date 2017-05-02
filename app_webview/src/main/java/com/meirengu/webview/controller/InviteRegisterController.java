@@ -39,14 +39,12 @@ public class InviteRegisterController {
     @RequestMapping(value = "invite/{inviter_phone}")
     public ModelAndView invite(@PathVariable(value = "inviter_phone") String inviterPhone){
 
-        try {
-            inviterPhone = AESOperator.getInstance().decrypt(inviterPhone);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        logger.info("inviteRegister params  >> inviterPhone:{} ", inviterPhone);
+        long phone = Long.parseLong(inviterPhone);
+        //客户端先左移5位，然后加10；对应的服务器端减10右移5位
+        long realPhone = (phone-10)>>5;
+        logger.info("inviteRegister params  >> inviterPhone:{} ", realPhone);
         Map model = new HashMap();
-        model.put("inviterPhone", inviterPhone);
+        model.put("inviterPhone", realPhone);
         return new ModelAndView("invite_register", model);
     }
 

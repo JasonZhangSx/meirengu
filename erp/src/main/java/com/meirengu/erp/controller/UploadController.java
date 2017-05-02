@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,28 @@ public class UploadController extends BaseController{
                 pictureName = map.get("pictureName");
             }
             return super.setResult(StatusCode.OK, pictureName, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+
+    }
+
+    @RequestMapping(value = "uploadMultiple", method = RequestMethod.POST)
+    @ResponseBody
+    public Result uploadMultiple(MultipartHttpServletRequest request, String foldName){
+        //file组件的name
+        String file = "file";
+        String endpoint = ConfigUtil.getConfig("endpoint");
+        String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+        String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+        String bucketName = ConfigUtil.getConfig("bucketName");
+        String callbackUrl = ConfigUtil.getConfig("callbackUrl");
+
+        try {
+            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callbackUrl);
+            List<String> pictureList = fileUtils.uploadMultiple(request, file, foldName);
+            return super.setResult(StatusCode.OK, pictureList, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (IOException e) {
             e.printStackTrace();
         }
