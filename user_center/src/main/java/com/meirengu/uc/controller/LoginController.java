@@ -203,25 +203,8 @@ public class LoginController extends BaseController {
     public Result register(RegisterVO registerVO){
         logger.info("LoginController.register params >> registerVO:{} time:{}",registerVO.toString(),new Date());
         try {
-            //手机注册校验
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
-            }else {
-                //验证手机号是否注册
-                User user = userService.retrieveByPhone(registerVO.getMobile());
-                if(user != null){
-                    //第三方重新绑定账号 只需更改用户表信息 然后返回登陆
-                    if(StringUtil.isEmpty(registerVO.getSina_openid()) || StringUtil.isEmpty(registerVO.getWx_openid()) || StringUtil.isEmpty(registerVO.getQq_openid())){
-                        return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
-                    }
-                    int result = userService.updateUser(registerVO);
-                    if (result == 1){
-                        RegisterInfo registerInfo = loginService.setUserToRedis(user);
-                        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-                    }else {
-                        return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
-                    }
-                }
             }
 
             //邀请注册校验
@@ -254,13 +237,29 @@ public class LoginController extends BaseController {
                 logger.info("LoginController.register update code result:{}", updateResult);
             }
 
-            //注册
-            User usr = userService.createUserInfo(registerVO);
-            if (usr != null){
-                RegisterInfo registerInfo = loginService.setUserToRedis(usr);
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else {
-                return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+            //验证手机号是否注册
+            User user = userService.retrieveByPhone(registerVO.getMobile());
+            if(user != null){
+                //第三方重新绑定账号 只需更改用户表信息 然后返回登陆
+                if(StringUtil.isEmpty(registerVO.getSina_openid()) || StringUtil.isEmpty(registerVO.getWx_openid()) || StringUtil.isEmpty(registerVO.getQq_openid())){
+                    return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
+                }
+                int result = userService.updateUser(registerVO);
+                if (result == 1){
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                }
+            }else{
+                //注册
+                User usr = userService.createUserInfo(registerVO);
+                if (usr != null){
+                    RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                }
             }
         }catch (Exception e){
             logger.error("LoginController register throws Exception :{}",e.getMessage());
