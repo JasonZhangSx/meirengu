@@ -17,7 +17,9 @@ public class Test {
 
     @org.junit.Test
     public void testGetByte(){
-        System.err.print((int)(Math.random()*2));
+        for(int i=0;i<1000;i++){
+            System.err.println((int)Math.random()*2);
+        }
     }
     
 

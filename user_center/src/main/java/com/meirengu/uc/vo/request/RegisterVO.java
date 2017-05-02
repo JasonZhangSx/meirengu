@@ -18,36 +18,9 @@ public class RegisterVO {
     private Integer from;
     private String ip;
     private String mobile_inviter;
-    private String wx;
-    private String qq;
-
-    private String wxNickName;
-    private String qqNickName;
-    private String sinaNickName;
-
-    public String getWxNickName() {
-        return wxNickName;
-    }
-
-    public void setWxNickName(String wxNickName) {
-        this.wxNickName = wxNickName;
-    }
-
-    public String getQqNickName() {
-        return qqNickName;
-    }
-
-    public void setQqNickName(String qqNickName) {
-        this.qqNickName = qqNickName;
-    }
-
-    public String getSinaNickName() {
-        return sinaNickName;
-    }
-
-    public void setSinaNickName(String sinaNickName) {
-        this.sinaNickName = sinaNickName;
-    }
+    private String wx_name;
+    private String qq_name;
+    private String sina_name;
 
     public String getMobile() {
         return mobile;
@@ -153,19 +126,27 @@ public class RegisterVO {
         this.mobile_inviter = mobile_inviter;
     }
 
-    public String getWx() {
-        return wx;
+    public String getWx_name() {
+        return wx_name;
     }
 
-    public void setWx(String wx) {
-        this.wx = wx;
+    public void setWx_name(String wx_name) {
+        this.wx_name = wx_name;
     }
 
-    public String getQq() {
-        return qq;
+    public String getQq_name() {
+        return qq_name;
     }
 
-    public void setQq(String qq) {
-        this.qq = qq;
+    public void setQq_name(String qq_name) {
+        this.qq_name = qq_name;
+    }
+
+    public String getSina_name() {
+        return sina_name;
+    }
+
+    public void setSina_name(String sina_name) {
+        this.sina_name = sina_name;
     }
 }
