@@ -35,7 +35,7 @@
     WHERE
     1=1
     <if test="name != null">
-      AND a.name = #{name,jdbcType=VARCHAR}
+      AND r.name = #{name,jdbcType=VARCHAR}
     </if>
   </select>
 
@@ -46,7 +46,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <insert id="insertRole" parameterType="com.meirengu.commons.authority.model.Role">
+  <insert id="insertRole" parameterType="com.meirengu.commons.authority.model.Role" useGeneratedKeys="true" keyProperty="id" >
     insert into role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="name != null">

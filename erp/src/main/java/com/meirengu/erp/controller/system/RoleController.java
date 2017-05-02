@@ -1,6 +1,10 @@
 package com.meirengu.erp.controller.system;
 
+import com.alibaba.fastjson.JSON;
+import com.meirengu.commons.authority.model.Permission;
 import com.meirengu.commons.authority.model.Role;
+import com.meirengu.commons.authority.model.RolePermission;
+import com.meirengu.commons.authority.service.RolePermissionService;
 import com.meirengu.commons.authority.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: haoyang.Yu
@@ -20,21 +29,76 @@ import java.util.List;
 public class RoleController {
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RolePermissionService rolePermissionService;
     /**
      * 获取所有的角色
-     * @param role
+     * @param name
      * @return
      */
     @RequestMapping(value = "/all",method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView getRoleAll(Role role){
+    public ModelAndView getRoleAll(HttpServletRequest request,String name) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();
+        Role role = new Role();
+        if (name!=null&&!name.isEmpty()){
+            role.setName(new String((name).getBytes("ISO-8859-1"),"utf8"));
+        }
         List<Role> roleList = roleService.findRoleAll(role);
         modelAndView.addObject("roleList",roleList);
-        modelAndView.setViewName("/view/system/roleinfo/roleinfo_list");
+        modelAndView.setViewName("/system/roleList");
         return modelAndView;
     }
-
+    @RequestMapping(value = "/updateOrAdd",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView updateOrAdd(Role role) {
+        ModelAndView modelAndView = new ModelAndView("/system/editRole");
+        Map<Long,Long> map = new HashMap<>();
+        Role r = roleService.findRoleDetail(role.getId()==null ? null:Integer.valueOf(role.getId().toString()));
+        List<Permission> permissionList = new ArrayList<>();
+        if(r.getPermissionList()!=null&&r.getPermissionList().size()!=0){
+            permissionList = r.getPermissionList();
+        }
+        r.setPermissionList(roleService.findRoleDetail(null).getPermissionList());
+        for (Permission permission : permissionList){
+            map.put(permission.getId(),permission.getId());
+        }
+        modelAndView.addObject("role",r);
+        modelAndView.addObject("rolePermission",map);
+        return modelAndView;
+    }
+    @RequestMapping(value = "/updateOrAdd",method = RequestMethod.POST)
+    @ResponseBody
+    public String updateAdd(Role role,HttpServletRequest request)  {
+        Map<String,Integer> map = new HashMap<>();
+        String[] permission = request.getParameterValues("permissionId");
+        if (permission!=null&&permission.length!=0){
+            for (String s : permission){
+                for (String per : s.split(",")){
+                    map.put(per,Integer.valueOf(per));
+                }
+            }
+        }
+        if (role!=null&&role.getId()!=null&&role.getId()>0){
+            roleService.updateRole(role);
+        }else {
+            roleService.insertRole(role);
+        }
+        List<RolePermission> permissionList = new ArrayList<>();
+        for (String s : map.keySet()){
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setRoleId(role.getId());
+            rolePermission.setPermissionId(Long.valueOf(map.get(s)));
+            permissionList.add(rolePermission);
+        }
+        if (permissionList.size()>0){
+            rolePermissionService.deleteByRoleId(role.getId());
+            rolePermissionService.insertRolePermission(permissionList);
+        }
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("code","200");
+        return JSON.toJSON(resultMap).toString();
+    }
     /**
      * 查询角色详情
      * @param id
@@ -85,13 +149,17 @@ public class RoleController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.GET)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView deleteRole(Integer id){
-        ModelAndView modelAndView = new ModelAndView();
+    public String deleteRole(Integer id){
         int code = roleService.deleteRole(id);
-        modelAndView.addObject("code",code);
-        modelAndView.setViewName("/view/system/roleinfo/roleinfo_update");
-        return modelAndView;
+        rolePermissionService.deleteByRoleId(Long.valueOf(id));
+        Map<String,String> map = new HashMap<>();
+        if (code!=1){
+            map.put("code","400");
+        }else {
+            map.put("code","200");
+        }
+        return JSON.toJSON(map).toString();
     }
 }

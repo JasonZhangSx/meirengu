@@ -35,7 +35,7 @@ public class Account {
     /**
      * 状态：1、启用；0、禁用
      */
-    private Boolean status;
+    private Integer status;
     /**
      * 创建时间
      */
@@ -117,11 +117,11 @@ public class Account {
         this.organizationId = organizationId;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

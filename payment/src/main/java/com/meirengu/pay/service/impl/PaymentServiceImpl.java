@@ -524,6 +524,12 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
     public String getPaymentRecord(PaymentRecordVo paymentRecordVo) {
         Map<String,Object> map = new HashMap<>();
         try {
+            if (paymentRecordVo.getStartDate()!=null&&!paymentRecordVo.getStartDate().isEmpty()){
+                paymentRecordVo.setStartDate(paymentRecordVo.getStartDate()+" 00:00:00");
+            }
+            if (paymentRecordVo.getEndDate()!=null&&!paymentRecordVo.getEndDate().isEmpty()){
+                paymentRecordVo.setEndDate(paymentRecordVo.getEndDate()+" 23:59:59");
+            }
             LOGGER.info("Request getPaymentRecord parameter:{}",paymentRecordVo.toString());
             List<PaymentRecordVo> list = paymentRecordDao.getPaymentRecord(paymentRecordVo);
             List<PaymentInvitationBonus> paymentInvitationBonusList = paymentInvitationBonusDao.getUserBonus(paymentRecordVo.getUserId());

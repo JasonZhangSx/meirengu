@@ -11,4 +11,5 @@ import java.util.List;
  */
 public interface PermissionService {
     List<Permission> findPermission(List<Role> roleList);
+    List<Permission> getAllPermission();
 }

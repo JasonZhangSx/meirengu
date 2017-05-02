@@ -31,4 +31,17 @@ ${item.id}
     )
     )
   </select>
+    <select id="getAllPermission" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        permission p
+        WHERE
+        p.id IN (
+        SELECT DISTINCT
+        rp.permission_id
+        FROM
+        role_permission rp
+        )
+    </select>
 </mapper>

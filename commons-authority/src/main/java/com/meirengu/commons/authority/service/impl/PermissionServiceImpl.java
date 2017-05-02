@@ -22,4 +22,8 @@ public class PermissionServiceImpl implements PermissionService {
     public List<Permission> findPermission(List<Role> roleList) {
         return permissionMapper.findPermission(roleList);
     }
+    @Override
+    public List<Permission> getAllPermission() {
+        return permissionMapper.getAllPermission();
+    }
 }
