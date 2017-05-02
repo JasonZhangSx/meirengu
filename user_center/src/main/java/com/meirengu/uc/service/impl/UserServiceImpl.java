@@ -533,5 +533,25 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return userDao.retrieveByOpenId(openId);
     }
 
+    @Override
+    public int updateUser(RegisterVO registerVO) {
 
+        User user = new User();
+        if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+            user.setWx(registerVO.getWx_name());
+            user.setWxOpenid(registerVO.getWx_openid());
+            user.setWxInfo(registerVO.getWx_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+            user.setQq(registerVO.getQq_name());
+            user.setQqOpenid(registerVO.getQq_openid());
+            user.setQqInfo(registerVO.getQq_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+            user.setSina(registerVO.getSina_name());
+            user.setSinaOpenid(registerVO.getSina_openid());
+            user.setSinaInfo(registerVO.getSina_info());
+        }
+        return userDao.update(user);
+    }
 }

@@ -210,7 +210,17 @@ public class LoginController extends BaseController {
                 //验证手机号是否注册
                 User user = userService.retrieveByPhone(registerVO.getMobile());
                 if(user != null){
-                    return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
+                    //第三方重新绑定账号 只需更改用户表信息 然后返回登陆
+                    if(StringUtil.isEmpty(registerVO.getSina_openid()) || StringUtil.isEmpty(registerVO.getWx_openid()) || StringUtil.isEmpty(registerVO.getQq_openid())){
+                        return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
+                    }
+                    int result = userService.updateUser(registerVO);
+                    if (result == 1){
+                        RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                        return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                    }else {
+                        return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                    }
                 }
             }
 

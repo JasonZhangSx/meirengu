@@ -125,4 +125,6 @@ public interface UserService extends BaseService<User>{
     boolean getIdCard(String idcard);
 
     User retrieveByOpenId(String openId);
+
+    int updateUser(RegisterVO registerVO);
 }
