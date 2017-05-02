@@ -1,16 +1,13 @@
 package com.meirengu.erp.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
-import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.model.User;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.utils.ExportExcel;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.DateUtils;
-import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,32 +112,6 @@ public class UserController extends BaseController{
         }
         return new ModelAndView("/user/userDetail", map);
     }
-
-
-
-
-
-    public Map sendPost(String url,Map paramsMap){
-        Map<String, Object> map = new HashMap<>();
-        HttpUtil.HttpResult hr = HttpUtil.doPostForm(url,paramsMap);
-        try {
-            if(hr!=null && hr.getStatusCode() == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null){
-                    JSONObject data = (JSONObject) jsonObject.get("data");
-                    map = data;
-                }
-            }else{
-                logger.info("UserController.sendPost connected refused ! url:{}",url);
-            }
-        }catch (Exception e){
-            logger.info("UserController.sendPost throws Exception :{}" ,e.getMessage());
-        }
-        return  map;
-    }
-
 
     @RequestMapping(value="/export", method= RequestMethod.GET)
     public ModelAndView userExport(HttpServletResponse response){

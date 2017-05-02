@@ -13,73 +13,73 @@
 	<update id="update" parameterType="refund">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="refundSn != null and refundSn != ''">
+			<if test="@Ognl@isNotEmpty(refundSn)">
 				refund_sn=#{refundSn},
 			</if>
-			<if test="orderId != null">
+			<if test="@Ognl@isNotEmpty(orderId)">
 				order_id=#{orderId},
 			</if>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="@Ognl@isNotEmpty(orderSn)">
 				order_sn=#{orderSn},
 			</if>
-			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+			<if test="@Ognl@isNotEmpty(thirdOrderSn)">
 				third_order_sn=#{thirdOrderSn},
 			</if>
-			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+			<if test="@Ognl@isNotEmpty(thirdRefundSn)">
 				third_refund_sn=#{thirdRefundSn},
 			</if>
-			<if test="itemId != null">
+			<if test="@Ognl@isNotEmpty(itemId)">
 				item_id=#{itemId},
 			</if>
-			<if test="partnerId != null">
+			<if test="@Ognl@isNotEmpty(partnerId)">
 				partner_id=#{partnerId},
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				user_id=#{userId},
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				user_name=#{userName},
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				user_phone=#{userPhone},
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				order_amount=#{orderAmount},
 			</if>
-			<if test="orderRefund != null">
+			<if test="@Ognl@isNotEmpty(orderRefund)">
 				order_refund=#{orderRefund},
 			</if>
-			<if test="refundPaymentname != null and refundPaymentname != ''">
+			<if test="@Ognl@isNotEmpty(refundPaymentname)">
 				refund_paymentname=#{refundPaymentname},
 			</if>
-			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+			<if test="@Ognl@isNotEmpty(refundPaymentcode)">
 				refund_paymentcode=#{refundPaymentcode},
 			</if>
-			<if test="refundMessage != null and refundMessage != ''">
+			<if test="@Ognl@isNotEmpty(refundMessage)">
 				refund_message=#{refundMessage},
 			</if>
-			<if test="userMessage != null and userMessage != ''">
+			<if test="@Ognl@isNotEmpty(userMessage)">
 				user_message=#{userMessage},
 			</if>
-			<if test="adminMessage != null and adminMessage != ''">
+			<if test="@Ognl@isNotEmpty(adminMessage)">
 				admin_message=#{adminMessage},
 			</if>
-			<if test="partnerTime != null ">
+			<if test="@Ognl@isNotEmpty(partnerTime) ">
 				partner_time=#{partnerTime},
 			</if>
-			<if test="adminTime != null ">
+			<if test="@Ognl@isNotEmpty(adminTime) ">
 				admin_time=#{adminTime},
 			</if>
-			<if test="confirmTime != null ">
+			<if test="@Ognl@isNotEmpty(confirmTime) ">
 				confirm_time=#{confirmTime},
 			</if>
-			<if test="refundType != null">
+			<if test="@Ognl@isNotEmpty(refundType)">
 				refund_type=#{refundType},
 			</if>
-			<if test="refundState != null">
+			<if test="@Ognl@isNotEmpty(refundState)">
 				refund_state=#{refundState},
 			</if>
-			<if test="userConfirm != null">
+			<if test="@Ognl@isNotEmpty(userConfirm)">
 				user_confirm=#{userConfirm},
 			</if>
 		</set>
@@ -99,82 +99,82 @@
 
 	<sql id="findPage_where">
 		<where>
-			<if test="refundSn != null and refundSn != ''">
+			<if test="@Ognl@isNotEmpty(refundSn)">
 				AND tb.refund_sn=#{refundSn}
 			</if>
-			<if test="orderId != null">
+			<if test="@Ognl@isNotEmpty(orderId)">
 				AND tb.order_id=#{orderId}
 			</if>
-			<if test="orderSn != null and orderSn != ''">
+			<if test="@Ognl@isNotEmpty(orderSn)">
 				AND tb.order_sn=#{orderSn}
 			</if>
-			<if test="thirdOrderSn != null and thirdOrderSn != ''">
+			<if test="@Ognl@isNotEmpty(thirdOrderSn)">
 				AND tb.third_order_sn=#{thirdOrderSn}
 			</if>
-			<if test="thirdRefundSn != null and thirdRefundSn != ''">
+			<if test="@Ognl@isNotEmpty(thirdRefundSn)">
 				AND tb.third_refund_sn=#{thirdRefundSn}
 			</if>
-			<if test="itemId != null">
+			<if test="@Ognl@isNotEmpty(itemId)">
 				AND tb.item_id=#{itemId}
 			</if>
-			<if test="partnerId != null">
+			<if test="@Ognl@isNotEmpty(partnerId)">
 				AND tb.partner_id=#{partnerId}
 			</if>
-			<if test="userId != null">
+			<if test="@Ognl@isNotEmpty(userId)">
 				AND tb.user_id=#{userId}
 			</if>
-			<if test="userName != null and userName != ''">
+			<if test="@Ognl@isNotEmpty(userName)">
 				AND tb.user_name=#{userName}
 			</if>
-			<if test="userPhone != null and userPhone != ''">
+			<if test="@Ognl@isNotEmpty(userPhone)">
 				AND tb.user_phone=#{userPhone}
 			</if>
-			<if test="createTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
 				AND tb.create_time >= #{createTimeBegin}
 			</if>
-			<if test="createTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
 				AND tb.create_time &lt;= #{createTimeEnd}
 			</if>
-			<if test="orderAmount != null">
+			<if test="@Ognl@isNotEmpty(orderAmount)">
 				AND tb.order_amount=#{orderAmount}
 			</if>
-			<if test="orderRefund != null">
+			<if test="@Ognl@isNotEmpty(orderRefund)">
 				AND tb.order_refund=#{orderRefund}
 			</if>
-			<if test="refundPaymentname != null and refundPaymentname != ''">
+			<if test="@Ognl@isNotEmpty(refundPaymentname)">
 				AND tb.refund_paymentname=#{refundPaymentname}
 			</if>
-			<if test="refundPaymentcode != null and refundPaymentcode != ''">
+			<if test="@Ognl@isNotEmpty(refundPaymentcode)">
 				AND tb.refund_paymentcode=#{refundPaymentcode}
 			</if>
-			<if test="refundMessage != null and refundMessage != ''">
+			<if test="@Ognl@isNotEmpty(refundMessage)">
 				AND tb.refund_message=#{refundMessage}
 			</if>
-			<if test="userMessage != null and userMessage != ''">
+			<if test="@Ognl@isNotEmpty(userMessage)">
 				AND tb.user_message=#{userMessage}
 			</if>
-			<if test="adminMessage != null and adminMessage != ''">
+			<if test="@Ognl@isNotEmpty(adminMessage)">
 				AND tb.admin_message=#{adminMessage}
 			</if>
-			<if test="partnerTime != null ">
+			<if test="@Ognl@isNotEmpty(partnerTime) ">
 				AND tb.partner_time=#{partnerTime}
 			</if>
-			<if test="adminTime != null ">
+			<if test="@Ognl@isNotEmpty(adminTime) ">
 				AND tb.admin_time=#{adminTime}
 			</if>
-			<if test="confirmTimeBegin != null">
+			<if test="@Ognl@isNotEmpty(confirmTimeBegin)">
 				AND tb.confirm_time >= #{confirmTimeBegin}
 			</if>
-			<if test="confirmTimeEnd != null">
+			<if test="@Ognl@isNotEmpty(confirmTimeEnd)">
 				AND tb.confirm_time &lt;= #{confirmTimeBegin}
 			</if>
-			<if test="refundType != null">
+			<if test="@Ognl@isNotEmpty(refundType)">
 				AND tb.refund_type=#{refundType}
 			</if>
-			<if test="refundState != null">
+			<if test="@Ognl@isNotEmpty(refundState)">
 				AND tb.refund_state=#{refundState}
 			</if>
-			<if test="userConfirm != null">
+			<if test="@Ognl@isNotEmpty(userConfirm)">
 				AND tb.user_confirm=#{userConfirm}
 			</if>
 		</where>
@@ -185,7 +185,7 @@
 		FROM
 		<include refid="table_name" /> tb
 		<include refid="findPage_where"/>
-		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
 			order by ${sortBy} ${order}
 		</if>
 	</select>

@@ -159,7 +159,7 @@ public class ActivityController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("activity_id",activityId);
-            paramsMap.put("operate_account","暂时保留");
+            paramsMap.put("operate_account","admin");
             if(!StringUtil.isEmpty(endTime)){
                 paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,"yyyy-MM-dd HH:mm:ss"));
             }if(!StringUtil.isEmpty(startTime)){

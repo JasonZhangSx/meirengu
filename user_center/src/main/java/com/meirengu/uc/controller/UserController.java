@@ -419,7 +419,7 @@ public class UserController extends BaseController{
                 listUserIds.add(id);
             }
             List<AvatarVO> user = userService.listUserAvatar(listUserIds);
-           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class,AvatarVO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("UserController listUserAvatar throw exception:", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));

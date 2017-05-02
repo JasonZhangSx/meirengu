@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -102,9 +103,15 @@ public class OSSFileUtils {
 
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        inputStream.close();
     }
     public void upload(String content, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+    }
+    public void uploadUrl(String url, String folderName, String fileName) throws IOException {
+        InputStream inputStream = new URL(url).openStream();
+        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        inputStream.close();
     }
 
     public InputStream download(String filePath,String fileName){

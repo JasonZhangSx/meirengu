@@ -8,7 +8,8 @@ package com.meirengu.utils;
 public class OrderSNUtils {
 
     //前缀区分业务类型，第一位为业务类型：电商 9，众筹 8
-    // 第二位为订单类型： 1 普通订单   2 联合订单   3退款订单     4退款订单   5充值订单      6支付订单
+    // 第二位为订单类型： 1 普通订单   2 联合订单   3退款订单     4认购订单   5充值订单      6支付订单
+    // 认购订单第三位区分众筹类型： 1 产品众筹  2 收益权众筹  3 股权众筹
 
     private static final String ORDER_SN_PREFIX = "91";
 
@@ -17,12 +18,14 @@ public class OrderSNUtils {
     private static final String REFUND_SN_PREFIX = "93";
 
     private static final String SERVICE_CODE_PREFIX = "";
-    //众筹认购订单
-    public static final String CROWD_FUNDING_ORDER_SN_PREFIX = "81";
     //众筹退款订单
     public static final String CROWD_FUNDING_REFUND_SN_PREFIX = "83";
-    //众筹预约订单
-    public static final String CROWD_FUNDING_BOOK_SN_PREFIX = "84";
+    //众筹认购订单(产品众筹)
+    public static final String CROWD_FUNDING_PRODUCT_ORDER_SN_PREFIX = "841";
+    //众筹认购订单(收益权众筹)
+    public static final String CROWD_FUNDING_ROYALTY_BASED_ORDER_SN_PREFIX = "842";
+    //众筹认购订单(股权众筹)
+    public static final String CROWD_FUNDING_EQUITY_ORDER_SN_PREFIX = "843";
     //众筹充值订单
     public static final String CROWD_FUNDING_RECHARGE_SN_PREFIX = "85";
     //众筹支付订单

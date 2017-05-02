@@ -125,6 +125,7 @@ public class ItemLevelController extends BaseController{
             if(item != null){
                 map.put("partnerId", item.getPartnerId());
                 map.put("itemName", item.getItemName());
+                map.put("typeId", item.getTypeId());
                 //根据不同的行业分类获取不同的协议地址
                 if(item.getTypeId() == Constants.TYPE_PRODUCT){
                     map.put("agreement1", ConfigUtil.getConfig("type.product.agreement1"));

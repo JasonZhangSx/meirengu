@@ -10,9 +10,11 @@ import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
+import com.meirengu.utils.NumberUtil;
 import com.meirengu.utils.OrderSNUtils;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,22 +57,22 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/appointment", method = RequestMethod.POST)
-    public Result insertAppointment(@RequestParam(value = "item_id", required = false) int itemId,
-                                    @RequestParam(value = "item_level_id", required = false) int itemLevelId,
+    public Result insertAppointment(@RequestParam(value = "item_id", required = false) Integer itemId,
+                                    @RequestParam(value = "item_level_id", required = false) Integer itemLevelId,
                                     @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                     @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
-                                    @RequestParam(value = "item_num", required = false) int itemNum,
+                                    @RequestParam(value = "item_num", required = false) Integer itemNum,
                                     @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                     @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                     @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
-                                    @RequestParam(value = "user_id", required = false) int userId,
+                                    @RequestParam(value = "user_id", required = false) Integer userId,
                                     @RequestParam(value = "user_name", required = false) String userName,
                                     @RequestParam(value = "user_phone", required = false) String userPhone,
-                                    @RequestParam(value = "user_address_id", required = false) int userAddressId,
+                                    @RequestParam(value = "user_address_id", required = false) Integer userAddressId,
                                     @RequestParam(value = "order_message", required = false) String orderMessage,
                                     @RequestParam(value = "order_from", required = false) String orderFrom,
                                     @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                                    @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
+                                    @RequestParam(value = "rebate_receive_id", required = false) Integer rebateReceiveId,
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
@@ -78,16 +80,16 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
-                || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
-                || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
-                || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)){
+        if (NumberUtil.isNullOrZero(itemId) || NumberUtil.isNullOrZero(itemLevelId)
+                || StringUtils.isEmpty(itemLevelName)|| NumberUtil.isNullOrZero(itemLevelAmount)
+                || NumberUtil.isNullOrZero(itemNum)|| NumberUtil.isNullOrZero(orderAmount)
+                || NumberUtil.isNullOrZero(userId)|| StringUtils.isEmpty(userName)
+                || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)){
             //备注和微信号选填
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
-        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_BOOK_SN_PREFIX));
         order.setItemId(itemId);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
@@ -142,23 +144,23 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/subscriptions", method = RequestMethod.POST)
-    public Result insertSubscriptions(@RequestParam(value = "item_id", required = false) int itemId,
-                                      @RequestParam(value = "item_level_id", required = false) int itemLevelId,
+    public Result insertSubscriptions(@RequestParam(value = "item_id", required = false) Integer itemId,
+                                      @RequestParam(value = "item_level_id", required = false) Integer itemLevelId,
                                       @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                       @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
-                                      @RequestParam(value = "item_num", required = false) int itemNum,
+                                      @RequestParam(value = "item_num", required = false) Integer itemNum,
                                       @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                       @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                       @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
-                                      @RequestParam(value = "user_id", required = false) int userId,
+                                      @RequestParam(value = "user_id", required = false) Integer userId,
                                       @RequestParam(value = "user_name", required = false) String userName,
                                       @RequestParam(value = "user_phone", required = false) String userPhone,
-                                      @RequestParam(value = "user_address_id", required = false) int userAddressId,
+                                      @RequestParam(value = "user_address_id", required = false) Integer userAddressId,
                                       @RequestParam(value = "order_message", required = false) String orderMessage,
                                       @RequestParam(value = "order_from", required = false) String orderFrom,
                                       @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                                      @RequestParam(value = "rebate_receive_id", required = false) int rebateReceiveId,
-                                      @RequestParam(value = "payment_method", required = false)int paymentMethod,
+                                      @RequestParam(value = "rebate_receive_id", required = false) Integer rebateReceiveId,
+                                      @RequestParam(value = "payment_method", required = false)Integer paymentMethod,
                                       @RequestParam(value = "token", required = false) String token){
 
         //验证token
@@ -166,17 +168,17 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (itemId == 0 || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
-                || itemLevelAmount == null || itemLevelAmount.equals(BigDecimal.ZERO) || itemNum == 0
-                || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) || userId == 0
-                || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)) {
+        if (NumberUtil.isNullOrZero(itemId) || NumberUtil.isNullOrZero(itemLevelId)
+                || StringUtils.isEmpty(itemLevelName) || NumberUtil.isNullOrZero(itemLevelAmount)
+                || NumberUtil.isNullOrZero(itemNum) || NumberUtil.isNullOrZero(orderAmount)
+                || NumberUtil.isNullOrZero(userId)  || StringUtils.isEmpty(userName)
+                || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(orderFrom)) {
             //备注和微信号选填
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         //根据项目信息请求项目服务查询地址是否必填，校验地址
         Order order = new Order();
-        order.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_ORDER_SN_PREFIX));
         order.setItemId(itemId);
         order.setItemLevelId(itemLevelId);
         order.setItemLevelName(itemLevelName);
@@ -206,7 +208,7 @@ public class OrderController extends BaseController{
             return result;
         } catch (OrderException oe) {
             logger.error("throw OrderException: {}", oe);
-            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+            if (oe.getErrorCode()!= null && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
                 return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -225,10 +227,10 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/appointment/audit/{order_id}",  method = RequestMethod.POST)
-    public Result appointmentAudit(@PathVariable("order_id") int orderId,
-                                    @RequestParam(value = "status") int orderStatus,
+    public Result appointmentAudit(@PathVariable("order_id") Integer orderId,
+                                    @RequestParam(value = "status") Integer orderStatus,
                                     @RequestParam(value = "operate_account") String operateAccount){
-        if (orderId == 0 || !(orderStatus == OrderStateEnum.BOOK_ADUIT_FAIL.getValue() || orderStatus == OrderStateEnum.BOOK_ADUIT_PASS.getValue())) {
+        if (NumberUtil.isNullOrZero(orderId) || NumberUtil.isNullOrZero(orderStatus) || !(orderStatus == OrderStateEnum.BOOK_ADUIT_FAIL.getValue() || orderStatus == OrderStateEnum.BOOK_ADUIT_PASS.getValue())) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
@@ -241,7 +243,7 @@ public class OrderController extends BaseController{
             return  result;
         }catch (OrderException oe){
             logger.error("throw OrderException: {}", oe);
-            if (oe.getErrorCode()!= 0 && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+            if (oe.getErrorCode()!= null && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
                 return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
             } else {
                 return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -259,7 +261,7 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/{order_id}",  method = RequestMethod.POST)
-    public Result delete(@PathVariable("order_id") int orderId,
+    public Result delete(@PathVariable("order_id") Integer orderId,
                          @RequestParam(value = "token", required = false) String token){
 
         //验证token
@@ -267,7 +269,7 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (orderId == 0 ) {
+        if (NumberUtil.isNullOrZero(orderId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
@@ -297,37 +299,53 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public Result getPage(@RequestParam(value = "page_num", required = false, defaultValue = "1") int pageNum,
-                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+    public Result getPage(@RequestParam(value = "page_num", required = false, defaultValue = "1") Integer pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") Integer pageSize,
                           @RequestParam(value = "sort_by", required = false) String sortBy,
                           @RequestParam(value = "order", required = false) String order,
                           @RequestParam(value = "order_sn", required = false) String orderSn,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "item_name", required = false) String itemName,
-                          @RequestParam(value = "user_id", required = false) String userId,
-                          @RequestParam(value = "order_state", required = false, defaultValue = "0") int orderState,
-                          @RequestParam(value = "need_avatar", required = false, defaultValue = "0") int needAvatar,
-                          @RequestParam(value = "item_id", required = false, defaultValue = "0") int itemId){
+                          @RequestParam(value = "user_id", required = false) Integer userId,
+                          @RequestParam(value = "order_state", required = false) Integer orderState,
+                          @RequestParam(value = "need_avatar", required = false, defaultValue = "0") Integer needAvatar,
+                          @RequestParam(value = "item_id", required = false, defaultValue = "0") Integer itemId){
         //如果需要头像，则必传项目ID，因为此时需要去获取项目的最新状态，查出该项目的订单
         if (needAvatar != 0 ) {
-            if (itemId == 0) {
+            if (NumberUtil.isNullOrZero(itemId)) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
         Map<String, Object> map = new HashMap<>();
         //前台不展示删除订单
         map.put("flag", Constant.NOT_DELETE);//逻辑删除状态 0为删除，1为未删除
-        map.put("orderSn", orderSn);
-        map.put("userPhone", userPhone);
-        map.put("itemName", itemName);
-        map.put("userId", userId);
-        map.put("orderState", orderState);
-        map.put("needAvatar", needAvatar);
-        if (itemId != 0) {
+        if (StringUtils.isNotBlank(orderSn)) {
+            map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            map.put("userPhone", userPhone);
+        }
+        if (StringUtils.isNotBlank(itemName)) {
+            map.put("itemName", itemName);
+        }
+        if (NumberUtil.isNullOrZero(userId)) {
+            map.put("userId", userId);
+        }
+        if (NumberUtil.isNullOrZero(orderState)) {
+            map.put("orderState", orderState);
+        }
+        if (needAvatar != null) {
+            map.put("needAvatar", needAvatar);
+        }
+        if (itemId != null) {
             map.put("itemId", itemId);
         }
-        map.put("sortBy", sortBy);
-        map.put("order", order);
+        if (StringUtils.isNotBlank(sortBy)) {
+            map.put("sortBy", sortBy);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            map.put("order", order);
+        }
         Page<Order> page = new Page<Order>();
         page.setPageNow(pageNum);
         page.setPageSize(pageSize);
@@ -353,22 +371,33 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/system", method = RequestMethod.GET)
-    public Result getSystemPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
-                                @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+    public Result getSystemPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") Integer pageNum,
+                                @RequestParam(value = "page_size", required = false, defaultValue = "10") Integer pageSize,
                                 @RequestParam(value = "sort_by", required = false) String sortBy,
                                 @RequestParam(value = "order", required = false) String order,
                                 @RequestParam(value = "order_sn", required = false) String orderSn,
                                 @RequestParam(value = "user_phone", required = false) String userPhone,
                                 @RequestParam(value = "item_name", required = false) String itemName,
-                                @RequestParam(value = "order_state", required = false) String orderState){
+                                @RequestParam(value = "order_state", required = false) Integer orderState){
         Map<String, Object> map = new HashMap<>();
-        map.put("orderSn", orderSn);
-        map.put("userPhone", userPhone);
-        map.put("itemName", itemName);
-        map.put("orderState", orderState);
-        map.put("sortBy", sortBy);
-        map.put("order", order);
-
+        if (StringUtils.isNotBlank(orderSn)) {
+            map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            map.put("userPhone", userPhone);
+        }
+        if (StringUtils.isNotBlank(itemName)) {
+            map.put("itemName", itemName);
+        }
+        if (NumberUtil.isNullOrZero(orderState)) {
+            map.put("orderState", orderState);
+        }
+        if (StringUtils.isNotBlank(sortBy)) {
+            map.put("sortBy", sortBy);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            map.put("order", order);
+        }
         Page page = new Page();
         page.setPageNow(pageNum);
         page.setPageSize(pageSize);
@@ -388,7 +417,7 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "appointment/cancel/{order_id}",  method = RequestMethod.POST)
-    public Result appointmentCancel(@PathVariable("order_id") int orderId,
+    public Result appointmentCancel(@PathVariable("order_id") Integer orderId,
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
@@ -396,7 +425,7 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (orderId == 0 ) {
+        if (NumberUtil.isNullOrZero(orderId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
@@ -417,8 +446,8 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "detail/{order_id}",  method = RequestMethod.GET)
-    public Result detail(@PathVariable("order_id") int orderId){
-        if (orderId == 0 ) {
+    public Result detail(@PathVariable("order_id") Integer orderId){
+        if (NumberUtil.isNullOrZero(orderId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         try{
@@ -458,7 +487,7 @@ public class OrderController extends BaseController{
     @RequestMapping(value = "user",  method = RequestMethod.GET)
     public Result user(@RequestParam(value = "item_level_id", required = false) Integer itemLevelId,
                        @RequestParam(value = "user_id", required = false) Integer userId){
-        if (itemLevelId == null || itemLevelId == 0 || userId == null || userId == 0) {
+        if (NumberUtil.isNullOrZero(itemLevelId) || NumberUtil.isNullOrZero(userId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -491,7 +520,7 @@ public class OrderController extends BaseController{
      */
     @RequestMapping(value = "payment",  method = RequestMethod.POST)
     public Result paymentCallBack(@RequestParam(value = "order_sn", required = false)String orderSn,
-                                  @RequestParam(value = "payment_method", required = false)int paymentMethod,
+                                  @RequestParam(value = "payment_method", required = false)Integer paymentMethod,
                                   @RequestParam(value = "out_sn", required = false)String outSn) {
         logger.debug("支付成功回调订单号：{} 支付方式 {} 第三方支付号 {}", orderSn, paymentMethod, outSn);
         if (StringUtils.isEmpty(orderSn)) {
@@ -499,7 +528,9 @@ public class OrderController extends BaseController{
         }
         Order order = new Order();
         order.setOrderSn(orderSn);
-        order.setPaymentMethod(paymentMethod);
+        if (paymentMethod != null) {
+            order.setPaymentMethod(paymentMethod);
+        }
         if (StringUtils.isNotBlank(outSn)) {
             order.setOutSn(outSn);
         }

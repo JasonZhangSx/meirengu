@@ -202,6 +202,12 @@
         WHERE user_id=#{userId}   AND state = 1
     </select>
 
+    <select id="retrieveByOpenId" parameterType="String" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE wx_openid = #{openId} OR qq_openid = #{openId} OR sina_openid = #{openId}    AND state = 1
+    </select>
+
     <select id="retrieveByPhone" parameterType="String" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
@@ -303,7 +309,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 
@@ -339,7 +345,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
+            order by ${sortBy} ${order}
         </if>
     </select>
     <!-- 分页相关结束 -->
@@ -367,7 +373,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 
@@ -393,7 +399,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 

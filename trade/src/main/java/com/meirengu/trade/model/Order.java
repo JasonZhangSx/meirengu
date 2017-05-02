@@ -23,6 +23,8 @@ public class Order{
 	private BigDecimal itemLevelAmount;
 	/** 众筹份数 */
 	private Integer itemNum;
+	/** 合作方Id */
+	private Integer partnerId;
 	/** 订单总价格 */
 	private BigDecimal orderAmount;
 	/** 本金（本金=订单总价格-抵扣券金额） */
@@ -130,7 +132,15 @@ public class Order{
 		return itemNum;
 	}
 
-	public void setOrderAmount(BigDecimal orderAmount){
+	 public Integer getPartnerId() {
+		 return partnerId;
+	 }
+
+	 public void setPartnerId(Integer partnerId) {
+		 this.partnerId = partnerId;
+	 }
+
+	 public void setOrderAmount(BigDecimal orderAmount){
 		this.orderAmount = orderAmount;
 	}
 

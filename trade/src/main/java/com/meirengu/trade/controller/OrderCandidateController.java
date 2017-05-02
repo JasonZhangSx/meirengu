@@ -1,5 +1,6 @@
 package com.meirengu.trade.controller;
 
+import com.meirengu.utils.NumberUtil;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -56,14 +57,14 @@ public class OrderCandidateController extends BaseController{
      * @return
      */
     @RequestMapping( method = RequestMethod.POST)
-    public Result insertCandidate(@RequestParam(value = "user_id", required = false) int userId,
+    public Result insertCandidate(@RequestParam(value = "user_id", required = false) Integer userId,
                           @RequestParam(value = "user_name", required = false) String userName,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "user_weixin", required = false) String userWeixin,
-                          @RequestParam(value = "item_id", required = false) int itemId,
-                          @RequestParam(value = "item_level_id", required = false) int itemLevelId,
+                          @RequestParam(value = "item_id", required = false) Integer itemId,
+                          @RequestParam(value = "item_level_id", required = false) Integer itemLevelId,
                           @RequestParam(value = "item_level_name", required = false) String itemLevelName,
-                          @RequestParam(value = "item_num", required = false) int itemNum,
+                          @RequestParam(value = "item_num", required = false) Integer itemNum,
                           @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                           @RequestParam(value = "token", required = false) String token){
 
@@ -72,9 +73,9 @@ public class OrderCandidateController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (userId == 0 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone) || StringUtils.isEmpty(userWeixin)
-                || itemId == 0  || itemLevelId == 0 || StringUtils.isEmpty(itemLevelName)
-                || itemNum == 0 || orderAmount == null || orderAmount.equals(BigDecimal.ZERO) ){
+        if (NumberUtil.isNullOrZero(userId) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPhone)
+                || StringUtils.isEmpty(userWeixin) || NumberUtil.isNullOrZero(itemId) || NumberUtil.isNullOrZero(itemLevelId)
+                || StringUtils.isEmpty(itemLevelName) || NumberUtil.isNullOrZero(itemNum) || NumberUtil.isNullOrZero(orderAmount)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 

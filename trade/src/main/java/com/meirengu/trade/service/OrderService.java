@@ -21,7 +21,7 @@ public interface OrderService extends BaseService<Order>{
      * @param orderId
      * @return
      */
-    Map<String, Object> orderDetail (int orderId) throws ParseException, IOException ;
+    Map<String, Object> orderDetail (Integer orderId) throws ParseException, IOException ;
     /**
      * 获取订单详情
      * @param orderSn
@@ -47,7 +47,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertSubscriptions(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
+    Result insertSubscriptions(Order order, Integer rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 获取客户端订单列表
@@ -62,7 +62,7 @@ public interface OrderService extends BaseService<Order>{
      * @param order
      * @return
      */
-    Result insertAppointment(Order order, int rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
+    Result insertAppointment(Order order, Integer rebateReceiveId)  throws IllegalAccessException, IOException, OrderException;
 
     /**
      * 取消预约

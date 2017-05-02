@@ -3,6 +3,10 @@ package com.meirengu.erp.controller.user;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.erp.utils.ExportExcel;
+import com.meirengu.erp.vo.InviterVo;
+import com.meirengu.utils.ApacheBeanUtils;
+import com.meirengu.utils.DateUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +75,29 @@ public class InviterController extends BaseController{
         return view;
     }
 
+    @RequestMapping(value="/export", method= RequestMethod.GET)
+    public ModelAndView inviterExport(HttpServletResponse response){
 
+        try {
+            Map<String,String> paramsMap = new HashedMap();
+            Map<String, Object> map = new HashMap<>();
+            String url = ConfigUtil.getConfig("user.inviter.list");
+            //查询参数
+            paramsMap.put("per_page","1000000");
+
+            map = (Map<String,Object>)super.httpPost(url,paramsMap);
+            String fileName = "inviterInfo"+ DateUtils.getFormatDate("yyyyMMddHHmmss")+".xlsx";
+            List<Map<String, String>> userList = (List<Map<String, String>>) map.get("list");
+            List<InviterVo> list = new ArrayList<InviterVo>();
+            for(Map userMap:userList){
+                InviterVo inviterVo = (InviterVo) ApacheBeanUtils.mapToObject(userMap,InviterVo.class);
+                list.add(inviterVo);
+            }
+            new ExportExcel("", InviterVo.class).setDataList(list).write(response, fileName).dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("/user/userInvite");
+    }
 
 }

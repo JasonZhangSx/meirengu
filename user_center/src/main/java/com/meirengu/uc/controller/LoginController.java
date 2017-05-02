@@ -61,11 +61,8 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
                         @RequestParam(value = "wx_openid", required = false) String wxOpenId,
-                        @RequestParam(value = "wx_info", required = false) String wxInfo,
                         @RequestParam(value = "qq_openid", required = false) String qqOpenId,
-                        @RequestParam(value = "qq_info", required = false) String qqInfo,
                         @RequestParam(value = "sina_openid", required = false) String sinaOpenId,
-                        @RequestParam(value = "sina_info", required = false) String sinaInfo,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
@@ -87,16 +84,39 @@ public class LoginController extends BaseController {
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }
-            //第三方登录
+            //第三方登录 待优化
             if(!StringUtil.isEmpty(wxOpenId)){
                 //如果有该用户直接登陆  没有的话返回code 去注册页面
-
+                User user = userService.retrieveByOpenId(wxOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
             if(!StringUtil.isEmpty(qqOpenId)){
-
+                //如果有该用户直接登陆  没有的话返回code 去注册页面
+                User user = userService.retrieveByOpenId(qqOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
             if(!StringUtil.isEmpty(sinaOpenId)){
-
+                //如果有该用户直接登陆  没有的话返回code 去注册页面
+                User user = userService.retrieveByOpenId(sinaOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
 
             //verify params

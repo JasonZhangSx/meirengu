@@ -6,19 +6,19 @@ package com.meirengu.trade.common;
  */
 public class OrderException extends RuntimeException {
 
-    public int errorCode;
+    public Integer errorCode;
 
     public OrderException(){}
-    public OrderException(String msg, int errorCode){
+    public OrderException(String msg, Integer errorCode){
         super(msg);
         this.errorCode = errorCode;
     }
 
-    public int getErrorCode() {
+    public Integer getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(int errorCode) {
+    public void setErrorCode(Integer errorCode) {
         this.errorCode = errorCode;
     }
 }

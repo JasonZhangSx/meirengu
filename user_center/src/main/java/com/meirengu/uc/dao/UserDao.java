@@ -77,4 +77,6 @@ public interface UserDao extends BaseDao<User>{
     int getBankIdCard(String bankIdcard);
 
     int getIdCard(String idcard);
+
+    User retrieveByOpenId(String openId);
 }
