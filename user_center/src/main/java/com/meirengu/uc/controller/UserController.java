@@ -373,39 +373,6 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 用户使用动态密码登陆 设置密码接口
-     * @param token
-     * @param userId
-     * @param password
-     * @return
-     */
-    @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
-    public Result setPassword (@RequestParam(value = "token", required = true) String token,
-                               @RequestParam(value = "user_id", required = true) Integer userId,
-                               @RequestParam(value = "password", required = true) String password){
-            try{
-                if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
-                    return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
-                }
-                User user = userService.retrieveByUserId(userId);
-                if(user != null){
-                    if(PasswordEncryption.validatePassword("",user.getPassword())){
-                        user.setPassword(PasswordEncryption.createHash(password));
-                        userService.update(user);
-                        return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-                    }else{
-                        return super.setResult(StatusCode.USER_PASSWORD_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_PASSWORD_IS_EXITS));
-                    }
-                }else{
-                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
-                }
-            }catch (Exception e){
-                logger.error("UserController setPassword throw exception:", e.getMessage());
-                return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-            }
-    }
-
-    /**
      * 获取头像
      * @param userIds
      * @return
@@ -455,6 +422,8 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
+
+
     /**
      * 修改交易密码
      * @param mobile

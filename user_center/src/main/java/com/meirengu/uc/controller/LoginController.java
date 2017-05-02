@@ -156,7 +156,7 @@ public class LoginController extends BaseController {
                         int updateResult = checkCodeService.update(code);
                         logger.info("LoginController.login update code result:{}", updateResult);
 
-                        User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
+                        User usr = userService.createUserInfo(mobile,from,ip,avatar);
                         if (usr != null){
                             RegisterInfo registerInfo = loginService.setUserToRedis(usr);
                             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));

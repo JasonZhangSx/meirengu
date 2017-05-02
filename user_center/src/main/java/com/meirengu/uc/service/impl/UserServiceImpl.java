@@ -172,7 +172,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip,String avatar) {
+    public User createUserInfo(String mobile,Integer from, String ip,String avatar) {
 
         //创建用户
         User user = new User();
@@ -198,11 +198,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
-        try {
-            user.setPassword(PasswordEncryption.createHash(password));
-        }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
-        }
+        user.setPassword("");
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -273,8 +269,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setState(1);
         user.setIsBuy(1);
         try {
-            String password = PasswordEncryption.createHash(registerVO.getPassword());
-            user.setPassword(password);
+            if(!StringUtil.isEmpty(registerVO.getPassword())){
+                String password = PasswordEncryption.createHash(registerVO.getPassword());
+                user.setPassword(password);
+            }else{
+                user.setPassword("");
+            }
         }catch (Exception e){
             logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
