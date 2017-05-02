@@ -73,13 +73,12 @@ public interface UserService extends BaseService<User>{
     /**
      * 用户动态密码登陆创建用户
      * @param mobile
-     * @param password
      * @param from
      * @param ip
      * @param avatar
      * @return
      */
-    User createUserInfo(String mobile, String password, Integer from, String ip,String avatar);
+    User createUserInfo(String mobile,Integer from, String ip,String avatar);
 
     /**
      * 用户注册方式 创建用户
@@ -124,4 +123,8 @@ public interface UserService extends BaseService<User>{
     boolean getBankIdCard(String bankIdcard);
 
     boolean getIdCard(String idcard);
+
+    User retrieveByOpenId(String openId);
+
+    int updateUser(RegisterVO registerVO);
 }

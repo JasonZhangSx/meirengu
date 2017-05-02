@@ -17,6 +17,7 @@
         <result column="email" property="email" jdbcType="VARCHAR" javaType="string"/>
         <result column="qq" property="qq" jdbcType="VARCHAR" javaType="string"/>
         <result column="wx" property="wx" jdbcType="VARCHAR" javaType="string"/>
+        <result column="sina" property="sina" jdbcType="VARCHAR" javaType="string"/>
         <result column="area_id" property="areaId" jdbcType="INTEGER" javaType="int"/>
         <result column="register_from" property="registerFrom" jdbcType="TINYINT" javaType="int"/>
         <result column="register_time" property="registerTime" jdbcType="DATE" javaType="Date"/>
@@ -42,7 +43,7 @@
     <sql id='table_name'>user</sql>
     <sql id="select_columns">
         user_id as userId, nickname, realname, phone, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
-        birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
+        birthday,email,qq,wx,sina,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
         is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state,invest_conditions AS investConditions
     </sql>
@@ -51,12 +52,12 @@
         INSERT INTO
         <include refid="table_name"/>
         (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
-        birthday,email,qq,wx,area_id,register_from,register_time,login_time,last_login_time,
+        birthday,email,qq,wx,sina,area_id,register_from,register_time,login_time,last_login_time,
         login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,
         sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
         VALUES
         (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
-        #{birthday}, #{email}, #{qq}, #{wx}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
+        #{birthday}, #{email}, #{qq}, #{wx},  #{sina}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
         #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
         #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
     </insert>
@@ -105,6 +106,9 @@
             </if>
             <if test="wx != null and wx != ''">
                 wx=#{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="sina != null and sina != ''">
+                sina=#{sina,jdbcType=VARCHAR},
             </if>
             <if test="areaId != null">
                 area_id=#{areaId,jdbcType=INTEGER},
@@ -157,10 +161,23 @@
             <if test="investConditions != null">
                 invest_conditions=#{investConditions,jdbcType=INTEGER},
             </if>
-            user_id=#{userId}
+            <if test="phone != null and phone != ''">
+                 phone=#{phone},
+            </if>
+            <if test="userId != null and userId != ''">
+                 user_id=#{userId},
+            </if>
+            state=1
         </set>
         <where>
-            user_id=#{userId} and state=1
+            1 = 1
+            <if test="phone != null and phone != ''">
+                AND phone=#{phone}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id=#{userId}
+            </if>
+            AND state=1
         </where>
     </update>
     <update id="updatePasswordByPhone" parameterType="User">
@@ -200,6 +217,12 @@
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>
         WHERE user_id=#{userId}   AND state = 1
+    </select>
+
+    <select id="retrieveByOpenId" parameterType="String" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE wx_openid = #{openId} OR qq_openid = #{openId} OR sina_openid = #{openId}    AND state = 1
     </select>
 
     <select id="retrieveByPhone" parameterType="String" resultType="User">

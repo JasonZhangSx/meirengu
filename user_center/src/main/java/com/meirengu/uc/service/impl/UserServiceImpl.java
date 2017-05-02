@@ -9,7 +9,6 @@ import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
@@ -17,11 +16,9 @@ import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
-import com.meirengu.utils.HttpUtil;
+import com.meirengu.uc.vo.response.AvatarVO;
+import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
-import com.meirengu.utils.JacksonUtil;
-import com.meirengu.utils.StringUtil;
-import com.meirengu.utils.UuidUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -30,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
@@ -174,7 +172,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip,String avatar) {
+    public User createUserInfo(String mobile,Integer from, String ip,String avatar) {
 
         //创建用户
         User user = new User();
@@ -200,11 +198,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
-        try {
-            user.setPassword(PasswordEncryption.createHash(password));
-        }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
-        }
+        user.setPassword("");
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -221,9 +215,27 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if(StringUtil.isEmpty(registerVO.getAvatar())) {
             String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
-            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+            user.setAvatar(avatarDefault[(int) (Math.random()*number)]);
         }else{
-            user.setAvatar(registerVO.getAvatar());
+            try {
+                //上传头像到oss 并保存文件路径到user
+                //oss配置信息  从oss读取文件
+                String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+                String endpoint = ConfigUtil.getConfig("endpoint");
+                String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+                String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+                String bucketName = ConfigUtil.getConfig("bucketName");
+                String callback = ConfigUtil.getConfig("callbackUrl");
+
+                String foldName = ConfigUtil.getConfig("foldName");
+                String fileName = new Date().getTime() + new Random().nextInt(10000)+".jpg";
+                OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+                fileUtils.uploadUrl(registerVO.getAvatar(),foldName,fileName);
+
+                user.setAvatar(foldName+"/"+fileName);
+            } catch (IOException e) {
+                logger.info("第三方头像上传失败！");
+            }
         }
         user.setUserId(UuidUtils.getShortUuid());
         user.setLoginFrom(registerVO.getFrom());
@@ -236,18 +248,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if(!StringUtil.isEmpty(registerVO.getWx_openid())){
             user.setWxOpenid(registerVO.getWx_openid());
             user.setWxInfo(registerVO.getWx_info());
-            user.setWx(registerVO.getWx());
-            user.setNickname(registerVO.getWxNickName());
+            user.setWx(registerVO.getWx_name());
         }
         if(!StringUtil.isEmpty(registerVO.getQq_openid())) {
             user.setQqOpenid(registerVO.getQq_openid());
             user.setQqInfo(registerVO.getQq_info());
-            user.setQq(registerVO.getQq());
-            user.setNickname(registerVO.getQqNickName());
+            user.setQq(registerVO.getQq_name());
         }
         if(!StringUtil.isEmpty(registerVO.getSina_openid())) {
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
+            user.setSina(registerVO.getSina_name());
         }
         user.setLoginNum(1);
         user.setRegisterFrom(registerVO.getFrom());
@@ -258,8 +269,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setState(1);
         user.setIsBuy(1);
         try {
-            String password = PasswordEncryption.createHash(registerVO.getPassword());
-            user.setPassword(password);
+            if(!StringUtil.isEmpty(registerVO.getPassword())){
+                String password = PasswordEncryption.createHash(registerVO.getPassword());
+                user.setPassword(password);
+            }else{
+                user.setPassword("");
+            }
         }catch (Exception e){
             logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
@@ -513,5 +528,36 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return flag;
     }
 
+    @Override
+    public User retrieveByOpenId(String openId) {
+        return userDao.retrieveByOpenId(openId);
+    }
 
+    @Override
+    public int updateUser(RegisterVO registerVO) {
+
+        User user = new User();
+        user.setPhone(registerVO.getMobile());
+        if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+            user.setWx(registerVO.getWx_name());
+            user.setWxOpenid(registerVO.getWx_openid());
+            user.setWxInfo(registerVO.getWx_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+            user.setQq(registerVO.getQq_name());
+            user.setQqOpenid(registerVO.getQq_openid());
+            user.setQqInfo(registerVO.getQq_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+            user.setSina(registerVO.getSina_name());
+            user.setSinaOpenid(registerVO.getSina_openid());
+            user.setSinaInfo(registerVO.getSina_info());
+        }
+        try {
+            user.setPassword(PasswordEncryption.createHash(registerVO.getPassword()));
+        } catch (Exception e) {
+            logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
+        }
+        return userDao.update(user);
+    }
 }

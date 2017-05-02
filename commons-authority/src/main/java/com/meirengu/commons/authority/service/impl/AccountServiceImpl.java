@@ -31,12 +31,28 @@ public class AccountServiceImpl implements IAccountService {
     public Account findAccount(Account account) {
         return accountMapper.findUser(account);
     }
+    @Override
+    public List<Account> getAllUser(Account account) {
+        return accountMapper.getAllUser(account);
+    }
+
+    @Override
+    public int updateAccount(Account account) {
+       return accountMapper.updateAccount(account);
+    }
+
+    @Override
+    public int insertAccount(Account account) {
+        return accountMapper.insert(account);
+    }
 
     @Override
     public Account findRolePermission(Account account) {
         account=accountMapper.findUser(account);
         account.setRoleList(roleMapper.findRoleList(account.getId()));
-        account.setPermissionsList(tree(permissionMapper.findPermission(account.getRoleList()),0));
+        if (account.getRoleList()!=null&&account.getRoleList().size()!=0){
+            account.setPermissionsList(tree(permissionMapper.findPermission(account.getRoleList()),0));
+        }
         account.setOrganization(organizationMapper.getOrganization(account.getOrganizationId()));
         return account;
     }

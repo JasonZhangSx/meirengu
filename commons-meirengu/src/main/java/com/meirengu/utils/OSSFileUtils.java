@@ -11,10 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.net.URL;
+import java.util.*;
 
 /**
  * 文件上传工具类
@@ -48,6 +46,14 @@ public class OSSFileUtils {
         }
     }
 
+    /**
+     * 单张图片上传
+     * @param request
+     * @param fileName
+     * @param folderName
+     * @return
+     * @throws IOException
+     */
     public Map<String, String> upload(HttpServletRequest request, String fileName, String folderName) throws IOException {
         Map<String, String> map = new HashMap<>();
         if (request instanceof MultipartHttpServletRequest) {
@@ -65,12 +71,47 @@ public class OSSFileUtils {
 
         return map;
     }
+
+    /**
+     * 多张图片上传
+     * @param request
+     * @param fileName
+     * @param folderName
+     * @return
+     * @throws IOException
+     */
+    public List<String> uploadMultiple(HttpServletRequest request, String fileName, String folderName) throws IOException {
+        List<String> list = new ArrayList<String>();
+        if (request instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
+            List<MultipartFile> fileList = req.getFiles(fileName);
+            for (MultipartFile file: fileList) {
+                if (file != null) {
+                    String originalFilename = file.getOriginalFilename();
+                    long alias = new Date().getTime() + new Random().nextInt(10000);
+                    String suffix  = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    String pictureName = alias + suffix;
+                    ossClient.putObject(bucketName, folderName+"/"+pictureName, file.getInputStream());
+                    list.add(folderName + "/" + pictureName);
+                }
+            }
+        }
+
+        return list;
+    }
+
+
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
         inputStream.close();
     }
     public void upload(String content, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+    }
+    public void uploadUrl(String url, String folderName, String fileName) throws IOException {
+        InputStream inputStream = new URL(url).openStream();
+        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        inputStream.close();
     }
 
     public InputStream download(String filePath,String fileName){

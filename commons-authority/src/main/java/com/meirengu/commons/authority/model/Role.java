@@ -1,5 +1,7 @@
 package com.meirengu.commons.authority.model;
 
+import java.util.List;
+
 public class Role {
     /**
      * 角色id
@@ -13,6 +15,10 @@ public class Role {
      * 角色描述
      */
     private String description;
+    /**
+     * 权限集合
+     */
+    private List<Permission> permissionList;
 
     public Long getId() {
         return id;
@@ -38,12 +44,21 @@ public class Role {
         this.description = description == null ? null : description.trim();
     }
 
+    public List<Permission> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<Permission> permissionList) {
+        this.permissionList = permissionList;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", permissionList=" + permissionList +
                 '}';
     }
 }

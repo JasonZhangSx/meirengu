@@ -1,3 +1,5 @@
+import com.meirengu.utils.StringUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +17,10 @@ public class Test {
         System.out.println(sdf.format(date));
     }
 
-
+    @org.junit.Test
     public void testGetByte(){
+        System.err.print(StringUtil.isEmpty("") && StringUtil.isEmpty("") && StringUtil.isEmpty("123123"));
+
 
     }
     

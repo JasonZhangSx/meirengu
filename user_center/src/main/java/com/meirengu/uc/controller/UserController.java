@@ -379,7 +379,7 @@ public class UserController extends BaseController{
      * @param password
      * @return
      */
-    @RequestMapping(value = "setPassword" ,method = RequestMethod.POST)
+    @RequestMapping(value = "password/site" ,method = RequestMethod.POST)
     public Result setPassword (@RequestParam(value = "token", required = true) String token,
                                @RequestParam(value = "user_id", required = true) Integer userId,
                                @RequestParam(value = "password", required = true) String password){
@@ -389,7 +389,7 @@ public class UserController extends BaseController{
                 }
                 User user = userService.retrieveByUserId(userId);
                 if(user != null){
-                    if(PasswordEncryption.validatePassword("",user.getPassword())){
+                    if("".equals(user.getPassword())){
                         user.setPassword(PasswordEncryption.createHash(password));
                         userService.update(user);
                         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -445,6 +445,11 @@ public class UserController extends BaseController{
             }else{
                 map.put("payPassword","0");
             }
+            if(StringUtil.isEmpty(user.getPassword())){
+                map.put("loginPassword","0");
+            }else{
+                map.put("loginPassword","1");
+            }
             map.put("isAuth",user.getIsAuth());
             map.put("isBuy",user.getIsBuy());
             map.put("isAllowInform",user.getIsAllowInform());
@@ -455,6 +460,8 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
+
+
     /**
      * 修改交易密码
      * @param mobile

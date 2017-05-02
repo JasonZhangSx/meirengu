@@ -61,19 +61,16 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
                         @RequestParam(value = "wx_openid", required = false) String wxOpenId,
-                        @RequestParam(value = "wx_info", required = false) String wxInfo,
                         @RequestParam(value = "qq_openid", required = false) String qqOpenId,
-                        @RequestParam(value = "qq_info", required = false) String qqInfo,
                         @RequestParam(value = "sina_openid", required = false) String sinaOpenId,
-                        @RequestParam(value = "sina_info", required = false) String sinaInfo,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
                         @RequestParam(value = "ip", required = true) String ip) {
-        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{}", new
-                Object[]{mobile, checkCode, password, from, ip});
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} time :{}", new
+                Object[]{mobile, checkCode, password, from, ip,new Date()});
         try{
             //token自动登陆
             if(!StringUtil.isEmpty(token)){
@@ -87,16 +84,39 @@ public class LoginController extends BaseController {
                     return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
                 }
             }
-            //第三方登录
+            //第三方登录 待优化
             if(!StringUtil.isEmpty(wxOpenId)){
                 //如果有该用户直接登陆  没有的话返回code 去注册页面
-
+                User user = userService.retrieveByOpenId(wxOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
             if(!StringUtil.isEmpty(qqOpenId)){
-
+                //如果有该用户直接登陆  没有的话返回code 去注册页面
+                User user = userService.retrieveByOpenId(qqOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
             if(!StringUtil.isEmpty(sinaOpenId)){
-
+                //如果有该用户直接登陆  没有的话返回code 去注册页面
+                User user = userService.retrieveByOpenId(sinaOpenId);
+                if(user != null){
+                    userService.updateUserInfo(user, mobile, ip, from);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
             }
 
             //verify params
@@ -136,7 +156,7 @@ public class LoginController extends BaseController {
                         int updateResult = checkCodeService.update(code);
                         logger.info("LoginController.login update code result:{}", updateResult);
 
-                        User usr = userService.createUserInfo(mobile,password,from,ip,avatar);
+                        User usr = userService.createUserInfo(mobile,from,ip,avatar);
                         if (usr != null){
                             RegisterInfo registerInfo = loginService.setUserToRedis(usr);
                             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -174,22 +194,6 @@ public class LoginController extends BaseController {
         }
     }
 
-    //退出
-    @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public Result logout(@RequestParam(value = "token", required = false) String token,
-                         @RequestParam(value = "registration_id", required = false) String registrationId){
-        try {
-            redisClient.delkeyObject(token);
-            //清空token
-            //清空redis
-            //清空推送别名
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }catch(Exception e){
-
-            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-        }
-    }
-
     /**
      * 注册
      * @param registerVO
@@ -197,17 +201,10 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public Result register(RegisterVO registerVO){
-        logger.info("LoginController.register params >> registerVO:{}",registerVO.toString());
+        logger.info("LoginController.register params >> registerVO:{} time:{}",registerVO.toString(),new Date());
         try {
-            //手机注册校验
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
-            }else {
-                //验证手机号是否注册
-                User user = userService.retrieveByPhone(registerVO.getMobile());
-                if(user != null){
-                    return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
-                }
             }
 
             //邀请注册校验
@@ -240,19 +237,53 @@ public class LoginController extends BaseController {
                 logger.info("LoginController.register update code result:{}", updateResult);
             }
 
-            //注册
-            User usr = userService.createUserInfo(registerVO);
-            if (usr != null){
-                RegisterInfo registerInfo = loginService.setUserToRedis(usr);
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else {
-                return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+            //验证手机号是否注册
+            User user = userService.retrieveByPhone(registerVO.getMobile());
+            if(user != null){
+                //第三方重新绑定账号 只需更改用户表信息 然后返回登陆
+                if(StringUtil.isEmpty(registerVO.getSina_openid()) && StringUtil.isEmpty(registerVO.getWx_openid()) && StringUtil.isEmpty(registerVO.getQq_openid())){
+                    return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
+                }
+                int result = userService.updateUser(registerVO);
+                if (result == 1){
+                    User userInfo = userService.retrieveByPhone(registerVO.getMobile());
+                    RegisterInfo registerInfo = loginService.setUserToRedis(userInfo);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                }
+            }else{
+                //注册
+                User usr = userService.createUserInfo(registerVO);
+                if (usr != null){
+                    RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                    return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+                }
             }
         }catch (Exception e){
             logger.error("LoginController register throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR,null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    //退出
+    @RequestMapping(value = "logout", method = RequestMethod.POST)
+    public Result logout(@RequestParam(value = "token", required = false) String token,
+                         @RequestParam(value = "registration_id", required = false) String registrationId){
+        try {
+            redisClient.delkeyObject(token);
+            //清空token
+            //清空redis
+            //清空推送别名
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch(Exception e){
+
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }
+    }
+
     //用户密码校验
     private Boolean validatePassword(String password,User user){
         try {

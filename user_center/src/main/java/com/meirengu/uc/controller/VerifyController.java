@@ -1,5 +1,6 @@
 package com.meirengu.uc.controller;
 
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -142,26 +143,38 @@ public class VerifyController extends BaseController {
      * @return
      */
     @RequestMapping(value = "user",method = {RequestMethod.POST})
-    public Result user(@RequestParam(value = "user_id", required = true,defaultValue = "")Integer userId,
-                         @RequestParam(value = "id_card", required = false)String idcard,
-                         @RequestParam(value = "realname", required = false)String realname){
+    public Result user(@RequestParam(value = "user_id", required = true)Integer userId,
+                       @RequestParam(value = "id_card", required = false)String idcard,
+                       @RequestParam(value = "realname", required = false)String realname,
+                       @RequestParam(value = "phone", required = false)String phone,
+                       @RequestParam(value = "password", required = false)String password)
+    {
         logger.info("用户基本信息校验 userId：{} id_card：{} realname：{}",userId,idcard,realname);
         try {
-            if(!StringUtil.isEmpty(userId)){
-                //用户基本信息验证
-                User user = userService.retrieveByUserId(userId);
-                if(user!=null && user.getIdCard().equals(idcard)){
+            //用户基本信息验证
+            User user = userService.retrieveByUserId(userId);
+            if(user == null){
+                return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+            }
+            if(!StringUtil.isEmpty(idcard)){
+                if(user.getIdCard().equals(idcard)){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.ID_CARD_IS_NOT_MATCH, null, StatusCode.codeMsgMap.get(StatusCode.ID_CARD_IS_NOT_MATCH));
                 }
-            }else{
-                return super.setResult(StatusCode.PARAMETER_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.PARAMETER_FORMAT_ERROR));
+            }
+            if(!StringUtil.isEmpty(password)){
+                if(validatePassword(password,user)){
+                    return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_ERROR));
+                }
             }
         }catch (Exception e){
             logger.error("VerifyController user Throws Exception :{}" ,e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
+        return null;
     }
 
 
@@ -220,6 +233,22 @@ public class VerifyController extends BaseController {
         }catch (Exception e){
             logger.error("VerifyController user Throws Exception :{}" ,e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
+    }
+
+    /**
+     * 校验密码方法提取
+     * @param password
+     * @param user
+     * @return
+     */
+    private Boolean validatePassword(String password,User user){
+        try {
+            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
+            return  result;
+        }catch (Exception e){
+            logger.error("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
+            return  false;
         }
     }
 }
