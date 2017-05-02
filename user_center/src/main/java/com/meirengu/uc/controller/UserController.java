@@ -412,6 +412,11 @@ public class UserController extends BaseController{
             }else{
                 map.put("payPassword","0");
             }
+            if(StringUtil.isEmpty(user.getPassword())){
+                map.put("loginPassword","0");
+            }else{
+                map.put("loginPassword","1");
+            }
             map.put("isAuth",user.getIsAuth());
             map.put("isBuy",user.getIsBuy());
             map.put("isAllowInform",user.getIsAllowInform());
