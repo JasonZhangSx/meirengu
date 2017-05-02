@@ -219,7 +219,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if(StringUtil.isEmpty(registerVO.getAvatar())) {
             String [] avatarDefault = ConfigUtil.getConfig("USER_AVATAR").split(",");
             Integer number = Integer.parseInt(ConfigUtil.getConfig("USER_AVATAR_NUMBER"));
-            user.setAvatar(avatarDefault[(int) Math.random()*number]);
+            user.setAvatar(avatarDefault[(int) (Math.random()*number)]);
         }else{
             try {
                 //上传头像到oss 并保存文件路径到user
