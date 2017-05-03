@@ -16,6 +16,16 @@ public class Contract {
     private Date preservationTime;
     private String contractFilepath;
     private String contractNo;
+    private Integer orderId;
+
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 
     public Integer getContractId() {
         return contractId;

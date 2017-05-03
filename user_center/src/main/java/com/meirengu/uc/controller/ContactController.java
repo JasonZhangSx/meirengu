@@ -3,8 +3,8 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.service.ContactService;
-import com.meirengu.uc.utils.GetIPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /** 电子合同controller
@@ -40,6 +38,7 @@ public class ContactController extends BaseController{
     @RequestMapping(value = "/create",method = RequestMethod.GET)
     public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
+                                    @RequestParam(value = "order_id",required = true) String orderId,
                                     @RequestParam(value = "user_id",required = true) String userId) {
         logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
         try {
@@ -47,6 +46,7 @@ public class ContactController extends BaseController{
             map.put("itemId",itemId);
             map.put("levelId",levelId);
             map.put("userId",userId);
+            map.put("orderId",orderId);
             return contactService.CreateContactFile(map);
         }catch (Exception e){
             logger.error("ContactController createContactFile throws Exception :{}",e.getMessage());
@@ -64,6 +64,7 @@ public class ContactController extends BaseController{
     @RequestMapping(value = "/view",method = RequestMethod.GET)
     public Result ViewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
+                                    @RequestParam(value = "order_id",required = true) String orderId,
                                     @RequestParam(value = "user_id",required = true) String userId) {
         logger.info("ContactController ViewContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
         try {
@@ -71,8 +72,12 @@ public class ContactController extends BaseController{
             map.put("itemId",itemId);
             map.put("levelId",levelId);
             map.put("userId",userId);
-            List<String> viewUrl =  contactService.ViewContactFile(map);
-            return super.setResult(StatusCode.OK, viewUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
+            map.put("orderId",orderId);
+            Contract contract =  contactService.ViewContactFile(map);
+            if(contract == null){
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+            return super.setResult(StatusCode.OK, contract.getContractFilepath(), StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("ContactController ViewContactFile throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
@@ -89,14 +94,19 @@ public class ContactController extends BaseController{
      @RequestMapping(value = "/down",method = RequestMethod.GET)
         public Result DownContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                         @RequestParam(value = "level_id",required = true) String levelId,
+                                        @RequestParam(value = "order_id",required = true) String orderId,
                                         @RequestParam(value = "user_id",required = true) String userId) {
          logger.info("ContactController DownContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
             try {
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
                 map.put("levelId",levelId);
+                map.put("orderId",orderId);
                 map.put("userId",userId);
-                List<String> downUrl =  contactService.DownContactFile(map);
+                String downUrl =  contactService.DownContactFile(map);
+                if("".equals(downUrl)){
+                    return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+                }
                 return super.setResult(StatusCode.OK, downUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
             }catch (Exception e){
                 logger.info("ContactController DownContactFile throws Exception :{}",e.getMessage());

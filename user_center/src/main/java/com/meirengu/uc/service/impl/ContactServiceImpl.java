@@ -85,10 +85,16 @@ public class ContactServiceImpl implements ContactService {
                 data.put("userId",map.get("userId"));
                 //获取投资人信息
                 User user = userDao.retrieveByUserId(Integer.parseInt(map.get("userId")));
+                if(user ==null){
+                    return this.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
                 UserAddress userAddress = new UserAddress();
                 userAddress.setUserId(Integer.parseInt(map.get("userId")));
                 userAddress.setIsDefault(1);
                 userAddress = userAddressDao.selectByUserAddress(userAddress);
+                if(userAddress == null){
+                    return this.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+                }
                 AddressVO addressVO = addressServiceImpl.showAddress(userAddress.getAreaId());
                 data.put("investors",user.getRealname());
                 data.put("investorIdCard",user.getIdCard());
@@ -241,6 +247,7 @@ public class ContactServiceImpl implements ContactService {
                                 contract.setUserId(Integer.parseInt(map.get("userId")));
                                 contract.setItemId(Integer.parseInt(map.get("itemId")));
                                 contract.setLevelId(Integer.parseInt(map.get("levelId")));
+                                contract.setOrderId(Integer.parseInt(map.get("orderId")));
                                 contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
                                 contract.setContractNo(contractNo);
                                 contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
@@ -292,51 +299,41 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<String> ViewContactFile(Map<String,String> map) {
+    public Contract ViewContactFile(Map<String,String> map) {
         Contract contract = new Contract();
         contract.setUserId(Integer.parseInt(map.get("userId")));
         contract.setItemId(Integer.parseInt(map.get("itemId")));
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
-        List<Contract> contractList = contractDao.select(contract);
-
-        List<String> downUrl = new ArrayList<>();
-        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
-        for(Contract contract1:contractList){
-            downUrl.add(contract1.getContractFilepath());
-        }
-        return downUrl;
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
+        Contract contractInfo = contractDao.select(contract);
+        return contractInfo;
     }
 
     @Override
-    public  List<String> DownContactFile(Map<String, String> map) {
+    public  String DownContactFile(Map<String, String> map) {
         Contract contract = new Contract();
         contract.setUserId(Integer.parseInt(map.get("userId")));
         contract.setItemId(Integer.parseInt(map.get("itemId")));
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
-        List<Contract> contractList = contractDao.select(contract);
-
-        List<String> downUrl = new ArrayList<>();
-        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
-        for(Contract contract1:contractList){
-
-            request.setPreservationId(new Long(contract1.getPreservationId()));
-            ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
-            if (response.isSuccess() && response.getDownUrl() != null) {
-                logger.info("Get the connection to see success",response.getDownUrl());
-                downUrl.add(response.getDownUrl());
-            }else{
-                logger.info("Get the connection to see failed");
-                logger.info("Main Error Code:"+response.getError().getCode());
-                logger.info("Main Error Message:"+response.getError().getMessage());
-                logger.info("Main Error Solution:"+response.getError().getSolution());
-            }
-            try {
-                Thread.sleep(100L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
+        Contract contractInfo = contractDao.select(contract);
+        if(contractInfo == null){
+            return "";
         }
-        return  downUrl;
+        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
+
+        request.setPreservationId(new Long(contractInfo.getPreservationId()));
+        ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
+        if (response.isSuccess() && response.getDownUrl() != null) {
+            logger.info("Get the connection to see success",response.getDownUrl());
+            return  response.getDownUrl();
+        }else{
+            logger.info("Get the connection to see failed");
+            logger.info("Main Error Code:"+response.getError().getCode());
+            logger.info("Main Error Message:"+response.getError().getMessage());
+            logger.info("Main Error Solution:"+response.getError().getSolution());
+            return "";
+        }
     }
 
     public Result setResult(int code, Object data, String msg){
@@ -345,8 +342,6 @@ public class ContactServiceImpl implements ContactService {
         result.setMsg(msg);
         if (code == 200 && (data != null && !"".equals(data))){
             result.setData(data);
-        }else {
-            //result.setData("");
         }
         logger.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
