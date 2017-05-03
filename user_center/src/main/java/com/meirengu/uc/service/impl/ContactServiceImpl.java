@@ -9,10 +9,10 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.NumberToCN;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.JacksonUtil;
@@ -24,8 +24,10 @@ import org.mapu.themis.api.common.StampType;
 import org.mapu.themis.api.request.contract.ContactHtmlCreateFileRequest;
 import org.mapu.themis.api.request.contract.ContractFileDownloadUrlRequest;
 import org.mapu.themis.api.request.contract.ContractFilePreservationCreateRequest;
+import org.mapu.themis.api.request.contract.ContractFileViewUrlRequest;
 import org.mapu.themis.api.response.contract.ContactHtmlCreateFileResponse;
 import org.mapu.themis.api.response.contract.ContractFileDownloadUrlResponse;
+import org.mapu.themis.api.response.contract.ContractFileViewUrlResponse;
 import org.mapu.themis.api.response.preservation.PreservationCreateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +42,9 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 
 import static com.meirengu.uc.utils.ThemisClientInit.getClient;
 
@@ -306,7 +310,14 @@ public class ContactServiceImpl implements ContactService {
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
         contract.setOrderId(Integer.parseInt(map.get("orderId")));
         Contract contractInfo = contractDao.select(contract);
-        return contractInfo;
+        if(contract == null){
+            return contract;
+        }
+        ContractFileViewUrlRequest request = new ContractFileViewUrlRequest();
+        request.setPreservationId(new Long(contractInfo.getPreservationId()));
+        ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
+        contract.setContractFilepath(response.getViewUrl());
+        return contract;
     }
 
     @Override

@@ -131,6 +131,15 @@ public class LoginController extends BaseController {
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
                 if(user != null && validatePassword(password,user)){
+                    Integer times = 0;
+                    if(redisClient.existsObject(user.getPhone()+"_"+user.getUserId())){
+                        times = (Integer) redisClient.getObject(user.getPhone()+"_"+user.getUserId());
+                        if(times>5){
+                            return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
+                        }
+                    }
+                    redisClient.setObject(user.getPhone()+"_"+user.getUserId(),String.valueOf(times),300);
+
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
