@@ -132,13 +132,13 @@ public class LoginController extends BaseController {
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
 
                 Integer times = 0;
-                if(redisClient.existsObject(user.getPhone()+"_login_times")){
-                    times = (Integer) redisClient.getObject(user.getPhone()+"_"+user.getUserId());
+                if(redisClient.existsObject(mobile+"_login_times")){
+                    times = Integer.parseInt(String.valueOf(redisClient.getObject(mobile+"_login_times")))+1;
                     if(times>5){
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),300);
+                redisClient.setObject(mobile+"_login_times",String.valueOf(times),300);
 
                 if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
