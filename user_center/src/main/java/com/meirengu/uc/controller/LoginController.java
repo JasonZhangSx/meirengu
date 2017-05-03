@@ -130,6 +130,7 @@ public class LoginController extends BaseController {
 
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
+
                 Integer times = 0;
                 if(redisClient.existsObject(user.getPhone()+"_login_times")){
                     times = (Integer) redisClient.getObject(user.getPhone()+"_"+user.getUserId());
@@ -137,9 +138,9 @@ public class LoginController extends BaseController {
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                if(user != null && validatePassword(password,user)){
-                    redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),300);
+                redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),300);
 
+                if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
