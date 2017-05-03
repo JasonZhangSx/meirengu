@@ -65,31 +65,31 @@
     <update id="update" parameterType="User">
         update <include refid="table_name"/>
         <set>
-            <if test="nickname != null and nickname != ''">
+            <if test="nickname != null ">
             nickname=#{nickname,jdbcType=VARCHAR},
             </if>
-            <if test="realname != null and realname != ''">
+            <if test="realname != null ">
                 realname=#{realname,jdbcType=VARCHAR},
             </if>
-            <if test="phone != null and phone != ''">
+            <if test="phone != null ">
                 phone=#{phone,jdbcType=VARCHAR},
             </if>
-            <if test="idCard != null and idCard != ''">
+            <if test="idCard != null ">
                 idcard=#{idCard,jdbcType=VARCHAR},
             </if>
-            <if test="password != null and password != ''">
+            <if test="password != null ">
                 password=#{password,jdbcType=VARCHAR},
             </if>
-            <if test="bankIdCard != null and bankIdCard != ''">
+            <if test="bankIdCard != null ">
                 bank_idcard=#{bankIdCard,jdbcType=VARCHAR},
             </if>
-            <if test="bankCode != null and bankCode != ''">
+            <if test="bankCode != null ">
                 bank_code=#{bankCode,jdbcType=VARCHAR},
             </if>
-            <if test="bankPhone != null and bankPhone != ''">
+            <if test="bankPhone != null ">
                 bank_phone=#{bankPhone,jdbcType=VARCHAR},
             </if>
-            <if test="avatar != null and avatar != ''">
+            <if test="avatar != null ">
                 avatar=#{avatar,jdbcType=VARCHAR},
             </if>
             <if test="sex != null">
@@ -98,16 +98,16 @@
             <if test="birthday != null">
                 birthday=#{birthday,jdbcType=DATE},
             </if>
-            <if test="email != null and email != ''">
+            <if test="email != null ">
                 email=#{email,jdbcType=VARCHAR},
             </if>
-            <if test="qq != null and qq != ''">
+            <if test="qq != null">
                 qq=#{qq,jdbcType=VARCHAR},
             </if>
-            <if test="wx != null and wx != ''">
+            <if test="wx != null">
                 wx=#{wx,jdbcType=VARCHAR},
             </if>
-            <if test="sina != null and sina != ''">
+            <if test="sina != null ">
                 sina=#{sina,jdbcType=VARCHAR},
             </if>
             <if test="areaId != null">
@@ -125,10 +125,10 @@
             <if test="lastLoginTime != null">
                 last_login_time=#{lastLoginTime,jdbcType=DATE},
             </if>
-            <if test="loginIp != null and loginIp !=''">
+            <if test="loginIp != null ">
                 login_ip=#{loginIp,jdbcType=VARCHAR},
             </if>
-            <if test="lastLoginIp != null and lastLoginIp != ''">
+            <if test="lastLoginIp != null ">
                 last_login_ip=#{lastLoginIp,jdbcType=VARCHAR},
             </if>
             <if test="loginFrom != null">
@@ -137,34 +137,34 @@
             <if test="loginNum != null">
                 login_num=#{loginNum,jdbcType=VARCHAR},
             </if>
-            <if test="wxOpenid != null and wxOpenid != ''">
+            <if test="wxOpenid != null ">
                 wx_openid=#{wxOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="wxInfo != null and wxInfo != ''">
+            <if test="wxInfo != null ">
                 wx_info=#{wxInfo,jdbcType=VARCHAR},
             </if>
-            <if test="qqOpenid != null and qqOpenid != ''">
+            <if test="qqOpenid != null ">
                 qq_openid=#{qqOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="qqInfo != null and qqInfo != ''">
+            <if test="qqInfo != null ">
                 qq_info=#{qqInfo,jdbcType=VARCHAR},
             </if>
-            <if test="sinaOpenid != null and sinaOpenid != ''">
+            <if test="sinaOpenid != null ">
                 sina_openid=#{sinaOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="sinaInfo != null and sinaInfo != ''">
+            <if test="sinaInfo != null ">
                 sina_info=#{sinaInfo,jdbcType=VARCHAR},
             </if>
-            <if test="isAuth != null and isAuth != ''">
+            <if test="isAuth != null ">
                 is_auth=#{isAuth,jdbcType=INTEGER},
             </if>
             <if test="investConditions != null">
                 invest_conditions=#{investConditions,jdbcType=INTEGER},
             </if>
-            <if test="phone != null and phone != ''">
+            <if test="phone != null">
                  phone=#{phone},
             </if>
-            <if test="userId != null and userId != ''">
+            <if test="userId != null">
                  user_id=#{userId},
             </if>
             state=1

@@ -418,7 +418,7 @@ public class UserController extends BaseController{
             map.put("isBuy",user.getIsBuy());
             map.put("isAllowInform",user.getIsAllowInform());
             map.put("isAllowTalk",user.getIsAllowTalk());
-            return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            return super.setResult(StatusCode.OK,map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("UserController auth throw exception:", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
@@ -600,7 +600,7 @@ public class UserController extends BaseController{
                 map.put("bankIdCard",user.getBankIdCard()+"");
                 map.put("bankPhone",user.getBankPhone()+"");
                 map.put("bankCode",user.getBankCode()+"");
-                return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(map,Map.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+                return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }

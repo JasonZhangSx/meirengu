@@ -477,7 +477,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
             }
         }catch (Exception e){
-
+            logger.error("VerityServiceImpl.back code >> throws exception:{}", e.getMessage());
+            return 0;
         }
         return 0;
     }
