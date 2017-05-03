@@ -991,5 +991,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
+    /**
+     * 根据用户id查询用户投资金额
+     * @param userIds
+     * @return
+     */
+    public List<Map<String, Object>> getSumAmountByUserIds(String userIds){
+        // 目前不支持批量
+        Integer userId = Integer.parseInt(userIds);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        params.put("orderState", OrderStateEnum.PAID.getValue());
+        Map<String, Object> map = orderDao.getSumAmountByUserId(params);
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        list.add(map);
+        return list;
+    }
 
 }

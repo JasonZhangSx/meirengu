@@ -302,4 +302,14 @@
 	</select>
 	<!-- 分页相关结束 -->
 
+	<select id="getSumAmountByUserId" parameterType="Map" resultType="Map">
+		select SUM(order_amount) AS sumOrderAmount,
+				SUM(rebate_amount) AS sumRebateAmount,
+				SUM(cost_amount) AS sumCostAmount,
+				user_id AS userId
+		FROM
+		<include refid="table_name" />
+		<include refid="findPage_where"/>
+	</select>
+
 </mapper>
