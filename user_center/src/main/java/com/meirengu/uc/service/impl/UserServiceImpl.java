@@ -234,7 +234,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
                 user.setAvatar(foldName+"/"+fileName);
             } catch (IOException e) {
-                logger.info("第三方头像上传失败！");
+                logger.error("第三方头像上传失败！");
             }
         }
         user.setUserId(UuidUtils.getShortUuid());
@@ -276,7 +276,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 user.setPassword("");
             }
         }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
+            logger.error("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
@@ -556,7 +556,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         try {
             user.setPassword(PasswordEncryption.createHash(registerVO.getPassword()));
         } catch (Exception e) {
-            logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
+            logger.error("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
         }
         return userDao.update(user);
     }
