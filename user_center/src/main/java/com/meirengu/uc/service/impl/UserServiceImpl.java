@@ -534,7 +534,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public int updateUser(RegisterVO registerVO) {
+    public int bundThirdParty(RegisterVO registerVO) {
 
         User user = new User();
         user.setPhone(registerVO.getMobile());

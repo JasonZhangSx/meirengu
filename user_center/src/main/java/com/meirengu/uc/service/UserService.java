@@ -119,14 +119,15 @@ public interface UserService extends BaseService<User>{
     int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword);
 
     int setPayPassword(Integer userId, String newPassword);
-
+    //获取银行卡号
     boolean getBankIdCard(String bankIdcard);
-
+    //获取身份证
     boolean getIdCard(String idcard);
-
+    //根据openId 查找用户
     User retrieveByOpenId(String openId);
+    //绑定第三方
+    int bundThirdParty(RegisterVO registerVO);
 
-    int updateUser(RegisterVO registerVO);
-
+    //解除绑定第三方
     int unbund(String userId, Integer type);
 }

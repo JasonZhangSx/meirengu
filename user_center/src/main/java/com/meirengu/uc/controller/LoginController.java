@@ -244,7 +244,7 @@ public class LoginController extends BaseController {
                 if(StringUtil.isEmpty(registerVO.getSina_openid()) && StringUtil.isEmpty(registerVO.getWx_openid()) && StringUtil.isEmpty(registerVO.getQq_openid())){
                     return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
                 }
-                int result = userService.updateUser(registerVO);
+                int result = userService.bundThirdParty(registerVO);
                 if (result == 1){
                     User userInfo = userService.retrieveByPhone(registerVO.getMobile());
                     RegisterInfo registerInfo = loginService.setUserToRedis(userInfo);

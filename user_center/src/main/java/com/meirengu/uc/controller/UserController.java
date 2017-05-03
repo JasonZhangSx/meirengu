@@ -12,6 +12,7 @@ import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.ApacheBeanUtils;
@@ -526,12 +527,28 @@ public class UserController extends BaseController{
     }
 
     /**
+     * 绑定第三方
+     * @param registerVO
+     * @return
+     */
+    @RequestMapping(value = "thirdParty/bund", method = RequestMethod.POST)
+    public Result register(RegisterVO registerVO){
+        int result = userService.bundThirdParty(registerVO);
+        if (result == 1){
+            return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+        }
+    }
+
+    /**
      * 解除绑定
      * @param token
      * @param userId
      * @param type
      * @return
      */
+    @RequestMapping(value = "thirdParty/unbund", method = RequestMethod.POST)
     public Result unbund(@RequestParam(value = "token", required = true) String token,
                          @RequestParam(value = "user_id", required = false) String userId,
                          @RequestParam(value = "type", required = true) Integer type){
