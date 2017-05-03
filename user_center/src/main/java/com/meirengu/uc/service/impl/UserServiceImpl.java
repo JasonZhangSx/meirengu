@@ -553,11 +553,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
         }
-        try {
-            user.setPassword(PasswordEncryption.createHash(registerVO.getPassword()));
-        } catch (Exception e) {
-            logger.error("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
-        }
         return userDao.update(user);
     }
 

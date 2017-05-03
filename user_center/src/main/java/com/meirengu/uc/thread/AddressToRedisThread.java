@@ -44,11 +44,12 @@ public class AddressToRedisThread implements Runnable{
          */
         List<Area> list = new ArrayList<Area>();
         list = areasMapper.getAreaData();
+        logger.info("set area form redis start :{} ",list);
         for (Area area:list){
             redisClient.delkeyObject("area_"+area.getAreaId());
             String value = JacksonUtil.toJSon(area);
             redisClient.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
-        logger.info("set area form redis :{}","");
+        logger.info("set area form redis end  :{}",list);
     }
 }
