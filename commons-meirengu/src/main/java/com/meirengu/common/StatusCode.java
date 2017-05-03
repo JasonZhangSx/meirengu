@@ -176,6 +176,7 @@ public class StatusCode {
     public static final int DELETE_ADDRESS_FAILED = 50130;
     public static final int MODIFY_PASSWORD_FAILED = 50131;
     public static final int UNBUND_IS_FAILED = 50132;
+    public static final int BUND_IS_FAILED = 50133;
 
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
@@ -433,6 +434,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.DELETE_ADDRESS_FAILED, "删除地址失败! ");
         codeMsgMap.put(StatusCode.MODIFY_PASSWORD_FAILED, "修改密码失败! ");
         codeMsgMap.put(StatusCode.UNBUND_IS_FAILED, "解绑失败! ");
+        codeMsgMap.put(StatusCode.BUND_IS_FAILED, "绑定失败! ");
 
         //50200-50300//news_cms
         codeMsgMap.put(StatusCode.FEEDBACK_ERROR_INSERT, "意见反馈保存失败，请重试");

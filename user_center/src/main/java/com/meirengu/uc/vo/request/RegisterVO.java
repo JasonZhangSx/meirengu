@@ -5,6 +5,7 @@ package com.meirengu.uc.vo.request;
  */
 public class RegisterVO {
 
+    private String token;
     private String mobile;
     private String password;
     private Integer check_code;
@@ -21,6 +22,14 @@ public class RegisterVO {
     private String wx_name;
     private String qq_name;
     private String sina_name;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getMobile() {
         return mobile;

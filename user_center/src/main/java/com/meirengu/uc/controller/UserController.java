@@ -533,11 +533,15 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "thirdParty/bund", method = RequestMethod.POST)
     public Result register(RegisterVO registerVO){
+        logger.info("绑定第三方 ：{}",registerVO.toString());
+        if(StringUtil.isEmpty(registerVO.getToken()) || !redisClient.existsObject(registerVO.getToken())){
+            return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+        }
         int result = userService.bundThirdParty(registerVO);
         if (result == 1){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }else {
-            return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
+            return super.setResult(StatusCode.BUND_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.BUND_IS_FAILED));
         }
     }
 
@@ -553,6 +557,10 @@ public class UserController extends BaseController{
                          @RequestParam(value = "user_id", required = false) String userId,
                          @RequestParam(value = "type", required = true) Integer type){
         try {
+            logger.info("解除绑定第三方 token:{} userId:{}  type:{} ",token,userId,type);
+            if(StringUtil.isEmpty(token) || !redisClient.existsObject(token)){
+                return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            }
             int result = userService.unbund(userId,type);
             if(result == 1){
                 return super.setResult(StatusCode.OK,null, StatusCode.codeMsgMap.get(StatusCode.OK));
