@@ -26,6 +26,9 @@
     <include refid="Base_Column_List" />
     from organization
     where 1=1
+    <if test="organizationId != null" >
+     AND organization_id = #{organizationId,jdbcType=INTEGER}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from organization
@@ -41,7 +44,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{operateAccount,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.meirengu.commons.authority.model.Organization" >
+  <insert id="insertSelective" parameterType="com.meirengu.commons.authority.model.Organization" useGeneratedKeys="true" keyProperty="id" >
     insert into organization
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="organizationId != null" >

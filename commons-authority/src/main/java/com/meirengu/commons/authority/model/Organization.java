@@ -18,11 +18,11 @@ public class Organization {
     /**
      * 状态：1、启用；0、禁用
      */
-    private Boolean organizationStatus;
+    private Integer organizationStatus;
     /**
      * 排序：数字越小权重越大
      */
-    private Boolean organizationSort;
+    private Integer organizationSort;
     /**
      * 创建时间
      */
@@ -60,19 +60,19 @@ public class Organization {
         this.organizationParentId = organizationParentId;
     }
 
-    public Boolean getOrganizationStatus() {
+    public Integer getOrganizationStatus() {
         return organizationStatus;
     }
 
-    public void setOrganizationStatus(Boolean organizationStatus) {
+    public void setOrganizationStatus(Integer organizationStatus) {
         this.organizationStatus = organizationStatus;
     }
 
-    public Boolean getOrganizationSort() {
+    public Integer getOrganizationSort() {
         return organizationSort;
     }
 
-    public void setOrganizationSort(Boolean organizationSort) {
+    public void setOrganizationSort(Integer organizationSort) {
         this.organizationSort = organizationSort;
     }
 

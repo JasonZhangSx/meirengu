@@ -20,4 +20,19 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Organization> getAllOrganization(Organization record) {
         return organizationMapper.getAllOrganization(record);
     }
+
+    @Override
+    public int update(Organization record) {
+        return organizationMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int insert(Organization record) {
+        return organizationMapper.insertSelective(record);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return organizationMapper.deleteByPrimaryKey(id);
+    }
 }
