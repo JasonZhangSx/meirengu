@@ -164,6 +164,16 @@ public class VerifyController extends BaseController {
                 }
             }
             if(!StringUtil.isEmpty(password)){
+
+                Integer times = 0;
+                if(redisClient.existsObject(userId+"_login_times")){
+                    times = Integer.parseInt(String.valueOf(redisClient.getObject(userId+"_login_times")))+1;
+                    if(times>5){
+                        return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
+                    }
+                }
+                redisClient.setObject(userId+"_login_times",String.valueOf(times),300);
+
                 if(validatePassword(password,user)){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
