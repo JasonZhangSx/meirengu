@@ -17,9 +17,9 @@ import java.util.Map;
 /**
  * Created by huoyan403 on 4/25/2017.
  */
-public class OssUpload {
+public class OssUploadTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(OssUpload.class);
+    private static final Logger logger = LoggerFactory.getLogger(OssUploadTest.class);
 
     //测试list<String[]>
     @Test
