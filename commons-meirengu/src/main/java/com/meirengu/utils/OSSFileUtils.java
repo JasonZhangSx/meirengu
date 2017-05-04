@@ -97,55 +97,69 @@ public class OSSFileUtils {
                 }
             }
         }
-
         return list;
     }
 
-
+    /**
+     * inputstream 上传oss
+     * @param inputStream
+     * @param fileName
+     * @param folderName
+     * @throws IOException
+     */
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
-        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
-        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
 
-            }
+        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
             putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
         }
-        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-           throw new IOException("oss 上传失败！");
-        }
         inputStream.close();
-    }
-    public void upload(String content, String fileName, String folderName) throws IOException {
-        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
         if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
+            throw new IOException("oss 上传失败！"+putObjectResult.getResponse().getErrorResponseAsString());
+        }
+    }
 
-            }
-            putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
-        }
+    /**
+     * String类型上传 oss
+     * @param content
+     * @param fileName
+     * @param folderName
+     * @throws IOException
+     */
+    public void upload(String content, String fileName, String folderName) throws IOException {
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
+        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName,byteArrayInputStream);
+
         if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-            throw new IOException("oss 上传失败！");
+            putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, byteArrayInputStream);
+        }
+        byteArrayInputStream.close();
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            throw new IOException("oss 上传失败！"+putObjectResult.getResponse().getErrorResponseAsString());
         }
     }
+
+    /**
+     * url格式上传oss
+     * @param url
+     * @param folderName
+     * @param fileName
+     * @throws IOException
+     */
     public void uploadUrl(String url, String folderName, String fileName) throws IOException {
+
         InputStream inputStream = new URL(url).openStream();
         PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
-        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
 
-            }
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
             putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
         }
-        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
-            throw new IOException("oss 上传失败！");
-        }
         inputStream.close();
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            throw new IOException("oss 上传失败！"+putObjectResult.getResponse().getErrorResponseAsString());
+        }
     }
 
     public InputStream download(String filePath,String fileName){
