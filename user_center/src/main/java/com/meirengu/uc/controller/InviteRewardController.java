@@ -56,8 +56,11 @@ public class InviteRewardController extends BaseController{
             // 根据用户id 获取邀请人信息 判断是否为空
             if(investInfo.size()!=0){
                 for (Map map:investInfo){
-                    for(Object userId : map.keySet()){
-                        Object investMoney = map.get(userId);
+                    String userId = String.valueOf(map.get("userId"));
+                    String investMoney = String.valueOf(map.get("investMoney"));
+                    String type = String.valueOf(map.get("type"));
+//                    for(Object userId : map.keySet()){
+//                        Object investMoney = map.get(userId);
 
                         Inviter inviter = new Inviter();
                         inviter.setInvitedUserId(Integer.parseInt(userId+""));
@@ -76,6 +79,7 @@ public class InviteRewardController extends BaseController{
                                     arr[0] = userId+"";
                                     arr[1] = inviter.getUserId()+"";
                                     arr[2] = investMoney+"";
+                                    arr[3] = type+"";
                                     list.add(arr);
                                 }
                             }catch (Exception e){
@@ -85,7 +89,7 @@ public class InviteRewardController extends BaseController{
                         }
                     }
                 }
-            }
+//            }
             //如果没有数据直接return
             if(list.size()==0){
                 return setResult(StatusCode.OK,null, StatusCode.codeMsgMap.get(StatusCode.OK));

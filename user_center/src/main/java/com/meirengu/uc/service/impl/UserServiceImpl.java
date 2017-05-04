@@ -234,7 +234,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
                 user.setAvatar(foldName+"/"+fileName);
             } catch (IOException e) {
-                logger.info("第三方头像上传失败！");
+                logger.error("第三方头像上传失败！");
             }
         }
         user.setUserId(UuidUtils.getShortUuid());
@@ -276,7 +276,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 user.setPassword("");
             }
         }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
+            logger.error("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
@@ -477,7 +477,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
             }
         }catch (Exception e){
-
+            logger.error("VerityServiceImpl.back code >> throws exception:{}", e.getMessage());
+            return 0;
         }
         return 0;
     }
@@ -534,7 +535,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public int updateUser(RegisterVO registerVO) {
+    public int bundThirdParty(RegisterVO registerVO) {
 
         User user = new User();
         user.setPhone(registerVO.getMobile());
@@ -553,10 +554,27 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
         }
-        try {
-            user.setPassword(PasswordEncryption.createHash(registerVO.getPassword()));
-        } catch (Exception e) {
-            logger.info("UserServiceImpl setPayPassword throws Exception :{}",e.getMessage());
+        return userDao.update(user);
+    }
+
+    @Override
+    public int unbund(String userId, Integer type) {
+        User user = new User();
+        user.setUserId(Integer.parseInt(userId));
+        if(type == 1){
+            user.setWxOpenid("");
+            user.setWx("");
+            user.setWxInfo("");
+        }
+        if(type == 2){
+            user.setQq("");
+            user.setQqInfo("");
+            user.setQqOpenid("");
+        }
+        if(type == 3){
+            user.setSina("");
+            user.setSinaOpenid("");
+            user.setSinaInfo("");
         }
         return userDao.update(user);
     }

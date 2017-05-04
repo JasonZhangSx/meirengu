@@ -130,6 +130,16 @@ public class LoginController extends BaseController {
 
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
+
+                Integer times = 0;
+                if(redisClient.existsObject(mobile+"_login_times")){
+                    times = Integer.parseInt(String.valueOf(redisClient.getObject(mobile+"_login_times")))+1;
+                    if(times>5){
+                        return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
+                    }
+                }
+                redisClient.setObject(mobile+"_login_times",String.valueOf(times),300);
+
                 if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
@@ -244,7 +254,7 @@ public class LoginController extends BaseController {
                 if(StringUtil.isEmpty(registerVO.getSina_openid()) && StringUtil.isEmpty(registerVO.getWx_openid()) && StringUtil.isEmpty(registerVO.getQq_openid())){
                     return super.setResult(StatusCode.USER_IS_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_EXITS));
                 }
-                int result = userService.updateUser(registerVO);
+                int result = userService.bundThirdParty(registerVO);
                 if (result == 1){
                     User userInfo = userService.retrieveByPhone(registerVO.getMobile());
                     RegisterInfo registerInfo = loginService.setUserToRedis(userInfo);

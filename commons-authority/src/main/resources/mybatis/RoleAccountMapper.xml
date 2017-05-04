@@ -9,4 +9,16 @@
   <sql id="Base_Column_List">
     id, role_id, account_id
   </sql>
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into role_account (role_id, account_id
+    )
+    values
+    <foreach collection="list" item="role" index="index" separator=",">
+      ( #{role.roleId,jdbcType=BIGINT}, #{role.accountId,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <delete id="deleteByAccountId" parameterType="java.lang.Long" >
+    delete from role_account
+    where account_id = #{accountId,jdbcType=BIGINT}
+  </delete>
 </mapper>

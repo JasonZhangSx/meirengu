@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.meirengu.commons.authority.dao.PermissionMapper">
-  <resultMap id="BaseResultMap" type="com.meirengu.commons.authority.model.Permission">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="value" jdbcType="VARCHAR" property="value" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.meirengu.commons.authority.model.Permission">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="value" jdbcType="VARCHAR" property="value" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+    </resultMap>
+    <sql id="Base_Column_List">
     id, parent_id, name, value, description
   </sql>
-  <select id="findPermission" parameterType="java.util.List" resultMap="BaseResultMap">
-    select 
-      <include refid="Base_Column_List" />
-    FROM
-     permission p
-    WHERE
-      p.id IN (
-    SELECT DISTINCT
-     rp.permission_id
-    FROM
-     role_permission rp
-    WHERE
-      rp.role_id IN (
-    0,
-    <foreach collection="list" item="item" open="" close="" separator=",">
-${item.id}
-    </foreach>
-    )
-    )
-  </select>
-    <select id="getAllPermission" resultMap="BaseResultMap">
+    <select id="findPermission" parameterType="java.util.List" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         FROM
@@ -42,6 +22,84 @@ ${item.id}
         rp.permission_id
         FROM
         role_permission rp
+        WHERE
+        rp.role_id IN (
+        0,
+        <foreach collection="list" item="item" open="" close="" separator=",">
+            ${item.id}
+        </foreach>
+        )
         )
     </select>
+    <select id="getAllPermission" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        permission p
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from permission
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <insert id="insert" parameterType="com.meirengu.commons.authority.model.Permission" useGeneratedKeys="true" keyProperty="id" >
+        insert into permission
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="parentId != null" >
+                parent_id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="value != null" >
+                value,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="parentId != null" >
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="value != null" >
+                #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.meirengu.commons.authority.model.Permission" >
+        update permission
+        <set >
+            <if test="parentId != null" >
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="value != null" >
+                value = #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <delete id="delete" parameterType="java.lang.Long" >
+        delete from permission
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
 </mapper>

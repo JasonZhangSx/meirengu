@@ -9,10 +9,10 @@ import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
-import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.NumberToCN;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.JacksonUtil;
@@ -24,8 +24,10 @@ import org.mapu.themis.api.common.StampType;
 import org.mapu.themis.api.request.contract.ContactHtmlCreateFileRequest;
 import org.mapu.themis.api.request.contract.ContractFileDownloadUrlRequest;
 import org.mapu.themis.api.request.contract.ContractFilePreservationCreateRequest;
+import org.mapu.themis.api.request.contract.ContractFileViewUrlRequest;
 import org.mapu.themis.api.response.contract.ContactHtmlCreateFileResponse;
 import org.mapu.themis.api.response.contract.ContractFileDownloadUrlResponse;
+import org.mapu.themis.api.response.contract.ContractFileViewUrlResponse;
 import org.mapu.themis.api.response.preservation.PreservationCreateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +65,7 @@ public class ContactServiceImpl implements ContactService {
     private AddressServiceImpl addressServiceImpl;
 
     @Override
-    public Result CreateContactFile(Map<String,String> map) {
+    public Result CreateIncomeContactFile(Map<String,String> map) {
 
         HttpUtil.HttpResult hr = null;
         Result result = new Result();
@@ -85,10 +87,16 @@ public class ContactServiceImpl implements ContactService {
                 data.put("userId",map.get("userId"));
                 //获取投资人信息
                 User user = userDao.retrieveByUserId(Integer.parseInt(map.get("userId")));
+                if(user ==null){
+                    return this.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+                }
                 UserAddress userAddress = new UserAddress();
                 userAddress.setUserId(Integer.parseInt(map.get("userId")));
                 userAddress.setIsDefault(1);
                 userAddress = userAddressDao.selectByUserAddress(userAddress);
+                if(userAddress == null){
+                    return this.setResult(StatusCode.ADDRESS_IS_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.ADDRESS_IS_NOT_EXITS));
+                }
                 AddressVO addressVO = addressServiceImpl.showAddress(userAddress.getAreaId());
                 data.put("investors",user.getRealname());
                 data.put("investorIdCard",user.getIdCard());
@@ -241,6 +249,7 @@ public class ContactServiceImpl implements ContactService {
                                 contract.setUserId(Integer.parseInt(map.get("userId")));
                                 contract.setItemId(Integer.parseInt(map.get("itemId")));
                                 contract.setLevelId(Integer.parseInt(map.get("levelId")));
+                                contract.setOrderId(Integer.parseInt(map.get("orderId")));
                                 contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
                                 contract.setContractNo(contractNo);
                                 contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
@@ -292,19 +301,27 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public Result CreateEquityContactFile(Map<String, String> map) {
+        return null;
+    }
+
+    @Override
     public List<String> ViewContactFile(Map<String,String> map) {
         Contract contract = new Contract();
         contract.setUserId(Integer.parseInt(map.get("userId")));
         contract.setItemId(Integer.parseInt(map.get("itemId")));
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
         List<Contract> contractList = contractDao.select(contract);
 
-        List<String> downUrl = new ArrayList<>();
-        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
+        List<String> viewUrl = new ArrayList<>();
+        ContractFileViewUrlRequest request = new ContractFileViewUrlRequest();
         for(Contract contract1:contractList){
-            downUrl.add(contract1.getContractFilepath());
+            request.setPreservationId(new Long(contract1.getPreservationId()));
+            ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
+            viewUrl.add(response.getViewUrl());
         }
-        return downUrl;
+        return viewUrl;
     }
 
     @Override
@@ -313,12 +330,12 @@ public class ContactServiceImpl implements ContactService {
         contract.setUserId(Integer.parseInt(map.get("userId")));
         contract.setItemId(Integer.parseInt(map.get("itemId")));
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
         List<Contract> contractList = contractDao.select(contract);
 
-        List<String> downUrl = new ArrayList<>();
         ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
+        List<String> downUrl = new ArrayList<>();
         for(Contract contract1:contractList){
-
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
             if (response.isSuccess() && response.getDownUrl() != null) {
@@ -329,11 +346,7 @@ public class ContactServiceImpl implements ContactService {
                 logger.info("Main Error Code:"+response.getError().getCode());
                 logger.info("Main Error Message:"+response.getError().getMessage());
                 logger.info("Main Error Solution:"+response.getError().getSolution());
-            }
-            try {
-                Thread.sleep(100L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                return null;
             }
         }
         return  downUrl;
@@ -345,8 +358,6 @@ public class ContactServiceImpl implements ContactService {
         result.setMsg(msg);
         if (code == 200 && (data != null && !"".equals(data))){
             result.setData(data);
-        }else {
-            //result.setData("");
         }
         logger.info("Request getResponse: {}", JSON.toJSON(result));
         return result;

@@ -25,7 +25,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="updateOrAdd" method="post" class="form form-horizontal" id="accountUpOrAdd" onsubmit="return saveReport();">
+    <form action="updateOrAdd" method="post" class="form form-horizontal" id="permissionUpOrAdd" onsubmit="return saveReport();">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -40,83 +40,54 @@
 
         <div>
             <input type="text" class="input-text"  id="id"  maxlength="30"
-                   value="${account.id}" style="display: none" name="id">
+                   value="${permission.id}" style="display: none" name="id">
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">用户名：</label>
+                <label class="form-label col-xs-4 col-sm-2">权限名称：</label>
                 <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"  id="userName"  maxlength="30"
-                           value="${account.userName}" placeholder="用户名最多10字" name="userName">
+                    <input type="text" class="input-text"  id="name"  maxlength="30"
+                           value="${permission.name}" placeholder="用户名最多10字" name="name">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">设置密码：</label>
+                <label class="form-label col-xs-4 col-sm-2">权限值：</label>
                 <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"  id="password"  maxlength="30"
-                           value="${account.password}" placeholder="密码最多30字" name="password">
+                    <input type="text" class="input-text"  id="value"  maxlength="30"
+                           value="${permission.value}"  placeholder="真实姓名最多10字" name="value">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">使用者姓名：</label>
+                <label class="form-label col-xs-4 col-sm-2">权限描述：</label>
                 <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"  id="realName"  maxlength="30"
-                           value="${account.realName}"  placeholder="真实姓名最多10字" name="realName">
+                    <input type="text" class="input-text"  id="description"  maxlength="30"
+                           value="${permission.description}" placeholder="手机号最多11字" name="description">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">手机号：</label>
-                <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"  id="userPhone"  maxlength="30"
-                           value="${account.userPhone}" placeholder="手机号最多11字" name="userPhone">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">邮箱地址：</label>
-                <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"   maxlength="30"
-                           value="${account.userEmail}"   placeholder="邮箱最多30字" id="userEmail" name="userEmail">
-                </div>
-            </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">选择部门：</label>
+                <label class="form-label col-xs-4 col-sm-2">父权限：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="organizationId" class="select">
-                    <c:forEach var="organization" items="${organizationList}" varStatus="status">
-                        <c:choose>
-                            <c:when test="${account.organizationId==organization.organizationId}">
-                                <option value="${organization.organizationId}" selected="selected">${organization.organizationName}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${organization.organizationId}">${organization.organizationName}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
+				<select name="parentId" class="select">
+                    <c:choose>
+                        <c:when test="${permission.parentId eq 0}">
+                            <option disabled="disabled">已是一级菜单</option>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="0">一级菜单</option>
+                            <c:forEach var="p" items="${permissionList}" varStatus="status">
+                                <c:choose>
+                                    <c:when test="${p.id==permission.parentId}">
+                                        <option value="${p.id}" selected="selected">${p.name}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${p.id}">${p.name}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </select>
 				</span>
                 </div>
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">选择角色：</label>
-                <div class="formControls col-xs-8 col-sm-5">
-                    <c:forEach var="role" items="${roleList}" varStatus="status">
-                        <c:choose>
-                            <c:when test="${role.id eq roleAccount[role.id]}">
-                                    <input name="roleId" type="checkbox" id="checkbox-1" checked="checked"  value="${role.id}"> ${role.name}
-                            </c:when>
-                            <c:otherwise>
-                                <input name="roleId" type="checkbox" id="checkbox-1"  value="${role.id}"> ${role.name}
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">到期时间：</label>
-                <div class="formControls col-xs-8 col-sm-5">
-                    <input type="text" class="input-text"  id="datetimepicker2" placeholder="${organization.expireTime}" value="" name="expireDate"/>
-                </div>
-            </div>
-
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
@@ -161,16 +132,16 @@
 
     function saveReport() {
 // jquery 表单提交
-        $("#accountUpOrAdd").ajaxSubmit(function(result) {
+        $("#permissionUpOrAdd").ajaxSubmit(function(result) {
             if (result==""){
                 layer.msg('操作失败!', {icon: 5, time: 1000});
             }else {
                 var map = eval("("+result+")");
                 if (map.code==200){
-                    if(confirm("操作成功,是否进入操作员列表"))
+                    if(confirm("操作成功,是否进入权限列表"))
                     {
                         //如果是true ，那么就把页面转向thcjp.cnblogs.com
-                        parent.location.href="list";
+                        parent.location.href="all";
                     }
                 }else {
                     layer.msg('操作失败!', {icon: 5, time: 1000});
