@@ -1,7 +1,8 @@
 package com.meirengu.erp.controller.system;
 
-import com.meirengu.commons.authority.model.Account;
-import com.meirengu.commons.authority.model.Organization;
+import com.meirengu.commons.authority.model.*;
+import com.meirengu.commons.authority.service.RoleAccountService;
+import com.meirengu.commons.authority.service.RoleService;
 import com.meirengu.erp.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Author: haoyang.Yu
@@ -24,6 +26,10 @@ import java.util.Date;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private RoleAccountService roleAccountService;
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public ModelAndView accountList(String realName,String userName) throws UnsupportedEncodingException {
@@ -45,23 +51,44 @@ public class AccountController {
     @ResponseBody
     public ModelAndView updateOrAdd(Account account){
         ModelAndView modelAndView = new ModelAndView("/system/editAccount");
+        Account a = new Account();
+        Map<Long,Long> map = new HashMap<>();
         if (account.getId()!=null){
-            modelAndView.addObject("account",accountService.getRolePermission(account));
+            a = accountService.getRolePermission(account);
+            modelAndView.addObject("account",a);
+            for (Role role : a.getRoleList()){
+                map.put(role.getId(),role.getId());
+            }
+            modelAndView.addObject("roleAccount",map);
         }
-        return modelAndView.addObject("organizationList",accountService.getAllOrganization(new Organization()));
+        modelAndView.addObject("organizationList",accountService.getAllOrganization(new Organization()));
+        modelAndView.addObject("roleList",roleService.findRoleAll(null));
+        return modelAndView;
     }
     @RequestMapping(value = "/updateOrAdd",method = RequestMethod.POST)
     @ResponseBody
-    public String updateAdd(Account account,String expireDate) throws ParseException {
+    public String updateAdd(Account account,String expireDate,HttpServletRequest request) throws ParseException {
+        String[] permission = request.getParameterValues("roleId");
+        String msg;
         if (expireDate!=null&&!expireDate.isEmpty()){
             expireDate=expireDate+" 00:00:00";
             account.setExpireTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expireDate));
         }
         if (account.getId()!=null){
-            return accountService.updateAccount(account);
+            msg = accountService.updateAccount(account);
         }else {
             account.setCreateTime(new Date());
-            return accountService.insertAccount(account);
+            msg = accountService.insertAccount(account);
         }
+        List<RoleAccount> list = new ArrayList<>();
+        for (String s : permission){
+            RoleAccount roleAccount = new RoleAccount();
+            roleAccount.setAccountId(Long.valueOf(account.getId()));
+            roleAccount.setRoleId(Long.valueOf(s));
+            list.add(roleAccount);
+        }
+        roleAccountService.deleteByAccountId(Long.valueOf(account.getId()));
+        roleAccountService.insertList(list);
+        return msg;
     }
 }

@@ -11,4 +11,10 @@ import java.util.List;
 public interface OrganizationService {
 
     List<Organization> getAllOrganization(Organization record);
+
+    int update(Organization record);
+
+    int insert(Organization record);
+
+    int delete(Integer id);
 }
