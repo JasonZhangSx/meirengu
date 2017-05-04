@@ -2,6 +2,7 @@ package com.meirengu.utils;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
+import com.aliyun.oss.model.PutObjectResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -102,15 +103,48 @@ public class OSSFileUtils {
 
 
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
-        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+
+            }
+            putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        }
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+           throw new IOException("oss 上传失败！");
+        }
         inputStream.close();
     }
     public void upload(String content, String fileName, String folderName) throws IOException {
-        ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+
+            }
+            putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+        }
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            throw new IOException("oss 上传失败！");
+        }
     }
     public void uploadUrl(String url, String folderName, String fileName) throws IOException {
         InputStream inputStream = new URL(url).openStream();
-        ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        PutObjectResult  putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+
+            }
+            putObjectResult = ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
+        }
+        if(putObjectResult !=null && putObjectResult.getResponse().getStatusCode() != 200){
+            throw new IOException("oss 上传失败！");
+        }
         inputStream.close();
     }
 
