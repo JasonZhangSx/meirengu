@@ -6,11 +6,7 @@ import com.meirengu.utils.HttpUtil.HttpResult;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.remoting.RemoteAccessException;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,47 +26,29 @@ public class InitPayAccountThread implements Runnable{
         this.userId = userId;
         this.mobile = mobile;
     }
-    private Integer times;
-    /**
-     *@Retryable注解
-     *被注解的方法发生异常时会重试
-     *value:指定发生的异常进行重试
-     *include:和value一样，默认空，当exclude也为空时，所有异常都重试
-     *exclude:指定异常不重试，默认空，当include也为空时，所有异常都重试
-     *maxAttemps:重试次数，默认3
-     *backoff:重试补偿机制，默认没有
-     */
+
     @Override
     public void run(){
 
         try {
-            initPayAccount();
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", userId);
+            map.put("mobile", mobile);
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("content", JacksonUtil.toJSon(map));
+            String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
+            logger.info("InitPayAccountThread.initUserPayAccount post first>> uri :{}, params:{}", url, params);
+
+            HttpResult hr = null;
+            hr = HttpUtil.doPostForm(url, params);
+            if(hr.getStatusCode()!=200){
+                Thread.sleep(5000L);
+                logger.info("InitPayAccountThread.initUserPayAccount post second>> uri :{}, params:{}", url, params);
+                hr = HttpUtil.doPostForm(url, params);
+            }
         } catch (Exception e) {
             logger.info("InitPayAccountThread initPayAccount throws Exception :{}",e.getMessage());
         }
-    }
-   @Retryable(value= {RemoteAccessException.class},maxAttempts = 3,backoff = @Backoff(delay = 5000l,multiplier = 1))
-   public void initPayAccount(){
-        HttpResult hr = null;
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("mobile", mobile);
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("content", JacksonUtil.toJSon(map));
-        String url = ConfigUtil.getConfig("URI_INIT_USER_PAYACCOUNT");
-
-        logger.info("InitPayAccountThread.initUserPayAccount post >> uri :{}, params:{}", new Object[]{url, params});
-
-        hr = HttpUtil.doPostForm(url, params);
-        if(hr.getStatusCode()!=200){
-            new RemoteAccessException("RPC调用异常");
-        }
-   }
-    @Recover
-    public void recover(RemoteAccessException e) {
-        logger.info("重试回调执行");
-        logger.info(e.getMessage());
     }
 }

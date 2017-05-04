@@ -7,13 +7,14 @@ import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
-import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
@@ -28,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 会员服务实现类
@@ -43,6 +44,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private ExecutorService cachedThreadPool = ThreadPoolSingleton.getInstance();
+
     @Autowired
     UserDao userDao;
     @Autowired
@@ -50,32 +53,38 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public User create(User user){
-        int result = userDao.create(user);
-        if(result == 0){
-            user.setUserId(UuidUtils.getShortUuid());
-            result = userDao.create(user);
-        }
-        if(result == 1){
-            if(!StringUtil.isEmpty(user.getMobileInviter())){
-                //初始化邀请关系？//优化改成异步
-                User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
-                Inviter inviter = new Inviter();
-                inviter.setUserId(userInviter.getUserId());
-                inviter.setInvitedUserId(user.getUserId());
-                inviter.setInvitedUserPhone(user.getPhone());
-                inviter.setRegisterTime(new Date());
-                inviter.setReward(new BigDecimal("0"));
-                inviterDao.insert(inviter);
+        try {
+            int result = userDao.create(user);
+            if(result == 0){
+                user.setUserId(UuidUtils.getShortUuid());
+                result = userDao.create(user);
             }
-            //初始化支付账户
-            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
-            initPayAccountThread.run();
-            //领取注册抵扣券
-            ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
-            receiveCouponsThread.run();
-            return user;
-        }else{
-            logger.info("UserServiceImpl createUser failed :{}",user);
+            if(result == 1){
+                //初始化支付账户
+                cachedThreadPool.execute(new InitPayAccountThread(
+                        user.getUserId(),
+                        user.getPhone()
+                ));
+                //领取注册抵扣券
+                cachedThreadPool.execute(new ReceiveCouponsThread(
+                        user.getUserId(),
+                        user.getPhone()
+                ));
+                //初始化邀请关系//优化改成异步
+                if(!StringUtil.isEmpty(user.getMobileInviter())){
+                    cachedThreadPool.execute(new InitInviterThread(
+                            user,
+                            userDao,
+                            inviterDao
+                    ));
+                }
+                return user;
+            }else{
+                logger.info("UserServiceImpl createUser failed :{}",user);
+                return null;
+            }
+        }catch (Exception e){
+            logger.error("用户初始化失败 phone：{},异常信息为：{}" ,user.getPhone(),e);
             return null;
         }
     }
