@@ -42,9 +42,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.meirengu.uc.utils.ThemisClientInit.getClient;
 
@@ -67,7 +65,7 @@ public class ContactServiceImpl implements ContactService {
     private AddressServiceImpl addressServiceImpl;
 
     @Override
-    public Result CreateContactFile(Map<String,String> map) {
+    public Result CreateIncomeContactFile(Map<String,String> map) {
 
         HttpUtil.HttpResult hr = null;
         Result result = new Result();
@@ -303,48 +301,55 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Contract ViewContactFile(Map<String,String> map) {
-        Contract contract = new Contract();
-        contract.setUserId(Integer.parseInt(map.get("userId")));
-        contract.setItemId(Integer.parseInt(map.get("itemId")));
-        contract.setLevelId(Integer.parseInt(map.get("levelId")));
-        contract.setOrderId(Integer.parseInt(map.get("orderId")));
-        Contract contractInfo = contractDao.select(contract);
-        if(contract == null){
-            return contract;
-        }
-        ContractFileViewUrlRequest request = new ContractFileViewUrlRequest();
-        request.setPreservationId(new Long(contractInfo.getPreservationId()));
-        ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
-        contract.setContractFilepath(response.getViewUrl());
-        return contract;
+    public Result CreateEquityContactFile(Map<String, String> map) {
+        return null;
     }
 
     @Override
-    public  String DownContactFile(Map<String, String> map) {
+    public List<String> ViewContactFile(Map<String,String> map) {
         Contract contract = new Contract();
         contract.setUserId(Integer.parseInt(map.get("userId")));
         contract.setItemId(Integer.parseInt(map.get("itemId")));
         contract.setLevelId(Integer.parseInt(map.get("levelId")));
         contract.setOrderId(Integer.parseInt(map.get("orderId")));
-        Contract contractInfo = contractDao.select(contract);
-        if(contractInfo == null){
-            return "";
-        }
-        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
+        List<Contract> contractList = contractDao.select(contract);
 
-        request.setPreservationId(new Long(contractInfo.getPreservationId()));
-        ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
-        if (response.isSuccess() && response.getDownUrl() != null) {
-            logger.info("Get the connection to see success",response.getDownUrl());
-            return  response.getDownUrl();
-        }else{
-            logger.info("Get the connection to see failed");
-            logger.info("Main Error Code:"+response.getError().getCode());
-            logger.info("Main Error Message:"+response.getError().getMessage());
-            logger.info("Main Error Solution:"+response.getError().getSolution());
-            return "";
+        List<String> viewUrl = new ArrayList<>();
+        ContractFileViewUrlRequest request = new ContractFileViewUrlRequest();
+        for(Contract contract1:contractList){
+            request.setPreservationId(new Long(contract1.getPreservationId()));
+            ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
+            viewUrl.add(response.getViewUrl());
         }
+        return viewUrl;
+    }
+
+    @Override
+    public  List<String> DownContactFile(Map<String, String> map) {
+        Contract contract = new Contract();
+        contract.setUserId(Integer.parseInt(map.get("userId")));
+        contract.setItemId(Integer.parseInt(map.get("itemId")));
+        contract.setLevelId(Integer.parseInt(map.get("levelId")));
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
+        List<Contract> contractList = contractDao.select(contract);
+
+        ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
+        List<String> downUrl = new ArrayList<>();
+        for(Contract contract1:contractList){
+            request.setPreservationId(new Long(contract1.getPreservationId()));
+            ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
+            if (response.isSuccess() && response.getDownUrl() != null) {
+                logger.info("Get the connection to see success",response.getDownUrl());
+                downUrl.add(response.getDownUrl());
+            }else{
+                logger.info("Get the connection to see failed");
+                logger.info("Main Error Code:"+response.getError().getCode());
+                logger.info("Main Error Message:"+response.getError().getMessage());
+                logger.info("Main Error Solution:"+response.getError().getSolution());
+                return null;
+            }
+        }
+        return  downUrl;
     }
 
     public Result setResult(int code, Object data, String msg){

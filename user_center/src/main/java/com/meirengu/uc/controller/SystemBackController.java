@@ -36,33 +36,51 @@ public class SystemBackController extends BaseController{
     public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
                                     @RequestParam(value = "order_id",required = true) String orderId,
+                                    @RequestParam(value = "type",required = true) Integer type,
                                     @RequestParam(value = "invited_user_id", required = true)String invitedUserId,
                                     @RequestParam(value = "invited_user_phone", required = true)String invitedUserPhone,
                                     @RequestParam(value = "invest_time", required = true)Date investTime) {
         logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{}",itemId,levelId);
         try {
-
+            //修改投资人投资时间
             Inviter inviter = new Inviter();
             inviter.setInvitedUserId(Integer.parseInt(invitedUserId));
             inviter.setInvitedUserPhone(invitedUserPhone);
             inviter.setInvestTime(investTime);
             inviterService.update(inviter);
 
-            Map<String,String> map = new HashMap();
-            map.put("itemId",itemId);
-            map.put("levelId",levelId);
-            map.put("userId",invitedUserId);
-            map.put("orderId",orderId);
-            Result result = contactService.CreateContactFile(map);
-            if(result.getCode() == 200){
-                return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-            }else{
-                return contactService.CreateContactFile(map);
+
+            //给用户签订合同
+            if(type != 1 && type != 2){
+                return this.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
             }
+            if(type == 1){
+                Map<String,String> map = new HashMap();
+                map.put("itemId",itemId);
+                map.put("levelId",levelId);
+                map.put("userId",invitedUserId);
+                map.put("orderId",orderId);
+                Result result = contactService.CreateIncomeContactFile(map);
+                if(result.getCode() == 200){
+                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return contactService.CreateIncomeContactFile(map);
+                }
+            }
+            if(type == 2){
+                Map<String,String> map = new HashMap();
+                map.put("itemId",itemId);
+                map.put("levelId",levelId);
+                map.put("userId",invitedUserId);
+                map.put("orderId",orderId);
+                return contactService.CreateEquityContactFile(map);
+            }
+
         }catch (Exception e){
             logger.error("ContactController createContactFile throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+        return null;
     }
 
     /**
