@@ -67,9 +67,9 @@ public class OssUpload {
 
 
             String foldName = "user";
-            String fileName = "user."+ DateUtils.getCurrentDate()+".txt";
-            OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-            fileUpload.upload(sb.toString(),fileName,foldName);
+           String fileName = "user."+ DateUtils.getCurrentDate()+".txt";
+           OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+           fileUpload.upload(sb.toString(),fileName,foldName);
 
            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
            String userInviterInfo = IOUtils.toString(fileUtils.download(foldName,fileName),"UTF-8");
