@@ -158,11 +158,11 @@ img{vertical-align: top}
 .unMenu_con .sec3 .item{position: relative;margin-top: .4rem;}
 .unMenu_con .sec3 .item img{width:4.5rem;}
 .unMenu_con .sec3 .item em{position: absolute;z-index:22;left:.32rem;top:0;width:1.5rem;height:.78rem;line-height: .58rem;color:#fff;font-size:.32rem;text-align: center;background:url('../img/findHotAct_tit.png') center 0 no-repeat;background-size: 100%;}
-.unMenu_con .sec3 .item .wrapper{width:2.8rem;height:2.52rem;position: absolute;right:0;top:.2rem;background-color: #fff;border-radius:.1rem;
-  box-shadow: 0 0 .2rem .03rem rgba(170,170,170,.35);
-  display:flex;flex-direction: column;align-items: center;justify-content: center;
+.unMenu_con .sec3 .item .wrapper{width:2.8rem;height:2.52rem;box-sizing: border-box;padding:0 0.2rem;position: absolute;right:0;top:.2rem;background-color: #fff;border-radius:.1rem;
+  box-shadow: 0 0 .2rem .03rem rgba(170,170,170,.35);display:flex;flex-direction: column;align-items: left;justify-content: center;
 }
-.unMenu_con .sec3 .item .wrapper h4{width:2.26rem;text-align:center;height:.72rem;font-size: .28rem;color:#202020;line-height: .36rem;}
+.unMenu_con .sec3 .item .wrapper h4{width:2.26rem;text-align:left;font-size: .28rem;color:#202020;line-height: .36rem;}
+.unMenu_con .sec3 .item .wrapper ul{color:#bb6666;font-size: .18rem;list-style-type:initial;margin-left:1.2em;margin-top:.24rem;line-height: .26rem;}
 .unMenu_con .sec3 .item .wrapper a{width:2rem;height:.6rem;font-size: .32rem;color:#fff;border-radius: .06rem;text-align: center;line-height: .6rem;
   background-color:#ff639c;background: -webkit-linear-gradient(45deg, #ff639c,#ff8bb5);margin-top: .2rem;
 }
