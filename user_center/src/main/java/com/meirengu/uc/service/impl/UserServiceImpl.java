@@ -70,7 +70,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                         user.getUserId(),
                         user.getPhone()
                 ));
-                //初始化邀请关系//优化改成异步
+                //初始化邀请关系
                 if(!StringUtil.isEmpty(user.getMobileInviter())){
                     cachedThreadPool.execute(new InitInviterThread(
                             user,

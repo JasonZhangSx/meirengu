@@ -26,7 +26,7 @@ public class InitInviterThread implements Runnable{
 
     @Override
     public void run() {
-        //初始化邀请关系？//优化改成异步
+        //初始化邀请关系
         User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
         Inviter inviter = new Inviter();
         inviter.setUserId(userInviter.getUserId());
