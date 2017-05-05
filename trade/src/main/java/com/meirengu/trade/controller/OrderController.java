@@ -337,7 +337,7 @@ public class OrderController extends BaseController{
         if (needAvatar != null) {
             map.put("needAvatar", needAvatar);
         }
-        if (itemId != null) {
+        if (!NumberUtil.isNullOrZero(itemId)) {
             map.put("itemId", itemId);
         }
         if (StringUtils.isNotBlank(sortBy)) {

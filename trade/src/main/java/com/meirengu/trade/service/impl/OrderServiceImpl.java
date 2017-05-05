@@ -548,7 +548,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     public Page getPage(Page page, Map map)  throws IOException {
         Integer needAvatar = Integer.parseInt(map.get("needAvatar").toString());
-        Integer itemId = Integer.parseInt(map.get("itemId").toString());
+        Integer itemId = Integer.parseInt((map.get("itemId")==null ? 0 : map.get("itemId")).toString());
         if (needAvatar == Constant.YES){
             //该请求为支持人数列表的请求
             //1.查询项目状态
