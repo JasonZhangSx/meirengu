@@ -179,6 +179,8 @@ public class StatusCode {
     public static final int UNBUND_IS_FAILED = 50132;
     public static final int BUND_IS_FAILED = 50133;
 
+    public static final int FAILED_UPDATE_USER_CONTRACT = 50134;
+
     //50200-50250//news_cms
     public static final int FEEDBACK_ERROR_INSERT = 50200;
     public static final int BULLETIN_ERROR_INSERT = 50201;
@@ -429,6 +431,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.UPLOAD_HTML_STAMP_FAILED, "上传html 盖章失败! ");
         codeMsgMap.put(StatusCode.UPLOAD_PDF_FIX_FAILED, "上传pdf 保全失败! ");
         codeMsgMap.put(StatusCode.FAILED_GET_DOWNLOAD_LINK, "获取合同下载链接失败! ");
+        codeMsgMap.put(StatusCode.FAILED_UPDATE_USER_CONTRACT, "更新合同表失败! ");
 
         codeMsgMap.put(StatusCode.ID_CARD_IS_EXITS, "该身份证已绑定! ");
         codeMsgMap.put(StatusCode.LOGIN_FAILED, "登陆失败! ");

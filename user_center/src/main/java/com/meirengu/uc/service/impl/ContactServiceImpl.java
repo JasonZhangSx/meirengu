@@ -261,7 +261,7 @@ public class ContactServiceImpl implements ContactService {
                                 }
                                 if(count==0){
                                     //// TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
-
+                                    return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
                                 }
                             }else{
                                 logger.info("get download link failed");
@@ -339,17 +339,7 @@ public class ContactServiceImpl implements ContactService {
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
                 Map<String,String> urlMap = new HashMap<String,String>();
-
-//                String string = contract1.getContractNo().substring()
-//                if(){
-//
-//                }
-
-
-
-
-
-                urlMap.put("contractName",contract1.getContractNo());
+                urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
                 urlMap.put("url",response.getDownUrl());
                 downUrl.add(urlMap);
             }else{
