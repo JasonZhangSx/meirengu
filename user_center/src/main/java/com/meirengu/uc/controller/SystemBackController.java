@@ -61,7 +61,7 @@ public class SystemBackController extends BaseController{
                 map.put("userId",invitedUserId);
                 map.put("orderId",orderId);
                 Result result = contactService.CreateIncomeContactFile(map);
-                if(result.getCode() == 200){
+                if(result.getCode() == StatusCode.OK){
                     return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return contactService.CreateIncomeContactFile(map);

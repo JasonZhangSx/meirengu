@@ -1,5 +1,6 @@
 package com.meirengu.uc.thread;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -42,7 +43,7 @@ public class InitPayAccountThread implements Runnable{
 
             HttpResult hr = null;
             hr = HttpUtil.doPostForm(url, params);
-            if(hr.getStatusCode()!=200){
+            if(hr.getStatusCode() != StatusCode.OK){
                 Thread.sleep(5000L);
                 logger.info("InitPayAccountThread.initUserPayAccount post second>> uri :{}, params:{}", url, params);
                 hr = HttpUtil.doPostForm(url, params);

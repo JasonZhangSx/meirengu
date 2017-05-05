@@ -63,7 +63,7 @@ public class InviterServiceimpl extends BaseServiceImpl<Inviter> implements Invi
         } catch (Exception e) {
             logger.error("InviterServiceimpl.send error >> uri:{}, exception:{}", new Object[]{urlAppend, e});
         }
-        if(hr.getStatusCode()==200){
+        if(hr.getStatusCode() == StatusCode.OK){
             Map<String,Object> message = new HashedMap();
             message = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(message!=null){

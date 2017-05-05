@@ -1,5 +1,6 @@
 package com.meirengu.uc.thread;
 
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Inviter;
@@ -33,7 +34,7 @@ public class InitInviterThread implements Runnable{
         inviter.setInvitedUserId(user.getUserId());
         inviter.setInvitedUserPhone(user.getPhone());
         inviter.setRegisterTime(new Date());
-        inviter.setReward(new BigDecimal("0"));
+        inviter.setReward(new BigDecimal(Constants.ZERO_STRING));
         inviterDao.insert(inviter);
     }
 }

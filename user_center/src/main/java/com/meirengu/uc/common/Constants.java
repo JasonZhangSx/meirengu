@@ -12,4 +12,22 @@ public class Constants {
     public static final int NOTIFY_READ = 1;
     //未读
     public static final int NOTIFY_UNREAD = 0;
+
+
+
+    public static final Integer ZERO_INTEGER = 0;
+
+    public static final Integer ONE_INTEGER = 1;
+
+    public static final Integer TWO_INTEGER = 1;
+
+    public static final String ZERO_STRING = "0";
+
+    public static final String ONE_STRING = "1";
+
+    public static final String TWO_STRING = "2";
+
+
+
+
 }
