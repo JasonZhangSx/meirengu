@@ -340,6 +340,29 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void getUserTotalInvestMoney(Map map) {
         map.put("totalInvestMoney","0.00");
+        try {
+            HttpResult hr = null;
+            String url = ConfigUtil.getConfig("URI_GET_SUM_AMOUNT");
+            String urlAppend = url+"?user_ids="+ map.get("userId");
+            hr = HttpUtil.doGet(urlAppend);
+            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+            if(hr.getStatusCode()== StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    List<Map> mapData = (List<Map>)account.get("data");
+                    if(mapData!=null){
+                        map.put("totalInvestMoney",mapData.get(0).get("sumOrderAmount"));
+                        map.put("sumRebateAmount",mapData.get(0).get("sumRebateAmount"));
+                        map.put("sumCostAmount",mapData.get(0).get("sumCostAmount"));
+                    }
+                }
+            }else{
+                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+            }
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
+        }
     }
 
     @Override
