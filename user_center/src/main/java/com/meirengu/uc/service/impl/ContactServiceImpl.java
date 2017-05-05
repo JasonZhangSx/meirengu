@@ -3,6 +3,7 @@ package com.meirengu.uc.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.dao.ContractDao;
 import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.dao.UserDao;
@@ -77,7 +78,7 @@ public class ContactServiceImpl implements ContactService {
         } catch (Exception e) {
             logger.error("ContactServiceImpl.CreateContactFile send get >> params:{}, exception:{}", new Object[]{e});
         }
-        if( hr!=null && hr.getStatusCode()==200){
+        if( hr!=null && hr.getStatusCode()==StatusCode.OK){
             Map<String,Object> mapData = new HashedMap();
             mapData = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(mapData!=null){
@@ -166,10 +167,10 @@ public class ContactServiceImpl implements ContactService {
                     html = html.replace("{investmentStalls}",data.get("investmentStalls"));//投资档位1
 
                     String flag = String.valueOf(data.get("flag"));
-                    if("1".equals(flag)){
+                    if(Constants.ONE_STRING.equals(flag)){
                         html = html.replace("{exitAndRepurchase}","届满<em>"+String.valueOf(data.get("exitAndRepurchaseDate"))+"</em>个月时，医院退还用户投资本金及利息。");
                     }
-                    if("2".equals(flag)){
+                    if(Constants.TWO_STRING.equals(flag)){
                         html = html.replace("{exitAndRepurchase}","每<em>"+String.valueOf(data.get("exitAndRepurchaseDate"))+"</em>月返还利息，届满<em>"+String.valueOf(data.get("exitAndRepurchaseDateNum"))+"</em>个月时，项目方退还用户投资本金。");//项目公司注册资金 （万元）//exitAndRepurchaseDateNum
                     }
 
@@ -260,7 +261,7 @@ public class ContactServiceImpl implements ContactService {
                                 }
                                 if(count==0){
                                     //// TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
-
+                                    return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
                                 }
                             }else{
                                 logger.info("get download link failed");
@@ -317,7 +318,7 @@ public class ContactServiceImpl implements ContactService {
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
             urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
-            urlMap.put("generate","1");
+            urlMap.put("generate", Constants.ONE_STRING);
             urlMap.put("url",response.getViewUrl());
             viewUrl.add(urlMap);
         }
@@ -338,17 +339,7 @@ public class ContactServiceImpl implements ContactService {
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
                 Map<String,String> urlMap = new HashMap<String,String>();
-
-//                String string = contract1.getContractNo().substring()
-//                if(){
-//
-//                }
-
-
-
-
-
-                urlMap.put("contractName",contract1.getContractNo());
+                urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
                 urlMap.put("url",response.getDownUrl());
                 downUrl.add(urlMap);
             }else{
@@ -366,7 +357,7 @@ public class ContactServiceImpl implements ContactService {
         Result result = new Result();
         result.setCode(code);
         result.setMsg(msg);
-        if (code == 200 && (data != null && !"".equals(data))){
+        if (code == StatusCode.OK && (data != null && !"".equals(data))){
             result.setData(data);
         }
         logger.info("Request getResponse: {}", JSON.toJSON(result));

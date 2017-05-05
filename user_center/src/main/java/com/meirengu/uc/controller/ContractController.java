@@ -3,6 +3,7 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.service.ContactService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("contract")
-public class ContactController extends BaseController{
+public class ContractController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContractController.class);
 
     @Autowired
     private ContactService contactService;
@@ -55,7 +56,7 @@ public class ContactController extends BaseController{
                 map.put("userId",userId);
                 map.put("orderId",orderId);
                 Result result = contactService.CreateIncomeContactFile(map);
-                if(result.getCode() == 200){
+                if(result.getCode() == StatusCode.OK){
                     return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return contactService.CreateIncomeContactFile(map);
@@ -93,17 +94,17 @@ public class ContactController extends BaseController{
                 if(type == 1){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","收益转让协议");
-                    urlMap.put("generate","0");
+                    urlMap.put("generate", Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                 }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","合伙协议(美人谷)");
-                    urlMap.put("generate","0");
+                    urlMap.put("generate",Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     Map<String,String> urlMap1 = new HashMap<String,String>();
                     urlMap1.put("contractName","股权收益权投资协议");
-                    urlMap1.put("generate","0");
+                    urlMap1.put("generate",Constants.ZERO_STRING);
                     urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                     viewUrl.add(urlMap1);

@@ -1,4 +1,4 @@
-package common;
+package com.meirengu.uc.common;
 
 import com.meirengu.common.PasswordEncryption;
 

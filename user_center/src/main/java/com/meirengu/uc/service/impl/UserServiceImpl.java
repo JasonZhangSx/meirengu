@@ -320,7 +320,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         } catch (Exception e) {
             logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
         }
-        if(hr.getStatusCode()==200){
+        if(hr.getStatusCode() == StatusCode.OK){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(account!=null){
@@ -450,7 +450,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             } catch (Exception e) {
                 logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
             }
-            if(hr.getStatusCode()==200){
+            if(hr.getStatusCode() == StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
@@ -468,7 +468,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                                     paramsModify.put("content", JacksonUtil.toJSon(payAccount));
                                     String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
                                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
-                                    if(hr.getStatusCode()!=200){
+                                    if(hr.getStatusCode() != StatusCode.OK){
                                         hr = HttpUtil.doPostForm(urlModify,paramsModify);
                                     }else{
                                         return 1;
@@ -504,11 +504,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             paramsModify.put("content", JacksonUtil.toJSon(payAccount));
             String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
             hr = HttpUtil.doPostForm(urlModify,paramsModify);
-            if(hr.getStatusCode()==200) {
+            if(hr.getStatusCode() == StatusCode.OK) {
                 return 1;
             }else{
                 hr = HttpUtil.doPostForm(urlModify, paramsModify);
-                if(hr.getStatusCode()==200){
+                if(hr.getStatusCode() == StatusCode.OK){
                     return 1;
                 }else{
                     return 0;

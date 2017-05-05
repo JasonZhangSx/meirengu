@@ -50,7 +50,7 @@ public class VerityServiceImpl implements VerityService{
         } catch (Exception e) {
             logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
         }
-        if( hr!=null && hr.getStatusCode()==200){
+        if( hr!=null && hr.getStatusCode() == StatusCode.OK){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(account!=null){
@@ -112,7 +112,7 @@ public class VerityServiceImpl implements VerityService{
                 paramsModify.put("content", JacksonUtil.toJSon(payAccount));
                 String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
                 hr = HttpUtil.doPostForm(urlModify,paramsModify);
-                if(hr.getStatusCode()!=200){
+                if(hr.getStatusCode() != StatusCode.OK){
                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
                 }
                 return this.setResult((Integer) account.get("code"),null,(String) account.get("msg"));
@@ -140,7 +140,7 @@ public class VerityServiceImpl implements VerityService{
         Result result = new Result();
         result.setCode(code);
         result.setMsg(msg);
-        if (code == 200 && (data != null && !"".equals(data))){
+        if (code == StatusCode.OK && (data != null && !"".equals(data))){
             result.setData(data);
         }else {
             //result.setData("");
