@@ -29,7 +29,6 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +77,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public Map<String, Object> orderDetail(Integer orderId) throws ParseException, IOException {
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
+            String orderSn = map.get("orderSn").toString();
+            //项目类型
+            int itemType = Integer.parseInt(orderSn.substring(2,3));
+            map.put("itemType", itemType);
             //如果是待支付订单，返回剩余支付时长
             int orderState = Integer.parseInt(map.get("orderState").toString());
             String beginTimeStr = null;
@@ -149,36 +152,34 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     }
                 }
             }
-            if (map.get("orderSn") != null) {
-                int contractGenerate = 1;
-                if (orderState == OrderStateEnum.PAID.getValue()) {
-                    contractGenerate = 2;
-                }
-                // 防止没有数据时给客户端字段为空
-                map.put("contractGenerate", contractGenerate);
-                map.put("contractList", null);
-                String itemId = map.get("orderSn").toString();
-                //合同链接
-                String url = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemId.substring(2,3);
-                HttpResult contractResult = HttpUtil.doGet(url);
-                logger.debug("Request: {} getResponse: {}", url, contractResult);
-                if (contractResult.getStatusCode() == HttpStatus.SC_OK) {
-                    JSONObject resultJson = JSON.parseObject(contractResult.getContent());
-                    int code = resultJson.getIntValue("code");
-                    if (code == StatusCode.OK) {
-                        JSONArray contractList = resultJson.getJSONArray("data");
-                        map.put("contractList", contractList);
-                        if (contractList != null) {
-                            for (int i=0; i<contractList.size(); i++) {
-                                JSONObject contractInfo = contractList.getJSONObject(i);
-                                if (contractInfo != null && contractInfo.getString("generate") != null) {
-                                    if (contractInfo.getString("generate").equals("1")) {
-                                        contractGenerate = 3;
-                                    }
+            int contractGenerate = 1;
+            if (orderState == OrderStateEnum.PAID.getValue()) {
+                contractGenerate = 2;
+            }
+            // 防止没有数据时给客户端字段为空
+            map.put("contractGenerate", contractGenerate);
+            map.put("contractList", null);
+            //合同链接
+            String contractUrl = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemType;
+            HttpResult contractResult = HttpUtil.doGet(contractUrl);
+            logger.debug("Request: {} getResponse: {}", contractUrl, contractResult);
+            if (contractResult.getStatusCode() == HttpStatus.SC_OK) {
+                JSONObject resultJson = JSON.parseObject(contractResult.getContent());
+                int code = resultJson.getIntValue("code");
+                if (code == StatusCode.OK) {
+                    JSONArray contractList = resultJson.getJSONArray("data");
+                    map.put("contractList", contractList);
+                    if (contractList != null) {
+                        for (int i=0; i<contractList.size(); i++) {
+                            JSONObject contractInfo = contractList.getJSONObject(i);
+                            if (contractInfo != null && contractInfo.getString("generate") != null) {
+                                if (contractInfo.getString("generate").equals("1")) {
+                                    contractGenerate = 3;
+                                    map.put("contractGenerate", contractGenerate);
+                                    break;
                                 }
                             }
                         }
-                        map.put("contractGenerate", contractGenerate);
                     }
                 }
             }
