@@ -30,7 +30,8 @@ public class Test {
     @org.junit.Test
     public void testSubString(){
         String string = "MRG-SYZR-20170503-3551";
-//        logger.in
+        String result = string.substring(4,8);
+        logger.info(result);
 
     }
 

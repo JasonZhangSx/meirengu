@@ -318,6 +318,7 @@ public class ContactServiceImpl implements ContactService {
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
             urlMap.put("contractName",contract1.getContractNo());
+            urlMap.put("generate","1");
             urlMap.put("url",response.getViewUrl());
             viewUrl.add(urlMap);
         }

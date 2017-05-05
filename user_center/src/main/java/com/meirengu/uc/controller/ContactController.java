@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by huoyan403 on 4/11/2017.
  */
 @RestController
-@RequestMapping("contact")
+@RequestMapping("contract")
 public class ContactController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
@@ -79,7 +79,7 @@ public class ContactController extends BaseController{
     /**
      * 查看合同文件
      * @param type 1:收益众筹 2:股权众筹
-     * @return
+     * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
     public Result ViewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
@@ -93,14 +93,17 @@ public class ContactController extends BaseController{
                 if(type == 1){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","收益转让协议");
+                    urlMap.put("generate","0");
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                 }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","合伙协议(美人谷)");
+                    urlMap.put("generate","0");
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     Map<String,String> urlMap1 = new HashMap<String,String>();
                     urlMap1.put("contractName","股权收益权投资协议");
+                    urlMap1.put("generate","0");
                     urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                     viewUrl.add(urlMap1);
