@@ -10,10 +10,14 @@ import java.util.Map;
  */
 public interface ContactService {
     //    生成盖章合同 并创建保全  并把保全文本下载到本地一份
-    Result CreateContactFile(Map<String,String> map);
+    Result CreateIncomeContactFile(Map<String,String> map);
+
+    Result CreateEquityContactFile(Map<String, String> map);
+
+
     //返回查看保全合同地址
-    List<String> ViewContactFile(Map<String,String> map);
+    List<Map<String,String>> ViewContactFile(Map<String,String> map);
     //返回下载地址
-    List<String> DownContactFile(Map<String, String> map);
+    List<Map<String,String>> DownContactFile(Map<String, String> map);
 
 }

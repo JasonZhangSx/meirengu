@@ -32,12 +32,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
+
+import static com.meirengu.utils.JacksonUtil.toJSon;
 
 /**
  * Order服务实现层 
@@ -791,41 +791,47 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         paramMap.put("finishedTimeEnd", com.meirengu.utils.DateUtils.getDayEndTime(beforeDate));
         paramMap.put("orderState", OrderStateEnum.PAID.getValue());
         List<Map<String, Object>> orderList = getList(paramMap);
-        Map<Integer, BigDecimal> resultMap = new HashMap<Integer, BigDecimal>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map = null;
         if (orderList != null && orderList.size() > 0) {
             for (Map<String, Object> order : orderList) {
                 if (order != null) {
-                    int userId = Integer.parseInt(order.get("userId").toString());
-                    BigDecimal costAmount = (BigDecimal)order.get("costAmount");
-                    if (resultMap.get(userId) != null) {
-                        BigDecimal alreadyCostAmount = (BigDecimal)resultMap.get(userId);
-                        resultMap.put(userId, alreadyCostAmount.add(costAmount));
-                    } else {
-                        resultMap.put(userId, costAmount);
-                    }
+//                    int userId = Integer.parseInt(order.get("userId").toString());
+//                    BigDecimal costAmount = (BigDecimal)order.get("costAmount");
+//                    if (resultMap.get(userId) != null) {
+//                        BigDecimal alreadyCostAmount = (BigDecimal)resultMap.get(userId);
+//                        resultMap.put(userId, alreadyCostAmount.add(costAmount));
+//                    } else {
+//                        resultMap.put(userId, costAmount);
+//                    }
+                    map = new HashMap<String, Object>();
+                    map.put("userId", order.get("userId"));
+                    map.put("costAmount", order.get("costAmount"));
+                    //根据订单编号判断项目类型
+                    map.put("itemType", order.get("orderSn").toString().substring(2,3));
+                    resultList.add(map);
                 }
             }
 
-            String orderPath = ConfigUtil.getConfig("order.txt.path");
-            String txtName = "order." + com.meirengu.utils.DateUtils.dateToStr(currentDate, "yyyy-MM-dd") + ".txt";
-            String fileNameStr = orderPath + txtName;
-            File fileName = new File(fileNameStr);
-            if (fileName.exists()) {
-                fileName.delete();
-                logger.debug( "{}已删除", fileName);
-            }
-            fileName.createNewFile();
-            logger.debug( "{}已创建", fileName);
-            List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-            Map<String, String> tempMap = new HashMap<String, String>();
-            for(Integer key : resultMap.keySet()){
-                tempMap.put(key.toString(), resultMap.get(key).toString());
-            }
-            mapList.add(tempMap);
-            ObjectToFile.writeObject(mapList, fileNameStr);
+            String foldName = ConfigUtil.getConfig("order.file.path");
+            String fileName = "order." + com.meirengu.utils.DateUtils.dateToStr(currentDate, "yyyy-MM-dd") + ".txt";
 
+            //oss配置信息  从oss读取文件
+            String endpoint = ConfigUtil.getConfig("endpoint");
+            String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+            String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+            String bucketName = ConfigUtil.getConfig("bucketName");
+            String callback = ConfigUtil.getConfig("callbackUrl");
+            try {
+                OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+                fileUpload.upload(toJSon(resultList),fileName,foldName);
+            } catch (Exception e) {
+                logger.error("oss upload exception: {}", e);
+                e.printStackTrace();
+            }
             //请求用户服务
-            String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileNameStr, "UTF-8");
+            String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileName, "UTF-8") +
+                    "&file_path=" + URLEncoder.encode(foldName, "UTF-8");
             HttpResult itemResult = HttpUtil.doGet(url);
             logger.debug("Request: {} getResponse: {}", url, itemResult);
             //后续处理对方处理失败重新请求
@@ -839,8 +845,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private void sendRocketMQDeployQueue(String orderSn) {
         Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
         msg.setKeys("OSE" + orderSn);
-        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
-        msg.setDelayTimeLevel(20);
+        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
+        msg.setDelayTimeLevel(21);
         SendResult sendResult = null;
         try {
             logger.debug("发送消息：tag:orderLoseEfficacy: {}", orderSn);
@@ -866,7 +872,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private void sendRocketMQDeployQueue4Sms(String orderSn) {
         Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
         msg.setKeys("ORFP" + orderSn);
-        //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d
+        //messageDelayLevel =  1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;
         try {
@@ -991,5 +997,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
+    /**
+     * 根据用户id查询用户投资金额
+     * @param userIds
+     * @return
+     */
+    public List<Map<String, Object>> getSumAmountByUserIds(String userIds){
+        // 目前不支持批量
+        Integer userId = Integer.parseInt(userIds);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        params.put("orderState", OrderStateEnum.PAID.getValue());
+        Map<String, Object> map = orderDao.getSumAmountByUserId(params);
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        list.add(map);
+        return list;
+    }
 
 }

@@ -73,13 +73,12 @@ public interface UserService extends BaseService<User>{
     /**
      * 用户动态密码登陆创建用户
      * @param mobile
-     * @param password
      * @param from
      * @param ip
      * @param avatar
      * @return
      */
-    User createUserInfo(String mobile, String password, Integer from, String ip,String avatar);
+    User createUserInfo(String mobile,Integer from, String ip,String avatar);
 
     /**
      * 用户注册方式 创建用户
@@ -120,10 +119,15 @@ public interface UserService extends BaseService<User>{
     int modifyPayPassword(Integer userId,String mobile, String oldPassword, String newPassword);
 
     int setPayPassword(Integer userId, String newPassword);
-
+    //获取银行卡号
     boolean getBankIdCard(String bankIdcard);
-
+    //获取身份证
     boolean getIdCard(String idcard);
-
+    //根据openId 查找用户
     User retrieveByOpenId(String openId);
+    //绑定第三方
+    int bundThirdParty(RegisterVO registerVO);
+
+    //解除绑定第三方
+    int unbund(String userId, Integer type);
 }

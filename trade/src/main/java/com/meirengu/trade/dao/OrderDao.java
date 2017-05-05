@@ -2,6 +2,7 @@ package com.meirengu.trade.dao;
 import com.meirengu.dao.BaseDao;
 import com.meirengu.trade.model.Order;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,10 @@ public interface OrderDao extends BaseDao<Order>{
      * @return
      */
     Map<String, Object> orderDetailBySn(String orderSn);
+    /**
+     * 查询用户投资金额
+     * @param map
+     * @return
+     */
+    Map<String, Object> getSumAmountByUserId(Map map);
 }

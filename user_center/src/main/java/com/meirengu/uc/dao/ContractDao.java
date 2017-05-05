@@ -11,5 +11,5 @@ public interface ContractDao {
 
     int insert(Contract contract);
 
-    List<Contract>  select(Contract contract);
+    List<Contract> select(Contract contract);
 }

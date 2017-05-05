@@ -17,6 +17,7 @@
         <result column="email" property="email" jdbcType="VARCHAR" javaType="string"/>
         <result column="qq" property="qq" jdbcType="VARCHAR" javaType="string"/>
         <result column="wx" property="wx" jdbcType="VARCHAR" javaType="string"/>
+        <result column="sina" property="sina" jdbcType="VARCHAR" javaType="string"/>
         <result column="area_id" property="areaId" jdbcType="INTEGER" javaType="int"/>
         <result column="register_from" property="registerFrom" jdbcType="TINYINT" javaType="int"/>
         <result column="register_time" property="registerTime" jdbcType="DATE" javaType="Date"/>
@@ -42,7 +43,7 @@
     <sql id='table_name'>user</sql>
     <sql id="select_columns">
         user_id as userId, nickname, realname, phone, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
-        birthday,email,qq,wx,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
+        birthday,email,qq,wx,sina,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
         is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state,invest_conditions AS investConditions
     </sql>
@@ -51,12 +52,12 @@
         INSERT INTO
         <include refid="table_name"/>
         (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
-        birthday,email,qq,wx,area_id,register_from,register_time,login_time,last_login_time,
+        birthday,email,qq,wx,sina,area_id,register_from,register_time,login_time,last_login_time,
         login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,
         sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
         VALUES
         (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
-        #{birthday}, #{email}, #{qq}, #{wx}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
+        #{birthday}, #{email}, #{qq}, #{wx},  #{sina}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
         #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
         #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
     </insert>
@@ -64,31 +65,31 @@
     <update id="update" parameterType="User">
         update <include refid="table_name"/>
         <set>
-            <if test="nickname != null and nickname != ''">
+            <if test="nickname != null ">
             nickname=#{nickname,jdbcType=VARCHAR},
             </if>
-            <if test="realname != null and realname != ''">
+            <if test="realname != null ">
                 realname=#{realname,jdbcType=VARCHAR},
             </if>
-            <if test="phone != null and phone != ''">
+            <if test="phone != null ">
                 phone=#{phone,jdbcType=VARCHAR},
             </if>
-            <if test="idCard != null and idCard != ''">
+            <if test="idCard != null ">
                 idcard=#{idCard,jdbcType=VARCHAR},
             </if>
-            <if test="password != null and password != ''">
+            <if test="password != null ">
                 password=#{password,jdbcType=VARCHAR},
             </if>
-            <if test="bankIdCard != null and bankIdCard != ''">
+            <if test="bankIdCard != null ">
                 bank_idcard=#{bankIdCard,jdbcType=VARCHAR},
             </if>
-            <if test="bankCode != null and bankCode != ''">
+            <if test="bankCode != null ">
                 bank_code=#{bankCode,jdbcType=VARCHAR},
             </if>
-            <if test="bankPhone != null and bankPhone != ''">
+            <if test="bankPhone != null ">
                 bank_phone=#{bankPhone,jdbcType=VARCHAR},
             </if>
-            <if test="avatar != null and avatar != ''">
+            <if test="avatar != null ">
                 avatar=#{avatar,jdbcType=VARCHAR},
             </if>
             <if test="sex != null">
@@ -97,14 +98,17 @@
             <if test="birthday != null">
                 birthday=#{birthday,jdbcType=DATE},
             </if>
-            <if test="email != null and email != ''">
+            <if test="email != null ">
                 email=#{email,jdbcType=VARCHAR},
             </if>
-            <if test="qq != null and qq != ''">
+            <if test="qq != null">
                 qq=#{qq,jdbcType=VARCHAR},
             </if>
-            <if test="wx != null and wx != ''">
+            <if test="wx != null">
                 wx=#{wx,jdbcType=VARCHAR},
+            </if>
+            <if test="sina != null ">
+                sina=#{sina,jdbcType=VARCHAR},
             </if>
             <if test="areaId != null">
                 area_id=#{areaId,jdbcType=INTEGER},
@@ -121,10 +125,10 @@
             <if test="lastLoginTime != null">
                 last_login_time=#{lastLoginTime,jdbcType=DATE},
             </if>
-            <if test="loginIp != null and loginIp !=''">
+            <if test="loginIp != null ">
                 login_ip=#{loginIp,jdbcType=VARCHAR},
             </if>
-            <if test="lastLoginIp != null and lastLoginIp != ''">
+            <if test="lastLoginIp != null ">
                 last_login_ip=#{lastLoginIp,jdbcType=VARCHAR},
             </if>
             <if test="loginFrom != null">
@@ -133,34 +137,47 @@
             <if test="loginNum != null">
                 login_num=#{loginNum,jdbcType=VARCHAR},
             </if>
-            <if test="wxOpenid != null and wxOpenid != ''">
+            <if test="wxOpenid != null ">
                 wx_openid=#{wxOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="wxInfo != null and wxInfo != ''">
+            <if test="wxInfo != null ">
                 wx_info=#{wxInfo,jdbcType=VARCHAR},
             </if>
-            <if test="qqOpenid != null and qqOpenid != ''">
+            <if test="qqOpenid != null ">
                 qq_openid=#{qqOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="qqInfo != null and qqInfo != ''">
+            <if test="qqInfo != null ">
                 qq_info=#{qqInfo,jdbcType=VARCHAR},
             </if>
-            <if test="sinaOpenid != null and sinaOpenid != ''">
+            <if test="sinaOpenid != null ">
                 sina_openid=#{sinaOpenid,jdbcType=VARCHAR},
             </if>
-            <if test="sinaInfo != null and sinaInfo != ''">
+            <if test="sinaInfo != null ">
                 sina_info=#{sinaInfo,jdbcType=VARCHAR},
             </if>
-            <if test="isAuth != null and isAuth != ''">
+            <if test="isAuth != null ">
                 is_auth=#{isAuth,jdbcType=INTEGER},
             </if>
             <if test="investConditions != null">
                 invest_conditions=#{investConditions,jdbcType=INTEGER},
             </if>
-            user_id=#{userId}
+            <if test="phone != null">
+                 phone=#{phone},
+            </if>
+            <if test="userId != null">
+                 user_id=#{userId},
+            </if>
+            state=1
         </set>
         <where>
-            user_id=#{userId} and state=1
+            1 = 1
+            <if test="phone != null and phone != ''">
+                AND phone=#{phone}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id=#{userId}
+            </if>
+            AND state=1
         </where>
     </update>
     <update id="updatePasswordByPhone" parameterType="User">

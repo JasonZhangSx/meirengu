@@ -11,4 +11,9 @@ import java.util.List;
  */
 public interface PermissionService {
     List<Permission> findPermission(List<Role> roleList);
+    List<Permission> getAllPermission();
+    Permission selectById(Long id);
+    int insert(Permission permission);
+    int update(Permission permission);
+    int delete(Long id);
 }

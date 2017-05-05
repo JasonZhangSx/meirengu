@@ -44,11 +44,11 @@ public class UuidTest {
 //        Random random = new Random(47);
 //        int g = random.nextInt(10);
 //        System.out.println(s.replaceFirst(g+"","a"));
-        StringBuffer sb = new StringBuffer();
-        sb.append("page_num=" + 1);
-        sb.append("&");
-        sb.substring(0, sb.length()-2);
-        System.out.println(sb.length());
-        System.out.print(sb.toString());
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("page_num=" + 1);
+//        sb.append("&");
+//        sb.substring(0, sb.length()-2);
+//        System.out.println(sb.length());
+//        System.out.print(sb.toString());
     }
 }

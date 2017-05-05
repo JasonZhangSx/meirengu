@@ -1,11 +1,14 @@
 package com.meirengu.commons.authority.service.impl;
 
+import com.meirengu.commons.authority.dao.PermissionMapper;
 import com.meirengu.commons.authority.dao.RoleMapper;
+import com.meirengu.commons.authority.model.Permission;
 import com.meirengu.commons.authority.model.Role;
 import com.meirengu.commons.authority.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +19,8 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
     /**
      * 根据用户获得角色
      * @param accountId
@@ -41,7 +46,18 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role findRoleDetail(Integer id) {
-        return roleMapper.findRoleDetail(id);
+        List<Role> list = new ArrayList<>();
+        Role role = new Role();
+        if (id!=null&&id>0){
+            role = roleMapper.findRoleDetail(id);
+        }
+        if (role.getId()!=null){
+            list.add(role);
+            role.setPermissionList(permissionMapper.findPermission(list));
+        }else {
+            role.setPermissionList(tree(permissionMapper.getAllPermission(),0));
+        }
+        return role;
     }
     /**
      * 根据角色id删除角色记录
@@ -70,5 +86,21 @@ public class RoleServiceImpl implements RoleService {
     public int updateRole(Role role) {
         return roleMapper.updateRole(role);
     }
-
+    /**
+     * 递归遍历树形
+     * @param list 查询结果
+     * @param icParentId 父节点
+     * @return 树形结构
+     */
+    public List<Permission> tree(List<Permission> list, int icParentId){
+        List<Permission> permissionList = new ArrayList<>();
+        for (Permission vo : list){
+            if (vo.getParentId()==icParentId){
+                List<Permission> voList=tree(list,vo.getId().intValue());
+                vo.setList(voList);
+                permissionList.add(vo);
+            }
+        }
+        return permissionList;
+    }
 }

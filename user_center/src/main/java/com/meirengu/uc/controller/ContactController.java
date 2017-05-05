@@ -4,7 +4,6 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.service.ContactService;
-import com.meirengu.uc.utils.GetIPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,7 @@ import java.util.Map;
  * Created by huoyan403 on 4/11/2017.
  */
 @RestController
-@RequestMapping("contact")
+@RequestMapping("contract")
 public class ContactController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
@@ -35,43 +33,84 @@ public class ContactController extends BaseController{
      * @param levelId  档位id
      * @param userId   投资人id
      * @param itemId
+     * @param type 1:收益众筹 2:股权众筹
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.GET)
     public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
-                                    @RequestParam(value = "user_id",required = true) String userId) {
-        logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
+                                    @RequestParam(value = "order_id",required = true) String orderId,
+                                    @RequestParam(value = "user_id",required = true) String userId,
+                                    @RequestParam(value = "type",required = true) Integer type) {
+        logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{} type:{}",itemId,levelId,userId,type);
         try {
-            Map<String,String> map = new HashMap();
-            map.put("itemId",itemId);
-            map.put("levelId",levelId);
-            map.put("userId",userId);
-            return contactService.CreateContactFile(map);
+
+            if(type != 1 && type != 2){
+                return this.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            }
+            if(type == 1){
+                Map<String,String> map = new HashMap();
+                map.put("itemId",itemId);
+                map.put("levelId",levelId);
+                map.put("userId",userId);
+                map.put("orderId",orderId);
+                Result result = contactService.CreateIncomeContactFile(map);
+                if(result.getCode() == 200){
+                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else{
+                    return contactService.CreateIncomeContactFile(map);
+                }
+            }
+            if(type == 2){
+                Map<String,String> map = new HashMap();
+                map.put("itemId",itemId);
+                map.put("levelId",levelId);
+                map.put("userId",userId);
+                map.put("orderId",orderId);
+                return contactService.CreateEquityContactFile(map);
+            }
         }catch (Exception e){
             logger.error("ContactController createContactFile throws Exception :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+        return null;
     }
 
     /**
      * 查看合同文件
-     * @param itemId
-     * @param levelId
-     * @param userId
-     * @return
+     * @param type 1:收益众筹 2:股权众筹
+     * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result ViewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
-                                    @RequestParam(value = "level_id",required = true) String levelId,
-                                    @RequestParam(value = "user_id",required = true) String userId) {
-        logger.info("ContactController ViewContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
+    public Result ViewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
+                                  @RequestParam(value = "type",required = true) Integer type) {
+        logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
         try {
             Map<String,String> map = new HashMap();
-            map.put("itemId",itemId);
-            map.put("levelId",levelId);
-            map.put("userId",userId);
-            List<String> viewUrl =  contactService.ViewContactFile(map);
+            map.put("orderId",orderId);
+            List<Map<String,String>>  viewUrl=  contactService.ViewContactFile(map);
+            if(viewUrl.size() == 0){
+                if(type == 1){
+                    Map<String,String> urlMap = new HashMap<String,String>();
+                    urlMap.put("contractName","收益转让协议");
+                    urlMap.put("generate","0");
+                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    viewUrl.add(urlMap);
+                }else if(type == 2){
+                    Map<String,String> urlMap = new HashMap<String,String>();
+                    urlMap.put("contractName","合伙协议(美人谷)");
+                    urlMap.put("generate","0");
+                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    Map<String,String> urlMap1 = new HashMap<String,String>();
+                    urlMap1.put("contractName","股权收益权投资协议");
+                    urlMap1.put("generate","0");
+                    urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    viewUrl.add(urlMap);
+                    viewUrl.add(urlMap1);
+                }else{
+
+                }
+            }
             return super.setResult(StatusCode.OK, viewUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("ContactController ViewContactFile throws Exception :{}",e.getMessage());
@@ -81,22 +120,18 @@ public class ContactController extends BaseController{
 
     /**
      * 下载合同文件
-     * @param itemId
-     * @param levelId
-     * @param userId
+     * order_id
      * @return
      */
      @RequestMapping(value = "/down",method = RequestMethod.GET)
-        public Result DownContactFile(@RequestParam(value = "item_id",required = true) String itemId,
-                                        @RequestParam(value = "level_id",required = true) String levelId,
-                                        @RequestParam(value = "user_id",required = true) String userId) {
-         logger.info("ContactController DownContactFile itemId :{} levelId:{} userId:{}",itemId,levelId,userId);
+        public Result DownContactFile(@RequestParam(value = "order_id",required = true) String orderId) {
+         logger.info("ContactController DownContactFile order_id :{}",orderId);
             try {
+
                 Map<String,String> map = new HashMap();
-                map.put("itemId",itemId);
-                map.put("levelId",levelId);
-                map.put("userId",userId);
-                List<String> downUrl =  contactService.DownContactFile(map);
+                map.put("orderId",orderId);
+
+                List<Map<String,String>> downUrl =  contactService.DownContactFile(map);
                 return super.setResult(StatusCode.OK, downUrl, StatusCode.codeMsgMap.get(StatusCode.OK));
             }catch (Exception e){
                 logger.info("ContactController DownContactFile throws Exception :{}",e.getMessage());

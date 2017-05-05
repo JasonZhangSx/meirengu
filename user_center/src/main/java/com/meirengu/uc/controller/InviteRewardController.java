@@ -56,33 +56,34 @@ public class InviteRewardController extends BaseController{
             // 根据用户id 获取邀请人信息 判断是否为空
             if(investInfo.size()!=0){
                 for (Map map:investInfo){
-                    for(Object userId : map.keySet()){
-                        Object investMoney = map.get(userId);
+                    String userId = String.valueOf(map.get("userId"));
+                    String investMoney = String.valueOf(map.get("costAmount"));
+                    String type = String.valueOf(map.get("itemType"));
 
-                        Inviter inviter = new Inviter();
-                        inviter.setInvitedUserId(Integer.parseInt(userId+""));
-                        inviter = inviterService.detail(inviter);
-                        if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
-                        // 根据注册时间  投资时间 校验是否有效期
-                            Date registerTime = inviter.getRegisterTime();
-                            Date investTime = inviter.getInvestTime();
-                            try {
-                                int i  = DateAndTime.dateDiff("dd",DateAndTime.convertDateToString(registerTime,"yyyy-MM-dd HH:mm:ss"),
-                                        DateAndTime.convertDateToString(investTime,"yyyy-MM-dd HH:mm:ss"));
+                    Inviter inviter = new Inviter();
+                    inviter.setInvitedUserId(Integer.parseInt(userId+""));
+                    inviter = inviterService.detail(inviter);
+                    if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
+                    // 根据注册时间  投资时间 校验是否有效期
+                        Date registerTime = inviter.getRegisterTime();
+                        Date investTime = inviter.getInvestTime();
+                        try {
+                            int i  = DateAndTime.dateDiff("dd",DateAndTime.convertDateToString(registerTime,"yyyy-MM-dd HH:mm:ss"),
+                                    DateAndTime.convertDateToString(investTime,"yyyy-MM-dd HH:mm:ss"));
 
-                                // 封装入结构 写入文件
-                                if(i<34){
-                                    String[] arr = new String[3];
-                                    arr[0] = userId+"";
-                                    arr[1] = inviter.getUserId()+"";
-                                    arr[2] = investMoney+"";
-                                    list.add(arr);
-                                }
-                            }catch (Exception e){
-                                    logger.info("InviteRewardController.notify throws Exception :{} ",e.getMessage());
+                            // 封装入结构 写入文件
+                            if(i<34){
+                                String[] arr = new String[3];
+                                arr[0] = userId+"";
+                                arr[1] = inviter.getUserId()+"";
+                                arr[2] = investMoney+"";
+                                arr[3] = type+"";
+                                list.add(arr);
                             }
-
+                        }catch (Exception e){
+                                logger.info("InviteRewardController.notify throws Exception :{} ",e.getMessage());
                         }
+
                     }
                 }
             }

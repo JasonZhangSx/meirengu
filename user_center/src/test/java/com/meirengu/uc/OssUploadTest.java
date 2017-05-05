@@ -14,14 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.meirengu.utils.JacksonUtil.toJSon;
-
 /**
  * Created by huoyan403 on 4/25/2017.
  */
-public class OssUpload {
+public class OssUploadTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(OssUpload.class);
+    private static final Logger logger = LoggerFactory.getLogger(OssUploadTest.class);
 
     //测试list<String[]>
     @Test
@@ -67,9 +65,9 @@ public class OssUpload {
 
 
             String foldName = "user";
-            String fileName = "user."+ DateUtils.getCurrentDate()+".txt";
-            OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-            fileUpload.upload(sb.toString(),fileName,foldName);
+           String fileName = "user."+ DateUtils.getCurrentDate()+".txt";
+           OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+           fileUpload.upload(sb.toString(),fileName,foldName);
 
            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
            String userInviterInfo = IOUtils.toString(fileUtils.download(foldName,fileName),"UTF-8");
@@ -97,16 +95,21 @@ public class OssUpload {
             List<Map<String,String>> list = new ArrayList<>();
 
             Map<String,String> map = new HashMap<>();
-            map.put("111111","2222222");
+            map.put("userId","2222222");
+            map.put("investMoney","123.00");
+            map.put("type","1");
             Map<String,String> map1 = new HashMap<>();
-            map1.put("333333","4444444");
+            map1.put("userId","11111");
+            map1.put("investMoney","122.00");
+            map1.put("type","2");
 
             list.add(map);
             list.add(map1);
+            String result = JacksonUtil.toJSon(list);
             String foldName = "order";
             String fileName = "order."+ DateUtils.getCurrentDate()+".txt";
-            OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-            fileUpload.upload(toJSon(list),fileName,foldName);
+//            OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+//            fileUpload.upload(result,fileName,foldName);
 
             OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
             String order = IOUtils.toString(fileUtils.download(foldName,fileName),"UTF-8");
@@ -116,12 +119,9 @@ public class OssUpload {
 
             // 根据用户id 获取邀请人信息 判断是否为空
             for (Map map11:investInfo){
-                for(Object userId : map11.keySet()){
-
-                    Object investMoney = map11.get(userId);
-                    logger.info("userId = "+userId);
-                    logger.info("investMoney = "+investMoney);
-                }
+                    logger.info("userId = "+map11.get("userId"));
+                    logger.info("investMoney = "+map11.get("costAmount"));
+                    logger.info("type = "+map11.get("itemType"));
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -7,13 +7,14 @@ import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
-import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
+import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
@@ -28,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 会员服务实现类
@@ -43,6 +44,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private ExecutorService cachedThreadPool = ThreadPoolSingleton.getInstance();
+
     @Autowired
     UserDao userDao;
     @Autowired
@@ -50,32 +53,38 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     public User create(User user){
-        int result = userDao.create(user);
-        if(result == 0){
-            user.setUserId(UuidUtils.getShortUuid());
-            result = userDao.create(user);
-        }
-        if(result == 1){
-            if(!StringUtil.isEmpty(user.getMobileInviter())){
-                //初始化邀请关系？//优化改成异步
-                User userInviter = userDao.retrieveByPhone(user.getMobileInviter());
-                Inviter inviter = new Inviter();
-                inviter.setUserId(userInviter.getUserId());
-                inviter.setInvitedUserId(user.getUserId());
-                inviter.setInvitedUserPhone(user.getPhone());
-                inviter.setRegisterTime(new Date());
-                inviter.setReward(new BigDecimal("0"));
-                inviterDao.insert(inviter);
+        try {
+            int result = userDao.create(user);
+            if(result == 0){
+                user.setUserId(UuidUtils.getShortUuid());
+                result = userDao.create(user);
             }
-            //初始化支付账户
-            InitPayAccountThread initPayAccountThread = new InitPayAccountThread(user.getUserId(),user.getPhone());
-            initPayAccountThread.run();
-            //领取注册抵扣券
-            ReceiveCouponsThread receiveCouponsThread = new ReceiveCouponsThread(user.getUserId(),user.getPhone());
-            receiveCouponsThread.run();
-            return user;
-        }else{
-            logger.info("UserServiceImpl createUser failed :{}",user);
+            if(result == 1){
+                //初始化支付账户
+                cachedThreadPool.execute(new InitPayAccountThread(
+                        user.getUserId(),
+                        user.getPhone()
+                ));
+                //领取注册抵扣券
+                cachedThreadPool.execute(new ReceiveCouponsThread(
+                        user.getUserId(),
+                        user.getPhone()
+                ));
+                //初始化邀请关系
+                if(!StringUtil.isEmpty(user.getMobileInviter())){
+                    cachedThreadPool.execute(new InitInviterThread(
+                            user,
+                            userDao,
+                            inviterDao
+                    ));
+                }
+                return user;
+            }else{
+                logger.info("UserServiceImpl createUser failed :{}",user);
+                return null;
+            }
+        }catch (Exception e){
+            logger.error("用户初始化失败 phone：{},异常信息为：{}" ,user.getPhone(),e);
             return null;
         }
     }
@@ -172,7 +181,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User createUserInfo(String mobile, String password, Integer from, String ip,String avatar) {
+    public User createUserInfo(String mobile,Integer from, String ip,String avatar) {
 
         //创建用户
         User user = new User();
@@ -198,11 +207,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsBuy(1);
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
-        try {
-            user.setPassword(PasswordEncryption.createHash(password));
-        }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
-        }
+        user.setPassword("");
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -238,7 +243,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
                 user.setAvatar(foldName+"/"+fileName);
             } catch (IOException e) {
-                logger.info("第三方头像上传失败！");
+                logger.error("第三方头像上传失败！");
             }
         }
         user.setUserId(UuidUtils.getShortUuid());
@@ -273,10 +278,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setState(1);
         user.setIsBuy(1);
         try {
-            String password = PasswordEncryption.createHash(registerVO.getPassword());
-            user.setPassword(password);
+            if(!StringUtil.isEmpty(registerVO.getPassword())){
+                String password = PasswordEncryption.createHash(registerVO.getPassword());
+                user.setPassword(password);
+            }else{
+                user.setPassword("");
+            }
         }catch (Exception e){
-            logger.info("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
+            logger.error("UserServiceImpl PasswordEncryption.createHash throws Exception :{}" ,e.getMessage());
         }
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
@@ -477,7 +486,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
             }
         }catch (Exception e){
-
+            logger.error("VerityServiceImpl.back code >> throws exception:{}", e.getMessage());
+            return 0;
         }
         return 0;
     }
@@ -533,5 +543,48 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return userDao.retrieveByOpenId(openId);
     }
 
+    @Override
+    public int bundThirdParty(RegisterVO registerVO) {
 
+        User user = new User();
+        user.setPhone(registerVO.getMobile());
+        if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+            user.setWx(registerVO.getWx_name());
+            user.setWxOpenid(registerVO.getWx_openid());
+            user.setWxInfo(registerVO.getWx_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+            user.setQq(registerVO.getQq_name());
+            user.setQqOpenid(registerVO.getQq_openid());
+            user.setQqInfo(registerVO.getQq_info());
+        }
+        if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+            user.setSina(registerVO.getSina_name());
+            user.setSinaOpenid(registerVO.getSina_openid());
+            user.setSinaInfo(registerVO.getSina_info());
+        }
+        return userDao.update(user);
+    }
+
+    @Override
+    public int unbund(String userId, Integer type) {
+        User user = new User();
+        user.setUserId(Integer.parseInt(userId));
+        if(type == 1){
+            user.setWxOpenid("");
+            user.setWx("");
+            user.setWxInfo("");
+        }
+        if(type == 2){
+            user.setQq("");
+            user.setQqInfo("");
+            user.setQqOpenid("");
+        }
+        if(type == 3){
+            user.setSina("");
+            user.setSinaOpenid("");
+            user.setSinaInfo("");
+        }
+        return userDao.update(user);
+    }
 }

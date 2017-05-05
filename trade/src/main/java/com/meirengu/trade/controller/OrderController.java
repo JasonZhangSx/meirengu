@@ -564,4 +564,26 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+    /**
+     * 根据用户id查询用户投资金额
+     * 目前不支持批量查询，后期修改
+     * @param userIds
+     * @return
+     */
+    @RequestMapping(value = "/get_sum_amount_by_user_id")
+    public Result getSumAmountByUserIds(@RequestParam(value = "user_ids", required = true) String userIds) {
+        if (StringUtils.isEmpty(userIds)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try {
+            List<Map<String, Object>> sumAmountMap = orderService.getSumAmountByUserIds(userIds);
+            return setResult(StatusCode.OK, sumAmountMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception: {}", e);
+            e.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+    }
 }
