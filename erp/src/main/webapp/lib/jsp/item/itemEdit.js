@@ -2,6 +2,68 @@
 var contentIndex = 0;
 var levelIndex = 0;
 
+/**
+ * 是否分红
+ */
+function shareBonusChange(){
+
+}
+
+function getCity(){
+    var pid = $("#provinceSelect").val();
+    $.ajax({
+        type: "POST",
+        url: "address/city",
+        data: {"pid": pid},
+        dataType: "json",
+        success: function(data){
+            data = data.data;
+            console.log(data);
+            if(data != null){
+                var option = "";
+                for(var i = 0; i<data.length; i++){
+                    if(i==0){
+                        option += '<option value="'+data[i].areaId+'" selected>'+data[i].areaName+'</option>';
+                    }else {
+                        option += '<option value="'+data[i].areaId+'">'+data[i].areaName+'</option>';
+                    }
+                    
+                }
+                $("#citySelect").html("");
+                $("#citySelect").append(option);
+                getArea();
+            }
+        }
+    });
+}
+
+function getArea(){
+    var cid = $("#citySelect").val();
+    console.log("cid:"+cid);
+    $.ajax({
+        type: "POST",
+        url: "address/area",
+        data: {"cid": cid},
+        dataType: "json",
+        success: function(data){
+            console.log(data);
+            data = data.data;
+            if(data != null){
+                var option = "";
+                for(var i = 0; i<data.length; i++){
+                    if(i==0){
+                        option += '<option value="'+data[i].areaId+'" selected>'+data[i].areaName+'</option>';
+                    }else {
+                        option += '<option value="'+data[i].areaId+'">'+data[i].areaName+'</option>';
+                    }
+                }
+                $("#areaSelect").html("");
+                $("#areaSelect").append(option);
+            }
+        }
+    });
+}
+
 function contentAdd(){
     var itemId = $("#itemId"+contentIndex).val();
     if(itemId == null || itemId == '' || itemId == 0){
@@ -17,8 +79,10 @@ function contentAdd(){
             console.log(data);
             if(data.code == '200'){
                 var content = data.data;
+                console.log(content);
+                console.log(contentIndex);
                 $("#contentId"+contentIndex).val(content.contentId);
-                $('content_tab_menu span[cnum='+contentIndex+'] sa' ).text(content.levelName);
+                $('.content_tab_menu span[cnum='+contentIndex+']' ).html(content.contentTitle+"<var></var>");
                 alert("内容添加成功");
             }
         }
@@ -43,7 +107,7 @@ function levelAdd(){
                 var content = data.data;
                 console.log(content);
                 $("#levelId"+levelIndex).val(content.levelId);
-                $('.huibao_set .huibao_tab_menu span[cnum='+levelIndex+'] sa' ).text(content.levelName);
+                $('.huibao_set .huibao_tab_menu span[cnum='+levelIndex+']' ).html(content.levelName+"<var></var>");
                 alert("回报档位添加成功");
             }
         }
@@ -148,7 +212,8 @@ $(function () {
 }), $(".toTop").show();
 
 $(function () {
-    //tab切换
+    getCity();
+    //回报tab切换
     $('body').on('click', '.huibao_set .huibao_tab_menu span', function (event) {
         console.log($(event.target));
         $('.huibao_set .huibao_tab_menu span').removeClass('current');
@@ -157,7 +222,8 @@ $(function () {
         $('.huibao_set .huibao_tab').hide();
         $('.huibao_set .huibao_tab').eq(index).show();
         console.log(levelIndex);
-    })
+    });
+    //内容tab切换
     $('body').on('click', '.content_tab_menu span', function (event) {
         console.log($(event.target));
         $('.content_tab_menu span').removeClass('current');
@@ -165,8 +231,9 @@ $(function () {
         var index = $(event.target).index();
         contentIndex = index;
         $('.content_set .item').hide();
-        $('.content_set .item').eq(index).show()
-    })
+        $('.content_set .item').eq(index).show();
+        console.log(contentIndex);
+    });
     function sortName(menu) {
         // for (var i = 0; i < menu.length; i++) {
         // 	$(menu[i]).html('名称' + (i+1)+'<var></var>');
@@ -246,7 +313,7 @@ $(function () {
             '   <div class="row cl">' +
             '   <label class="form-label col-xs-4 col-sm-2">收益方式：</label>' +
             '<div class="formControls col-xs-8 col-sm-3"> <span class="select-box">' +
-            '   <select name="revenueModel" id="revenue_model#1" class="select">' +
+            '   <select name="revenueModel" id="revenueModel#1" class="select">' +
             '   <option value="1">一次性还款</option>' +
             '   <option value="2">按月还息到期还本</option>' +
             '   </select>' +
@@ -298,57 +365,65 @@ $(function () {
             menu = $('.huibao_tab_menu .wrapper span');
         if (a) {
             $('.huibao_tab_menu span').removeClass('current');
-            $('.huibao_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current"><sa>档位</sa><var></var></span>');
+            $('.huibao_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current">档位'+cnum+'<var></var></span>');
             sortName($('.huibao_tab_menu .wrapper span'));
             $('.huibao_wrapper').children().hide();
             $('.huibao_wrapper').append(aObj);
             levelIndex = cnum;
         }
-    })
+    });
     $('.content_tab_menu em').on('click', function () {
         //var aObj = $('.hide_content_item').find('.item').eq(0).clone();
         var itemId = $("#itemId").val();
-        var aObj = '<form action="content/add" method="post" id="contentAddForm#1">'+
-            '<input type="hidden" name="itemId" id="itemId#1" value="'+itemId+'">'+
-            '<input type="hidden" name="contentType" value="1">'+
-            '<input type="hidden" id="contentId#1" name="contentId" value="0">'+
-            '<div class="item">'+
-            '<div class="row cl">'+
-            '<label class="form-label col-xs-4 col-sm-2">主标题：</label>'+
-        '<div class="formControls col-xs-8 col-sm-8">'+
-            '<input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle#1"'+
-        'name="contentTitle">'+
-            '</div>'+
-            '</div>'+
-            '<div class="row cl">'+
-            '<label class="form-label col-xs-4 col-sm-2">内容：</label>'+
-        '<div class="formControls col-xs-8 col-sm-8">'+
-            '<textarea name="contentInfo" id="contentInfo#1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"'+
-        'dragonfly="true" nullmsg="备注不能为空！"'+
-        'onKeyUp="$.Huitextarealength(this,200)"></textarea>'+
-            '<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>'+
-            '</div>'+
-            '</div>'+
 
-            '<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">'+
-            '<button class="btn btn-primary radius" id="contentAddBtn#1" type="button"  onclick="contentAdd()"><i'+
-        'class="Hui-iconfont">&#xe632;</i> 保存</button>'+
-        '</div>'+
-        '</div>'+
-        '</form>';
+        var aObj = '<div class="item" style="display: block;">'+
+                        '<form action="content/add" method="post" id="contentAddForm#1">'+
+                            '<input type="hidden" name="itemId" id="itemId#1" value="'+itemId+'">'+
+                            '<input type="hidden" name="contentType" value="1">'+
+                            '<input type="hidden" id="contentId#1" name="contentId" value="0">'+
+                            '<div class="row cl">'+
+                                '<label class="form-label col-xs-4 col-sm-2">主标题：</label>'+
+                                '<div class="formControls col-xs-8 col-sm-8">'+
+                                    '<input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle#1" name="contentTitle">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="row cl">'+
+                                '<label class="form-label col-xs-4 col-sm-2">内容：</label>'+
+                                '<div class="formControls col-xs-8 col-sm-8">'+
+                                    '<input type="hidden" id="contentInfo#1" name="contentInfo">'+
+                                    '<div class="img-box full">'+
+                                        '<section class=" img-section">'+
+                                            '<div class="z_photo upimg-div clearfix">'+
+                                                '<div id="imgParent1#1" class="clearfix"></div>'+
+                                                '<section class="z_file fl">'+
+                                                    '<img src="static/upload-file/a11.png" class="add-img">'+
+                                                    '<input type="file" name="file" id="file1#1" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="" onchange="uploadFile(\'file1#1\',\'item\',\'imgParent1#1\',\'contentInfo#1\')">'+
+                                                '</section>'+
+                                            '</div>'+
+                                        '</section>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">'+
+                                '<button class="btn btn-primary radius" id="contentAddBtn0" type="button"  onclick="contentAdd()">'+
+                                '<i class="Hui-iconfont">&#xe632;</i> 保存</button>'+
+                            '</div>'+
+                        '</form>'+
+                    '</div>';
 
-        alert(aObj);
         var cnum = $('.content_tab_menu .wrapper span:last-child').attr("cnum");
-        console.log("cnum:"+cnum);
         cnum = parseInt(cnum)+1;
         aObj = aObj.replace(/#1/g,cnum);
+        console.log("cnum:"+cnum);
         var a = confirm('要新增内容页吗'),
             menu = $('.content_tab_menu .wrapper span');
         if (a) {
-            $('.content_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current"><sa>内容</sa><var></var></span>');
+            $('.content_tab_menu .wrapper span').removeClass("current");
+            $('.content_tab_menu .wrapper').append('<span cnum="'+cnum+'" class="current">内容'+cnum+'<var></var></span>');
             sortName($('.content_tab_menu .wrapper span'));
             $('.content_set').children().hide();
             $('.content_set').append(aObj);
+            contentIndex = cnum;
         }
     })
     $('.huibao_tab_menu').on('click', 'span var', function (event) {
@@ -369,12 +444,27 @@ $(function () {
     $('.content_tab_menu').on('click', 'span var', function (event) {
         event.stopPropagation();
         var index = $(event.target).parent().index();
-        if(index == 0){
+        /*if(index == 0){
             alert("内容至少有一个");
             return;
-        }
+        }*/
+
         var a = confirm('要删除此项吗');
         if (a) {
+            /*$.ajax({
+                type: "POST",
+                url: "item/content/del",
+                data: {"contentId": contentId},
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+                    if(data.code == '200'){
+                        layer_close();
+                    }else {
+                        alert("提交审核失败")
+                    }
+                }
+            });*/
             $(event.target).parent().remove();
             $('.content_set .item').eq(index).remove();
             // sortName($('.huibao_tab_menu .wrapper span'));
@@ -404,6 +494,6 @@ $(function () {
             //parent.$('.btn-refresh').click();
             parent.layer.close(index);
         }
-    })
+    });
 
 });

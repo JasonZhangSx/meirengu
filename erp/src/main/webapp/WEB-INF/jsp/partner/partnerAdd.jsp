@@ -45,11 +45,27 @@
         <!-- 合作方 添加 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">合作方名称：</label>
-            <div class="formControls col-xs-8 col-sm-8">
+            <div class="formControls col-xs-8 col-sm-3">
                 <input type="text" class="input-text" value="" id="partnerName" name="partnerName" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
+            <label class="form-label col-xs-4 col-sm-2">公司成立日：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="partnerCreateDay" name="partnerCreateDay">
+            </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">注册资金：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="partnerRegistCapital" name="partnerRegistCapital">
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">公司估值：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="" placeholder="" id="partnerValuation" name="partnerValuation">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">行业类型：</label>
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
@@ -62,7 +78,7 @@
             </div>
             <label class="form-label col-xs-4 col-sm-2">服务专员：</label>
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="" class="select">
+				<select name="accountId" id="accountId" class="select">
 					<option value="0">专员a</option>
 					<option value="1">专员b</option>
 				</select>
@@ -93,11 +109,6 @@
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
                         <input type="text" class="input-text" name="enterpriseAddress" id="enterpriseAddress">
-						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
-						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -138,11 +149,6 @@
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
                         <input type="text" class="input-text" name="principalAddress" id="principalAddress">
-						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
-						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -182,11 +188,6 @@
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
                         <input type="text" class="input-text" name="contactsAddress" id="contactsAddress">
-						<%--<select name="" class="col-sm-1 col-xs-8" data-province="---- 选择省 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-city="---- 选择市 ----"></select>
-						<select name="" class="col-sm-2 col-xs-8 ml-10" data-district="---- 选择区 ----"></select>
-						<input type="text" class=" input-text ml-20" style="width:40%" value="" id="articletitle"
-                               name="articletitle" maxlength="30" placeholder="项目标题最多30字" id="" name="">--%>
 					</span>
                 </label>
             </div>
@@ -285,47 +286,12 @@
         <br/><br/><br/>
     </form>
 </div>
-<!-- 省市区 -->
-<%--<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
-<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>--%>
-<%--
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>--%>
 
 <script>
 
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     });
-
-    /*$(function () {
-        $("#btn1").click(function () {
-            ajaxFileUpload();
-        })
-    })
-
-    function ajaxFileUpload() {
-        $.ajaxFileUpload({
-            url: 'upload?foldName=item', //用于文件上传的服务器端请求地址
-            secureuri: false, //是否需要安全协议，一般设置为false
-            fileElementId: 'file1', //文件上传域的ID
-            dataType: 'json', //返回值类型 一般设置为json
-            success: function (data, status){  //服务器成功响应处理函数
-                console.log(data);
-                $("#img1").attr("src", data.imgurl);
-                if (typeof (data.error) != 'undefined'){
-                    if (data.error != '') {
-                        alert(data.error);
-                    } else {
-                        alert(data.msg);
-                    }
-                }
-            },
-            error: function (data, status, e){//服务器响应失败处理函数
-                alert(e);
-            }
-        })
-        return false;
-    }*/
 
 </script>
 </body>

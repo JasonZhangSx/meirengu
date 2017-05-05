@@ -1,5 +1,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -18,7 +19,6 @@
 <link rel=stylesheet type=text/css href="<%=basePath %>lib/Hui-iconfont/1.0.8/iconfont.css"/>
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/skin/default/skin.css" id=skin/>
 <link rel=stylesheet type=text/css href="<%=basePath %>static/h-ui.admin/css/style.css"/>
-<link rel="stylesheet" type="text/css" href="<%=basePath %>static/upload-file/upload.css" />
 <link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css" />
 <link href="<%=basePath %>lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
 <link href="<%=basePath %>lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />

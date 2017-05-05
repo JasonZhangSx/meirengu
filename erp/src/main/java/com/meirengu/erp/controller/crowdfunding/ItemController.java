@@ -7,6 +7,7 @@ import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.model.Item;
 import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemLevel;
+import com.meirengu.erp.service.AddressService;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.service.PartnerService;
 import com.meirengu.erp.service.TypeService;
@@ -42,6 +43,8 @@ public class ItemController extends BaseController {
     TypeService typeService;
     @Autowired
     PartnerService partnerService;
+    @Autowired
+    AddressService addressService;
 
     /**
      * 新建list
@@ -166,7 +169,7 @@ public class ItemController extends BaseController {
         params.put("preheating_days", String.valueOf(item.getPreheatingDays()));
         params.put("partner_id", String.valueOf(item.getPartnerId()));
         params.put("crowd_days", String.valueOf(item.getCrowdDays()));
-        params.put("area_id", "2");
+        params.put("area_id", String.valueOf(item.getAreaId()));
         params.put("header_image", item.getHeaderImage());
         params.put("operate_account", "jason");
         params.put("sponsor_name","jason");
@@ -185,7 +188,7 @@ public class ItemController extends BaseController {
                 }
             }else {
                 params.put("item_id", String.valueOf(item.getItemId()));
-                if(itemService.contentUpdate(params)){
+                if(itemService.itemUpdate(params)){
                     returnMap.put("code", StatusCode.OK);
                     returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
                     returnMap.put("data", item);
@@ -409,7 +412,7 @@ public class ItemController extends BaseController {
         List itemClassData = itemService.getItemClassList();
         List typeData = typeService.getTypeList();
         List partnerData = partnerService.getPartnerList();
-        List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
+        List provinceData = addressService.getProvinceList();
         Map item = itemService.itemDetail(itemId);
         List contentData = itemService.getContentList(itemId, null);
         List levelData = itemService.getLevelList(itemId);

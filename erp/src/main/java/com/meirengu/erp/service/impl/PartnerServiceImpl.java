@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 合作方服务层
@@ -64,21 +65,17 @@ public class PartnerServiceImpl implements PartnerService{
     }
 
     @Override
-    public boolean partnerAdd(Partner partner) {
+    public boolean partnerAdd(Map params) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.list"));
-        try {
-            HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null && code.equals(StatusCode.OK)){
-                    return true;
-                }
+        HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
+        int statusCode = hr.getStatusCode();
+        if(statusCode == StatusCode.OK){
+            String content = hr.getContent();
+            JSONObject jsonObject = JSONObject.parseObject(content);
+            Object code = jsonObject.get("code");
+            if(code != null && code.equals(StatusCode.OK)){
+                return true;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return false;
     }

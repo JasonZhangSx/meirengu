@@ -16,12 +16,14 @@
     <!--[if lt IE 9]>
     <script type="text/javascript" src="lib/html5.js"></script>
     <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script src="static/upload-file/ajaxfileupload.js" />
     <![endif]-->
     <link rel=stylesheet type=text/css href="static/h-ui/css/H-ui.min.css"/>
     <link rel=stylesheet type=text/css href="static/h-ui.admin/css/H-ui.admin.css"/>
     <link rel=stylesheet type=text/css href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
     <link rel=stylesheet type=text/css href="static/h-ui.admin/skin/default/skin.css" id=skin/>
     <link rel=stylesheet type=text/css href="static/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/upload-file/upload.css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
@@ -29,67 +31,69 @@
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
     <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
     <title>项目添加</title>
-
     <style>
-    .select-box1 {
-        padding-left: 0;
-    }
+        .select-box1 {
+            padding-left: 0;
+        }
 
-    .select-box1 select {
-        font-size: 14px;
-        height: 31px;
-        line-height: 1.42857;
-        padding: 4px;
-        border: 1px #ddd solid;
-    }
+        .select-box1 select {
+            font-size: 14px;
+            height: 31px;
+            line-height: 1.42857;
+            padding: 4px;
+            border: 1px #ddd solid;
+        }
 
-    .edit_h31 {
-        border-bottom: 1px #ddd solid;
-        overflow: hidden;
-    }
+        .edit_h31 {
+            border-bottom: 1px #ddd solid;
+            overflow: hidden;
+        }
 
-    .tabCon {
-        width: 100%;
-    }
+        .tabCon {
+            width: 100%;
+        }
 
-    .tabCon {
-        display: none;
-        overflow: hidden;
-        width：100%;
-    }
+        .tabCon {
+            display: none;
+            overflow: hidden;
+            width：100%;
+        }
 
-    .tabBar {
-        border: none;
-        position: fixed;
-        top: 30px;
-        right: 20px;
-        z-index: 9999;
-    }
+        .tabBar {
+            border: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            z-index: 9999;
+        }
 
-    .tabBar span {
-        display: block;
-        float: none;
-        font-size: 20px;
-        line-height: 30px;
-        padding: 5px 15px;
-        font-weight: normal;
-        color: #a7a5a5
-    }
+        .tabBar span {
+            display: block;
+            float: none;
+            font-size: 20px;
+            line-height: 30px;
+            padding: 5px 15px;
+            font-weight: normal;
+            color: #a7a5a5
+        }
 
-    .tabBar span.current {
-        background-color: #5a98de;
-    }
+        .tabBar span.current {
+            background-color: #5a98de;
+        }
 
-    .tabCon .form-label {
-        margin-top: 3px;
-        cursor: text;
-        text-align: right;
-    }
+        .tabCon .form-label {
+            margin-top: 3px;
+            cursor: text;
+            text-align: right;
+        }
 
-    .tabCon .row {
-        margin-top: 15px;
-    }
-</style>
+        .tabCon .row {
+            margin-top: 15px;
+        }
+
+        .clearfix section,.clearfix{float:left;display:inline;}
+        .img-box .upimg-div .z_file{overflow: hidden}
+    </style>
     <script type="text/javascript">
         $('#datetimepicker').datetimepicker({
             lang: $.datetimepicker.setLocale('ch'),
@@ -132,8 +136,8 @@
         }
 
         //上传文件
-        function uploadFile(fileId, foldName, parentId) {
-            alert(fileId+"|"+foldName+"|"+parentId);
+        function uploadFile(fileId, foldName, parentId, inputId) {
+            //alert(fileId+"|"+foldName+"|"+parentId);
             //将上传的多个文件放入formData中
             var picFileList = $("#"+fileId).get(0).files;
             var formData = new FormData();
@@ -161,6 +165,13 @@
                         var data = responseData.data;
                         var imgStr = "";
                         for(var i = 0; i < data.length; i++){
+                            var imgs = $("#"+inputId).val();
+                            if(imgs == null || imgs == ''){
+                                $("#"+inputId).val(data[i]);
+                            }else{
+                                $("#"+inputId).val(imgs+","+data[i]);
+                            }
+
                             imgStr += '<section class="up-section fl">'
                                     +'  <span class="up-span"></span>'
                                     +'  <img class="close-upimg" src="static/upload-file/a7.png">'
@@ -263,32 +274,59 @@
                     <div class="formControls col-xs-8 col-sm-9">
                         <label data-toggle="distpicker" style="display:block;width:100%">
                             <span class="select-box select-box1" style="border:none;">
-                            <select name="areaId" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----">
+                            <select name="provinceSelect" id="provinceSelect" class="col-sm-3 col-xs-8" data-province="---- 选择省 ----" onchange="getCity()">
                                 <c:forEach items="${provinces}" var="provinces">
                                     <option value="${provinces.areaId}">${provinces.areaName}</option>
                                 </c:forEach>
                             </select>
-                              <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1" data-city="---- 选择市 ----"></select>
-                              <select name="" class="col-sm-3 col-xs-8 col-sm-offset-1"
-                                      data-district="---- 选择区 ----"></select>
+                            <select name="" id="citySelect" class="col-sm-3 col-xs-8 col-sm-offset-1" data-city="---- 选择市 ----" onchange="getArea()"></select>
+                            <select name="areaId" id="areaSelect" class="col-sm-3 col-xs-8 col-sm-offset-1" data-district="---- 选择区 ----" onchange=""></select>
                             </span>
                         </label>
                     </div>
                 </div>
-<style>
-    #imgParent0 section,#imgParent0{float:left;display:inline;}
-    .img-box .upimg-div .z_file{overflow: hidden}
-</style>
+
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">项目头图：</label>
                     <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="headerImage" name="headerImage">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
                                     <div id="imgParent0" class="clearfix"></div>
                                     <section class="z_file fl">
                                         <img src="static/upload-file/a11.png" class="add-img">
-                                        <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="" onchange="uploadFile('file0','item','imgParent0')">
+                                        <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                    </section>
+                                 </div>
+                             </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">领投人名称：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="leadInvestorName"
+                               name="leadInvestorName" required>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">领投金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder=""
+                               id="leadInvestorAmount" name="leadInvestorAmount">
+                    </div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">领头人头像：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="leadInvestorHeader" name="leadInvestorHeader">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent2" class="clearfix"></div>
+                                    <section class="z_file fl">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file2" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file2','item','imgParent2','leadInvestorHeader')">
                                     </section>
                                  </div>
                              </section>
@@ -311,18 +349,18 @@
             </div>
             <div class="row cl content_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
                 <div class="wrapper">
-                    <span class="current" cnum="0">项目介绍<var></var></span>
-                    <span cnum="1">融资方案<var></var></span>
+                    <span class="current" cnum="0">内容<var></var></span>
+                    <%--<span cnum="1">融资方案<var></var></span>--%>
                 </div>
-                <%--<em>+</em>--%>
+                <em>+</em>
             </div>
             <div class="cl"></div>
             <div class="content_set">
-                <form action="content/add" method="post" id="contentAddForm0">
-                    <input type="hidden" name="itemId" id="itemId0">
-                    <input type="hidden" name="contentType" value="1">
-                    <input type="hidden" id="contentId0" name="contentId" value="0">
-                    <div class="item">
+                <div class="item">
+                    <form action="content/add" method="post" id="contentAddForm0">
+                        <input type="hidden" name="itemId" id="itemId0">
+                        <input type="hidden" name="contentType" value="1">
+                        <input type="hidden" id="contentId0" name="contentId" value="0">
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">主标题：</label>
                             <div class="formControls col-xs-8 col-sm-8">
@@ -333,10 +371,18 @@
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-2">内容：</label>
                             <div class="formControls col-xs-8 col-sm-8">
-                                <textarea name="contentInfo" id="contentInfo0" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                          dragonfly="true" nullmsg="备注不能为空！"
-                                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                                <input type="hidden" id="contentInfo0" name="contentInfo">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent10" class="clearfix"></div>
+                                            <section class="z_file fl">
+                                                <img src="static/upload-file/a11.png" class="add-img">
+                                                <input type="file" name="file" id="file10" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" multiple="" onchange="uploadFile('file10','item','imgParent10','contentInfo0')">
+                                            </section>
+                                         </div>
+                                     </section>
+                                </div>
                             </div>
                         </div>
 
@@ -344,38 +390,8 @@
                             <button class="btn btn-primary radius" id="contentAddBtn0" type="button"  onclick="contentAdd()"><i
                                     class="Hui-iconfont">&#xe632;</i> 保存</button>
                         </div>
-                    </div>
-                </form>
-
-                <form action="content/add" method="post" id="contentAddForm1">
-                    <input type="hidden" name="itemId" id="itemId1">
-                    <input type="hidden" name="contentType" value="2">
-                    <input type="hidden" id="contentId1" name="contentId" value="0">
-                    <div class="item">
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="contentTitle1"
-                                       name="contentTitle">
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <textarea name="contentInfo" id="contentInfo1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                          dragonfly="true" nullmsg="备注不能为空！"
-                                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                            </div>
-                        </div>
-
-                        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                            <button class="btn btn-primary radius" id="contentAddBtn1" type="button" onclick="contentAdd()"><i
-                                    class="Hui-iconfont">&#xe632;</i> 保存</button>
-                        </div>
-                    </div>
-                </form>
-
+                    </form>
+                </div>
 
             </div>
 
@@ -447,7 +463,7 @@
 
                 <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
                     <div class="wrapper">
-                        <span class="current" cnum="0"><sa>档位1</sa><var></var></span>
+                        <span class="current" cnum="0">档位<var></var></span>
                     </div>
                     <em>+</em>
                 </div>
@@ -465,8 +481,13 @@
                             </div>
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
-                                <div class="formControls col-xs-8 col-sm-8">
+                                <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount">
+                                </div>
+
+                                <label class="form-label col-xs-4 col-sm-2">持股比例：</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate">
                                 </div>
                             </div>
                             <div class="row cl">
@@ -499,7 +520,7 @@
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
                                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                <select id="isShareBonus0" name="isShareBonus" class="select">
+                                <select id="isShareBonus0" name="isShareBonus" class="select" onchange="shareBonusChange()">
                                     <option value="1">是</option>
                                     <option value="0">否</option>
                                 </select>
@@ -521,7 +542,7 @@
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
                                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                <select name="revenueModel" id="revenue_model0" class="select">
+                                <select name="revenueModel" id="revenueModel0" class="select">
                                     <option value="1">一次性还款</option>
                                     <option value="2">按月还息到期还本</option>
                                 </select>
@@ -529,7 +550,7 @@
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
                                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                <select name="shareBonusPeriod" id="shareBonusPeriod" class="select">
+                                <select name="shareBonusPeriod" id="shareBonusPeriod0" class="select">
                                     <option value="1">1月</option>
                                     <option value="3">3月</option>
                                     <option value="6">6月</option>
@@ -568,141 +589,6 @@
                 </div>
             </div>
 
-
-            <div class="hide_huibao_tab" style="display:none">
-                <div class="huibao_tab">
-                    <form id="levelAddForm$1" >
-                        <input type="hidden" id="itemId1$1" name="itemId">
-                        <input type="hidden" id="levelId$1" name="levelId" value="0">
-                        <div class="row cl" style="display:block">
-                            <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="" maxlength="30" id="levelName$1" name="levelName">
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <input type="text" class="input-text" value="" maxlength="30" id="levelAmount$1" name="levelAmount">
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
-                            <div class="formControls col-xs-8 col-sm-8">
-                                <textarea name="levelDesc" id="levelDesc$1" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                          dragonfly="true" nullmsg="备注不能为空！"
-                                          onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                            </div>
-                        </div>
-
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">总份数：</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber$1"
-                                       name="totalNumber">
-                            </div>
-                            <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber$1"
-                                       name="singleLimitNumber">
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays$1"
-                                       name="paybackDays">
-                            </div>
-                            <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
-                            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                            <select id="isShareBonus$1" name="isShareBonus" class="select">
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate$1"
-                                       name="yearRate">
-                            </div>
-                            <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod$1"
-                                       name="investmentPeriod">
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
-                            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                            <select name="revenueModel" id="revenue_model$1" class="select">
-                                <option value="1">一次性还款</option>
-                                <option value="2">按月还息到期还本</option>
-                            </select>
-                            </span>
-                            </div>
-                            <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
-                            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                            <select name="shareBonusPeriod" id="shareBonusPeriod$1" class="select">
-                                <option value="1">1月</option>
-                                <option value="3">3月</option>
-                                <option value="6">6月</option>
-                                <option value="12">12月</option>
-                            </select>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
-                            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                            <select name="isNeedAddress" id="isNeedAddress$1" class="select">
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                            </span>
-                            </div>
-                            <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
-                            <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                            <select name="isNeedAgreement" id="isNeedAgreement$1" class="select">
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="row cl">
-                            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                                <button class="btn btn-secondary radius" type="button" id="levelAddBtn$1"  onclick="levelAdd()"><i
-                                        class="Hui-iconfont">&#xe632;</i> 保存
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="hide_content_item" style="display:none;">
-                <div class="item">
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id=""
-                                   name="">
-                        </div>
-                    </div>
-                    <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                        <div class="formControls col-xs-8 col-sm-8">
-                            <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                      dragonfly="true" nullmsg="备注不能为空！"
-                                      onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         <!-- 保存提交 -->
         <div class="row cl">
@@ -716,14 +602,33 @@
 
     </span>
 </div>
-<%--
-<script src=lib/jquery/1.9.1/jquery.min.js></script>--%>
-<script type="text/javascript" src="static/upload-file/ajaxfileupload.js"></script>
+
+<script src=lib/jquery/1.9.1/jquery.min.js></script>
+<script src=lib/layer/2.4/layer.js></script>
+<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
+<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
+<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
+<script src=static/h-ui/js/H-ui.js></script>
+<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.min.js"></script>
+<script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 
+<script type="text/javascript">
 
+    $('#datetimepicker').datetimepicker({
+        lang: $.datetimepicker.setLocale('ch'),
+    });
+
+</script>
 </body>
 </html>

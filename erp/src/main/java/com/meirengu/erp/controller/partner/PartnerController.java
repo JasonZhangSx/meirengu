@@ -166,7 +166,8 @@ public class PartnerController extends BaseController{
 
     @RequestMapping("add")
     public ModelAndView add(Partner partner){
-        partnerService.partnerAdd(partner);
+        Map<String, String> params = new HashMap<String, String>();
+        partnerService.partnerAdd(params);
         return new ModelAndView("redirect:/partner/list");
     }
 }
