@@ -62,6 +62,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                     @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
                                     @RequestParam(value = "item_num", required = false) Integer itemNum,
+                                    @RequestParam(value = "share_hold_rate", required = false, defaultValue = "0.0000") BigDecimal shareHoldRate,
                                     @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                     @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                     @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
@@ -95,6 +96,7 @@ public class OrderController extends BaseController{
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
+        order.setShareHoldRate(shareHoldRate);
         order.setOrderAmount(orderAmount);
         order.setCostAmount(costAmount);
         order.setRebateAmount(rebateAmount);
@@ -149,6 +151,7 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                       @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
                                       @RequestParam(value = "item_num", required = false) Integer itemNum,
+                                      @RequestParam(value = "share_hold_rate", required = false, defaultValue = "0.0000") BigDecimal shareHoldRate,
                                       @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                       @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                       @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
@@ -184,6 +187,7 @@ public class OrderController extends BaseController{
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
+        order.setShareHoldRate(shareHoldRate);
         order.setOrderAmount(orderAmount);
         order.setCostAmount(costAmount);
         order.setRebateAmount(rebateAmount);
