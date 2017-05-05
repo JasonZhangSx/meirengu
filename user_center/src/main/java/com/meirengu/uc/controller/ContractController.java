@@ -34,7 +34,7 @@ public class ContractController extends BaseController{
      * @param levelId  档位id
      * @param userId   投资人id
      * @param itemId
-     * @param type 1:收益众筹 2:股权众筹
+     * @param type 1:产品众筹    2:收益众筹   3:股权众筹
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.GET)
@@ -46,10 +46,10 @@ public class ContractController extends BaseController{
         logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{} type:{}",itemId,levelId,userId,type);
         try {
 
-            if(type != 1 && type != 2){
+            if(type != 1 && type != 2  && type != 3  ){
                 return this.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
             }
-            if(type == 1){
+            if(type == 2){
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
                 map.put("levelId",levelId);
@@ -62,7 +62,7 @@ public class ContractController extends BaseController{
                     return contactService.CreateIncomeContactFile(map);
                 }
             }
-            if(type == 2){
+            if(type == 3){
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
                 map.put("levelId",levelId);
@@ -79,7 +79,7 @@ public class ContractController extends BaseController{
 
     /**
      * 查看合同文件
-     * @param type 1:收益众筹 2:股权众筹
+     * @param type type 1:产品众筹    2:收益众筹   3:股权众筹
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
@@ -92,12 +92,14 @@ public class ContractController extends BaseController{
             List<Map<String,String>>  viewUrl=  contactService.ViewContactFile(map);
             if(viewUrl.size() == 0){
                 if(type == 1){
+
+                }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","收益转让协议");
                     urlMap.put("generate", Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
-                }else if(type == 2){
+                }else if(type == 3){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName","合伙协议(美人谷)");
                     urlMap.put("generate",Constants.ZERO_STRING);
