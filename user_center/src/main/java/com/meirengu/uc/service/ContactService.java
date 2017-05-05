@@ -16,8 +16,8 @@ public interface ContactService {
 
 
     //返回查看保全合同地址
-    List<String> ViewContactFile(Map<String,String> map);
+    List<Map<String,String>> ViewContactFile(Map<String,String> map);
     //返回下载地址
-    List<String> DownContactFile(Map<String, String> map);
+    List<Map<String,String>> DownContactFile(Map<String, String> map);
 
 }

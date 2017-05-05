@@ -306,41 +306,51 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<String> ViewContactFile(Map<String,String> map) {
+    public  List<Map<String,String>> ViewContactFile(Map<String,String> map) {
         Contract contract = new Contract();
-        contract.setUserId(Integer.parseInt(map.get("userId")));
-        contract.setItemId(Integer.parseInt(map.get("itemId")));
-        contract.setLevelId(Integer.parseInt(map.get("levelId")));
         contract.setOrderId(Integer.parseInt(map.get("orderId")));
         List<Contract> contractList = contractDao.select(contract);
 
-        List<String> viewUrl = new ArrayList<>();
+        List<Map<String,String>> viewUrl = new ArrayList<>();
         ContractFileViewUrlRequest request = new ContractFileViewUrlRequest();
         for(Contract contract1:contractList){
+            Map<String,String> urlMap = new HashMap<String,String>();
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
-            viewUrl.add(response.getViewUrl());
+            urlMap.put("contractName",contract1.getContractNo());
+            urlMap.put("url",response.getViewUrl());
+            viewUrl.add(urlMap);
         }
         return viewUrl;
     }
 
     @Override
-    public  List<String> DownContactFile(Map<String, String> map) {
+    public  List<Map<String, String>> DownContactFile(Map<String, String> map) {
         Contract contract = new Contract();
-        contract.setUserId(Integer.parseInt(map.get("userId")));
-        contract.setItemId(Integer.parseInt(map.get("itemId")));
-        contract.setLevelId(Integer.parseInt(map.get("levelId")));
         contract.setOrderId(Integer.parseInt(map.get("orderId")));
         List<Contract> contractList = contractDao.select(contract);
 
         ContractFileDownloadUrlRequest request = new ContractFileDownloadUrlRequest();
-        List<String> downUrl = new ArrayList<>();
+        List<Map<String, String>> downUrl = new ArrayList<>();
         for(Contract contract1:contractList){
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
-                downUrl.add(response.getDownUrl());
+                Map<String,String> urlMap = new HashMap<String,String>();
+
+//                String string = contract1.getContractNo().substring()
+//                if(){
+//
+//                }
+
+
+
+
+
+                urlMap.put("contractName",contract1.getContractNo());
+                urlMap.put("url",response.getDownUrl());
+                downUrl.add(urlMap);
             }else{
                 logger.info("Get the connection to see failed");
                 logger.info("Main Error Code:"+response.getError().getCode());
