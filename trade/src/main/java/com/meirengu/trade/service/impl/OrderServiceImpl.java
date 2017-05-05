@@ -154,6 +154,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 if (orderState == OrderStateEnum.PAID.getValue()) {
                     contractGenerate = 2;
                 }
+                // 防止没有数据时给客户端字段为空
+                map.put("contractGenerate", contractGenerate);
+                map.put("contractList", null);
                 String itemId = map.get("orderSn").toString();
                 //合同链接
                 String url = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemId.substring(2,3);

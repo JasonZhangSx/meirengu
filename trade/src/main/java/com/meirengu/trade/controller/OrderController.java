@@ -328,10 +328,10 @@ public class OrderController extends BaseController{
         if (StringUtils.isNotBlank(itemName)) {
             map.put("itemName", itemName);
         }
-        if (NumberUtil.isNullOrZero(userId)) {
+        if (!NumberUtil.isNullOrZero(userId)) {
             map.put("userId", userId);
         }
-        if (NumberUtil.isNullOrZero(orderState)) {
+        if (!NumberUtil.isNullOrZero(orderState)) {
             map.put("orderState", orderState);
         }
         if (needAvatar != null) {
@@ -389,7 +389,7 @@ public class OrderController extends BaseController{
         if (StringUtils.isNotBlank(itemName)) {
             map.put("itemName", itemName);
         }
-        if (NumberUtil.isNullOrZero(orderState)) {
+        if (!NumberUtil.isNullOrZero(orderState)) {
             map.put("orderState", orderState);
         }
         if (StringUtils.isNotBlank(sortBy)) {
@@ -425,7 +425,7 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (NumberUtil.isNullOrZero(orderId)) {
+        if (!NumberUtil.isNullOrZero(orderId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();

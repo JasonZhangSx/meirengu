@@ -135,13 +135,13 @@ public class RefundController extends BaseController{
         if (StringUtils.isNotBlank(orderSn)) {
             map.put("orderSn", orderSn);
         }
-        if (NumberUtil.isNullOrZero(userId)) {
+        if (!NumberUtil.isNullOrZero(userId)) {
             map.put("userId", userId);
         }
         if (StringUtils.isNotBlank(userPhone)) {
             map.put("userPhone", userPhone);
         }
-        if (NumberUtil.isNullOrZero(refundState)) {
+        if (!NumberUtil.isNullOrZero(refundState)) {
             map.put("refundState", refundState);
         }
         if (StringUtils.isNotBlank(sortBy)) {
