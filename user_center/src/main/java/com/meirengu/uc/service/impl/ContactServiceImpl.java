@@ -11,6 +11,7 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.ContractUtil;
 import com.meirengu.uc.utils.NumberToCN;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
@@ -41,7 +42,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.meirengu.uc.utils.ThemisClientInit.getClient;
@@ -213,13 +213,12 @@ public class ContactServiceImpl implements ContactService {
                         builder.setFile(new UploadFile(fileName,response.getByteArrayFile()));
                         builder.setPreservationTitle("收益权转让协议 合同");//保全标题
                         builder.setPreservationType(5);//保全类型，默认即可
-                        builder.setIdentifer(new PersonalIdentifer(data.get("investorIdCard"),data.get("investors"))); //测试是请修改为自己的姓名和身份证号
+                        builder.setIdentifer(new PersonalIdentifer(data.get("investorIdCard"),data.get("investors"))); //姓名和身份证号
                         builder.setSourceRegistryId("6");//平台来源ID
                         builder.setContractAmount(new Double(String.valueOf(data.get("investmentAmount"))));//合同金额
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                        String contractNo = "MRG-SYZR-"+sdf.format(new Date().getTime())+"-"+new Random().nextInt(10000);
+                        String contractNo = ContractUtil.getIncomeContractNo();
                         builder.setContractNumber(contractNo);//合同编号
-                        builder.setMobilePhone(user.getPhone());//测试时请修改为自己的手机号码
+                        builder.setMobilePhone(user.getPhone());//手机号码
                         builder.setComments("备注信息"); //备注
                         builder.setIsNeedSign(true);//是否启用保全签章
 
@@ -317,7 +316,7 @@ public class ContactServiceImpl implements ContactService {
             Map<String,String> urlMap = new HashMap<String,String>();
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
-            urlMap.put("contractName",contract1.getContractNo());
+            urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
             urlMap.put("generate","1");
             urlMap.put("url",response.getViewUrl());
             viewUrl.add(urlMap);
