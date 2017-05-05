@@ -7,6 +7,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.LoginService;
@@ -131,10 +132,10 @@ public class LoginController extends BaseController {
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
 
-                Integer times = 0;
+                Integer times = 1;
                 if(redisClient.existsObject(mobile+"_login_times")){
                     times = Integer.parseInt(String.valueOf(redisClient.getObject(mobile+"_login_times")))+1;
-                    if(times>5){
+                    if(times > Integer.parseInt(ConfigUtil.getConfig("VERIFY_PASSWORD_TIMES"))){
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }

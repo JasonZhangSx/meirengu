@@ -96,18 +96,41 @@ public class OSSFileUtils {
                 }
             }
         }
-
         return list;
     }
 
-
+    /**
+     * inputstream 上传oss
+     * @param inputStream
+     * @param fileName
+     * @param folderName
+     * @throws IOException
+     */
     public void upload(InputStream inputStream, String fileName, String folderName) throws IOException {
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
         inputStream.close();
     }
+
+    /**
+     * String类型上传 oss
+     * @param content
+     * @param fileName
+     * @param folderName
+     * @throws IOException
+     */
     public void upload(String content, String fileName, String folderName) throws IOException {
-        ossClient.putObject(bucketName, folderName+"/"+fileName, new ByteArrayInputStream(content.getBytes()));
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
+        ossClient.putObject(bucketName, folderName+"/"+fileName, byteArrayInputStream);
+        byteArrayInputStream.close();
     }
+
+    /**
+     * url格式上传oss
+     * @param url
+     * @param folderName
+     * @param fileName
+     * @throws IOException
+     */
     public void uploadUrl(String url, String folderName, String fileName) throws IOException {
         InputStream inputStream = new URL(url).openStream();
         ossClient.putObject(bucketName, folderName+"/"+fileName, inputStream);
