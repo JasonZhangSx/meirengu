@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /** 电子合同controller
  * Created by huoyan403 on 4/11/2017.
  */
@@ -95,17 +96,17 @@ public class ContractController extends BaseController{
 
                 }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName","收益转让协议");
+                    urlMap.put("contractName",Constants.SYZR_FULLNAME);
                     urlMap.put("generate", Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                 }else if(type == 3){
                     Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName","合伙协议(美人谷)");
+                    urlMap.put("contractName",Constants.HHXY_FULLNAME);
                     urlMap.put("generate",Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     Map<String,String> urlMap1 = new HashMap<String,String>();
-                    urlMap1.put("contractName","股权收益权投资协议");
+                    urlMap1.put("contractName",Constants.GQZR_FULLNAME);
                     urlMap1.put("generate",Constants.ZERO_STRING);
                     urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
