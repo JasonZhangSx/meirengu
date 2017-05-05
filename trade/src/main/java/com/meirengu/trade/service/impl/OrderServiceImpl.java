@@ -29,6 +29,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -145,6 +146,36 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             map.put("itemStatus", itemStatus);
                             map.put("partnerId", partnerId);
                         }
+                    }
+                }
+            }
+            if (map.get("orderSn") != null) {
+                int contractGenerate = 1;
+                if (orderState == OrderStateEnum.PAID.getValue()) {
+                    contractGenerate = 2;
+                }
+                String itemId = map.get("orderSn").toString();
+                //合同链接
+                String url = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemId.substring(2,3);
+                HttpResult contractResult = HttpUtil.doGet(url);
+                logger.debug("Request: {} getResponse: {}", url, contractResult);
+                if (contractResult.getStatusCode() == HttpStatus.SC_OK) {
+                    JSONObject resultJson = JSON.parseObject(contractResult.getContent());
+                    int code = resultJson.getIntValue("code");
+                    if (code == StatusCode.OK) {
+                        JSONArray contractList = resultJson.getJSONArray("data");
+                        map.put("contractList", contractList);
+                        if (contractList != null) {
+                            for (int i=0; i<contractList.size(); i++) {
+                                JSONObject contractInfo = contractList.getJSONObject(i);
+                                if (contractInfo != null && contractInfo.getString("generate") != null) {
+                                    if (contractInfo.getString("generate").equals("1")) {
+                                        contractGenerate = 3;
+                                    }
+                                }
+                            }
+                        }
+                        map.put("contractGenerate", contractGenerate);
                     }
                 }
             }
