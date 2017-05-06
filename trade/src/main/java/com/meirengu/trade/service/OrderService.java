@@ -4,6 +4,7 @@ import com.meirengu.model.Result;
 import com.meirengu.service.BaseService;
 import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.Order;
+import com.meirengu.rocketmq.RocketmqEvent;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -107,13 +108,13 @@ public interface OrderService extends BaseService<Order>{
      * 订单失效
      * @return
      */
-    void orderLoseEfficacy(String orderSn) throws IOException ;
+    void listenOrderLoseEfficacy(RocketmqEvent event) throws IOException ;
 
     /**
      * 订单失效前提醒
      * @return
      */
-    void orderRemindForPay(String orderSn) throws IOException ;
+    void listenOrderRemindForPay(RocketmqEvent event) throws IOException ;
 
     /**
      * 根据用户id查询用户投资金额

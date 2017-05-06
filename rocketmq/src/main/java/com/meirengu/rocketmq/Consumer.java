@@ -1,11 +1,5 @@
-package com.meirengu.trade.rocketmq;
+package com.meirengu.rocketmq;
 
-
-import java.util.List;
-
-import com.meirengu.trade.service.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -15,7 +9,12 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
+import java.util.List;
 
 public class Consumer {
 
@@ -24,8 +23,11 @@ public class Consumer {
     private DefaultMQPushConsumer defaultMQPushConsumer;
     private String namesrvAddr;
     private String consumerGroup;
+    private String topic;
+    private String tags;
+
     @Autowired
-    private OrderService orderService;
+    private ApplicationContext applicationContext;
 
     /**
      * Spring bean init-method
@@ -41,11 +43,9 @@ public class Consumer {
         // 注意：ConsumerGroupName需要由应用来保证唯一
         defaultMQPushConsumer = new DefaultMQPushConsumer(consumerGroup);
         defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
-        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 
         // 订阅指定MyTopic下tags等于MyTag
-
-        defaultMQPushConsumer.subscribe("deploy", "*");
+        defaultMQPushConsumer.subscribe(topic, tags);
 
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
         // 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -62,19 +62,11 @@ public class Consumer {
 
                 MessageExt msg = msgs.get(0);
                 logger.info(msg.toString());
-                if (msg.getTopic().equals("deploy")) {
-                    // TODO 执行Topic的消费逻辑
-                    try {
-                        if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
-                            // TODO 执行Tag的消费
-                            orderService.orderLoseEfficacy(new String(msg.getBody()));
-                        } else if (msg.getTags() != null && msg.getTags().equals("orderRemindForPay")) {
-                            // TODO 执行Tag的消费
-                            orderService.orderRemindForPay(new String(msg.getBody()));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                // TODO 执行Topic的消费逻辑
+                try {
+                    applicationContext.publishEvent(new RocketmqEvent(msg, defaultMQPushConsumer));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -104,4 +96,11 @@ public class Consumer {
         this.consumerGroup = consumerGroup;
     }
 
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 }

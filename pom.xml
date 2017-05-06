@@ -14,6 +14,7 @@
         <module>app_webview</module>
         <module>commons-authority</module>
         <module>commons-meirengu</module>
+        <module>rocketmq</module>
         <module>crowd_funding</module>
         <module>data_operation</module>
         <module>erp</module>
@@ -91,6 +92,8 @@
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <!-- 美人谷通用组件包 -->
         <commons-meirengu.version>1.0-SNAPSHOT</commons-meirengu.version>
+        <!-- 美人谷消息队列组件包 -->
+        <rocketmq.version>1.0-SNAPSHOT</rocketmq.version>
         <!-- google java library -->
         <guava.version>17.0</guava.version>
         <!-- joda -->
@@ -619,6 +622,11 @@
                 <groupId>com.meirengu</groupId>
                 <artifactId>commons-meirengu</artifactId>
                 <version>${commons-meirengu.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.meirengu</groupId>
+                <artifactId>rocketmq</artifactId>
+                <version>${rocketmq.version}</version>
             </dependency>
 
             <!-- google java library -->

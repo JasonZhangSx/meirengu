@@ -12,7 +12,6 @@ import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
-import com.meirengu.trade.rocketmq.Producer;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
@@ -22,6 +21,7 @@ import com.meirengu.utils.HttpUtil.HttpResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
+import org.apache.rocketmq.client.consumer.listener.MessageListener;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -29,8 +29,11 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.meirengu.rocketmq.Producer;
+import com.meirengu.rocketmq.RocketmqEvent;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -60,6 +63,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Autowired
     private Producer producer;
+
+
+    public void consumeMessage(){
+
+    }
+
     /**
      * 获取订单详情
      * @param orderSn
@@ -905,7 +914,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param orderSn
      */
     private void sendRocketMQDeployQueue4Sms(String orderSn) {
-        Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
+        Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
         msg.setKeys("ORFP" + orderSn);
         //messageDelayLevel =  1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(19);
@@ -931,7 +940,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单失效
      * @return
      */
-    public void orderLoseEfficacy(String orderSn) throws IOException {
+    @EventListener(condition = "#event.topic=='deploy' && #event.tag=='orderLoseEfficacy'")
+    public void listenOrderLoseEfficacy(RocketmqEvent event) throws IOException {
+        String orderSn = event.getMsg();
         //订单在24小时内未支付，置失效
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
         Map<String, String> params = null;
@@ -991,11 +1002,55 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
+//    /**
+//     * 订单失效前提醒
+//     * @return
+//     */
+//    public void orderRemindForPay(String orderSn) throws IOException {
+//        Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
+//        Map<String, String> params = null;
+//        if (orderMap != null) {
+//            params = new HashMap<String, String>();
+//            int orderState = Integer.parseInt(orderMap.get("orderState").toString());
+//            if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
+//                    || orderState == OrderStateEnum.UNPAID.getValue()) {
+//
+//                /**未支付与抵扣券短信目前无法发送
+//                // 发送短信提醒用户
+//                // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+//                params = new HashMap<String, String>();
+//                params.put("tpl_id", Integer.toString(1790353));
+//                params.put("mobile", orderMap.get("userPhone").toString());
+//                params.put("item_name", orderMap.get("itemName").toString());
+//                String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
+//                HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
+//                logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
+//                */
+//
+//                // 发送消息提醒用户
+//                // 14986214=亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+//                params.put("sender", Integer.toString(0));// 0默认为系统发送
+//                params.put("tpl_id", Integer.toString(14986214));
+//                params.put("type", Integer.toString(2));// 消息类型：1公告Announce；2提醒Remind；3信息、私信Message
+//                params.put("receiver", orderMap.get("userId").toString());
+//                params.put("item_name", orderMap.get("itemName").toString());
+//                String msgurl = ConfigUtil.getConfig("notify.send.tpl.url");
+//                HttpResult msgHttpResult = HttpUtil.doPostForm(msgurl, params);
+//                logger.debug("Request: {} getResponse: {}", msgurl, msgHttpResult);
+//            }
+//        } else {
+//            logger.error("该订单号：{}不存在", orderSn);
+//        }
+//    }
+
     /**
      * 订单失效前提醒
      * @return
      */
-    public void orderRemindForPay(String orderSn) throws IOException {
+    @EventListener(condition = "#event.topic=='deploy' && #event.tag=='orderRemindForPay'")
+    public void listenOrderRemindForPay(RocketmqEvent event) throws IOException {
+        logger.info("orderRemindForPayListener: {}", event.getMsg());
+        String orderSn = event.getMsg();
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
         Map<String, String> params = null;
         if (orderMap != null) {
@@ -1005,16 +1060,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     || orderState == OrderStateEnum.UNPAID.getValue()) {
 
                 /**未支付与抵扣券短信目前无法发送
-                // 发送短信提醒用户
-                // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
-                params = new HashMap<String, String>();
-                params.put("tpl_id", Integer.toString(1790353));
-                params.put("mobile", orderMap.get("userPhone").toString());
-                params.put("item_name", orderMap.get("itemName").toString());
-                String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
-                HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
-                logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
-                */
+                 // 发送短信提醒用户
+                 // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+                 params = new HashMap<String, String>();
+                 params.put("tpl_id", Integer.toString(1790353));
+                 params.put("mobile", orderMap.get("userPhone").toString());
+                 params.put("item_name", orderMap.get("itemName").toString());
+                 String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
+                 HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
+                 logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
+                 */
 
                 // 发送消息提醒用户
                 // 14986214=亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。

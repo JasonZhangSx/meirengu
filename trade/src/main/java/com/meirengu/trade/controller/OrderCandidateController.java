@@ -5,22 +5,21 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
-import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
-import com.meirengu.trade.rocketmq.Consumer;
-import com.meirengu.trade.rocketmq.Producer;
 import com.meirengu.trade.service.OrderCandidateService;
 import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
+import com.meirengu.rocketmq.Producer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -42,6 +41,9 @@ public class OrderCandidateController extends BaseController{
 
     @Autowired
     private Producer producer;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 候补预约新增接口
@@ -176,10 +178,11 @@ public class OrderCandidateController extends BaseController{
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
     public Result sendMessage(@RequestParam(value = "content")String content){
 
-        Message msg = new Message("deploy", "MyTag", content.getBytes());
+        Message msg = new Message("deploy", "orderRemindForPay", content.getBytes());
         SendResult sendResult = null;
         try {
             sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info(sendResult+"");
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
