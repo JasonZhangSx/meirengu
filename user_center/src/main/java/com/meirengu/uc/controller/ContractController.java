@@ -3,16 +3,20 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.service.ContactService;
+import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,29 @@ public class ContractController extends BaseController{
     @Autowired
     private ContactService contactService;
 
+
+    /** rocketMQ接收消息
+     * 生成盖章合同 并创建保全  并把保全文本下载到本地一份
+     */
+    @EventListener(condition = "#event.topic=='user' && #event.tag=='createContract'")
+    public void listenCreateContactFile(RocketmqEvent event) throws IOException {
+        logger.info("ContactController listenCreateContactFile event :{} ",event.getMsg());
+        String message = event.getMsg();
+        Map<String,Object> map = (Map<String,Object>)JacksonUtil.readValue(message,Map.class);
+
+        String itemId = String.valueOf(map.get("itemId"));
+        String levelId = String.valueOf(map.get("levelId"));
+        String userId = String.valueOf(map.get("userId"));
+        String orderId = String.valueOf(map.get("orderId"));
+        Integer type = Integer.parseInt(String.valueOf(map.get("type")));
+
+        Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
+        if(result.getCode() != StatusCode.OK){
+            this.createContactFile(itemId,levelId,userId,orderId,type);
+        }
+    }
+
+
     /**生成盖章合同 并创建保全  并把保全文本下载到本地一份
      * @param itemId  项目id
      * @param levelId  档位id
@@ -39,7 +66,7 @@ public class ContractController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.GET)
-    public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
+    public Result createContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
                                     @RequestParam(value = "order_id",required = true) String orderId,
                                     @RequestParam(value = "user_id",required = true) String userId,
@@ -84,7 +111,7 @@ public class ContractController extends BaseController{
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result ViewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
+    public Result viewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
                                   @RequestParam(value = "type",required = true) Integer type) {
         logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
         try {
@@ -128,7 +155,7 @@ public class ContractController extends BaseController{
      * @return
      */
      @RequestMapping(value = "/down",method = RequestMethod.GET)
-        public Result DownContactFile(@RequestParam(value = "order_id",required = true) String orderId) {
+        public Result downContactFile(@RequestParam(value = "order_id",required = true) String orderId) {
          logger.info("ContactController DownContactFile order_id :{}",orderId);
             try {
 
