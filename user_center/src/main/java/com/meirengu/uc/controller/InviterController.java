@@ -4,16 +4,20 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.service.InviterService;
+import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -162,5 +166,26 @@ public class InviterController extends BaseController{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+
+    /** rocketMQ接收消息
+     * 修改邀请人投资时间
+     */
+    @EventListener(condition = "#event.topic=='user' && #event.tag=='editInviter'")
+    public void listeneditInviter(RocketmqEvent event) throws IOException {
+        logger.info("ContactController listenCreateContactFile event :{} ",event.getMsg());
+        String message = event.getMsg();
+        Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
+
+        String invitedUserPhone = String.valueOf(map.get("invitedUserPhone"));
+        Integer invitedUserId = Integer.parseInt(String.valueOf(map.get("invitedUserId")));
+        Date investTime = (Date) map.get("investTime");
+
+        Inviter inviter = new Inviter();
+        inviter.setInvitedUserId(invitedUserId);
+        inviter.setInvitedUserPhone(invitedUserPhone);
+        inviter.setInvestTime(investTime);
+        int result  = inviterService.update(inviter);
     }
 }

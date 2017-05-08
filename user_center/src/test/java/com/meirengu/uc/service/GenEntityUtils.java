@@ -1,3 +1,5 @@
+package com.meirengu.uc.service;
+
 import com.meirengu.utils.GenEntityMysql;
 
 /**

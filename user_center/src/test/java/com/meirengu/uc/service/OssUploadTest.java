@@ -1,4 +1,4 @@
-package com.meirengu.uc;
+package com.meirengu.uc.service;
 
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.DateUtils;
