@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
-@Component(value = "Producer")
+@Component
 @PropertySource("classpath:rocketmq.properties")
 public class Producer {
 

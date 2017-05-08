@@ -24,8 +24,6 @@
 	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-	<context:component-scan base-package="com.meirengu.trade"/>
-
 	<mvc:annotation-driven >
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -44,19 +42,9 @@
 	</bean>
 
 	<!-- redis配置 -->
-	<context:property-placeholder location="classpath:redis.properties"/>
-	<!-- rocketmq配置 -->
-	<context:property-placeholder location="classpath:rocketmq.properties"/>
-	<!--<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
-		<!--<property name="locations">-->
-			<!--<list>-->
-				<!--<value>classpath:rocketmq.properties</value>-->
-			<!--</list>-->
-		<!--</property>-->
-	<!--</bean>-->
-	<!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">-->
-		<!--<property name="properties" ref="configProperties"/>-->
-	<!--</bean>-->
+	<context:property-placeholder location="classpath:redis.properties" ignore-resource-not-found="true"/>
+
+
 
 
 </beans>

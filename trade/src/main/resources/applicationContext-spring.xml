@@ -79,24 +79,4 @@
         <property name="redisClient" ref="redisClient"/>
     </bean>
 
-    <!--<bean id="consumer" class="com.meirengu.rocketmq.Consumer"-->
-                 <!--init-method="init"-->
-                 <!--destroy-method="destroy"-->
-                 <!--scope="singleton">-->
-        <!--<property name="consumerGroup" value="${rocketmq.consumer.group}" />-->
-        <!--<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />-->
-        <!--<property name="topic" value="${rocketmq.subscribe.topic}" />-->
-        <!--<property name="tags" value="${rocketmq.subscribe.tags}" />-->
-    <!--</bean>-->
-
-    <!--<bean id="producer" class="com.meirengu.rocketmq.Producer"-->
-          <!--init-method="init"-->
-          <!--destroy-method="destroy"-->
-          <!--scope="singleton">-->
-        <!--<property name="producerGroup" value="${rocketmq.producer.group}" />-->
-        <!--<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />-->
-    <!--</bean>-->
-
-
-
 </beans>

@@ -554,24 +554,32 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Integer needAvatar = Integer.parseInt(map.get("needAvatar").toString());
         Integer itemId = Integer.parseInt((map.get("itemId")==null ? 0 : map.get("itemId")).toString());
         if (needAvatar == Constant.YES){
+            //modify by maoruxin 20170508 reason:展示所有待审核，待支付，已支付订单
             //该请求为支持人数列表的请求
             //1.查询项目状态
-            String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
-            HttpResult itemResult = HttpUtil.doGet(url);
-            logger.debug("Request: {} getResponse: {}", url, itemResult);
-            if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
-                JSONObject resultJson = JSON.parseObject(itemResult.getContent());
-                int code = resultJson.getIntValue("code");
-                if (code == StatusCode.OK) {
-                    JSONObject item = resultJson.getJSONObject("data");
-                    int itemStatus = item.getIntValue("itemStatus");
-                    if (itemStatus == Constant.ITEM_PERHEARTING) {
-                        map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
-                    } else {
-                        map.put("orderState", OrderStateEnum.PAID.getValue());
-                    }
-                }
-            }
+//            String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
+//            HttpResult itemResult = HttpUtil.doGet(url);
+//            logger.debug("Request: {} getResponse: {}", url, itemResult);
+//            if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+//                JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+//                int code = resultJson.getIntValue("code");
+//                if (code == StatusCode.OK) {
+//                    JSONObject item = resultJson.getJSONObject("data");
+//                    int itemStatus = item.getIntValue("itemStatus");
+//                    if (itemStatus == Constant.ITEM_PERHEARTING) {
+//                        map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+//                    } else {
+//                        map.put("orderState", OrderStateEnum.PAID.getValue());
+//                    }
+//                }
+//            }
+            //预约、审核通过，待支付，已支付
+            List<Integer> orderStateList = new ArrayList<Integer>();
+            orderStateList.add(OrderStateEnum.BOOK.getValue());
+            orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+            orderStateList.add(OrderStateEnum.UNPAID.getValue());
+            orderStateList.add(OrderStateEnum.PAID.getValue());
+            map.put("orderStateList", orderStateList);
         }
         //2.查询列表
         page = getListByPage(page, map);
