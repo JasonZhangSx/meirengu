@@ -86,7 +86,12 @@ public class UserController extends BaseController{
             paramMap.put("inviteRealname", inviteRealname);
             paramMap.put("inviteIdcard", inviteIdcard);
             paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
+            if(order.contains("desc") || order.contains("DESC")){
+                paramMap.put("order", "DESC");
+            }
+            if(order.contains("asc") || order.contains("ASC")){
+                paramMap.put("order", "ASC");
+            }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
             for(Map map:list){
@@ -94,7 +99,7 @@ public class UserController extends BaseController{
                 userService.getUserRestMoney(map);
                 //取累计投资额
                 userService.getUserTotalInvestMoney(map);
-                Thread.sleep(30L);//减小http访问   减小订单系统和支付系统http压力
+                Thread.sleep(300L);//减小http访问   减小订单系统和支付系统http压力
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -180,7 +185,12 @@ public class UserController extends BaseController{
                 paramMap.put("realname", realname);
                 paramMap.put("idcard", idcard);
                 paramMap.put("sortBy", sortBy);
-                paramMap.put("order", order);
+                if(order.contains("desc") || order.contains("DESC")){
+                    paramMap.put("order", "DESC");
+                }
+                if(order.contains("asc") || order.contains("ASC")){
+                    paramMap.put("order", "ASC");
+                }
                 page = userService.getByPage(page, paramMap);
             }else{
                 page = userService.getUserList(page,paramMap);
