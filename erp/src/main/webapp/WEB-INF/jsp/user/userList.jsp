@@ -45,8 +45,6 @@
                         <th>身份证号</th>
                         <th>投资人认证</th>
                         <th>银行卡</th>
-                        <th>账户余额</th>
-                        <th>已投资金额</th>
                         <th>注册时间</th>
                         <th>操作</th>
                     </tr>
@@ -262,8 +260,6 @@
                         return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
                     }
                 },
-                { "data": "accountBalance" },
-                { "data": "totalInvestMoney" },
                 { "data": "registerTime",
                     render: function(data, type, row, meta) {
                         //先讲 时间格式化
