@@ -97,7 +97,7 @@
         <div class="row cl">
             <div class="col-xs-10 col-sm-6">
                 <label class="form-label col-xs-4 col-sm-4">累计分红金额：</label>
-                <div class="formControls col-xs-8 col-sm-5"><%--${userInfo.}--%>接口未返回</div>
+                <div class="formControls col-xs-8 col-sm-5"><%--${userInfo.}--%>0.00</div>
             </div>
         </div>
 
