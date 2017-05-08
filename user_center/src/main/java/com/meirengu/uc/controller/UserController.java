@@ -94,13 +94,13 @@ public class UserController extends BaseController{
             }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
-            for(Map map:list){
+            if(list.size() == 1){
                 //获取余额信息
-                userService.getUserRestMoney(map);
+                userService.getUserRestMoney(list.get(0));
                 //取累计投资额
-                userService.getUserTotalInvestMoney(map);
-                Thread.sleep(300L);//减小http访问   减小订单系统和支付系统http压力
+                userService.getUserTotalInvestMoney(list.get(0));
             }
+
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
