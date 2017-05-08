@@ -2,6 +2,7 @@ package com.meirengu.trade.controller;
 
 import com.meirengu.utils.NumberUtil;
 import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
@@ -176,7 +177,7 @@ public class OrderCandidateController extends BaseController{
 
 
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
-    public Result sendMessage(@RequestParam(value = "content")String content){
+    public Result sendMessage(@RequestParam(value = "content")String content) throws Exception{
 
         Message msg = new Message("deploy", "orderRemindForPay", content.getBytes());
         SendResult sendResult = null;
@@ -193,6 +194,17 @@ public class OrderCandidateController extends BaseController{
         if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
             // TODO
         }
+//        producer.getDefaultMQProducer().send(msg, new SendCallback() {
+//            @Override
+//            public void onSuccess(SendResult sendResult) {
+//                logger.info("sendResult: {}, key: {}", sendResult, key);
+//            }
+//
+//            @Override
+//            public void onException(Throwable e) {
+//                logger.error("发送消息失败 key: {}, Exception: {}",  key, e);
+//            }
+//        });
         return new Result();
 
     }

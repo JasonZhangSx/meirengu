@@ -93,6 +93,7 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     int updateBySn(Order order);
+    void paymentCallBack(Order order);
     /**
      * 生成3天订单txt文件
      */
@@ -108,13 +109,13 @@ public interface OrderService extends BaseService<Order>{
      * 订单失效
      * @return
      */
-    void listenOrderLoseEfficacy(RocketmqEvent event) throws IOException ;
+    void orderLoseEfficacy(String orderSn) throws IOException ;
 
     /**
      * 订单失效前提醒
      * @return
      */
-    void listenOrderRemindForPay(RocketmqEvent event) throws IOException ;
+    void orderRemindForPay(String orderSn) throws IOException ;
 
     /**
      * 根据用户id查询用户投资金额

@@ -20,6 +20,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	<!--子容器中自动扫描且只扫描@Controller -->
 	<context:component-scan base-package="com.meirengu.trade" />
+	<context:component-scan base-package="com.meirengu.rocketmq" />
 	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
@@ -44,83 +45,18 @@
 
 	<!-- redis配置 -->
 	<context:property-placeholder location="classpath:redis.properties"/>
+	<!-- rocketmq配置 -->
+	<context:property-placeholder location="classpath:rocketmq.properties"/>
+	<!--<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
+		<!--<property name="locations">-->
+			<!--<list>-->
+				<!--<value>classpath:rocketmq.properties</value>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">-->
+		<!--<property name="properties" ref="configProperties"/>-->
+	<!--</bean>-->
 
-	<!--<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="${redis.maxIdle}" />
-		<property name="max" value="${redis.maxActive}" />
-		<property name="maxWait" value="${redis.maxWait}" />
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
-	</bean>
-
-	<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-		<property name="hostName" value="${redis.host}" />
-		<property name="port" value="${redis.port}" />
-		<property name="poolConfig" ref="poolConfig" />
-	</bean>
-
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-		<property name="connectionFactory" ref="connectionFactory" />
-	</bean>-->
-
-	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="${redis.pool.maxTotal}" />
-		<property name="maxIdle" value="${redis.pool.maxIdle}" />
-		<property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}" />
-		<property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}" />
-		<property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}" />
-		<property name="softMinEvictableIdleTimeMillis" value="${redis.pool.softMinEvictableIdleTimeMillis}" />
-		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
-		<property name="testWhileIdle" value="${redis.pool.testWhileIdle}" />
-		<property name="testOnReturn" value="${redis.pool.testOnReturn}" />
-		<property name="jmxEnabled" value="${redis.pool.jmxEnabled}" />
-		<property name="blockWhenExhausted" value="${redis.pool.blockWhenExhausted}" />
-	</bean>
-
-
-	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-		<constructor-arg index="0" ref="jedisPoolConfig" />
-		<constructor-arg index="1">
-			<list>
-				<bean name="slaver" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.slaver.host}" />
-					<constructor-arg index="1" value="${redis.slaver.port}"
-									 type="int" />
-					<!--表示当redis.password不为空时，那么返回redis.password，否则返回null -->
-					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
-				</bean>
-				<bean name="master" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.master.host}" />
-					<constructor-arg index="1" value="${redis.master.port}"
-									 type="int" />
-					<property name="password" value="#{'${redis.master.password}'?:null}"></property>
-				</bean>
-			</list>
-		</constructor-arg>
-	</bean>
-	<bean id="redisClient" class="com.meirengu.common.RedisClient">
-		<constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
-	</bean>
-	<bean class="com.meirengu.utils.TokenUtils">
-		<property name="redisClient" ref="redisClient"/>
-	</bean>
-
-	<bean id="consumer" class="com.meirengu.rocketmq.Consumer"
-		  init-method="init"
-		  destroy-method="destroy"
-		  scope="singleton">
-		<property name="consumerGroup" value="${rocketmq.consumer.group}" />
-		<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />
-		<property name="topic" value="${rocketmq.topic}" />
-		<property name="tags" value="${rocketmq.tags}" />
-	</bean>
-
-	<bean id="producer" class="com.meirengu.rocketmq.Producer"
-		  init-method="init"
-		  destroy-method="destroy"
-		  scope="singleton">
-		<property name="producerGroup" value="${rocketmq.producer.group}" />
-		<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />
-	</bean>
 
 </beans>
