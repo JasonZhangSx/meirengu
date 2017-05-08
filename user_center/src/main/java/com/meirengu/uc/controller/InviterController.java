@@ -33,7 +33,9 @@ public class InviterController extends BaseController{
 
     @Autowired
     private InviterService inviterService;
+
     private static final Logger logger = LoggerFactory.getLogger(InviterController.class);
+
     /**
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
@@ -180,7 +182,7 @@ public class InviterController extends BaseController{
 
         String invitedUserPhone = String.valueOf(map.get("invitedUserPhone"));
         Integer invitedUserId = Integer.parseInt(String.valueOf(map.get("invitedUserId")));
-        Date investTime = (Date) map.get("investTime");
+        Date investTime = new Date((Long) map.get("investTime"));
 
         Inviter inviter = new Inviter();
         inviter.setInvitedUserId(invitedUserId);
