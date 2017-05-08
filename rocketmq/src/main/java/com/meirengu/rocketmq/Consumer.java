@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.List;
-
 @Component
 public class Consumer {
 

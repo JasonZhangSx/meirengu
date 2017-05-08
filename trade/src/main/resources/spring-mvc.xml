@@ -44,19 +44,9 @@
 	</bean>
 
 	<!-- redis配置 -->
-	<context:property-placeholder location="classpath:redis.properties"/>
-	<!-- rocketmq配置 -->
-	<context:property-placeholder location="classpath:rocketmq.properties"/>
-	<!--<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
-		<!--<property name="locations">-->
-			<!--<list>-->
-				<!--<value>classpath:rocketmq.properties</value>-->
-			<!--</list>-->
-		<!--</property>-->
-	<!--</bean>-->
-	<!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">-->
-		<!--<property name="properties" ref="configProperties"/>-->
-	<!--</bean>-->
+	<context:property-placeholder location="classpath:redis.properties" ignore-resource-not-found="true"/>
+
+
 
 
 </beans>
