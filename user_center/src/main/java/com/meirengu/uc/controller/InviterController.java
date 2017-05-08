@@ -176,7 +176,7 @@ public class InviterController extends BaseController{
      */
     @EventListener(condition = "#event.topic=='user' && #event.tag=='editInviter'")
     public void listeneditInviter(RocketmqEvent event) throws IOException {
-        logger.info("ContactController listenCreateContactFile event :{} ",event.getMsg());
+        logger.info("ContactController listeneditInviter event :{} ",event.getMsg());
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
 
@@ -188,6 +188,6 @@ public class InviterController extends BaseController{
         inviter.setInvitedUserId(invitedUserId);
         inviter.setInvitedUserPhone(invitedUserPhone);
         inviter.setInvestTime(investTime);
-        int result  = inviterService.update(inviter);
+        inviterService.update(inviter);
     }
 }
