@@ -3,6 +3,7 @@ import com.meirengu.cf.model.Item;
 import com.meirengu.service.BaseService;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -19,6 +20,14 @@ public interface ItemService extends BaseService<Item>{
     int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount);
 
     Map<String, Object> moreDetail(int id);
+
+    /**
+     * 支付成功修改项目的已筹总金额
+     * @param itemId
+     * @param amount
+     * @return
+     */
+    void updateItemCompleteAmount(Integer itemId, BigDecimal amount);
 
     /**
      * 初审操作
@@ -42,5 +51,5 @@ public interface ItemService extends BaseService<Item>{
      * 发布
      * @return
      */
-    boolean publish();
+    boolean publish(int itemId, Date appointDate, int type, String operateAccount);
 }

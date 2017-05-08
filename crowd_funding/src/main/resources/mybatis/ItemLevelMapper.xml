@@ -30,14 +30,27 @@
 
 	<sql id="table_name">item_level</sql>
 	<sql id="select_columns">
-		level_id as levelId, item_id as itemId, level_name as levelName, level_amount as levelAmount, level_desc as levelDesc, total_number as totalNumber, single_limit_number as singleLimitNumber, book_number as bookNumber, completed_number as completedNumber, payback_days as paybackDays, payback_time as paybackTime, is_share_bonus as isShareBonus, year_rate as yearRate, investment_period as investmentPeriod, revenue_model as revenueModel, share_bonus_period as shareBonusPeriod, is_need_address as isNeedAddress, is_need_agreement as isNeedAgreement, level_status as levelStatus, level_sort as levelSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		level_id as levelId, item_id as itemId, level_name as levelName, level_amount as levelAmount,
+		level_desc as levelDesc, total_number as totalNumber, single_limit_number as singleLimitNumber,
+		book_number as bookNumber, completed_number as completedNumber, payback_days as paybackDays,
+		payback_time as paybackTime, is_share_bonus as isShareBonus, year_rate as yearRate,
+		investment_period as investmentPeriod, revenue_model as revenueModel, share_bonus_period as shareBonusPeriod,
+		is_need_address as isNeedAddress, is_need_agreement as isNeedAgreement, level_status as levelStatus,
+		level_sort as levelSort, create_time as createTime, update_time as updateTime, operate_account as operateAccount,
+		share_hold_rate as shareHoldRate, year_rate_max as yearRateMax
 	</sql>
 
 	<insert id="insert" parameterType="itemLevel" useGeneratedKeys="true" keyProperty="levelId" >
 		INSERT INTO <include refid="table_name" />
-			(level_id, item_id, level_name, level_amount, level_desc, total_number, single_limit_number, book_number, completed_number, payback_days, is_share_bonus, year_rate, investment_period, revenue_model, share_bonus_period, is_need_address, is_need_agreement, level_status, level_sort, create_time, operate_account)
+			(level_id, item_id, level_name, level_amount, level_desc, total_number, single_limit_number,
+			book_number, completed_number, payback_days, is_share_bonus, year_rate, investment_period,
+			revenue_model, share_bonus_period, is_need_address, is_need_agreement, level_status, level_sort,
+			create_time, operate_account, share_hold_rate, year_rate_max)
 		VALUES
-			(#{levelId}, #{itemId}, #{levelName}, #{levelAmount}, #{levelDesc}, #{totalNumber}, #{singleLimitNumber}, #{bookNumber}, #{completedNumber}, #{paybackDays}, #{isShareBonus}, #{yearRate}, #{investmentPeriod}, #{revenueModel}, #{shareBonusPeriod}, #{isNeedAddress}, #{isNeedAgreement}, #{levelStatus}, #{levelSort}, #{createTime}, #{operateAccount})
+			(#{levelId}, #{itemId}, #{levelName}, #{levelAmount}, #{levelDesc}, #{totalNumber}, #{singleLimitNumber},
+			#{bookNumber}, #{completedNumber}, #{paybackDays}, #{isShareBonus}, #{yearRate}, #{investmentPeriod},
+			#{revenueModel}, #{shareBonusPeriod}, #{isNeedAddress}, #{isNeedAgreement}, #{levelStatus}, #{levelSort},
+			#{createTime}, #{operateAccount}, #{shareHoldRate}, #{yearRateMax})
 	</insert>
 
 	<update id="update" parameterType="itemLevel">
@@ -103,6 +116,12 @@
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},
 			</if>
+			<if test="shareHoldRate != null">
+				share_hold_rate=#{shareHoldRate},
+			</if>
+			<if test="yearRateMax != null">
+				year_rate_max=#{yearRateMax},
+			</if>
 		</set>
 		<where>
 			level_id = #{levelId}
@@ -138,6 +157,10 @@
 		<if test="completedNumber != null">
 			and total_number-completed_number>0
 		</if>
+	</update>
+
+	<update id="updateStatusByItemId" parameterType="itemLevel">
+		UPDATE <include refid="table_name" /> SET level_status=#{levelStatus}, operate_account=#{operateAccount} where item_id=#{itemId}
 	</update>
 
 	<!-- 分页相关开始 -->

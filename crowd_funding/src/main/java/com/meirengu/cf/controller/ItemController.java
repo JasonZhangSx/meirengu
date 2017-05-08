@@ -274,7 +274,7 @@ public class ItemController extends BaseController {
     }
 
     /**
-     * 修改已筹总金额/预约总金额
+     * 下单修改档位金额和预约的总金额
      * @param type  1已筹 2预约
      * @param itemId
      * @param levelId
@@ -363,6 +363,30 @@ public class ItemController extends BaseController {
     }
 
     /**
+     * 订单支付成功修改项目已筹金额
+     * @param itemId
+     * @param amount
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "complete_amount/update", method = RequestMethod.POST)
+    public Result updateItemCompleteAmount(@RequestParam(value = "item_id", required = false) Integer itemId,
+                     @RequestParam(value = "amount", required = false) BigDecimal amount){
+
+        try {
+            if(itemId == null || itemId == 0 || amount == null){
+                return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+            itemService.updateItemCompleteAmount(itemId, amount);
+            return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">>ItemController.updateItemCompleteAmount throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
+    /**
      * 初审
      * @param itemId
      * @param operateStatus
@@ -445,18 +469,6 @@ public class ItemController extends BaseController {
         }
 
     }
-
-    /*@ResponseBody
-    @RequestMapping(value = "/more_detail", method = RequestMethod.GET)
-    public Result getMoreDetail(@PathVariable(value = "item_id", required = false)Integer itemId){
-
-        if(itemId == null || itemId == 0){
-            return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-        }
-
-
-        return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
-    }*/
 
     public Item setEntity(Integer itemId, String itemName, String itemProfile, Integer typeId, Integer classId,
                           BigDecimal targetAmount, BigDecimal appointAmount, BigDecimal completedAmount,

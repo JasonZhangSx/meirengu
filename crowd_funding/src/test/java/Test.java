@@ -1,3 +1,7 @@
+import com.meirengu.utils.DateAndTime;
+
+import java.util.Date;
+
 /**
  * ${DESCRIPTION}
  *
@@ -6,7 +10,7 @@
  */
 public class Test {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 
         /*Map<String, Object> map = new HashMap<>();
         map.put("flag", new Integer(0));
@@ -21,5 +25,8 @@ public class Test {
         String s = "哈哈123";
         System.out.println(s);
 
+        String dat = DateAndTime.dateFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+
+        System.out.println(DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", dat, 3)));
     }
 }

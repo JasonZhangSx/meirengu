@@ -53,14 +53,28 @@ public class ItemCooperationController extends BaseController{
                          @RequestParam(value = "store_renderings", required = false) String storeRenderings,
                          @RequestParam(value = "corporate_articles", required = false) String corporateArticles,
                          @RequestParam(value = "asset_water_liabilities", required = false) String assetWaterLiabilities,
-                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+                         @RequestParam(value = "operate_account", required = false) String operateAccount,
+                         @RequestParam(value = "shareholder_name", required = false) String shareholderName,
+                         @RequestParam(value = "shareholder_idcard", required = false) String shareholderIdcard,
+                         @RequestParam(value = "shareholder_address", required = false) String shareholderAddress,
+                         @RequestParam(value = "guarantee_name", required = false) String guaranteeName,
+                         @RequestParam(value = "guarantee_idcard", required = false) String guaranteeIdcard,
+                         @RequestParam(value = "guarantee_address", required = false) String guaranteeAddress,
+                         @RequestParam(value = "pledged_shares", required = false) BigDecimal pledgedShares,
+                         @RequestParam(value = "partner_seal", required = false) String partnerSeal,
+                         @RequestParam(value = "escrow_agreement", required = false) String escrowAgreement,
+                         @RequestParam(value = "finance_service", required = false) String financeService,
+                         @RequestParam(value = "finance_manage", required = false) String financeManage,
+                         @RequestParam(value = "guaranty_agreement", required = false) String guarantyAgreement){
 
-        ItemCooperation itemCooperation = setEntity(itemId, commissionRate, guaranteeRate,
-                prepaidBonus, loanMode, firstRatio, sponsorIdcard,
-                sponsorCredit, principalIdcard, principalCredit,
-                businessLicence, venueRentalAgreement,
-                storeRenderings, corporateArticles, assetWaterLiabilities,
-                new Date(), operateAccount);
+        ItemCooperation itemCooperation = setEntity(itemId, commissionRate, guaranteeRate, prepaidBonus,
+                                            loanMode, firstRatio, sponsorIdcard, sponsorCredit,
+                                            principalIdcard, principalCredit, businessLicence,
+                                            venueRentalAgreement, storeRenderings, corporateArticles,
+                                            assetWaterLiabilities, shareholderName, shareholderIdcard,
+                                            shareholderAddress, guaranteeName, guaranteeIdcard,
+                                            guaranteeAddress, pledgedShares, partnerSeal,
+                                            escrowAgreement, financeService, financeManage, financeManage, guarantyAgreement, new Date(), operateAccount);
         try {
             int insertNum = itemCooperationService.insert(itemCooperation);
             if(insertNum == 1){
@@ -97,14 +111,14 @@ public class ItemCooperationController extends BaseController{
                 return super.setResult(StatusCode.ITEM_COOPERATION_ERROR_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.ITEM_COOPERATION_ERROR_DELETE));
             }
         }catch (Exception e){
-            LOGGER.error(">> delete item content throw exception: {}", e);
+            LOGGER.error(">> delete item cooperation throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{content_id}", method = RequestMethod.PUT)
-    public Result update(@RequestParam(value = "item_id", required = false) Integer itemId,
+    @RequestMapping(value = "/{item_id}", method = RequestMethod.PUT)
+    public Result update(@PathVariable(value = "item_id", required = false) Integer itemId,
                          @RequestParam(value = "commission_rate", required = false) BigDecimal commissionRate,
                          @RequestParam(value = "guarantee_rate", required = false) BigDecimal guaranteeRate,
                          @RequestParam(value = "prepaid_bonus", required = false) Integer prepaidBonus,
@@ -119,14 +133,28 @@ public class ItemCooperationController extends BaseController{
                          @RequestParam(value = "store_renderings", required = false) String storeRenderings,
                          @RequestParam(value = "corporate_articles", required = false) String corporateArticles,
                          @RequestParam(value = "asset_water_liabilities", required = false) String assetWaterLiabilities,
-                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+                         @RequestParam(value = "operate_account", required = false) String operateAccount,
+                         @RequestParam(value = "shareholder_name", required = false) String shareholderName,
+                         @RequestParam(value = "shareholder_idcard", required = false) String shareholderIdcard,
+                         @RequestParam(value = "shareholder_address", required = false) String shareholderAddress,
+                         @RequestParam(value = "guarantee_name", required = false) String guaranteeName,
+                         @RequestParam(value = "guarantee_idcard", required = false) String guaranteeIdcard,
+                         @RequestParam(value = "guarantee_address", required = false) String guaranteeAddress,
+                         @RequestParam(value = "pledged_shares", required = false) BigDecimal pledgedShares,
+                         @RequestParam(value = "partner_seal", required = false) String partnerSeal,
+                         @RequestParam(value = "escrow_agreement", required = false) String escrowAgreement,
+                         @RequestParam(value = "finance_service", required = false) String financeService,
+                         @RequestParam(value = "finance_manage", required = false) String financeManage,
+                         @RequestParam(value = "guaranty_agreement", required = false) String guarantyAgreement){
 
-        ItemCooperation itemCooperation = setEntity(itemId, commissionRate, guaranteeRate,
-                prepaidBonus, loanMode, firstRatio, sponsorIdcard,
-                sponsorCredit, principalIdcard, principalCredit,
-                businessLicence, venueRentalAgreement,
-                storeRenderings, corporateArticles, assetWaterLiabilities,
-                null, operateAccount);
+        ItemCooperation itemCooperation = setEntity(itemId, commissionRate, guaranteeRate, prepaidBonus,
+                loanMode, firstRatio, sponsorIdcard, sponsorCredit,
+                principalIdcard, principalCredit, businessLicence,
+                venueRentalAgreement, storeRenderings, corporateArticles,
+                assetWaterLiabilities, shareholderName, shareholderIdcard,
+                shareholderAddress, guaranteeName, guaranteeIdcard,
+                guaranteeAddress, pledgedShares, partnerSeal,
+                escrowAgreement, financeService, financeManage, financeManage, guarantyAgreement, new Date(), operateAccount);
         try {
             int updateNum = itemCooperationService.update(itemCooperation);
             if(updateNum == 1){
@@ -140,12 +168,15 @@ public class ItemCooperationController extends BaseController{
         }
     }
 
-    private ItemCooperation setEntity(Integer itemId, BigDecimal commissionRate, BigDecimal guaranteeRate,
-                                      Integer prepaidBonus, Integer loanMode, Integer firstRatio, String sponsorIdcard,
-                                      String sponsorCredit, String principalIdcard, String principalCredit,
-                                      String businessLicence, String venueRentalAgreement,
-                                      String storeRenderings, String corporateArticles, String assetWaterLiabilities,
-                                      Date createTime, String operateAccount){
+    private ItemCooperation setEntity(Integer itemId, BigDecimal commissionRate, BigDecimal guaranteeRate, Integer prepaidBonus,
+                                      Integer loanMode, Integer firstRatio, String sponsorIdcard, String sponsorCredit, String
+                                              principalIdcard, String principalCredit, String businessLicence, String
+                                              venueRentalAgreement, String storeRenderings, String corporateArticles, String
+                                              assetWaterLiabilities, String shareholderName, String shareholderIdcard, String
+                                              shareholderAddress, String guaranteeName, String guaranteeIdcard, String
+                                              guaranteeAddress, BigDecimal pledgedShares, String partnerSeal, String
+                                              escrowAgreement, String financeService, String financeManage, String
+                                              sharePledgeAgreement, String guarantyAgreement, Date createTime, String operateAccount){
         ItemCooperation entity = new ItemCooperation();
         entity.setItemId(itemId);
         entity.setCommissionRate(commissionRate);
@@ -153,17 +184,30 @@ public class ItemCooperationController extends BaseController{
         entity.setPrepaidBonus(prepaidBonus);
         entity.setLoanMode(loanMode);
         entity.setFirstRatio(firstRatio);
-        entity.setSponsorIdcard(sponsorIdcard);
-        entity.setSponsorCredit(sponsorCredit);
-        entity.setPrincipalIdcard(principalIdcard);
-        entity.setPrincipalCredit(principalCredit);
-        entity.setBusinessLicence(businessLicence);
-        entity.setVenueRentalAgreement(venueRentalAgreement);
-        entity.setStoreRenderings(storeRenderings);
-        entity.setCorporateArticles(corporateArticles);
-        entity.setAssetWaterLiabilities(assetWaterLiabilities);
+        entity.setSharePledgeAgreement(sharePledgeAgreement == null ? "" : sharePledgeAgreement);
+        entity.setGuarantyAgreement(guarantyAgreement == null ? "" : guarantyAgreement);
+        entity.setSponsorIdcard(sponsorIdcard == null ? "" : sponsorIdcard);
+        entity.setSponsorCredit(sponsorCredit == null ? "" : sponsorCredit);
+        entity.setPrincipalIdcard(principalIdcard == null ? "" : principalIdcard);
+        entity.setPrincipalCredit(principalCredit == null ? "" : principalCredit);
+        entity.setBusinessLicence(businessLicence == null ? "" : businessLicence);
+        entity.setVenueRentalAgreement(venueRentalAgreement == null ? "" : venueRentalAgreement);
+        entity.setStoreRenderings(storeRenderings == null ? "" : storeRenderings);
+        entity.setCorporateArticles(corporateArticles == null ? "" : corporateArticles);
+        entity.setAssetWaterLiabilities(assetWaterLiabilities == null ? "" : assetWaterLiabilities);
         entity.setCreateTime(createTime);
-        entity.setOperateAccount(operateAccount);
+        entity.setOperateAccount(operateAccount == null ? "" : operateAccount);
+        entity.setShareholderAddress(shareholderAddress == null ? "" : shareholderAddress);
+        entity.setShareholderName(shareholderName == null ? "" : shareholderName);
+        entity.setShareholderIdcard(shareholderIdcard == null ? "" : shareholderIdcard);
+        entity.setGuaranteeName(guaranteeName == null ? "" : guaranteeName);
+        entity.setGuaranteeIdcard(guaranteeIdcard == null ? "" : guaranteeIdcard);
+        entity.setGuaranteeAddress(guaranteeAddress == null ? "" : guaranteeAddress);
+        entity.setPledgedShares(pledgedShares);
+        entity.setPartnerSeal(partnerSeal == null ? "" : partnerSeal);
+        entity.setEscrowAgreement(escrowAgreement == null ? "" : escrowAgreement);
+        entity.setFinanceService(financeService == null ? "" : financeService);
+        entity.setFinanceManage(financeManage == null ? "" : financeManage);
         return entity;
     }
 }

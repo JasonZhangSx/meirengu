@@ -10,6 +10,8 @@ import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.exception.BusinessException;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.utils.DateAndTime;
+import com.meirengu.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,6 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
         int type = 0;
         //1.修改订单的预约/已筹金额  2.档位份数是否不足 3.修改档位预约份数/完成份数
         try {
-            //1.修改订单的预约/已筹金额
             ItemLevel il = itemLevelService.detail(levelId);
             if(il == null){
                 LOGGER.warn(">> the level does not exit.... id : ", levelId);
@@ -69,7 +70,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
                         new Object[]{levelAmount, levelAmount1});
                 return 5;
             }
-
+            //档位份数校验
             BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
             int compareToReturnNum = -1;
             int bookNumber = il.getBookNumber();
@@ -117,16 +118,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
                 return 9;
             }
 
-            Item item = new Item();
-            item.setItemId(itemId);
-            item.setAppointAmount(appointAmount);
-            item.setCompletedAmount(completedAmount);
-            int i = itemDao.changeAmount(item);
-            if(i != 1){
-                LOGGER.warn(">> update amount fail....");
-                throw new BusinessException("update amount fail....");
-            }
-
+            //修改档位份数
             ItemLevel levelParam = new ItemLevel();
             levelParam.setLevelId(levelId);
 
@@ -143,6 +135,19 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             if(j != 1){
                 LOGGER.warn(">> update number fail....");
                 throw new BusinessException("update number fail....");
+            }
+
+            //修改项目预约金额（已筹不修改，下单成功后修改）
+            if(type == 2){
+                Item item = new Item();
+                item.setItemId(itemId);
+                item.setAppointAmount(appointAmount);
+                //item.setCompletedAmount(completedAmount);
+                int i = itemDao.changeAmount(item);
+                if(i != 1){
+                    LOGGER.warn(">> update amount fail....");
+                    throw new BusinessException("update amount fail....");
+                }
             }
 
             return 1;
@@ -233,6 +238,18 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     @Override
     public Map<String, Object> moreDetail(int id) {
         return itemDao.moreDetail(id);
+    }
+
+    @Override
+    public void updateItemCompleteAmount(Integer itemId, BigDecimal amount) {
+        Item item = new Item();
+        item.setItemId(itemId);
+        item.setCompletedAmount(amount);
+        int i = itemDao.changeAmount(item);
+        if(i != 1){
+            LOGGER.warn(">> ItemServiceImpl.updateItemCompleteAmount fail....");
+            throw new BusinessException("ItemServiceImpl.updateItemCompleteAmount fail....");
+        }
     }
 
     @Override
@@ -355,8 +372,89 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
-    public boolean publish() {
+    @Transactional
+    public boolean publish(int itemId, Date appointDate, int type, String operateAccount) {
+
+        try{
+            //发布需要三步， 1.修改项目状态和起始时间 2.修改档位状态  3.审核记录
+            Item item = this.detail(itemId);
+            if(item == null){
+                LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                return false;
+            }
+
+            Item params = new Item();
+
+            int preheatingDays = item.getPreheatingDays();
+            int crowdDays = item.getCrowdDays();
+
+            String baseDate = DateAndTime.dateFormat(appointDate, "yyyy-MM-dd HH:mm:ss");
+
+            Date preheatingEndTime = DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", baseDate, preheatingDays));
+            params.setPreheatingStartTime(appointDate);
+            params.setPreheatingEndTime(preheatingEndTime);
+            params.setCrowdStartTime(preheatingEndTime);
+            Date crowdEndTime = DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", baseDate, preheatingDays+crowdDays));
+            params.setCrowdEndTime(crowdEndTime);
+
+            //type 1为预约 2为立即
+            if(type == 1){
+                //暂时这样
+                int updateNum = 0;
+                //预约期为0，就直接跳过预约进入众筹
+                if(preheatingDays == 0){
+                    params.setItemStatus(Constants.ITEM_CROWDING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }else {
+                    params.setItemStatus(Constants.ITEM_PERHEARTING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }
+
+                if(updateNum <= 0){
+                    LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                    return false;
+                }
+            }else if(type == 2){
+                int updateNum = 0;
+                //预约期为0，就直接跳过预约进入众筹
+                if(preheatingDays == 0){
+                    params.setItemStatus(Constants.ITEM_CROWDING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }else {
+                    params.setItemStatus(Constants.ITEM_PERHEARTING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }
+
+                if(updateNum <= 0){
+                    LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                    return false;
+                }
+                //itemLevelService.update();
+            }
+
+            this.update(params);
+        }catch (Exception e){
+
+        }
+
         return false;
     }
+
 
 }
