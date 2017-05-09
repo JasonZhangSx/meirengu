@@ -125,7 +125,7 @@ public class ObjectUtils {
                 field.set(object, ObjectUtils.getNotNullObject(fieldObject, fieldClass, fieldActualTypeClazzes));
             }
         } catch (Exception e) {
-            logger.debug("NotNullObject is ERROR , object:" + object + ", class:" + clazz
+            logger.warn("NotNullObject is ERROR , object:" + object + ", class:" + clazz
                     + ", _actualTypeClazzes:" + _actualTypeClazzes + ", e:" + e.getMessage());
         }
         return object;
