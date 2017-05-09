@@ -65,9 +65,10 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
-                        @RequestParam(value = "ip", required = true) String ip) {
-        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} time :{}", new
-                Object[]{mobile, checkCode, password, from, ip,new Date()});
+                        @RequestParam(value = "ip", required = true) String ip,
+                        @RequestParam(value = "device_id", required = true) String deviceId) {
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} deviceId:{} time :{}", new
+                Object[]{mobile, checkCode, password, from, ip,deviceId,new Date()});
         try{
             //token自动登陆
             if(!StringUtil.isEmpty(token)){
@@ -174,8 +175,9 @@ public class LoginController extends BaseController {
      * @return
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public Result register(RegisterVO registerVO){
-        logger.info("LoginController.register params >> registerVO:{} time:{}",registerVO.toString(),new Date());
+    public Result register(RegisterVO registerVO,
+                           @RequestParam(value = "device_id", required = true) String deviceId){
+        logger.info("LoginController.register params >> registerVO:{} device_id :{} time:{}",registerVO.toString(),deviceId,new Date());
         try {
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
