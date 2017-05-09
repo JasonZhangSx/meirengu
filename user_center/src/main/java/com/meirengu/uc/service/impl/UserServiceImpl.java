@@ -13,7 +13,7 @@ import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;

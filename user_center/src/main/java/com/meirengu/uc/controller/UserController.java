@@ -12,7 +12,7 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;

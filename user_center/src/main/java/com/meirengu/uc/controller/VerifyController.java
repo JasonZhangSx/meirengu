@@ -172,7 +172,7 @@ public class VerifyController extends BaseController {
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),300);
+                redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),0);
 
                 if(validatePassword(password,user)){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
