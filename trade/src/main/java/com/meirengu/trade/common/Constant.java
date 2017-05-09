@@ -39,6 +39,14 @@ public class Constant {
     public static final int PAYMENT_METHOD_BALANCE = 1;
     /** 订单支付方式：第三方 **/
     public static final int PAYMENT_METHOD_THIRD = 2;
+    /** 优惠券类别：1无条件使用(订单免M元),2有条件使用(满N元减M元) **/
+    public static final int REBATE_TYPE_UNCONDITIONAL = 1;
+    public static final int REBATE_TYPE_CONDITIONAL = 2;
+
+    /** 优惠券使用范围：1固定项目，2某类项目，3所有项目 **/
+    public static final int REBATE_USE_SPECIFIC = 1;
+    public static final int REBATE_USE_CATEGORY = 2;
+    public static final int REBATE_USE_ALL = 3;
 
     /** 优惠券过期类型 **/
     /** 按绝对时间过期 **/
