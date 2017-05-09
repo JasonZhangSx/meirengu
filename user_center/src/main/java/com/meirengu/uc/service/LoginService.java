@@ -15,5 +15,5 @@ public interface LoginService {
 
     RegisterInfo getNewToken(String token, Object object);
 
-    RegisterInfo setUserToRedis(User usr);
+    RegisterInfo setUserToRedis(User usr,String deviceId);
 }
