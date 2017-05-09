@@ -351,7 +351,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
                     List<Map> mapData = (List<Map>)account.get("data");
-                    if(mapData!=null){
+                    if(mapData!=null && mapData.get(0) != null){
                         map.put("totalInvestMoney",mapData.get(0).get("sumOrderAmount"));
                         map.put("sumRebateAmount",mapData.get(0).get("sumRebateAmount"));
                         map.put("sumCostAmount",mapData.get(0).get("sumCostAmount"));
