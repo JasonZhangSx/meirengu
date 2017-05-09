@@ -139,7 +139,7 @@ public class LoginController extends BaseController {
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                redisClient.setObject(mobile+"_login_times",String.valueOf(times),300);
+                redisClient.setObject(mobile+"_login_times",String.valueOf(times),0);
 
                 if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
