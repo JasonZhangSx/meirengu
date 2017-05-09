@@ -12,7 +12,7 @@ import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.service.UserService;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
@@ -127,11 +127,9 @@ public class LoginController extends BaseController {
             if (checkCode == null && password == null) {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
-            User user = userService.retrieveByPhone(mobile);
 
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
-
                 Integer times = 1;
                 if(redisClient.existsObject(mobile+"_login_times")){
                     times = Integer.parseInt(String.valueOf(redisClient.getObject(mobile+"_login_times")))+1;
@@ -139,8 +137,9 @@ public class LoginController extends BaseController {
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                redisClient.setObject(mobile+"_login_times",String.valueOf(times),0);
+                redisClient.setObject(mobile+"_login_times",String.valueOf(times),300);
 
+                User user = userService.retrieveByPhone(mobile);
                 if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
@@ -152,21 +151,23 @@ public class LoginController extends BaseController {
 
             //验证码登陆
             if(!StringUtil.isEmpty(checkCode)&&!StringUtil.isEmpty(mobile)){
+
+                CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
+                if (code == null) {
+                    return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
+                }
+                if (code.getExpireTime().compareTo(new Date()) < 0) {
+                    return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
+                }
+                code.setUse(true);
+                code.setUsingTime(new Date());
+                int updateResult = checkCodeService.update(code);
+                logger.info("LoginController.login update code result:{}", updateResult);
+
                 //如果没有注册 给用户注册一个用户
+                User user = userService.retrieveByPhone(mobile);
                 if(user==null || StringUtil.isEmpty(user.getUserId())){
                     try {
-                        CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-                        if (code == null) {
-                            return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
-                        }
-                        if (code.getExpireTime().compareTo(new Date()) < 0) {
-                            return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
-                        }
-                        code.setUse(true);
-                        code.setUsingTime(new Date());
-                        int updateResult = checkCodeService.update(code);
-                        logger.info("LoginController.login update code result:{}", updateResult);
-
                         User usr = userService.createUserInfo(mobile,from,ip,avatar);
                         if (usr != null){
                             RegisterInfo registerInfo = loginService.setUserToRedis(usr);
@@ -180,18 +181,6 @@ public class LoginController extends BaseController {
                     }
                 }else{//如果用户存在
                     //手机动态密码方式登录
-                    CheckCode code = checkCodeService.retrieve(mobile, Integer.valueOf(checkCode));
-                    if (code == null) {
-                        return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
-                    }
-                    if (code.getExpireTime().compareTo(new Date()) < 0) {
-                        return super.setResult(StatusCode.CAPTCHA_EXPIRE, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_EXPIRE));
-                    }
-                    code.setUse(true);
-                    code.setUsingTime(new Date());
-                    int updateResult = checkCodeService.update(code);
-
-                    logger.info("LoginController.login update code result:{}", updateResult);
                     userService.updateUserInfo(user,mobile,ip,from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));

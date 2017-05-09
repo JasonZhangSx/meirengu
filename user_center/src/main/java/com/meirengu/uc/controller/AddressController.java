@@ -6,7 +6,7 @@ import com.meirengu.model.Result;
 import com.meirengu.uc.model.Area;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.AddressService;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
