@@ -185,11 +185,13 @@ public class UserController extends BaseController{
                 paramMap.put("realname", realname);
                 paramMap.put("idcard", idcard);
                 paramMap.put("sortBy", sortBy);
-                if(order.contains("desc") || order.contains("DESC")){
-                    paramMap.put("order", "DESC");
-                }
-                if(order.contains("asc") || order.contains("ASC")){
-                    paramMap.put("order", "ASC");
+                if(!StringUtil.isEmpty(order)){
+                    if(order.contains("desc") || order.contains("DESC")){
+                        paramMap.put("order", "DESC");
+                    }
+                    if(order.contains("asc") || order.contains("ASC")){
+                        paramMap.put("order", "ASC");
+                    }
                 }
                 page = userService.getByPage(page, paramMap);
             }else{
