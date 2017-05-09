@@ -57,8 +57,8 @@
 		<property name="testOnReturn" value="${redis.pool.testOnReturn}" />
 		<property name="jmxEnabled" value="${redis.pool.jmxEnabled}" />
 		<property name="blockWhenExhausted" value="${redis.pool.blockWhenExhausted}" />
-	</bean>
 
+</bean>
 
 	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
 		<constructor-arg index="0" ref="jedisPoolConfig" />
