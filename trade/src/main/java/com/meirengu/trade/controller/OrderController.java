@@ -542,7 +542,6 @@ public class OrderController extends BaseController{
         order.setOrderState(OrderStateEnum.PAID.getValue());
         try {
             orderService.paymentCallBack(order);
-            int i = orderService.updateBySn(order);
             return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception: {}", e);

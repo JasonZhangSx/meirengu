@@ -812,9 +812,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @return
      */
     public void paymentCallBack(Order order) {
-        int i = update(order);
+        int i = updateBySn(order);
         if (i > 0) {
-
+            Map<String, Object> map = orderDao.orderDetailBySn(order.getOrderSn());
+            //下单成功回调修改已筹金额
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("item_id", map.get("itemId").toString());
+            paramMap.put("amount", map.get("orderAmount").toString());
+            String url = ConfigUtil.getConfig("item.complete.amount.update.url");
+            HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
+            logger.debug("Request: {} getResponse: {}", url, httpResult);
         }
     }
     /**
