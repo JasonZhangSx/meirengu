@@ -2,38 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.trade.dao.RebateBatchDao" >
 
-	<resultMap id="rebateBatchMap" type="RebateBatch">
-		<id column="batch_id" property="batchId" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="rebate_type" property="rebateType" jdbcType="SMALLINT" javaType="Integer"/>
-		<result column="rebate_mark" property="rebateMark" jdbcType="SMALLINT" javaType="Integer"/>
-		<result column="rebate_name" property="rebateName" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_scope" property="rebateScope" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_amount" property="rebateAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
-		<result column="rebate_limit" property="rebateLimit" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="valid_days" property="validDays" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="valid_start_time" property="validStartTime" jdbcType="DATE" javaType="Date"/>
-		<result column="valid_end_time" property="validEndTime" jdbcType="DATE" javaType="Date"/>
-		<result column="valid_type" property="validType" jdbcType="TINYINT" javaType="Integer"/>
-		<result column="batch_statue" property="batchStatue" jdbcType="TINYINT" javaType="Integer"/>
-		<result column="batch_count" property="batchCount" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="channel" property="channel" jdbcType="VARCHAR" javaType="String"/>
-		<result column="budget_amount" property="budgetAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
-		<result column="remarks" property="remarks" jdbcType="VARCHAR" javaType="String"/>
-		<result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
-		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="Date"/>
-		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
-	</resultMap>
 
 	<sql id="table_name">`rebate_batch`</sql>
 	<sql id="select_columns">
-		batch_id as batchId, rebate_type as rebateType, rebate_mark as rebateMark, rebate_name as rebateName, rebate_scope as rebateScope, rebate_amount as rebateAmount, rebate_limit as rebateLimit, valid_days as validDays, valid_start_time as validStartTime, valid_end_time as validEndTime, valid_type as validType, batch_statue as batchStatue, batch_count as batchCount, channel as channel, budget_amount as budgetAmount, remarks as remarks, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		batch_id as batchId, rebate_type as rebateType, rebate_limit_amount as rebateLimitAmount, rebate_use_range as rebateUseRange, rebate_use_range_value as rebateUseRangeValue, rebate_mark as rebateMark, rebate_name as rebateName, rebate_scope as rebateScope, rebate_amount as rebateAmount, rebate_limit as rebateLimit, valid_days as validDays, valid_start_time as validStartTime, valid_end_time as validEndTime, valid_type as validType, batch_statue as batchStatue, batch_count as batchCount, channel as channel, budget_amount as budgetAmount, remarks as remarks, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="rebateBatch" useGeneratedKeys="true" keyProperty="batchId" >
 		INSERT INTO <include refid="table_name" />
-			(batch_id, rebate_type, rebate_mark, rebate_name, rebate_scope, rebate_amount, rebate_limit, valid_days, valid_start_time, valid_end_time, valid_type, batch_statue, batch_count, channel, budget_amount, remarks, create_time, operate_account)
+			(batch_id, rebate_type, rebate_limit_amount, rebate_use_range, rebate_use_range_value, rebate_mark, rebate_name, rebate_scope, rebate_amount, rebate_limit, valid_days, valid_start_time, valid_end_time, valid_type, batch_statue, batch_count, channel, budget_amount, remarks, create_time, operate_account)
 		VALUES
-			(#{batchId}, #{rebateType}, #{rebateMark}, #{rebateName}, #{rebateScope}, #{rebateAmount}, #{rebateLimit}, #{validDays}, #{validStartTime}, #{validEndTime}, #{validType}, #{batchStatue}, #{batchCount}, #{channel}, #{budgetAmount}, #{remarks}, #{createTime}, #{operateAccount})
+			(#{batchId}, #{rebateType}, #{rebateLimitAmount}, #{rebateUseRange}, #{rebateUseRangeValue}, #{rebateMark}, #{rebateName}, #{rebateScope}, #{rebateAmount}, #{rebateLimit}, #{validDays}, #{validStartTime}, #{validEndTime}, #{validType}, #{batchStatue}, #{batchCount}, #{channel}, #{budgetAmount}, #{remarks}, #{createTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="rebateBatch">
@@ -41,6 +20,15 @@
 		<set>
 			<if test="@Ognl@isNotEmpty(rebateType)">
 				rebate_type=#{rebateType},
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateLimitAmount)">
+				rebate_limit_amount=#{rebateLimitAmount},
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateUseRange)">
+				rebate_use_range=#{rebateUseRange},
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateUseRangeValue)">
+				rebate_use_range_value=#{rebateUseRangeValue},
 			</if>
 			<if test="@Ognl@isNotEmpty(rebateMark)">
 				rebate_mark=#{rebateMark},
@@ -111,6 +99,15 @@
 			</if>
 			<if test="@Ognl@isNotEmpty(rebateType)">
 				AND rebate_type=#{rebateType}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateLimitAmount)">
+				AND rebate_limit_amount=#{rebateLimitAmount}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateUseRange)">
+				AND rebate_use_range=#{rebateUseRange}
+			</if>
+			<if test="@Ognl@isNotEmpty(rebateUseRangeValue)">
+				AND rebate_use_range_value=#{rebateUseRangeValue}
 			</if>
 			<if test="@Ognl@isNotEmpty(rebateMark)">
 				AND rebate_mark=#{rebateMark}
