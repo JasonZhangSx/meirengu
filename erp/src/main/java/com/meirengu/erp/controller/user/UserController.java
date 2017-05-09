@@ -6,6 +6,7 @@ import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.model.User;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.utils.ExportExcel;
+import com.meirengu.erp.utils.InfoProcessUtil;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.DateUtils;
 import org.apache.commons.collections.map.HashedMap;
@@ -97,6 +98,8 @@ public class UserController extends BaseController{
             mapUserInfo = ( Map<String, Object>)super.httpPost(urlForGetUser,paramsMap);
             JSONArray objects =(JSONArray) mapUserInfo.get("list");
             Map<String,Object> user  = ( Map<String,Object>)objects.get(0);
+            user.put("idCard", InfoProcessUtil.generateDefaultIdCard(String.valueOf(user.get("idCard"))));
+            user.put("bankIdCard", InfoProcessUtil.generateDefaultBankIdCard(String.valueOf(user.get("bankIdCard"))));
 
             Map<String,String> paramsForAddress = new HashedMap();
             paramsForAddress.put("user_id",user.get("userId")+"");
@@ -104,7 +107,7 @@ public class UserController extends BaseController{
             Map<String,Object> mapAddress = ( Map<String, Object>)super.httpPost(urlForGetUserAddress,paramsForAddress);
 
             // TODO: 3/30/2017 可能会有exception
-            map.put("userInfo", ((JSONArray) mapUserInfo.get("list")).get(0));
+            map.put("userInfo", user);
             map.put("mapAddress",mapAddress);
 
         } catch (Exception e) {
