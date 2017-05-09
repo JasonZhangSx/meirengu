@@ -33,7 +33,9 @@ public class InviterController extends BaseController{
 
     @Autowired
     private InviterService inviterService;
+
     private static final Logger logger = LoggerFactory.getLogger(InviterController.class);
+
     /**
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
@@ -174,18 +176,18 @@ public class InviterController extends BaseController{
      */
     @EventListener(condition = "#event.topic=='user' && #event.tag=='editInviter'")
     public void listeneditInviter(RocketmqEvent event) throws IOException {
-        logger.info("ContactController listenCreateContactFile event :{} ",event.getMsg());
+        logger.info("ContactController listeneditInviter event :{} ",event.getMsg());
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
 
         String invitedUserPhone = String.valueOf(map.get("invitedUserPhone"));
         Integer invitedUserId = Integer.parseInt(String.valueOf(map.get("invitedUserId")));
-        Date investTime = (Date) map.get("investTime");
+        Date investTime = new Date((Long) map.get("investTime"));
 
         Inviter inviter = new Inviter();
         inviter.setInvitedUserId(invitedUserId);
         inviter.setInvitedUserPhone(invitedUserPhone);
         inviter.setInvestTime(investTime);
-        int result  = inviterService.update(inviter);
+        inviterService.update(inviter);
     }
 }
