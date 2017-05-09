@@ -49,9 +49,7 @@ public class LoginController extends BaseController {
     /**
      * 用户登陆接口
      * @param mobile
-     * @param wxOpenId
-     * @param qqOpenId
-     * @param sinaOpenId
+     * @param openId
      * @param token
      * @param checkCode
      * @param password
@@ -61,9 +59,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
-                        @RequestParam(value = "wx_openid", required = false) String wxOpenId,
-                        @RequestParam(value = "qq_openid", required = false) String qqOpenId,
-                        @RequestParam(value = "sina_openid", required = false) String sinaOpenId,
+                        @RequestParam(value = "openid", required = false) String openId,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
@@ -87,17 +83,8 @@ public class LoginController extends BaseController {
             }
             //第三方登录
             //如果有该用户直接登陆  没有的话返回code 去注册页面
-            if(!StringUtil.isEmpty(wxOpenId) || !StringUtil.isEmpty(qqOpenId) || !StringUtil.isEmpty(sinaOpenId)){
-                User user = new User();
-                if(!StringUtil.isEmpty(wxOpenId)){
-                    user = userService.retrieveByOpenId(wxOpenId);
-                }
-                if(!StringUtil.isEmpty(qqOpenId)){
-                    user = userService.retrieveByOpenId(qqOpenId);
-                }
-                if(!StringUtil.isEmpty(sinaOpenId)){
-                    user = userService.retrieveByOpenId(sinaOpenId);
-                }
+            if(!StringUtil.isEmpty(openId)){
+                User user = userService.retrieveByOpenId(openId);
                 if(user == null){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }else{
