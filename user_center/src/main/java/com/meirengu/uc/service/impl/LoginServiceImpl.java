@@ -59,9 +59,8 @@ public class LoginServiceImpl implements LoginService {
         tokenVO.setDeviceId(deviceId);
 
 //        this.setToken(key,tokenVO,token,usr,tokenTime);
-        redisClient.setObject(token,usr,tokenTime);
         redisClient.setObject(key,tokenVO,tokenTime);
-
+        redisClient.setObject(token,usr,tokenTime);
 
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
