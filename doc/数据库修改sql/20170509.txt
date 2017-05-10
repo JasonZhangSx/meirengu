@@ -1,12 +1,13 @@
 ******************trade begin*************************
 
-µÖ¿ÛÈ¯±í
-ALTER TABLE `rebate_batch` ADD `rebate_use_range` smallint(5) unsigned NOT NULL COMMENT 'µÖ¿ÛÈ¯Ê¹ÓÃÏŞÖÆ£º1¹Ì¶¨ÏîÄ¿£¬2Ä³ÀàÏîÄ¿£¬3ËùÓĞÏîÄ¿' AFTER `rebate_type`;
-ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_type`  smallint(5) unsigned NOT NULL COMMENT '1ÎŞÌõ¼şÊ¹ÓÃ(¶©µ¥ÃâMÔª),2ÓĞÌõ¼şÊ¹ÓÃ(ÂúNÔª¼õMÔª)';
-ALTER TABLE `rebate_batch` ADD `rebate_limit_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT 'µÖ¿ÛÈ¯ÏŞ¶î' AFTER `rebate_type`;
-ALTER TABLE `rebate_batch` ADD `rebate_use_range_value` int(11) unsigned NOT NULL COMMENT 'µÖ¿ÛÈ¯Ê¹ÓÃÏŞÖÆÖµ' AFTER `rebate_use_range`;
-ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NULL COMMENT 'µÖ¿ÛÈ¯ÏŞÁì´ÎÊı:1Ã¿ÌìÒ»´Î,2ÓÀ¾ÃÒ»´Î,3²»ÏŞ´ÎÊı';
-ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT 'ÓĞĞ§ÆÚ¿ªÊ¼Ê±¼ä';
-ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT 'ÓĞĞ§ÆÚ½ØÖ¹Ê±¼ä';
+æŠµæ‰£åˆ¸è¡¨
+#ALTER TABLE `rebate_batch` ADD `rebate_use_range` smallint(5) unsigned NOT NULL COMMENT 'æŠµæ‰£åˆ¸ä½¿ç”¨é™åˆ¶ï¼š1å›ºå®šé¡¹ç›®ï¼Œ2æŸç±»é¡¹ç›®ï¼Œ3æ‰€æœ‰é¡¹ç›®' AFTER `rebate_type`;
+#ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_type`  smallint(5) unsigned NOT NULL COMMENT '1æ— æ¡ä»¶ä½¿ç”¨(è®¢å•å…Må…ƒ),2æœ‰æ¡ä»¶ä½¿ç”¨(æ»¡Nå…ƒå‡Må…ƒ)';
+#ALTER TABLE `rebate_batch` ADD `rebate_limit_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT 'æŠµæ‰£åˆ¸é™é¢' AFTER `rebate_type`;
+#ALTER TABLE `rebate_batch` ADD `rebate_use_range_value` int(11) unsigned COMMENT 'æŠµæ‰£åˆ¸ä½¿ç”¨é™åˆ¶å€¼' AFTER `rebate_use_range`;
+#ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NULL COMMENT 'æŠµæ‰£åˆ¸é™é¢†æ¬¡æ•°:1æ¯å¤©ä¸€æ¬¡,2æ°¸ä¹…ä¸€æ¬¡,3ä¸é™æ¬¡æ•°';
+#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT 'æœ‰æ•ˆæœŸå¼€å§‹æ—¶é—´';
+#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT 'æœ‰æ•ˆæœŸæˆªæ­¢æ—¶é—´';
+#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_days` int(4) COMMENT 'æŠµæ‰£åˆ¸æœ‰æ•ˆå¤©æ•°';
 
 ******************trade end***************************

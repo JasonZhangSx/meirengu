@@ -1,9 +1,9 @@
 ******************trade begin*************************
 
-Òâ¼û·´À¡±í
-ALTER TABLE `feedback` CHANGE `create_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Ìá½»·´À¡Ê±¼ä';
+æ„è§åé¦ˆè¡¨
+ALTER TABLE `feedback` CHANGE `create_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'æäº¤åé¦ˆæ—¶é—´';
 
-¶©µ¥±í
-ALTER TABLE `order` ADD `partner_id` int(10) unsigned DEFAULT 0 NOT NULL COMMENT 'ºÏ×÷·½id' AFTER `item_num`;
+è®¢å•è¡¨
+ALTER TABLE `order` ADD `partner_id` int(10) unsigned DEFAULT 0 NOT NULL COMMENT 'åˆä½œæ–¹id' AFTER `item_num`;
 
 ******************trade end***************************

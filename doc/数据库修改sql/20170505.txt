@@ -1,7 +1,7 @@
 ******************trade begin*************************
 
-¶©µ¥±í
-ALTER TABLE `order` ADD `share_hold_rate` decimal(10,4) NOT NULL DEFAULT '0.0000' COMMENT '³Ö¹É±ÈÀı' AFTER `item_num`;
+è®¢å•è¡¨
+ALTER TABLE `order` ADD `share_hold_rate` decimal(10,4) NOT NULL DEFAULT '0.0000' COMMENT 'æŒè‚¡æ¯”ä¾‹' AFTER `item_num`;
 
 ******************trade end***************************
 
