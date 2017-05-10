@@ -49,9 +49,7 @@ public class LoginController extends BaseController {
     /**
      * 用户登陆接口
      * @param mobile
-     * @param wxOpenId
-     * @param qqOpenId
-     * @param sinaOpenId
+     * @param openId
      * @param token
      * @param checkCode
      * @param password
@@ -61,17 +59,16 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
-                        @RequestParam(value = "wx_openid", required = false) String wxOpenId,
-                        @RequestParam(value = "qq_openid", required = false) String qqOpenId,
-                        @RequestParam(value = "sina_openid", required = false) String sinaOpenId,
+                        @RequestParam(value = "openid", required = false) String openId,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
-                        @RequestParam(value = "ip", required = true) String ip) {
-        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} time :{}", new
-                Object[]{mobile, checkCode, password, from, ip,new Date()});
+                        @RequestParam(value = "ip", required = true) String ip,
+                        @RequestParam(value = "device_id", required = false,defaultValue = "") String deviceId) {
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} deviceId:{} time :{}", new
+                Object[]{mobile, checkCode, password, from, ip,deviceId,new Date()});
         try{
             //token自动登陆
             if(!StringUtil.isEmpty(token)){
@@ -87,22 +84,13 @@ public class LoginController extends BaseController {
             }
             //第三方登录
             //如果有该用户直接登陆  没有的话返回code 去注册页面
-            if(!StringUtil.isEmpty(wxOpenId) || !StringUtil.isEmpty(qqOpenId) || !StringUtil.isEmpty(sinaOpenId)){
-                User user = new User();
-                if(!StringUtil.isEmpty(wxOpenId)){
-                    user = userService.retrieveByOpenId(wxOpenId);
-                }
-                if(!StringUtil.isEmpty(qqOpenId)){
-                    user = userService.retrieveByOpenId(qqOpenId);
-                }
-                if(!StringUtil.isEmpty(sinaOpenId)){
-                    user = userService.retrieveByOpenId(sinaOpenId);
-                }
+            if(!StringUtil.isEmpty(openId)){
+                User user = userService.retrieveByOpenId(openId);
                 if(user == null){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }else{
                     userService.updateUserInfo(user, mobile, ip, from);
-                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
             }
@@ -124,12 +112,12 @@ public class LoginController extends BaseController {
                         return super.setResult(StatusCode.USER_IS_LOCKED, null,StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                     }
                 }
-                redisClient.setObject(mobile+"_login_times",String.valueOf(times),300);
+                redisClient.setObject(mobile+"_login_times",String.valueOf(times),0);
 
                 User user = userService.retrieveByPhone(mobile);
                 if(user != null && validatePassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
-                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.INVALID_USERNAME_OR_PASSWORD, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_USERNAME_OR_PASSWORD));
@@ -157,7 +145,7 @@ public class LoginController extends BaseController {
                     try {
                         User usr = userService.createUserInfo(mobile,from,ip,avatar);
                         if (usr != null){
-                            RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                            RegisterInfo registerInfo = loginService.setUserToRedis(usr,deviceId);
                             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                         }else {
                             return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
@@ -169,7 +157,7 @@ public class LoginController extends BaseController {
                 }else{//如果用户存在
                     //手机动态密码方式登录
                     userService.updateUserInfo(user,mobile,ip,from);
-                    RegisterInfo registerInfo = loginService.setUserToRedis(user);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(user,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
                 }
             }else{
@@ -187,8 +175,9 @@ public class LoginController extends BaseController {
      * @return
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public Result register(RegisterVO registerVO){
-        logger.info("LoginController.register params >> registerVO:{} time:{}",registerVO.toString(),new Date());
+    public Result register(RegisterVO registerVO,
+                           @RequestParam(value = "device_id", required = false) String deviceId){
+        logger.info("LoginController.register params >> registerVO:{} device_id :{} time:{}",registerVO.toString(),deviceId,new Date());
         try {
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
@@ -234,7 +223,7 @@ public class LoginController extends BaseController {
                 int result = userService.bundThirdParty(registerVO);
                 if (result == 1){
                     User userInfo = userService.retrieveByPhone(registerVO.getMobile());
-                    RegisterInfo registerInfo = loginService.setUserToRedis(userInfo);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(userInfo,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));
@@ -243,7 +232,7 @@ public class LoginController extends BaseController {
                 //注册
                 User usr = userService.createUserInfo(registerVO);
                 if (usr != null){
-                    RegisterInfo registerInfo = loginService.setUserToRedis(usr);
+                    RegisterInfo registerInfo = loginService.setUserToRedis(usr,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return super.setResult(StatusCode.REGISTER_IS_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.REGISTER_IS_FAILED));

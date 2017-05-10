@@ -15,5 +15,12 @@ public interface LoginService {
 
     RegisterInfo getNewToken(String token, Object object);
 
-    RegisterInfo setUserToRedis(User usr);
+    /**
+     * 给用户绑定token
+     * 第二设备登陆 第一设备无效
+     * @param usr
+     * @param deviceId
+     * @return
+     */
+    RegisterInfo setUserToRedis(User usr,String deviceId);
 }

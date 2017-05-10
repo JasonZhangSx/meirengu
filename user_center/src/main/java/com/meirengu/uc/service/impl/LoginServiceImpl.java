@@ -3,9 +3,11 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.TokenProccessor;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.TokenUtils;
+import com.meirengu.uc.vo.request.TokenVO;
+import com.meirengu.uc.vo.response.RegisterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +42,33 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public RegisterInfo setUserToRedis(User usr) {
+    public RegisterInfo setUserToRedis(User usr,String deviceId) {
 
+        String key = TokenUtils.getTokenKey(usr.getPhone());
+        TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
+        if(tokenVO != null) {
+            redisClient.delkeyObject(tokenVO.getToken());
+        }
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setUser(usr);
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
+
+        tokenVO = new TokenVO();
+        tokenVO.setToken(token);
+        tokenVO.setDeviceId(deviceId);
+
+//        this.setToken(key,tokenVO,token,usr,tokenTime);
+        redisClient.setObject(key,tokenVO,tokenTime);
         redisClient.setObject(token,usr,tokenTime);
+
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
         return registerInfo;
+    }
+
+    private synchronized void  setToken(String key, TokenVO tokenVO, String token, User usr,Integer tokenTime){
+        redisClient.setObject(key,tokenVO,tokenTime);
+        redisClient.setObject(token,usr,tokenTime);
     }
 }
