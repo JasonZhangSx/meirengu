@@ -132,7 +132,18 @@
                     }
                 },
                 {"data": "rebateMark"},
-                {"data": "rebateLimit"},
+                {
+                    "data": "rebateLimit",
+                    "render": function (data, type, row, meta) {
+                        if (data == 1) {
+                            return "每天一次";
+                        } else if (validType == 2) {
+                            return "永久一次";
+                        }  else if (validType == 3) {
+                            return "不限次数";
+                        }
+                    }
+                },
                 {
                     "data": null,
                     "render": function (data, type, row, meta) {
