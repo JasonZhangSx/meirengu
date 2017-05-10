@@ -54,13 +54,13 @@ public class LoginServiceImpl implements LoginService {
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
 
-        tokenVO = new TokenVO();
-        tokenVO.setToken(token);
-        tokenVO.setDeviceId(deviceId);
+        TokenVO tokenInfo = new TokenVO();
+        tokenInfo.setToken(token);
+        tokenInfo.setDeviceId(deviceId);
 
-//        this.setToken(key,tokenVO,token,usr,tokenTime);
-        redisClient.setObject(key,tokenVO,tokenTime);
-        redisClient.setObject(token,usr,tokenTime);
+        this.setToken(key,tokenVO,token,usr,tokenTime);
+//        redisClient.setObject(key,tokenInfo,tokenTime);
+//        redisClient.setObject(token,usr,tokenTime);
 
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
