@@ -45,24 +45,42 @@ public class LoginServiceImpl implements LoginService {
     public RegisterInfo setUserToRedis(User usr,String deviceId) {
 
         String key = TokenUtils.getTokenKey(usr.getPhone());
-        if(redisClient.existsObject(key)){
-            TokenVO tokenVO = (TokenVO)redisClient.getObject(key);
-            redisClient.delkeyObject(key);
-            redisClient.delkeyObject(tokenVO.getToken());
+        if(redisClient.existsObject(key)) {
+            TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
+            this.delToken(key, tokenVO.getToken());
         }
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setUser(usr);
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
-        redisClient.setObject(token,usr,tokenTime);
 
         TokenVO tokenVO = new TokenVO();
         tokenVO.setToken(token);
         tokenVO.setDeviceId("");
 //      tokenVO.setDeviceId(deviceId);
-        redisClient.setObject(key,tokenVO,tokenTime);
+
+        this.setToken(key,tokenVO,token,usr,tokenTime);
+
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
         return registerInfo;
     }
+
+    private synchronized void  setToken(String key, TokenVO tokenVO, String token, User usr,Integer tokenTime){
+        redisClient.setObject(token,usr,tokenTime);
+        redisClient.setObject(key,tokenVO,tokenTime);
+    }
+     private synchronized void  delToken(String key,String token){
+             redisClient.delkeyObject(key);
+             redisClient.delkeyObject(token);
+    }
+
+
+
+
+
+
+
+
+
 }
