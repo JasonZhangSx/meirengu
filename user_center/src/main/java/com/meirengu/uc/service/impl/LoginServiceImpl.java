@@ -50,7 +50,7 @@ public class LoginServiceImpl implements LoginService {
      * @param tokenTime
      */
     @Async
-    private void setNewToken(String newToken,String token, Object userRedis, Integer tokenTime) {
+    private synchronized void setNewToken(String newToken,String token, Object userRedis, Integer tokenTime) {
 
         User user = (User)userRedis;
         String key = TokenUtils.getTokenKey(user.getPhone());

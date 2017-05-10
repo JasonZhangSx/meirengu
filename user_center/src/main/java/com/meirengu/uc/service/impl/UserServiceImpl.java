@@ -307,33 +307,34 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getUserRestMoney(Map map) {
-        HttpResult hr = null;
-        Map<String, Object> paramsmap = new HashMap<String, Object>();
-        paramsmap.put("userId",map.get("userId"));
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("content", JacksonUtil.toJSon(map));
-        String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
-        String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
-        logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend, params});
+        map.put("accountBalance","0");
         try {
+            HttpResult hr = null;
+            Map<String, Object> paramsmap = new HashMap<String, Object>();
+            paramsmap.put("userId",map.get("userId"));
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("content", JacksonUtil.toJSon(map));
+            String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
+            String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
+            logger.info("UserServiceImpl.getUserRestMoney send get >> uri :{}, params:{}", new Object[]{urlAppend, params});
             hr = HttpUtil.doGet(urlAppend);
-        } catch (Exception e) {
-            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
-        }
-        if(hr.getStatusCode() == StatusCode.OK){
-            Map<String,Object> account = new HashedMap();
-            account = JacksonUtil.readValue(hr.getContent(),Map.class);
-            if(account!=null){
-                Map mapData = (Map)account.get("data");
-                if(mapData!=null){
-                    Map accountUser = (Map) mapData.get("account");
-                    if(accountUser!=null){
-                       map.put("accountBalance",accountUser.get("accountBalance"));
+            if(hr !=null && hr.getStatusCode() == StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    Map mapData = (Map)account.get("data");
+                    if(mapData!=null){
+                        Map accountUser = (Map) mapData.get("account");
+                        if(accountUser!=null){
+                           map.put("accountBalance",accountUser.get("accountBalance"));
+                        }
                     }
                 }
+            }else{
+                logger.error("UserServiceImpl.getUserRestMoney connected refused :{}",urlAppend);
             }
-        }else{
-            logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.getUserRestMoney error >> params:{}, exception:{}", e.getMessage());
         }
     }
 
@@ -367,7 +368,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void getWithdrawalsAmount(Map map) {
-        map.put("withdrawalsAmount","");
+        map.put("withdrawalsAmount","0");
         try {
             HttpResult hr = null;
             String url = ConfigUtil.getConfig("URI_GET_WITHDRAWALSAMOUNT");
@@ -467,11 +468,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             params.put("content", JacksonUtil.toJSon(map));
             String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
             String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(map));
-            logger.info("VerityServiceImpl.send get >> uri :{}, params:{}", new Object[]{url, params});
+            logger.info("UserServiceImpl.modifyPayPassword send get >> uri :{}, params:{}", new Object[]{url, params});
             try {
                 hr = HttpUtil.doGet(urlAppend);
             } catch (Exception e) {
-                logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
+                logger.error("UserServiceImpl.modifyPayPassword send error >> params:{}, exception:{}", new Object[]{params, e});
             }
             if(hr.getStatusCode() == StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
@@ -506,10 +507,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                     }
                 }
             }else{
-                logger.error("VerityServiceImpl.back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+                logger.error("UserServiceImpl.modifyPayPassword back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
             }
         }catch (Exception e){
-            logger.error("VerityServiceImpl.back code >> throws exception:{}", e.getMessage());
+            logger.error("UserServiceImpl.modifyPayPassword back code >> throws exception:{}", e.getMessage());
             return 0;
         }
         return 0;
