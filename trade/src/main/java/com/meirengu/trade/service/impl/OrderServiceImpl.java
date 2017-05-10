@@ -1088,6 +1088,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("levelIdList", levelIdList);
+        params.put("orderState", OrderStateEnum.PAID.getValue());
+
         List<Map<String, Object>> list = orderDao.getSumAmountByLevelIds(params);
         return list;
     }

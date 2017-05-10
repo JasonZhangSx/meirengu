@@ -69,4 +69,20 @@ public class Constants {
     /** 5下架 */
     public static final int LEVEL_OFF = 5;
 
+
+    /** 优惠券类别：1无条件使用(订单免M元),2有条件使用(满N元减M元) **/
+    public static final int REBATE_TYPE_UNCONDITIONAL = 1;
+    public static final int REBATE_TYPE_CONDITIONAL = 2;
+
+    /** 优惠券使用范围：1固定项目，2某类项目，3所有项目 **/
+    public static final int REBATE_USE_SPECIFIC = 1;
+    public static final int REBATE_USE_CATEGORY = 2;
+    public static final int REBATE_USE_ALL = 3;
+
+    /** 优惠券过期类型 **/
+    /** 按绝对时间过期 **/
+    public static final int REBATE_EXPIRE_BY_ABSOLUTE_TIME = 1;
+    /** 按相对时间过期 **/
+    public static final int REBATE_EXPIRE_BY_RELATIVE_TIME = 2;
+
 }

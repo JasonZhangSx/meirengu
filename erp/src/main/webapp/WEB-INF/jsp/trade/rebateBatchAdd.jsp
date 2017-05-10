@@ -20,6 +20,9 @@
         overflow: hidden;
     }
 </style>
+    <!-- 时间插件 -->
+    <link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
 </head>
 <body>
 <div class="page-container">
@@ -31,9 +34,8 @@
         </div>
         <div class="content_set">
 
-            <form action="rebateBatch/add" method="post" id="form">
+            <form action="rebate_batch/add" method="post" id="form">
                 <div class="item">
-                    <div class="item">
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-2">抵扣券名称：</label>
                         <div class="formControls col-xs-8 col-sm-3">
@@ -57,9 +59,9 @@
                             </select>
                             </span>
                         </div>
-                        <label class="form-label col-xs-4 col-sm-2">抵扣券限额(满减券时录入)：</label>
-                        <div class="formControls col-xs-8 col-sm-3">
-                            <input type="number" class="input-text" style="width:100%" min="1" max="999999" name="rebateLimitAmount">
+                        <label class="form-label col-xs-4 col-sm-2" ><span style="display: none"  id="rebateLimitAmountTitle">满减型抵扣券限额：</span></label>
+                        <div class="formControls col-xs-8 col-sm-3" style="display: none" id="rebateLimitAmountDiv">
+                            <input type="number" class="input-text" style="width:100%" min="1" max="999999" id="rebateLimitAmount">
                         </div>
                     </div>
                     <div class="row cl">
@@ -95,7 +97,7 @@
                                 <option value="2">收益权众筹项目</option>
                                 <option value="3">股权众筹项目</option>
                             </select>
-                            <input type="number" class="input-text" min="1" max="999" id="rebateUseSpecific">
+                            <input type="number" class="input-text" style="width:100%" min="1" max="999" id="rebateUseSpecific">
                         </div>
                     </div>
                     <div class="row cl">
@@ -126,13 +128,13 @@
                             </select>
                             </span>
                         </div>
-                        <label class="form-label col-xs-4 col-sm-2" style="display: none" id="validDateLabel">
+                        <label class="form-label col-xs-4 col-sm-2">
                             <span id="validDateTitle"></span>
                         </label>
                         <div class="formControls col-xs-8 col-sm-3" style="display: none" id="validDateValueDiv">
-                            <input type="datetime" class="input-text" value="" id="validStartTime" placeholder="" name="validStartTime">
-                            <input type="datetime" class="input-text" value="" id="validEndTime" placeholder="" name="validEndTime">
-                            <input type="number" class="input-text" min="1" max="360" style="display: none" name="validDays">
+                            <input type="datetime" class="input-text" style="width: 40%;float:left;" value="" id="validStartTime" placeholder="开始日期">
+                            <input type="datetime" class="input-text" style="width: 40%;float:right;" value="" id="validEndTime" placeholder="结束日期">
+                            <input type="number" class="input-text" style="width:100%"  min="1" max="360" style="display: none" id="validDays">
                         </div>
                     </div>
                     <div class="row cl">
@@ -147,7 +149,7 @@
                         </div>
                     </div>
                     <div class="row cl">
-                        <label class="form-label col-xs-4 col-sm-2">备注</label>
+                        <label class="form-label col-xs-4 col-sm-2">备注：</label>
                         <div class="formControls col-xs-8 col-sm-8">
                             <input type="text" class="input-text" value="" id="remarks" name="remarks"
                                     maxlength="50">
@@ -160,32 +162,109 @@
                     </div>
                 </div>
             </form>
-
-
         </div>
-
     </span>
 </div>
 
 <script type="text/javascript">
-    //抵扣券下拉框change事件
+
+    // 抵扣券类型下拉框change事件
+    $('#rebateType').on('change',function(){
+        var value = $("#rebateType option:selected" ).val();
+        if (value == 0) {
+            //隐藏
+            $('#rebateLimitAmountTitle').hide();
+            $('#rebateLimitAmountDiv').hide();
+            $('#rebateLimitAmount').attr("name","");
+        } else if (value == 1) {
+            $('#rebateLimitAmountTitle').hide();
+            $('#rebateLimitAmountDiv').hide();
+            $('#rebateLimitAmount').attr("name","");
+        } else if (value == 2) {
+            $('#rebateLimitAmountTitle').show();
+            $('#rebateLimitAmountDiv').show();
+            $('#rebateLimitAmount').attr("name","rebateLimitAmount");
+        }
+    });
+    //抵扣券使用限制下拉框change事件
     $('#rebateUseRange').on('change',function(){
-        var selected = this.element.children( ":selected" ),
-            value = selected.val() ? selected.text() : "";
+        var value = $("#rebateUseRange option:selected" ).val();
         if (value == 0) {
             //隐藏
             $('#rebateUseRangeTitle').html("");
             $('#rebateUseRangeValueDiv').hide();
             $('#rebateUseCategory').hide();
+            $('#rebateUseCategory').attr("name","");
             $('#rebateUseSpecific').hide();
+            $('#rebateUseSpecific').attr("name","");
         } else if (value == 1) {
-            $('#rebateUseRangeTitle').html("项目id");
+            $('#rebateUseRangeTitle').html("项目id：");
             $('#rebateUseRangeValueDiv').show();
             $('#rebateUseCategory').hide();
+            $('#rebateUseCategory').attr("name","");
             $('#rebateUseSpecific').show();
+            $('#rebateUseSpecific').attr("name","rebateUseRangeValue");
+        } else if (value == 2) {
+            $('#rebateUseRangeTitle').html("项目类型：");
+            $('#rebateUseRangeValueDiv').show();
+            $('#rebateUseCategory').show();
+            $('#rebateUseCategory').attr("name","rebateUseRangeValue");
+            $('#rebateUseSpecific').hide();
+            $('#rebateUseSpecific').attr("name","");
+        } else if (value == 3) {
+            $('#rebateUseRangeTitle').html("");
+            $('#rebateUseRangeValueDiv').hide();
+            $('#rebateUseCategory').hide();
+            $('#rebateUseCategory').attr("name","");
+            $('#rebateUseSpecific').hide();
+            $('#rebateUseSpecific').attr("name","");
         }
-
     });
+    // 抵扣券有效时间类型下拉框change事件
+    $('#validType').on('change',function(){
+        var value = $("#validType option:selected" ).val();
+        if (value == 0) {
+            //隐藏
+            $('#validDateTitle').html("");
+            $('#validDateValueDiv').hide();
+            $('#validStartTime').hide();
+            $('#validStartTime').attr("name","");
+            $('#emptyStr').hide();
+            $('#validEndTime').hide();
+            $('#validEndTime').attr("name","");
+            $('#validDays').hide();
+            $('#validDays').attr("name","");
+        } else if (value == 1) {
+            $('#validDateTitle').html("有效期：");
+            $('#validDateValueDiv').show();
+            $('#validStartTime').show();
+            $('#validStartTime').attr("name","validStartTime");
+            $('#emptyStr').show();
+            $('#validEndTime').show();
+            $('#validEndTime').attr("name","validEndTime");
+            $('#validDays').hide();
+            $('#validDays').attr("name","");
+        } else if (value == 2) {
+            $('#validDateTitle').html("有效天数：");
+            $('#validDateValueDiv').show();
+            $('#validStartTime').hide();
+            $('#validStartTime').attr("name","");
+            $('#emptyStr').hide();
+            $('#validEndTime').hide();
+            $('#validEndTime').attr("name","");
+            $('#validDays').show();
+            $('#validDays').attr("name","validDays");
+        }
+    });
+    // 时间
+    $('#validStartTime,#validEndTime').datetimepicker({
+        yearOffset: 0,
+        lang: $.datetimepicker.setLocale('ch'),
+        timepicker: false,
+        format: 'Y-m-d',
+        formatDate: 'Y/m/d',
+    });
+
 
 
 
