@@ -45,23 +45,23 @@ public class LoginServiceImpl implements LoginService {
     public RegisterInfo setUserToRedis(User usr,String deviceId) {
 
         String key = TokenUtils.getTokenKey(usr.getPhone());
-        TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
-        if(tokenVO != null) {
-            redisClient.delkeyObject(tokenVO.getToken());
-        }
-        RegisterInfo registerInfo = new RegisterInfo();
-        registerInfo.setUser(usr);
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
+
+        RegisterInfo registerInfo = new RegisterInfo();
+        registerInfo.setUser(usr);
 
         TokenVO tokenInfo = new TokenVO();
         tokenInfo.setToken(token);
         tokenInfo.setDeviceId(deviceId);
 
-        this.setToken(key,tokenVO,token,usr,tokenTime);
-//        redisClient.setObject(key,tokenInfo,tokenTime);
-//        redisClient.setObject(token,usr,tokenTime);
-
+//        this.setToken(key,tokenVO,token,usr,tokenTime);
+        TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
+        redisClient.setObject(key,tokenInfo,tokenTime);
+        redisClient.setObject(token,usr,tokenTime);
+        if(tokenVO != null) {
+            redisClient.delkeyObject(tokenVO.getToken());
+        }
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
         return registerInfo;
