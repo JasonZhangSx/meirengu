@@ -11,6 +11,7 @@ import com.meirengu.uc.vo.response.RegisterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,15 +31,35 @@ public class LoginServiceImpl implements LoginService {
     public RegisterInfo getNewToken(String token, Object userRedis) {
 
         //删除本次token  建立一个新的有效token
-        redisClient.delkeyObject(token);
         String newToken = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
-        redisClient.setObject(newToken,userRedis,tokenTime);
+
+        this.setNewToken(newToken,token,userRedis,tokenTime);
+
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setToken(newToken);
         registerInfo.setUser((User) userRedis);
         registerInfo.getUser().setPassword("");
         return registerInfo;
+    }
+
+    /**
+     * god know what i coded
+     * @param token
+     * @param userRedis
+     * @param tokenTime
+     */
+    @Async
+    private void setNewToken(String newToken,String token, Object userRedis, Integer tokenTime) {
+
+        User user = (User)userRedis;
+        String key = TokenUtils.getTokenKey(user.getPhone());
+
+        TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
+        tokenVO.setToken(newToken);
+        redisClient.delkeyObject(token);
+        redisClient.setObject(key,tokenVO,tokenTime);
+        redisClient.setObject(newToken,user,tokenTime);
     }
 
     @Override
@@ -54,21 +75,23 @@ public class LoginServiceImpl implements LoginService {
         TokenVO tokenInfo = new TokenVO();
         tokenInfo.setToken(token);
         tokenInfo.setDeviceId(deviceId);
-
-        this.setToken(key,tokenInfo,token,usr,tokenTime); //并发 消费了响应时间 但保证了token的绝对唯一性
+        //并发 消费了响应时间 但保证了token的绝对唯一性 一用户一token
+        // 分布式下无效    呵呵··
+        //你怎么优化呢？ redis分布式锁
+        this.setToken(key,tokenInfo,token,usr,tokenTime);
 
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
         return registerInfo;
     }
-
+    @Async
     private synchronized void  setToken(String key, TokenVO tokenInfo, String token, User usr,Integer tokenTime){
 
         TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
-        redisClient.setObject(key,tokenInfo,tokenTime);
-        redisClient.setObject(token,usr,tokenTime);
         if(tokenVO != null) {
             redisClient.delkeyObject(tokenVO.getToken());
         }
+        redisClient.setObject(key,tokenInfo,tokenTime);
+        redisClient.setObject(token,usr,tokenTime);
     }
 }
