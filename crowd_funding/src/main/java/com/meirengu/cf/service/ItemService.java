@@ -1,5 +1,6 @@
 package com.meirengu.cf.service;
 import com.meirengu.cf.model.Item;
+import com.meirengu.cf.model.ItemCooperation;
 import com.meirengu.service.BaseService;
 
 import java.math.BigDecimal;
@@ -22,6 +23,13 @@ public interface ItemService extends BaseService<Item>{
     Map<String, Object> moreDetail(int id);
 
     /**
+     * 获取合作方银行和佣金相关信息
+     * @param itemId
+     * @return
+     */
+    Map<String, Object> getBankAndCommission(Integer itemId);
+
+    /**
      * 支付成功修改项目的已筹总金额
      * @param itemId
      * @param amount
@@ -39,7 +47,7 @@ public interface ItemService extends BaseService<Item>{
      * 设置合作
      * @return
      */
-    void setCooperate(int itemId, int operateStatus, String operateRemark, String operateAccount);
+    void setCooperate(ItemCooperation itemCooperation);
 
     /**
      * 复审操作

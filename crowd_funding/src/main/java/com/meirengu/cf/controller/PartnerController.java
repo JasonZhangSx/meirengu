@@ -11,9 +11,12 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,20 +95,20 @@ public class PartnerController extends BaseController{
                          @RequestParam(value = "partner_valuation", required = false) Integer partnerValuation,
                          @RequestParam(value = "account_id", required = false) Integer accountId,
                          @RequestParam(value = "enterprise_name", required = false) String enterpriseName,
-                         @RequestParam(value = "id_number", required = false) Integer idNumber,
+                         @RequestParam(value = "id_number", required = false) String idNumber,
                          @RequestParam(value = "enterprise_address", required = false) String enterpriseAddress,
                          @RequestParam(value = "principal_name", required = false) String principalName,
                          @RequestParam(value = "principal_idcard", required = false) String principalIdcard,
                          @RequestParam(value = "principal_telephone", required = false) String principalTelephone,
-                         @RequestParam(value = "principal_fax", required = false) Integer principalFax,
+                         @RequestParam(value = "principal_fax", required = false) String principalFax,
                          @RequestParam(value = "principal_address", required = false) String principalAddress,
                          @RequestParam(value = "contacts_name", required = false) String contactsName,
                          @RequestParam(value = "contacts_idcard", required = false) String contactsIdcard,
                          @RequestParam(value = "contacts_telephone", required = false) String contactsTelephone,
-                         @RequestParam(value = "contacts_fax", required = false) Integer contactsFax,
+                         @RequestParam(value = "contacts_fax", required = false) String contactsFax,
                          @RequestParam(value = "bank_name", required = false) String bankName,
                          @RequestParam(value = "bank_account", required = false) String bankAccount,
-                         @RequestParam(value = "bank_card", required = false) int bankCard,
+                         @RequestParam(value = "bank_card", required = false) String bankCard,
                          @RequestParam(value = "image_principal", required = false) String imagePrincipal,
                          @RequestParam(value = "image_businessLicence", required = false) String imageBusinessLicence,
                          @RequestParam(value = "image_bank", required = false) String imageBank,
@@ -136,7 +139,7 @@ public class PartnerController extends BaseController{
     }
 
     /**
-     * 获取合作伙伴信息
+     * 获取行业分类详情
      */
     @ResponseBody
     @RequestMapping(value = "{partner_id}", method = RequestMethod.GET)
@@ -163,20 +166,20 @@ public class PartnerController extends BaseController{
                          @RequestParam(value = "partner_valuation", required = false) Integer partnerValuation,
                          @RequestParam(value = "account_id", required = false) Integer accountId,
                          @RequestParam(value = "enterprise_name", required = false) String enterpriseName,
-                         @RequestParam(value = "id_number", required = false) Integer idNumber,
+                         @RequestParam(value = "id_number", required = false) String idNumber,
                          @RequestParam(value = "enterprise_address", required = false) String enterpriseAddress,
                          @RequestParam(value = "principal_name", required = false) String principalName,
                          @RequestParam(value = "principal_idcard", required = false) String principalIdcard,
                          @RequestParam(value = "principal_telephone", required = false) String principalTelephone,
-                         @RequestParam(value = "principal_fax", required = false) Integer principalFax,
+                         @RequestParam(value = "principal_fax", required = false) String principalFax,
                          @RequestParam(value = "principal_address", required = false) String principalAddress,
                          @RequestParam(value = "contacts_name", required = false) String contactsName,
                          @RequestParam(value = "contacts_idcard", required = false) String contactsIdcard,
                          @RequestParam(value = "contacts_telephone", required = false) String contactsTelephone,
-                         @RequestParam(value = "contacts_fax", required = false) Integer contactsFax,
+                         @RequestParam(value = "contacts_fax", required = false) String contactsFax,
                          @RequestParam(value = "bank_name", required = false) String bankName,
                          @RequestParam(value = "bank_account", required = false) String bankAccount,
-                         @RequestParam(value = "bank_card", required = false) int bankCard,
+                         @RequestParam(value = "bank_card", required = false) String bankCard,
                          @RequestParam(value = "image_principal", required = false) String imagePrincipal,
                          @RequestParam(value = "image_businessLicence", required = false) String imageBusinessLicence,
                          @RequestParam(value = "image_bank", required = false) String imageBank,
@@ -206,7 +209,7 @@ public class PartnerController extends BaseController{
     }
 
     /*
-     * 删除合作伙伴
+     * 删除
      * @param classId
      * @return
      */
@@ -226,12 +229,19 @@ public class PartnerController extends BaseController{
         }
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
     private Partner setPartner(Integer partnerId, int typeId, String partnerName, Date partnerCreateDay, int partnerRegistCapital,
-                   int partnerValuation, int accountId, String enterpriseName, int idNumber, String
+                   int partnerValuation, int accountId, String enterpriseName, String idNumber, String
                            enterpriseAddress, String principalName, String principalIdcard, String
-                           principalTelephone, int principalFax, String principalAddress, String contactsName, String
-                           contactsIdcard, String contactsTelephone, int contactsFax, String contactsAddress, String
-                           bankName, String bankAccount, int bankCard, String imagePrincipal, String
+                           principalTelephone, String principalFax, String principalAddress, String contactsName, String
+                           contactsIdcard, String contactsTelephone, String contactsFax, String contactsAddress, String
+                           bankName, String bankAccount, String bankCard, String imagePrincipal, String
                            imageBusinessLicence, String imageBank, String imageProfessionalLicense, int flag, Date
                            createTime, String operateAccount) {
         Partner partner = new Partner();

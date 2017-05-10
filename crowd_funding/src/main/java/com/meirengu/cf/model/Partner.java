@@ -1,6 +1,8 @@
 package com.meirengu.cf.model;
 
 import com.meirengu.model.BaseObject;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
  /*
   * Partner 实体类
@@ -24,7 +26,7 @@ public class Partner  extends BaseObject {
 	/** 企业名词 */
 	private String enterpriseName;
 	/** 证件号 */
-	private int idNumber;
+	private String idNumber;
 	/** 企业地址 */
 	private String enterpriseAddress;
 	/** 负责人姓名 */
@@ -34,7 +36,7 @@ public class Partner  extends BaseObject {
 	/** 负责人联系电话 */
 	private String principalTelephone;
 	/** 负责人传真 */
-	private int principalFax;
+	private String principalFax;
 	/** 负责人联系地址 */
 	private String principalAddress;
 	/** 联系人姓名 */
@@ -44,7 +46,7 @@ public class Partner  extends BaseObject {
 	/** 联系人电话 */
 	private String contactsTelephone;
 	/** 联系人 传真 */
-	private int contactsFax;
+	private String contactsFax;
 	/** 联系人地址 */
 	private String contactsAddress;
 	/** 开户行名称 */
@@ -52,7 +54,7 @@ public class Partner  extends BaseObject {
 	/** 账号名 */
 	private String bankAccount;
 	/** 银行账号 */
-	private int bankCard;
+	private String bankCard;
 	/** 负责人身份证图片 */
 	private String imagePrincipal;
 	/** 营业执照照片 */
@@ -70,251 +72,251 @@ public class Partner  extends BaseObject {
 	/** 操作人账号 */
 	private String operateAccount;
 
-	public void setPartnerId(int partnerId){
-		this.partnerId = partnerId;
-	}
+	 public int getPartnerId() {
+		 return partnerId;
+	 }
 
-	public int getPartnerId(){
-		return partnerId;
-	}
+	 public void setPartnerId(int partnerId) {
+		 this.partnerId = partnerId;
+	 }
 
-	public void setTypeId(int typeId){
-		this.typeId = typeId;
-	}
+	 public int getTypeId() {
+		 return typeId;
+	 }
 
-	public int getTypeId(){
-		return typeId;
-	}
+	 public void setTypeId(int typeId) {
+		 this.typeId = typeId;
+	 }
 
-	public void setPartnerName(String partnerName){
-		this.partnerName = partnerName;
-	}
+	 public String getPartnerName() {
+		 return partnerName;
+	 }
 
-	public String getPartnerName(){
-		return partnerName;
-	}
+	 public void setPartnerName(String partnerName) {
+		 this.partnerName = partnerName;
+	 }
 
-	public void setAccountId(int accountId){
-		this.accountId = accountId;
-	}
+	 public Date getPartnerCreateDay() {
+		 return partnerCreateDay;
+	 }
 
-	public int getAccountId(){
-		return accountId;
-	}
+	 public void setPartnerCreateDay(Date partnerCreateDay) {
+		 this.partnerCreateDay = partnerCreateDay;
+	 }
 
-	public void setEnterpriseName(String enterpriseName){
-		this.enterpriseName = enterpriseName;
-	}
+	 public int getPartnerRegistCapital() {
+		 return partnerRegistCapital;
+	 }
 
-	public String getEnterpriseName(){
-		return enterpriseName;
-	}
+	 public void setPartnerRegistCapital(int partnerRegistCapital) {
+		 this.partnerRegistCapital = partnerRegistCapital;
+	 }
 
-	public void setIdNumber(int idNumber){
-		this.idNumber = idNumber;
-	}
+	 public int getPartnerValuation() {
+		 return partnerValuation;
+	 }
 
-	public int getIdNumber(){
-		return idNumber;
-	}
+	 public void setPartnerValuation(int partnerValuation) {
+		 this.partnerValuation = partnerValuation;
+	 }
 
-	public void setEnterpriseAddress(String enterpriseAddress){
-		this.enterpriseAddress = enterpriseAddress;
-	}
+	 public int getAccountId() {
+		 return accountId;
+	 }
 
-	public String getEnterpriseAddress(){
-		return enterpriseAddress;
-	}
+	 public void setAccountId(int accountId) {
+		 this.accountId = accountId;
+	 }
 
-	public void setPrincipalName(String principalName){
-		this.principalName = principalName;
-	}
+	 public String getEnterpriseName() {
+		 return enterpriseName;
+	 }
 
-	public String getPrincipalName(){
-		return principalName;
-	}
+	 public void setEnterpriseName(String enterpriseName) {
+		 this.enterpriseName = enterpriseName;
+	 }
 
-	public void setPrincipalIdcard(String principalIdcard){
-		this.principalIdcard = principalIdcard;
-	}
+	 public String getIdNumber() {
+		 return idNumber;
+	 }
 
-	public String getPrincipalIdcard(){
-		return principalIdcard;
-	}
+	 public void setIdNumber(String idNumber) {
+		 this.idNumber = idNumber;
+	 }
 
-	public void setPrincipalTelephone(String principalTelephone){
-		this.principalTelephone = principalTelephone;
-	}
+	 public String getEnterpriseAddress() {
+		 return enterpriseAddress;
+	 }
 
-	public String getPrincipalTelephone(){
-		return principalTelephone;
-	}
+	 public void setEnterpriseAddress(String enterpriseAddress) {
+		 this.enterpriseAddress = enterpriseAddress;
+	 }
 
-	public void setPrincipalFax(int principalFax){
-		this.principalFax = principalFax;
-	}
+	 public String getPrincipalName() {
+		 return principalName;
+	 }
 
-	public int getPrincipalFax(){
-		return principalFax;
-	}
+	 public void setPrincipalName(String principalName) {
+		 this.principalName = principalName;
+	 }
 
-	public void setPrincipalAddress(String principalAddress){
-		this.principalAddress = principalAddress;
-	}
+	 public String getPrincipalIdcard() {
+		 return principalIdcard;
+	 }
 
-	public String getPrincipalAddress(){
-		return principalAddress;
-	}
+	 public void setPrincipalIdcard(String principalIdcard) {
+		 this.principalIdcard = principalIdcard;
+	 }
 
-	public void setContactsName(String contactsName){
-		this.contactsName = contactsName;
-	}
+	 public String getPrincipalTelephone() {
+		 return principalTelephone;
+	 }
 
-	public String getContactsName(){
-		return contactsName;
-	}
+	 public void setPrincipalTelephone(String principalTelephone) {
+		 this.principalTelephone = principalTelephone;
+	 }
 
-	public void setContactsIdcard(String contactsIdcard){
-		this.contactsIdcard = contactsIdcard;
-	}
+	 public String getPrincipalFax() {
+		 return principalFax;
+	 }
 
-	public String getContactsIdcard(){
-		return contactsIdcard;
-	}
+	 public void setPrincipalFax(String principalFax) {
+		 this.principalFax = principalFax;
+	 }
 
-	public void setContactsTelephone(String contactsTelephone){
-		this.contactsTelephone = contactsTelephone;
-	}
+	 public String getPrincipalAddress() {
+		 return principalAddress;
+	 }
 
-	public String getContactsTelephone(){
-		return contactsTelephone;
-	}
+	 public void setPrincipalAddress(String principalAddress) {
+		 this.principalAddress = principalAddress;
+	 }
 
-	public void setContactsFax(int contactsFax){
-		this.contactsFax = contactsFax;
-	}
+	 public String getContactsName() {
+		 return contactsName;
+	 }
 
-	public int getContactsFax(){
-		return contactsFax;
-	}
+	 public void setContactsName(String contactsName) {
+		 this.contactsName = contactsName;
+	 }
 
-	public void setContactsAddress(String contactsAddress){
-		this.contactsAddress = contactsAddress;
-	}
+	 public String getContactsIdcard() {
+		 return contactsIdcard;
+	 }
 
-	public String getContactsAddress(){
-		return contactsAddress;
-	}
+	 public void setContactsIdcard(String contactsIdcard) {
+		 this.contactsIdcard = contactsIdcard;
+	 }
 
-	public void setBankName(String bankName){
-		this.bankName = bankName;
-	}
+	 public String getContactsTelephone() {
+		 return contactsTelephone;
+	 }
 
-	public String getBankName(){
-		return bankName;
-	}
+	 public void setContactsTelephone(String contactsTelephone) {
+		 this.contactsTelephone = contactsTelephone;
+	 }
 
-	public void setBankAccount(String bankAccount){
-		this.bankAccount = bankAccount;
-	}
+	 public String getContactsFax() {
+		 return contactsFax;
+	 }
 
-	public String getBankAccount(){
-		return bankAccount;
-	}
+	 public void setContactsFax(String contactsFax) {
+		 this.contactsFax = contactsFax;
+	 }
 
-	public void setBankCard(int bankCard){
-		this.bankCard = bankCard;
-	}
+	 public String getContactsAddress() {
+		 return contactsAddress;
+	 }
 
-	public int getBankCard(){
-		return bankCard;
-	}
+	 public void setContactsAddress(String contactsAddress) {
+		 this.contactsAddress = contactsAddress;
+	 }
 
-	public void setImagePrincipal(String imagePrincipal){
-		this.imagePrincipal = imagePrincipal;
-	}
+	 public String getBankName() {
+		 return bankName;
+	 }
 
-	public String getImagePrincipal(){
-		return imagePrincipal;
-	}
+	 public void setBankName(String bankName) {
+		 this.bankName = bankName;
+	 }
 
-	public void setImageBusinessLicence(String imageBusinessLicence){
-		this.imageBusinessLicence = imageBusinessLicence;
-	}
+	 public String getBankAccount() {
+		 return bankAccount;
+	 }
 
-	public String getImageBusinessLicence(){
-		return imageBusinessLicence;
-	}
+	 public void setBankAccount(String bankAccount) {
+		 this.bankAccount = bankAccount;
+	 }
 
-	public void setImageBank(String imageBank){
-		this.imageBank = imageBank;
-	}
+	 public String getBankCard() {
+		 return bankCard;
+	 }
 
-	public String getImageBank(){
-		return imageBank;
-	}
+	 public void setBankCard(String bankCard) {
+		 this.bankCard = bankCard;
+	 }
 
-	public void setImageProfessionalLicense(String imageProfessionalLicense){
-		this.imageProfessionalLicense = imageProfessionalLicense;
-	}
+	 public String getImagePrincipal() {
+		 return imagePrincipal;
+	 }
 
-	public String getImageProfessionalLicense(){
-		return imageProfessionalLicense;
-	}
+	 public void setImagePrincipal(String imagePrincipal) {
+		 this.imagePrincipal = imagePrincipal;
+	 }
 
-	public void setFlag(int flag){
-		this.flag = flag;
-	}
+	 public String getImageBusinessLicence() {
+		 return imageBusinessLicence;
+	 }
 
-	public int getFlag(){
-		return flag;
-	}
+	 public void setImageBusinessLicence(String imageBusinessLicence) {
+		 this.imageBusinessLicence = imageBusinessLicence;
+	 }
 
-	public void setCreateTime(Date createTime){
-		this.createTime = createTime;
-	}
+	 public String getImageBank() {
+		 return imageBank;
+	 }
 
-	public Date getCreateTime(){
-		return createTime;
-	}
+	 public void setImageBank(String imageBank) {
+		 this.imageBank = imageBank;
+	 }
 
-	public void setUpdateTime(Date updateTime){
-		this.updateTime = updateTime;
-	}
+	 public String getImageProfessionalLicense() {
+		 return imageProfessionalLicense;
+	 }
 
-	public Date getUpdateTime(){
-		return updateTime;
-	}
+	 public void setImageProfessionalLicense(String imageProfessionalLicense) {
+		 this.imageProfessionalLicense = imageProfessionalLicense;
+	 }
 
-	public void setOperateAccount(String operateAccount){
-		this.operateAccount = operateAccount;
-	}
+	 public int getFlag() {
+		 return flag;
+	 }
 
-	public String getOperateAccount(){
-		return operateAccount;
-	}
+	 public void setFlag(int flag) {
+		 this.flag = flag;
+	 }
 
-	public Date getPartnerCreateDay() {
-	 return partnerCreateDay;
-	}
+	 public Date getCreateTime() {
+		 return createTime;
+	 }
 
-	public void setPartnerCreateDay(Date partnerCreateDay) {
-	 this.partnerCreateDay = partnerCreateDay;
-	}
+	 public void setCreateTime(Date createTime) {
+		 this.createTime = createTime;
+	 }
 
-	public int getPartnerValuation() {
-	 return partnerValuation;
-	}
+	 public Date getUpdateTime() {
+		 return updateTime;
+	 }
 
-	public void setPartnerValuation(int partnerValuation) {
-	 this.partnerValuation = partnerValuation;
-	}
+	 public void setUpdateTime(Date updateTime) {
+		 this.updateTime = updateTime;
+	 }
 
-	public int getPartnerRegistCapital() {
-	 	return partnerRegistCapital;
-	}
+	 public String getOperateAccount() {
+		 return operateAccount;
+	 }
 
-	public void setPartnerRegistCapital(int partnerRegistCapital) {
-	 	this.partnerRegistCapital = partnerRegistCapital;
-	}
+	 public void setOperateAccount(String operateAccount) {
+		 this.operateAccount = operateAccount;
+	 }
  }

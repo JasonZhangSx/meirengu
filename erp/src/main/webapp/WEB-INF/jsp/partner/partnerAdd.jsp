@@ -13,16 +13,17 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>行业添加</title>
+    <title>合作方添加</title>
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
     <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="static/upload-file/upload.css" />
     <%--<script src="static/js/ajaxfileupload.js"/>--%>
 
 </head>
 <body>
 <div class="page-container">
-    <form action="add" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="partner/add" method="post" class="form form-horizontal" id="form-article-add">
         <style>
             .select-box1 {
                 padding-left: 0;
@@ -40,7 +41,118 @@
                 border-bottom: 1px #ddd solid;
                 overflow: hidden;
             }
+
+
+            .u_img, .fl{
+                background: #00b7ee;
+                cursor: pointer;
+                width: 100px;
+                height: 30px;
+                color: #fff;
+                text-align: center;
+                border-radius: 3px;
+                overflow: hidden;
+                padding-top: 8px;
+                border: none;
+            }
         </style>
+        <script type="text/javascript">
+            var xhr;
+            if(window.XMLHttpRequest){
+                xhr = new XMLHttpRequest();
+            }else{
+                xhr = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+
+            function printFileInfo(){
+
+                var picFile = document.getElementById("pic");
+                var files = picFile.files;
+                for(var i=0; i<files.length; i++){
+                    var file = files[i];
+                    var div = document.createElement("div")
+                    div.innerHTML = "第("+ (i+1) +") 个文件的名字："+ file.name +
+                            " , 文件类型："+ file.type +" , 文件大小:"+ file.size
+                    document.body.appendChild( div)
+                }
+            }
+
+            //上传失败
+            function uploadFailed(evt) {
+                alert("上传失败");
+            }
+
+            /**
+             * 侦查附件上传情况 ,这个方法大概0.05-0.1秒执行一次
+             */
+            function onprogress(evt){
+                var loaded = evt.loaded;       //已经上传大小情况
+                var tot = evt.total;       //附件总大小
+                var per = Math.floor(100*loaded/tot);   //已经上传的百分比
+                $("#son").html( per +"%" );
+                $("#son").css("width" , per +"%");
+            }
+
+            //上传文件
+            function uploadFile(fileId, foldName, parentId, inputId) {
+                //alert(fileId+"|"+foldName+"|"+parentId);
+                //将上传的多个文件放入formData中
+                var picFileList = $("#"+fileId).get(0).files;
+                var formData = new FormData();
+                for(var i=0; i< picFileList.length; i++){
+                    formData.append("file" , picFileList[i] );
+                }
+                formData.append("foldName", foldName);
+
+                //监听事件
+                xhr.upload.addEventListener("progress", onprogress, false);
+                xhr.addEventListener("error", uploadFailed, false);//发送文件和表单自定义参数
+                xhr.open("POST", "uploadMultiple");
+                //记得加入上传数据formData
+                xhr.send(formData);
+                //异步接受响应
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState == 4){
+                        if(xhr.status == 200){
+                            var responseData = eval('(' + xhr.responseText + ')');
+                            if(responseData.code != 200){
+                                alert("上传失败");
+                                return;
+                            }
+                            console.log(responseData);
+                            var data = responseData.data;
+                            var imgStr = "";
+                            for(var i = 0; i < data.length; i++){
+                                var imgs = $("#"+inputId).val();
+                                if(imgs == null || imgs == ''){
+                                    $("#"+inputId).val(data[i]);
+                                }else{
+                                    $("#"+inputId).val(imgs+","+data[i]);
+                                }
+
+                                imgStr = '<div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">'
+                                        +'<a href="http://test.img.meirenguvip.com/'+data[i]+'" data-lightbox="gallery">'
+                                        +'<img src="http://test.img.meirenguvip.com/'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
+                                        +'</div>';
+
+                                /*imgStr += '<section class="up-section fl">'
+                                        +'  <span class="up-span"></span>'
+                                        +'  <img class="close-upimg" src="static/upload-file/a7.png">'
+                                        +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
+                                        +'  <p class="img-name-p">'+data[i]+'</p>'
+                                        +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
+                                        +'  <input id="tags" name="tags" value="" type="hidden">'
+                                        +'</section>';*/
+                            }
+
+                            $("#"+parentId).append(imgStr);
+                        }
+                    }
+                }
+
+            }
+
+        </script>
 
         <!-- 合作方 添加 -->
         <div class="row cl">
@@ -51,7 +163,8 @@
             </div>
             <label class="form-label col-xs-4 col-sm-2">公司成立日：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="partnerCreateDay" name="partnerCreateDay">
+                <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value=""
+                       id="partnerCreateDay" name="partnerCreateDay"/>
             </div>
         </div>
 
@@ -79,8 +192,8 @@
             <label class="form-label col-xs-4 col-sm-2">服务专员：</label>
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 				<select name="accountId" id="accountId" class="select">
-					<option value="0">专员a</option>
-					<option value="1">专员b</option>
+					<option value="1">专员a</option>
+					<option value="2">专员b</option>
 				</select>
 				</span>
             </div>
@@ -178,7 +291,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="contactsax" name="contacts_fax" maxlength="30"
+                <input type="text" class="input-text" value="" id="contactsFax" name="contactsFax" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -231,12 +344,18 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <div class="uploader-thum-container">
-                            <div id="fileList" class="uploader-list"></div>
-                            <div id="filePicker">选择图片</div>
-                            <button id="btn-star" class="btn btn-default btn-uploadstar radius ml-10" type="button">
-                                开始上传
-                            </button>
+                        <input type="hidden" id="imagePrincipal" name="imagePrincipal">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent0" class="clearfix">
+                                    </div>
+                                    <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                        <label class="u_img">上传图片</label>
+                                        <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','partner','imgParent0','imagePrincipal')">
+                                    </section>
+                                </div>
+                            </section>
                         </div>
                     </td>
                 </tr>
@@ -245,16 +364,19 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l"><!-- upload?foldName=item-->
-                        <div class="portfoliobox">
-                            <div class="picbox">
-                                <a href="" data-lightbox="gallery" data-title="项目头图"><img
-                                        src="?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
-                            </div>
-                        </div>
                         <input type="hidden" id="imageBusinessLicence" name="imageBusinessLicence">
-                        <input type="file" id="file1" name="file">
-                        <button class="btn r va-m btn-secondary radius ml-10" id="btn1" type="button">上传</button>
-                        <p><img id="img1" alt="上传成功啦" src="" /></p>
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent1" class="clearfix">
+                                    </div>
+                                    <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                        <label class="u_img">上传图片</label>
+                                        <input type="file" name="file" id="file1" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file1','partner','imgParent1','imageBusinessLicence')">
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
                     </td>
                 </tr>
                 <tr class="text-c">
@@ -262,7 +384,19 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                        <input type="hidden" id="imageBank" name="imageBank">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent2" class="clearfix">
+                                    </div>
+                                    <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                        <label class="u_img">上传图片</label>
+                                        <input type="file" name="file" id="file2" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file2','partner','imgParent2','imageBank')">
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
                     </td>
                 </tr>
                 <tr class="text-c">
@@ -270,7 +404,19 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
+                        <input type="hidden" id="imageProfessionalLicense" name="imageProfessionalLicense">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent3" class="clearfix">
+                                    </div>
+                                    <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                        <label class="u_img">上传图片</label>
+                                        <input type="file" name="file" id="file3" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file3','partner','imgParent3','imageProfessionalLicense')">
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -291,6 +437,10 @@
 
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
+    });
+
+    $('#partnerCreateDay').datetimepicker({
+        lang: $.datetimepicker.setLocale('ch'),
     });
 
 </script>

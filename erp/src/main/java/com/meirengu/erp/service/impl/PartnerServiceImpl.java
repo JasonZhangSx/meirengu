@@ -66,7 +66,7 @@ public class PartnerServiceImpl implements PartnerService{
 
     @Override
     public boolean partnerAdd(Map params) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.list"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.insert"));
         HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
         int statusCode = hr.getStatusCode();
         if(statusCode == StatusCode.OK){

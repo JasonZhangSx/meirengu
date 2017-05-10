@@ -1,14 +1,11 @@
 package com.meirengu.cf.service.impl;
 import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.dao.ItemDao;
-import com.meirengu.cf.model.Item;
-import com.meirengu.cf.model.ItemLevel;
-import com.meirengu.cf.model.ItemOperateRecord;
-import com.meirengu.cf.service.ItemLevelService;
-import com.meirengu.cf.service.ItemOperateRecordService;
-import com.meirengu.cf.service.ItemService;
+import com.meirengu.cf.model.*;
+import com.meirengu.cf.service.*;
 import com.meirengu.common.StatusCode;
 import com.meirengu.exception.BusinessException;
+import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.DateUtils;
@@ -20,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +37,10 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     ItemLevelService itemLevelService;
     @Autowired
     ItemOperateRecordService itemOperateRecordService;
+    @Autowired
+    PartnerService partnerService;
+    @Autowired
+    ItemCooperationService itemCooperationService;
 
     @Override
     public int updateStatus(Item item) {
@@ -241,6 +244,52 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
+    public Map<String, Object> getBankAndCommission(Integer itemId) {
+
+        Map<String, Object> map = new HashMap<>();
+        if(itemId != null && itemId != 0){
+            Item item = detail(itemId);
+            LOGGER.info(">>ItemServiceImpl.getBankAndCommission get item is {}", item);
+            if(item != null){
+                BigDecimal completedAmount = item.getCompletedAmount();
+                int type = item.getTypeId();
+                map.put("type", type);
+                Map<String, Object> params = new HashMap<>();
+                params.put("itemId", itemId);
+                List<Map<String, Object>> list = itemLevelService.getList(params);
+                map.put("levelList", list);
+
+                int partnerId = item.getPartnerId();
+                Partner partner = partnerService.detail(partnerId);
+                LOGGER.info(">>ItemServiceImpl.getBankAndCommission get partner is {}", partner);
+                if(partner != null){
+                    map.put("bankName", partner.getBankName());
+                    map.put("bankAccount", partner.getBankAccount());
+                    map.put("bankCard", partner.getBankCard());
+                    ItemCooperation cooperation = itemCooperationService.detail(itemId);
+                    LOGGER.info(">>ItemServiceImpl.getBankAndCommission get cooperation is {}", cooperation);
+                    if(cooperation != null){
+                        BigDecimal commissionRate = cooperation.getCommissionRate();
+                        BigDecimal guaranteeRate = cooperation.getGuaranteeRate();
+                        map.put("commissionRate", commissionRate);
+                        map.put("guaranteeRate", guaranteeRate);
+                        BigDecimal commissionAmount = completedAmount.multiply(commissionRate.multiply(new BigDecimal(0.01)));
+                        BigDecimal guaranteeAmount = completedAmount.multiply(guaranteeRate.multiply(new BigDecimal(0.01)));
+                        map.put("commissionAmount", commissionAmount.intValue());
+                        map.put("guaranteeAmount", guaranteeAmount.intValue());
+                        map.put("prepaidBonus", cooperation.getPrepaidBonus());
+                        map.put("loanMode", cooperation.getLoanMode());
+                        map.put("firstRatio", cooperation.getFirstRatio());
+                        return map;
+                    }
+                }
+            }
+        }
+        LOGGER.info(">>ItemServiceImpl.getBankAndCommission return null");
+        return null;
+    }
+
+    @Override
     public void updateItemCompleteAmount(Integer itemId, BigDecimal amount) {
         Item item = new Item();
         item.setItemId(itemId);
@@ -293,41 +342,42 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
-    public void setCooperate(int itemId, int operateStatus, String operateRemark, String operateAccount) {
-        //1插入审核记录 2修改项目状态
-        ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
-        itemOperateRecord.setItemId(itemId);
-        itemOperateRecord.setOperateType(Constants.RECORD_OPERATION);
-        itemOperateRecord.setOperateStatus(operateStatus);
-        itemOperateRecord.setOperateRemark(operateRemark);
-        itemOperateRecord.setOperateTime(new Date());
-        itemOperateRecord.setOperateAccount(operateAccount);
+    public void setCooperate(ItemCooperation itemCooperation) {
+        if(itemCooperation != null){
+            //1 新增设置合作  2  修改项目状态  3 插入审核记录
+            ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+            itemOperateRecord.setItemId(itemCooperation.getItemId());
+            itemOperateRecord.setOperateType(Constants.RECORD_OPERATION);
+            itemOperateRecord.setOperateStatus(Constants.STATUS_YES);
+            itemOperateRecord.setOperateRemark("");
+            itemOperateRecord.setOperateTime(new Date());
+            itemOperateRecord.setOperateAccount(itemCooperation.getOperateAccount());
 
-        Item item = new Item();
-        item.setItemId(itemId);
-        if(operateStatus == Constants.STATUS_YES){
-            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_SUCCESS);
-        }else if(operateStatus == Constants.STATUS_NO){
-            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_FAIL);
-        }else{
-            LOGGER.warn(">>ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
-            throw new BusinessException("ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
-        }
+            Item item = new Item();
+            item.setItemId(itemCooperation.getItemId());
 
-        try {
-            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
-            if(insertNum != 1){
-                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify insert operate record fail... return insertNum is {}", insertNum);
-                throw new BusinessException("ItemOperateRecordServiceImpl.verify insert operate record fail...");
+            try {
+
+                int cooperationInsertNum = itemCooperationService.insert(itemCooperation);
+                if(cooperationInsertNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate update item status fail... return updateNum is {}", cooperationInsertNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate update item status fail...");
+                }
+
+                int updateNum = super.update(item);
+                if(updateNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate update item status fail... return updateNum is {}", updateNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate update item status fail...");
+                }
+
+                int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+                if(insertNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate insert operate record fail... return insertNum is {}", insertNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate insert operate record fail...");
+                }
+            }catch (Exception e){
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
             }
-
-            int updateNum = super.update(item);
-            if(updateNum != 1){
-                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify update item status fail... return updateNum is {}", updateNum);
-                throw new BusinessException("ItemOperateRecordServiceImpl.verify update item status fail...");
-            }
-        }catch (Exception e){
-            throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
         }
     }
 

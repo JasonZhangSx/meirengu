@@ -12,6 +12,7 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +63,8 @@ public class PartnerController extends BaseController{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        List classList = partnerService.getPartnerClassList();
+        map.put("classList", classList);
         return new ModelAndView("/partner/partnerList", map);
     }
 
@@ -165,8 +169,42 @@ public class PartnerController extends BaseController{
     }
 
     @RequestMapping("add")
-    public ModelAndView add(Partner partner){
+    public ModelAndView add(Integer typeId, String partnerName, Date partnerCreateDay, Integer partnerRegistCapital, Integer partnerValuation,
+                            Integer accountId, String enterpriseName, String idNumber, String enterpriseAddress, String principalName,
+                            String principalIdcard, String principalTelephone, String principalFax, String principalAddress, String contactsName,
+                            String contactsIdcard, String contactsTelephone, String contactsFax, String bankName, String bankAccount,
+                            String bankCard, String imagePrincipal, String imageBusinessLicence, String imageBank, String imageProfessionalLicense,
+                            String contactsAddress){
         Map<String, String> params = new HashMap<String, String>();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        params.put("type_id", String.valueOf(typeId));
+        params.put("partner_name", partnerName);
+        params.put("partner_create_day", format.format(partnerCreateDay).toString());
+        params.put("partner_regist_capital", String.valueOf(partnerRegistCapital));
+        params.put("partner_valuation", String.valueOf(partnerValuation));
+        params.put("account_id", String.valueOf(accountId));
+        params.put("enterprise_name", enterpriseName);
+        params.put("id_number", idNumber);
+        params.put("enterprise_address", enterpriseAddress);
+        params.put("principal_name", principalName);
+        params.put("principal_idcard", principalIdcard);
+        params.put("principal_telephone", principalTelephone);
+        params.put("principal_fax", principalFax);
+        params.put("principal_address", principalAddress);
+        params.put("contacts_name", contactsName);
+        params.put("contacts_idcard", contactsIdcard);
+        params.put("contacts_telephone", contactsTelephone);
+        params.put("contacts_fax", contactsFax);
+        params.put("bank_name", bankName);
+        params.put("bank_account", bankAccount);
+        params.put("bank_card", bankCard);
+        params.put("image_principal", String.valueOf(imagePrincipal));
+        params.put("image_business_licence", imageBusinessLicence);
+        params.put("image_bank", imageBank);
+        params.put("image_professional_license", imageProfessionalLicense);
+        params.put("contacts_address", contactsAddress);
+        params.put("operate_account", "admin");
         partnerService.partnerAdd(params);
         return new ModelAndView("redirect:/partner/list");
     }

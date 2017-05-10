@@ -187,7 +187,7 @@
         }
 
         //上传文件
-        function uploadFile(fileId, foldName, parentId, inputId) {
+        function uploadFile(fileId, foldName, parentId, inputId, type) {
             //alert(fileId+"|"+foldName+"|"+parentId);
             //将上传的多个文件放入formData中
             var picFileList = $("#"+fileId).get(0).files;
@@ -222,15 +222,22 @@
                             }else{
                                 $("#"+inputId).val(imgs+","+data[i]);
                             }
+                            if(type == 1){
+                                imgStr += '<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">'
+                                        + '   <a href="http://test.img.meirenguvip.com/'+data[i]+'" data-lightbox="gallery">'
+                                        + '   <img src="http://test.img.meirenguvip.com/'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
+                                        + '</div>';
+                            }else if(type == 2){
+                                imgStr += '<section class="up-section fl">'
+                                        +'  <span class="up-span"></span>'
+                                        +'  <img class="close-upimg" src="static/upload-file/a7.png">'
+                                        +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
+                                        +'  <p class="img-name-p">'+data[i]+'</p>'
+                                        +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
+                                        +'  <input id="tags" name="tags" value="" type="hidden">'
+                                        +'</section>';
+                            }
 
-                            imgStr += '<section class="up-section fl">'
-                                    +'  <span class="up-span"></span>'
-                                    +'  <img class="close-upimg" src="static/upload-file/a7.png">'
-                                    +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
-                                    +'  <p class="img-name-p">'+data[i]+'</p>'
-                                    +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
-                                    +'  <input id="tags" name="tags" value="" type="hidden">'
-                                    +'</section>';
                         }
 
                         $("#"+parentId).append(imgStr);
@@ -245,7 +252,7 @@
 <div class="page-container">
     <!-- 选项卡 -->
 
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="item/cooperate" method="post" class="form form-horizontal" id="form-article-add">
 
         <!-- 基本信息 -->
         <div class="jiben_info">
@@ -509,17 +516,19 @@
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
                     </div>
-                    <label class="form-label col-xs-4 col-sm-2">保证金：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
-                    </div>
                 </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
+                <c:if test="${item.typeId != 3}">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">保证金：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
+                        </div>
                     </div>
-                </div>
+                </c:if>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">放款方式：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
@@ -565,7 +574,7 @@
                                             </div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -577,21 +586,21 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="sponsorCredit" name="sponsorCredit">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix">
+                                            <div id="imgParent1" class="clearfix">
                                                 <%--<div class="portfoliobox">--%>
-                                                    <div class="picbox" style="margin: 5px; width: 100px; height: 100px;">
+                                                    <%--<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">
                                                         <a href="http://test.img.meirenguvip.com/item/1493870878824.jpg" data-lightbox="gallery">
                                                             <img src="http://test.img.meirenguvip.com/item/1493870878824.jpg?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>
-                                                    </div>
+                                                    </div>--%>
                                                 <%--</div>--%>
                                             </div>
                                             <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file1" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file1','item','imgParent1','sponsorCredit', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -603,14 +612,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="principalIdcard" name="principalIdcard">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent2" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file2" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file2','item','imgParent2','principalIdcard',1)">
                                             </section>
                                         </div>
                                     </section>
@@ -622,14 +631,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="principalCredit" name="principalCredit">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent3" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file3" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file3','item','imgParent3','principalCredit', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -641,14 +650,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="businessLicence" name="businessLicence">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent4" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file4" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file4','item','imgParent4','businessLicence', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -660,14 +669,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="venueRentalAgreement" name="venueRentalAgreement">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent5" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file5" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file5','item','imgParent5','venueRentalAgreement, 1')">
                                             </section>
                                         </div>
                                     </section>
@@ -679,14 +688,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="storeRenderings" name="storeRenderings">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent6" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file6" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file6','item','imgParent6','storeRenderings', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -698,14 +707,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="corporateArticles" name="corporateArticles">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent7" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file7" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file7','item','imgParent7','corporateArticles', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -717,14 +726,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="assetWaterLiabilities" name="assetWaterLiabilities">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent8" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file8" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file8','item','imgParent8','assetWaterLiabilities', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -785,14 +794,14 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">项目方印章：</label>
                     <div class="formControls col-xs-8 col-sm-8">
-                        <input type="hidden" id="headerImage" name="headerImage">
+                        <input type="hidden" id="partnerSeal" name="partnerSeal">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
-                                    <div id="imgParent0" class="clearfix"></div>
+                                    <div id="imgParent9" class="clearfix"></div>
                                     <section class="z_file">
                                         <img src="static/upload-file/a11.png" class="add-img">
-                                        <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                        <input type="file" name="file" id="file9" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file9','item','imgParent9','partnerSeal', 2)">
                                     </section>
                                 </div>
                             </section>
@@ -821,14 +830,33 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="escrowAgreement" name="escrowAgreement">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent10" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file10" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file10','item','imgParent10','escrowAgreement', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>融资服务协议
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="financeService" name="financeService">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent11" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file11" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file11','item','imgParent11','financeService', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -840,14 +868,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="financeManage" name="financeManage">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent12" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file12" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file12','item','imgParent12','financeManage', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -859,14 +887,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="sharePledgeAgreement" name="sharePledgeAgreement">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent13" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file13" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file13','item','imgParent13','sharePledgeAgreement', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -878,14 +906,14 @@
                                 <button class="btn btn-link radius ml-10" type="button">下载</button>
                             </td>
                             <td class="text-l">
-                                <input type="hidden" id="headerImage" name="headerImage">
+                                <input type="hidden" id="guarantyAgreement" name="guarantyAgreement">
                                 <div class="img-box full">
                                     <section class=" img-section">
                                         <div class="z_photo upimg-div clearfix">
-                                            <div id="imgParent0" class="clearfix"></div>
+                                            <div id="imgParent14" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage')">
+                                                <input type="file" name="file" id="file14" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file14','item','imgParent14','guarantyAgreement', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -942,9 +970,8 @@
                 </div>
                 <div class="cl"></div>
                 <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"></label>
                     <div class="formControls col-xs-8 col-sm-8 text-c">
-                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">提交复审
+                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">提交审核
                         </button>
                     </div>
                 </div>

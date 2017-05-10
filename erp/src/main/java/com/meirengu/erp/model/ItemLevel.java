@@ -18,6 +18,8 @@ public class ItemLevel  extends BaseObject {
    private String levelName;
    /** 档位支持金额 */
    private BigDecimal levelAmount;
+   /** 持股比例 **/
+   private BigDecimal shareHoldRate;
    /** 档位回报描述 */
    private String levelDesc;
    /** 总份数，0即为无限制 */
@@ -35,7 +37,9 @@ public class ItemLevel  extends BaseObject {
    /** 是否分红 */
    private Integer isShareBonus;
    /** 年化利率 */
-   private Double yearRate;
+   private double yearRate;
+   /** 年化利率(最大) */
+   private double yearRateMax;
    /** 投资期限，以月为单位 */
    private Integer investmentPeriod;
    /** 收益方式：1、一次性还款（到期本息到账）；2、按月还息到期还本（每月计息，一月30天，一年360天计算） */
@@ -153,11 +157,11 @@ public class ItemLevel  extends BaseObject {
        return isShareBonus;
    }
 
-   public void setYearRate(Double yearRate){
+   public void setYearRate(double yearRate){
        this.yearRate = yearRate;
    }
 
-   public Double getYearRate(){
+   public double getYearRate(){
        return yearRate;
    }
 
@@ -241,4 +245,19 @@ public class ItemLevel  extends BaseObject {
        return operateAccount;
    }
 
+    public BigDecimal getShareHoldRate() {
+        return shareHoldRate;
+    }
+
+    public void setShareHoldRate(BigDecimal shareHoldRate) {
+        this.shareHoldRate = shareHoldRate;
+    }
+
+    public double getYearRateMax() {
+        return yearRateMax;
+    }
+
+    public void setYearRateMax(double yearRateMax) {
+        this.yearRateMax = yearRateMax;
+    }
 }

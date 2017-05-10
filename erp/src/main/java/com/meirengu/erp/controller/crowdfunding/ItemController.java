@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
-import com.meirengu.erp.model.Item;
-import com.meirengu.erp.model.ItemContent;
-import com.meirengu.erp.model.ItemLevel;
+import com.meirengu.erp.model.*;
 import com.meirengu.erp.service.AddressService;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.service.PartnerService;
@@ -175,7 +173,6 @@ public class ItemController extends BaseController {
         params.put("sponsor_name","jason");
 
         try {
-
             if(item.getItemId() == null || item.getItemId() == 0){
                 Object itemResult = itemService.itemInsert(params);
                 if(itemResult != null){
@@ -308,29 +305,9 @@ public class ItemController extends BaseController {
 
     @RequestMapping("to_edit")
     public ModelAndView toItemEdit(Integer itemId){
-        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = null;
         try {
-            List itemClassData = itemService.getItemClassList();
-            List typeData = typeService.getTypeList();
-            List partnerData = partnerService.getPartnerList();
-            List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
-            StringBuffer itemUrl = new StringBuffer(ConfigUtil.getConfig("item.list"));
-            itemUrl.append("/").append(itemId);
-            JSONObject itemJson = (JSONObject) httpGet(itemUrl.toString());
-            Item item = JSON.parseObject(itemJson.toJSONString(), Item.class);
-            StringBuffer contentUrl = new StringBuffer(ConfigUtil.getConfig("item.content.list"));
-            contentUrl.append("?item_id=").append(itemId);
-            List contentData = (List) httpGet(contentUrl.toString());
-            StringBuffer levelUrl = new StringBuffer(ConfigUtil.getConfig("item.level.list"));
-            levelUrl.append("?item_id=").append(itemId);
-            List levelData = (List) httpGet(levelUrl.toString());
-            returnMap.put("itemClass", itemClassData);
-            returnMap.put("type", typeData);
-            returnMap.put("partner", partnerData);
-            returnMap.put("provinces", provinceData);
-            returnMap.put("item", item);
-            returnMap.put("content", contentData);
-            returnMap.put("level", levelData);
+            returnMap = getItemInfo(itemId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -392,6 +369,49 @@ public class ItemController extends BaseController {
             e.printStackTrace();
         }
         return new ModelAndView("/item/itemCooperate", returnMap);
+    }
+
+    @RequestMapping(value = "cooperate")
+    public Map cooperate(ItemCooperation cooperation){
+        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
+        params.put("item_id", String.valueOf(cooperation.getItemId()));
+        params.put("commission_rate", String.valueOf(cooperation.getCommissionRate()));
+        params.put("guarantee_rate", String.valueOf(cooperation.getGuaranteeRate()));
+        params.put("prepaid_bonus", String.valueOf(cooperation.getPrepaidBonus()));
+        params.put("loan_mode", String.valueOf(cooperation.getLoanMode()));
+        params.put("first_ratio", String.valueOf(cooperation.getFirstRatio()));
+        params.put("sponsor_idcard", cooperation.getSponsorIdcard());
+        params.put("sponsor_credit", cooperation.getSponsorCredit());
+        params.put("principal_idcard", cooperation.getPrincipalIdcard());
+        params.put("principal_credit", cooperation.getPrincipalCredit());
+        params.put("business_licence", cooperation.getBusinessLicence());
+        params.put("venue_rental_agreement", cooperation.getVenueRentalAgreement());
+        params.put("store_renderings", cooperation.getStoreRenderings());
+        params.put("corporate_articles", cooperation.getCorporateArticles());
+        params.put("asset_water_liabilities", cooperation.getAssetWaterLiabilities());
+        params.put("operate_account", cooperation.getOperateAccount());
+        params.put("shareholder_name", cooperation.getShareholderName());
+        params.put("shareholder_idcard", cooperation.getShareholderIdcard());
+        params.put("shareholder_address", cooperation.getShareholderAddress());
+        params.put("guarantee_name", cooperation.getGuaranteeAddress());
+        params.put("guarantee_idcard", cooperation.getGuaranteeIdcard());
+        params.put("guarantee_address", cooperation.getGuaranteeAddress());
+        params.put("pledged_shares", String.valueOf(cooperation.getPledgedShares()));
+        params.put("partner_seal", cooperation.getPartnerSeal());
+        params.put("escrow_agreement", cooperation.getEscrowAgreement());
+        params.put("finance_service", cooperation.getFinanceService());
+        params.put("finance_manage", cooperation.getFinanceManage());
+        params.put("guaranty_agreement", cooperation.getGuarantyAgreement());
+
+        if(itemService.setCooperate(params)){
+            returnMap.put("code", StatusCode.OK);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+        return returnMap;
     }
 
     @RequestMapping(value = "to_review")
