@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by huoyan403 on 5/10/2017.
  */
-public class AESUtilsTest {
+public class DataEncryptionUtilsTest {
 
     @Test
     public void testEncrypt() throws NoSuchAlgorithmException {
@@ -19,12 +19,12 @@ public class AESUtilsTest {
         String content="6216618009001077164";
 
         System.out.println("加密前：" + content);
-        byte[] encryptResult = AESUtils.encrypt(content, password);
-        String encryptResultStr = AESUtils.parseByte2HexStr(encryptResult);
+        byte[] encryptResult = DataEncryptionUtils.encrypt(content, password);
+        String encryptResultStr = DataEncryptionUtils.parseByte2HexStr(encryptResult);
         System.out.println("加密后：" + encryptResultStr);
         //解密
-        byte[] decryptFrom = AESUtils.parseHexStr2Byte(encryptResultStr);
-        byte[] decryptResult = AESUtils.decrypt(decryptFrom, password);
+        byte[] decryptFrom = DataEncryptionUtils.parseHexStr2Byte(encryptResultStr);
+        byte[] decryptResult = DataEncryptionUtils.decrypt(decryptFrom, password);
         System.out.println("解密后：" + new String(decryptResult));
         long stimeEnd=System.currentTimeMillis();
         System.err.print(stimeEnd-stimeStarted);

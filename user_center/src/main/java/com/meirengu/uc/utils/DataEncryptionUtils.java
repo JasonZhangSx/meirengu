@@ -13,11 +13,11 @@ import java.security.SecureRandom;
 /**
  * Created by huoyan403 on 5/10/2017.
  */
-public class AESUtils {
+public class DataEncryptionUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(AESUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataEncryptionUtils.class);
 
-    public AESUtils() {
+    public DataEncryptionUtils() {
         logger.info("--------constrocter---started------------");
     }
 

@@ -51,7 +51,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Autowired
     InviterDao inviterDao;
 
-    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    @Transactional
     public User create(User user){
         try {
             int result = userDao.create(user);
@@ -438,12 +438,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return page;
     }
 
-    /**
-     * 不分页 封装入page
-     * @param page
-     * @param paramMap
-     * @return
-     */
     @Override
     public Page<User> getUserList(Page<User> page, Map paramMap) {
 
