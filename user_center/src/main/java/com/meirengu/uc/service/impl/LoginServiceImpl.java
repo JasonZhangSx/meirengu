@@ -55,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
         tokenInfo.setToken(token);
         tokenInfo.setDeviceId(deviceId);
 
-        this.setToken(key,tokenInfo,token,usr,tokenTime);
+        this.setToken(key,tokenInfo,token,usr,tokenTime); //并发 消费了响应时间 但保证了token的绝对唯一性
 
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
@@ -70,8 +70,5 @@ public class LoginServiceImpl implements LoginService {
         if(tokenVO != null) {
             redisClient.delkeyObject(tokenVO.getToken());
         }
-
-//        redisClient.setObject(key,tokenInfo,tokenTime);
-//        redisClient.setObject(token,usr,tokenTime);
     }
 }
