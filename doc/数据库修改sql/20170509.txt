@@ -1,13 +1,16 @@
 ******************trade begin*************************
 
 抵扣券表
-#ALTER TABLE `rebate_batch` ADD `rebate_use_range` smallint(5) unsigned NOT NULL COMMENT '抵扣券使用限制：1固定项目，2某类项目，3所有项目' AFTER `rebate_type`;
-#ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_type`  smallint(5) unsigned NOT NULL COMMENT '1无条件使用(订单免M元),2有条件使用(满N元减M元)';
-#ALTER TABLE `rebate_batch` ADD `rebate_limit_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '抵扣券限额' AFTER `rebate_type`;
-#ALTER TABLE `rebate_batch` ADD `rebate_use_range_value` int(11) unsigned COMMENT '抵扣券使用限制值' AFTER `rebate_use_range`;
-#ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NULL COMMENT '抵扣券限领次数:1每天一次,2永久一次,3不限次数';
-#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT '有效期开始时间';
-#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT '有效期截止时间';
-#ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_days` int(4) COMMENT '抵扣券有效天数';
+ALTER TABLE `rebate_batch` ADD `rebate_use_range` smallint(5) unsigned NOT NULL COMMENT '抵扣券使用限制：1固定项目，2某类项目，3所有项目' AFTER `rebate_type`;
+ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_type`  smallint(5) unsigned NOT NULL COMMENT '1无条件使用(订单免M元),2有条件使用(满N元减M元)';
+ALTER TABLE `rebate_batch` ADD `rebate_limit_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '抵扣券限额' AFTER `rebate_type`;
+ALTER TABLE `rebate_batch` ADD `rebate_use_range_value` int(11) unsigned COMMENT '抵扣券使用限制值' AFTER `rebate_use_range`;
+ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NULL COMMENT '抵扣券限领次数:1每天一次,2永久一次,3不限次数';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT '有效期开始时间';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT '有效期截止时间';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_days` int(4) COMMENT '抵扣券有效天数';
+
+UPDATE rebate_batch SET rebate_limit_amount = rebate_limit;
+UPDATE rebate_batch SET rebate_limit = 2;
 
 ******************trade end***************************
