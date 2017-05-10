@@ -1,7 +1,5 @@
 package com.meirengu.uc.utils;
 
-import com.meirengu.utils.GenEntityMysql;
-
 /**
  * Created by huoyan403 on 5/10/2017.
  */
@@ -9,7 +7,7 @@ public class GenEntityMysqlTest {
 
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         GenEntityMysql gm = new GenEntityMysql();
         String basePath = System.getProperty("user.dir");
@@ -34,8 +32,8 @@ public class GenEntityMysqlTest {
                 username, password, driver, databaseName);
         gm.start("");
         //System.out.println(s);
-        /*System.out.println(Class.class.getClass().getResource("/").getPath());
+        *//*System.out.println(Class.class.getClass().getResource("/").getPath());
         Properties p = System.getProperties();
-        System.out.println(System.getProperty("user.dir"));*/
-    }
+        System.out.println(System.getProperty("user.dir"));*//*
+    }*/
 }
