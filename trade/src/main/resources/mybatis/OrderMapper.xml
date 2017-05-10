@@ -281,6 +281,12 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="@Ognl@isNotEmpty(levelIdList)">
+				AND item_level_id in
+				<foreach collection="levelIdList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 		</where>
 	</sql>
 	<!-- 分页相关开始 -->
@@ -302,6 +308,7 @@
 	</select>
 	<!-- 分页相关结束 -->
 
+	<!-- 查询用户投资金额 -->
 	<select id="getSumAmountByUserId" parameterType="Map" resultType="Map">
 		select SUM(order_amount) AS sumOrderAmount,
 				SUM(rebate_amount) AS sumRebateAmount,
@@ -310,6 +317,17 @@
 		FROM
 		<include refid="table_name" />
 		<include refid="findPage_where"/>
+	</select>
+	<!-- 查询项目档位下的投资金额-->
+	<select id="getSumAmountByLevelIds" parameterType="Map" resultType="Map">
+		select SUM(order_amount) AS sumOrderAmount,
+		SUM(rebate_amount) AS sumRebateAmount,
+		SUM(cost_amount) AS sumCostAmount,
+		item_level_id AS itemLevelId
+		FROM
+		<include refid="table_name" />
+		<include refid="findPage_where"/>
+		GROUP BY item_level_id
 	</select>
 
 </mapper>

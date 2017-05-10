@@ -124,4 +124,11 @@ public interface OrderService extends BaseService<Order>{
      */
     List<Map<String, Object>> getSumAmountByUserIds(String userIds);
 
+    /**
+     * 根据档位id查询档位下面的投资金额
+     * @param levelIds
+     * @return
+     */
+    List<Map<String, Object>> getSumAmountByLevelIds(String levelIds);
+
 }
