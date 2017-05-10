@@ -66,7 +66,7 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
                         @RequestParam(value = "ip", required = true) String ip,
-                        @RequestParam(value = "device_id", required = false) String deviceId) {
+                        @RequestParam(value = "device_id", required = false,defaultValue = "") String deviceId) {
         logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} deviceId:{} time :{}", new
                 Object[]{mobile, checkCode, password, from, ip,deviceId,new Date()});
         try{

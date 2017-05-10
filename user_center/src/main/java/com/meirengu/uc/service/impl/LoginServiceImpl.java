@@ -3,11 +3,11 @@ package com.meirengu.uc.service.impl;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.TokenProccessor;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.service.LoginService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.TokenUtils;
 import com.meirengu.uc.vo.request.TokenVO;
 import com.meirengu.uc.vo.response.RegisterInfo;
-import com.meirengu.uc.service.LoginService;
-import com.meirengu.uc.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,21 +45,23 @@ public class LoginServiceImpl implements LoginService {
     public RegisterInfo setUserToRedis(User usr,String deviceId) {
 
         String key = TokenUtils.getTokenKey(usr.getPhone());
-        if(redisClient.existsObject(key)) {
-            TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
-            this.delToken(key, tokenVO.getToken());
+        TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
+        if(tokenVO != null) {
+            redisClient.delkeyObject(tokenVO.getToken());
         }
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setUser(usr);
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
 
-        TokenVO tokenVO = new TokenVO();
+        tokenVO = new TokenVO();
         tokenVO.setToken(token);
-        tokenVO.setDeviceId("");
-//      tokenVO.setDeviceId(deviceId);
+        tokenVO.setDeviceId(deviceId);
 
-        this.setToken(key,tokenVO,token,usr,tokenTime);
+//        this.setToken(key,tokenVO,token,usr,tokenTime);
+        redisClient.setObject(token,usr,tokenTime);
+        redisClient.setObject(key,tokenVO,tokenTime);
+
 
         registerInfo.setToken(token);
         registerInfo.getUser().setPassword("");
@@ -67,20 +69,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private synchronized void  setToken(String key, TokenVO tokenVO, String token, User usr,Integer tokenTime){
-        redisClient.setObject(token,usr,tokenTime);
         redisClient.setObject(key,tokenVO,tokenTime);
+        redisClient.setObject(token,usr,tokenTime);
     }
-     private synchronized void  delToken(String key,String token){
-             redisClient.delkeyObject(key);
-             redisClient.delkeyObject(token);
-    }
-
-
-
-
-
-
-
-
-
 }
