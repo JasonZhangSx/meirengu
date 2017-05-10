@@ -40,6 +40,15 @@ public class RebateBatchController extends BaseController{
         return "/trade/rebateBatchList";
     }
 
+    /**
+     * 抵扣券批次新增
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
+    public String bulletinAddView() throws IOException {
+        return "/trade/rebateBatchAdd";
+    }
 
     /**
      * 抵扣券批次列表数据请求

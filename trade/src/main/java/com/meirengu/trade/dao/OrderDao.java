@@ -35,4 +35,10 @@ public interface OrderDao extends BaseDao<Order>{
      * @return
      */
     Map<String, Object> getSumAmountByUserId(Map map);
+    /**
+     * 根据档位id查询档位下面的投资金额
+     * @param levelIds
+     * @return
+     */
+    List<Map<String, Object>> getSumAmountByLevelIds(Map map);
 }
