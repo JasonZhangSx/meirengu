@@ -126,23 +126,23 @@ public class RebateBatchController extends BaseController{
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Result insert(@RequestParam String rebateName,
-                         @RequestParam String rebateScope,
-                         @RequestParam Integer rebateType,
-                         @RequestParam BigDecimal rebateLimitAmount,
-                         @RequestParam Integer rebateMark,
-                         @RequestParam BigDecimal rebateAmount,
-                         @RequestParam Integer rebateUseRange,
-                         @RequestParam Integer rebateUseRangeValue,
-                         @RequestParam Integer rebateLimit,
-                         @RequestParam Integer batchCount,
-                         @RequestParam Integer validType,
-                         @RequestParam String validStartTime,
-                         @RequestParam String validEndTime,
-                         @RequestParam Integer validDays,
-                         @RequestParam BigDecimal budgetAmount,
-                         @RequestParam String channel,
-                         @RequestParam String remarks) {
+    public Result insert(@RequestParam(value = "rebateName", required = false) String rebateName,
+                         @RequestParam(value = "rebateScope", required = false) String rebateScope,
+                         @RequestParam(value = "rebateType", required = false) Integer rebateType,
+                         @RequestParam(value = "rebateLimitAmount", required = false) BigDecimal rebateLimitAmount,
+                         @RequestParam(value = "rebateMark", required = false) Integer rebateMark,
+                         @RequestParam(value = "rebateAmount", required = false) BigDecimal rebateAmount,
+                         @RequestParam(value = "rebateUseRange", required = false) Integer rebateUseRange,
+                         @RequestParam(value = "rebateUseRangeValue", required = false) Integer rebateUseRangeValue,
+                         @RequestParam(value = "rebateLimit", required = false) Integer rebateLimit,
+                         @RequestParam(value = "batchCount", required = false) Integer batchCount,
+                         @RequestParam(value = "validType", required = false) Integer validType,
+                         @RequestParam(value = "validStartTime", required = false) String validStartTime,
+                         @RequestParam(value = "validEndTime", required = false) String validEndTime,
+                         @RequestParam(value = "validDays", required = false) Integer validDays,
+                         @RequestParam(value = "budgetAmount", required = false) BigDecimal budgetAmount,
+                         @RequestParam(value = "channel", required = false) String channel,
+                         @RequestParam(value = "remarks", required = false) String remarks) {
         if (StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope) || NumberUtil.isNullOrZero(rebateType)
                 || NumberUtil.isNullOrZero(rebateMark) || NumberUtil.isNullOrZero(rebateAmount) || NumberUtil.isNullOrZero(rebateUseRange)
                 || NumberUtil.isNullOrZero(rebateLimit) || NumberUtil.isNullOrZero(batchCount) || NumberUtil.isNullOrZero(validType)
@@ -171,23 +171,33 @@ public class RebateBatchController extends BaseController{
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
-        String url = ConfigUtil.getConfig("news.bulletin.insert");
+        String url = ConfigUtil.getConfig("rebate.batch.insert.url");
         Map<String, String> params = new HashMap<String, String>();
-        params.put("rebateName", rebateName);
-        params.put("rebateScope", rebateScope);
-        params.put("rebateType", rebateType.toString());
-        params.put("rebateLimitAmount", rebateLimitAmount.toString());
-        params.put("rebateMark", rebateMark.toString());
-        params.put("rebateAmount", rebateAmount.toString());
-        params.put("rebateUseRange", rebateUseRange.toString());
-        params.put("rebateUseRangeValue", rebateUseRangeValue.toString());
-        params.put("rebateLimit", rebateLimit.toString());
-        params.put("batchCount", batchCount.toString());
-        params.put("validType", validType.toString());
-        params.put("validStartTime", validStartTime);
-        params.put("validEndTime", validEndTime);
-        params.put("validDays", validDays.toString());
-        params.put("budgetAmount", budgetAmount.toString());
+        params.put("rebate_name", rebateName);
+        params.put("rebate_scope", rebateScope);
+        params.put("rebate_type", rebateType.toString());
+        if (!NumberUtil.isNullOrZero(rebateLimitAmount)) {
+            params.put("rebate_limit_amount", rebateLimitAmount.toString());
+        }
+        params.put("rebate_mark", rebateMark.toString());
+        params.put("rebate_amount", rebateAmount.toString());
+        params.put("rebate_use_range", rebateUseRange.toString());
+        if (!NumberUtil.isNullOrZero(rebateUseRangeValue)) {
+            params.put("rebate_use_range_value", rebateUseRangeValue.toString());
+        }
+        params.put("rebate_limit", rebateLimit.toString());
+        params.put("batch_count", batchCount.toString());
+        params.put("valid_type", validType.toString());
+        if (StringUtils.isNotBlank(validStartTime)) {
+            params.put("valid_start_time", validStartTime);
+        }
+        if (StringUtils.isNotBlank(validEndTime)) {
+            params.put("valid_end_time", validEndTime);
+        }
+        if (!NumberUtil.isNullOrZero(validDays)) {
+            params.put("valid_days", validDays.toString());
+        }
+        params.put("budget_amount", budgetAmount.toString());
         params.put("channel", channel);
         params.put("remarks", remarks);
         params.put("operate_account", "admin");//稍后修改

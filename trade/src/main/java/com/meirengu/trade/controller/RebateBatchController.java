@@ -103,8 +103,8 @@ public class RebateBatchController extends BaseController{
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
-        if (NumberUtil.isNullOrZero(rebateUseRangeValue)) {
-            rebateUseRangeValue = 0;
+        if (NumberUtil.isNullOrZero(rebateLimitAmount)) {
+            rebateLimitAmount = new BigDecimal(0);
         }
         if (StringUtils.isEmpty(channel)) {
             channel = "";

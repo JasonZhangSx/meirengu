@@ -97,7 +97,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 Date beginTime = DateUtils.parseDate(beginTimeStr.substring(0,19),"yyyy-MM-dd HH:mm:ss");
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(beginTime);
-                cal.add(Calendar.DATE, 1);
+                cal.add(Calendar.DATE, 3);
                 Calendar cal2 = Calendar.getInstance();
                 cal2.setTime(new Date());
                 long remainingTime = cal.getTimeInMillis() - cal2.getTimeInMillis();
