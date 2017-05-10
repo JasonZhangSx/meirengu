@@ -1,11 +1,5 @@
-package com.meirengu.trade.rocketmq;
+package com.meirengu.rocketmq;
 
-
-import java.util.List;
-
-import com.meirengu.trade.service.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -15,21 +9,38 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.List;
+@Component
 public class Consumer {
 
     private final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     private DefaultMQPushConsumer defaultMQPushConsumer;
-    private String namesrvAddr;
+    @Value("${rocketmq.consumer.group}")
     private String consumerGroup;
+    @Value("${rocketmq.namesrv.addr}")
+    private String namesrvAddr;
+    @Value("${rocketmq.subscribe.topic}")
+    private String topic;
+    @Value("${rocketmq.subscribe.tags}")
+    private String tags;
+
     @Autowired
-    private OrderService orderService;
+    private ApplicationContext applicationContext;
 
     /**
      * Spring bean init-method
      */
+    @PostConstruct
     public void init() throws InterruptedException, MQClientException {
 
         // 参数信息
@@ -41,11 +52,9 @@ public class Consumer {
         // 注意：ConsumerGroupName需要由应用来保证唯一
         defaultMQPushConsumer = new DefaultMQPushConsumer(consumerGroup);
         defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
-        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 
         // 订阅指定MyTopic下tags等于MyTag
-
-        defaultMQPushConsumer.subscribe("deploy", "*");
+        defaultMQPushConsumer.subscribe(topic, tags);
 
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
         // 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -62,18 +71,17 @@ public class Consumer {
 
                 MessageExt msg = msgs.get(0);
                 logger.info(msg.toString());
-                if (msg.getTopic().equals("deploy")) {
-                    // TODO 执行Topic的消费逻辑
-                    try {
-                        if (msg.getTags() != null && msg.getTags().equals("orderLoseEfficacy")) {
-                            // TODO 执行Tag的消费
-                            orderService.orderLoseEfficacy(new String(msg.getBody()));
-                        } else if (msg.getTags() != null && msg.getTags().equals("orderRemindForPay")) {
-                            // TODO 执行Tag的消费
-                            orderService.orderRemindForPay(new String(msg.getBody()));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                // TODO 执行Topic的消费逻辑
+                try {
+                    applicationContext.publishEvent(new RocketmqEvent(msg, defaultMQPushConsumer));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if(msg.getReconsumeTimes()<=3){//重复消费3次
+                        //TODO 进行日志记录
+                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    } else {
+                        //TODO 消息消费失败，进行日志记录
+                        logger.error("comsumer消费失败：{}", msg.toString());
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
@@ -81,15 +89,37 @@ public class Consumer {
             }
         });
 
-        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
-        defaultMQPushConsumer.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);//延迟5秒再启动，主要是等待spring事件监听相关程序初始化完成，否则，回出现对RocketMQ的消息进行消费后立即发布消息到达的事件，然而此事件的监听程序还未初始化，从而造成消息的丢失
+                    /**
+                     * Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
+                     */
+                    try {
+                        defaultMQPushConsumer.start();
+                    } catch (Exception e) {
+                        logger.info("DefaultMQPushConsumer start failure!");
+                        e.printStackTrace();
+                    }
 
-        logger.info("DefaultMQPushConsumer start success!");
+                    logger.info("DefaultMQPushConsumer start success!");
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+
+
     }
 
     /**
      * Spring bean destroy-method
      */
+    @PreDestroy
     public void destroy() {
         defaultMQPushConsumer.shutdown();
     }
@@ -104,4 +134,11 @@ public class Consumer {
         this.consumerGroup = consumerGroup;
     }
 
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 }

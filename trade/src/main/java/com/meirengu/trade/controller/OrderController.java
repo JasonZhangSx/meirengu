@@ -62,6 +62,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                     @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
                                     @RequestParam(value = "item_num", required = false) Integer itemNum,
+                                    @RequestParam(value = "share_hold_rate", required = false, defaultValue = "0.0000") BigDecimal shareHoldRate,
                                     @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                     @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                     @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
@@ -95,6 +96,7 @@ public class OrderController extends BaseController{
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
+        order.setShareHoldRate(shareHoldRate);
         order.setOrderAmount(orderAmount);
         order.setCostAmount(costAmount);
         order.setRebateAmount(rebateAmount);
@@ -149,6 +151,7 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "item_level_name", required = false) String itemLevelName,
                                       @RequestParam(value = "item_level_amount", required = false) BigDecimal itemLevelAmount,
                                       @RequestParam(value = "item_num", required = false) Integer itemNum,
+                                      @RequestParam(value = "share_hold_rate", required = false, defaultValue = "0.0000") BigDecimal shareHoldRate,
                                       @RequestParam(value = "order_amount", required = false) BigDecimal orderAmount,
                                       @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
                                       @RequestParam(value = "cost_amount", required = false) BigDecimal costAmount,
@@ -184,6 +187,7 @@ public class OrderController extends BaseController{
         order.setItemLevelName(itemLevelName);
         order.setItemLevelAmount(itemLevelAmount);
         order.setItemNum(itemNum);
+        order.setShareHoldRate(shareHoldRate);
         order.setOrderAmount(orderAmount);
         order.setCostAmount(costAmount);
         order.setRebateAmount(rebateAmount);
@@ -328,16 +332,16 @@ public class OrderController extends BaseController{
         if (StringUtils.isNotBlank(itemName)) {
             map.put("itemName", itemName);
         }
-        if (NumberUtil.isNullOrZero(userId)) {
+        if (!NumberUtil.isNullOrZero(userId)) {
             map.put("userId", userId);
         }
-        if (NumberUtil.isNullOrZero(orderState)) {
+        if (!NumberUtil.isNullOrZero(orderState)) {
             map.put("orderState", orderState);
         }
         if (needAvatar != null) {
             map.put("needAvatar", needAvatar);
         }
-        if (itemId != null) {
+        if (!NumberUtil.isNullOrZero(itemId)) {
             map.put("itemId", itemId);
         }
         if (StringUtils.isNotBlank(sortBy)) {
@@ -389,7 +393,7 @@ public class OrderController extends BaseController{
         if (StringUtils.isNotBlank(itemName)) {
             map.put("itemName", itemName);
         }
-        if (NumberUtil.isNullOrZero(orderState)) {
+        if (!NumberUtil.isNullOrZero(orderState)) {
             map.put("orderState", orderState);
         }
         if (StringUtils.isNotBlank(sortBy)) {
@@ -425,7 +429,7 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
-        if (NumberUtil.isNullOrZero(orderId)) {
+        if (!NumberUtil.isNullOrZero(orderId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         Order order = new Order();
@@ -537,7 +541,7 @@ public class OrderController extends BaseController{
         order.setFinishedTime(new Date());
         order.setOrderState(OrderStateEnum.PAID.getValue());
         try {
-            int i = orderService.updateBySn(order);
+            orderService.paymentCallBack(order);
             return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception: {}", e);

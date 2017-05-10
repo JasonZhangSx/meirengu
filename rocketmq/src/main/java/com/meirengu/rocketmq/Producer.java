@@ -1,27 +1,32 @@
-package com.meirengu.trade.rocketmq;
+package com.meirengu.rocketmq;
 
-
-import org.apache.rocketmq.client.exception.MQBrokerException;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+@Component
+@PropertySource("classpath:rocketmq.properties")
 public class Producer {
 
     private final Logger logger = LoggerFactory.getLogger(Producer.class);
 
     private DefaultMQProducer defaultMQProducer;
+    @Value("${rocketmq.producer.group}")
     private String producerGroup;
+    @Value("${rocketmq.namesrv.addr}")
     private String namesrvAddr;
 
     /**
      * Spring bean init-method
      */
+    @PostConstruct
     public void init() throws MQClientException {
         // 参数信息
         logger.info("DefaultMQProducer initialize!");
@@ -41,6 +46,7 @@ public class Producer {
     /**
      * Spring bean destroy-method
      */
+    @PreDestroy
     public void destroy() {
         defaultMQProducer.shutdown();
     }

@@ -9,7 +9,7 @@ import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserAddressService;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.UuidUtils;
 import com.meirengu.utils.ValidatorUtil;

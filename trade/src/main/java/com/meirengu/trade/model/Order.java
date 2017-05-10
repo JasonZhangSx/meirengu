@@ -23,6 +23,8 @@ public class Order{
 	private BigDecimal itemLevelAmount;
 	/** 众筹份数 */
 	private Integer itemNum;
+	/** 众筹份数 */
+	private BigDecimal shareHoldRate;
 	/** 合作方Id */
 	private Integer partnerId;
 	/** 订单总价格 */
@@ -131,6 +133,14 @@ public class Order{
 	public Integer getItemNum(){
 		return itemNum;
 	}
+
+	 public BigDecimal getShareHoldRate() {
+		 return shareHoldRate;
+	 }
+
+	 public void setShareHoldRate(BigDecimal shareHoldRate) {
+		 this.shareHoldRate = shareHoldRate;
+	 }
 
 	 public Integer getPartnerId() {
 		 return partnerId;

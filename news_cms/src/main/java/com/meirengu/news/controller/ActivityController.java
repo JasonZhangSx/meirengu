@@ -49,7 +49,12 @@ public class ActivityController extends BaseController{
         Map paramMap = new HashMap<String, Object>();
         Page<Activity> page = super.setPageParams(pageNum,pageSize);
         paramMap.put("sortBy", sortBy);
-        paramMap.put("order", order);
+        if(order.contains("desc") || order.contains("DESC")){
+            paramMap.put("order", "DESC");
+        }
+        if(order.contains("asc") || order.contains("ASC")){
+            paramMap.put("order", "ASC");
+        }
         paramMap.put("status", status);
         paramMap.put("activityId", activityId);
         paramMap.put("activityName", activityName);

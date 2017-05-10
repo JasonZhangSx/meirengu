@@ -4,6 +4,7 @@ import com.meirengu.model.Result;
 import com.meirengu.service.BaseService;
 import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.Order;
+import com.meirengu.rocketmq.RocketmqEvent;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -92,6 +93,7 @@ public interface OrderService extends BaseService<Order>{
      * @return
      */
     int updateBySn(Order order);
+    void paymentCallBack(Order order);
     /**
      * 生成3天订单txt文件
      */

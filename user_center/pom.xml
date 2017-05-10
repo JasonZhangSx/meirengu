@@ -356,6 +356,12 @@
         </dependency>
         <!-- 易保全电子合同专用 -->
 
+        <!--rocketMQ started-->
+        <dependency>
+            <groupId>com.meirengu</groupId>
+            <artifactId>rocketmq</artifactId>
+        </dependency>
+        <!--rocketMQ end-->
     </dependencies>
 
     <build>

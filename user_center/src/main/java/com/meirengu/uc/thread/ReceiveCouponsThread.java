@@ -1,5 +1,6 @@
 package com.meirengu.uc.thread;
 
+import com.meirengu.common.StatusCode;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -37,7 +38,7 @@ public class ReceiveCouponsThread implements Runnable{
 
             HttpResult hr = null;
             hr = HttpUtil.doPostForm(url, map);
-            if(hr.getStatusCode()!=200){
+            if(hr.getStatusCode() != StatusCode.OK){
                 Thread.sleep(5000L);
                 logger.info("InitPayAccountThread.initUserPayAccount post second>> uri :{}, params:{}", new Object[]{url, map});
                 hr = HttpUtil.doPostForm(url, map);

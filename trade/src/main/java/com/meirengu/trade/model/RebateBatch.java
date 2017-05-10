@@ -11,8 +11,14 @@ import java.util.Date;
 public class RebateBatch  extends BaseObject {
 	/** 抵扣券批次索引ID */
 	private Integer batchId;
-	/** 抵扣券类别：1通用型，2满减型，3固定项目抵扣券 */
+	/** 抵扣券类别：1无条件使用(订单免M元),2有条件使用(满N元减M元) */
 	private Integer rebateType;
+	/** 抵扣券限额：抵扣券类别为2时，限额 */
+	private BigDecimal rebateLimitAmount;
+	/** 抵扣券使用范围：1固定项目，2某类项目，3所有项目 */
+	private Integer rebateUseRange;
+	 /** 抵扣券使用范围值：抵扣券使用范围为1,2时，范围值 */
+	 private Integer rebateUseRangeValue;
 	/** 抵扣券标识 */
 	private Integer rebateMark;
 	/** 抵扣券名称 */
@@ -21,7 +27,7 @@ public class RebateBatch  extends BaseObject {
 	private String rebateScope;
 	/** 抵扣券金额 */
 	private BigDecimal rebateAmount;
-	/** 抵扣券使用限额 */
+	/** 抵扣券使用限制次数 */
 	private Integer rebateLimit;
 	/** 抵扣券有效天数 */
 	private Integer validDays;
@@ -200,4 +206,27 @@ public class RebateBatch  extends BaseObject {
 		return operateAccount;
 	}
 
-}
+	 public BigDecimal getRebateLimitAmount() {
+		 return rebateLimitAmount;
+	 }
+
+	 public void setRebateLimitAmount(BigDecimal rebateLimitAmount) {
+		 this.rebateLimitAmount = rebateLimitAmount;
+	 }
+
+	 public Integer getRebateUseRange() {
+		 return rebateUseRange;
+	 }
+
+	 public void setRebateUseRange(Integer rebateUseRange) {
+		 this.rebateUseRange = rebateUseRange;
+	 }
+
+	 public Integer getRebateUseRangeValue() {
+		 return rebateUseRangeValue;
+	 }
+
+	 public void setRebateUseRangeValue(Integer rebateUseRangeValue) {
+		 this.rebateUseRangeValue = rebateUseRangeValue;
+	 }
+ }

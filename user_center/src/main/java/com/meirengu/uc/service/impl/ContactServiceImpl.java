@@ -3,6 +3,7 @@ package com.meirengu.uc.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.dao.ContractDao;
 import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.dao.UserDao;
@@ -11,6 +12,7 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.model.UserAddress;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
+import com.meirengu.uc.utils.ContractUtil;
 import com.meirengu.uc.utils.NumberToCN;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
@@ -41,7 +43,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.meirengu.uc.utils.ThemisClientInit.getClient;
@@ -77,7 +78,7 @@ public class ContactServiceImpl implements ContactService {
         } catch (Exception e) {
             logger.error("ContactServiceImpl.CreateContactFile send get >> params:{}, exception:{}", new Object[]{e});
         }
-        if( hr!=null && hr.getStatusCode()==200){
+        if( hr!=null && hr.getStatusCode()==StatusCode.OK){
             Map<String,Object> mapData = new HashedMap();
             mapData = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(mapData!=null){
@@ -166,10 +167,10 @@ public class ContactServiceImpl implements ContactService {
                     html = html.replace("{investmentStalls}",data.get("investmentStalls"));//投资档位1
 
                     String flag = String.valueOf(data.get("flag"));
-                    if("1".equals(flag)){
+                    if(Constants.ONE_STRING.equals(flag)){
                         html = html.replace("{exitAndRepurchase}","届满<em>"+String.valueOf(data.get("exitAndRepurchaseDate"))+"</em>个月时，医院退还用户投资本金及利息。");
                     }
-                    if("2".equals(flag)){
+                    if(Constants.TWO_STRING.equals(flag)){
                         html = html.replace("{exitAndRepurchase}","每<em>"+String.valueOf(data.get("exitAndRepurchaseDate"))+"</em>月返还利息，届满<em>"+String.valueOf(data.get("exitAndRepurchaseDateNum"))+"</em>个月时，项目方退还用户投资本金。");//项目公司注册资金 （万元）//exitAndRepurchaseDateNum
                     }
 
@@ -213,13 +214,12 @@ public class ContactServiceImpl implements ContactService {
                         builder.setFile(new UploadFile(fileName,response.getByteArrayFile()));
                         builder.setPreservationTitle("收益权转让协议 合同");//保全标题
                         builder.setPreservationType(5);//保全类型，默认即可
-                        builder.setIdentifer(new PersonalIdentifer(data.get("investorIdCard"),data.get("investors"))); //测试是请修改为自己的姓名和身份证号
+                        builder.setIdentifer(new PersonalIdentifer(data.get("investorIdCard"),data.get("investors"))); //姓名和身份证号
                         builder.setSourceRegistryId("6");//平台来源ID
                         builder.setContractAmount(new Double(String.valueOf(data.get("investmentAmount"))));//合同金额
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                        String contractNo = "MRG-SYZR-"+sdf.format(new Date().getTime())+"-"+new Random().nextInt(10000);
+                        String contractNo = ContractUtil.getIncomeContractNo();
                         builder.setContractNumber(contractNo);//合同编号
-                        builder.setMobilePhone(user.getPhone());//测试时请修改为自己的手机号码
+                        builder.setMobilePhone(user.getPhone());//手机号码
                         builder.setComments("备注信息"); //备注
                         builder.setIsNeedSign(true);//是否启用保全签章
 
@@ -261,7 +261,7 @@ public class ContactServiceImpl implements ContactService {
                                 }
                                 if(count==0){
                                     //// TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
-
+                                    return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
                                 }
                             }else{
                                 logger.info("get download link failed");
@@ -317,8 +317,8 @@ public class ContactServiceImpl implements ContactService {
             Map<String,String> urlMap = new HashMap<String,String>();
             request.setPreservationId(new Long(contract1.getPreservationId()));
             ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
-            urlMap.put("contractName",contract1.getContractNo());
-            urlMap.put("generate","1");
+            urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
+            urlMap.put("generate", Constants.ONE_STRING);
             urlMap.put("url",response.getViewUrl());
             viewUrl.add(urlMap);
         }
@@ -339,17 +339,7 @@ public class ContactServiceImpl implements ContactService {
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
                 Map<String,String> urlMap = new HashMap<String,String>();
-
-//                String string = contract1.getContractNo().substring()
-//                if(){
-//
-//                }
-
-
-
-
-
-                urlMap.put("contractName",contract1.getContractNo());
+                urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
                 urlMap.put("url",response.getDownUrl());
                 downUrl.add(urlMap);
             }else{
@@ -367,7 +357,7 @@ public class ContactServiceImpl implements ContactService {
         Result result = new Result();
         result.setCode(code);
         result.setMsg(msg);
-        if (code == 200 && (data != null && !"".equals(data))){
+        if (code == StatusCode.OK && (data != null && !"".equals(data))){
             result.setData(data);
         }
         logger.info("Request getResponse: {}", JSON.toJSON(result));

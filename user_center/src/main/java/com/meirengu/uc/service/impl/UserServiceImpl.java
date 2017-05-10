@@ -13,7 +13,7 @@ import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
@@ -320,7 +320,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         } catch (Exception e) {
             logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{urlAppend, e});
         }
-        if(hr.getStatusCode()==200){
+        if(hr.getStatusCode() == StatusCode.OK){
             Map<String,Object> account = new HashedMap();
             account = JacksonUtil.readValue(hr.getContent(),Map.class);
             if(account!=null){
@@ -340,6 +340,29 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void getUserTotalInvestMoney(Map map) {
         map.put("totalInvestMoney","0.00");
+        try {
+            HttpResult hr = null;
+            String url = ConfigUtil.getConfig("URI_GET_SUM_AMOUNT");
+            String urlAppend = url+"?user_ids="+ map.get("userId");
+            hr = HttpUtil.doGet(urlAppend);
+            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+            if(hr.getStatusCode()== StatusCode.OK){
+                Map<String,Object> account = new HashedMap();
+                account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                if(account!=null){
+                    List<Map> mapData = (List<Map>)account.get("data");
+                    if(mapData!=null && mapData.get(0) != null){
+                        map.put("totalInvestMoney",mapData.get(0).get("sumOrderAmount"));
+                        map.put("sumRebateAmount",mapData.get(0).get("sumRebateAmount"));
+                        map.put("sumCostAmount",mapData.get(0).get("sumCostAmount"));
+                    }
+                }
+            }else{
+                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+            }
+        } catch (Exception e) {
+            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
+        }
     }
 
     @Override
@@ -450,7 +473,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             } catch (Exception e) {
                 logger.error("VerityServiceImpl.send error >> params:{}, exception:{}", new Object[]{params, e});
             }
-            if(hr.getStatusCode()==200){
+            if(hr.getStatusCode() == StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
@@ -468,7 +491,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                                     paramsModify.put("content", JacksonUtil.toJSon(payAccount));
                                     String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
                                     hr = HttpUtil.doPostForm(urlModify,paramsModify);
-                                    if(hr.getStatusCode()!=200){
+                                    if(hr.getStatusCode() != StatusCode.OK){
                                         hr = HttpUtil.doPostForm(urlModify,paramsModify);
                                     }else{
                                         return 1;
@@ -504,11 +527,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             paramsModify.put("content", JacksonUtil.toJSon(payAccount));
             String urlModify = ConfigUtil.getConfig("URI_MODIFY_USER_PAYACCOUNT");
             hr = HttpUtil.doPostForm(urlModify,paramsModify);
-            if(hr.getStatusCode()==200) {
+            if(hr.getStatusCode() == StatusCode.OK) {
                 return 1;
             }else{
                 hr = HttpUtil.doPostForm(urlModify, paramsModify);
-                if(hr.getStatusCode()==200){
+                if(hr.getStatusCode() == StatusCode.OK){
                     return 1;
                 }else{
                     return 0;

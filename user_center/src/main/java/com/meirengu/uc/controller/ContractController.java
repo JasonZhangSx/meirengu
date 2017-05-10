@@ -3,41 +3,70 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.rocketmq.RocketmqEvent;
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.service.ContactService;
+import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /** 电子合同controller
  * Created by huoyan403 on 4/11/2017.
  */
 @RestController
 @RequestMapping("contract")
-public class ContactController extends BaseController{
+public class ContractController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContractController.class);
 
     @Autowired
     private ContactService contactService;
+
+
+    /** rocketMQ接收消息
+     * 生成盖章合同 并创建保全  并把保全文本下载到本地一份
+     */
+    @EventListener(condition = "#event.topic=='user' && #event.tag=='createContract'")
+    public void listenCreateContactFile(RocketmqEvent event) throws IOException {
+        logger.info("ContactController listenCreateContactFile event :{} ",event.getMsg());
+        String message = event.getMsg();
+        Map<String,Object> map = (Map<String,Object>)JacksonUtil.readValue(message,Map.class);
+
+        String itemId = String.valueOf(map.get("itemId"));
+        String levelId = String.valueOf(map.get("levelId"));
+        String userId = String.valueOf(map.get("userId"));
+        String orderId = String.valueOf(map.get("orderId"));
+        Integer type = Integer.parseInt(String.valueOf(map.get("type")));
+
+        Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
+        if(result.getCode() != StatusCode.OK){
+            this.createContactFile(itemId,levelId,userId,orderId,type);
+        }
+    }
+
 
     /**生成盖章合同 并创建保全  并把保全文本下载到本地一份
      * @param itemId  项目id
      * @param levelId  档位id
      * @param userId   投资人id
      * @param itemId
-     * @param type 1:收益众筹 2:股权众筹
+     * @param type 1:产品众筹    2:收益众筹   3:股权众筹
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.GET)
-    public Result CreateContactFile(@RequestParam(value = "item_id",required = true) String itemId,
+    public Result createContactFile(@RequestParam(value = "item_id",required = true) String itemId,
                                     @RequestParam(value = "level_id",required = true) String levelId,
                                     @RequestParam(value = "order_id",required = true) String orderId,
                                     @RequestParam(value = "user_id",required = true) String userId,
@@ -45,23 +74,23 @@ public class ContactController extends BaseController{
         logger.info("ContactController createContactFile itemId :{} levelId:{} userId:{} type:{}",itemId,levelId,userId,type);
         try {
 
-            if(type != 1 && type != 2){
+            if(type != 1 && type != 2  && type != 3  ){
                 return this.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
             }
-            if(type == 1){
+            if(type == 2){
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
                 map.put("levelId",levelId);
                 map.put("userId",userId);
                 map.put("orderId",orderId);
                 Result result = contactService.CreateIncomeContactFile(map);
-                if(result.getCode() == 200){
+                if(result.getCode() == StatusCode.OK){
                     return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return contactService.CreateIncomeContactFile(map);
                 }
             }
-            if(type == 2){
+            if(type == 3){
                 Map<String,String> map = new HashMap();
                 map.put("itemId",itemId);
                 map.put("levelId",levelId);
@@ -78,11 +107,11 @@ public class ContactController extends BaseController{
 
     /**
      * 查看合同文件
-     * @param type 1:收益众筹 2:股权众筹
+     * @param type type 1:产品众筹    2:收益众筹   3:股权众筹
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result ViewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
+    public Result viewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
                                   @RequestParam(value = "type",required = true) Integer type) {
         logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
         try {
@@ -91,19 +120,21 @@ public class ContactController extends BaseController{
             List<Map<String,String>>  viewUrl=  contactService.ViewContactFile(map);
             if(viewUrl.size() == 0){
                 if(type == 1){
-                    Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName","收益转让协议");
-                    urlMap.put("generate","0");
-                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
-                    viewUrl.add(urlMap);
+
                 }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName","合伙协议(美人谷)");
-                    urlMap.put("generate","0");
+                    urlMap.put("contractName",Constants.SYZR_FULLNAME);
+                    urlMap.put("generate", Constants.ZERO_STRING);
+                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    viewUrl.add(urlMap);
+                }else if(type == 3){
+                    Map<String,String> urlMap = new HashMap<String,String>();
+                    urlMap.put("contractName",Constants.HHXY_FULLNAME);
+                    urlMap.put("generate",Constants.ZERO_STRING);
                     urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     Map<String,String> urlMap1 = new HashMap<String,String>();
-                    urlMap1.put("contractName","股权收益权投资协议");
-                    urlMap1.put("generate","0");
+                    urlMap1.put("contractName",Constants.GQZR_FULLNAME);
+                    urlMap1.put("generate",Constants.ZERO_STRING);
                     urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
                     viewUrl.add(urlMap);
                     viewUrl.add(urlMap1);
@@ -124,7 +155,7 @@ public class ContactController extends BaseController{
      * @return
      */
      @RequestMapping(value = "/down",method = RequestMethod.GET)
-        public Result DownContactFile(@RequestParam(value = "order_id",required = true) String orderId) {
+        public Result downContactFile(@RequestParam(value = "order_id",required = true) String orderId) {
          logger.info("ContactController DownContactFile order_id :{}",orderId);
             try {
 

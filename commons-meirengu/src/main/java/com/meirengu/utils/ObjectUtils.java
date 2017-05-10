@@ -1,24 +1,28 @@
 package com.meirengu.utils;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.util.*;
 
 /**
- * 
- * 对象处理工具类 TODO 该类可以改为工厂，对于各种特殊类型可以方便扩展
- * 
- * @author sunjie at 2016年7月28日
  *
+ * 对象处理工具类 TODO 该类可以改为工厂，对于各种特殊类型可以方便扩展
+ *
+ * @author sunjie at 2016年7月28日
+ * https://github.com/popkidorc/JavaUtils/blob/master/JavaUtil/src/com/utils/nulltest/ObjectUtils.java
+ * 版本待更新
  */
 public class ObjectUtils {
 
     private static final String T = null;
+    private static final Logger logger = LoggerFactory.getLogger(ObjectUtils.class);
 
     /**
-     * 
+     *
      * 将任意对象及对象内属性转为非null对象。深度转换，自动创建对象（对于多个构造方法的类，使用第一个能够成功的构造方法进行实例化）。
      *
      * @author sunjie at 2016年7月28日
@@ -35,7 +39,7 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 将任意对象及对象内属性转为非null对象。深度转换，自动创建对象（对于多个构造方法的类，使用第一个能够成功的构造方法进行实例化）。
      *
      * @author sunjie at 2016年7月28日
@@ -58,7 +62,7 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 将任意对象及对象内属性转为非null对象。深度转换，自动创建对象（对于多个构造方法的类，使用第一个能够成功的构造方法进行实例化）。
      *
      * @author sunjie at 2016年7月28日
@@ -66,7 +70,6 @@ public class ObjectUtils {
      * @param object
      * @param clazz
      *            对象的类
-     * @param _actualTypeClazzes
      *            泛型类，多范型，例如Map
      * @return
      * @throws Exception
@@ -122,7 +125,7 @@ public class ObjectUtils {
                 field.set(object, ObjectUtils.getNotNullObject(fieldObject, fieldClass, fieldActualTypeClazzes));
             }
         } catch (Exception e) {
-            System.err.println("NotNullObject is ERROR , object:" + object + ", class:" + clazz
+            logger.warn("NotNullObject is ERROR , object:" + object + ", class:" + clazz
                     + ", _actualTypeClazzes:" + _actualTypeClazzes + ", e:" + e.getMessage());
         }
         return object;
@@ -142,13 +145,12 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取interface类型的非空对象，TODO 需要自行扩展
      *
      * @author sunjie at 2016年7月28日
      *
      * @param clazz
-     * @param _actualTypeClazzes
      *            泛型类型
      * @return
      * @throws Exception
@@ -193,14 +195,13 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取数组的非空对象，TODO 待实现
      *
      * @author sunjie at 2016年7月28日
      *
      * @param arrayObject
      * @param clazz
-     * @param _actualTypeClazzes
      * @return
      * @throws Exception
      */
@@ -219,7 +220,7 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取基本类型的默认值
      *
      * @author sunjie at 2016年7月28日
@@ -238,13 +239,12 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取interface类型的默认值，TODO 需要自行扩展
      *
      * @author sunjie at 2016年7月28日
      *
      * @param clazz
-     * @param _actualTypeClazzes
      *            泛型类型
      * @return
      * @throws Exception
@@ -261,13 +261,12 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取数组的默认值，TODO 待实现
      *
      * @author sunjie at 2016年7月28日
      *
      * @param clazz
-     * @param _actualTypeClazzes
      *            泛型类型
      * @return
      * @throws Exception
@@ -278,12 +277,13 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 获取interface类型的默认值，需要自行扩展
      *
      * @author sunjie at 2016年7月28日
      *
      * @param clazz
+     *            泛型类型
      * @return
      * @throws Exception
      */
@@ -299,13 +299,12 @@ public class ObjectUtils {
     }
 
     /**
-     * 
+     *
      * 构造任意对象的空对象，深层构造
      *
      * @author sunjie at 2016年7月28日
      *
      * @param clazz
-     * @param _actualTypeClazzes
      * @return
      * @throws Exception
      */

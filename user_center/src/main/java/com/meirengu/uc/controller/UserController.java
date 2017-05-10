@@ -6,12 +6,13 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
-import com.meirengu.uc.utils.ObjectUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
@@ -85,16 +86,21 @@ public class UserController extends BaseController{
             paramMap.put("inviteRealname", inviteRealname);
             paramMap.put("inviteIdcard", inviteIdcard);
             paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
+            if(order.contains("desc") || order.contains("DESC")){
+                paramMap.put("order", "DESC");
+            }
+            if(order.contains("asc") || order.contains("ASC")){
+                paramMap.put("order", "ASC");
+            }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
-            for(Map map:list){
+            if(list.size() == 1){
                 //获取余额信息
-                userService.getUserRestMoney(map);
+                userService.getUserRestMoney(list.get(0));
                 //取累计投资额
-                userService.getUserTotalInvestMoney(map);
-                Thread.sleep(30L);//减小http访问   减小订单系统和支付系统http压力
+                userService.getUserTotalInvestMoney(list.get(0));
             }
+
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -179,7 +185,14 @@ public class UserController extends BaseController{
                 paramMap.put("realname", realname);
                 paramMap.put("idcard", idcard);
                 paramMap.put("sortBy", sortBy);
-                paramMap.put("order", order);
+                if(!StringUtil.isEmpty(order)){
+                    if(order.contains("desc") || order.contains("DESC")){
+                        paramMap.put("order", "DESC");
+                    }
+                    if(order.contains("asc") || order.contains("ASC")){
+                        paramMap.put("order", "ASC");
+                    }
+                }
                 page = userService.getByPage(page, paramMap);
             }else{
                 page = userService.getUserList(page,paramMap);
@@ -405,14 +418,14 @@ public class UserController extends BaseController{
             Boolean flag  = verityService.selectPayAccountByUserId(userId);
             Map<String,Object> map = new HashMap<String,Object>();
             if(flag){
-                map.put("payPassword","1");
+                map.put("payPassword",Constants.ONE_STRING);
             }else{
-                map.put("payPassword","0");
+                map.put("payPassword", Constants.ZERO_STRING);
             }
             if(StringUtil.isEmpty(user.getPassword())){
-                map.put("loginPassword","0");
+                map.put("loginPassword",Constants.ZERO_STRING);
             }else{
-                map.put("loginPassword","1");
+                map.put("loginPassword",Constants.ONE_STRING);
             }
             map.put("isAuth",user.getIsAuth());
             map.put("isBuy",user.getIsBuy());

@@ -3,11 +3,12 @@ package com.meirengu.trade.controller;
 import com.alibaba.fastjson.JSON;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
-import com.meirengu.trade.common.RebateTypeEnum;
 import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.trade.service.RebateBatchService;
+import com.meirengu.utils.NumberUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 优惠券批次控制类
@@ -52,30 +55,40 @@ public class RebateBatchController extends BaseController{
      * @return
      */
     @RequestMapping( method = RequestMethod.POST)
-    public Result refundApply(@RequestParam(value = "rebate_type", required = false)int rebateType,
-                              @RequestParam(value = "rebate_mark", required = false)int rebateMark,
+    public Result refundApply(@RequestParam(value = "rebate_type", required = false)Integer rebateType,
+                              @RequestParam(value = "rebate_limit_amount", required = false)BigDecimal rebateLimitAmount,
+                              @RequestParam(value = "rebate_use_range", required = false)Integer rebateUseRange,
+                              @RequestParam(value = "rebate_use_range_value", required = false)Integer rebateUseRangeValue,
+                              @RequestParam(value = "rebate_mark", required = false)Integer rebateMark,
                               @RequestParam(value = "rebate_name", required = false) String rebateName,
                               @RequestParam(value = "rebate_scope", required = false) String rebateScope,
                               @RequestParam(value = "rebate_amount", required = false) BigDecimal rebateAmount,
-                              @RequestParam(value = "rebate_limit", required = false) int rebateLimit,
-                              @RequestParam(value = "valid_days", required = false) int validDays,
+                              @RequestParam(value = "rebate_limit", required = false) Integer rebateLimit,
+                              @RequestParam(value = "valid_days", required = false) Integer validDays,
                               @RequestParam(value = "valid_start_time", required = false) Date validStartTime,
                               @RequestParam(value = "valid_end_time", required = false) Date validEndTime,
-                              @RequestParam(value = "valid_type", required = false) int validType,
-                              @RequestParam(value = "batch_count", required = false) int batchCount,
+                              @RequestParam(value = "valid_type", required = false) Integer validType,
+                              @RequestParam(value = "batch_count", required = false) Integer batchCount,
                               @RequestParam(value = "channel", required = false) String channel,
                               @RequestParam(value = "budget_amount", required = false) BigDecimal budgetAmount,
                               @RequestParam(value = "remarks", required = false) String remarks,
                               @RequestParam(value = "operate_account", required = false) String operateAccount){
 
-        if (rebateType == 0 || rebateMark == 0 || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope)
-                || StringUtils.isEmpty(operateAccount) || rebateAmount == null || rebateAmount.equals(BigDecimal.ZERO) || validType == 0 || batchCount == 0
-                || StringUtils.isEmpty(channel) || budgetAmount == null || budgetAmount.equals(BigDecimal.ZERO)){
+        if (NumberUtil.isNullOrZero(rebateType) || NumberUtil.isNullOrZero(rebateUseRange) || NumberUtil.isNullOrZero(rebateMark)
+                || StringUtils.isEmpty(rebateName) || StringUtils.isEmpty(rebateScope) || NumberUtil.isNullOrZero(rebateAmount)
+                || NumberUtil.isNullOrZero(rebateLimit) || NumberUtil.isNullOrZero(validType) || NumberUtil.isNullOrZero(batchCount)
+                || NumberUtil.isNullOrZero(budgetAmount) || StringUtils.isEmpty(operateAccount) ){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         //如果券类型为满减型，限额字段必须有值
-        if (rebateType == RebateTypeEnum.FULL_REBATE.getValue()) {
-            if (rebateLimit == 0) {
+        if (rebateType == Constant.REBATE_TYPE_CONDITIONAL) {
+            if (NumberUtil.isNullOrZero(rebateLimitAmount)) {
+                return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+            }
+        }
+        //如果券范围不是所有项目，使用范围值字段必须有值
+        if (rebateUseRange != Constant.REBATE_USE_ALL) {
+            if (NumberUtil.isNullOrZero(rebateUseRangeValue)) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
@@ -86,14 +99,23 @@ public class RebateBatchController extends BaseController{
             }
             //如果有效期判断类型为 2按相对时间过期 则有效天数字段必传
         } else if (validType == Constant.REBATE_EXPIRE_BY_RELATIVE_TIME) {
-            if (validDays == 0) {
+            if (NumberUtil.isNullOrZero(validDays)) {
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
+        }
+        if (NumberUtil.isNullOrZero(rebateUseRangeValue)) {
+            rebateUseRangeValue = 0;
+        }
+        if (StringUtils.isEmpty(channel)) {
+            channel = "";
         }
 
         //抵扣券批次信息
         RebateBatch rebateBatch = new RebateBatch();
         rebateBatch.setRebateType(rebateType);
+        rebateBatch.setRebateLimitAmount(rebateLimitAmount);
+        rebateBatch.setRebateUseRange(rebateUseRange);
+        rebateBatch.setRebateUseRangeValue(rebateUseRangeValue);
         rebateBatch.setRebateMark(rebateMark);
         rebateBatch.setRebateName(rebateName);
         rebateBatch.setRebateScope(rebateScope);
@@ -119,8 +141,46 @@ public class RebateBatchController extends BaseController{
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
     }
+
+    /**
+     * 抵扣券批次列表
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param batchId
+     * @param channel
+     * @param batchStatue
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    public Result getPage(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                          @RequestParam(value = "sort_by", required = false) String sortBy,
+                          @RequestParam(value = "order", required = false) String order,
+                          @RequestParam(value = "batch_id", required = false) Integer batchId,
+                          @RequestParam(value = "channel", required = false) String channel,
+                          @RequestParam(value = "batch_statue", required = false) Integer batchStatue){
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchId", batchId);
+        map.put("channel", channel);
+        map.put("batchStatue", batchStatue);
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        Page<RebateBatch> page = new Page<RebateBatch>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = rebateBatchService.getListByPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

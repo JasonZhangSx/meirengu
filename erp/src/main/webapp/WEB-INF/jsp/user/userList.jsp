@@ -29,9 +29,9 @@
                 </button>
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l" onclick="export1()"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a
-                        class="btn btn-primary radius" href="javascript:;"><i
-                        class="Hui-iconfont">&#xe634;</i>导出</a></span>
+                <%--<span class="l" onclick="export1()"><!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>  --><a--%>
+                        <%--class="btn btn-primary radius" href="javascript:;"><i--%>
+                        <%--class="Hui-iconfont">&#xe634;</i>导出</a></span>--%>
                 <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
             </div>
             <div class="mt-20">
@@ -45,8 +45,6 @@
                         <th>身份证号</th>
                         <th>投资人认证</th>
                         <th>银行卡</th>
-                        <th>账户余额</th>
-                        <th>已投资金额</th>
                         <th>注册时间</th>
                         <th>操作</th>
                     </tr>
@@ -89,6 +87,105 @@
     var table;
     $(document).ready(function() {
 
+//        table = $('.table-sort').DataTable({
+//            "pagingType": "simple_numbers",//设置分页控件的模式
+//            searching: false,//屏蔽datatales的查询框
+//            ordering:false,
+//            "scrollX": true, //允许水平滚动
+//            aLengthMenu:[10],//设置一页展示10条记录
+//            "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
+//            "oLanguage": {  //对表格国际化
+//                "sLengthMenu": "每页显示 _MENU_条",
+//                "sZeroRecords": "没有找到符合条件的数据",
+//                //  "sProcessing": "&lt;img src=’./loading.gif’ /&gt;",
+//                "sInfo": "当前第 _START_ - _END_ 条　共计 _TOTAL_ 条",
+//                "sInfoEmpty": "木有记录",
+//                "sInfoFiltered": "(从 _MAX_ 条记录中过滤)",
+//                "sSearch": "搜索：",
+//                "oPaginate": {
+//                    "sFirst": "首页",
+//                    "sPrevious": "前一页",
+//                    "sNext": "后一页",
+//                    "sLast": "尾页"
+//
+//                }
+//            },
+//            "processing": true, //打开数据加载时的等待效果
+//            "serverSide": true,//打开后台分页
+//            "ajax": {
+//                "url": "/erp/user/list",
+//                "dataSrc": "aaData",
+//                "data": function ( d ) {
+//                    var phone = $('#phone').val();
+//                    var realname = $('#realname').val();
+//                    var idcard = $('#idcard').val();
+//                    //添加额外的参数传给服务器
+//                    d.phone = phone;
+//                    d.realname = realname;
+//                    d.idcard = idcard;
+//                }
+//            },
+//            "columns": [
+//                { "data": "id" },
+//                { "data": "phone" },
+//                { "data": null,
+//                    render: function(data, type, row, meta) {
+//                        if(row.isAuth=='0'){
+//                            return '<label> 否 </label>';
+//                        }
+//                        if(row.isAuth=='1'){
+//                            return '<label> 是 </label>';
+//                        }
+//                    }
+//                },
+//                { "data": "realname" },
+//                { "data": "idCard" },
+//                { "data": null,
+//                    render: function(data, type, row, meta) {
+//                        if(row.investConditions=='0'){
+//                            return '<label> 用户未认证 </label>';
+//                        }
+//                        if(row.investConditions=='1'){
+//                            return '<label>  专业投资人  </label>';
+//                        }
+//                        if(row.investConditions=='2'){
+//                            return '<label>  近三年年收入不低于30万元  </label>';
+//                        }
+//                        if(row.investConditions=='3'){
+//                            return '<label>  金融资产不低于100万元 </label>';
+//                        }
+//                    }
+//                },
+//                { "data": null,
+//                    render: function(data, type, row, meta) {
+//                        return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
+//                    }
+//                },
+//                { "data": "accountBalance" },
+//                { "data": "totalInvestMoney" },
+//                { "data": "registerTime",
+//                    render: function(data, type, row, meta) {
+//                        //先讲 时间格式化
+//                        //这类问题主要给大家讲逻辑，因为都是类似的问题，类似的解决方案
+//                        //最基础的解决方案： 一、直接在数据源就格式化为常见的格式（sql或者后台代码格式化）;二、在dt里面格式化;
+//                        //在js格式化时间的三种方式，我这里示范一种
+//                        //具体方法的链接：http://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+//                        return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
+//                    }
+//                },
+//                { "data": null,
+//                    render: function(data, type, row, meta) {
+//                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'detail\','+row.phone+')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+//                    }
+//                }
+//            ]
+//
+//        } );
+    } );
+
+
+    function search1()
+    {
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
@@ -163,8 +260,6 @@
                         return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
                     }
                 },
-                { "data": "accountBalance" },
-                { "data": "totalInvestMoney" },
                 { "data": "registerTime",
                     render: function(data, type, row, meta) {
                         //先讲 时间格式化
@@ -183,12 +278,7 @@
             ]
 
         } );
-    } );
-
-
-    function search1()
-    {
-        table.ajax.reload();
+//        table.ajax.reload();
     }
     function export1()
         {

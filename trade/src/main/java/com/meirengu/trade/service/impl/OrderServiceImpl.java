@@ -12,7 +12,6 @@ import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
-import com.meirengu.trade.rocketmq.Producer;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
@@ -29,8 +28,11 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.meirengu.rocketmq.Producer;
+import com.meirengu.rocketmq.RocketmqEvent;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -60,6 +62,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
     @Autowired
     private Producer producer;
+
     /**
      * 获取订单详情
      * @param orderSn
@@ -77,6 +80,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     public Map<String, Object> orderDetail(Integer orderId) throws ParseException, IOException {
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
+            String orderSn = map.get("orderSn").toString();
+            //项目类型
+            int itemType = Integer.parseInt(orderSn.substring(2,3));
+            map.put("itemType", itemType);
             //如果是待支付订单，返回剩余支付时长
             int orderState = Integer.parseInt(map.get("orderState").toString());
             String beginTimeStr = null;
@@ -144,6 +151,37 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             map.put("headerImage", headerImagePath);
                             map.put("itemStatus", itemStatus);
                             map.put("partnerId", partnerId);
+                        }
+                    }
+                }
+            }
+            int contractGenerate = 1;
+            if (orderState == OrderStateEnum.PAID.getValue()) {
+                contractGenerate = 2;
+            }
+            // 防止没有数据时给客户端字段为空
+            map.put("contractGenerate", contractGenerate);
+            map.put("contractList", null);
+            //合同链接
+            String contractUrl = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemType;
+            HttpResult contractResult = HttpUtil.doGet(contractUrl);
+            logger.debug("Request: {} getResponse: {}", contractUrl, contractResult);
+            if (contractResult.getStatusCode() == HttpStatus.SC_OK) {
+                JSONObject resultJson = JSON.parseObject(contractResult.getContent());
+                int code = resultJson.getIntValue("code");
+                if (code == StatusCode.OK) {
+                    JSONArray contractList = resultJson.getJSONArray("data");
+                    map.put("contractList", contractList);
+                    if (contractList != null) {
+                        for (int i=0; i<contractList.size(); i++) {
+                            JSONObject contractInfo = contractList.getJSONObject(i);
+                            if (contractInfo != null && contractInfo.getString("generate") != null) {
+                                if (contractInfo.getString("generate").equals("1")) {
+                                    contractGenerate = 3;
+                                    map.put("contractGenerate", contractGenerate);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -514,26 +552,34 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     public Page getPage(Page page, Map map)  throws IOException {
         Integer needAvatar = Integer.parseInt(map.get("needAvatar").toString());
-        Integer itemId = Integer.parseInt(map.get("itemId").toString());
+        Integer itemId = Integer.parseInt((map.get("itemId")==null ? 0 : map.get("itemId")).toString());
         if (needAvatar == Constant.YES){
+            //modify by maoruxin 20170508 reason:展示所有待审核，待支付，已支付订单
             //该请求为支持人数列表的请求
             //1.查询项目状态
-            String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
-            HttpResult itemResult = HttpUtil.doGet(url);
-            logger.debug("Request: {} getResponse: {}", url, itemResult);
-            if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
-                JSONObject resultJson = JSON.parseObject(itemResult.getContent());
-                int code = resultJson.getIntValue("code");
-                if (code == StatusCode.OK) {
-                    JSONObject item = resultJson.getJSONObject("data");
-                    int itemStatus = item.getIntValue("itemStatus");
-                    if (itemStatus == Constant.ITEM_PERHEARTING) {
-                        map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
-                    } else {
-                        map.put("orderState", OrderStateEnum.PAID.getValue());
-                    }
-                }
-            }
+//            String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
+//            HttpResult itemResult = HttpUtil.doGet(url);
+//            logger.debug("Request: {} getResponse: {}", url, itemResult);
+//            if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+//                JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+//                int code = resultJson.getIntValue("code");
+//                if (code == StatusCode.OK) {
+//                    JSONObject item = resultJson.getJSONObject("data");
+//                    int itemStatus = item.getIntValue("itemStatus");
+//                    if (itemStatus == Constant.ITEM_PERHEARTING) {
+//                        map.put("orderState", OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+//                    } else {
+//                        map.put("orderState", OrderStateEnum.PAID.getValue());
+//                    }
+//                }
+//            }
+            //预约、审核通过，待支付，已支付
+            List<Integer> orderStateList = new ArrayList<Integer>();
+            orderStateList.add(OrderStateEnum.BOOK.getValue());
+            orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+            orderStateList.add(OrderStateEnum.UNPAID.getValue());
+            orderStateList.add(OrderStateEnum.PAID.getValue());
+            map.put("orderStateList", orderStateList);
         }
         //2.查询列表
         page = getListByPage(page, map);
@@ -761,6 +807,24 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return orderDao.updateBySn(order);
     }
     /**
+     * 通过订单编号更新订单消息
+     * @param order
+     * @return
+     */
+    public void paymentCallBack(Order order) {
+        int i = updateBySn(order);
+        if (i > 0) {
+            Map<String, Object> map = orderDao.orderDetailBySn(order.getOrderSn());
+            //下单成功回调修改已筹金额
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("item_id", map.get("itemId").toString());
+            paramMap.put("amount", map.get("orderAmount").toString());
+            String url = ConfigUtil.getConfig("item.complete.amount.update.url");
+            HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
+            logger.debug("Request: {} getResponse: {}", url, httpResult);
+        }
+    }
+    /**
      * 用户已购份数查询
      * @param param
      */
@@ -843,26 +907,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param orderSn
      */
     private void sendRocketMQDeployQueue(String orderSn) {
-        Message msg = new Message("deploy", "orderLoseEfficacy", orderSn.getBytes());
-        msg.setKeys("OSE" + orderSn);
+        String key = "OLE" + orderSn;
+        Message msg = new Message("trade", "orderLoseEfficacy", key, orderSn.getBytes());
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(21);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：tag:orderLoseEfficacy: {}", orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
-            logger.info("sendResult: {}", sendResult);
-        } catch (MQClientException e) {
-            logger.error(e.getMessage() + String.valueOf(sendResult));
+            logger.info("sendResult: {}, key: {}", sendResult, key);
         } catch (Exception e) {
+            logger.error("发送消息异常：{}", e);
             e.printStackTrace();
         }
 
         // 当消息发送失败时如何处理
         if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
             // TODO
-            logger.error("发送消息：tag:orderLoseEfficacy: {}失败", orderSn);
-            logger.error(sendResult.toString());
+            logger.error("发送消息失败 sendResult: {}, key: {} ", sendResult, key);
         }
     }
     /**
@@ -870,15 +931,14 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param orderSn
      */
     private void sendRocketMQDeployQueue4Sms(String orderSn) {
-        Message msg = new Message("deploy", "orderRemindForPay", orderSn.getBytes());
-        msg.setKeys("ORFP" + orderSn);
+        String key = "ORFP" + orderSn;
+        Message msg = new Message("trade", "orderLoseEfficacy",key, orderSn.getBytes());
         //messageDelayLevel =  1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;
         try {
-            logger.debug("发送消息：tag:orderRemindForPay: {}", orderSn);
             sendResult = producer.getDefaultMQProducer().send(msg);
-            logger.info("sendResult: {}", sendResult);
+            logger.info("sendResult: {}, key: {}", sendResult, key);
         } catch (MQClientException e) {
             logger.error(e.getMessage() + String.valueOf(sendResult));
         } catch (Exception e) {
@@ -970,16 +1030,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     || orderState == OrderStateEnum.UNPAID.getValue()) {
 
                 /**未支付与抵扣券短信目前无法发送
-                // 发送短信提醒用户
-                // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
-                params = new HashMap<String, String>();
-                params.put("tpl_id", Integer.toString(1790353));
-                params.put("mobile", orderMap.get("userPhone").toString());
-                params.put("item_name", orderMap.get("itemName").toString());
-                String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
-                HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
-                logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
-                */
+                 // 发送短信提醒用户
+                 // 1790353=【美人谷】亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
+                 params = new HashMap<String, String>();
+                 params.put("tpl_id", Integer.toString(1790353));
+                 params.put("mobile", orderMap.get("userPhone").toString());
+                 params.put("item_name", orderMap.get("itemName").toString());
+                 String smsurl = ConfigUtil.getConfig("single.send.tpl.url");
+                 HttpResult smsHttpResult = HttpUtil.doPostForm(smsurl, params);
+                 logger.debug("Request: {} getResponse: {}", smsurl, smsHttpResult);
+                 */
 
                 // 发送消息提醒用户
                 // 14986214=亲，您的#item_name#项目订单还未支付，请登录APP立即支付，超时未支付将会关闭自动订单。
@@ -1014,4 +1074,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return list;
     }
 
+    /**
+     * 订单失效消息监听
+     * @return
+     */
+    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
+    public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
+        logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
+        String orderSn = event.getMsg();
+        //TODO 进行业务处理
+        orderLoseEfficacy(orderSn);
+    }
+
+    /**
+     * 订单失效前提醒消息监听
+     * @return
+     */
+    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderRemindForPay'")
+    public void listenOrderRemindForPay(RocketmqEvent event) throws Exception {
+        logger.info("listenOrderRemindForPay: {}", event.getMsg());
+        String orderSn = event.getMsg();
+        orderRemindForPay(orderSn);
+    }
 }
