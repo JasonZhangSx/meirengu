@@ -173,7 +173,7 @@
 
 		<include refid="findPage_where"/>
 	</select>
-	<!-- 抵扣券连表查询结束 -->
+	<!-- 抵扣券连表查询结束
 	SELECT
 	tr.rebate_id,
 	tr.rebate_sn,
@@ -200,5 +200,5 @@
 	LEFT JOIN rebate_batch trb ON tr.rebate_batch = trb.batch_id
 	LEFT JOIN rebate_receive trr ON tr.rebate_sn = trr.rebate_sn
 	LEFT JOIN rebate_used tru ON tr.rebate_sn = tru.rebate_sn;
-
+-->
 </mapper>
