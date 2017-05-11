@@ -50,7 +50,8 @@ public class UserController extends BaseController{
     public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard){
+                                    @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
+                                    @RequestParam(value="is_auth", required = false ,defaultValue = "") String isAuth){
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
@@ -59,6 +60,7 @@ public class UserController extends BaseController{
         paramsMap.put("phone",phone);
         paramsMap.put("realname",realname);
         paramsMap.put("idcard",idcard);
+        paramsMap.put("is_auth",isAuth);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
         paramsMap.put("page",page+"");
@@ -68,15 +70,21 @@ public class UserController extends BaseController{
 
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
-        //后台处理数据 保存编号 没有编号的不需要这一步
-        for (int i = 0;i<userList.size();i++){
-            userList.get(i).put("id",i+1);
+        List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
+        if(map != null){
+            userList = (List<Map<String,Object>>) map.get("list");
+            //后台处理数据 保存编号 没有编号的不需要这一步
+            for (int i = 0;i<userList.size();i++){
+                userList.get(i).put("id",i+1);
+            }
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+        }else{
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(0);//显示总记录
+            view.setiTotalRecords(0);//数据库总记录
         }
-        //保存给datatabls 分页数据
-        view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-        view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
-
         view.setAaData(userList);
         return view;
     }
