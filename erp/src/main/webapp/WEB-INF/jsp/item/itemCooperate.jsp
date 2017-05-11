@@ -788,6 +788,7 @@
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-8 col-sm-8  col-sm-offset-1" style="text-align:left;">投资人每投资100万元，股东向管理公司质押不低于
+                        <input type="text" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width: 50px; text-align: center;" id="pledgedShares" name="pledgedShares">
                         %的股份</label>
 
                 </div>
@@ -953,8 +954,8 @@
                                     <c:if test="${record.operateType == 5}">下架</c:if>
                                 </td>
                                 <td>
-                                    <c:if test="${record.operateType == 1}">通过</c:if>
-                                    <c:if test="${record.operateType == 0}">不通过</c:if>
+                                    <c:if test="${record.operateStatus == 1}">通过</c:if>
+                                    <c:if test="${record.operateStatus == 0}">不通过</c:if>
                                 </td>
                                 <td>${record.operateRemark}</td>
                                 <td>

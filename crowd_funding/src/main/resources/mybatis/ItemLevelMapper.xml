@@ -152,10 +152,10 @@
 		</set>
 		WHERE level_id=#{levelId}
 		<if test="bookNumber != null">
-			and total_number-book_number>0
+			and total_number-book_number>=0
 		</if>
 		<if test="completedNumber != null">
-			and total_number-completed_number>0
+			and total_number-completed_number>=0
 		</if>
 	</update>
 

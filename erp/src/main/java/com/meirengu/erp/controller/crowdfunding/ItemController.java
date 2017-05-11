@@ -171,6 +171,9 @@ public class ItemController extends BaseController {
         params.put("header_image", item.getHeaderImage());
         params.put("operate_account", "jason");
         params.put("sponsor_name","jason");
+        params.put("lead_investor_name", item.getLeadInvestorName());
+        params.put("lead_investor_amount", String.valueOf(item.getLeadInvestorAmount()));
+        params.put("lead_investor_header", item.getLeadInvestorHeader());
 
         try {
             if(item.getItemId() == null || item.getItemId() == 0){
@@ -372,15 +375,15 @@ public class ItemController extends BaseController {
     }
 
     @RequestMapping(value = "cooperate")
-    public Map cooperate(ItemCooperation cooperation){
+    public ModelAndView cooperate(ItemCooperation cooperation){
         Map<String, Object> returnMap = new HashMap<>();
         Map<String, String> params = new HashMap<>();
         params.put("item_id", String.valueOf(cooperation.getItemId()));
-        params.put("commission_rate", String.valueOf(cooperation.getCommissionRate()));
-        params.put("guarantee_rate", String.valueOf(cooperation.getGuaranteeRate()));
-        params.put("prepaid_bonus", String.valueOf(cooperation.getPrepaidBonus()));
-        params.put("loan_mode", String.valueOf(cooperation.getLoanMode()));
-        params.put("first_ratio", String.valueOf(cooperation.getFirstRatio()));
+        params.put("commission_rate", cooperation.getCommissionRate() == null ? "0" : String.valueOf(cooperation.getCommissionRate()));
+        params.put("guarantee_rate", cooperation.getGuaranteeRate() == null ? "0" : String.valueOf(cooperation.getGuaranteeRate()));
+        params.put("prepaid_bonus", cooperation.getPrepaidBonus() == null ? "0" : String.valueOf(cooperation.getPrepaidBonus()));
+        params.put("loan_mode", cooperation.getLoanMode() == null ? "1" : String.valueOf(cooperation.getLoanMode()));
+        params.put("first_ratio", cooperation.getFirstRatio() == null ? "0" : String.valueOf(cooperation.getFirstRatio()));
         params.put("sponsor_idcard", cooperation.getSponsorIdcard());
         params.put("sponsor_credit", cooperation.getSponsorCredit());
         params.put("principal_idcard", cooperation.getPrincipalIdcard());
@@ -411,7 +414,8 @@ public class ItemController extends BaseController {
             returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
             returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-        return returnMap;
+
+        return new ModelAndView("redirect:/item/to_review");
     }
 
     @RequestMapping(value = "to_review")
@@ -423,6 +427,20 @@ public class ItemController extends BaseController {
             e.printStackTrace();
         }
         return new ModelAndView("/item/itemReview", returnMap);
+    }
+
+    @RequestMapping(value = "review")
+    public Map review(Integer itemId, Integer operateStatus, String operateRemark){
+        Map<String, Object> returnMap = new HashMap<>();
+        if(itemService.review(itemId, operateStatus, operateRemark)){
+            returnMap.put("code", StatusCode.OK);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
+            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
+        return returnMap;
     }
 
 

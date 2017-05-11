@@ -171,20 +171,21 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
      * @return
      */
     @Override
-    public int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
+    @Transactional
+    public int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
 
         try {
-            //1.修改订单的预约/已筹金额
+            //1.修改订单的已筹金额
             ItemLevel il = itemLevelService.detail(levelId);
             if(il == null){
-                LOGGER.warn(">> the level does not exit.... id : ", levelId);
+                LOGGER.warn(">>ItemServiceImpl.completedRollback the level does not exit.... id : ", levelId);
                 return StatusCode.ITEM_LEVEL_NULL;
             }
             int levelStatus = il.getLevelStatus();
 
             BigDecimal levelAmount1 = il.getLevelAmount();
             if(levelAmount.compareTo(levelAmount1) != 0){
-                LOGGER.warn(">> two level amount does not equal... param amount is {}, query amount is {}",
+                LOGGER.warn(">>ItemServiceImpl.completedRollback two level amount does not equal... param amount is {}, query amount is {}",
                         new Object[]{levelAmount, levelAmount1});
                 return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
             }
@@ -195,26 +196,27 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             int currentNumber = completedNumber - itemNum;
             //先比较已完成的数量和要回滚的数量
             if(currentNumber < 0){
-                LOGGER.warn(">> two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{itemNum, completedNumber});
+                LOGGER.warn(">>ItemServiceImpl.completedRollback two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{itemNum, completedNumber});
                 return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
             }
 
             compareToReturnNum = totalAmount.compareTo(completedAmount);
 
             if(compareToReturnNum != 0){
-                LOGGER.warn(">> totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                LOGGER.warn(">>ItemServiceImpl.completedRollback totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
                         new Object[]{totalAmount, levelAmount, itemNum});
                 return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
             }
 
-            Item item = new Item();
+            //已筹金额回滚
+            /*Item item = new Item();
             item.setItemId(itemId);
             item.setCompletedAmount(totalAmount.multiply(new BigDecimal(-1)));
             int i = itemDao.changeAmount(item);
             if(i != 1){
                 LOGGER.warn(">> update amount fail....");
                 throw new BusinessException("update amount fail....");
-            }
+            }*/
 
             ItemLevel levelParam = new ItemLevel();
             levelParam.setLevelId(levelId);
@@ -226,13 +228,80 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             }
             int j = itemLevelService.updateNumber(levelParam);
             if(j != 1){
-                LOGGER.warn(">> update number fail....");
+                LOGGER.warn(">>ItemServiceImpl.completedRollback update number fail....");
                 throw new BusinessException("update number fail....");
             }
 
             return StatusCode.OK;
         }catch (Exception e){
-            String errorMsg = ">> change amount throw exception: {}";
+            String errorMsg = ">>ItemServiceImpl.completedRollback change amount throw exception: {}";
+            LOGGER.error(errorMsg, e);
+            throw new BusinessException(errorMsg, e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public int appointRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal
+            appointAmount) {
+        try {
+            //1.修改订单的预约金额
+            ItemLevel il = itemLevelService.detail(levelId);
+            if(il == null){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback the level does not exit.... id : ", levelId);
+                return StatusCode.ITEM_LEVEL_NULL;
+            }
+            int levelStatus = il.getLevelStatus();
+
+            BigDecimal levelAmount1 = il.getLevelAmount();
+            if(levelAmount.compareTo(levelAmount1) != 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback two level amount does not equal... param amount is {}, query amount is {}",
+                        new Object[]{levelAmount, levelAmount1});
+                return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
+            }
+
+            BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
+            int compareToReturnNum = -1;
+            int bookNumber = il.getBookNumber();
+            int currentNumber = bookNumber - itemNum;
+            //先比较已完成的数量和要回滚的数量
+            if(currentNumber < 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback two level amount does not equal... param itemNum is {}, bookNumber is {}", new Object[]{itemNum, bookNumber});
+                return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
+            }
+
+            compareToReturnNum = totalAmount.compareTo(appointAmount);
+
+            if(compareToReturnNum != 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                        new Object[]{totalAmount, levelAmount, itemNum});
+                return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
+            }
+
+            Item item = new Item();
+            item.setItemId(itemId);
+            item.setAppointAmount(totalAmount.multiply(new BigDecimal(-1)));
+            int i = itemDao.changeAmount(item);
+            if(i != 1){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback update amount fail....");
+                throw new BusinessException("ItemServiceImpl.appointRollback update amount fail....");
+            }
+
+            ItemLevel levelParam = new ItemLevel();
+            levelParam.setLevelId(levelId);
+
+            levelParam.setBookNumber(currentNumber);
+            levelParam.setLevelStatus(Constants.LEVEL_APPOINTING);
+
+            int j = itemLevelService.updateNumber(levelParam);
+            if(j != 1){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback update number fail....");
+                throw new BusinessException("ItemServiceImpl.appointRollback update number fail....");
+            }
+
+            return StatusCode.OK;
+        }catch (Exception e){
+            String errorMsg = ">>ItemServiceImpl.appointRollback change amount throw exception: {}";
             LOGGER.error(errorMsg, e);
             throw new BusinessException(errorMsg, e);
         }
@@ -342,6 +411,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
+    @Transactional
     public void setCooperate(ItemCooperation itemCooperation) {
         if(itemCooperation != null){
             //1 新增设置合作  2  修改项目状态  3 插入审核记录
@@ -355,6 +425,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
 
             Item item = new Item();
             item.setItemId(itemCooperation.getItemId());
+            item.setItemStatus(Constants.ITEM_REVIEW_VERIFY);
 
             try {
 

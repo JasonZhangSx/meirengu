@@ -18,7 +18,27 @@ public interface ItemService extends BaseService<Item>{
 
     int changeAmount(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount, BigDecimal completedAmount);
 
-    int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount);
+    /**
+     * 已筹金额、档位回滚
+     * @param itemId
+     * @param levelAmount
+     * @param levelId
+     * @param itemNum
+     * @param completedAmount
+     * @return
+     */
+    int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount);
+
+    /**
+     * 已预约金额、档位回滚
+     * @param itemId
+     * @param levelAmount
+     * @param levelId
+     * @param itemNum
+     * @param appointAmount
+     * @return
+     */
+    int appointRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount);
 
     Map<String, Object> moreDetail(int id);
 

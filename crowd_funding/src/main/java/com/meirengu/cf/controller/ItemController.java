@@ -147,14 +147,17 @@ public class ItemController extends BaseController {
                          @RequestParam(value = "area_id", required = false) Integer areaId,
                          @RequestParam(value = "header_image", required = false) String headerImage,
                          @RequestParam(value = "sponsor_name", required = false) String sponsorName,
-                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+                         @RequestParam(value = "operate_account", required = false) String operateAccount,
+                         @RequestParam(value = "lead_investor_name", required = false) String leadInvestorName,
+                         @RequestParam(value = "lead_investor_header", required = false) String leadInvestorHeader,
+                         @RequestParam(value = "lead_investor_amount", required = false) BigDecimal leadInvestorAmount){
         try {
             Item item = setEntity(null, itemName, itemProfile, typeId, classId,
                     targetAmount, new BigDecimal(0), new BigDecimal(0),
                     preheatingDays, null, null, crowdDays,
                     null, null, partnerId, areaId, headerImage,
-                    Constants.ITEM_BUILDING, Constants.STATUS_YES, 255, new Date(), null,
-                    operateAccount, sponsorName);
+                    Constants.ITEM_BUILDING, Constants.STATUS_YES, 255, new Date(),
+                    operateAccount, sponsorName, leadInvestorName, leadInvestorHeader, leadInvestorAmount);
             int insertNum = itemService.insert(item);
             if(insertNum == 1){
                 return super.setResult(StatusCode.OK, item, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -235,7 +238,10 @@ public class ItemController extends BaseController {
                          @RequestParam(value = "sponsor_name", required = false) String sponsorName,
                          @RequestParam(value = "item_sort", required = false) Integer itemSort,
                          @RequestParam(value = "item_status", required = false) Integer itemStatus,
-                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+                         @RequestParam(value = "operate_account", required = false) String operateAccount,
+                         @RequestParam(value = "lead_investor_name", required = false) String leadInvestorName,
+                         @RequestParam(value = "lead_investor_header", required = false) String leadInvestorHeader,
+                         @RequestParam(value = "lead_investor_amount", required = false) BigDecimal leadInvestorAmount){
         try {
             if(StringUtil.isEmpty(itemId)){
                 return super.setResult(StatusCode.MISSING_ARGUMENT, "", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -244,8 +250,8 @@ public class ItemController extends BaseController {
                     targetAmount, appointAmount, completedAmount,
                     preheatingDays, preheatingStartTime, preheatingEndTime, crowdDays,
                     crowdStartTime, crowdEndTime, partnerId, areaId, headerImage,
-                    itemStatus, null, itemSort, null, null,
-                    operateAccount, sponsorName);
+                    itemStatus, null, itemSort, null,
+                    operateAccount, sponsorName, leadInvestorName, leadInvestorHeader, leadInvestorAmount);
             int updateNum = itemService.update(item);
             if(updateNum == 1){
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -339,7 +345,7 @@ public class ItemController extends BaseController {
 
 
     /**
-     * 失效订单将已筹集金额减回去
+     * 失效订单将已筹集金额，份数减回去
      * @param itemId
      * @param levelId
      * @param levelAmount
@@ -348,14 +354,39 @@ public class ItemController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "level_rollback", method = RequestMethod.POST)
-    public Result levelRollback(@RequestParam(value = "item_id", required = false) Integer itemId,
+    @RequestMapping(value = "complete/rollback", method = RequestMethod.POST)
+    public Result completeRollback(@RequestParam(value = "item_id", required = false) Integer itemId,
                            @RequestParam(value = "level_id", required = false) Integer levelId,
                            @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
                            @RequestParam(value = "item_num", required = false) Integer itemNum,
                            @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount){
         try {
-            int code = itemService.levelRollback(itemId, levelAmount, levelId, itemNum, totalAmount);
+            int code = itemService.completedRollback(itemId, levelAmount, levelId, itemNum, totalAmount);
+            return super.setResult(code, null, StatusCode.codeMsgMap.get(code));
+        }catch (Exception e){
+            LOGGER.error(">>ItemController.levelRollback throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 失效订单将已预约金额，份数减回去
+     * @param itemId
+     * @param levelId
+     * @param levelAmount
+     * @param itemNum
+     * @param totalAmount
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "appoint/rollback", method = RequestMethod.POST)
+    public Result appointRollback(@RequestParam(value = "item_id", required = false) Integer itemId,
+                                @RequestParam(value = "level_id", required = false) Integer levelId,
+                                @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
+                                @RequestParam(value = "item_num", required = false) Integer itemNum,
+                                @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount){
+        try {
+            int code = itemService.appointRollback(itemId, levelAmount, levelId, itemNum, totalAmount);
             return super.setResult(code, null, StatusCode.codeMsgMap.get(code));
         }catch (Exception e){
             LOGGER.error(">>ItemController.levelRollback throw exception: {}", e);
@@ -580,8 +611,8 @@ public class ItemController extends BaseController {
                           BigDecimal targetAmount, BigDecimal appointAmount, BigDecimal completedAmount,
                           Integer preheatingDays, Date preheatingStartTime, Date preheatingEndTime, Integer crowdDays,
                           Date crowdStartTime, Date crowdEndTime, Integer partnerId, Integer areaId, String headerImage,
-                          Integer itemStatus, Integer flag, Integer itemSort, Date createTime, Date updateTime,
-                          String operateAccount, String sponsorName) {
+                          Integer itemStatus, Integer flag, Integer itemSort, Date createTime, String operateAccount,
+                          String sponsorName, String leadInvestorName, String leadInvestorHeader, BigDecimal leadInvestorAmount) {
         Item item = new Item();
 
         item.setItemId(itemId);
@@ -589,7 +620,10 @@ public class ItemController extends BaseController {
         item.setItemProfile(itemProfile);
         item.setTypeId(typeId);
         item.setClassId(classId);
-        item.setTargetAmount(targetAmount);
+        item.setLeadInvestorAmount(leadInvestorAmount == null ? BigDecimal.valueOf(0): leadInvestorAmount);
+        item.setLeadInvestorName(leadInvestorName == null ? "" : leadInvestorName);
+        item.setLeadInvestorHeader(leadInvestorHeader == null ? "" : leadInvestorHeader);
+        item.setTargetAmount(targetAmount == null ? BigDecimal.valueOf(0) : targetAmount.add(item.getLeadInvestorAmount().multiply(BigDecimal.valueOf(10000))));
         item.setAppointAmount(appointAmount);
         item.setCompletedAmount(completedAmount);
         item.setPreheatingDays(preheatingDays);
@@ -600,17 +634,17 @@ public class ItemController extends BaseController {
         item.setCrowdEndTime(crowdEndTime);
         item.setPartnerId(partnerId);
         item.setAreaId(areaId);
-        item.setHeaderImage(headerImage);
+        item.setHeaderImage(headerImage == null ? "" : headerImage);
         item.setItemStatus(itemStatus);
         item.setFlag(flag);
         item.setItemSort(itemSort);
         item.setCreateTime(createTime);
-        item.setUpdateTime(updateTime);
-        item.setOperateAccount(operateAccount);
-        item.setSponsorName(sponsorName);
+        item.setOperateAccount(operateAccount == null ? "" : operateAccount);
+        item.setSponsorName(sponsorName == null ? "" : sponsorName);
 
         return item;
     }
+
 
     private ItemCooperation setItemCooperation(Integer itemId, BigDecimal commissionRate, BigDecimal guaranteeRate, Integer prepaidBonus,
                                       Integer loanMode, Integer firstRatio, String sponsorIdcard, String sponsorCredit, String
@@ -623,11 +657,11 @@ public class ItemController extends BaseController {
                                               sharePledgeAgreement, String guarantyAgreement, Date createTime, String operateAccount){
         ItemCooperation entity = new ItemCooperation();
         entity.setItemId(itemId);
-        entity.setCommissionRate(commissionRate);
-        entity.setGuaranteeRate(guaranteeRate);
-        entity.setPrepaidBonus(prepaidBonus);
+        entity.setCommissionRate(commissionRate == null ? BigDecimal.valueOf(0) : commissionRate);
+        entity.setGuaranteeRate(guaranteeRate == null ? BigDecimal.valueOf(0) : guaranteeRate);
+        entity.setPrepaidBonus(prepaidBonus == null ? 0 : prepaidBonus);
         entity.setLoanMode(loanMode);
-        entity.setFirstRatio(firstRatio);
+        entity.setFirstRatio(firstRatio == null ? 0 : firstRatio);
         entity.setSharePledgeAgreement(sharePledgeAgreement == null ? "" : sharePledgeAgreement);
         entity.setGuarantyAgreement(guarantyAgreement == null ? "" : guarantyAgreement);
         entity.setSponsorIdcard(sponsorIdcard == null ? "" : sponsorIdcard);
@@ -654,4 +688,5 @@ public class ItemController extends BaseController {
         entity.setFinanceManage(financeManage == null ? "" : financeManage);
         return entity;
     }
+
 }

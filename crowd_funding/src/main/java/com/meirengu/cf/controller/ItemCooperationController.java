@@ -179,11 +179,11 @@ public class ItemCooperationController extends BaseController{
                                               sharePledgeAgreement, String guarantyAgreement, Date createTime, String operateAccount){
         ItemCooperation entity = new ItemCooperation();
         entity.setItemId(itemId);
-        entity.setCommissionRate(commissionRate);
-        entity.setGuaranteeRate(guaranteeRate);
-        entity.setPrepaidBonus(prepaidBonus);
+        entity.setCommissionRate(commissionRate == null ? BigDecimal.valueOf(0) : commissionRate);
+        entity.setGuaranteeRate(guaranteeRate == null ? BigDecimal.valueOf(0) : guaranteeRate);
+        entity.setPrepaidBonus(prepaidBonus == null ? 0 : prepaidBonus);
         entity.setLoanMode(loanMode);
-        entity.setFirstRatio(firstRatio);
+        entity.setFirstRatio(firstRatio == null ? 0 : firstRatio);
         entity.setSharePledgeAgreement(sharePledgeAgreement == null ? "" : sharePledgeAgreement);
         entity.setGuarantyAgreement(guarantyAgreement == null ? "" : guarantyAgreement);
         entity.setSponsorIdcard(sponsorIdcard == null ? "" : sponsorIdcard);

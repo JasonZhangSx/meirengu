@@ -22,118 +22,237 @@
     <link rel=stylesheet type=text/css href="lib/Hui-iconfont/1.0.8/iconfont.css" />
     <link rel=stylesheet type=text/css href="static/h-ui.admin/skin/default/skin.css" id=skin/>
     <link rel=stylesheet type=text/css href="static/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/upload-file/upload.css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
-    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
-</html>
-<link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<style>
-    .select-box1 {
-        padding-left: 0;
-    }
+    <script>DD_belatedPNG.fix('*');</script><![endif]-->
 
-    .select-box1 select {
-        font-size: 14px;
-        height: 31px;
-        line-height: 1.42857;
-        padding: 4px;
-        border: 1px #ddd solid;
-    }
+    <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+    <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .select-box1 {
+            padding-left: 0;
+        }
 
-    .edit_h31 {
-        border-bottom: 1px #ddd solid;
-        overflow: hidden;
-    }
+        .select-box1 select {
+            font-size: 14px;
+            height: 31px;
+            line-height: 1.42857;
+            padding: 4px;
+            border: 1px #ddd solid;
+        }
 
-    .tabCon {
-        width: 100%;
-    }
+        .edit_h31 {
+            border-bottom: 1px #ddd solid;
+            overflow: hidden;
+        }
 
-    .tabCon {
-        display: none;
-        overflow: hidden;
-        width：100%;
-    }
+        .tabCon {
+            width: 100%;
+        }
 
-    .tabBar {
-        border: none;
-        position: fixed;
-        top: 30px;
-        right: 20px;
-        z-index: 9999;
-    }
+        .tabCon {
+            display: none;
+            overflow: hidden;
+            width：100%;
+        }
 
-    .tabBar span {
-        display: block;
-        float: none;
-        font-size: 20px;
-        line-height: 30px;
-        padding: 5px 15px;
-        font-weight: normal;
-        color: #a7a5a5
-    }
+        .tabBar {
+            border: none;
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            z-index: 9999;
+        }
 
-    .tabBar span.current {
-        background-color: #5a98de;
-    }
+        .tabBar span {
+            display: block;
+            float: none;
+            font-size: 20px;
+            line-height: 30px;
+            padding: 5px 15px;
+            font-weight: normal;
+            color: #a7a5a5
+        }
 
-    .tabCon .form-label {
-        margin-top: 3px;
-        cursor: text;
-        text-align: right;
-    }
+        .tabBar span.current {
+            background-color: #5a98de;
+        }
 
-    .tabCon .row {
-        margin-top: 15px;
-    }
+        .tabCon .form-label {
+            margin-top: 3px;
+            cursor: text;
+            text-align: right;
+        }
 
-    .huibao_tab_menu {
-        border-bottom: 1px #ddd solid;
-    }
+        .tabCon .row {
+            margin-top: 15px;
+        }
 
-    .huibao_tab_menu span {
-        float: left;
-        display: inline;
-        line-height: 28px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        color: #a7a5a5;
-        padding: 5px 15px;
-        cursor: pointer;
-        background-color: #e8e8e8;
-    }
 
-    .huibao_tab_menu span.current {
-        background-color: #5a98de;
-        color: #fff;
-    }
+        .huibao_tab_menu,.content_tab_menu  {
+            border-bottom: 1px #ddd solid;
+        }
 
-    .huibao_set .huibao_tab {
-        display: none;
-    }
+        .huibao_tab_menu span,.content_tab_menu span {
+            float: left;
+            display: inline;
+            line-height: 28px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            color: #a7a5a5;
+            padding: 5px 15px;
+            cursor: pointer;
+            background-color: #e8e8e8;
+        }
 
-    /* 去掉输入样式 */
-    .jiben_info input[type="text"], .jiben_info select, .jiben_info textarea, .jiben_info option, .jiben_info .select-box,
-    .neirong_set input[type="text"], .neirong_set select, .neirong_set textarea, .neirong_set option, .neirong_set .select-box,
-    .huibao_set input[type="text"], .huibao_set select, .huibao_set textarea, .huibao_set option, .huibao_set .select-box,
-    .hezuo_style input[type="text"], .hezuo_style select, .hezuo_style textarea, .hezuo_style option, .hezuo_style .select-box {
-        -webkit-appearance: initial;
-        border: none !important;
-        cursor: auto
-    }
+        .huibao_tab_menu span.current ,.content_tab_menu span.current{
+            background-color: #5a98de;
+            color: #fff;
+        }
 
-    input[disabled=""] {
-        background-color: #fff;
-    }
-</style>
+        .huibao_set .huibao_tab {
+            display: none;
+        }
+
+        /* 去掉输入样式 */
+        .jiben_info input[type="text"], .jiben_info select, .jiben_info textarea, .jiben_info option, .jiben_info .select-box,
+        .neirong_set input[type="text"], .neirong_set select, .neirong_set textarea, .neirong_set option, .neirong_set .select-box,
+        .huibao_set input[type="text"], .huibao_set select, .huibao_set textarea, .huibao_set option, .huibao_set .select-box {
+            -webkit-appearance: initial;
+            border: none !important;
+            cursor: auto
+        }
+
+        input[disabled=""],textarea[disabled=""] {
+            background-color: #fff;
+        }
+        .uploader-thum-container1 .uploader-list .item {
+            float: left;
+            display: inline;
+            width: 25%;
+        }
+        .clearfix section,.clearfix{float:left;display:inline;}
+        .img-box .upimg-div .z_file{overflow: hidden}
+
+        .u_img, .fl{
+            background: #00b7ee;
+            cursor: pointer;
+            width: 100px;
+            height: 30px;
+            color: #fff;
+            text-align: center;
+            border-radius: 3px;
+            overflow: hidden;
+            padding-top: 8px;
+            border: none;
+        }
+    </style>
+    <script>
+        var xhr;
+        if(window.XMLHttpRequest){
+            xhr = new XMLHttpRequest();
+        }else{
+            xhr = new ActiveXObject('Microsoft.XMLHTTP');
+        }
+
+        function printFileInfo(){
+
+            var picFile = document.getElementById("pic");
+            var files = picFile.files;
+            for(var i=0; i<files.length; i++){
+                var file = files[i];
+                var div = document.createElement("div")
+                div.innerHTML = "第("+ (i+1) +") 个文件的名字："+ file.name +
+                        " , 文件类型："+ file.type +" , 文件大小:"+ file.size
+                document.body.appendChild( div)
+            }
+        }
+
+        //上传失败
+        function uploadFailed(evt) {
+            alert("上传失败");
+        }
+
+        /**
+         * 侦查附件上传情况 ,这个方法大概0.05-0.1秒执行一次
+         */
+        function onprogress(evt){
+            var loaded = evt.loaded;       //已经上传大小情况
+            var tot = evt.total;       //附件总大小
+            var per = Math.floor(100*loaded/tot);   //已经上传的百分比
+            $("#son").html( per +"%" );
+            $("#son").css("width" , per +"%");
+        }
+
+        //上传文件
+        function uploadFile(fileId, foldName, parentId, inputId, type) {
+            //alert(fileId+"|"+foldName+"|"+parentId);
+            //将上传的多个文件放入formData中
+            var picFileList = $("#"+fileId).get(0).files;
+            var formData = new FormData();
+            for(var i=0; i< picFileList.length; i++){
+                formData.append("file" , picFileList[i] );
+            }
+            formData.append("foldName", foldName);
+
+            //监听事件
+            xhr.upload.addEventListener("progress", onprogress, false);
+            xhr.addEventListener("error", uploadFailed, false);//发送文件和表单自定义参数
+            xhr.open("POST", "uploadMultiple");
+            //记得加入上传数据formData
+            xhr.send(formData);
+            //异步接受响应
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4){
+                    if(xhr.status == 200){
+                        var responseData = eval('(' + xhr.responseText + ')');
+                        if(responseData.code != 200){
+                            alert("上传失败");
+                            return;
+                        }
+                        console.log(responseData);
+                        var data = responseData.data;
+                        var imgStr = "";
+                        for(var i = 0; i < data.length; i++){
+                            var imgs = $("#"+inputId).val();
+                            if(imgs == null || imgs == ''){
+                                $("#"+inputId).val(data[i]);
+                            }else{
+                                $("#"+inputId).val(imgs+","+data[i]);
+                            }
+                            if(type == 1){
+                                imgStr += '<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">'
+                                        + '   <a href="http://test.img.meirenguvip.com/'+data[i]+'" data-lightbox="gallery">'
+                                        + '   <img src="http://test.img.meirenguvip.com/'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
+                                        + '</div>';
+                            }else if(type == 2){
+                                imgStr += '<section class="up-section fl">'
+                                        +'  <span class="up-span"></span>'
+                                        +'  <img class="close-upimg" src="static/upload-file/a7.png">'
+                                        +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
+                                        +'  <p class="img-name-p">'+data[i]+'</p>'
+                                        +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
+                                        +'  <input id="tags" name="tags" value="" type="hidden">'
+                                        +'</section>';
+                            }
+
+                        }
+
+                        $("#"+parentId).append(imgStr);
+                    }
+                }
+            }
+
+        }
+    </script>
 </head>
 <body>
 <div class="page-container">
     <!-- 选项卡 -->
 
-    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+    <div class="form form-horizontal" id="form-article-add">
 
         <!-- 基本信息 -->
         <div class="jiben_info">
@@ -143,66 +262,57 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" disabled id="articletitle" name="articletitle"
+                    <input type="text" class="input-text" value="${item.itemName}" disabled id="articletitle" name="articletitle"
                            maxlength="30" placeholder="项目标题最多30字" id="" name="">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目简介：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"  disabled
+                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)">${item.itemProfile}</textarea>
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select" disabled>
-						<option value="0">一级分类</option>
-						<option value="1">一级分类</option>
-						<option value="11">├二级分类</option>
-						<option value="12">├二级分类</option>
-						<option value="13">├二级分类</option>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <c:forEach items="${type}" var="type">
+                        <c:if test="${type.typeId == item.typeId}">
+                            <input type="text" class="input-text" value="${type.typeName}">
+                        </c:if>
+                    </c:forEach>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">项目分类：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<option value="0">一级分类</option>
-						<option value="1">一级分类</option>
-						<option value="11">├二级分类</option>
-						<option value="12">├二级分类</option>
-						<option value="13">├二级分类</option>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <c:forEach items="${itemClass}" var="itemClass">
+                        <c:if test="${itemClass.classId == item.typeId}">
+                            <input type="text" class="input-text" value="${itemClass.className}">
+                        </c:if>
+                    </c:forEach>
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                    <input type="text" class="input-text" value="${item.targetAmount}" disabled >
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                    <input type="text" class="input-text" value="${item.preheatingDays}" disabled >
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目方：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<option value="0">宇智光</option>
-						<option value="1">宇智光</option>
-						<option value="11">宇智光</option>
-						<option value="13">├二级分类</option>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <c:forEach items="${partner}" var="partner">
+                        <c:if test="${item.partnerId == partner.partnerId}">
+                            <input type="text" class="input-text" value="${partner.partnerName}">
+                        </c:if>
+                    </c:forEach>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                    <input type="text" class="input-text" value="${item.crowdDays}" disabled >
                 </div>
             </div>
             <div class="row cl">
@@ -225,306 +335,672 @@
                     <!-- 审核模式 查看图 -->
                     <div class="portfoliobox">
                         <div class="picbox">
-                            <a href="temp/big/beauty.jpg" data-lightbox="gallery" data-title="项目头图"><img
-                                    src="temp/Thumb/shufang.jpg"></a>
+                            <a href="${imageUrl}${item.headerImage}" data-lightbox="gallery"><img
+                                    src="${imageUrl}${item.headerImage}?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
                         </div>
                     </div>
 
                 </div>
             </div>
-
         </div>
 
         <!-- 内容设置 -->
         <div class="neirong_set">
             <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">内容信息</h3>
+                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">内容设置</h3>
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+            <div class="row cl content_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
+                <div class="wrapper">
+                    <c:if test="${not empty content}">
+                        <c:forEach items="${content}" var="content" varStatus="status">
+                            <c:if test="${status.count == 1}">
+                                <span class="current">${content.contentTitle}<var></var></span>
+                            </c:if>
+                            <c:if test="${status.count != 1}">
+                                <span>${content.contentTitle}<var></var></span>
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty content}">
+                        <span>内容<var></var></span>
+                    </c:if>
                 </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
-            </div>
-        </div>
-        <!-- 回报信息 -->
-        <div class="huibao_set">
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">回报信息</h3>
-            </div>
-            <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
-                <span class="current">档位名称1</span>
-                <span>档位名称2</span>
+                <%--<em>+</em>--%>
             </div>
             <div class="cl"></div>
-            <div class="huibao_tab">
+            <div class="content_set">
+                <c:if test="${not empty content}">
+                <c:forEach items="${content}" var="content" varStatus="status">
+                <c:if test="${status.count == 1}">
+                <div class="item">
+                    </c:if>
+                    <c:if test="${status.count != 1}">
+                    <div class="item" style="display: none;">
+                        </c:if>
+                        <input type="hidden" name="itemId" id="itemId${status.count-1}"  value="${item.itemId}">
+                        <input type="hidden" name="contentType" value="1">
+                        <input type="hidden" id="contentId${status.count-1}" name="contentId" value="${content.contentId}">
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">主标题：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <input type="text" class="input-text" value="${content.contentTitle}" maxlength="30" placeholder="项目标题最多30字" id="contentTitle${status.count-1}"
+                                       name="contentTitle">
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">内容：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+
+                                <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
+                                    <!-- 审核模式 查看图 -->
+                                    <div class="portfoliobox" style="float: left;">
+                                        <div class="picbox">
+                                            <a href="${imageUrl}${imgs}" data-lightbox="gallery">
+                                                <img src="${imageUrl}${imgs}?x-oss-process=image/resize,m_lfit,h_200,w_200" /></a>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+
+                            </div>
+                        </div>
+                    </div>
+                    </c:forEach>
+                    </c:if>
+                </div>
+            </div>
+            <!-- 回报信息 -->
+            <div class="huibao_set">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">回报信息</h3>
+                </div>
+
+
+                <div class="row cl huibao_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
+                    <c:forEach items="${level}" var="level" varStatus="status">
+                        <c:if test="${status.index == 0}">
+                            <span class="current">${level.levelName}</span>
+                        </c:if>
+                        <c:if test="${status.index != 0}">
+                            <span>${level.levelName}</span>
+                        </c:if>
+                    </c:forEach>
+                </div>
+                <div class="cl"></div>
+                <c:forEach items="${level}" var="level">
+                    <div class="huibao_tab">
+                        <div class="row cl" style="display:block">
+                            <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <input type="text" class="input-text" value="${level.levelName}" maxlength="30" disabled >
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                                <input type="text" class="input-text" value="${level.levelAmount}" maxlength="30" disabled >
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
+                            <div class="formControls col-xs-8 col-sm-8">
+                            <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                                      dragonfly="true" nullmsg="备注不能为空！" disabled
+                                      onKeyUp="$.Huitextarealength(this,200)">${level.levelDesc}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">总份数：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" value="${level.totalNumber}" disabled>
+                            </div>
+                            <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" value="${level.singleLimitNumber}" disabled >
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" value="${level.paybackDays}天" maxlength="30" disabled >
+                            </div>
+                            <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <c:if test="${level.isShareBonus == 1}">是</c:if>
+                                <c:if test="${level.isShareBonus == 0}">否</c:if>
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" value="${level.yearRate}%" maxlength="30" id="" name="">
+                            </div>
+                            <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" value="${level.investmentPeriod}月" maxlength="30" disabled >
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <c:if test="${level.revenueModel == 1}">一次性还款</c:if>
+                                <c:if test="${level.revenueModel == 2}">按月还息到期还本</c:if>
+                            </div>
+                            <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                    ${level.shareBonusPeriod}月
+                            </div>
+                        </div>
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <c:if test="${level.isNeedAddress == 1}">是</c:if>
+                                <c:if test="${level.isNeedAddress == 0}">否</c:if>
+                            </div>
+                            <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <c:if test="${level.isNeedAgreement == 1}">是</c:if>
+                                <c:if test="${level.isNeedAgreement == 0}">否</c:if>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+            <!-- 合作方式 -->
+            <div class="hezuo_style">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">合作方式</h3>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
+                    </div>
+                </div>
+                <c:if test="${item.typeId != 3}">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">保证金：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
+                        </div>
+                    </div>
+                </c:if>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">放款方式：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="loanMode" id="loanMode" class="select">
+                            <option value="1">一次性</option>
+                            <option value="2">两次放款</option>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 补充资料-收益权股权类 -->
+            <div class="cailiao_buchong">
+
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">补充资料-收益权股权类</h3>
+                </div>
+                <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+                    <table class="table table-border table-bordered table-bg table-hover table-sort">
+                        <thead>
+                        <tr class="text-c">
+                            <th width="240">资料类型</th>
+                            <th>资质文件</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-c">
+                            <td>发起人身份证正反面
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="sponsorIdcard" name="sponsorIdcard">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent0" class="clearfix">
+                                            </div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>发起人征信报告
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="sponsorCredit" name="sponsorCredit">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent1" class="clearfix">
+                                                <%--<div class="portfoliobox">--%>
+                                                <%--<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">
+                                                    <a href="http://test.img.meirenguvip.com/item/1493870878824.jpg" data-lightbox="gallery">
+                                                        <img src="http://test.img.meirenguvip.com/item/1493870878824.jpg?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>
+                                                </div>--%>
+                                                <%--</div>--%>
+                                            </div>
+                                            <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file1" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file1','item','imgParent1','sponsorCredit', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>企业法人身份证正反面
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="principalIdcard" name="principalIdcard">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent2" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file2" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file2','item','imgParent2','principalIdcard',1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>企业法人征信报告
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="principalCredit" name="principalCredit">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent3" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file3" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file3','item','imgParent3','principalCredit', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>营业执照
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="businessLicence" name="businessLicence">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent4" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file4" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file4','item','imgParent4','businessLicence', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>场地/土地租赁协议
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="venueRentalAgreement" name="venueRentalAgreement">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent5" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file5" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file5','item','imgParent5','venueRentalAgreement, 1')">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>新店装修效果图
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="storeRenderings" name="storeRenderings">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent6" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file6" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file6','item','imgParent6','storeRenderings', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>公司章程
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="corporateArticles" name="corporateArticles">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent7" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file7" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file7','item','imgParent7','corporateArticles', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>近一年流水，资产负债表
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="assetWaterLiabilities" name="assetWaterLiabilities">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent8" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file8" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file8','item','imgParent8','assetWaterLiabilities', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 投资合同补充信息  -->
+            <div class="hezuo_style">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">投资合同补充信息</h3>
+                </div>
                 <div class="row cl" style="display:block">
-                    <label class="form-label col-xs-4 col-sm-2">档位名称：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                    <label class="form-label col-xs-4 col-sm-2">股东姓名：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" maxlength="30" id="shareholderName" name="shareholderName">
                     </div>
                 </div>
                 <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="" maxlength="30" id="" name="">
+                    <label class="form-label col-xs-4 col-sm-2">股东身份证号：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="shareholderIdcard" name="shareholderIdcard">
                     </div>
                 </div>
                 <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">回报描述：</label>
+                    <label class="form-label col-xs-4 col-sm-2">股东地址：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="shareholderAddress" name="shareholderAddress">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">担保人姓名：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="guaranteeName" name="guaranteeName">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">担保人身份证号：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="guaranteeIdcard" name="guaranteeIdcard">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">担保人地址：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="guaranteeAddress" name="guaranteeAddress">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-8 col-sm-8  col-sm-offset-1" style="text-align:left;">投资人每投资100万元，股东向管理公司质押不低于
+                        <input type="text" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width: 50px; text-align: center;" id="pledgedShares" name="pledgedShares">
+                        %的股份</label>
+
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目方印章：</label>
                     <div class="formControls col-xs-8 col-sm-8">
-                        <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                                  dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+                        <input type="hidden" id="partnerSeal" name="partnerSeal">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent9" class="clearfix"></div>
+                                    <section class="z_file">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file9" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file9','item','imgParent9','partnerSeal', 2)">
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cailiao_buchong">
+
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">合同</h3>
+                </div>
+                <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+                    <table class="table table-border table-bordered table-bg table-hover table-sort">
+                        <thead>
+                        <tr class="text-c">
+                            <th width="240">资料类型</th>
+                            <th>资质文件</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-c">
+                            <td>托管协议书
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="escrowAgreement" name="escrowAgreement">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent10" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file10" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file10','item','imgParent10','escrowAgreement', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>融资服务协议
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="financeService" name="financeService">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent11" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file11" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file11','item','imgParent11','financeService', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>融资管理协议
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="financeManage" name="financeManage">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent12" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file12" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file12','item','imgParent12','financeManage', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>股权质押合同
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="sharePledgeAgreement" name="sharePledgeAgreement">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent13" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file13" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file13','item','imgParent13','sharePledgeAgreement', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="text-c">
+                            <td>保证合同
+                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                            </td>
+                            <td class="text-l">
+                                <input type="hidden" id="guarantyAgreement" name="guarantyAgreement">
+                                <div class="img-box full">
+                                    <section class=" img-section">
+                                        <div class="z_photo upimg-div clearfix">
+                                            <div id="imgParent14" class="clearfix"></div>
+                                            <section class="z_file fl" style="width:100px;height:30px;">
+                                                <label class="u_img">上传图片</label>
+                                                <input type="file" name="file" id="file14" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file14','item','imgParent14','guarantyAgreement', 1)">
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- 审核记录 -->
+            <div class="shenhe_record">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">审核记录</h3>
+                </div>
+                <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+                    <table class="table table-border table-bordered table-bg table-hover table-sort">
+                        <thead>
+                        <tr class="text-c">
+                            <th width="100">审核阶段</th>
+                            <th width="100">审核结果</th>
+                            <th>备注</th>
+                            <th>审核时间</th>
+                            <th width="100">审核人</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${record}" var="record">
+                            <tr class="text-c">
+                                <td>
+                                    <c:if test="${record.operateType == 1}">初审</c:if>
+                                    <c:if test="${record.operateType == 2}">设置合作</c:if>
+                                    <c:if test="${record.operateType == 3}">复审</c:if>
+                                    <c:if test="${record.operateType == 4}">发布</c:if>
+                                    <c:if test="${record.operateType == 5}">下架</c:if>
+                                </td>
+                                <td>
+                                    <c:if test="${record.operateStatus == 1}">通过</c:if>
+                                    <c:if test="${record.operateStatus == 0}">不通过</c:if>
+                                </td>
+                                <td>${record.operateRemark}</td>
+                                <td>
+                                    <jsp:useBean id="dateValue" class="java.util.Date"/>
+                                    <jsp:setProperty name="dateValue" property="time" value="${record.operateTime}"/>
+                                    <fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>
+                                </td>
+                                <td>${record.operateAccount}</td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 复审审核 -->
+            <div class="fushen">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">复审审核</h3>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"></label>
+                    <label class="col-xs-4 col-sm-1 mr-20"><input type="radio" class="radio" value="1" name="radio-feedback"
+                                                                  id="feedback-1"> 通过</label>
+                    <label><input type="radio" class="radio" value="2" name="radio-feedback" id="feedback-2"> 不通过</label>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">备注：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
                         <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
                     </div>
                 </div>
-
                 <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">总份数：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                               name="">
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id=""
-                               name="">
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="" name="">
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="" name="">
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="" name="">
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">一次性还款</option>
-							<option value="1">等额本金...</option>
-						</select>
-						</span>
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">1月</option>
-							<option value="1">3月</option>
-							<option value="0">6月</option>
-							<option value="1">12月</option>
-						</select>
-						</span>
-                    </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                    </div>
-                    <label class="form-label col-xs-4 col-sm-2">是否需要协议：</label>
-                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-						<select name="" class="select">
-							<option value="0">是</option>
-							<option value="1">否</option>
-						</select>
-						</span>
-                    </div>
-                </div>
-            </div>
-            <div class="huibao_tab">
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">另外一档位名称：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                        <input type="text" class="input-text" value="仿照第一个添加表格" maxlength="30" id="" name="">
+                    <label class="form-label col-xs-4 col-sm-2"></label>
+                    <div class="formControls col-xs-8 col-sm-8 text-c">
+                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">复审确认
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- 合作方式 -->
-        <div class="hezuo_style">
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">合作方式</h3>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="" name="">
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">保证金：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="" name="">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="/期" id="" name="">
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">放款方式：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<option value="0">一次性</option>
-						<option value="1">俩次放款</option>
-					</select>
-					</span>
-                </div>
-                <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
-                <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="" placeholder="" id="30%（默认）" name="">
-                </div>
-            </div>
-        </div>
+    </div>
 
-        <style>
-            .uploader-thum-container1 .uploader-list .item {
-                float: left;
-                display: inline;
-                width: 25%;
-            }
-        </style>
-        <!-- 补充资料-收益权股权类 -->
-        <div class="cailiao_buchong">
-
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">补充资料-收益权股权类</h3>
-            </div>
-            <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
-                <table class="table table-border table-bordered table-bg table-hover table-sort">
-                    <thead>
-                    <tr class="text-c">
-                        <th width="240">资料类型</th>
-                        <th>合同文件</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="text-c">
-                        <td>发起人身份证正反面
-                            <button class="btn btn-link radius ml-10" type="button">下载</button>
-                        </td>
-                        <td class="text-l">
-                            <div class="portfoliobox">
-                                <div class="picbox l mr-10">
-                                    <a href="temp/big/beauty.jpg" data-lightbox="gallery" data-title="项目头图"><img
-                                            src="temp/Thumb/shufang.jpg"></a>
-                                </div>
-                                <div class="picbox l mr-10">
-                                    <a href="temp/big/beauty.jpg" data-lightbox="gallery" data-title="项目头图"><img
-                                            src="temp/Thumb/shufang.jpg"></a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="text-c">
-                        <td>发起人身份证正反面
-                            <button class="btn btn-link radius ml-10" type="button">下载</button>
-                        </td>
-                        <td class="text-l">北京玉之光众筹
-                            <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
-                        </td>
-                    </tr>
-                    <tr class="text-c">
-                        <td>发起人身份证正反面
-                            <button class="btn btn-link radius ml-10" type="button">下载</button>
-                        </td>
-                        <td class="text-l">北京玉之光众筹
-                            <button class="btn r va-m btn-secondary radius ml-10" type="button">上传</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 审核记录 -->
-        <div class="shenhe_record">
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">审核记录</h3>
-            </div>
-            <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
-                <table class="table table-border table-bordered table-bg table-hover table-sort">
-                    <thead>
-                    <tr class="text-c">
-                        <th width="100">审核阶段</th>
-                        <th width="100">审核结果</th>
-                        <th>备注</th>
-                        <th>审核时间</th>
-                        <th width="100">审核人</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="text-c">
-                        <td>初审</td>
-                        <td>通过</td>
-                        <td>...</td>
-                        <td>2017-02-15 15:33:33</td>
-                        <td>财务</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
-        <!-- 复审审核 -->
-        <div class="fushen">
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">复审审核</h3>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"></label>
-                <label class="col-xs-4 col-sm-1 mr-20"><input type="radio" class="radio" value="1" name="radio-feedback"
-                                                              id="feedback-1"> 通过</label>
-                <label><input type="radio" class="radio" value="2" name="radio-feedback" id="feedback-2"> 不通过</label>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">备注：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
-            </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"></label>
-                <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">复审确认
-                    </button>
-                </div>
-            </div>
-        </div>
 </div>
 
 <script src=lib/jquery/1.9.1/jquery.min.js></script>
@@ -538,20 +1014,13 @@
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
-})</script>
+}), $(".toTop").show()</script>
 
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
-<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
-<script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.min.js"></script>
-<script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
-
-<!-- 省市区 -->
-<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
-<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>
 
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
@@ -563,141 +1032,19 @@
         $.Huitab(".huibao_set .huibao_tab_menu span", ".huibao_set .huibao_tab", "current", "click", "0")
         $.Huitab(".tabBar span", ".tabCon", "current", "click", "0")
     });
-    $('#datetimepicker').datetimepicker({
-        lang: $.datetimepicker.setLocale('ch'),
+
+    //内容tab切换
+    $('body').on('click', '.content_tab_menu span', function (event) {
+        console.log($(event.target));
+        $('.content_tab_menu span').removeClass('current');
+        $(event.target).addClass('current');
+        var index = $(event.target).index();
+        contentIndex = index;
+        $('.content_set .item').hide();
+        $('.content_set .item').eq(index).show();
+        console.log(contentIndex);
     });
-    //表单验证
-    $(function () {
-        $('.skin-minimal input').iCheck({
-            checkboxClass: 'icheckbox-blue',
-            radioClass: 'iradio-blue',
-            increaseArea: '20%'
-        });
-        $("#form-article-add").validate({
-            rules: {
-                articletitle: {
-                    required: true,
-                }
-            },
-            onkeyup: false,
-            focusCleanup: true,
-            success: "valid",
-            submitHandler: function (form) {
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
-            }
-        })
-
-        $list = $("#fileList"),
-                $btn = $("#btn-star"),
-                state = "pending",
-                uploader;
-
-        var uploader = WebUploader.create({
-            auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
-
-            // 文件接收服务端。
-            server: 'http://lib.h-ui.net/webuploader/0.1.5/server/fileupload.php',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            // 只允许选择图片文件。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-        uploader.on('fileQueued', function (file) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="item">' +
-                            '<div class="pic-box"><img></div>' +
-                            '<div class="info">' + file.name + '</div>' +
-                            '<p class="state">等待上传...</p>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
-            $list.append($li);
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb(file, function (error, src) {
-                if (error) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
-                }
-
-                $img.attr('src', src);
-            }, thumbnailWidth, thumbnailHeight);
-        });
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function (file, percentage) {
-            var $li = $('#' + file.id),
-                    $percent = $li.find('.progress-box .sr-only');
-
-            // 避免重复创建
-            if (!$percent.length) {
-                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
-            }
-            $li.find(".state").text("上传中");
-            $percent.css('width', percentage * 100 + '%');
-        });
-
-        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file) {
-            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        });
-
-        // 文件上传失败，显示上传出错。
-        uploader.on('uploadError', function (file) {
-            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
-        });
-
-        // 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on('uploadComplete', function (file) {
-            $('#' + file.id).find('.progress-box').fadeOut();
-        });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
-
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
-            } else {
-                $btn.text('开始上传');
-            }
-        });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
-        });
-
-    });
-
-    (function ($) {
-
-
-    })(jQuery);
-
 
 </script>
 </body>
 </html>
-

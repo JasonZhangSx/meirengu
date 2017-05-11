@@ -22,11 +22,12 @@ public class Test {
         String sm1 = "is_page=true&item_status=10,11&key=ca26e68b388b4ffcad4942fa648695f&page=1&per_page=10&timestamp=1490255543665&secret=09721ab88e0a552087391be1ef0c6826";
         String s1 = MD5Util.MD5(sm1, "UTF-8").toUpperCase();
         System.out.println(s1);*/
-        String s = "哈哈123";
+        /*String s = "哈哈123";
         System.out.println(s);
 
         String dat = DateAndTime.dateFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
 
-        System.out.println(DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", dat, 3)));
+        System.out.println(DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", dat, 3)));*/
+        System.out.println(Math.ceil(3.54343));
     }
 }

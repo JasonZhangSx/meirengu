@@ -153,7 +153,7 @@
 	</update>
 
 	<select id="moreDetail" parameterType="integer" resultType="Map">
-		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
+		select <include refid="select_columns" />,  CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
 		t1.type_name as typeName, t2.class_name as className, t3.partner_name as partnerName
 		FROM <include refid="table_name" /> t
@@ -178,7 +178,7 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />,  TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) as leavelDay,
+		select <include refid="select_columns" />, CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
 		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
 		t1.type_name as typeName, t2.class_name as className
 		FROM <include refid="table_name" /> t
