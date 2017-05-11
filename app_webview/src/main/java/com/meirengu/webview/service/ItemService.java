@@ -14,7 +14,7 @@ public interface ItemService {
      * @param itemId
      * @return
      */
-    Map<String, Object> getDetail(Integer itemId);
+    Map<String, Object> getItemDetail(Integer itemId);
 
     /**
      * 获取档位列表
@@ -22,4 +22,11 @@ public interface ItemService {
      * @return
      */
     List<Map<String, Object>> getLevelList(Integer itemId);
+
+    /**
+     * 获取内容列表
+     * @param itemId
+     * @return
+     */
+    List<Map<String, Object>> getContentList(Integer itemId);
 }
