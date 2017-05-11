@@ -189,16 +189,19 @@
                 {
                     "targets": 14,
                     "render": function (data, type, row, meta) {
-                        var status = row.status;
-                        var context =
-                            {
-                                func: [
-                                    {"name": "失效处理", "fn": "edit(\'" + row.batchId + "\')", "type": "primary"},
-                                ]
-                            };
-                        var html = template(context);
-                        return html;
-
+                        var status = row.batchStatue;
+                        if (status == 1) {
+                            var context =
+                                {
+                                    func: [
+                                        {"name": "失效处理", "fn": "edit(\'" + row.batchId + "\')", "type": "primary"},
+                                    ]
+                                };
+                            var html = template(context);
+                            return html;
+                        } else {
+                            return "";
+                        }
                     }
                 }
 
