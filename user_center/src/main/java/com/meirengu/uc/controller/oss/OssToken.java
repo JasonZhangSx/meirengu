@@ -1,4 +1,4 @@
-package com.meirengu.uc.oss;
+package com.meirengu.uc.controller.oss;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.exceptions.ClientException;
@@ -51,25 +51,7 @@ public class OssToken {
         String roleArn = ConfigUtil.getConfig("RoleArn");
         Long durationSeconds = new Long(ConfigUtil.getConfig("TokenExpireTime"));
 
-        String policy = "{\n" +
-                "  \"Statement\": [\n" +
-                "    {\n" +
-                "      \"Action\": [\n" +
-                "        \"oss:GetObject\",\n" +
-                "        \"oss:PutObject\",\n" +
-                "        \"oss:DeleteObject\",\n" +
-                "        \"oss:ListParts\",\n" +
-                "        \"oss:AbortMultipartUpload\",\n" +
-                "        \"oss:ListObjects\"\n" +
-                "      ],\n" +
-                "      \"Effect\": \"Allow\",\n" +
-                "      \"Resource\": [\"acs:oss:*:*:test-mrg-img/*\", \"acs:oss:*:*:test-mrg-img\"]\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"Version\": \"1\"\n" +
-                "}";
-
-
+        String policy = ConfigUtil.getConfig("policy");
 
         // RoleSessionName 是临时Token的会话名称，自己指定用于标识你的用户，主要用于审计，或者用于区分Token颁发给谁
         // 但是注意RoleSessionName的长度和规则，不要有空格，只能有'-' '_' 字母和数字等字符
