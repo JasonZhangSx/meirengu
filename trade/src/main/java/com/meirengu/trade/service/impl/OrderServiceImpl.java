@@ -326,7 +326,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 sendRocketMQDeployQueue(orderDetail.getOrderSn());
                 // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
                 sendRocketMQDeployQueue4Sms(orderDetail.getOrderSn());
+            } else if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_FAIL.getValue()) {
+                //请求项目服务修改档位状态
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("item_id", orderDetail.getItemId().toString());
+                params.put("level_id", orderDetail.getItemLevelId().toString());
+                params.put("level_amount", orderDetail.getItemLevelAmount().toString());
+                params.put("item_num", orderDetail.getItemNum().toString());
+                params.put("total_amount", orderDetail.getOrderAmount().toString());
+                String url = ConfigUtil.getConfig("item.appoint.rollback.url");
+                HttpResult httpResult = HttpUtil.doPostForm(url, params);
+                logger.debug("Request: {} getResponse: {}", url, httpResult);
             }
+
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -985,7 +997,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 params.put("level_amount", orderMap.get("itemLevelAmount").toString());
                 params.put("item_num", orderMap.get("itemNum").toString());
                 params.put("total_amount", orderMap.get("orderAmount").toString());
-                String url = ConfigUtil.getConfig("item.level.rollback.url");
+                String url = ConfigUtil.getConfig("item.complete.rollback.url");
                 HttpResult httpResult = HttpUtil.doPostForm(url, params);
                 logger.debug("Request: {} getResponse: {}", url, httpResult);
 

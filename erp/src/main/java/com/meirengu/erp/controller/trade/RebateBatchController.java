@@ -115,7 +115,7 @@ public class RebateBatchController extends BaseController{
                 return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         } catch (Exception e) {
-            logger.error("throw exception:", e);
+            logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
@@ -204,6 +204,41 @@ public class RebateBatchController extends BaseController{
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
+        } catch (Exception e) {
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 订单批次置失效
+     * @param batchId
+     * @return
+     */
+    @RequestMapping(value = "/lose_efficacy/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result handle(@PathVariable("id") Integer batchId ) {
+        if (NumberUtil.isNullOrZero(batchId)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        String url = ConfigUtil.getConfig("rebate.batch.update.url") + "/" + batchId;
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("status", Constants.STATUS_NO + "");
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
             if(statusCode == StatusCode.OK){
                 String content = hr.getContent();
