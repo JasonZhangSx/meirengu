@@ -10,47 +10,49 @@ import java.util.Date;
 */
 public class ItemOperateRecord  extends BaseObject {
    /** 项目操作记录索引id */
-   private int id;
+   private Integer id;
    /** 项目id */
-   private int itemId;
+   private Integer itemId;
    /** 操作类型：1初审；2设置合作；3复审；4发布；5下架 */
-   private int operateType;
+   private Integer operateType;
    /** 操作状态 */
-   private int operateStatus;
+   private Integer operateStatus;
+   /** 备注信息 */
+   private String operateRemark;
    /** 操作时间 */
    private Date operateTime;
    /** 操作人账号 */
    private String operateAccount;
 
-   public void setId(int id){
+   public void setId(Integer id){
        this.id = id;
    }
 
-   public int getId(){
+   public Integer getId(){
        return id;
    }
 
-   public void setItemId(int itemId){
+   public void setItemId(Integer itemId){
        this.itemId = itemId;
    }
 
-   public int getItemId(){
+   public Integer getItemId(){
        return itemId;
    }
 
-   public void setOperateType(int operateType){
+   public void setOperateType(Integer operateType){
        this.operateType = operateType;
    }
 
-   public int getOperateType(){
+   public Integer getOperateType(){
        return operateType;
    }
 
-   public void setOperateStatus(int operateStatus){
+   public void setOperateStatus(Integer operateStatus){
        this.operateStatus = operateStatus;
    }
 
-   public int getOperateStatus(){
+   public Integer getOperateStatus(){
        return operateStatus;
    }
 
@@ -70,4 +72,11 @@ public class ItemOperateRecord  extends BaseObject {
        return operateAccount;
    }
 
+   public String getOperateRemark() {
+       return operateRemark;
+   }
+
+   public void setOperateRemark(String operateRemark) {
+       this.operateRemark = operateRemark;
+   }
 }

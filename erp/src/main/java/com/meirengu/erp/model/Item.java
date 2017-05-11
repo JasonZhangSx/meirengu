@@ -46,6 +46,12 @@ public class Item  extends BaseObject {
    String headerImage;
    /** 状态：1:新建中；2:初审中；3初审通过；4初审未通过；5:设置合作中；6:复审中；7复审通过；8复审未通过；9待发布；10:预热中；11认筹中；12 已完成；13已下架 */
    Integer itemStatus;
+   /** 领投人名称 **/
+   String leadInvestorName;
+   /** 领投金额 单位：万 **/
+   BigDecimal leadInvestorAmount;
+   /** 领投人头像 **/
+   String leadInvestorHeader;
    /** 删除标识： 1 未删除  0 删除 */
    Integer flag;
    /** 排序，数字越小权重越大 */
@@ -195,7 +201,31 @@ public class Item  extends BaseObject {
        return itemStatus;
    }
 
-   public void setFlag(Integer flag){
+    public String getLeadInvestorName() {
+        return leadInvestorName;
+    }
+
+    public void setLeadInvestorName(String leadInvestorName) {
+        this.leadInvestorName = leadInvestorName;
+    }
+
+    public BigDecimal getLeadInvestorAmount() {
+        return leadInvestorAmount;
+    }
+
+    public void setLeadInvestorAmount(BigDecimal leadInvestorAmount) {
+        this.leadInvestorAmount = leadInvestorAmount;
+    }
+
+    public String getLeadInvestorHeader() {
+        return leadInvestorHeader;
+    }
+
+    public void setLeadInvestorHeader(String leadInvestorHeader) {
+        this.leadInvestorHeader = leadInvestorHeader;
+    }
+
+    public void setFlag(Integer flag){
        this.flag = flag;
    }
 
@@ -243,11 +273,12 @@ public class Item  extends BaseObject {
        return sponsorName;
    }
 
-    public BigDecimal getAppointAmount() {
+   public BigDecimal getAppointAmount() {
         return appointAmount;
     }
 
-    public void setAppointAmount(BigDecimal appointAmount) {
+   public void setAppointAmount(BigDecimal appointAmount) {
         this.appointAmount = appointAmount;
     }
+
 }

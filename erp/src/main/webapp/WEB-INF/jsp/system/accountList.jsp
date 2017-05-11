@@ -111,7 +111,8 @@
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
     $('.table-sort').dataTable({
-        "aaSorting": [[0, "desc"]],
+//        "aaSorting": [[0, "desc"]],
+        "bSort" : false,
         "bStateSave": true,
     });
     //*账户-添加*/

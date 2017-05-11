@@ -24,4 +24,9 @@ public class ItemLevelServiceImpl extends BaseServiceImpl<ItemLevel> implements 
     public int updateNumber(ItemLevel itemLevel) {
         return itemLevelDao.updateNumber(itemLevel);
     }
+
+    @Override
+    public int updateStatusByItemId(ItemLevel itemLevel) {
+        return itemLevelDao.updateStatusByItemId(itemLevel);
+    }
 }

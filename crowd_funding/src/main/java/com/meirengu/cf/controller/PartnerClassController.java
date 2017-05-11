@@ -179,8 +179,8 @@ public class PartnerClassController extends BaseController{
         if(classId != 0){
             pc.setClassId(classId);
         }
-        pc.setClassName(className);
-        pc.setClassDescription(classDescription);
+        pc.setClassName(className == null ? "" : className);
+        pc.setClassDescription(classDescription == null ? "" : classDescription);
         pc.setClassSort(classSort);
         pc.setPartnerNum(partnerNum);
         pc.setFlag(flag);

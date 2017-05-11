@@ -9,4 +9,11 @@ import com.meirengu.dao.BaseDao;
 public interface ItemLevelDao extends BaseDao<ItemLevel>{
 
     int updateNumber(ItemLevel itemLevel);
+
+    /**
+     * 通过项目id修改档位状态
+     * @param itemLevel
+     * @return
+     */
+    int updateStatusByItemId(ItemLevel itemLevel);
 }

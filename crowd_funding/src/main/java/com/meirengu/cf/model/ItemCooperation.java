@@ -319,4 +319,4 @@ public class ItemCooperation  extends BaseObject {
 		return operateAccount;
 	}
 
-}
+ }

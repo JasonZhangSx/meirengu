@@ -15,4 +15,11 @@ public interface ItemCooperationService extends BaseService<ItemCooperation>{
      * @return
      */
     ItemCooperation getByItemId(int itemId);
+
+    /**
+     * 设置合作
+     * @param cooperation
+     * @return
+     */
+    void setCooperate(ItemCooperation cooperation);
 }

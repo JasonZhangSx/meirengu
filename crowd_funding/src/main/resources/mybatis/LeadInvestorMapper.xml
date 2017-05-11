@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.LeadInvestorDao" >
+
+	<resultMap id="leadInvestorMap" type="LeadInvestor">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="investor_name" property="investorName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="investor_type" property="investorType" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="investor_business_licence" property="investorBusinessLicence" jdbcType="VARCHAR" javaType="String"/>
+		<result column="investor_idcard" property="investorIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="investor_address" property="investorAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="investor_telphone" property="investorTelphone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="investor_image" property="investorImage" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="Date"/>
+		<result column="update_time" property="updateTime" jdbcType="DATE" javaType="Date"/>
+		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">`lead_investor`</sql>
+	<sql id="select_columns">
+		id as id, investor_name as investorName, investor_type as investorType, investor_business_licence as investorBusinessLicence, investor_idcard as investorIdcard, investor_address as investorAddress, investor_telphone as investorTelphone, investor_image as investorImage, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+	</sql>
+
+	<insert id="insert" parameterType="leadInvestor" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO <include refid="table_name" />
+			(id, investor_name, investor_type, investor_business_licence, investor_idcard, investor_address, investor_telphone, investor_image, create_time, update_time, operate_account)
+		VALUES
+			(#{id}, #{investorName}, #{investorType}, #{investorBusinessLicence}, #{investorIdcard}, #{investorAddress}, #{investorTelphone}, #{investorImage}, #{createTime}, #{updateTime}, #{operateAccount})
+	</insert>
+
+	<update id="update" parameterType="leadInvestor">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="investorName != null and investorName != ''">
+				investor_name=#{investorName},
+			</if>
+			<if test="investorType != null and investorType != ''">
+				investor_type=#{investorType},
+			</if>
+			<if test="investorBusinessLicence != null and investorBusinessLicence != ''">
+				investor_business_licence=#{investorBusinessLicence},
+			</if>
+			<if test="investorIdcard != null and investorIdcard != ''">
+				investor_idcard=#{investorIdcard},
+			</if>
+			<if test="investorAddress != null and investorAddress != ''">
+				investor_address=#{investorAddress},
+			</if>
+			<if test="investorTelphone != null and investorTelphone != ''">
+				investor_telphone=#{investorTelphone},
+			</if>
+			<if test="investorImage != null and investorImage != ''">
+				investor_image=#{investorImage},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time=#{createTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time=#{updateTime},
+			</if>
+			<if test="operateAccount != null and operateAccount != ''">
+				operate_account=#{operateAccount},
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="leadInvestor">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

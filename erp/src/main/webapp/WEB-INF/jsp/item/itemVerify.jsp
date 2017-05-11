@@ -88,11 +88,11 @@
             margin-top: 15px;
         }
 
-        .huibao_tab_menu {
+        .huibao_tab_menu,.content_tab_menu  {
             border-bottom: 1px #ddd solid;
         }
 
-        .huibao_tab_menu span {
+        .huibao_tab_menu span,.content_tab_menu span {
             float: left;
             display: inline;
             line-height: 28px;
@@ -104,7 +104,7 @@
             background-color: #e8e8e8;
         }
 
-        .huibao_tab_menu span.current {
+        .huibao_tab_menu span.current ,.content_tab_menu span.current{
             background-color: #5a98de;
             color: #fff;
         }
@@ -120,7 +120,7 @@
             cursor: auto
         }
 
-        input[disabled=""] {
+        input[disabled=""],textarea[disabled=""] {
             background-color: #fff;
         }
     </style>
@@ -148,23 +148,24 @@
                 <div class="formControls col-xs-8 col-sm-8">
                     <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"  disabled
                               dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)">${item.itemProfile}</textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select" disabled>
-						<%--<option value="${item.typeId}">${item.typeName}</option>--%>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+					<c:forEach items="${type}" var="type">
+                        <c:if test="${type.typeId == item.typeId}">
+                            <input type="text" class="input-text" value="${type.typeName}">
+                        </c:if>
+                    </c:forEach>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">项目分类：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<%--<option value="${item.classId}">${item.className}</option>--%>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <c:forEach items="${itemClass}" var="itemClass">
+                        <c:if test="${itemClass.classId == item.typeId}">
+                            <input type="text" class="input-text" value="${itemClass.className}">
+                        </c:if>
+                    </c:forEach>
                 </div>
             </div>
             <div class="row cl">
@@ -179,11 +180,12 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">项目方：</label>
-                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-					<select name="" class="select">
-						<%--<option value="${item.partnerId}">${item.partnerName}</option>--%>
-					</select>
-					</span>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <c:forEach items="${partner}" var="partner">
+                        <c:if test="${item.partnerId == partner.partnerId}">
+                            <input type="text" class="input-text" value="${partner.partnerName}">
+                        </c:if>
+                    </c:forEach>
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
                 <div class="formControls col-xs-8 col-sm-3">
@@ -210,8 +212,8 @@
                     <!-- 审核模式 查看图 -->
                     <div class="portfoliobox">
                         <div class="picbox">
-                            <a href="${imageUrl}${item.headerImage}" data-lightbox="gallery" data-title="项目头图"><img
-                                    src="${imageUrl}${item.headerImage}"></a>
+                            <a href="${imageUrl}${item.headerImage}" data-lightbox="gallery"><img
+                                    src="${imageUrl}${item.headerImage}?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
                         </div>
                     </div>
 
@@ -225,19 +227,63 @@
             <div class="row cl">
                 <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">内容设置</h3>
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">主标题：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" maxlength="30" placeholder="项目标题最多30字" id="" name="">
+            <div class="row cl content_tab_menu col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10">
+                <div class="wrapper">
+                    <c:if test="${not empty content}">
+                        <c:forEach items="${content}" var="content" varStatus="status">
+                            <c:if test="${status.count == 1}">
+                                <span class="current">${content.contentTitle}<var></var></span>
+                            </c:if>
+                            <c:if test="${status.count != 1}">
+                                <span>${content.contentTitle}<var></var></span>
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty content}">
+                        <span>内容<var></var></span>
+                    </c:if>
                 </div>
+                <%--<em>+</em>--%>
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">内容：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-                </div>
+            <div class="cl"></div>
+            <div class="content_set">
+                <c:if test="${not empty content}">
+                    <c:forEach items="${content}" var="content" varStatus="status">
+                        <c:if test="${status.count == 1}">
+                            <div class="item">
+                        </c:if>
+                        <c:if test="${status.count != 1}">
+                            <div class="item" style="display: none;">
+                        </c:if>
+                            <input type="hidden" name="itemId" id="itemId${status.count-1}"  value="${item.itemId}">
+                            <input type="hidden" name="contentType" value="1">
+                            <input type="hidden" id="contentId${status.count-1}" name="contentId" value="${content.contentId}">
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">主标题：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" value="${content.contentTitle}" maxlength="30" placeholder="项目标题最多30字" id="contentTitle${status.count-1}"
+                                           name="contentTitle">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-2">内容：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+
+                                    <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
+                                        <!-- 审核模式 查看图 -->
+                                        <div class="portfoliobox" style="float: left;">
+                                            <div class="picbox">
+                                                <a href="${imageUrl}${imgs}" data-lightbox="gallery"><img
+                                                        src="${imageUrl}${imgs}?x-oss-process=image/resize,m_lfit,h_200,w_200"></a>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
             </div>
             <!-- 回报信息 -->
             <div class="huibao_set">
@@ -427,240 +473,22 @@
         $.Huitab(".huibao_set .huibao_tab_menu span", ".huibao_set .huibao_tab", "current", "click", "0")
         $.Huitab(".tabBar span", ".tabCon", "current", "click", "0")
     });
+
+    //内容tab切换
+    $('body').on('click', '.content_tab_menu span', function (event) {
+        console.log($(event.target));
+        $('.content_tab_menu span').removeClass('current');
+        $(event.target).addClass('current');
+        var index = $(event.target).index();
+        contentIndex = index;
+        $('.content_set .item').hide();
+        $('.content_set .item').eq(index).show();
+        console.log(contentIndex);
+    });
+
     $('#datetimepicker').datetimepicker({
         lang: $.datetimepicker.setLocale('ch'),
     });
-
-    //表单验证
-    $(function () {
-        $('.skin-minimal input').iCheck({
-            checkboxClass: 'icheckbox-blue',
-            radioClass: 'iradio-blue',
-            increaseArea: '20%'
-        });
-        $("#form-article-add").validate({
-            rules: {
-                articletitle: {
-                    required: true,
-                }
-            },
-            onkeyup: false,
-            focusCleanup: true,
-            success: "valid",
-            submitHandler: function (form) {
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
-            }
-        })
-
-        $list = $("#fileList"),
-                $btn = $("#btn-star"),
-                state = "pending",
-                uploader;
-
-        var uploader = WebUploader.create({
-            auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
-
-            // 文件接收服务端。
-            server: 'http://lib.h-ui.net/webuploader/0.1.5/server/fileupload.php',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            // 只允许选择图片文件。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-        uploader.on('fileQueued', function (file) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="item">' +
-                            '<div class="pic-box"><img></div>' +
-                            '<div class="info">' + file.name + '</div>' +
-                            '<p class="state">等待上传...</p>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
-            $list.append($li);
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb(file, function (error, src) {
-                if (error) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
-                }
-
-                $img.attr('src', src);
-            }, thumbnailWidth, thumbnailHeight);
-        });
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function (file, percentage) {
-            var $li = $('#' + file.id),
-                    $percent = $li.find('.progress-box .sr-only');
-
-            // 避免重复创建
-            if (!$percent.length) {
-                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
-            }
-            $li.find(".state").text("上传中");
-            $percent.css('width', percentage * 100 + '%');
-        });
-
-        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file) {
-            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        });
-
-        // 文件上传失败，显示上传出错。
-        uploader.on('uploadError', function (file) {
-            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
-        });
-
-        // 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on('uploadComplete', function (file) {
-            $('#' + file.id).find('.progress-box').fadeOut();
-        });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
-
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
-            } else {
-                $btn.text('开始上传');
-            }
-        });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
-        });
-
-    });
-
-    //补充资料-收益权股权类  图片上传demo
-    jQuery(function () {
-        $list = $("#fileList"),
-                $btn = $("#btn-star"),
-                state = "pending",
-                uploader,
-                ratio = window.devicePixelRatio || 1,
-                thumbnailWidth = 110 * ratio,
-                thumbnailHeight = 110 * ratio;
-
-        var uploader = WebUploader.create({
-            auto: true,
-            swf: 'lib/webuploader/0.1.5/Uploader.swf',
-
-            // 文件接收服务端。
-            server: 'fileupload.php',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            // 只允许选择图片文件。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-        uploader.on('fileQueued', function (file) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="item">' +
-                            '<div class="pic-box"><img></div>' +
-                            '<div class="info">' + file.name + '</div>' +
-                            '<p class="state">等待上传...</p>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
-            $list.append($li);
-
-            // 创建缩略图
-            // 如果为非图片文件，可以不用调用此方法。
-            // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb(file, function (error, src) {
-                if (error) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
-                }
-
-                $img.attr('src', src);
-            }, thumbnailWidth, thumbnailHeight);
-        });
-// 文件上传过程中创建进度条实时显示。
-        uploader.on('uploadProgress', function (file, percentage) {
-            var $li = $('#' + file.id),
-                    $percent = $li.find('.progress-box .sr-only');
-
-            // 避免重复创建
-            if (!$percent.length) {
-                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
-            }
-            $li.find(".state").text("上传中");
-            $percent.css('width', percentage * 100 + '%');
-        });
-
-// 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on('uploadSuccess', function (file) {
-            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        });
-
-// 文件上传失败，显示上传出错。
-        uploader.on('uploadError', function (file) {
-            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
-        });
-
-// 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on('uploadComplete', function (file) {
-            $('#' + file.id).find('.progress-box').fadeOut();
-        });
-        uploader.on('all', function (type) {
-            if (type === 'startUpload') {
-                state = 'uploading';
-            } else if (type === 'stopUpload') {
-                state = 'paused';
-            } else if (type === 'uploadFinished') {
-                state = 'done';
-            }
-
-            if (state === 'uploading') {
-                $btn.text('暂停上传');
-            } else {
-                $btn.text('开始上传');
-            }
-        });
-
-        $btn.on('click', function () {
-            if (state === 'uploading') {
-                uploader.stop();
-            } else {
-                uploader.upload();
-            }
-        });
-    });
-
 
 </script>
 </body>

@@ -1,29 +1,36 @@
 package com.meirengu.pay.model;
 
+import com.meirengu.pay.utils.check.AnnotationValidable;
+import com.meirengu.pay.utils.check.ValidateDigit;
+import com.meirengu.pay.utils.check.ValidateNotNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class PaymentCommitList {
+public class PaymentCommitList implements AnnotationValidable {
     private Integer id;
-
+    @ValidateNotNull(attributeValue = "合作方id")
+    @ValidateDigit
     private Integer partnerId;
-
+    @ValidateNotNull(attributeValue = "合作方名称")
     private String partnerName;
-
+    @ValidateNotNull(attributeValue = "众筹项目id")
+    @ValidateDigit
     private Integer itemId;
-
+    @ValidateNotNull(attributeValue = "众筹项目名称")
     private String itemName;
-
+    @ValidateNotNull(attributeValue = "目标金额")
     private BigDecimal targetAmount;
-
+    @ValidateNotNull(attributeValue = "完成金额")
     private BigDecimal completedAmount;
 
     private Date completedTime;
-
+    @ValidateNotNull(attributeValue = "放款方式")
+    @ValidateDigit
     private Integer loanMode;
-
+    @ValidateNotNull(attributeValue = "首款比例")
     private Short firstRatio;
-
+    @ValidateNotNull(attributeValue = "尾款比例")
     private Short endRatio;
 
     private Byte status;
@@ -142,5 +149,25 @@ public class PaymentCommitList {
 
     public void setCommitAccount(String commitAccount) {
         this.commitAccount = commitAccount == null ? null : commitAccount.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentCommitList{" +
+                "id=" + id +
+                ", partnerId=" + partnerId +
+                ", partnerName='" + partnerName + '\'' +
+                ", itemId=" + itemId +
+                ", itemName='" + itemName + '\'' +
+                ", targetAmount=" + targetAmount +
+                ", completedAmount=" + completedAmount +
+                ", completedTime=" + completedTime +
+                ", loanMode=" + loanMode +
+                ", firstRatio=" + firstRatio +
+                ", endRatio=" + endRatio +
+                ", status=" + status +
+                ", commitTime=" + commitTime +
+                ", commitAccount='" + commitAccount + '\'' +
+                '}';
     }
 }

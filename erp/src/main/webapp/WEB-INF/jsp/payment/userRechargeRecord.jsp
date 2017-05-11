@@ -130,7 +130,8 @@
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
     $('.table-sort').dataTable({
-        "aaSorting": [[5, "desc"]],
+//        "aaSorting": [[5, "desc"]],
+        "bSort" : false,
         "bStateSave": true,
     });
     //*项目-编辑*/
