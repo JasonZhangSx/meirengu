@@ -6,6 +6,7 @@ import com.meirengu.model.Result;
 import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.uc.common.Constants;
 import com.meirengu.uc.service.ContactService;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,17 +126,17 @@ public class ContractController extends BaseController{
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName",Constants.SYZR_FULLNAME);
                     urlMap.put("generate", Constants.ZERO_STRING);
-                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    urlMap.put("url", ConfigUtil.getConfig("USUFRUCT_TRANSFER"));
                     viewUrl.add(urlMap);
                 }else if(type == 3){
                     Map<String,String> urlMap = new HashMap<String,String>();
                     urlMap.put("contractName",Constants.HHXY_FULLNAME);
                     urlMap.put("generate",Constants.ZERO_STRING);
-                    urlMap.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    urlMap.put("url",ConfigUtil.getConfig("PARTNERSHIP_AGREEMENT"));
                     Map<String,String> urlMap1 = new HashMap<String,String>();
                     urlMap1.put("contractName",Constants.GQZR_FULLNAME);
                     urlMap1.put("generate",Constants.ZERO_STRING);
-                    urlMap1.put("url","https://api.meirenguvip.com/webview/html/usufruct_transfer.html");
+                    urlMap1.put("url",ConfigUtil.getConfig("EQUITY_INVESTMENT"));
                     viewUrl.add(urlMap);
                     viewUrl.add(urlMap1);
                 }else{

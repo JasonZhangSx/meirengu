@@ -21,9 +21,9 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                用户账号：<input type="text" id="phone" class="input-text" style="width:120px;">　
-                姓名：<input type="text" id="realname" class="input-text" style="width:120px;">　
-                身份证号：<input type="text" id="idcard" class="input-text" style="width:120px;">　
+                用户账号：<input type="text" id="phone" minlength="1" class="input-text" style="width:120px;">　
+                姓名：<input type="text" id="realname" minlength="1" class="input-text" style="width:120px;">　
+                身份证号：<input type="text" id="idcard" minlength="1" class="input-text" style="width:120px;">　
                 是否认证：
                 <span class="select-box mr-20" style="width:120px">
                     <select id="is_auth" name="is_auth" class="select">
@@ -127,9 +127,6 @@
                     var idcard = $('#idcard').val();
                     var is_auth = $('#is_auth').val();
                     //添加额外的参数传给服务器
-                    if(phone==""){
-                        var phone =13800000000;
-                    }
                     d.phone = phone;
                     d.realname = realname;
                     d.idcard = idcard;

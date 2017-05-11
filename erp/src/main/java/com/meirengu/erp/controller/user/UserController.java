@@ -48,30 +48,29 @@ public class UserController extends BaseController{
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
+                                    @RequestParam(value="draw", required = false ,defaultValue = "") Integer draw,
                                     @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
                                     @RequestParam(value="is_auth", required = false ,defaultValue = "") String isAuth){
-
-        Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.list");
-        //查询参数
-        paramsMap.put("phone",phone);
-        paramsMap.put("realname",realname);
-        paramsMap.put("idcard",idcard);
-        paramsMap.put("is_auth",isAuth);
-        /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
-        int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
-        paramsMap.put("page",page+"");
-        paramsMap.put("per_page",request.getParameter("length"));
-
-        map = (Map<String,Object>)super.httpPost(url,paramsMap);
-
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
-        if(map != null){
+        if(draw != 1) { //首次不加载数据
+            String url = ConfigUtil.getConfig("user.list");
+            //查询参数
+            Map<String, String> paramsMap = new HashedMap();
+            paramsMap.put("phone", phone);
+            paramsMap.put("realname", realname);
+            paramsMap.put("idcard", idcard);
+            paramsMap.put("is_auth", isAuth);
+            /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
+            int page = Integer.parseInt(request.getParameter("start")) / Integer.parseInt(request.getParameter("length")) + 1;
+            paramsMap.put("page", page + "");
+            paramsMap.put("per_page", request.getParameter("length"));
+
+            map = (Map<String, Object>) super.httpPost(url, paramsMap);
             userList = (List<Map<String,Object>>) map.get("list");
             //后台处理数据 保存编号 没有编号的不需要这一步
             for (int i = 0;i<userList.size();i++){
