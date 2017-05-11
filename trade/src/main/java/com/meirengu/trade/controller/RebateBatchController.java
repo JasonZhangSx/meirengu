@@ -6,6 +6,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.model.Rebate;
 import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.trade.service.RebateBatchService;
 import com.meirengu.utils.NumberUtil;
@@ -103,8 +104,8 @@ public class RebateBatchController extends BaseController{
                 return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
             }
         }
-        if (NumberUtil.isNullOrZero(rebateUseRangeValue)) {
-            rebateUseRangeValue = 0;
+        if (NumberUtil.isNullOrZero(rebateLimitAmount)) {
+            rebateLimitAmount = new BigDecimal(0);
         }
         if (StringUtils.isEmpty(channel)) {
             channel = "";
@@ -178,6 +179,31 @@ public class RebateBatchController extends BaseController{
             logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
+
+    @RequestMapping(value = "/update/{batch_id}", method = RequestMethod.POST)
+    public Result handle(@PathVariable("batch_id") Integer batchId,
+                         @RequestParam(value = "status", required = false) Integer status,
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
+        if (NumberUtil.isNullOrZero(batchId) || status == null) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        RebateBatch rebateBatch = new RebateBatch();
+        rebateBatch.setBatchId(batchId);
+        rebateBatch.setBatchStatue(status);
+        rebateBatch.setOperateAccount(operateAccount);
+        try{
+            int i = rebateBatchService.update(rebateBatch);
+            if (i == 1) {
+                return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
+        } catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
 

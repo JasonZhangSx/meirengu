@@ -150,11 +150,18 @@ public class OrderCandidateController extends BaseController{
         }
     }
 
+    /**
+     * 预约订单处理
+     * @param id
+     * @param status
+     * @param operateAccount
+     * @return
+     */
     @RequestMapping(value = "/handle/{id}", method = RequestMethod.POST)
-    public Result handle(@PathVariable("id") int id,
-                         @RequestParam(value = "status") int status,
+    public Result handle(@PathVariable("id") Integer id,
+                         @RequestParam(value = "status") Integer status,
                          @RequestParam(value = "operate_account") String operateAccount){
-        if (id == 0) {
+        if (NumberUtil.isNullOrZero(id) || NumberUtil.isNullOrZero(status)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         OrderCandidate orderCandidate = new OrderCandidate();

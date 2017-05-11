@@ -65,12 +65,18 @@ public class InviterController extends BaseController{
         map = (Map<String,Object>)super.httpPost(url,paramsMap);
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> userList = (List<Map<String,Object>>) map.get("list");
+        List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
+        if(map != null){
+            userList = (List<Map<String,Object>>) map.get("list");
 
-        //保存给datatabls 分页数据
-        view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-        view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
-
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+        }else{
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(0);//显示总记录
+            view.setiTotalRecords(0);//数据库总记录
+        }
         view.setAaData(userList);
         return view;
     }

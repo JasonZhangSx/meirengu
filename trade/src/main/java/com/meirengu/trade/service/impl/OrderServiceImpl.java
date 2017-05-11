@@ -97,7 +97,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 Date beginTime = DateUtils.parseDate(beginTimeStr.substring(0,19),"yyyy-MM-dd HH:mm:ss");
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(beginTime);
-                cal.add(Calendar.DATE, 1);
+                cal.add(Calendar.DATE, 3);
                 Calendar cal2 = Calendar.getInstance();
                 cal2.setTime(new Date());
                 long remainingTime = cal.getTimeInMillis() - cal2.getTimeInMillis();
@@ -302,7 +302,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_STATUS_NOT_MATCH));
             return result;
         }
-        /**----逻辑改为点击预约后立即改变档位状态，预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
+        /**----逻辑改为点击预约后改变档位状态，预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
         //审核通过需要改变档位的份数
         if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
             //1.查询该档位剩余份数
@@ -315,18 +315,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         //2.修改订单状态
         int i = update(order);
         if (i == 1) {
-            // 逻辑改为点击预约后立即改变档位状态
+            // 逻辑改为点击预约后改变档位状态
             // 预约审核改变订单状态，修改档位信息，预约的订单数据带到认购中
             //3.修改项目档位信息
             if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_PASS.getValue()) {
                 orderDetail.setOrderState(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
                 itemLevelUpdate(orderDetail);
 
-                // 订单号放入rocketmq延迟队列，24小时内未支付则订单失效
+                // 订单号放入rocketmq延迟队列，72小时内未支付则订单失效
                 sendRocketMQDeployQueue(orderDetail.getOrderSn());
                 // 订单号放入rocketmq延迟队列，22小时内未支付则提示用户
                 sendRocketMQDeployQueue4Sms(orderDetail.getOrderSn());
+            } else if (order.getOrderState() == OrderStateEnum.BOOK_ADUIT_FAIL.getValue()) {
+                //请求项目服务修改档位状态
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("item_id", orderDetail.getItemId().toString());
+                params.put("level_id", orderDetail.getItemLevelId().toString());
+                params.put("level_amount", orderDetail.getItemLevelAmount().toString());
+                params.put("item_num", orderDetail.getItemNum().toString());
+                params.put("total_amount", orderDetail.getOrderAmount().toString());
+                String url = ConfigUtil.getConfig("item.appoint.rollback.url");
+                HttpResult httpResult = HttpUtil.doPostForm(url, params);
+                logger.debug("Request: {} getResponse: {}", url, httpResult);
             }
+
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -985,7 +997,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 params.put("level_amount", orderMap.get("itemLevelAmount").toString());
                 params.put("item_num", orderMap.get("itemNum").toString());
                 params.put("total_amount", orderMap.get("orderAmount").toString());
-                String url = ConfigUtil.getConfig("item.level.rollback.url");
+                String url = ConfigUtil.getConfig("item.complete.rollback.url");
                 HttpResult httpResult = HttpUtil.doPostForm(url, params);
                 logger.debug("Request: {} getResponse: {}", url, httpResult);
 
@@ -1073,6 +1085,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         list.add(map);
         return list;
     }
+    /**
+     * 根据档位id查询档位下面的投资金额
+     * @param levelIds
+     * @return
+     */
+    public List<Map<String, Object>> getSumAmountByLevelIds(String levelIds) {
+        String[] levelIdsArr = levelIds.split(",");
+        List<String> levelIdList = new ArrayList<String>();
+        for (int i=0; i<levelIdsArr.length; i++) {
+            if (StringUtils.isNotBlank(levelIdsArr[i])) {
+                levelIdList.add(levelIdsArr[i]);
+            }
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("levelIdList", levelIdList);
+        params.put("orderState", OrderStateEnum.PAID.getValue());
+
+        List<Map<String, Object>> list = orderDao.getSumAmountByLevelIds(params);
+        return list;
+    }
 
     /**
      * 订单失效消息监听
@@ -1096,4 +1128,5 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         String orderSn = event.getMsg();
         orderRemindForPay(orderSn);
     }
+
 }

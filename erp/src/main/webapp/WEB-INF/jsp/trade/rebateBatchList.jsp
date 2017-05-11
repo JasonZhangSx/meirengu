@@ -12,7 +12,7 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>候补预约列表</title>
+    <title>抵扣券批次列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
         .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
@@ -20,34 +20,41 @@
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 订单管理 <span class="c-gray en">&gt;</span> 候补预约列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 运营管理 <span class="c-gray en">&gt;</span> 抵扣券批次列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">　
+                抵扣券批次号：<input type="text" class="input-text" style="width:120px;" id="batchId">　
+                批次状态：<input type="text" class="input-text" style="width:120px;" id="batchStatue">　
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
+                <span class="l"><a class="btn btn-primary radius" onClick="bulletin_insert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
+                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加抵扣券批次</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
                         <th></th>
-                        <th>账号</th>
-                        <th>项目名称</th>
-                        <th>回报档位</th>
-                        <th>数量</th>
-                        <th>订单总额</th>
-                        <th>微信号</th>
-                        <th>预约时间</th>
+                        <th>批次号</th>
+                        <th>抵扣券名称</th>
+                        <th>抵扣券适用范围</th>
+                        <th>抵扣券金额</th>
+                        <th>抵扣券类型</th>
+                        <th>抵扣券使用范围</th>
+                        <th>抵扣券标识</th>
+                        <th>抵扣券使用限制次数</th>
+                        <th>抵扣券有效期</th>
+                        <th>抵扣券发放数量</th>
+                        <th>抵扣券预算金额</th>
                         <th>状态</th>
+                        <th>创建时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -77,7 +84,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>order_candidate'
+                'url': '<%=basePath %>rebate_batch'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -89,30 +96,86 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
-                {"data": "userPhone"},
-                {"data": "itemName"},
-                {"data": "itemLevelName"},
-                {"data": "itemNum"},
-                {"data": "orderAmount"},
-                {"data": "userWeixin"},
+                {"data": "batchId"},
+                {"data": "rebateName"},
+                {"data": "rebateScope"},
+                {"data": "rebateAmount"},
+                {
+                    "data": "rebateType",
+                    "render": function (data, type, row, meta) {
+                        if (data == 1) {
+                            return "无门槛券";
+                        } else if (data == 2) {
+                            return "满减券";
+                        }
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var rebateUseRange = row.rebateUseRange;
+                        var rebateUseRangeValue = row.rebateUseRangeValue;
+                        if (rebateUseRange == 1) {
+                            //固定项目
+                            return "项目" + rebateUseRangeValue;
+                        } else if (rebateUseRange == 2) {
+                            if (rebateUseRangeValue == 1) {
+                                return "产品众筹项目";
+                            } else if (rebateUseRangeValue == 2) {
+                                return "收益权众筹项目";
+                            } else if (rebateUseRangeValue == 3) {
+                                return "股权众筹项目";
+                            }
+                        } else if (rebateUseRange == 3) {
+                            return "所有项目";
+                        }
+                    }
+                },
+                {"data": "rebateMark"},
+                {
+                    "data": "rebateLimit",
+                    "render": function (data, type, row, meta) {
+                        if (data == 1) {
+                            return "每天一次";
+                        } else if (data == 2) {
+                            return "永久一次";
+                        }  else if (data == 3) {
+                            return "不限次数";
+                        }
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        var validType = row.validType;
+                        if (validType == 1) {
+                            var validStartTime = row.validStartTime;
+                            var validEndTime = row.validEndTime;
+                            return new Date(validStartTime).Format("yyyy-MM-dd") + "到" + new Date(validEndTime).Format("yyyy-MM-dd");
+                        } else if (validType == 2) {
+                            var validDays = row.validDays;
+                            return "自领取" + validDays + "天内有效";
+                        }
+                    }
+                },
+                {"data": "batchCount"},
+                {"data": "budgetAmount"},
+                {
+                    "data": "batchStatue",
+                    "render": function (data, type, row, meta) {
+                        if (data == 0) {
+                            return "无效";
+                        } else if (data == 1) {
+                            return "有效";
+                        }
+                    }
+                },
                 {
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
                         return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                     }
                 },
-                {
-                    "data": "status",
-                    "render": function (data, type, row, meta) {
-                        if (data == 0) {
-                            return "未处理";
-                        } else if (data == 1) {
-                            return "已处理";
-                        }
-                        return "数据错误";
-                    }
-                },
-
                 {"data": null}
             ],
             "columnDefs": [
@@ -121,25 +184,24 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-                { "name": "userPhone",  "targets": 1 },
-                { "name": "itemName", "targets": 2 },
+                { "name": "batchId",  "targets": 1 },
+                { "name": "batchStatue", "targets": 12 },
                 {
-                    "targets": 9,
+                    "targets": 14,
                     "render": function (data, type, row, meta) {
-                        var status = row.status;
-                        if (status == 0) {
+                        var status = row.batchStatue;
+                        if (status == 1) {
                             var context =
                                 {
                                     func: [
-                                        {"name": "处理", "fn": "edit(\'" + row.id + "\')", "type": "primary"},
+                                        {"name": "失效处理", "fn": "edit(\'" + row.batchId + "\')", "type": "primary"},
                                     ]
                                 };
                             var html = template(context);
                             return html;
-                        } else if (status == 1) {
-                            return "已处理";
+                        } else {
+                            return "";
                         }
-
                     }
                 }
 
@@ -193,31 +255,30 @@
      * 检索
      **/
     function search(){
-        var userPhone = $("#userPhone").val();
-        var itemName = $("#itemName").val();
-        table.column(1).search(userPhone).column(2).search(itemName).draw();
+        var batchId = $("#batchId").val();
+        var batchStatue = $("#batchStatue").val();
+        table.column(1).search(batchId).column(12).search(batchStatue).draw();
     }
+
     /*候补预约订单处理*/
     function edit(id) {
-        layer.confirm('是否处理完成？', {
-
-            btn: ['完成', '取消'],
+        layer.confirm('是否失效处理？', {
+                btn: ['失效', '取消'],
                 shade: false,
                 closeBtn: 0
             },
             //state 处理完成为1
             function () {
-                if (candidateHandleAjax(id, 1)) {
-                    layer.msg('已处理', {icon: 5, time: 1000});
+                if (ajaxHandle(id)) {
+                    layer.msg('已失效', {icon: 5, time: 1000});
                     table.ajax.reload();
                 } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
             });
     }
-
-    function candidateHandleAjax(id, status) {
-        var url = "<%=basePath %>order_candidate/handle/"+id;
+    function ajaxHandle(id) {
+        var url = "<%=basePath %>rebate_batch/lose_efficacy/"+id;
         var flag=false;
         $.ajax({
             type: "post",
@@ -239,6 +300,7 @@
         });
         return flag;
     }
+
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
