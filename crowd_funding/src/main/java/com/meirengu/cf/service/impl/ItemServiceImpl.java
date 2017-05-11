@@ -1,15 +1,14 @@
 package com.meirengu.cf.service.impl;
 import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.dao.ItemDao;
-import com.meirengu.cf.model.Item;
-import com.meirengu.cf.model.ItemLevel;
-import com.meirengu.cf.model.ItemOperateRecord;
-import com.meirengu.cf.service.ItemLevelService;
-import com.meirengu.cf.service.ItemOperateRecordService;
-import com.meirengu.cf.service.ItemService;
+import com.meirengu.cf.model.*;
+import com.meirengu.cf.service.*;
 import com.meirengu.common.StatusCode;
 import com.meirengu.exception.BusinessException;
+import com.meirengu.model.Page;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.utils.DateAndTime;
+import com.meirengu.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,10 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     ItemLevelService itemLevelService;
     @Autowired
     ItemOperateRecordService itemOperateRecordService;
+    @Autowired
+    PartnerService partnerService;
+    @Autowired
+    ItemCooperationService itemCooperationService;
 
     @Override
     public int updateStatus(Item item) {
@@ -55,7 +60,6 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
         int type = 0;
         //1.修改订单的预约/已筹金额  2.档位份数是否不足 3.修改档位预约份数/完成份数
         try {
-            //1.修改订单的预约/已筹金额
             ItemLevel il = itemLevelService.detail(levelId);
             if(il == null){
                 LOGGER.warn(">> the level does not exit.... id : ", levelId);
@@ -69,7 +73,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
                         new Object[]{levelAmount, levelAmount1});
                 return 5;
             }
-
+            //档位份数校验
             BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
             int compareToReturnNum = -1;
             int bookNumber = il.getBookNumber();
@@ -117,16 +121,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
                 return 9;
             }
 
-            Item item = new Item();
-            item.setItemId(itemId);
-            item.setAppointAmount(appointAmount);
-            item.setCompletedAmount(completedAmount);
-            int i = itemDao.changeAmount(item);
-            if(i != 1){
-                LOGGER.warn(">> update amount fail....");
-                throw new BusinessException("update amount fail....");
-            }
-
+            //修改档位份数
             ItemLevel levelParam = new ItemLevel();
             levelParam.setLevelId(levelId);
 
@@ -143,6 +138,19 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             if(j != 1){
                 LOGGER.warn(">> update number fail....");
                 throw new BusinessException("update number fail....");
+            }
+
+            //修改项目预约金额（已筹不修改，下单成功后修改）
+            if(type == 2){
+                Item item = new Item();
+                item.setItemId(itemId);
+                item.setAppointAmount(appointAmount);
+                //item.setCompletedAmount(completedAmount);
+                int i = itemDao.changeAmount(item);
+                if(i != 1){
+                    LOGGER.warn(">> update amount fail....");
+                    throw new BusinessException("update amount fail....");
+                }
             }
 
             return 1;
@@ -163,20 +171,21 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
      * @return
      */
     @Override
-    public int levelRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
+    @Transactional
+    public int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
 
         try {
-            //1.修改订单的预约/已筹金额
+            //1.修改订单的已筹金额
             ItemLevel il = itemLevelService.detail(levelId);
             if(il == null){
-                LOGGER.warn(">> the level does not exit.... id : ", levelId);
+                LOGGER.warn(">>ItemServiceImpl.completedRollback the level does not exit.... id : ", levelId);
                 return StatusCode.ITEM_LEVEL_NULL;
             }
             int levelStatus = il.getLevelStatus();
 
             BigDecimal levelAmount1 = il.getLevelAmount();
             if(levelAmount.compareTo(levelAmount1) != 0){
-                LOGGER.warn(">> two level amount does not equal... param amount is {}, query amount is {}",
+                LOGGER.warn(">>ItemServiceImpl.completedRollback two level amount does not equal... param amount is {}, query amount is {}",
                         new Object[]{levelAmount, levelAmount1});
                 return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
             }
@@ -187,26 +196,27 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             int currentNumber = completedNumber - itemNum;
             //先比较已完成的数量和要回滚的数量
             if(currentNumber < 0){
-                LOGGER.warn(">> two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{itemNum, completedNumber});
+                LOGGER.warn(">>ItemServiceImpl.completedRollback two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{itemNum, completedNumber});
                 return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
             }
 
             compareToReturnNum = totalAmount.compareTo(completedAmount);
 
             if(compareToReturnNum != 0){
-                LOGGER.warn(">> totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                LOGGER.warn(">>ItemServiceImpl.completedRollback totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
                         new Object[]{totalAmount, levelAmount, itemNum});
                 return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
             }
 
-            Item item = new Item();
+            //已筹金额回滚
+            /*Item item = new Item();
             item.setItemId(itemId);
             item.setCompletedAmount(totalAmount.multiply(new BigDecimal(-1)));
             int i = itemDao.changeAmount(item);
             if(i != 1){
                 LOGGER.warn(">> update amount fail....");
                 throw new BusinessException("update amount fail....");
-            }
+            }*/
 
             ItemLevel levelParam = new ItemLevel();
             levelParam.setLevelId(levelId);
@@ -218,13 +228,80 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             }
             int j = itemLevelService.updateNumber(levelParam);
             if(j != 1){
-                LOGGER.warn(">> update number fail....");
+                LOGGER.warn(">>ItemServiceImpl.completedRollback update number fail....");
                 throw new BusinessException("update number fail....");
             }
 
             return StatusCode.OK;
         }catch (Exception e){
-            String errorMsg = ">> change amount throw exception: {}";
+            String errorMsg = ">>ItemServiceImpl.completedRollback change amount throw exception: {}";
+            LOGGER.error(errorMsg, e);
+            throw new BusinessException(errorMsg, e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public int appointRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal
+            appointAmount) {
+        try {
+            //1.修改订单的预约金额
+            ItemLevel il = itemLevelService.detail(levelId);
+            if(il == null){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback the level does not exit.... id : ", levelId);
+                return StatusCode.ITEM_LEVEL_NULL;
+            }
+            int levelStatus = il.getLevelStatus();
+
+            BigDecimal levelAmount1 = il.getLevelAmount();
+            if(levelAmount.compareTo(levelAmount1) != 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback two level amount does not equal... param amount is {}, query amount is {}",
+                        new Object[]{levelAmount, levelAmount1});
+                return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
+            }
+
+            BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
+            int compareToReturnNum = -1;
+            int bookNumber = il.getBookNumber();
+            int currentNumber = bookNumber - itemNum;
+            //先比较已完成的数量和要回滚的数量
+            if(currentNumber < 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback two level amount does not equal... param itemNum is {}, bookNumber is {}", new Object[]{itemNum, bookNumber});
+                return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
+            }
+
+            compareToReturnNum = totalAmount.compareTo(appointAmount);
+
+            if(compareToReturnNum != 0){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                        new Object[]{totalAmount, levelAmount, itemNum});
+                return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
+            }
+
+            Item item = new Item();
+            item.setItemId(itemId);
+            item.setAppointAmount(totalAmount.multiply(new BigDecimal(-1)));
+            int i = itemDao.changeAmount(item);
+            if(i != 1){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback update amount fail....");
+                throw new BusinessException("ItemServiceImpl.appointRollback update amount fail....");
+            }
+
+            ItemLevel levelParam = new ItemLevel();
+            levelParam.setLevelId(levelId);
+
+            levelParam.setBookNumber(currentNumber);
+            levelParam.setLevelStatus(Constants.LEVEL_APPOINTING);
+
+            int j = itemLevelService.updateNumber(levelParam);
+            if(j != 1){
+                LOGGER.warn(">>ItemServiceImpl.appointRollback update number fail....");
+                throw new BusinessException("ItemServiceImpl.appointRollback update number fail....");
+            }
+
+            return StatusCode.OK;
+        }catch (Exception e){
+            String errorMsg = ">>ItemServiceImpl.appointRollback change amount throw exception: {}";
             LOGGER.error(errorMsg, e);
             throw new BusinessException(errorMsg, e);
         }
@@ -233,6 +310,64 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     @Override
     public Map<String, Object> moreDetail(int id) {
         return itemDao.moreDetail(id);
+    }
+
+    @Override
+    public Map<String, Object> getBankAndCommission(Integer itemId) {
+
+        Map<String, Object> map = new HashMap<>();
+        if(itemId != null && itemId != 0){
+            Item item = detail(itemId);
+            LOGGER.info(">>ItemServiceImpl.getBankAndCommission get item is {}", item);
+            if(item != null){
+                BigDecimal completedAmount = item.getCompletedAmount();
+                int type = item.getTypeId();
+                map.put("type", type);
+                Map<String, Object> params = new HashMap<>();
+                params.put("itemId", itemId);
+                List<Map<String, Object>> list = itemLevelService.getList(params);
+                map.put("levelList", list);
+
+                int partnerId = item.getPartnerId();
+                Partner partner = partnerService.detail(partnerId);
+                LOGGER.info(">>ItemServiceImpl.getBankAndCommission get partner is {}", partner);
+                if(partner != null){
+                    map.put("bankName", partner.getBankName());
+                    map.put("bankAccount", partner.getBankAccount());
+                    map.put("bankCard", partner.getBankCard());
+                    ItemCooperation cooperation = itemCooperationService.detail(itemId);
+                    LOGGER.info(">>ItemServiceImpl.getBankAndCommission get cooperation is {}", cooperation);
+                    if(cooperation != null){
+                        BigDecimal commissionRate = cooperation.getCommissionRate();
+                        BigDecimal guaranteeRate = cooperation.getGuaranteeRate();
+                        map.put("commissionRate", commissionRate);
+                        map.put("guaranteeRate", guaranteeRate);
+                        BigDecimal commissionAmount = completedAmount.multiply(commissionRate.multiply(new BigDecimal(0.01)));
+                        BigDecimal guaranteeAmount = completedAmount.multiply(guaranteeRate.multiply(new BigDecimal(0.01)));
+                        map.put("commissionAmount", commissionAmount.intValue());
+                        map.put("guaranteeAmount", guaranteeAmount.intValue());
+                        map.put("prepaidBonus", cooperation.getPrepaidBonus());
+                        map.put("loanMode", cooperation.getLoanMode());
+                        map.put("firstRatio", cooperation.getFirstRatio());
+                        return map;
+                    }
+                }
+            }
+        }
+        LOGGER.info(">>ItemServiceImpl.getBankAndCommission return null");
+        return null;
+    }
+
+    @Override
+    public void updateItemCompleteAmount(Integer itemId, BigDecimal amount) {
+        Item item = new Item();
+        item.setItemId(itemId);
+        item.setCompletedAmount(amount);
+        int i = itemDao.changeAmount(item);
+        if(i != 1){
+            LOGGER.warn(">> ItemServiceImpl.updateItemCompleteAmount fail....");
+            throw new BusinessException("ItemServiceImpl.updateItemCompleteAmount fail....");
+        }
     }
 
     @Override
@@ -276,41 +411,44 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
-    public void setCooperate(int itemId, int operateStatus, String operateRemark, String operateAccount) {
-        //1插入审核记录 2修改项目状态
-        ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
-        itemOperateRecord.setItemId(itemId);
-        itemOperateRecord.setOperateType(Constants.RECORD_OPERATION);
-        itemOperateRecord.setOperateStatus(operateStatus);
-        itemOperateRecord.setOperateRemark(operateRemark);
-        itemOperateRecord.setOperateTime(new Date());
-        itemOperateRecord.setOperateAccount(operateAccount);
+    @Transactional
+    public void setCooperate(ItemCooperation itemCooperation) {
+        if(itemCooperation != null){
+            //1 新增设置合作  2  修改项目状态  3 插入审核记录
+            ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+            itemOperateRecord.setItemId(itemCooperation.getItemId());
+            itemOperateRecord.setOperateType(Constants.RECORD_OPERATION);
+            itemOperateRecord.setOperateStatus(Constants.STATUS_YES);
+            itemOperateRecord.setOperateRemark("");
+            itemOperateRecord.setOperateTime(new Date());
+            itemOperateRecord.setOperateAccount(itemCooperation.getOperateAccount());
 
-        Item item = new Item();
-        item.setItemId(itemId);
-        if(operateStatus == Constants.STATUS_YES){
-            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_SUCCESS);
-        }else if(operateStatus == Constants.STATUS_NO){
-            item.setItemStatus(Constants.ITEM_FIRST_VERIFY_FAIL);
-        }else{
-            LOGGER.warn(">>ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
-            throw new BusinessException("ItemOperateRecordServiceImpl.verify param operateStatus not invalid...");
-        }
+            Item item = new Item();
+            item.setItemId(itemCooperation.getItemId());
+            item.setItemStatus(Constants.ITEM_REVIEW_VERIFY);
 
-        try {
-            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
-            if(insertNum != 1){
-                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify insert operate record fail... return insertNum is {}", insertNum);
-                throw new BusinessException("ItemOperateRecordServiceImpl.verify insert operate record fail...");
+            try {
+
+                int cooperationInsertNum = itemCooperationService.insert(itemCooperation);
+                if(cooperationInsertNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate update item status fail... return updateNum is {}", cooperationInsertNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate update item status fail...");
+                }
+
+                int updateNum = super.update(item);
+                if(updateNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate update item status fail... return updateNum is {}", updateNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate update item status fail...");
+                }
+
+                int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+                if(insertNum != 1){
+                    LOGGER.warn(">>ItemOperateRecordServiceImpl.setCooperate insert operate record fail... return insertNum is {}", insertNum);
+                    throw new BusinessException("ItemOperateRecordServiceImpl.setCooperate insert operate record fail...");
+                }
+            }catch (Exception e){
+                throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
             }
-
-            int updateNum = super.update(item);
-            if(updateNum != 1){
-                LOGGER.warn(">>ItemOperateRecordServiceImpl.verify update item status fail... return updateNum is {}", updateNum);
-                throw new BusinessException("ItemOperateRecordServiceImpl.verify update item status fail...");
-            }
-        }catch (Exception e){
-            throw new BusinessException("ItemOperateRecordServiceImpl.verify throw exception:",e);
         }
     }
 
@@ -355,8 +493,89 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
-    public boolean publish() {
+    @Transactional
+    public boolean publish(int itemId, Date appointDate, int type, String operateAccount) {
+
+        try{
+            //发布需要三步， 1.修改项目状态和起始时间 2.修改档位状态  3.审核记录
+            Item item = this.detail(itemId);
+            if(item == null){
+                LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                return false;
+            }
+
+            Item params = new Item();
+
+            int preheatingDays = item.getPreheatingDays();
+            int crowdDays = item.getCrowdDays();
+
+            String baseDate = DateAndTime.dateFormat(appointDate, "yyyy-MM-dd HH:mm:ss");
+
+            Date preheatingEndTime = DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", baseDate, preheatingDays));
+            params.setPreheatingStartTime(appointDate);
+            params.setPreheatingEndTime(preheatingEndTime);
+            params.setCrowdStartTime(preheatingEndTime);
+            Date crowdEndTime = DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", baseDate, preheatingDays+crowdDays));
+            params.setCrowdEndTime(crowdEndTime);
+
+            //type 1为预约 2为立即
+            if(type == 1){
+                //暂时这样
+                int updateNum = 0;
+                //预约期为0，就直接跳过预约进入众筹
+                if(preheatingDays == 0){
+                    params.setItemStatus(Constants.ITEM_CROWDING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }else {
+                    params.setItemStatus(Constants.ITEM_PERHEARTING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }
+
+                if(updateNum <= 0){
+                    LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                    return false;
+                }
+            }else if(type == 2){
+                int updateNum = 0;
+                //预约期为0，就直接跳过预约进入众筹
+                if(preheatingDays == 0){
+                    params.setItemStatus(Constants.ITEM_CROWDING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }else {
+                    params.setItemStatus(Constants.ITEM_PERHEARTING);
+                    ItemLevel itemLevel = new ItemLevel();
+                    itemLevel.setItemId(itemId);
+                    itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
+                    itemLevel.setOperateAccount(operateAccount);
+                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
+                }
+
+                if(updateNum <= 0){
+                    LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                    return false;
+                }
+                //itemLevelService.update();
+            }
+
+            this.update(params);
+        }catch (Exception e){
+
+        }
+
         return false;
     }
+
 
 }

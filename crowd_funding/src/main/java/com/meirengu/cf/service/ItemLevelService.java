@@ -10,4 +10,10 @@ import com.meirengu.service.BaseService;
 public interface ItemLevelService extends BaseService<ItemLevel>{
 
     int updateNumber(ItemLevel itemLevel);
+    /**
+     * 通过项目id修改档位状态
+     * @param itemLevel
+     * @return
+     */
+    int updateStatusByItemId(ItemLevel itemLevel);
 }

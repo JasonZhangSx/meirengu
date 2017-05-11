@@ -73,7 +73,7 @@
                             </td>
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
-                                   onClick="project_edit('众筹-新建项目列表-添加基本信息','/erp/item/to_edit?itemId=${item.itemId}','10001')"
+                                   onClick="project_edit('众筹-新建项目列表-编辑基本信息','item/to_edit?itemId=${item.itemId}','10001')"
                                    href="javascript:;" title="项目编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
                                 <a style="text-decoration:none" class="ml-5" onClick="project_del(this,'10001')"
                                    href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>

@@ -3,6 +3,7 @@ package com.meirengu.erp.service;
 import com.meirengu.erp.model.Partner;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * ${DESCRIPTION}
@@ -16,6 +17,6 @@ public interface PartnerService {
 
     List getPartnerClassList();
 
-    boolean partnerAdd(Partner partner);
+    boolean partnerAdd(Map<String, String> params);
 
 }

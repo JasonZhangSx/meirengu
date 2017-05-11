@@ -44,20 +44,22 @@ public class BonusServiceImpl extends BaseServiceImpl implements BonusService {
             BufferedReader bufferedReader = new BufferedReader(read);
             for (String string : Arrays.asList(bufferedReader.readLine().split("\\|"))){
                 String[] str = string.split(",");
-                BigDecimal bigDecimal = new BigDecimal(str[2]);
-                BigDecimal money = bigDecimal.multiply(BigDecimal.valueOf(0.005)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
-                for (int i=0;i<str.length-1;i++){
-                    Integer userId = Integer.valueOf(str[i]);
-                    PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(userId);
-                    paymentAccountDao.updateBalance(paymentAccount.getAccountId(),paymentAccount.getAccountBalance().add(money));
-                    PaymentInvitationBonus paymentInvitationBonus = new PaymentInvitationBonus();
-                    paymentInvitationBonus.setUserId(userId);
-                    paymentInvitationBonus.setPrincipal(money);
-                    if (i==0){
-                        paymentInvitationBonus.setInvestPrincipal(bigDecimal);
+                if (str[3]!="1"){
+                    BigDecimal bigDecimal = new BigDecimal(str[2]);
+                    BigDecimal money = bigDecimal.multiply(BigDecimal.valueOf(0.005)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+                    for (int i=0;i<str.length-2;i++){
+                        Integer userId = Integer.valueOf(str[i]);
+                        PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(userId);
+                        paymentAccountDao.updateBalance(paymentAccount.getAccountId(),paymentAccount.getAccountBalance().add(money));
+                        PaymentInvitationBonus paymentInvitationBonus = new PaymentInvitationBonus();
+                        paymentInvitationBonus.setUserId(userId);
+                        paymentInvitationBonus.setPrincipal(money);
+                        if (i==0){
+                            paymentInvitationBonus.setInvestPrincipal(bigDecimal);
+                        }
+                        paymentInvitationBonus.setInvestmentTime(DateAndTime.addDay(-4));
+                        paymentInvitationBonusDao.insertSelective(paymentInvitationBonus);
                     }
-                    paymentInvitationBonus.setInvestmentTime(DateAndTime.addDay(-4));
-                    paymentInvitationBonusDao.insertSelective(paymentInvitationBonus);
                 }
             }
         } catch (UnsupportedEncodingException e) {

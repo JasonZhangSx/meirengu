@@ -26,8 +26,9 @@
                 合作方名称：<input type="text" class="input-text" style="width:120px;">　
                 分类：<span class="select-box mr-20" style="width:120px">
       					<select name="" class="select">
-      						<option value="0">公司</option>
-      						<option value="13">个人</option>
+                            <c:forEach items="${classList}" var="c">
+                                <option value="${c.classId}">${c.className}</option>
+                            </c:forEach>
       					</select>
       					</span>
                 <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
@@ -60,8 +61,12 @@
                         <tr class="text-c">
                             <td>${partner.partnerId}</td>
                             <td>${partner.partnerName}</td>
-                            <td>${partner.className}</td>
-                            <td>${partner.contactsame}</td>
+                            <c:forEach items="${classList}" var="c">
+                                <c:if test="${c.classId == partner.typeId}">
+                                    <td>${c.className}</td>
+                                </c:if>
+                            </c:forEach>
+                            <td>${partner.contactsName}</td>
                             <td>${partner.contactsTelephone}</td>
                             <td>
                                 <a style="text-decoration:none" class="ml-5"

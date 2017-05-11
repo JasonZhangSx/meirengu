@@ -10,17 +10,23 @@ import java.util.Date;
 */
 public class Partner  extends BaseObject {
    /** 合作方索引id */
-   private int partnerId;
+   private Integer partnerId;
    /** 行业类型id */
-   private int typeId;
+   private Integer typeId;
    /** 合作方名称 */
    private String partnerName;
+   /** 公司成立日 **/
+   private Date partnerCreateDay;
+   /** 公司注册资金 **/
+   private Integer partnerRegistCapital;
+   /** 公司估值 **/
+   private Integer partnerValuation;
    /** 服务专员id */
-   private int accountId;
+   private Integer accountId;
    /** 企业名词 */
    private String enterpriseName;
    /** 证件号 */
-   private int idNumber;
+   private Integer idNumber;
    /** 企业地址 */
    private String enterpriseAddress;
    /** 负责人姓名 */
@@ -30,7 +36,7 @@ public class Partner  extends BaseObject {
    /** 负责人联系电话 */
    private String principalTelephone;
    /** 负责人传真 */
-   private int principalFax;
+   private Integer principalFax;
    /** 负责人联系地址 */
    private String principalAddress;
    /** 联系人姓名 */
@@ -40,7 +46,7 @@ public class Partner  extends BaseObject {
    /** 联系人电话 */
    private String contactsTelephone;
    /** 联系人 传真 */
-   private int contactsFax;
+   private Integer contactsFax;
    /** 联系人地址 */
    private String contactsAddress;
    /** 开户行名称 */
@@ -48,7 +54,7 @@ public class Partner  extends BaseObject {
    /** 账号名 */
    private String bankAccount;
    /** 银行账号 */
-   private int bankCard;
+   private Integer bankCard;
    /** 负责人身份证图片 */
    private String imagePrincipal;
    /** 营业执照照片 */
@@ -58,7 +64,7 @@ public class Partner  extends BaseObject {
    /** 医疗机构执业许可证 */
    private String imageProfessionalLicense;
    /** 删除标识： 1 未删除  0 删除 */
-   private int flag;
+   private Integer flag;
    /** 创建时间 */
    private Date createTime;
    /** 修改时间 */
@@ -66,19 +72,19 @@ public class Partner  extends BaseObject {
    /** 操作人账号 */
    private String operateAccount;
 
-   public void setPartnerId(int partnerId){
+   public void setPartnerId(Integer partnerId){
        this.partnerId = partnerId;
    }
 
-   public int getPartnerId(){
+   public Integer getPartnerId(){
        return partnerId;
    }
 
-   public void setTypeId(int typeId){
+   public void setTypeId(Integer typeId){
        this.typeId = typeId;
    }
 
-   public int getTypeId(){
+   public Integer getTypeId(){
        return typeId;
    }
 
@@ -90,11 +96,11 @@ public class Partner  extends BaseObject {
        return partnerName;
    }
 
-   public void setAccountId(int accountId){
+   public void setAccountId(Integer accountId){
        this.accountId = accountId;
    }
 
-   public int getAccountId(){
+   public Integer getAccountId(){
        return accountId;
    }
 
@@ -106,11 +112,11 @@ public class Partner  extends BaseObject {
        return enterpriseName;
    }
 
-   public void setIdNumber(int idNumber){
+   public void setIdNumber(Integer idNumber){
        this.idNumber = idNumber;
    }
 
-   public int getIdNumber(){
+   public Integer getIdNumber(){
        return idNumber;
    }
 
@@ -146,11 +152,11 @@ public class Partner  extends BaseObject {
        return principalTelephone;
    }
 
-   public void setPrincipalFax(int principalFax){
+   public void setPrincipalFax(Integer principalFax){
        this.principalFax = principalFax;
    }
 
-   public int getPrincipalFax(){
+   public Integer getPrincipalFax(){
        return principalFax;
    }
 
@@ -186,11 +192,11 @@ public class Partner  extends BaseObject {
        return contactsTelephone;
    }
 
-   public void setContactsFax(int contactsFax){
+   public void setContactsFax(Integer contactsFax){
        this.contactsFax = contactsFax;
    }
 
-   public int getContactsFax(){
+   public Integer getContactsFax(){
        return contactsFax;
    }
 
@@ -218,11 +224,11 @@ public class Partner  extends BaseObject {
        return bankAccount;
    }
 
-   public void setBankCard(int bankCard){
+   public void setBankCard(Integer bankCard){
        this.bankCard = bankCard;
    }
 
-   public int getBankCard(){
+   public Integer getBankCard(){
        return bankCard;
    }
 
@@ -258,11 +264,11 @@ public class Partner  extends BaseObject {
        return imageProfessionalLicense;
    }
 
-   public void setFlag(int flag){
+   public void setFlag(Integer flag){
        this.flag = flag;
    }
 
-   public int getFlag(){
+   public Integer getFlag(){
        return flag;
    }
 
@@ -290,4 +296,27 @@ public class Partner  extends BaseObject {
        return operateAccount;
    }
 
+   public Date getPartnerCreateDay() {
+    return partnerCreateDay;
+   }
+
+   public void setPartnerCreateDay(Date partnerCreateDay) {
+    this.partnerCreateDay = partnerCreateDay;
+   }
+
+   public Integer getPartnerValuation() {
+    return partnerValuation;
+   }
+
+   public void setPartnerValuation(Integer partnerValuation) {
+    this.partnerValuation = partnerValuation;
+   }
+
+   public Integer getPartnerRegistCapital() {
+        return partnerRegistCapital;
+   }
+
+   public void setPartnerRegistCapital(Integer partnerRegistCapital) {
+        this.partnerRegistCapital = partnerRegistCapital;
+   }
 }

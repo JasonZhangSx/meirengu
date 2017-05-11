@@ -64,7 +64,7 @@
                             <td class="f-14 td-manage">
                                 <a style="text-decoration:none" class="ml-5"
                                    onClick="project_edit('众筹-待发布项目列表-详情','众筹-待发布项目列表-详情.html','10001')" href="javascript:;"
-                                   title="发布设置">发布设置</a>
+                                title="发布设置">发布设置</a>
                             </td>
                         </tr>
                     </c:forEach>

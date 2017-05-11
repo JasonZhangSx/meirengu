@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.common.Constants;
-import com.meirengu.erp.model.Item;
-import com.meirengu.erp.model.ItemClass;
-import com.meirengu.erp.model.ItemContent;
-import com.meirengu.erp.model.ItemLevel;
+import com.meirengu.erp.model.*;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
@@ -308,7 +305,23 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public boolean setCooperate() {
+    public boolean setCooperate(Map<String, String> map) {
+        String url = ConfigUtil.getConfig("item.cooperate");
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, map);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 

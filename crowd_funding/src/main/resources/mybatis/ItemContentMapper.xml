@@ -75,9 +75,9 @@
 		</if>
 		order by
 		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			${sortBy} ${order},
+			#{sortBy} ${order},
 		</if>
-		content_sort asc, create_time desc
+		create_time asc
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
@@ -89,11 +89,6 @@
 		<if test="contentType != null">
 			and content_type=#{contentType}
 		</if>
-		order by
-		<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-			${sortBy} ${order},
-		</if>
-		content_sort asc, create_time desc
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>

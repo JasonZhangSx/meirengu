@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentCommitRecordDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentCommitRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="payment_commit_id" property="paymentCommitId" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="partner_name" property="partnerName" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="commit_type" property="commitType" jdbcType="INTEGER" />
+    <result column="should_amount" property="shouldAmount" jdbcType="DECIMAL" />
+    <result column="actual_amount" property="actualAmount" jdbcType="DECIMAL" />
+    <result column="image_credential" property="imageCredential" jdbcType="VARCHAR" />
+    <result column="commit_time" property="commitTime" jdbcType="TIMESTAMP" />
+    <result column="commit_account" property="commitAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, payment_commit_id, partner_id, partner_name, item_id, item_name, commit_type, 
+    should_amount, actual_amount, image_credential, commit_time, commit_account
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="com.meirengu.pay.model.PaymentCommitRecord" >
+    select 
+    <include refid="Base_Column_List" />
+    from payment_commit_record
+    where 1=1
+    <if test="id != null" >
+      AND id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="paymentCommitId != null" >
+      AND payment_commit_id = #{paymentCommitId,jdbcType=INTEGER}
+    </if>
+    <if test="partnerName != null" >
+      AND partner_name = #{partnerName,jdbcType=VARCHAR}
+    </if>
+    <if test="itemName != null" >
+      AND item_name = #{itemName,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from payment_commit_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.pay.model.PaymentCommitRecord" >
+    insert into payment_commit_record (id, payment_commit_id, partner_id, 
+      partner_name, item_id, item_name, 
+      commit_type, should_amount, actual_amount, 
+      image_credential, commit_time, commit_account
+      )
+    values (#{id,jdbcType=INTEGER}, #{paymentCommitId,jdbcType=INTEGER}, #{partnerId,jdbcType=INTEGER}, 
+      #{partnerName,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{itemName,jdbcType=VARCHAR}, 
+      #{commitType,jdbcType=INTEGER}, #{shouldAmount,jdbcType=DECIMAL}, #{actualAmount,jdbcType=DECIMAL}, 
+      #{imageCredential,jdbcType=VARCHAR}, #{commitTime,jdbcType=TIMESTAMP}, #{commitAccount,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.meirengu.pay.model.PaymentCommitRecord" >
+    insert into payment_commit_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="paymentCommitId != null" >
+        payment_commit_id,
+      </if>
+      <if test="partnerId != null" >
+        partner_id,
+      </if>
+      <if test="partnerName != null" >
+        partner_name,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="commitType != null" >
+        commit_type,
+      </if>
+      <if test="shouldAmount != null" >
+        should_amount,
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount,
+      </if>
+      <if test="imageCredential != null" >
+        image_credential,
+      </if>
+      <if test="commitTime != null" >
+        commit_time,
+      </if>
+      <if test="commitAccount != null" >
+        commit_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="paymentCommitId != null" >
+        #{paymentCommitId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="commitType != null" >
+        #{commitType,jdbcType=INTEGER},
+      </if>
+      <if test="shouldAmount != null" >
+        #{shouldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="imageCredential != null" >
+        #{imageCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="commitTime != null" >
+        #{commitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commitAccount != null" >
+        #{commitAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.model.PaymentCommitRecord" >
+    update payment_commit_record
+    <set >
+      <if test="paymentCommitId != null" >
+        payment_commit_id = #{paymentCommitId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        partner_id = #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        partner_name = #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="commitType != null" >
+        commit_type = #{commitType,jdbcType=INTEGER},
+      </if>
+      <if test="shouldAmount != null" >
+        should_amount = #{shouldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="imageCredential != null" >
+        image_credential = #{imageCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="commitTime != null" >
+        commit_time = #{commitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commitAccount != null and commitAccount !=''" >
+        commit_account = #{commitAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.pay.model.PaymentCommitRecord" >
+    update payment_commit_record
+    set payment_commit_id = #{paymentCommitId,jdbcType=INTEGER},
+      partner_id = #{partnerId,jdbcType=INTEGER},
+      partner_name = #{partnerName,jdbcType=VARCHAR},
+      item_id = #{itemId,jdbcType=INTEGER},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      commit_type = #{commitType,jdbcType=INTEGER},
+      should_amount = #{shouldAmount,jdbcType=DECIMAL},
+      actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      image_credential = #{imageCredential,jdbcType=VARCHAR},
+      commit_time = #{commitTime,jdbcType=TIMESTAMP},
+      commit_account = #{commitAccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

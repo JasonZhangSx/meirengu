@@ -2,6 +2,7 @@ package com.meirengu.erp.service;
 
 import com.meirengu.erp.model.Item;
 import com.meirengu.erp.model.ItemContent;
+import com.meirengu.erp.model.ItemCooperation;
 import com.meirengu.erp.model.ItemLevel;
 
 import java.util.List;
@@ -111,7 +112,7 @@ public interface ItemService {
      * 设置合作
      * @return
      */
-    boolean setCooperate();
+    boolean setCooperate(Map<String, String> map);
 
     /**
      * 复审审核

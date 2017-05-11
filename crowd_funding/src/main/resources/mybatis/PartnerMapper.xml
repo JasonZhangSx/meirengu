@@ -40,9 +40,9 @@
 
 	<insert id="insert" parameterType="partner" useGeneratedKeys="true" keyProperty="partnerId" >
 		INSERT INTO <include refid="table_name" />
-			(partner_id, type_id, partner_name, partner_create_day, partner_regist_capital, partner_valuation, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, flag, create_time, update_time, operate_account)
+			(type_id, partner_name, partner_create_day, partner_regist_capital, partner_valuation, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, flag, create_time, operate_account)
 		VALUES
-			(#{partnerId}, #{typeId}, #{partnerName}, #{partnerCreateDay}, #{partnerRegistCapital} #{partnerValuation}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{flag}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{typeId}, #{partnerName}, #{partnerCreateDay,jdbcType=DATE}, #{partnerRegistCapital}, #{partnerValuation}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{flag}, #{createTime,jdbcType=TIMESTAMP}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="partner">
