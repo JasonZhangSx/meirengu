@@ -1,8 +1,10 @@
 package com.meirengu.trade.dao;
 import com.meirengu.trade.model.Rebate;
 import com.meirengu.dao.BaseDao;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * RebateDao 
@@ -23,4 +25,17 @@ public interface RebateDao extends BaseDao<Rebate>{
      * @return
      */
     public int updateBySn(Rebate rebate);
+    /**
+     * 根据条件进行分页
+     * @param map
+     * @param rowBounds
+     * @return
+     */
+    public List<Map<String, Object>> getRebateFullInfoByPage(Map map, RowBounds rowBounds);
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    public Integer getRebateFullInfoCount(Map map);
 }

@@ -1,6 +1,9 @@
 package com.meirengu.trade.service;
+import com.meirengu.model.Page;
 import com.meirengu.trade.model.Rebate;
 import com.meirengu.service.BaseService;
+
+import java.util.Map;
 
 /**
  * Rebate服务接口 
@@ -15,4 +18,11 @@ public interface RebateService extends BaseService<Rebate>{
      * @return
      */
     int updateBySn(Rebate rebate);
+    /**
+     * 根据条件进行分页
+     * @param page
+     * @param map
+     * @return
+     */
+    Page getRebateFullInfoByPage(Page page, Map map);
 }
