@@ -2,18 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.trade.dao.RebateReceiveDao" >
 
-	<resultMap id="rebateReceiveMap" type="RebateReceive">
-		<id column="id" property="id" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="user_id" property="userId" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_sn" property="rebateSn" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_batch_id" property="rebateBatchId" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="rebate_mark" property="rebateMark" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="activity_identification" property="activityIdentification" jdbcType="VARCHAR" javaType="String"/>
-		<result column="receive_time" property="receiveTime" jdbcType="DATE" javaType="Date"/>
-		<result column="status" property="status" jdbcType="TINYINT" javaType="Integer"/>
-	</resultMap>
-
 	<sql id="table_name">`rebate_receive`</sql>
 	<sql id="select_columns">
 		id as id, user_id as userId, user_phone as userPhone, rebate_sn as rebateSn, rebate_batch_id as rebateBatchId, rebate_mark as rebateMark,  activity_identification as activityIdentification, receive_time as receiveTime, status as status
@@ -104,7 +92,7 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getRebateInfoByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, trb.rebate_limit AS rebateLimit, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
+		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, trb.rebate_limit_amount AS rebateLimitAmount, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
 		FROM
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr
