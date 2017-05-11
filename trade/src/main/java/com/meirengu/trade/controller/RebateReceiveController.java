@@ -138,7 +138,6 @@ public class RebateReceiveController extends BaseController{
      * @param sortBy
      * @param order
      * @param userId
-     * @param userPhone
      * @param itemId
      * @param itemLevelId
      * @param orderAmount
