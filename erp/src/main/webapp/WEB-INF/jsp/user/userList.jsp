@@ -92,7 +92,9 @@
 
 <script type="text/javascript" language="javascript" class="init">
     var table;
+    var times = 0;
     $(document).ready(function() {
+        times = times + 1;
         table = $('.table-sort').DataTable({
             "pagingType": "simple_numbers",//设置分页控件的模式
             searching: false,//屏蔽datatales的查询框
@@ -192,7 +194,17 @@
 
     function search1()
     {
-        table.ajax.reload();
+        var phone = $('#phone').val();
+        var realname = $('#realname').val();
+        var idcard = $('#idcard').val();
+        var is_auth = $('#is_auth').val();
+        //添加额外的参数传给服务器
+        if( times != 0 && phone == "" && realname == "" && idcard == ""){
+            alert("查询信息不能为空！");
+            return false;
+        }else{
+            table.ajax.reload();
+        }
     }
     function export1()
         {
