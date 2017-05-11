@@ -121,7 +121,8 @@
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
     $('.table-sort').dataTable({
-        "aaSorting": [[4, "desc"]],
+//        "aaSorting": [[4, "desc"]],
+        "bSort" : false,
         "bStateSave": true,
     });
     function withdrawals_ok(id) {
