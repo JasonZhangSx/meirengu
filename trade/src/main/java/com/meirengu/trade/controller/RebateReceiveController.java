@@ -5,6 +5,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.utils.ConfigUtil;
@@ -116,6 +117,46 @@ public class RebateReceiveController extends BaseController{
         if (status != 0) {
             map.put("status", status);
         }
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        Page<RebateReceive> page = new Page<RebateReceive>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        try{
+            page = rebateReceiveService.getRebateInfoListByPage(page, map);
+            return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 用户可用抵扣券
+     * @param pageNum
+     * @param pageSize
+     * @param sortBy
+     * @param order
+     * @param userId
+     * @param userPhone
+     * @param itemId
+     * @param itemLevelId
+     * @param orderAmount
+     * @return
+     */
+    @RequestMapping(value = "/available", method = RequestMethod.GET)
+    public Result getAvailableRebateList(@RequestParam(value = "page_num", required = false,  defaultValue = "1") int pageNum,
+                          @RequestParam(value = "page_size", required = false, defaultValue = "10") int pageSize,
+                          @RequestParam(value = "sort_by", required = false, defaultValue = "rebateAmount") String sortBy,
+                          @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
+                          @RequestParam(value = "user_id", required = false) String userId,
+                          @RequestParam(value = "item_id", required = false) String itemId,
+                          @RequestParam(value = "item_level_id", required = false) String itemLevelId,
+                          @RequestParam(value = "order_amount", required = false) String orderAmount){
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("userId", userId);
+        map.put("status", Constant.REBATE_RECEIVE_UNUSED);
         map.put("sortBy", sortBy);
         map.put("order", order);
         Page<RebateReceive> page = new Page<RebateReceive>();
