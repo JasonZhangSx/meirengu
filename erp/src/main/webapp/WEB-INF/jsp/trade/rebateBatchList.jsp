@@ -137,9 +137,9 @@
                     "render": function (data, type, row, meta) {
                         if (data == 1) {
                             return "每天一次";
-                        } else if (validType == 2) {
+                        } else if (data == 2) {
                             return "永久一次";
-                        }  else if (validType == 3) {
+                        }  else if (data == 3) {
                             return "不限次数";
                         }
                     }
@@ -193,7 +193,7 @@
                         var context =
                             {
                                 func: [
-                                    {"name": "处理", "fn": "edit(\'" + row.id + "\')", "type": "primary"},
+                                    {"name": "失效处理", "fn": "edit(\'" + row.batchId + "\')", "type": "primary"},
                                 ]
                             };
                         var html = template(context);
@@ -259,34 +259,45 @@
 
     /*候补预约订单处理*/
     function edit(id) {
-        layer.confirm('是否处理完成？', {
-                btn: ['完成', '取消'],
+        layer.confirm('是否失效处理？', {
+                btn: ['失效', '取消'],
                 shade: false,
                 closeBtn: 0
             },
             //state 处理完成为1
             function () {
-                if (candidateHandleAjax(id, 1)) {
-                    layer.msg('已处理', {icon: 5, time: 1000});
+                if (ajaxHandle(id)) {
+                    layer.msg('已失效', {icon: 5, time: 1000});
                     table.ajax.reload();
                 } else {
                     layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
                 }
             });
     }
-
-    //*抵扣券批次-添加*/
-    function bulletin_insert(title, url) {
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url,
-            end: function(){
-                table.ajax.reload();
+    function ajaxHandle(id) {
+        var url = "<%=basePath %>rebate_batch/lose_efficacy/"+id;
+        var flag=false;
+        $.ajax({
+            type: "post",
+            url: url,
+            cache:false,
+            async:false,
+            data:{status:status},
+            dataType:"json",
+            success: function(data){
+                var code = data.code;//200 is success，other is fail
+                if(code=="200"){
+                    flag=true;
+                }else{
+                    $("#errcode").val(data.code);
+                    $("#errmsg").val(data.msg);
+                    flag=false;
+                }
             }
         });
-        layer.full(index);
+        return flag;
     }
+
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

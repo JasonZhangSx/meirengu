@@ -197,11 +197,11 @@
         var itemName = $("#itemName").val();
         table.column(1).search(userPhone).column(2).search(itemName).draw();
     }
-
     /*候补预约订单处理*/
     function edit(id) {
         layer.confirm('是否处理完成？', {
-                btn: ['完成', '取消'],
+
+            btn: ['完成', '取消'],
                 shade: false,
                 closeBtn: 0
             },
