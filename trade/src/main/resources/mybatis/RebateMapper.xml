@@ -153,7 +153,7 @@
 	</select>
 	<!-- 分页相关结束 -->
 
-	<!-- 抵扣券连表查询开始 -->
+	<!-- 抵扣券连表查询开始
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select
 		<include refid="select_columns" />
@@ -172,7 +172,7 @@
 
 
 		<include refid="findPage_where"/>
-	</select>
+	</select>-->
 	<!-- 抵扣券连表查询结束
 	SELECT
 	tr.rebate_id,
