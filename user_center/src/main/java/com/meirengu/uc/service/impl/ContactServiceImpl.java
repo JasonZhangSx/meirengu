@@ -212,9 +212,11 @@ public class ContactServiceImpl implements ContactService {
                     map.put("investors",data.get("investors"));//用户真实姓名
                     map.put("investmentAmount",String.valueOf(data.get("investmentAmount")));//订单金额
                     map.put("contractFolderName",contractFolderName);//上传路径
+                    map.put("fileName","contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf");//上传文件名
                     map.put("projectCompany",data.get("projectCompany"));
                     map.put("title",Constants.SYZR_FULLNAME); //保全标题
                     map.put("contractNo", ContractUtil.getIncomeContractNo());//合同编号 后台记录使用
+                    map.put("remarks","备注信息");//备注信息
 
                     //保全合同、更新到oss、 落地数据
                     return this.createContract(response,map);
@@ -342,9 +344,9 @@ public class ContactServiceImpl implements ContactService {
                 downUrl.add(urlMap);
             }else{
                 logger.info("Get the connection to see failed");
-                logger.info("Main Error Code:"+response.getError().getCode());
-                logger.info("Main Error Message:"+response.getError().getMessage());
-                logger.info("Main Error Solution:"+response.getError().getSolution());
+                logger.info("Main Error Code:{}"+response.getError().getCode());
+                logger.info("Main Error Message:{}"+response.getError().getMessage());
+                logger.info("Main Error Solution:{}"+response.getError().getSolution());
                 return null;
             }
         }
@@ -367,9 +369,8 @@ public class ContactServiceImpl implements ContactService {
         if(response.isSuccess()&&response.getByteArrayFile()!=null){
 
             //盖章成功后 创建保全
-            String fileName = "contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf";
             ContractFilePreservationCreateRequest builder = new ContractFilePreservationCreateRequest();
-            builder.setFile(new UploadFile(fileName,response.getByteArrayFile()));
+            builder.setFile(new UploadFile(map.get("fileName"),response.getByteArrayFile()));
             builder.setPreservationTitle(map.get("title"));//保全标题
             builder.setPreservationType(5);//保全类型，默认即可
             builder.setIdentifer(new PersonalIdentifer(map.get("investorIdCard"),map.get("investors"))); //姓名和身份证号
@@ -377,20 +378,20 @@ public class ContactServiceImpl implements ContactService {
             builder.setContractAmount(new Double(String.valueOf(map.get("investmentAmount"))));//合同金额
             builder.setContractNumber(map.get("contractNo"));//合同编号
             builder.setMobilePhone(map.get("phone"));//手机号码
-            builder.setComments("备注信息"); //备注
+            builder.setComments(map.get("remarks")); //备注
             builder.setIsNeedSign(true);//是否启用保全签章
 
             PreservationCreateResponse preservationCreateResponse = getClient().createPreservation(builder);
 
             //根据保全id 下载最终版合同
             if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
-                logger.info("Create a preservation success",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
+                logger.info("Create a preservation success message:{}",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
                 ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
                 contractFileDownloadUrlRequest.setPreservationId(preservationCreateResponse.getPreservationId());
                 ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
                 //根据下载url 获取文件流 并上传oss服务器
                 if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
-                    logger.info("get download link success",contractFileDownloadUrlResponse.getDownUrl());
+                    logger.info("get download link success url :{}",contractFileDownloadUrlResponse.getDownUrl());
                     URL downUrl = new URL(contractFileDownloadUrlResponse.getDownUrl());
                     HttpURLConnection conn = (HttpURLConnection)downUrl.openConnection();
                     conn.setConnectTimeout(3*1000);   //设置超时间为3秒
@@ -407,7 +408,7 @@ public class ContactServiceImpl implements ContactService {
                     String callback = ConfigUtil.getConfig("callbackUrl");
 
                     OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-                    fileUpload.upload(inputStream,fileName,map.get("contractFolderName"));
+                    fileUpload.upload(inputStream,map.get("fileName"),map.get("contractFolderName"));
 
                     //更新用户合同表
                     Contract contract = new Contract();
@@ -418,7 +419,7 @@ public class ContactServiceImpl implements ContactService {
                     contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
                     contract.setContractNo(map.get("contractNo"));
                     contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
-                    contract.setContractFilepath(map.get("contractFolderName")+"/"+fileName);
+                    contract.setContractFilepath(map.get("contractFolderName")+"/"+map.get("fileName"));
 
                     int count = contractDao.insert(contract);
                     if(count != 1){ //重试一次
@@ -433,24 +434,24 @@ public class ContactServiceImpl implements ContactService {
                     }
                 }else{
                     logger.info("get download link failed");
-                    logger.info("Main Error Code:"+contractFileDownloadUrlResponse.getError().getCode());
-                    logger.info("Main Error Message:"+contractFileDownloadUrlResponse.getError().getMessage());
-                    logger.info("Main Error Solution:"+contractFileDownloadUrlResponse.getError().getSolution());
+                    logger.info("Main Error Code:{}"+contractFileDownloadUrlResponse.getError().getCode());
+                    logger.info("Main Error Message:{}"+contractFileDownloadUrlResponse.getError().getMessage());
+                    logger.info("Main Error Solution:{}"+contractFileDownloadUrlResponse.getError().getSolution());
                     return this.setResult(StatusCode.FAILED_GET_DOWNLOAD_LINK, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_GET_DOWNLOAD_LINK));
                 }
             }else{
                 logger.info("Create a preservation failed");
-                logger.info("Main Error Code:"+preservationCreateResponse.getError().getCode());
-                logger.info("Main Error Message:"+preservationCreateResponse.getError().getMessage());
-                logger.info("Main Error Solution:"+preservationCreateResponse.getError().getSolution());
+                logger.info("Main Error Code:{}"+preservationCreateResponse.getError().getCode());
+                logger.info("Main Error Message:{}"+preservationCreateResponse.getError().getMessage());
+                logger.info("Main Error Solution:{}"+preservationCreateResponse.getError().getSolution());
                 return this.setResult(StatusCode.UPLOAD_PDF_FIX_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_PDF_FIX_FAILED));
             }
 
         }else{
             logger.info("Upload html stamp failed!");
-            logger.info("Main Error Code:"+response.getError().getCode());
-            logger.info("Main Error Message:"+response.getError().getMessage());
-            logger.info("Main Error Solution:"+response.getError().getSolution());
+            logger.info("Main Error Code:{}"+response.getError().getCode());
+            logger.info("Main Error Message:{}"+response.getError().getMessage());
+            logger.info("Main Error Solution:{}"+response.getError().getSolution());
             return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
         }
     }
