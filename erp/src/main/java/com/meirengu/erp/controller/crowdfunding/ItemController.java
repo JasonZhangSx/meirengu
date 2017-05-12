@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -407,14 +408,7 @@ public class ItemController extends BaseController {
         params.put("finance_manage", cooperation.getFinanceManage());
         params.put("guaranty_agreement", cooperation.getGuarantyAgreement());
 
-        if(itemService.setCooperate(params)){
-            returnMap.put("code", StatusCode.OK);
-            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else {
-            returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
-            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }
-
+        itemService.setCooperate(params);
         return new ModelAndView("redirect:/item/to_review");
     }
 
@@ -430,17 +424,32 @@ public class ItemController extends BaseController {
     }
 
     @RequestMapping(value = "review")
-    public Map review(Integer itemId, Integer operateStatus, String operateRemark){
-        Map<String, Object> returnMap = new HashMap<>();
-        if(itemService.review(itemId, operateStatus, operateRemark)){
-            returnMap.put("code", StatusCode.OK);
-            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.OK));
-        }else {
-            returnMap.put("code", StatusCode.INTERNAL_SERVER_ERROR);
-            returnMap.put("msg", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }
+    public ModelAndView review(Integer itemId, Integer operateStatus, String operateRemark){
+        itemService.review(itemId, operateStatus, operateRemark);
+        return new ModelAndView("redirect:/item/publish_list");
+    }
 
-        return returnMap;
+    @RequestMapping(value = "to_publish")
+    public ModelAndView toPublish(Integer itemId){
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = getItemInfo(itemId);
+            Map<String, Object> cooperateMap = getCooperateInfo(itemId);
+            returnMap.put("cooperate", cooperateMap);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ModelAndView("/item/itemPublish", returnMap);
+    }
+
+    @RequestMapping(value = "publish")
+    public ModelAndView publish(Integer itemId, Integer publishType, Date publishTime){
+        itemService.publish(publishTime, publishType, itemId, "admin");
+        return new ModelAndView("redirect:/item/published_list");
+    }
+
+    private Map getCooperateInfo(Integer itemId){
+        return itemService.getCooperateInfo(itemId);
     }
 
 

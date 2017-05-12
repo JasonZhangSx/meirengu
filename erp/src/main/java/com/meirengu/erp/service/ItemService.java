@@ -5,6 +5,7 @@ import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemCooperation;
 import com.meirengu.erp.model.ItemLevel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -126,4 +127,17 @@ public interface ItemService {
      * @return
      */
     List getOperateRecordList(Integer itemId);
+
+    /**
+     * 获取设置合作记录
+     * @param itemId
+     * @return
+     */
+    Map getCooperateInfo(Integer itemId);
+
+    /**
+     * 发布项目
+     * @param publishTime
+     */
+    boolean publish(Date publishTime, Integer type, Integer itemId, String operateAccount);
 }

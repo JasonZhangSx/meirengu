@@ -5,9 +5,22 @@ var levelIndex = 0;
 /**
  * 是否分红
  */
-function shareBonusChange(){
+$("#isShareBonus"+levelIndex).change(function(){
+    if($("#isShareBonus"+levelIndex).val() == 1){
+        $("#shareBonusDiv"+levelIndex).show();
+    }else if($("#isShareBonus"+levelIndex).val() == 0){
+        $("#shareBonusDiv"+levelIndex).hide();
+    }
+});
 
-}
+$("#revenueModel"+levelIndex).change(function () {
+    alert(levelIndex);
+    if($("#revenueModel"+levelIndex).val() == 1){
+        $("#shareBonusPeriodDiv"+levelIndex).hide();
+    }else if($("#revenueModel"+levelIndex).val() == 2){
+        $("#shareBonusPeriodDiv"+levelIndex).show();
+    }
+});
 
 function getCity(){
     var pid = $("#provinceSelect").val();
@@ -297,7 +310,8 @@ $(function () {
             '   </select>' +
             '   </span>' +
             '   </div>' +
-            '   </div>' +
+            '</div>' +
+            '<div id="shareBonusDiv#1">' +
             '   <div class="row cl">' +
             '   <label class="form-label col-xs-4 col-sm-2">年化利率：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
@@ -319,6 +333,7 @@ $(function () {
             '   </select>' +
             '   </span>' +
             '   </div>' +
+            '<div id="shareBonusPeriodDiv#1" style="display: none;">' +
             '   <label class="form-label col-xs-4 col-sm-2">分红周期：</label>' +
             '<div class="formControls col-xs-8 col-sm-3"> <span class="select-box">' +
             '   <select name="shareBonusPeriod" id="shareBonusPeriod#1" class="select">' +
@@ -328,6 +343,8 @@ $(function () {
             '<option value="12">12月</option>' +
             '</select>' +
             '</span>' +
+            '</div>' +
+            '</div>' +
             '</div>' +
             '</div>' +
             '<div class="row cl">' +
