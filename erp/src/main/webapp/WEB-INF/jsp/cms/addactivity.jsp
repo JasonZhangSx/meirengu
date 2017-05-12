@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -13,14 +14,14 @@
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
 </html>
-<link href="/erp/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-<link href="/erp/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-<link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+<link href="<%=basePath %>lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+<link href="<%=basePath %>lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+<link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/activity" method="post" id="form-horizontal" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
+    <form action="activity" method="post" id="form-horizontal" class="form form-horizontal" enctype="multipart/form-data" id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -127,10 +128,10 @@
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script type="text/javascript" src="/erp/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/webuploader/0.1.5/webuploader.min.js"></script>
 <!-- 时间插件 -->
-<link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
+<link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="<%=basePath %>lib/datetimepicker/datetimepicker.js"></script>
 
 <script  type="text/javascript" >
 
@@ -355,7 +356,7 @@
                 swf: 'lib/webuploader/0.1.5/Uploader.swf',
                 chunked: false,
                 chunkSize: 512 * 1024,
-                server: '/erp/upload',
+                server: 'upload',
                 // runtimeOrder: 'flash',
 
                 // accept: {
@@ -465,7 +466,7 @@
                             img = $('<img src="' + src + '">');
                             $wrap.empty().append(img);
                         } else {
-                            $.ajax('/erp/upload', {
+                            $.ajax('upload', {
                                 method: 'POST',
                                 data: src,
                                 dataType: 'json'

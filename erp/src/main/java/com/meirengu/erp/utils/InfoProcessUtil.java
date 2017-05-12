@@ -1,5 +1,7 @@
 package com.meirengu.erp.utils;
 
+import com.meirengu.utils.StringUtil;
+
 /**
  * Created by huoyan403 on 5/9/2017.
  */
@@ -21,7 +23,7 @@ public class InfoProcessUtil {
 
     public static String generateDefaultIdCard(String idcard){
         StringBuffer sb = new StringBuffer();
-        if (idcard != null) {
+        if (!StringUtil.isEmpty(idcard)) {
             char[] chars = idcard.toCharArray();
             if (chars.length == 18) {
                 sb.append(chars[0]).append(chars[1]).append(chars[2]).append(chars[3]).append(chars[4]).append(chars[5]).append("*")
@@ -32,10 +34,10 @@ public class InfoProcessUtil {
         return sb.toString();
     }
 
-    public static String generateDefaultBankIdCard(String idcard){
+    public static String generateDefaultBankIdCard(String BankIdcard){
         StringBuffer sb = new StringBuffer();
-        if (idcard != null) {
-            char[] chars = idcard.toCharArray();
+        if (!StringUtil.isEmpty(BankIdcard)) {
+            char[] chars = BankIdcard.toCharArray();
             sb.append(chars[0]).append(chars[1]).append(chars[2]).append(chars[3]).append(chars[4]).append(chars[5]);
             for(int i = 0;i<8;i++){
                 sb.append("*");

@@ -110,4 +110,7 @@ FROM `user_center`.`user`;
 
 select * from user_idcard;
 
+update `user` set `avatar` = "portrait/1.jpg" where  `avatar` = "portrait/1491015127467.jpg";
+update `user` set `avatar` = "portrait/2.jpg" where  `avatar` = "portrait/1491015569805.jpg";
 
+delete from `user` where `phone` in (15835132986,18516888365,18810716960);

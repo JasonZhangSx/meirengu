@@ -18,10 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by huoyan403 on 4/6/2017.
@@ -57,9 +54,9 @@ public class FaqClassController extends BaseController{
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public Result insert(@RequestParam(value = "class_name")String className
+    public Result insert(@RequestParam(value = "class_name")String className)
 //                             @RequestParam(value = "operate_account")String operateAccount
-                               ){
+    {
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account","admin");
@@ -105,11 +102,17 @@ public class FaqClassController extends BaseController{
                 urlAppend = "&class_id="+classId;
             }
             map = (Map<String,Object>)super.httpGet(urlAppend);
-            //封装返回集合
-            List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            List<Map<String,Object>> activityList = new ArrayList<>();
+            if(map != null){
+                //封装返回集合
+                activityList = (List<Map<String,Object>>) map.get("list");
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+                view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            }else{
+                view.setiTotalDisplayRecords(0);
+                view.setiTotalRecords(0);
+            }
             view.setAaData(activityList);
         } catch (IOException e) {
             logger.info("FaqClass list page throws Exception :{}" ,e);

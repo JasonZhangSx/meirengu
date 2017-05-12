@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -86,9 +87,9 @@
     })
 })</script>
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/erp/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="/erp/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/erp/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/laypage/1.2/laypage.js"></script>
 
 <script type="text/javascript" language="javascript" class="init">
     var table;
@@ -121,7 +122,7 @@
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
-                "url": "/erp/user/list",
+                "url": "user/list",
                 "dataSrc": "aaData",
                 "data": function ( d ) {
                     var phone = $('#phone').val();
@@ -183,7 +184,7 @@
                 },
                 { "data": null,
                     render: function(data, type, row, meta) {
-                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'detail\','+row.phone+')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
                     }
                 }
             ]
@@ -208,7 +209,7 @@
     }
     function export1()
         {
-           window.location.href="/erp/user/export";
+           window.location.href="user/export";
         }
 
 </script>

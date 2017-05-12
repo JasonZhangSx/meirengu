@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -68,9 +69,9 @@
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script type="text/javascript" src="/erp/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="/erp/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/erp/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript" language="javascript" class="init">
     var table;
     $(document).ready(function() {
@@ -100,7 +101,7 @@
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
-                "url": "/erp/inviter/list",
+                "url": "inviter/list",
                 "dataSrc": "aaData",
                 "data": function ( d ) {
                     var realname = $('#realname').val();
@@ -195,7 +196,7 @@
     function export1()
     {
         var count =
-        window.location.href="/erp/inviter/export";
+        window.location.href="inviter/export";
     }
 </script>
 </body>

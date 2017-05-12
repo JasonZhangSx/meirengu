@@ -125,11 +125,17 @@ public class FaqController extends BaseController{
                 urlAppend = "&faq_id="+faqId;
             }
             map = (Map<String,Object>)super.httpGet(urlAppend);
-            //封装返回集合
-            List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            List<Map<String,Object>> activityList = new ArrayList<>();
+            if(map != null){
+                //封装返回集合
+                activityList = (List<Map<String,Object>>) map.get("list");
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+                view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            }else{
+                view.setiTotalDisplayRecords(0);
+                view.setiTotalRecords(0);
+            }
             view.setAaData(activityList);
         } catch (IOException e) {
             logger.info("faq list page throws Exception :{}" ,e);
