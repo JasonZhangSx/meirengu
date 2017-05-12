@@ -77,7 +77,10 @@ public interface ItemService extends BaseService<Item>{
 
     /**
      * 发布
-     * @return
+     * @param itemId
+     * @param appointDate
+     * @param type
+     * @param operateAccount
      */
-    boolean publish(int itemId, Date appointDate, int type, String operateAccount);
+    void publish(int itemId, Date appointDate, int type, String operateAccount);
 }

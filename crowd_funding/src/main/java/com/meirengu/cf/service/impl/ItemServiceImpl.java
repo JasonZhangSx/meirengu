@@ -494,20 +494,25 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
 
     @Override
     @Transactional
-    public boolean publish(int itemId, Date appointDate, int type, String operateAccount) {
+    public void publish(int itemId, Date appointDate, int type, String operateAccount) {
 
         try{
-            //发布需要三步， 1.修改项目状态和起始时间 2.修改档位状态  3.审核记录
+            //发布需要三步，1.修改档位状态 2.修改项目状态和起始时间  3.审核记录
             Item item = this.detail(itemId);
             if(item == null){
                 LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
-                return false;
+                throw new BusinessException("ItemServiceImpl.publisthrow get item is null");
             }
 
             Item params = new Item();
+            params.setItemId(itemId);
 
-            int preheatingDays = item.getPreheatingDays();
-            int crowdDays = item.getCrowdDays();
+            int preheatingDays = item.getPreheatingDays() == null ? 0 : item.getPreheatingDays();
+            int crowdDays = item.getCrowdDays() == null ? 0 : item.getCrowdDays();
+
+            if(appointDate == null){
+                appointDate = new Date();
+            }
 
             String baseDate = DateAndTime.dateFormat(appointDate, "yyyy-MM-dd HH:mm:ss");
 
@@ -522,59 +527,71 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             if(type == 1){
                 //暂时这样
                 int updateNum = 0;
+                ItemLevel itemLevel = new ItemLevel();
                 //预约期为0，就直接跳过预约进入众筹
                 if(preheatingDays == 0){
                     params.setItemStatus(Constants.ITEM_CROWDING);
-                    ItemLevel itemLevel = new ItemLevel();
-                    itemLevel.setItemId(itemId);
                     itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
-                    itemLevel.setOperateAccount(operateAccount);
-                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
                 }else {
                     params.setItemStatus(Constants.ITEM_PERHEARTING);
-                    ItemLevel itemLevel = new ItemLevel();
-                    itemLevel.setItemId(itemId);
                     itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
-                    itemLevel.setOperateAccount(operateAccount);
-                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
                 }
+
+                itemLevel.setItemId(itemId);
+                itemLevel.setOperateAccount(operateAccount);
+                updateNum = itemLevelService.updateStatusByItemId(itemLevel);
 
                 if(updateNum <= 0){
                     LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
-                    return false;
+                    throw new BusinessException("ItemServiceImpl.publisthrow exception");
                 }
             }else if(type == 2){
                 int updateNum = 0;
+                ItemLevel itemLevel = new ItemLevel();
                 //预约期为0，就直接跳过预约进入众筹
                 if(preheatingDays == 0){
                     params.setItemStatus(Constants.ITEM_CROWDING);
-                    ItemLevel itemLevel = new ItemLevel();
-                    itemLevel.setItemId(itemId);
                     itemLevel.setLevelStatus(Constants.LEVEL_CROWDING);
-                    itemLevel.setOperateAccount(operateAccount);
-                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
                 }else {
                     params.setItemStatus(Constants.ITEM_PERHEARTING);
-                    ItemLevel itemLevel = new ItemLevel();
-                    itemLevel.setItemId(itemId);
                     itemLevel.setLevelStatus(Constants.LEVEL_APPOINTING);
-                    itemLevel.setOperateAccount(operateAccount);
-                    updateNum = itemLevelService.updateStatusByItemId(itemLevel);
                 }
+
+                itemLevel.setItemId(itemId);
+                itemLevel.setOperateAccount(operateAccount);
+                updateNum = itemLevelService.updateStatusByItemId(itemLevel);
 
                 if(updateNum <= 0){
                     LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
-                    return false;
+                    throw new BusinessException("ItemServiceImpl.publisthrow exception");
                 }
-                //itemLevelService.update();
             }
 
-            this.update(params);
+            //修改项目状态
+            int itemUpdateNum = this.update(params);
+            if(itemUpdateNum <= 0){
+                LOGGER.warn(">>ItemServiceImpl.publish item is null.. itemId: {}", itemId);
+                throw new BusinessException("ItemServiceImpl.publisthrow exception");
+            }
+
+            //插入记录
+            ItemOperateRecord itemOperateRecord = new ItemOperateRecord();
+            itemOperateRecord.setItemId(itemId);
+            itemOperateRecord.setOperateType(Constants.RECORD_PUBLISH);
+            itemOperateRecord.setOperateStatus(Constants.STATUS_YES);
+            itemOperateRecord.setOperateRemark("");
+            itemOperateRecord.setOperateTime(new Date());
+            itemOperateRecord.setOperateAccount(operateAccount);
+
+            int insertNum = itemOperateRecordService.insert(itemOperateRecord);
+            if(insertNum != 1){
+                LOGGER.warn(">>ItemOperateRecordServiceImpl.publish insert operate record fail... return insertNum is {}", insertNum);
+                throw new BusinessException("ItemOperateRecordServiceImpl.publish insert operate record fail...");
+            }
+
         }catch (Exception e){
-
+            throw new BusinessException("ItemOperateRecordServiceImpl.review throw exception:",e);
         }
-
-        return false;
     }
 
 

@@ -60,7 +60,7 @@
 						<img src="<%=request.getContextPath()%>/img/register_icon2.png" style="width:.46rem" alt="" />高收益
 					</var>
 					<em>
-						预期年化收益率<br/>15% - 30%。
+						预期年化收益率<br/>10% - 30%。
 					</em>
 				</span>
 				<span class="span3">

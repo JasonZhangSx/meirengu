@@ -527,37 +527,42 @@
                                 </span>
                                 </div>
                             </div>
-                            <div class="row cl">
-                                <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
-                                <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
-                                           name="yearRate">
+                            <div id="shareBonusDiv0">
+                                <div class="row cl">
+                                    <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
+                                    <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
+                                               name="yearRate">
+                                    </div>
+                                    <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
+                                    <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod0"
+                                               name="investmentPeriod">
+                                    </div>
                                 </div>
-                                <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
-                                <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod0"
-                                           name="investmentPeriod">
+                                <div class="row cl">
+                                    <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
+                                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                    <select name="revenueModel" id="revenueModel0" class="select">
+                                        <option value="1">一次性还款</option>
+                                        <option value="2">按月还息到期还本</option>
+                                    </select>
+                                    </span>
+                                    </div>
+                                    <div id="shareBonusPeriodDiv0" style="display: none;">
+                                        <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
+                                        <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                                        <select name="shareBonusPeriod" id="shareBonusPeriod0" class="select">
+                                            <option value="1">1月</option>
+                                            <option value="3">3月</option>
+                                            <option value="6">6月</option>
+                                            <option value="12">12月</option>
+                                        </select>
+                                        </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row cl">
-                                <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
-                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                <select name="revenueModel" id="revenueModel0" class="select">
-                                    <option value="1">一次性还款</option>
-                                    <option value="2">按月还息到期还本</option>
-                                </select>
-                                </span>
-                                </div>
-                                <label class="form-label col-xs-4 col-sm-2">分红周期：</label>
-                                <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                <select name="shareBonusPeriod" id="shareBonusPeriod0" class="select">
-                                    <option value="1">1月</option>
-                                    <option value="3">3月</option>
-                                    <option value="6">6月</option>
-                                    <option value="12">12月</option>
-                                </select>
-                                </span>
-                                </div>
+
                             </div>
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">是否需要地址：</label>

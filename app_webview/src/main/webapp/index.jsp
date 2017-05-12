@@ -15,6 +15,11 @@
     <li><a href="./html/invite_reward.html">邀请好友得奖励</a></li>
     <li><a href="./html/activity_register_reward.html">注册抵扣券活动</a></li>
     <li><a href="./html/rebate_rules.html">投资抵扣券使用规则</a></li>
+    <li><a href="./html/financier_info_agreement.html">融资人信息披露规则</a></li>
+    <li><a href="./html/financier_rule.html">融资人规则</a></li>
+    <li><a href="./html/investor_rule.html">投资人规则</a></li>
+    <li><a href="./html/equity_investment_agreement.html">股权收益权投资协议</a></li>
+    <li><a href="./html/partner_lp_agreement.html">合伙协议（LP专用）</a></li>
 </ul>
 </body>
 </html>

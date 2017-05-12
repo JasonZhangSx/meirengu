@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -371,5 +373,58 @@ public class ItemServiceImpl implements ItemService{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Map getCooperateInfo(Integer itemId) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.cooperate.insert"));
+        url.append("/").append(itemId);
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    return (Map) jsonObject.get("data");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean publish(Date publishTime, Integer type, Integer itemId, String operateAccount) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.publish"));
+        Map<String, String> params = new HashMap<>();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        if(publishTime == null){
+            publishTime = new Date();
+        }
+
+        params.put("item_id", itemId == null ? "0" : String.valueOf(itemId));
+        params.put("appoint_date", format.format(publishTime).toString());
+        params.put("type", type == null ? "2" : String.valueOf(type));
+        params.put("operate_account", operateAccount);
+
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
