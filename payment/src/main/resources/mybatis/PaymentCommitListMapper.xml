@@ -137,7 +137,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.vo.PaymentCommitListVo" >
+  <update id="update" parameterType="com.meirengu.pay.vo.PaymentCommitListVo" >
     update payment_commit_list
     <set >
       <if test="partnerId != null" >

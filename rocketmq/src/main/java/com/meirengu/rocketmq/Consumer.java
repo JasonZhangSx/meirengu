@@ -76,6 +76,7 @@ public class Consumer {
                     applicationContext.publishEvent(new RocketmqEvent(msg, defaultMQPushConsumer));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logger.error("comsumer消费异常：{}", e.getMessage());
                     if(msg.getReconsumeTimes()<=3){//重复消费3次
                         //TODO 进行日志记录
                         return ConsumeConcurrentlyStatus.RECONSUME_LATER;

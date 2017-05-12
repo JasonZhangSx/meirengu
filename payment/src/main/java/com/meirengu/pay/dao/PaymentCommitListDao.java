@@ -13,5 +13,5 @@ public interface PaymentCommitListDao {
 
     PaymentCommitListVo getById(Integer id);
 
-    int updateByPrimaryKeySelective(PaymentCommitListVo record);
+    int update(PaymentCommitListVo record);
 }

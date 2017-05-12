@@ -34,7 +34,7 @@
             </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="bulletin_insert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
+                <span class="l"><a class="btn btn-primary radius" onClick="rebateBatchInsert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
                                    href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加抵扣券批次</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
@@ -300,7 +300,18 @@
         });
         return flag;
     }
-
+    //*抵扣券批次-添加*/
+    function rebateBatchInsert(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            end: function(){
+                table.ajax.reload();
+            }
+        });
+        layer.full(index);
+    }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
