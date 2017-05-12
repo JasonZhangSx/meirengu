@@ -256,12 +256,15 @@ public class ContactServiceImpl implements ContactService {
                                 contract.setContractFilepath(contractFolderName+"/"+fileName);
 
                                 int count = contractDao.insert(contract);
-                                if(count!=1){
+                                if(count != 1){ //重试一次
+                                    Thread.sleep(500L);
                                     count = contractDao.insert(contract);
                                 }
-                                if(count==0){
-                                    //// TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
+                                if(count != 1){
+                                    // TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
                                     return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
+                                }else{
+                                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                                 }
                             }else{
                                 logger.info("get download link failed");
@@ -285,9 +288,9 @@ public class ContactServiceImpl implements ContactService {
                         logger.info("Main Error Solution:"+response.getError().getSolution());
                         return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
                     }
-//
                 }catch (Exception e){
-                    logger.info("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+                    logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+                    return this.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
                 }
             }else{
                 logger.info("ContactServiceImpl.CreateContactFile connected refused :{}");
@@ -297,12 +300,18 @@ public class ContactServiceImpl implements ContactService {
             logger.info("ContactServiceImpl.CreateContactFile connected refused :{}");
             return this.setResult(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED));
         }
-        return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     @Override
     public Result CreateEquityContactFile(Map<String, String> map) {
-        return null;
+
+
+
+
+
+
+
+        return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     @Override

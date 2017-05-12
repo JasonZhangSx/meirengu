@@ -74,9 +74,9 @@ public class InviteRewardController extends BaseController{
                             // 封装入结构 写入文件
                             if(i<34){
                                 String[] arr = new String[3];
-//                                arr[0] = String.valueOf(userId);
-                                arr[0] = inviter.getUserId()+"";
-                                arr[1] = String.valueOf(investMoney);
+//                                arr[0] = String.valueOf(userId);//被邀请人id
+                                arr[0] = inviter.getUserId()+"";//邀请人id
+                                arr[1] = String.valueOf(investMoney);//投资金额
                                 arr[2] = String.valueOf(type);
                                 list.add(arr);
                             }
