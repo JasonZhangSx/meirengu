@@ -20,7 +20,8 @@
 	</sql>
 	<sql id="order_select_columns">
 		o.order_amount as orderAmount,
-		o.cost_amount as costAmount
+		o.cost_amount as costAmount,
+		o.order_state as orderState
 	</sql>
 
 
