@@ -46,7 +46,9 @@ public class PaymentCommitRecordServiceImpl extends BaseServiceImpl implements P
             paymentCommitRecord.setCommitTime(new Date());
             paymentCommitRecordDao.insertSelective(paymentCommitRecord);
             if (paymentCommitRecord.getCommitType()==2){
-
+                paymentCommitListVo.setStatus(Byte.valueOf(String.valueOf(1)));
+                paymentCommitListVo.setCommitTime(new Date());
+                paymentCommitListDao.update(paymentCommitListVo);
             }
             logger.info("insert prompt message:{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_COMMIT_RECORD_SUCCESS_INSERT));
             return ResultUtil.getResult(StatusCode.OK,null);
