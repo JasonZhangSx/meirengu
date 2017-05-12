@@ -206,88 +206,24 @@ public class ContactServiceImpl implements ContactService {
                     request.setTaget(html);
                     ContactHtmlCreateFileResponse response = getClient().getContactHtmlCreateFile(request);
 
-                    if(response.isSuccess()&&response.getByteArrayFile()!=null){
+                    //为生成、保全合同 准备数据
+                    map.put("phone",user.getPhone()); //用户手机号
+                    map.put("investorIdCard",data.get("investorIdCard")); //用户身份证号
+                    map.put("investors",data.get("investors"));//用户真实姓名
+                    map.put("investmentAmount",String.valueOf(data.get("investmentAmount")));//订单金额
+                    map.put("contractFolderName",contractFolderName);//上传路径
+                    map.put("fileName","contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf");//上传文件名
+                    map.put("projectCompany",data.get("projectCompany"));
+                    map.put("title",Constants.SYZR_FULLNAME); //保全标题
+                    map.put("contractNo", ContractUtil.getIncomeContractNo());//合同编号 后台记录使用
+                    map.put("remarks","备注信息");//备注信息
 
-                        //盖章成功后 创建保全
-                        String fileName = "contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf";
-                        ContractFilePreservationCreateRequest builder = new ContractFilePreservationCreateRequest();
-                        builder.setFile(new UploadFile(fileName,response.getByteArrayFile()));
-                        builder.setPreservationTitle("收益权转让协议 合同");//保全标题
-                        builder.setPreservationType(5);//保全类型，默认即可
-                        builder.setIdentifer(new PersonalIdentifer(data.get("investorIdCard"),data.get("investors"))); //姓名和身份证号
-                        builder.setSourceRegistryId("6");//平台来源ID
-                        builder.setContractAmount(new Double(String.valueOf(data.get("investmentAmount"))));//合同金额
-                        String contractNo = ContractUtil.getIncomeContractNo();
-                        builder.setContractNumber(contractNo);//合同编号
-                        builder.setMobilePhone(user.getPhone());//手机号码
-                        builder.setComments("备注信息"); //备注
-                        builder.setIsNeedSign(true);//是否启用保全签章
+                    //保全合同、更新到oss、 落地数据
+                    return this.createContract(response,map);
 
-                        PreservationCreateResponse preservationCreateResponse = getClient().createPreservation(builder);
-
-                        //根据保全id 下载最终版合同
-                        if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
-                            logger.info("Create a preservation success",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
-                            ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
-                            contractFileDownloadUrlRequest.setPreservationId(preservationCreateResponse.getPreservationId());
-                            ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
-                            //根据下载url 获取文件流 并上传oss服务器
-                            if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
-                                logger.info("get download link success",contractFileDownloadUrlResponse.getDownUrl());
-                                URL downUrl = new URL(contractFileDownloadUrlResponse.getDownUrl());
-                                HttpURLConnection conn = (HttpURLConnection)downUrl.openConnection();
-                                conn.setConnectTimeout(3*1000);   //设置超时间为3秒
-                                conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");//防止屏蔽程序抓取而返回403错误
-                                InputStream inputStream = conn.getInputStream();
-
-                                //获取文件IO流 并将文件保存到oss
-                                OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-                                fileUpload.upload(inputStream,fileName,contractFolderName);
-
-                                //更新用户合同表
-                                Contract contract = new Contract();
-                                contract.setUserId(Integer.parseInt(map.get("userId")));
-                                contract.setItemId(Integer.parseInt(map.get("itemId")));
-                                contract.setLevelId(Integer.parseInt(map.get("levelId")));
-                                contract.setOrderId(Integer.parseInt(map.get("orderId")));
-                                contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
-                                contract.setContractNo(contractNo);
-                                contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
-                                contract.setContractFilepath(contractFolderName+"/"+fileName);
-
-                                int count = contractDao.insert(contract);
-                                if(count!=1){
-                                    count = contractDao.insert(contract);
-                                }
-                                if(count==0){
-                                    //// TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
-                                    return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
-                                }
-                            }else{
-                                logger.info("get download link failed");
-                                logger.info("Main Error Code:"+contractFileDownloadUrlResponse.getError().getCode());
-                                logger.info("Main Error Message:"+contractFileDownloadUrlResponse.getError().getMessage());
-                                logger.info("Main Error Solution:"+contractFileDownloadUrlResponse.getError().getSolution());
-                                return this.setResult(StatusCode.FAILED_GET_DOWNLOAD_LINK, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_GET_DOWNLOAD_LINK));
-                            }
-                        }else{
-                            logger.info("Create a preservation failed");
-                            logger.info("Main Error Code:"+preservationCreateResponse.getError().getCode());
-                            logger.info("Main Error Message:"+preservationCreateResponse.getError().getMessage());
-                            logger.info("Main Error Solution:"+preservationCreateResponse.getError().getSolution());
-                            return this.setResult(StatusCode.UPLOAD_PDF_FIX_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_PDF_FIX_FAILED));
-                        }
-
-                    }else{
-                        logger.info("Upload html stamp failed!");
-                        logger.info("Main Error Code:"+response.getError().getCode());
-                        logger.info("Main Error Message:"+response.getError().getMessage());
-                        logger.info("Main Error Solution:"+response.getError().getSolution());
-                        return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
-                    }
-//
                 }catch (Exception e){
-                    logger.info("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+                    logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+                    return this.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
                 }
             }else{
                 logger.info("ContactServiceImpl.CreateContactFile connected refused :{}");
@@ -297,11 +233,75 @@ public class ContactServiceImpl implements ContactService {
             logger.info("ContactServiceImpl.CreateContactFile connected refused :{}");
             return this.setResult(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.RETRIEVE_PROJECT_GET_MESSAGE_FAILED));
         }
-        return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     @Override
     public Result CreateEquityContactFile(Map<String, String> map) {
+
+//        // TODO 准备合同数据
+//
+//        try {
+//            //生成盖章合同
+//            ContactHtmlCreateFileRequest request=new ContactHtmlCreateFileRequest();
+//            /**模版类型，TPL_TYPE_HTML使用html文件方式,TPL_TYPE_URL使用url地址方式*/
+//            request.setTplType(ContactHtmlCreateFileRequest.TPL_TYPE_HTML);//使用html内容上传方式
+//            /**html内容*/
+//
+//            //oss配置信息  从oss读取文件
+//            String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+//            String endpoint = ConfigUtil.getConfig("endpoint");
+//            String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+//            String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+//            String bucketName = ConfigUtil.getConfig("bucketName");
+//            String callback = ConfigUtil.getConfig("callbackUrl");
+//
+//            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+//            String partnershipAgreement = IOUtils.toString(fileUtils.download("contract","contract002.html"),"UTF-8");//合伙协议模板
+//            String equityIncome = IOUtils.toString(fileUtils.download("contract","contract003.html"),"UTF-8");//股权收益模板
+//
+//            partnershipAgreement = partnershipAgreement.replace("","");
+//            equityIncome = equityIncome.replace("","");
+//
+//            /**用户签章*/
+//            JSONArray stampParams=new JSONArray();
+//
+//            JSONObject projectOwnerChapter=new JSONObject();
+//            projectOwnerChapter.put("id","projectOwnerChapter");//对应网页标签上的id，须确认此id为唯一,且找到的标签为行级（inline）或行块（inline-block）元素
+//            projectOwnerChapter.put("stampType", StampType.ENTERPRISE_01.getCode());//章类型，企业章类型1，其它还有待开发
+////            projectOwnerChapter.put("stampText", data.get("projectCompany"));//"项目公司盖章"
+//            stampParams.add(projectOwnerChapter);
+//
+//            JSONObject platformChapter=new JSONObject();
+//            platformChapter.put("id","platformChapter");//对应网页标签上的id，须确认此id为唯一,且找到的标签为行级（inline）或行块（inline-block）元素
+//            platformChapter.put("stampType", StampType.ENTERPRISE_01.getCode());//章类型，企业章类型1，其它还有待开发
+//            platformChapter.put("stampText", ConfigUtil.getConfig("PLATFORMNAME"));//平台刻章
+//            stampParams.add(platformChapter);
+//
+//            JSONObject managementCompanyChapter=new JSONObject();
+//            managementCompanyChapter.put("id","managementCompanyChapter");//对应网页标签上的id，须确认此id为唯一,且找到的标签为行级（inline）或行块（inline-block）元素
+//            managementCompanyChapter.put("stampType", StampType.ENTERPRISE_01.getCode());//章类型，企业章类型1，其它还有待开发
+//            managementCompanyChapter.put("stampText", ConfigUtil.getConfig("MANAGEMENTCOMPANY"));
+//            stampParams.add(managementCompanyChapter);
+//
+//            JSONObject investorsChapter=new JSONObject();
+//            investorsChapter.put("id","investorsChapter");
+//            investorsChapter.put("stampType", StampType.PERSONAL_01.getCode());//章类型，个人章，其它还有待开发
+////            investorsChapter.put("stampText", data.get("investors"));
+//            stampParams.add(investorsChapter);
+//
+//            request.setStampParams(stampParams);
+////            request.setTaget(html);
+//            ContactHtmlCreateFileResponse response = getClient().getContactHtmlCreateFile(request);
+//
+//
+//
+//
+//
+//            return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+//        }catch (Exception e){
+//            logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+//            return this.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+//        }
         return null;
     }
 
@@ -344,9 +344,9 @@ public class ContactServiceImpl implements ContactService {
                 downUrl.add(urlMap);
             }else{
                 logger.info("Get the connection to see failed");
-                logger.info("Main Error Code:"+response.getError().getCode());
-                logger.info("Main Error Message:"+response.getError().getMessage());
-                logger.info("Main Error Solution:"+response.getError().getSolution());
+                logger.info("Main Error Code:{}"+response.getError().getCode());
+                logger.info("Main Error Message:{}"+response.getError().getMessage());
+                logger.info("Main Error Solution:{}"+response.getError().getSolution());
                 return null;
             }
         }
@@ -362,5 +362,97 @@ public class ContactServiceImpl implements ContactService {
         }
         logger.info("Request getResponse: {}", JSON.toJSON(result));
         return result;
+    }
+
+    public Result createContract(ContactHtmlCreateFileResponse response,Map<String,String> map) throws Exception{
+
+        if(response.isSuccess()&&response.getByteArrayFile()!=null){
+
+            //盖章成功后 创建保全
+            ContractFilePreservationCreateRequest builder = new ContractFilePreservationCreateRequest();
+            builder.setFile(new UploadFile(map.get("fileName"),response.getByteArrayFile()));
+            builder.setPreservationTitle(map.get("title"));//保全标题
+            builder.setPreservationType(5);//保全类型，默认即可
+            builder.setIdentifer(new PersonalIdentifer(map.get("investorIdCard"),map.get("investors"))); //姓名和身份证号
+            builder.setSourceRegistryId("6");//平台来源ID
+            builder.setContractAmount(new Double(String.valueOf(map.get("investmentAmount"))));//合同金额
+            builder.setContractNumber(map.get("contractNo"));//合同编号
+            builder.setMobilePhone(map.get("phone"));//手机号码
+            builder.setComments(map.get("remarks")); //备注
+            builder.setIsNeedSign(true);//是否启用保全签章
+
+            PreservationCreateResponse preservationCreateResponse = getClient().createPreservation(builder);
+
+            //根据保全id 下载最终版合同
+            if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
+                logger.info("Create a preservation success message:{}",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
+                ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
+                contractFileDownloadUrlRequest.setPreservationId(preservationCreateResponse.getPreservationId());
+                ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
+                //根据下载url 获取文件流 并上传oss服务器
+                if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
+                    logger.info("get download link success url :{}",contractFileDownloadUrlResponse.getDownUrl());
+                    URL downUrl = new URL(contractFileDownloadUrlResponse.getDownUrl());
+                    HttpURLConnection conn = (HttpURLConnection)downUrl.openConnection();
+                    conn.setConnectTimeout(3*1000);   //设置超时间为3秒
+                    conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");//防止屏蔽程序抓取而返回403错误
+                    InputStream inputStream = conn.getInputStream();
+
+                    //获取文件IO流 并将文件保存到oss
+                    //oss配置信息  从oss读取文件
+                    String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+                    String endpoint = ConfigUtil.getConfig("endpoint");
+                    String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+                    String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+                    String bucketName = ConfigUtil.getConfig("bucketName");
+                    String callback = ConfigUtil.getConfig("callbackUrl");
+
+                    OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+                    fileUpload.upload(inputStream,map.get("fileName"),map.get("contractFolderName"));
+
+                    //更新用户合同表
+                    Contract contract = new Contract();
+                    contract.setUserId(Integer.parseInt(map.get("userId")));
+                    contract.setItemId(Integer.parseInt(map.get("itemId")));
+                    contract.setLevelId(Integer.parseInt(map.get("levelId")));
+                    contract.setOrderId(Integer.parseInt(map.get("orderId")));
+                    contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
+                    contract.setContractNo(map.get("contractNo"));
+                    contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
+                    contract.setContractFilepath(map.get("contractFolderName")+"/"+map.get("fileName"));
+
+                    int count = contractDao.insert(contract);
+                    if(count != 1){ //重试一次
+                        Thread.sleep(500L);
+                        count = contractDao.insert(contract);
+                    }
+                    if(count != 1){
+                        // TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
+                        return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
+                    }else{
+                        return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                    }
+                }else{
+                    logger.info("get download link failed");
+                    logger.info("Main Error Code:{}"+contractFileDownloadUrlResponse.getError().getCode());
+                    logger.info("Main Error Message:{}"+contractFileDownloadUrlResponse.getError().getMessage());
+                    logger.info("Main Error Solution:{}"+contractFileDownloadUrlResponse.getError().getSolution());
+                    return this.setResult(StatusCode.FAILED_GET_DOWNLOAD_LINK, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_GET_DOWNLOAD_LINK));
+                }
+            }else{
+                logger.info("Create a preservation failed");
+                logger.info("Main Error Code:{}"+preservationCreateResponse.getError().getCode());
+                logger.info("Main Error Message:{}"+preservationCreateResponse.getError().getMessage());
+                logger.info("Main Error Solution:{}"+preservationCreateResponse.getError().getSolution());
+                return this.setResult(StatusCode.UPLOAD_PDF_FIX_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_PDF_FIX_FAILED));
+            }
+
+        }else{
+            logger.info("Upload html stamp failed!");
+            logger.info("Main Error Code:{}"+response.getError().getCode());
+            logger.info("Main Error Message:{}"+response.getError().getMessage());
+            logger.info("Main Error Solution:{}"+response.getError().getSolution());
+            return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
+        }
     }
 }

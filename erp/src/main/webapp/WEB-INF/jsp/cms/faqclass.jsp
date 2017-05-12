@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -32,7 +33,7 @@
             </div>--%>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
   				<span class="l">
-            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题分类-添加分类','/erp/faqclass/toadd','10001')"
+            <a class="btn btn-primary radius" onClick="project_edit('CMS-常见问题分类-添加分类','faqclass/toadd','10001')"
                href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添 加 分 类</a>
           </span>
                 <%--<span class="r" style="line-height:30px;">共有数据：<strong>1</strong> 条</span>--%>
@@ -62,8 +63,8 @@
     })
 })</script>
 <!-- 时间插件 -->
-<link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="/erp/lib/datetimepicker/datetimepicker.js"></script>
+<link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="<%=basePath %>lib/datetimepicker/datetimepicker.js"></script>
 <script>
 
     var table;
@@ -95,7 +96,7 @@
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
-                url: "/erp/faqclass/list",
+                url: "<%=basePath %>faqclass/list",
                 "dataSrc": "aaData"
             },
 //            "order": [[1, 'asc']],// dt默认是第一列升序排列 这里第一列为序号列，所以设置为不排序，并把默认的排序列设置到后面
@@ -132,14 +133,14 @@
                             return '<td class="f-14 td-manage">' +
                                     '<a style="text-decoration:none" id="'+row.classId+'" onclick="project_start(this,'+row.classId+')" href="javascript:;" title="发布"><i class="Hui-iconfont"></i></a>' +
                                     '<a style="text-decoration:none" class="ml-5" ' +
-                                    'onclick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;" title="项目编辑">' +
+                                    'onclick="project_edit(\'CMS-常见问题分类-修改\',\'faqclass/toedit\','+row.classId+')" href="javascript:;" title="项目编辑">' +
                                     '<i class="Hui-iconfont"></i></a> </td>'
                         }
                         if(row.status=='1'){
                             return ' <td class="f-14 td-manage">' +
                                     '<a style="text-decoration:none" id="'+row.classId+'" onClick="project_stop(this,'+row.classId+')" href="javascript:;"title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>' +
                                     '<a style="text-decoration:none" class="ml-5"' +
-                                    'onClick="project_edit(\'CMS-常见问题分类-修改\',\'/erp/faqclass/toedit\','+row.classId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
+                                    'onClick="project_edit(\'CMS-常见问题分类-修改\',\'faqclass/toedit\','+row.classId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
                                     '</i></a>' +
                                     '</td>';
                         }else{
@@ -222,7 +223,7 @@
     function project_stop(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
             $.ajax({
-                url:"/erp/faqclass/update",
+                url:"faqclass/update",
                 data:{
                     "class_id":id,
                     "status":"0"
@@ -247,7 +248,7 @@
     function project_start(obj, id) {
         layer.confirm('确认要发布吗？', function (index) {
             $.ajax({
-                url:"/erp/faqclass/update",
+                url:"faqclass/update",
                 data:{
                     "class_id":id,
                     "status":"1"

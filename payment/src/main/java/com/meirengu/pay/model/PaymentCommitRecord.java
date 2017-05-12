@@ -1,10 +1,17 @@
 package com.meirengu.pay.model;
 
+import com.meirengu.pay.utils.check.AnnotationValidable;
+import com.meirengu.pay.utils.check.ValidateDigit;
+import com.meirengu.pay.utils.check.ValidateNotNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class PaymentCommitRecord {
+public class PaymentCommitRecord implements AnnotationValidable {
     private Integer id;
+    @ValidateNotNull(attributeValue = "待打款ID")
+    @ValidateDigit
+    private Integer paymentCommitId;
 
     private Integer partnerId;
 
@@ -13,13 +20,14 @@ public class PaymentCommitRecord {
     private Integer itemId;
 
     private String itemName;
-
+    @ValidateNotNull(attributeValue = "打款类型；1首款；2尾款")
+    @ValidateDigit
     private Integer commitType;
-
+    @ValidateNotNull(attributeValue = "应付款")
     private BigDecimal shouldAmount;
-
+    @ValidateNotNull(attributeValue = "实付款")
     private BigDecimal actualAmount;
-
+    @ValidateNotNull(attributeValue = "凭据")
     private String imageCredential;
 
     private Date commitTime;
@@ -32,6 +40,14 @@ public class PaymentCommitRecord {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getPaymentCommitId() {
+        return paymentCommitId;
+    }
+
+    public void setPaymentCommitId(Integer paymentCommitId) {
+        this.paymentCommitId = paymentCommitId;
     }
 
     public Integer getPartnerId() {
@@ -112,5 +128,23 @@ public class PaymentCommitRecord {
 
     public void setCommitAccount(String commitAccount) {
         this.commitAccount = commitAccount == null ? null : commitAccount.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentCommitRecord{" +
+                "id=" + id +
+                ", paymentCommitId=" + paymentCommitId +
+                ", partnerId=" + partnerId +
+                ", partnerName='" + partnerName + '\'' +
+                ", itemId=" + itemId +
+                ", itemName='" + itemName + '\'' +
+                ", commitType=" + commitType +
+                ", shouldAmount=" + shouldAmount +
+                ", actualAmount=" + actualAmount +
+                ", imageCredential='" + imageCredential + '\'' +
+                ", commitTime=" + commitTime +
+                ", commitAccount='" + commitAccount + '\'' +
+                '}';
     }
 }

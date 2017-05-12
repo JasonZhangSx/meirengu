@@ -7,6 +7,34 @@
 	<sql id="select_columns">
 		rebate_id as rebateId, rebate_sn as rebateSn, rebate_batch as rebateBatch, channel as channel, valid_start_time as validStartTime, valid_end_time as validEndTime, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
+	<sql id="rebate_select_columns">
+		tb.rebate_id as rebateId,
+		tb.rebate_sn as rebateSn,
+		tb.valid_start_time as validStartTime,
+		tb.valid_end_time as validEndTime
+	</sql>
+	<sql id="rebate_batch_select_columns">
+		trb.batch_id as rebateBatchId,
+		trb.rebate_type as rebateType,
+		trb.rebate_limit_amount as rebateLimitAmount,
+		trb.rebate_use_range as rebateUseRange,
+		trb.rebate_use_range_value as rebateUseRangeValue,
+		trb.rebate_name as rebateName,
+		trb.rebate_scope as rebateScope,
+		trb.rebate_amount as rebateAmount,
+		trb.channel as channel
+	</sql>
+	<sql id="rebate_receive_select_columns">
+		trr.id as rebateReceiveId,
+		trr.user_id as userId,
+		trr.user_phone as userPhone,
+		trr.receive_time as receiveTime,
+		trr.status as receiveStatus
+	</sql>
+	<sql id="rebate_used_select_columns">
+		tru.order_sn as orderSn,
+		tru.used_time as usedTime
+	</sql>
 
 	<insert id="insert" parameterType="rebate" useGeneratedKeys="true" keyProperty="rebateId" >
 		INSERT INTO <include refid="table_name" />
@@ -133,8 +161,30 @@
 			<if test="@Ognl@isNotEmpty(operateAccount)">
 				AND tb.operate_account=#{operateAccount}
 			</if>
+			<!-- 抵扣券批次查询条件 -->
+			<if test="@Ognl@isNotEmpty(rebateBatchId)">
+				AND trb.batch_id=#{rebateBatchId}
+			</if>
+			<if test="@Ognl@isNotEmpty(batchChannel)">
+				AND trb.channel=#{channel}
+			</if>
+			<!-- 抵扣券领取查询条件 -->
+			<if test="@Ognl@isNotEmpty(userId)">
+				AND trr.user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(userPhone)">
+				AND trr.user_phone=#{userPhone}
+			</if>
+			<if test="@Ognl@isNotEmpty(receiveStatus)">
+				AND trr.status=#{receiveStatus}
+			</if>
+			<!-- 抵扣券使用查询条件 -->
+			<if test="@Ognl@isNotEmpty(orderSn)">
+				AND tru.order_sn=#{orderSn}
+			</if>
 		</where>
 	</sql>
+
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
@@ -153,52 +203,32 @@
 	</select>
 	<!-- 分页相关结束 -->
 
-	<!-- 抵扣券连表查询开始
-	<select id="getByPage" resultType="Map" parameterType="Map">
+	<!-- 抵扣券连表查询开始-->
+	<select id="getRebateFullInfoByPage" resultType="Map" parameterType="Map">
 		select
-		<include refid="select_columns" />
+		<include refid="rebate_select_columns" />,
+		<include refid="rebate_batch_select_columns" />,
+		<include refid="rebate_receive_select_columns" />,
+		<include refid="rebate_used_select_columns" />
 		FROM
-		<include refid="table_name" />tb
+		rebate tb
+		LEFT JOIN rebate_batch trb ON tb.rebate_batch = trb.batch_id
+		LEFT JOIN rebate_receive trr ON tb.rebate_sn = trr.rebate_sn
+		LEFT JOIN rebate_used tru ON tb.rebate_sn = tru.rebate_sn
 		<include refid="findPage_where"/>
 		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
 			order by ${sortBy} ${order}
 		</if>
 	</select>
 
-	<select id="getCount" parameterType="Map" resultType="Integer">
+	<select id="getRebateFullInfoCount" parameterType="Map" resultType="Integer">
 		select count(1)
 		FROM
-		<include refid="table_name" />tb
-
-
+		rebate tb
+		LEFT JOIN rebate_batch trb ON tb.rebate_batch = trb.batch_id
+		LEFT JOIN rebate_receive trr ON tb.rebate_sn = trr.rebate_sn
+		LEFT JOIN rebate_used tru ON tb.rebate_sn = tru.rebate_sn
 		<include refid="findPage_where"/>
-	</select>-->
-	<!-- 抵扣券连表查询结束
-	SELECT
-	tr.rebate_id,
-	tr.rebate_sn,
-	tr.valid_start_time,
-	tr.valid_end_time,
-	trb.batch_id,
-	trb.rebate_type,
-	trb.rebate_limit_amount,
-	trb.rebate_use_range,
-	trb.rebate_use_range_value,
-	trb.rebate_name,
-	trb.rebate_scope,
-	trb.rebate_amount,
-	trb.channel,
-	trr.id,
-	trr.user_id,
-	trr.user_phone,
-	trr.receive_time,
-	trr.`status`,
-	tru.order_sn,
-	tru.used_time
-	FROM
-	rebate tr
-	LEFT JOIN rebate_batch trb ON tr.rebate_batch = trb.batch_id
-	LEFT JOIN rebate_receive trr ON tr.rebate_sn = trr.rebate_sn
-	LEFT JOIN rebate_used tru ON tr.rebate_sn = tru.rebate_sn;
--->
+	</select>
+	<!-- 抵扣券连表查询结束-->
 </mapper>

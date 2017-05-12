@@ -114,7 +114,16 @@ public class StatusCode {
     public static final int PAYMENT_ACCOUNT_CHECK_PWD_SUCCESS=40640;
     public static final int PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT=40641;
     public static final int PAYMENT_ACCOUNT_CHECK_PWD_ERROR=40642;
-
+    public static final int PAYMENT_COMMIT_SUCCESS_SELECT=40643;
+    public static final int PAYMENT_COMMIT_ERROR_SELECT=40644;
+    public static final int PAYMENT_COMMIT_SUCCESS_INSERT=40645;
+    public static final int PAYMENT_COMMIT_ERROR_INSERT=40646;
+    public static final int PAYMENT_COMMIT_SUCCESS_UPDATE=40647;
+    public static final int PAYMENT_COMMIT_ERROR_UPDATE=40648;
+    public static final int PAYMENT_COMMIT_RECORD_SUCCESS_SELECT=40649;
+    public static final int PAYMENT_COMMIT_RECORD_ERROR_SELECT=40650;
+    public static final int PAYMENT_COMMIT_RECORD_SUCCESS_INSERT=40651;
+    public static final int PAYMENT_COMMIT_RECORD_ERROR_INSERT=40652;
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
     public static final int KEYWORD_MATCHING = 40702;
@@ -552,7 +561,16 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_SUCCESS, "交易密码校验成功");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR_INCONSISTENT, "交易密码不符");
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_CHECK_PWD_ERROR, "交易密码校验失败");
-
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_SUCCESS_SELECT, "待打款查询成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_ERROR_SELECT, "待打款查询失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_SUCCESS_INSERT, "待打款添加成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_ERROR_INSERT, "待打款添加失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_SUCCESS_UPDATE, "待打款更新成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_ERROR_UPDATE, "待打款更新失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_SUCCESS_SELECT, "打款记录查询成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_ERROR_SELECT, "打款记录查询失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_SUCCESS_INSERT, "打款记录添加成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_ERROR_INSERT, "打款记录添加失败");
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");

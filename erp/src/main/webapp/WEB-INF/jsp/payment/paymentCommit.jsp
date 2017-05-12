@@ -1,10 +1,18 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %><%--
+  Created by IntelliJ IDEA.
+  User: xiaoyang
+  Date: 2017/5/8
+  Time: 16:42
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="../common/common.jsp"%>
-<!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <meta charset=utf-8>
-    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -13,121 +21,400 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-   </head>
-</html>
-</head>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script><![endif]--> </head>
+<style>
+    .select-box1 {
+        padding-left: 0;
+    }
+
+    .select-box1 select {
+        font-size: 14px;
+        height: 31px;
+        line-height: 1.42857;
+        padding: 4px;
+        border: 1px #ddd solid;
+    }
+
+    .edit_h31 {
+        border-bottom: 1px #ddd solid;
+        overflow: hidden;
+    }
+
+    .tabCon {
+        width: 100%;
+    }
+
+    .tabCon {
+        display: none;
+        overflow: hidden;
+        width：100%;
+    }
+
+    .tabBar {
+        border: none;
+        position: fixed;
+        top: 30px;
+        right: 20px;
+        z-index: 9999;
+    }
+
+    .tabBar span {
+        display: block;
+        float: none;
+        font-size: 20px;
+        line-height: 30px;
+        padding: 5px 15px;
+        font-weight: normal;
+        color: #a7a5a5
+    }
+
+    .tabBar span.current {
+        background-color: #5a98de;
+    }
+
+    .tabCon .form-label {
+        margin-top: 3px;
+        cursor: text;
+        text-align: right;
+    }
+
+    .tabCon .row {
+        margin-top: 15px;
+    }
+
+    .huibao_tab_menu {
+        border-bottom: 1px #ddd solid;
+    }
+
+    .huibao_tab_menu span {
+        float: left;
+        display: inline;
+        line-height: 28px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        color: #a7a5a5;
+        padding: 5px 15px;
+        cursor: pointer;
+        background-color: #e8e8e8;
+    }
+
+    .huibao_tab_menu span.current {
+        background-color: #5a98de;
+        color: #fff;
+    }
+
+    .huibao_set .huibao_tab {
+        display: none;
+    }
+
+    /* 去掉输入样式 */
+    .jiben_info input[type="text"], .jiben_info select, .jiben_info textarea, .jiben_info option, .jiben_info .select-box,
+    .neirong_set input[type="text"], .neirong_set select, .neirong_set textarea, .neirong_set option, .neirong_set .select-box,
+    .huibao_set input[type="text"], .huibao_set select, .huibao_set textarea, .huibao_set option, .huibao_set .select-box,
+    .hezuo_style input[type="text"], .hezuo_style select, .hezuo_style textarea, .hezuo_style option, .hezuo_style .select-box {
+        -webkit-appearance: initial;
+        border: none !important;
+        cursor: auto
+    }
+
+    input[disabled=""] {
+        background-color: #fff;
+    }
+</style>
 <body>
 <div class="page-container">
-    <form action="faqclass" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-add">
-        <style>
-            .edit_h31 {
-                border-bottom: 1px #ddd solid;
-                overflow: hidden;
-            }
-
-            .formControls {
-                line-height: 30px;
-            }
-        </style>
-        <!-- 基本信息 -->
-
-        <div>
-            <div class="row cl">
-                <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添 加 分 类</h3>
+    <!-- 打款信息 -->
+    <div class="tabCon">
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">应打款信息</h3>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.targetAmount}
             </div>
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2">分类名称：</label>
-                <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="class_name" maxlength="30"
-                           placeholder="项目标题最多30字">
-                </div>
+            <label class="form-label col-xs-4 col-sm-2">已筹金额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.completedAmount}
             </div>
-
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-2"></label>
-                <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="tijiao()" type="button">添 加
-                    </button>
-                </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">完成度：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.completedAmount / paymentCommitList.targetAmount * 100}%
             </div>
+            <label class="form-label col-xs-4 col-sm-2"></label>
+            <div class="formControls col-xs-8 col-sm-3">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.commissionRate}%
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">佣金金额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.commissionAmount}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">保证金比例：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.guaranteeRate}%
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">保证金金额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.guaranteeAmount}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">预付分红周期：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.prepaidBonus}
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">预付分红金金额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${bankCommission.prepaidBonusMoney}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">合计扣款：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <c:set var="totalDebit" value="${bankCommission.commissionAmount + bankCommission.guaranteeAmount + bankCommission.prepaidBonusMoney}" scope="session"/>
+                ${totalDebit}
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">应打款总额：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <c:set var="playMoney" value="${paymentCommitList.completedAmount - totalDebit}" scope="session"/>
+                ${playMoney}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">打款方式：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.loanMode}次
+            </div>
+            <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.firstRatio}%
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">尾款比例：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                ${paymentCommitList.endRatio}%
+            </div>
+        </div>
 
-            <br/><br/><br/><br/>
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">收款账户</h3>
+        </div>
+        <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th>开户行名称</th>
+                    <th>账户名</th>
+                    <th>银行账号</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-c">
+                    <td>${bankCommission.bankName}</td>
+                    <td>${bankCommission.bankAccount}</td>
+                    <td>${bankCommission.bankCard}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">打款记录</h3>
+        </div>
+        <div class="col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th>款项类型</th>
+                    <th>应打款金额</th>
+                    <th>实打款金额</th>
+                    <th>打款凭据</th>
+                    <th>打款时间</th>
+                    <th>打款人</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-c">
+                    <c:forEach items="${paymentCommitList.list}" var="paymentCommit">
+                        <c:choose>
+                            <c:when test="${paymentCommit.commitType==1}">
+                                <td>首款</td>
+                            </c:when>
+                            <c:when test="${paymentCommit.commitType==2}">
+                                <td>尾款</td>
+                            </c:when>
+                        </c:choose>
+                        <td>${paymentCommit.shouldAmount}</td>
+                        <td>${paymentCommit.actualAmount}</td>
+                        <td>查看/下载</td>
+                        <td>
+                            <c:set var="commitTime" value="${paymentCommit.commitTime}" scope="session"/>
+                            <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(String.valueOf(session.getAttribute("commitTime"))))%>
+                        </td>
+                        <%--<td>打款人</td>--%>
+                        <td>${fn:length(paymentCommitList.list)}</td>
+                    </c:forEach>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
 
-    </form>
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">打款</h3>
+        </div>
+        <c:choose>
+            <c:when test="${fn:length(paymentCommitList.list) != paymentCommitList.loanMode}">
+                <form action="savePaymentCommitRecord" method="post" enctype="multipart/form-data" class="form form-horizontal" id="paymentCommitForm"  onsubmit="return savePaymentCommitRecord();">
+                    <input type="text" class="input-text"  id="paymentCommitId"  maxlength="30"
+                           value="1" style="display: none" name="paymentCommitId">
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">应打款类型：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <c:choose>
+                            <c:when test="${fn:length(paymentCommitList.list) != 0}">
+                                尾款
+                                <input type="text" class="input-text"  id="id"  maxlength="30"
+                                       value="2" style="display: none" name="commitType">
+                                <c:set var="shouldPlayMoney" value="${playMoney * paymentCommitList.endRatio / 100}" scope="session"/>
+                            </c:when>
+                            <c:otherwise>
+                                首款
+                                <input type="text" class="input-text"  id="id"  maxlength="30"
+                                       value="1" style="display: none" name="commitType">
+                                <c:set var="shouldPlayMoney" value="${playMoney * paymentCommitList.firstRatio / 100}" scope="session"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">应打款金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${shouldPlayMoney}
+                        <input type="text" class="input-text"  id="shouldAmount"  maxlength="30"
+                               value="${shouldPlayMoney}" style="display: none" name="shouldAmount">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">实际打款金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="" name="actualAmount">
+                    </div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">打款凭据：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <input type="file" name="file"   accept="image/*"  class="form-control input-sm" multiple="multiple" />
+                        <!-- 图片上传模块 -->
+                        <%--<div class="uploader-list-container">--%>
+                            <%--<div class="queueList">--%>
+                                <%--<div id="dndArea" class="placeholder">--%>
+                                    <%--<div id="filePicker-2"></div>--%>
+                                    <%--<p>或将照片拖到这里，单次最多可选300张</p>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<div class="statusBar" style="display:none;">--%>
+                                <%--<div class="progress"><span class="text">0%</span> <span class="percentage"></span></div>--%>
+                                <%--<div class="info"></div>--%>
+                                <%--<div class="btns">--%>
+                                    <%--<div id="filePicker2"></div>--%>
+                                    <%--&lt;%&ndash;<div class="uploadBtn">开始上传</div>&ndash;%&gt;--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    </div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"></label>
+                    <div class="formControls col-xs-8 col-sm-8 text-c">
+                        <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">确 认
+                        </button>
+                    </div>
+                </div>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2"></label>
+                    <div class="formControls col-xs-8 col-sm-8 text-c">
+                        <label>已完成打款</label>
+                    </div>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+    </div>
+
+
 </div>
+
+<script src=lib/jquery/1.9.1/jquery.min.js></script>
+<script src=lib/layer/2.4/layer.js></script>
+<script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
+<script src=lib/jquery.validation/1.14.0/validate-methods.js></script>
+<script src=lib/jquery.validation/1.14.0/messages_zh.js></script>
+<script src=static/h-ui/js/H-ui.js></script>
+<script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <script>$(function () {
     $(".Hui-aside ul a").on("click", function () {
         console.log($(this).attr("data-href")), $(".content_iframe").attr("src", $(this).attr("data-href"))
     })
 })</script>
-<script>
 
-    // prepare Options Object
-    var options = {
-        beforeSubmit:  showRequest,  // pre-submit callback
-        success:       showResponse,  // post-submit callback
-        error : function() {
-            alert('error!');
-        },
-        timeout : 3000
-    };
-    // pre-submit callback
-    function showRequest(formData, jqForm, options) {
-        // formData is an array; here we use $.param to convert it to a string to display it
-        // but the form plugin does this for you automatically when it submits the data
-        var queryString = $.param(formData);
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
 
-        // jqForm is a jQuery object encapsulating the form element.  To access the
-        // DOM element for the form do this:
-        // var formElement = jqForm[0];
+<!-- 省市区 -->
+<script type="text/javascript" src="lib/distpicker/distpicker.data.js"></script>
+<script type="text/javascript" src="lib/distpicker/distpicker.js"></script>
 
-//        alert('About to submit: \n\n' + queryString);
+<!-- 换灯箱 -->
+<script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
+<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 
-        // here we could return false to prevent the form from being submitted;
-        // returning anything other than false will allow the form submit to continue
-        return true;
-    }
-    // post-submit callback
-    function showResponse(responseText, statusText, xhr, $form)  {
-        // for normal html responses, the first argument to the success callback
-        // is the XMLHttpRequest object's responseText property
+<script type="text/javascript">
 
-        // if the ajaxSubmit method was passed an Options Object with the dataType
-        // property set to 'xml' then the first argument to the success callback
-        // is the XMLHttpRequest object's responseXML property
+    function savePaymentCommitRecord() {
+// jquery 表单提交
+        $("#paymentCommitForm").ajaxSubmit(function(result) {
+            if (result==""){
+                layer.msg('添加失败!', {icon: 5, time: 1000});
+            }else {
+                var map = eval("("+result+")");
+                if(confirm("添加成功,是否进入待打款列表"))
+                {
+                    //如果是true ，那么就把页面转向thcjp.cnblogs.com
+                    parent.location.href="getPaymentCommit";
+                }
+            }
+// 对于表单提交成功后处理，message为提交页面saveReport.htm的返回内容
+        });
 
-        // if the ajaxSubmit method was passed an Options Object with the dataType
-        // property set to 'json' then the first argument to the success callback
-        // is the json data object returned by the server
-
-//        alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +
-//            '\n\nThe output div should have already been updated with the responseText.');
-        var data = responseText;
-        var code = data.code;//200 is success，other is fail
-        if(code=="200"){
-            layer.msg('保存成功', {icon: 1, time: 1000});
-            setTimeout(function() {
-                layer_close();
-            }, 2000);
-        }else{
-            layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
-        }
-    }
-    function tijiao() {
-        $('#form-add').ajaxSubmit(options);
+        return false; // 必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
     }
 
 
-    // 时间
-    $('#datetimepicker2,#datetimepicker3').datetimepicker({
-        yearOffset: 0,
-        lang: $.datetimepicker.setLocale('ch'),
-        timepicker: false,
-        format: 'Y-m-d',
-        formatDate: 'Y/m/d',
+    // tab切换
+    $(function () {
+        $.Huitab(".huibao_set .huibao_tab_menu span", ".huibao_set .huibao_tab", "current", "click", "0")
+        $.Huitab(".tabBar span", ".tabCon", "current", "click", "0")
     });
+
     (function ($) {
 
         // 大图上传 当domReady的时候开始初始化
@@ -703,8 +990,6 @@
 
     })(jQuery);
 
-
 </script>
-
 </body>
 </html>

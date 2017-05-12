@@ -920,7 +920,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue(String orderSn) {
         String key = "OLE" + orderSn;
-        Message msg = new Message("trade", "orderLoseEfficacy", key, orderSn.getBytes());
+        Message msg = new Message("trade", "orderRemindForPay", key, orderSn.getBytes());
         //1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(21);
         SendResult sendResult = null;
@@ -944,7 +944,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendRocketMQDeployQueue4Sms(String orderSn) {
         String key = "ORFP" + orderSn;
-        Message msg = new Message("trade", "orderLoseEfficacy",key, orderSn.getBytes());
+        Message msg = new Message("trade", "orderRemindForPay",key, orderSn.getBytes());
         //messageDelayLevel =  1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h 22h 1d 3d
         msg.setDelayTimeLevel(19);
         SendResult sendResult = null;

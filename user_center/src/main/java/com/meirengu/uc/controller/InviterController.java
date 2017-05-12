@@ -54,7 +54,14 @@ public class InviterController extends BaseController{
         try {
             Map paramMap = new HashMap<String, Object>();
             paramMap.put("sortBy", sortBy);
-            paramMap.put("order", order);
+            if(order != null){
+                if(order.contains("desc") || order.contains("DESC")){
+                    paramMap.put("order", "DESC");
+                }
+                if(order.contains("asc") || order.contains("ASC")){
+                    paramMap.put("order", "ASC");
+                }
+            }
             if(!StringUtil.isEmpty(userId)){
                 paramMap.put("userId", userId);
             }

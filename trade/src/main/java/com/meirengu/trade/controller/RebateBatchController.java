@@ -181,6 +181,13 @@ public class RebateBatchController extends BaseController{
         }
     }
 
+    /**
+     * 更新抵扣券批次信息
+     * @param batchId
+     * @param status
+     * @param operateAccount
+     * @return
+     */
     @RequestMapping(value = "/update/{batch_id}", method = RequestMethod.POST)
     public Result handle(@PathVariable("batch_id") Integer batchId,
                          @RequestParam(value = "status", required = false) Integer status,

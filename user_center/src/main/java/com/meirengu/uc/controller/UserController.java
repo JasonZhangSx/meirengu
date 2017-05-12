@@ -86,11 +86,13 @@ public class UserController extends BaseController{
             paramMap.put("inviteRealname", inviteRealname);
             paramMap.put("inviteIdcard", inviteIdcard);
             paramMap.put("sortBy", sortBy);
-            if(order.contains("desc") || order.contains("DESC")){
-                paramMap.put("order", "DESC");
-            }
-            if(order.contains("asc") || order.contains("ASC")){
-                paramMap.put("order", "ASC");
+            if(order != null){
+                if(order.contains("desc") || order.contains("DESC")){
+                    paramMap.put("order", "DESC");
+                }
+                if(order.contains("asc") || order.contains("ASC")){
+                    paramMap.put("order", "ASC");
+                }
             }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();

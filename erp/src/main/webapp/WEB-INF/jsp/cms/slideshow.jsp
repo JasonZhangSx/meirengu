@@ -126,7 +126,8 @@
 <script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script>
     var table = $('.table-sort').dataTable({
-        "aaSorting": [[0, "desc"]],
+//        "aaSorting": [[0, "desc"]],
+        "bSort" : false,
         "bStateSave": true,
     });
     function slideshow_add(title,url,id,w,h){
