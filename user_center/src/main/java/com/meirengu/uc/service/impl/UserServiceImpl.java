@@ -313,7 +313,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             Map<String, Object> paramsmap = new HashMap<String, Object>();
             paramsmap.put("userId",map.get("userId"));
             Map<String, String> params = new HashMap<String, String>();
-            params.put("content", JacksonUtil.toJSon(map));
+            params.put("content", JacksonUtil.toJSon(paramsmap));
             String url = ConfigUtil.getConfig("URI_GET_USER_PAYACCOUNT");
             String urlAppend = url+"?content="+ URLEncoder.encode(JacksonUtil.toJSon(paramsmap));
             logger.info("UserServiceImpl.getUserRestMoney send get >> uri :{}, params:{}", new Object[]{urlAppend, params});
