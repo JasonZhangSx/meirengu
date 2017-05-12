@@ -93,7 +93,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>rebate_batch'
+                'url': '<%=basePath %>rebate'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -107,15 +107,33 @@
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
                 {"data": "rebateId"},
                 {"data": "rebateSn"},
-                {"data": "validStartTime"},
-                {"data": "validEndTime"},
+                {
+                    "data": "validStartTime",
+                    defaultContent:""
+                },
+                {
+                    "data": "validEndTime",
+                    defaultContent:""
+                },
                 {"data": "rebateBatchId"},
                 {"data": "rebateScope"},
                 {"data": "rebateAmount"},
-                {"data": "userPhone"},
-                {"data": "receiveTime"},
-                {"data": "orderSn"},
-                {"data": "usedTime"},
+                {
+                    "data": "userPhone",
+                    defaultContent:""
+                },
+                {
+                    "data": "receiveTime",
+                    defaultContent:""
+                },
+                {
+                    "data": "orderSn",
+                    defaultContent:""
+                },
+                {
+                    "data": "usedTime",
+                    defaultContent:""
+                },
                 {
                     "data": "receiveStatus",
                     "render": function (data, type, row, meta) {
@@ -125,6 +143,8 @@
                             return "已使用";
                         } else if (data == 3) {
                             return "已失效";
+                        } else {
+                            return "";
                         }
                     }
                 },
