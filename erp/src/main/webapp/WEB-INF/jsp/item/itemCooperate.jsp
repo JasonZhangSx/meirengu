@@ -246,6 +246,7 @@
             }
 
         }
+
     </script>
 </head>
 <body>
@@ -532,16 +533,19 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">放款方式：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="loanMode" id="loanMode" class="select">
+                        <select name="loanMode" id="loanMode" class="select" onchange="">
                             <option value="1">一次性</option>
                             <option value="2">两次放款</option>
                         </select>
                         </span>
                     </div>
-                    <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">
+                    <div id="firstRatioDiv" style="display: none;">
+                        <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                            <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -1022,6 +1026,14 @@
         $('.content_set .item').hide();
         $('.content_set .item').eq(index).show();
         console.log(contentIndex);
+    });
+
+    $("#loanMode").change(function(){
+       if($("#loanMode").val() == 2){
+           $("#firstRatioDiv").show();
+       }else if($("#loanMode").val() == 1){
+           $("#firstRatioDiv").hide();
+       }
     });
 
 </script>

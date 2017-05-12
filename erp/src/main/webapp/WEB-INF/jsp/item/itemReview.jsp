@@ -973,30 +973,35 @@
 
             <!-- 复审审核 -->
             <div class="fushen">
-                <div class="row cl">
-                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">复审审核</h3>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"></label>
-                    <label class="col-xs-4 col-sm-1 mr-20"><input type="radio" class="radio" value="1" name="radio-feedback"
-                                                                  id="feedback-1"> 通过</label>
-                    <label><input type="radio" class="radio" value="2" name="radio-feedback" id="feedback-2"> 不通过</label>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2">备注：</label>
-                    <div class="formControls col-xs-8 col-sm-8">
-                    <textarea name="" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
+                <form action="item/review" method="post">
+                    <div class="row cl">
+                        <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">复审审核</h3>
+                    </div>
+                    <div class="row cl">
+                        <input type="hidden" name="itemId" id="itemId" value="${item.itemId}">
+                        <label class="form-label col-xs-4 col-sm-2"></label>
+                        <label class="col-xs-4 col-sm-1 mr-20">
+                            <input type="radio" class="radio" value="1" name="operateStatus" id="feedback-1"> 通过</label>
+                        <label>
+                            <input type="radio" class="radio" value="0" name="operateStatus" id="feedback-2"> 不通过</label>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">备注：</label>
+                        <div class="formControls col-xs-8 col-sm-8">
+                    <textarea name="operateRemark" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100"
                               dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                        </div>
                     </div>
-                </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-2"></label>
-                    <div class="formControls col-xs-8 col-sm-8 text-c">
-                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">复审确认
-                        </button>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2"></label>
+                        <div class="formControls col-xs-8 col-sm-8 text-c">
+                            <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">复审确认
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>

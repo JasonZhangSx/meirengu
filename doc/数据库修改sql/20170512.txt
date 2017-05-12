@@ -1,0 +1,7 @@
+/******** crowd_funding *****/
+ALTER TABLE `item` ADD `lead_investor_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '领投金额';
+ALTER TABLE `item` ADD `lead_investor_name` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '领投人姓名';
+ALTER TABLE `item` ADD `lead_investor_header` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '领投人头像';
+
+ALTER TABLE `item_level` ADD `share_hold_rate` decimal(10,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '持股比例';
+ALTER TABLE `item_level` ADD `year_rate_max` double(11,0) NOT NULL DEFAULT '0' COMMENT '年化利率(如果为区间，则为最小)';

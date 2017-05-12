@@ -12,10 +12,13 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -603,6 +606,36 @@ public class ItemController extends BaseController {
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
+    }
+
+    /**
+     * 发布项目
+     * @param itemId
+     * @param appointDate
+     * @param type  1 预约 2 立即
+     * @param operateAccount
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "publish", method = RequestMethod.POST)
+    public Result publish(@RequestParam(value = "item_id", required = false) Integer itemId,
+                          @RequestParam(value = "appoint_date", required = false) Date appointDate,
+                          @RequestParam(value = "type", required = false) Integer type,
+                          @RequestParam(value = "operate_account", required = false) String operateAccount){
+
+        try {
+            itemService.publish(itemId, appointDate, type, operateAccount);
+            return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "" , StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
 
