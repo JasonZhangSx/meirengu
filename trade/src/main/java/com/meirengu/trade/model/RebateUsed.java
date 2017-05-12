@@ -26,6 +26,10 @@ public class RebateUsed  extends BaseObject {
 	private BigDecimal rebateAmount;
 	/** 使用时间 */
 	private Date usedTime;
+	/** 核销状态 */
+	private Integer verifyStatus;
+	 /** 核销时间 */
+	 private Date verifyTime;
 
 	public void setId(Integer id){
 		this.id = id;
@@ -99,4 +103,19 @@ public class RebateUsed  extends BaseObject {
 		return usedTime;
 	}
 
-}
+	 public Integer getVerifyStatus() {
+		 return verifyStatus;
+	 }
+
+	 public void setVerifyStatus(Integer verifyStatus) {
+		 this.verifyStatus = verifyStatus;
+	 }
+
+	 public Date getVerifyTime() {
+		 return verifyTime;
+	 }
+
+	 public void setVerifyTime(Date verifyTime) {
+		 this.verifyTime = verifyTime;
+	 }
+ }
