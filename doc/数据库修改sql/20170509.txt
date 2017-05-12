@@ -9,8 +9,11 @@ ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NU
 ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT '有效期开始时间';
 ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT '有效期截止时间';
 ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_days` int(4) COMMENT '抵扣券有效天数';
+ALTER TABLE `rebate_used` ADD `verify_status` tinyint(1) NOT NULL COMMENT '核销状态：1已核销，0未核销' AFTER `used_time`;
+ALTER TABLE `rebate_used` ADD `verify_time` datetime  COMMENT '核销时间' AFTER `verify_status`;
 
 UPDATE rebate_batch SET rebate_limit_amount = rebate_limit;
 UPDATE rebate_batch SET rebate_limit = 2;
+
 
 ******************trade end***************************

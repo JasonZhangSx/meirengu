@@ -1,9 +1,14 @@
 package com.meirengu.trade.service;
+import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.model.RebateUsed;
 import com.meirengu.service.BaseService;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * RebateUsed服务接口 
@@ -19,4 +24,12 @@ public interface RebateUsedService extends BaseService<RebateUsed>{
      * @return
      */
     void rebateUse(int rebateReceiveId, String orderSn)  throws OrderException;
+
+    /**
+     * 根据条件进行分页
+     * @param page
+     * @param map
+     * @return
+     */
+    Page getVerifyInfoByPage(Page page, Map map);
 }

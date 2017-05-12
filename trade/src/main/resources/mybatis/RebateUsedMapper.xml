@@ -2,28 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.trade.dao.RebateUsedDao" >
 
-	<resultMap id="rebateUsedMap" type="RebateUsed">
-		<id column="id" property="id" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="user_id" property="userId" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_sn" property="rebateSn" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="rebate_batch_id" property="rebateBatchId" jdbcType="INTEGER" javaType="Integer"/>
-		<result column="activity_identification" property="activityIdentification" jdbcType="VARCHAR" javaType="String"/>
-		<result column="order_sn" property="orderSn" jdbcType="VARCHAR" javaType="String"/>
-		<result column="rebate_amount" property="rebateAmount" jdbcType="DECIMAL" javaType="BigDecimal"/>
-		<result column="used_time" property="usedTime" jdbcType="DATE" javaType="Date"/>
-	</resultMap>
-
 	<sql id="table_name">`rebate_used`</sql>
 	<sql id="select_columns">
-		id as id, user_id as userId, user_phone as userPhone, rebate_sn as rebateSn, rebate_batch_id as rebateBatchId, activity_identification as activityIdentification, order_sn as orderSn, rebate_amount as rebateAmount, used_time as usedTime
+		id as id, user_id as userId, user_phone as userPhone, rebate_sn as rebateSn, rebate_batch_id as rebateBatchId, activity_identification as activityIdentification,
+		order_sn as orderSn, rebate_amount as rebateAmount, used_time as usedTime, verify_status as verifyStatus, verify_time as verifyTime
 	</sql>
+	<sql id="rebate_used_select_columns">
+		tb.id as id, tb.user_id as userId, tb.user_phone as userPhone, tb.rebate_sn as rebateSn, tb.rebate_batch_id as rebateBatchId, tb.activity_identification as activityIdentification,
+		tb.order_sn as orderSn, tb.rebate_amount as rebateAmount, tb.used_time as usedTime, tb.verify_status as verifyStatus, tb.verify_time as verifyTime
+	</sql>
+	<sql id="rebate_select_columns">
+		tr.valid_end_time as validEndTime
+	</sql>
+	<sql id="rebate_batch_select_columns">
+		trb.rebate_name as rebateName,
+		trb.rebate_scope as rebateScope
+	</sql>
+	<sql id="order_select_columns">
+		o.order_amount as orderAmount,
+		o.cost_amount as costAmount
+	</sql>
+
 
 	<insert id="insert" parameterType="rebateUsed" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, user_id, user_phone, rebate_sn, rebate_batch_id, activity_identification, order_sn, rebate_amount, used_time)
+			(id, user_id, user_phone, rebate_sn, rebate_batch_id, activity_identification, order_sn, rebate_amount, used_time, verify_status, verify_time)
 		VALUES
-			(#{id}, #{userId}, #{userPhone}, #{rebateSn}, #{rebateBatchId}, #{activityIdentification}, #{orderSn}, #{rebateAmount}, #{usedTime})
+			(#{id}, #{userId}, #{userPhone}, #{rebateSn}, #{rebateBatchId}, #{activityIdentification}, #{orderSn}, #{rebateAmount}, #{usedTime}, #{verifyStatus}, #{verifyTime})
 	</insert>
 
 	<update id="update" parameterType="rebateUsed">
@@ -52,6 +57,12 @@
 			</if>
 			<if test="@Ognl@isNotEmpty(usedTime)">
 				used_time=#{usedTime},
+			</if>
+			<if test="@Ognl@isNotEmpty(verifyStatus)">
+				verify_status=#{verifyStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(verifyTime)">
+				verify_time=#{verifyTime},
 			</if>
 		</set>
 		<where>
@@ -97,6 +108,18 @@
 			<if test="@Ognl@isNotEmpty(usedTimeEnd)">
 				AND tb.used_time &lt;= #{usedTimeEnd}
 			</if>
+			<if test="@Ognl@isNotEmpty(verifyStatus)">
+				AND tb.verify_status &lt;= #{verifyStatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(verifyTimeBegin)">
+				AND tb.verify_time>=#{verifyTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(verifyTimeEnd)">
+				AND tb.verify_time &lt;= #{verifyTimeEnd}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderState)">
+				AND o.order_state = #{orderState}
+			</if>
 		</where>
 	</sql>
 
@@ -117,4 +140,33 @@
 		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
+
+	<!-- 核销列表开始 -->
+	<select id="getVerifyInfoByPage" resultType="Map" parameterType="Map">
+		select
+		<include refid="rebate_used_select_columns" />,
+		<include refid="rebate_select_columns" />,
+		<include refid="order_select_columns" />
+		FROM
+		rebate_used tb
+		LEFT JOIN rebate tr ON tb.rebate_sn = tr.rebate_sn
+		LEFT JOIN rebate_batch trb ON tb.rebate_batch_id = trb.batch_id
+		LEFT JOIN `order` o ON tb.order_sn = o.order_sn
+		<include refid="findPage_where"/>
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
+			order by ${sortBy} ${order}
+		</if>
+	</select>
+
+	<select id="getVerifyInfoCount" parameterType="Map" resultType="Integer">
+		select count(1)
+		FROM
+		rebate_used tb
+		LEFT JOIN rebate tr ON tb.rebate_sn = tr.rebate_sn
+		LEFT JOIN rebate_batch trb ON tb.rebate_batch_id = trb.batch_id
+		LEFT JOIN `order` o ON tb.order_sn = o.order_sn
+		<include refid="findPage_where"/>
+	</select>
+	<!-- 核销列表结束结束 -->
+
 </mapper>
