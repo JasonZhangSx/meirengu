@@ -44,7 +44,6 @@
                         <th>被邀请人姓名</th>
                         <th>身份证号</th>
                         <th>投资人认证</th>
-                        <th>累计投资额</th>
                         <th>注册时间</th>
                     </tr>
                     </thead>
@@ -140,7 +139,7 @@
 //                        return '<label>' + row.bankName + '</label>  <label>' + row.bankIdCard + '</label>';
 //                    }
 //                },
-                { "data": "totalInvestMoney" },
+//                { "data": "totalInvestMoney" },
                 { "data": "invitedRegisterTime",
                     render: function(data, type, row, meta) {
                         //先讲 时间格式化
