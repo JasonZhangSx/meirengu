@@ -8,5 +8,7 @@ ALTER TABLE
 ALTER TABLE `user` ADD `sina` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '新浪昵称';
 ALTER TABLE `user_contract` ADD `order_id` int(11) NOT NULL DEFAULT '0' COMMENT '订单id';
 
+update `user` set `avatar` = "portrait/1.jpg" where  `avatar` = "portrait/1491015127467.jpg";
+update `user` set `avatar` = "portrait/2.jpg" where  `avatar` = "portrait/1491015569805.jpg";
 
 ******************uc end***************************
