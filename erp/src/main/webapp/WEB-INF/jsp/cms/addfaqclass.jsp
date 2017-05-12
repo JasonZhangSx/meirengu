@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -17,7 +18,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="/erp/faqclass" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-add">
+    <form action="faqclass" method="post" class="form form-horizontal" enctype="multipart/form-data" id="form-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;

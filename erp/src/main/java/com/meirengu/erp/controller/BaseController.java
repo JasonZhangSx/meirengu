@@ -45,17 +45,20 @@ public class BaseController {
     }
 
     public Object httpGet(String url) throws IOException {
+        LOGGER.info("BaseController httpGet url :{}",url);
         HttpUtil.HttpResult hr = HttpUtil.doGet(url);
         Object data = getData(hr);
         return data;
     }
 
     public Object httpPost(String url, Map<String, String> params){
+        LOGGER.info("BaseController httpPost url :{} params:{}",url,params);
         HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
         Object data = getData(hr);
         return data;
     }
     public Object httpPut(String url, Map<String, String> params){
+        LOGGER.info("BaseController httpPut url :{} params:{}",url,params);
         HttpUtil.HttpResult hr = HttpUtil.doPut(url, params);
         Object data = getData(hr);
         return data;

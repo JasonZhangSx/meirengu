@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset=utf-8>
+    <base href="<%=basePath %>">
     <meta name=renderer content=webkit|ie-comp|ie-stand>
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
@@ -12,9 +13,9 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <link href="/erp/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
-    <link href="/erp/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-    <link href="/erp/lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<%=basePath %>lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
+    <link href="<%=basePath %>lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="<%=basePath %>lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
