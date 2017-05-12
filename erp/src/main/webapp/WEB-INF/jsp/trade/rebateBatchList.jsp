@@ -27,14 +27,21 @@
         <article class="cl pd-20">
             <div class="text-c">
                 抵扣券批次号：<input type="text" class="input-text" style="width:120px;" id="batchId">　
-                批次状态：<input type="text" class="input-text" style="width:120px;" id="batchStatue">　
+                批次状态：
+                        <span class="select-box mr-20" style="width:120px" >
+                            <select id="batchStatue" class="select">
+                                <option value="">请选择</option>
+                                <option value="1">有效</option>
+                                <option value="0">无效</option>
+                            </select>
+                        </span>
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="rebateBatchInsert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
+                <span class="l"><a class="btn btn-primary radius" onClick="rebateBatchInsert('添加抵扣券批次','rebate_batch/toAdd')"
                                    href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加抵扣券批次</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">

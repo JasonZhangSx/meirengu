@@ -83,44 +83,6 @@ public class RebateBatchController extends BaseController{
     }
 
     /**
-     * 新增抵扣券批次
-     * @param id
-     * @param status
-     * @return
-     */
-    @RequestMapping(value = "/handle/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public Result handle(@PathVariable("id") Integer id ,
-                         @RequestParam(value = "status") Integer status) {
-        if (id == null || id == 0 || status == null) {
-            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
-        }
-        String url = ConfigUtil.getConfig("order.candidate.handle.url") + "/" + id;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("status", status.toString());
-        params.put("operate_account", "admin");//稍后修改
-        try {
-            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Integer code = jsonObject.getIntValue("code");
-                if(code != null && code == StatusCode.OK){
-                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-                }else {
-                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
-                }
-            } else {
-                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
-            }
-        } catch (Exception e) {
-            logger.error("throw exception:{}", e);
-            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }
-    }
-
-    /**
      * 抵扣券批次新增
      * @return
      */
