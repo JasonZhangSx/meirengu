@@ -45,11 +45,13 @@ public class FaqClassController extends BaseController{
         paramMap.put("classId", classId);
         paramMap.put("status", status);
         paramMap.put("sortBy", sortBy);
-        if(order.contains("desc") || order.contains("DESC")){
-            paramMap.put("order", "DESC");
-        }
-        if(order.contains("asc") || order.contains("ASC")){
-            paramMap.put("order", "ASC");
+        if(order != null){
+            if(order.contains("desc") || order.contains("DESC")){
+                paramMap.put("order", "DESC");
+            }
+            if(order.contains("asc") || order.contains("ASC")){
+                paramMap.put("order", "ASC");
+            }
         }
         try{
             page = faqClassService.getPageList(page, paramMap);

@@ -92,28 +92,46 @@
         <span>项目发起人</span><var>${itemDetail.sponsorName}</var>
     </div>
 
-    <div class="section3 bg_fff">
-        <div class="leader">
-            <span>领投人</span>
-            <div class="">
-                <em><var style="background-image:url(<%=imgURI%>${itemDetail.leadInvestorHeader})"></var> ${itemDetail.leadInvestorName}</em>
-                <em class="">
-                    &yen; <fmt:formatNumber type="number" value="${itemDetail.leadInvestorAmount}" maxFractionDigits="0"/>万
-                </em>
+    <c:if test="${itemDetail.typeId == 3}">
+        <div class="section3 bg_fff">
+            <div class="leader">
+                <span>领投人</span>
+                <div class="">
+                    <em><var style="background-image:url(<%=imgURI%>${itemDetail.leadInvestorHeader})"></var> ${itemDetail.leadInvestorName}</em>
+                    <em class="">
+                        &yen; <fmt:formatNumber type="number" value="${itemDetail.leadInvestorAmount}" maxFractionDigits="0"/>万
+                    </em>
+                </div>
+            </div>
+            <div class="tit">
+                已有${orderMap.totalCount}人跟投此项目
+            </div>
+            <div class="supporter">
+                <c:forEach items="${orderMap.list}" var="order">
+                    <var style="background-image:url(<%=imgURI%>${order.avatar})"></var>
+                </c:forEach>
+                <c:if test="${orderMap.totalCount>6}">
+                    <span>·····</span>
+                </c:if>
             </div>
         </div>
-        <div class="tit">
-            已有${orderMap.totalCount}人跟投此项目
+    </c:if>
+    <c:if test="${itemDetail.typeId != 3}">
+        <div class="section3 bg_fff">
+            <div class="tit">
+                已有${orderMap.totalCount}人支持此项目
+            </div>
+            <div class="supporter">
+                <c:forEach items="${orderMap.list}" var="order">
+                    <var style="background-image:url(<%=imgURI%>${order.avatar})"></var>
+                </c:forEach>
+                <c:if test="${orderMap.totalCount>6}">
+                    <span>·····</span>
+                </c:if>
+            </div>
         </div>
-        <div class="supporter">
-            <c:forEach items="${orderMap.list}" var="order">
-                <var style="background-image:url(<%=imgURI%>${order.avatar})"></var>
-            </c:forEach>
-            <c:if test="${orderMap.totalCount>6}">
-                <span>·····</span>
-            </c:if>
-        </div>
-    </div>
+    </c:if>
+
     <div class="bg_fff">
         <div class="menu">
             <span class="active"><a href="javascript:void(0)">投资回报</a></span>

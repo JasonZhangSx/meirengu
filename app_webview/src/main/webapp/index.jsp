@@ -20,6 +20,7 @@
     <li><a href="./html/investor_rule.html">投资人规则</a></li>
     <li><a href="./html/equity_investment_agreement.html">股权收益权投资协议</a></li>
     <li><a href="./html/partner_lp_agreement.html">合伙协议（LP专用）</a></li>
+    <li><a href="./html/user_guide.html">用户指南</a></li>
 </ul>
 </body>
 </html>
