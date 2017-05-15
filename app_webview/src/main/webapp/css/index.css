@@ -261,3 +261,5 @@ img{vertical-align: top}
   background: -o-linear-gradient(top left, #ffcfcc, #fbe0e0);
 }
 .pro_det .fixed a{width:2rem;height:.6rem;background-color: #fff;text-align: center;line-height: .6rem;color:#202020;font-size: .28rem;border-radius: .12rem;}
+
+.user_guide ul a{display: block;width:100%;height:.98rem;line-height: .98rem;border-bottom:1px #e4e4e4 solid;font-size: .28rem;color:#202020;box-sizing: border-box;padding-left:.3rem;}
