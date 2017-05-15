@@ -86,6 +86,7 @@ public class Consumer {
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
+                logger.info("CONSUME_SUCCESS");
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
