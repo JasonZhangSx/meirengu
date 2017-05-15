@@ -1,21 +1,19 @@
 package com.meirengu.uc.vo.response;
 
-import com.meirengu.uc.model.User;
-
 /**
  * Created by huoyan403 on 3/14/2017.
  */
 public class RegisterInfo {
 
-    public User user;
+    public UserVO userVO;
     public String token;
 
-    public User getUser() {
-        return user;
+    public UserVO getUserVO() {
+        return userVO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserVO(UserVO userVO) {
+        this.userVO = userVO;
     }
 
     public String getToken() {
