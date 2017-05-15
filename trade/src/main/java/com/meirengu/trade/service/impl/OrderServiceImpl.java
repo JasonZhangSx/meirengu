@@ -1106,27 +1106,27 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return list;
     }
 
-    /**
-     * 订单失效消息监听
-     * @return
-     */
-    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
-    public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
-        logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
-        String orderSn = event.getMsg();
-        //TODO 进行业务处理
-        orderLoseEfficacy(orderSn);
-    }
-
-    /**
-     * 订单失效前提醒消息监听
-     * @return
-     */
-    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderRemindForPay'")
-    public void listenOrderRemindForPay(RocketmqEvent event) throws Exception {
-        logger.info("listenOrderRemindForPay: {}", event.getMsg());
-        String orderSn = event.getMsg();
-        orderRemindForPay(orderSn);
-    }
+//    /**
+//     * 订单失效消息监听
+//     * @return
+//     */
+//    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
+//    public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
+//        logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
+//        String orderSn = event.getMsg();
+//        //TODO 进行业务处理
+//        orderLoseEfficacy(orderSn);
+//    }
+//
+//    /**
+//     * 订单失效前提醒消息监听
+//     * @return
+//     */
+//    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderRemindForPay'")
+//    public void listenOrderRemindForPay(RocketmqEvent event) throws Exception {
+//        logger.info("listenOrderRemindForPay: {}", event.getMsg());
+//        String orderSn = event.getMsg();
+//        orderRemindForPay(orderSn);
+//    }
 
 }

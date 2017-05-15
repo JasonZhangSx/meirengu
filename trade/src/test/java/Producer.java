@@ -13,11 +13,10 @@ public class Producer {
         producer.setNamesrvAddr("192.168.0.135:9876");
         try {
             producer.start();
-            Message msg = new Message("deploy",
+            Message msg = new Message("trade",
                     "orderLoseEfficacy",
                     "1",
-                    "8137037955835885".getBytes());
-            msg.setDelayTimeLevel(1);
+                    "84138239305654648".getBytes());
             SendResult result = producer.send(msg);
             System.out.println("id:" + result.getMsgId() +
                     " result:" + result.getSendStatus());
