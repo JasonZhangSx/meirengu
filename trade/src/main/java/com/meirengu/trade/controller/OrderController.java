@@ -618,6 +618,16 @@ public class OrderController extends BaseController{
      * 订单失效消息监听
      * @return
      */
+    @RequestMapping(value = "/order_loss_efficacy")
+    public void orderLoseEfficacy(@RequestParam(value = "order_sn", required = true) String orderSn) throws Exception {
+        logger.info("订单置失效");
+        orderService.orderLoseEfficacy(orderSn);
+    }
+
+    /**
+     * 订单失效消息监听
+     * @return
+     */
     @org.springframework.context.event.EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
     public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
         logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
