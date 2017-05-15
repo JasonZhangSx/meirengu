@@ -114,3 +114,95 @@ update `user` set `avatar` = "portrait/1.jpg" where  `avatar` = "portrait/149101
 update `user` set `avatar` = "portrait/2.jpg" where  `avatar` = "portrait/1491015569805.jpg";
 
 delete from `user` where `phone` in (15835132986,18516888365,18810716960);
+
+SELECT
+	*
+FROM
+	`user`
+WHERE
+	`user_id` = "165444096";
+
+INSERT INTO `user_center`.`user` (
+	`user_id`,
+	`nickname`,
+	`realname`,
+	`phone`,
+	`idcard`,
+	`password`,
+	`bank_code`,
+	`bank_idcard`,
+	`bank_phone`,
+	`avatar`,
+	`sex`,
+	`birthday`,
+	`email`,
+	`qq`,
+	`wx`,
+	`sina`,
+	`area_id`,
+	`register_from`,
+	`register_time`,
+	`login_time`,
+	`last_login_time`,
+	`login_ip`,
+	`last_login_ip`,
+	`login_from`,
+	`login_num`,
+	`wx_openid`,
+	`wx_info`,
+	`qq_openid`,
+	`qq_info`,
+	`sina_openid`,
+	`sina_info`,
+	`is_auth`,
+	`is_buy`,
+	`is_allow_inform`,
+	`is_allow_talk`,
+	`state`,
+	`invest_conditions`
+)
+VALUES
+	(
+		'165444096',
+		'MRG_1001',
+		'',
+		'13800001001',
+		'',
+		'1000:3e8f171f8bf2d4f9d60edca46cda1cae05e07e7d2fbc9105:14b9f594cf8b110dcb191ac4aba8222b',
+		'0',
+		'',
+		'',
+		'portrait/1.jpg',
+		'0',
+		'2017-05-09',
+		'',
+		'',
+		'',
+		'',
+		'0',
+		'1',
+		'2017-05-09 00:00:00',
+		'2017-05-10 00:00:00',
+		'2017-05-10 00:00:00',
+		'127.0.0.1',
+		'127.0.0.1',
+		'1',
+		'697',
+		'',
+		'',
+		'',
+		'',
+		'',
+		'',
+		'0',
+		'1',
+		'1',
+		'1',
+		'1',
+		'1'
+	);
+
+
+
+
+
