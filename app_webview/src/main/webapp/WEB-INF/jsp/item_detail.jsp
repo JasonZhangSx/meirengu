@@ -67,20 +67,52 @@
         </div>
         <div class="tab">
             <c:if test="${itemDetail.itemStatus == 10}">
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.appointAmount/10000}" maxFractionDigits="0"/>万元</b>已约金额</span>
+                <c:if test="${itemDetail.targetAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                </c:if>
+                <c:if test="${itemDetail.targetAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                </c:if>
+
+                <c:if test="${itemDetail.appointAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.appointAmount}" maxFractionDigits="0"/>元</b>已约金额</span>
+                </c:if>
+                <c:if test="${itemDetail.appointAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.appointAmount/10000}" maxFractionDigits="0"/>万元</b>已约金额</span>
+                </c:if>
+
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.appointPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
             <c:if test="${itemDetail.itemStatus == 11}">
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                <c:if test="${itemDetail.targetAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                </c:if>
+                <c:if test="${itemDetail.targetAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                </c:if>
+                <c:if test="${itemDetail.completedAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount}" maxFractionDigits="0"/>元</b>已筹金额</span>
+                </c:if>
+                <c:if test="${itemDetail.completedAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                </c:if>
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
             <c:if test="${itemDetail.itemStatus == 12}">
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                <c:if test="${itemDetail.targetAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                </c:if>
+                <c:if test="${itemDetail.targetAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                </c:if>
+                <c:if test="${itemDetail.completedAmount < 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount}" maxFractionDigits="0"/>元</b>已筹金额</span>
+                </c:if>
+                <c:if test="${itemDetail.completedAmount >= 10000}">
+                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                </c:if>
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>

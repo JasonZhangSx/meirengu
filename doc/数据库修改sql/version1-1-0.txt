@@ -1,0 +1,61 @@
+******************trade begin*************************
+
+意见反馈表
+ALTER TABLE `feedback` CHANGE `create_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交反馈时间';
+
+订单表
+ALTER TABLE `order` ADD `partner_id` int(10) unsigned DEFAULT 0 NOT NULL COMMENT '合作方id' AFTER `item_num`;
+
+******************trade end***************************
+
+******************trade begin*************************
+
+订单表
+ALTER TABLE `order` ADD `share_hold_rate` decimal(10,4) NOT NULL DEFAULT '0.0000' COMMENT '持股比例' AFTER `item_num`;
+
+******************trade end***************************
+
+******************trade begin*************************
+
+抵扣券表
+ALTER TABLE `rebate_batch` ADD `rebate_use_range` smallint(5) unsigned NOT NULL COMMENT '抵扣券使用限制：1固定项目，2某类项目，3所有项目' AFTER `rebate_type`;
+ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_type`  smallint(5) unsigned NOT NULL COMMENT '1无条件使用(订单免M元),2有条件使用(满N元减M元)';
+ALTER TABLE `rebate_batch` ADD `rebate_limit_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '抵扣券限额' AFTER `rebate_type`;
+ALTER TABLE `rebate_batch` ADD `rebate_use_range_value` int(11) unsigned COMMENT '抵扣券使用限制值' AFTER `rebate_use_range`;
+ALTER TABLE `rebate_batch` MODIFY COLUMN `rebate_limit`  int(11) unsigned NOT NULL COMMENT '抵扣券限领次数:1每天一次,2永久一次,3不限次数';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_start_time` datetime COMMENT '有效期开始时间';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_end_time` datetime COMMENT '有效期截止时间';
+ALTER TABLE `rebate_batch` MODIFY COLUMN `valid_days` int(4) COMMENT '抵扣券有效天数';
+ALTER TABLE `rebate_used` ADD `verify_status` tinyint(1) NOT NULL COMMENT '核销状态：1已核销，0未核销' AFTER `used_time`;
+ALTER TABLE `rebate_used` ADD `verify_time` datetime  COMMENT '核销时间' AFTER `verify_status`;
+
+UPDATE rebate_batch SET rebate_limit_amount = rebate_limit;
+UPDATE rebate_batch SET rebate_limit = 2;
+
+
+******************trade end***************************
+
+******************uc begin*************************
+ALTER TABLE
+`user_center`.`user`
+	CHANGE `register_time` `register_time` DATETIME DEFAULT '1970-01-01 08:00:00' NOT NULL COMMENT '注册时间',
+	CHANGE `login_time` `login_time` DATETIME DEFAULT '1970-01-01 08:00:00' NOT NULL COMMENT '登录时间',
+	CHANGE `last_login_time` `last_login_time` DATETIME DEFAULT '1970-01-01 08:00:00' NOT NULL COMMENT '上次登录时间';
+
+ALTER TABLE `user` ADD `sina` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '新浪昵称';
+ALTER TABLE `user_contract` ADD `order_id` int(11) NOT NULL DEFAULT '0' COMMENT '订单id';
+
+update `user` set `avatar` = "portrait/1.jpg" where  `avatar` = "portrait/1491015127467.jpg";
+update `user` set `avatar` = "portrait/2.jpg" where  `avatar` = "portrait/1491015569805.jpg";
+
+delete from `user` where `phone` in (15835132986,18516888365,18810716960);
+
+******************uc end***************************
+
+/******** crowd_funding *****/
+ALTER TABLE `item` ADD `lead_investor_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '领投金额';
+ALTER TABLE `item` ADD `lead_investor_name` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '领投人姓名';
+ALTER TABLE `item` ADD `lead_investor_header` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '领投人头像';
+
+ALTER TABLE `item_level` ADD `share_hold_rate` decimal(10,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '持股比例';
+ALTER TABLE `item_level` ADD `year_rate_max` double(11,0) NOT NULL DEFAULT '0' COMMENT '年化利率(如果为区间，则为最小)';

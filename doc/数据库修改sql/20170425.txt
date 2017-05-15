@@ -1,9 +1,0 @@
-******************trade begin*************************
-
-意见反馈表
-ALTER TABLE `feedback` CHANGE `create_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交反馈时间';
-
-订单表
-ALTER TABLE `order` ADD `partner_id` int(10) unsigned DEFAULT 0 NOT NULL COMMENT '合作方id' AFTER `item_num`;
-
-******************trade end***************************
