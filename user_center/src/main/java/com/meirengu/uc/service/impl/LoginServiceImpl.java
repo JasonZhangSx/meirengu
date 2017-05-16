@@ -2,12 +2,11 @@ package com.meirengu.uc.service.impl;
 
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.TokenProccessor;
-import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.TokenUtils;
 import com.meirengu.uc.vo.request.TokenVO;
-import com.meirengu.uc.vo.response.UserVO;
+import com.meirengu.uc.vo.response.User;
 import com.meirengu.uc.vo.response.RegisterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +41,8 @@ public class LoginServiceImpl implements LoginService {
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setToken(newToken);
 
-        User user = (User) userRedis;
-        UserVO userVO = new UserVO();
+        com.meirengu.uc.model.User user = (com.meirengu.uc.model.User) userRedis;
+        User userVO = new User();
         userVO.setUserId(user.getUserId());
         userVO.setNickname(user.getNickname());
         userVO.setAvatar(user.getAvatar());
@@ -54,7 +53,7 @@ public class LoginServiceImpl implements LoginService {
         userVO.setSina(user.getSina());
         userVO.setAreaId(user.getAreaId());
         userVO.setIsAuth(user.getIsAuth());
-        registerInfo.setUserVO(userVO);
+        registerInfo.setUser(userVO);
         return registerInfo;
     }
 
@@ -67,7 +66,7 @@ public class LoginServiceImpl implements LoginService {
     @Async
     private synchronized void setNewToken(String newToken,String token, Object userRedis, Integer tokenTime) {
 
-        User user = (User)userRedis;
+        com.meirengu.uc.model.User user = (com.meirengu.uc.model.User)userRedis;
         String key = TokenUtils.getTokenKey(user.getPhone());
 
         TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
@@ -78,7 +77,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public RegisterInfo setUserToRedis(User user,String deviceId) {
+    public RegisterInfo setUserToRedis(com.meirengu.uc.model.User user, String deviceId) {
 
         String key = TokenUtils.getTokenKey(user.getPhone());
         String token = TokenProccessor.getInstance().makeToken();
@@ -86,7 +85,7 @@ public class LoginServiceImpl implements LoginService {
 
         RegisterInfo registerInfo = new RegisterInfo();
 
-        UserVO userVO = new UserVO();
+        User userVO = new User();
         userVO.setUserId(user.getUserId());
         userVO.setNickname(user.getNickname());
         userVO.setAvatar(user.getAvatar());
@@ -99,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
         userVO.setIsAuth(user.getIsAuth());
 
 
-        registerInfo.setUserVO(userVO);
+        registerInfo.setUser(userVO);
 
         TokenVO tokenInfo = new TokenVO();
         tokenInfo.setToken(token);
@@ -113,7 +112,7 @@ public class LoginServiceImpl implements LoginService {
         return registerInfo;
     }
     @Async
-    private synchronized void  setToken(String key, TokenVO tokenInfo, String token, User usr,Integer tokenTime){
+    private synchronized void  setToken(String key, TokenVO tokenInfo, String token, com.meirengu.uc.model.User usr, Integer tokenTime){
 
         TokenVO tokenVO = (TokenVO) redisClient.getObject(key);
         if(tokenVO != null) {

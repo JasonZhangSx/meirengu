@@ -1,9 +1,10 @@
 package com.meirengu.uc.vo.response;
 
 /**
+ * 登陆返回实e体信息类
  * Created by huoyan403 on 5/15/2017.
  */
-public class UserVO {
+public class User {
     /**
      * 会员id
      **/
