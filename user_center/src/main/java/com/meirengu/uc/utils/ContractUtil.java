@@ -33,13 +33,13 @@ public class ContractUtil {
     public static String returnContractName(String contractNo){
         String result = contractNo.substring(4,8);
         if(result.equals(Constants.SYZR)){
-            return Constants.SYZR_FULLNAME;
+            return ConfigUtil.getConfig("SYZR_FULLNAME");
         }
         if(result.equals(Constants.HHXY)){
-            return Constants.HHXY_FULLNAME;
+            return ConfigUtil.getConfig("HHXY_FULLNAME");
         }
         if(result.equals(Constants.GQZR)){
-            return Constants.GQZR_FULLNAME;
+            return ConfigUtil.getConfig("GQZR_FULLNAME");
         }
         return null;
     }

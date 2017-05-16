@@ -214,7 +214,7 @@ public class ContactServiceImpl implements ContactService {
                     map.put("contractFolderName",contractFolderName);//上传路径
                     map.put("fileName","contract_"+map.get("itemId")+"_"+map.get("levelId")+"_"+map.get("userId")+"_"+new Random().nextInt(1000)+".pdf");//上传文件名
                     map.put("projectCompany",data.get("projectCompany"));
-                    map.put("title",Constants.SYZR_FULLNAME); //保全标题
+                    map.put("title",ConfigUtil.getConfig("SYZR_FULLNAME")); //保全标题
                     map.put("contractNo", ContractUtil.getIncomeContractNo());//合同编号 后台记录使用
                     map.put("remarks","备注信息");//备注信息
 
