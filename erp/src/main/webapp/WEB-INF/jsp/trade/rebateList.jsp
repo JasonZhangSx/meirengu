@@ -45,8 +45,7 @@
             </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="rebateBatchInsert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
-                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加抵扣券批次</a></span>
+
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
