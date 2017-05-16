@@ -1,5 +1,7 @@
 package com.meirengu.uc.vo.response;
 
+import com.meirengu.uc.model.User;
+
 /**
  * Created by huoyan403 on 3/14/2017.
  */

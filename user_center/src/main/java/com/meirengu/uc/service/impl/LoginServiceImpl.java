@@ -2,11 +2,11 @@ package com.meirengu.uc.service.impl;
 
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.TokenProccessor;
+import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.TokenUtils;
 import com.meirengu.uc.vo.request.TokenVO;
-import com.meirengu.uc.vo.response.User;
 import com.meirengu.uc.vo.response.RegisterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,20 +40,21 @@ public class LoginServiceImpl implements LoginService {
 
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setToken(newToken);
-
-        com.meirengu.uc.model.User user = (com.meirengu.uc.model.User) userRedis;
-        User userVO = new User();
-        userVO.setUserId(user.getUserId());
-        userVO.setNickname(user.getNickname());
-        userVO.setAvatar(user.getAvatar());
-        userVO.setPhone(user.getPhone());
-        userVO.setSex(user.getSex());
-        userVO.setQq(user.getQq());
-        userVO.setWx(user.getWx());
-        userVO.setSina(user.getSina());
-        userVO.setAreaId(user.getAreaId());
-        userVO.setIsAuth(user.getIsAuth());
-        registerInfo.setUser(userVO);
+        registerInfo.setUser((User) userRedis);
+        registerInfo.getUser().setPassword("");
+//        com.meirengu.uc.model.User user = (com.meirengu.uc.model.User) userRedis;
+//        User userVO = new User();
+//        userVO.setUserId(user.getUserId());
+//        userVO.setNickname(user.getNickname());
+//        userVO.setAvatar(user.getAvatar());
+//        userVO.setPhone(user.getPhone());
+//        userVO.setSex(user.getSex());
+//        userVO.setQq(user.getQq());
+//        userVO.setWx(user.getWx());
+//        userVO.setSina(user.getSina());
+//        userVO.setAreaId(user.getAreaId());
+//        userVO.setIsAuth(user.getIsAuth());
+//        registerInfo.setUser(userVO);
         return registerInfo;
     }
 
@@ -84,21 +85,20 @@ public class LoginServiceImpl implements LoginService {
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
 
         RegisterInfo registerInfo = new RegisterInfo();
+        registerInfo.setUser(user);
 
-        User userVO = new User();
-        userVO.setUserId(user.getUserId());
-        userVO.setNickname(user.getNickname());
-        userVO.setAvatar(user.getAvatar());
-        userVO.setPhone(user.getPhone());
-        userVO.setSex(user.getSex());
-        userVO.setQq(user.getQq());
-        userVO.setWx(user.getWx());
-        userVO.setSina(user.getSina());
-        userVO.setAreaId(user.getAreaId());
-        userVO.setIsAuth(user.getIsAuth());
-
-
-        registerInfo.setUser(userVO);
+//        User userVO = new User();
+//        userVO.setUserId(user.getUserId());
+//        userVO.setNickname(user.getNickname());
+//        userVO.setAvatar(user.getAvatar());
+//        userVO.setPhone(user.getPhone());
+//        userVO.setSex(user.getSex());
+//        userVO.setQq(user.getQq());
+//        userVO.setWx(user.getWx());
+//        userVO.setSina(user.getSina());
+//        userVO.setAreaId(user.getAreaId());
+//        userVO.setIsAuth(user.getIsAuth());
+//        registerInfo.setUser(userVO);
 
         TokenVO tokenInfo = new TokenVO();
         tokenInfo.setToken(token);
@@ -109,6 +109,7 @@ public class LoginServiceImpl implements LoginService {
         this.setToken(key,tokenInfo,token,user,tokenTime);
 
         registerInfo.setToken(token);
+        registerInfo.getUser().setPassword("");
         return registerInfo;
     }
     @Async
