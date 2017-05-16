@@ -37,7 +37,7 @@ public class Constants {
 
     public static final String HHXY_FULLNAME = "《合伙协议》";//合伙协议
 
-    public static final String GQZR_FULLNAME = "《股权投资协议》";//股权转让
+    public static final String GQZR_FULLNAME = "《股权收益权投资协议》";//股权转让
 
 
 
