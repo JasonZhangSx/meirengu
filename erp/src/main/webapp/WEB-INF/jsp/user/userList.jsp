@@ -138,7 +138,15 @@
             },
             "columns": [
                 { "data": "id" },
-                { "data": "phone" },
+//                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                    '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看详情">' +
+                                    '<i class="Hui-iconfont">'+row.phone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.isAuth=='0'){
@@ -182,9 +190,37 @@
                         return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
                     }
                 },
-                { "data": null,
+               /* { "data": null,
                     render: function(data, type, row, meta) {
-                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+                        return '<td>' +
+//                                    '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看">' +
+//                                    '<i class="Hui-iconfont">&#xe725;</i></a>' +
+                                '冻结/解绑银行卡<br/>' +
+                                '冻结/解绑账户' +
+                                '</td>';
+                    }
+                },*/
+                { "data": null,
+                    "className":"f-14 td-manage",
+                    render: function(data, type, row, meta) {
+                        return '<td class="f-14 td-manage">'
+                        if(row.state=='0') {
+//                            return '<td class="f-14 td-manage">' +
+                            '<a style="text-decoration:none" id="' + row.faqId + '" onclick="project_start(this,' + row.faqId + ')" href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe605;</i>冻结银行卡</a><br/>'
+                        }
+                        if(row.state=='0'){
+
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" onclick="project_start(this,'+row.faqId+')" href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
+//                                    '</td>'
+                        }
+                        if(row.state=='1'){
+//                            return ' <td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" onClick="project_stop(this,'+row.faqId+')" href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" onClick="project_stop(this,'+row.faqId+')" href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
+                                    '</td>';
+                        }else{
+                            return ' <td class="f-14 td-manage"></td>';
+                        }
                     }
                 }
             ]

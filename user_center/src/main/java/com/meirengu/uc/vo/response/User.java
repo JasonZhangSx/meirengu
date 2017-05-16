@@ -1,7 +1,7 @@
 package com.meirengu.uc.vo.response;
 
 /**
- * 登陆返回实e体信息类
+ * 登陆返回实体信息类
  * Created by huoyan403 on 5/15/2017.
  */
 public class User {
