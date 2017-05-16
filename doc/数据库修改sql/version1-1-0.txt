@@ -59,3 +59,10 @@ ALTER TABLE `item` ADD `lead_investor_header` VARCHAR(50) NOT NULL DEFAULT '' CO
 
 ALTER TABLE `item_level` ADD `share_hold_rate` decimal(10,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '持股比例';
 ALTER TABLE `item_level` ADD `year_rate_max` double(11,0) NOT NULL DEFAULT '0' COMMENT '年化利率(如果为区间，则为最小)';
+
+
+/*************2017/05/15******************/
+alter table partner modify bank_name varchar(200) not null DEFAULT '' COMMENT '账号名';
+alter table partner modify bank_account varchar(200) not null DEFAULT '' COMMENT '账号名';
+alter table partner modify contacts_fax varchar(20) DEFAULT '' NOT NULL COMMENT '联系人 传真';
+alter table partner modify id_number varchar(100) DEFAULT '' NOT NULL COMMENT '证件号';
