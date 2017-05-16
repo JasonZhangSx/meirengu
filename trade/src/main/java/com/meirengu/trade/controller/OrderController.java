@@ -415,8 +415,6 @@ public class OrderController extends BaseController{
             logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
-
     }
     /**
      * 取消预约订单
@@ -593,6 +591,38 @@ public class OrderController extends BaseController{
         }
     }
 
+
+    @RequestMapping(value = "/getOrderInfoList", method = RequestMethod.GET)
+    public Result getSystemPage(@RequestParam(value = "order_sn", required = false) String orderSn,
+                                @RequestParam(value = "user_phone", required = false) String userPhone,
+                                @RequestParam(value = "item_id", required = false) Integer itemId,
+                                @RequestParam(value = "order_state", required = false) Integer orderState,
+                                @RequestParam(value = "item_level_id", required = false) Integer itemLevelId){
+        Map<String, Object> map = new HashMap<>();
+        if (StringUtils.isNotBlank(orderSn)) {
+            map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            map.put("userPhone", userPhone);
+        }
+        if (NumberUtil.isNullOrZero(itemId)) {
+            map.put("itemId", itemId);
+        }
+        if (!NumberUtil.isNullOrZero(orderState)) {
+            map.put("orderState", orderState);
+        }
+        if (!NumberUtil.isNullOrZero(itemLevelId)) {
+            map.put("itemLevelId", itemLevelId);
+        }
+        try{
+            List<Map<String, Object>> list = orderService.getList(map);
+            return setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
     /**
      * 通过档位ID查询该档位下的投资金额
      * @param levelIds
@@ -611,11 +641,10 @@ public class OrderController extends BaseController{
             e.printStackTrace();
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
     }
 
     /**
-     * 订单失效消息监听
+     * 手动订单失效消息
      * @return
      */
     @RequestMapping(value = "/order_loss_efficacy")
