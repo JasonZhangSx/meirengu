@@ -182,7 +182,22 @@ public class LoginController extends BaseController {
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
-
+            //第三方注册校验
+            if (!StringUtils.isEmpty(registerVO.getWx_openid()) || !StringUtils.isEmpty(registerVO.getQq_openid()) || !StringUtils.isEmpty(registerVO.getSina_openid()) ) {
+                User user = new User();
+                if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+                    user = userService.retrieveByOpenId(registerVO.getWx_openid());
+                }
+                if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+                    user = userService.retrieveByOpenId(registerVO.getQq_openid());
+                }
+                if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+                    user = userService.retrieveByOpenId(registerVO.getSina_openid());
+                }
+                if(user !=null){
+                    return super.setResult(StatusCode.THE_THIRD_PARTY_IS_BOUND, null, StatusCode.codeMsgMap.get(StatusCode.THE_THIRD_PARTY_IS_BOUND));
+                }
+            }
             //邀请注册校验
             if(!StringUtils.isEmpty(registerVO.getMobile_inviter())){
                 //邀请注册参数校验

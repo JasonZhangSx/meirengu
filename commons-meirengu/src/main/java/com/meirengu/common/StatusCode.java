@@ -53,6 +53,7 @@ public class StatusCode {
     public static final int MSG_TEMPLATE_INVALID = 40106;
     public static final int UPLOAD_SIZE_ERROR = 40107;
     public static final int USER_IS_LOCKED = 40108;
+    public static final int THE_THIRD_PARTY_IS_BOUND = 40109;
 
     //40200-40300//news_cms
 
@@ -364,6 +365,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
         codeMsgMap.put(StatusCode.UPLOAD_SIZE_ERROR, "上传文件大小超过限制！");
         codeMsgMap.put(StatusCode.USER_IS_LOCKED, "您多次密码输入错误，账户已被锁定，请3小时候重试！");
+        codeMsgMap.put(StatusCode.THE_THIRD_PARTY_IS_BOUND, "该第三方已绑定！");
 
 
         //40200-40300//news_cms
