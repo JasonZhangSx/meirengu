@@ -19,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 项目回报档位控制层
@@ -126,18 +123,42 @@ public class ItemLevelController extends BaseController{
                 map.put("partnerId", item.getPartnerId());
                 map.put("itemName", item.getItemName());
                 map.put("typeId", item.getTypeId());
+                String agreementNames = "";
+                String agreementUrls = "";
                 //根据不同的行业分类获取不同的协议地址
                 if(item.getTypeId() == Constants.TYPE_PRODUCT){
                     map.put("agreement1", ConfigUtil.getConfig("type.product.agreement1"));
                     map.put("agreement2", ConfigUtil.getConfig("type.product.agreement2"));
+                    agreementNames = ConfigUtil.getConfig("type.product.agreement.name");
+                    agreementUrls = ConfigUtil.getConfig("type.product.agreement.url");
                 }else if(item.getTypeId() == Constants.TYPE_PROFIT){
-                    map.put("agreement1", ConfigUtil.getConfig("type.profit.agreement1"));
-                    map.put("agreement2", ConfigUtil.getConfig("type.profit.agreement2"));
+                    map.put("agreement1", ConfigUtil.getConfig("type.profile.agreement1"));
+                    map.put("agreement2", ConfigUtil.getConfig("type.profile.agreement2"));
+                    agreementNames = ConfigUtil.getConfig("type.profile.agreement.name");
+                    agreementUrls = ConfigUtil.getConfig("type.profile.agreement.url");
                 }else if(item.getTypeId() == Constants.TYPE_SHARES){
                     map.put("agreement1", ConfigUtil.getConfig("type.shares.agreement1"));
                     map.put("agreement2", ConfigUtil.getConfig("type.shares.agreement2"));
+                    agreementNames = ConfigUtil.getConfig("type.shares.agreement.name");
+                    agreementUrls = ConfigUtil.getConfig("type.shares.agreement.url");
                 }
+
+                List<Map<String, Object>> agreementList = new ArrayList<>();
+                if(!StringUtil.isEmpty(agreementNames) && !StringUtil.isEmpty(agreementUrls)){
+                    String[] agreementName = agreementNames.split(",");
+                    String[] agreementUrl = agreementUrls.split(",");
+                    for (int i = 0 ; i < agreementName.length; i++){
+                        Map<String, Object> agreementMap = new HashMap<>();
+                        agreementMap.put("agreementName",agreementName[i]);
+                        agreementMap.put("agreementUrl", agreementUrl[i]);
+                        agreementList.add(agreementMap);
+                    }
+                }
+
+                map.put("agreements", agreementList);
             }
+
+
 
             return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
