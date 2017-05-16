@@ -5,6 +5,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
@@ -18,11 +19,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.EventListener;
 
 /**
  * 订单控制类
@@ -609,6 +612,39 @@ public class OrderController extends BaseController{
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
 
+    }
+
+    /**
+     * 订单失效消息监听
+     * @return
+     */
+    @RequestMapping(value = "/order_loss_efficacy")
+    public void orderLoseEfficacy(@RequestParam(value = "order_sn", required = true) String orderSn) throws Exception {
+        logger.info("订单置失效");
+        orderService.orderLoseEfficacy(orderSn);
+    }
+
+    /**
+     * 订单失效消息监听
+     * @return
+     */
+    @org.springframework.context.event.EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
+    public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
+        logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
+        String orderSn = event.getMsg();
+        //TODO 进行业务处理
+        orderService.orderLoseEfficacy(orderSn);
+    }
+
+    /**
+     * 订单失效前提醒消息监听
+     * @return
+     */
+    @org.springframework.context.event.EventListener(condition = "#event.topic=='trade' && #event.tag=='orderRemindForPay'")
+    public void listenOrderRemindForPay(RocketmqEvent event) throws Exception {
+        logger.info("listenOrderRemindForPay: {}", event.getMsg());
+        String orderSn = event.getMsg();
+        orderService.orderRemindForPay(orderSn);
     }
 
 
