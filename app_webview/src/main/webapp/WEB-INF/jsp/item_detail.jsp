@@ -68,17 +68,17 @@
         <div class="tab">
             <c:if test="${itemDetail.itemStatus == 10}">
                 <c:if test="${itemDetail.targetAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount}" pattern="#,#00.00"/>元</b>目标金额</span>
                 </c:if>
                 <c:if test="${itemDetail.targetAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount/10000}" pattern="#,#00.00"/>万</b>目标金额</span>
                 </c:if>
 
                 <c:if test="${itemDetail.appointAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.appointAmount}" maxFractionDigits="0"/>元</b>已约金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.appointAmount}" pattern="#,#00.00"/>元</b>已约金额</span>
                 </c:if>
                 <c:if test="${itemDetail.appointAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.appointAmount/10000}" maxFractionDigits="0"/>万元</b>已约金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.appointAmount/10000}" pattern="#,#00.00"/>万</b>已约金额</span>
                 </c:if>
 
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.appointPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
@@ -86,32 +86,32 @@
             </c:if>
             <c:if test="${itemDetail.itemStatus == 11}">
                 <c:if test="${itemDetail.targetAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount}" maxFractionDigits="0" pattern="#,#00.00"/>元</b>目标金额</span>
                 </c:if>
                 <c:if test="${itemDetail.targetAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount/10000}" pattern="#,#00.00"/>万</b>目标金额</span>
                 </c:if>
                 <c:if test="${itemDetail.completedAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount}" maxFractionDigits="0"/>元</b>已筹金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.completedAmount}" pattern="#,#00.00"/>元</b>已筹金额</span>
                 </c:if>
                 <c:if test="${itemDetail.completedAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.completedAmount/10000}" pattern="#,#00.00"/>万</b>已筹金额</span>
                 </c:if>
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
             <c:if test="${itemDetail.itemStatus == 12}">
                 <c:if test="${itemDetail.targetAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount}" maxFractionDigits="0"/>元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount}" pattern="#,#00.00"/>元</b>目标金额</span>
                 </c:if>
                 <c:if test="${itemDetail.targetAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.targetAmount/10000}" maxFractionDigits="0"/>万元</b>目标金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.targetAmount/10000}" pattern="#,#00.00"/>万</b>目标金额</span>
                 </c:if>
                 <c:if test="${itemDetail.completedAmount < 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount}" maxFractionDigits="0"/>元</b>已筹金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.completedAmount}" pattern="#,#00.00"/>元</b>已筹金额</span>
                 </c:if>
                 <c:if test="${itemDetail.completedAmount >= 10000}">
-                    <span><b><fmt:formatNumber type="number" value="${itemDetail.completedAmount/10000}" maxFractionDigits="0"/>万元</b>已筹金额</span>
+                    <span><b><fmt:formatNumber value="${itemDetail.completedAmount/10000}" pattern="#,#00.00"/>万</b>已筹金额</span>
                 </c:if>
                 <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
@@ -129,9 +129,9 @@
             <div class="leader">
                 <span>领投人</span>
                 <div class="">
-                    <em><var style="background-image:url(<%=imgURI%>${itemDetail.leadInvestorHeader})"></var> ${itemDetail.leadInvestorName}</em>
+                    <em><var style="background-image:url(<%=imgURI%>${itemDetail.leadInvestorHeader});background-size: contain"></var> ${itemDetail.leadInvestorName}</em>
                     <em class="">
-                        &yen; <fmt:formatNumber type="number" value="${itemDetail.leadInvestorAmount}" maxFractionDigits="0"/>万
+                        <fmt:formatNumber value="${itemDetail.leadInvestorAmount}" pattern="#,#00.00"/>万
                     </em>
                 </div>
             </div>
@@ -182,15 +182,35 @@
                     <div class="top">
                         <span>${level.levelName}</span><em>¥ <fmt:formatNumber type="number" value="${level.levelAmount}" maxFractionDigits="0"/>/份</em>
                     </div>
-                    <p>
+                    <p style="white-space: pre-line;">
                         ${level.levelDesc}
                     </p>
                     <div class="bot">
-                        <c:if test="${itemDetail.itemStatus == 10}"><h5>已预约${level.bookNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份）<small>项目结束${itemDetail.leavelDay}天后发送</small> </h5></c:if>
-                        <c:if test="${itemDetail.itemStatus == 11}"><h5>已认筹${level.completedNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份）<small>项目结束${itemDetail.leavelDay}天后发送</small> </h5></c:if>
-                        <c:if test="${itemDetail.itemStatus == 12}"><h5>已认筹${level.completedNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份）<small>项目结束${itemDetail.leavelDay}天后发送</small> </h5></c:if>
-
-                        <a href="javascript:openApp()">我要支持</a>
+                        <c:if test="${itemDetail.itemStatus == 10}"><h5>已预约${level.bookNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份） </h5></c:if>
+                        <c:if test="${itemDetail.itemStatus == 11}"><h5>已认筹${level.completedNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份） </h5></c:if>
+                        <c:if test="${itemDetail.itemStatus == 12}"><h5>已认筹${level.completedNumber}/${level.totalNumber}份（每人限购${level.singleLimitNumber}份） </h5></c:if>
+                        <c:if test="${itemDetail.itemStatus == 12}">
+                            <a href="javascript:openApp()">已完成</a>
+                        </c:if>
+                        <c:if test="${itemDetail.itemStatus == 11}">
+                            <c:if test="${level.levelStatus == 4}">
+                                <a href="javascript:openApp()">立即支持</a>
+                            </c:if>
+                            <c:if test="${level.levelStatus == 5}">
+                                <a href="javascript:openApp()">已完成</a>
+                            </c:if>
+                        </c:if>
+                        <c:if test="${itemDetail.itemStatus == 10}">
+                            <c:if test="${level.levelStatus == 1}">
+                                <a href="javascript:openApp()">立即预约</a>
+                            </c:if>
+                            <c:if test="${level.levelStatus == 2}">
+                                <a href="javascript:openApp()">候补预约</a>
+                            </c:if>
+                            <c:if test="${level.levelStatus == 3}">
+                                <a href="javascript:openApp()">候补预约</a>
+                            </c:if>
+                        </c:if>
                     </div>
                 </div>
             </c:forEach>

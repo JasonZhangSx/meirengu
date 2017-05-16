@@ -1,6 +1,9 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
+<%@ page language="java" contentType="text/html;charset=UTF-8" import="com.meirengu.webview.utils.ConfigUtil" pageEncoding="utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String imgURI = ConfigUtil.getConfig("URI_IMG_PREFIX");
+%>
 <!doctype html>
 <html>
 <head>
@@ -13,6 +16,17 @@
 <body style='background-color:#f2f2f2'>
 	<script type="text/javascript">
 	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
+    var flag = "";
+    var mobile = "";
+    function showInfoFromAppWithFlag(msg){
+        console.log("来自App的消息: "+flag);
+        flag = msg;
+    }
+
+    function showInfoFromAppWithMsg(msg){
+        console.log("来自App的消息: "+msg);
+        mobile = msg;
+    }
 	</script>
 
 	<div class="findHotAct_cont">
@@ -22,8 +36,8 @@
           <div class="item">
             <div class="top">
               <a href="${activity.activityLink}">
-                <img src="http://img.meirenguvip.com/${activity.activityImage}" width="100%" alt="" />
-                <span class="tit">热销中</span>
+                <img src="<%=imgURI %>${activity.activityImage}" width="100%" alt="" />
+                <span class="tit">进行中</span>
               </a>
             </div>
             <div class="txt">
