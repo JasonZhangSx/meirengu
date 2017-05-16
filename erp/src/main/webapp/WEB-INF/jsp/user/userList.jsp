@@ -203,20 +203,19 @@
                 { "data": null,
                     "className":"f-14 td-manage",
                     render: function(data, type, row, meta) {
-                        return '<td class="f-14 td-manage">'
+//                        return '<td class="f-14 td-manage">'
                         if(row.state=='0') {
-//                            return '<td class="f-14 td-manage">' +
-                            '<a style="text-decoration:none" id="' + row.faqId + '" onclick="project_start(this,' + row.faqId + ')" href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe605;</i>冻结银行卡</a><br/>'
-                        }
-                        if(row.state=='0'){
-
-                                    '<a style="text-decoration:none" id="'+row.faqId+'" onclick="project_start(this,'+row.faqId+')" href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
-//                                    '</td>'
+                            return '<td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="' + row.faqId + '" /*onclick="project_start(this,' + row.faqId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+                                    '<a style="text-decoration:none" id="'+row.faqId+'"/* onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" /*onclick="project_start(this,'+row.faqId+')"*/ href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
+                                  '</td>'
                         }
                         if(row.state=='1'){
-//                            return ' <td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" id="'+row.faqId+'" onClick="project_stop(this,'+row.faqId+')" href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
-                                    '<a style="text-decoration:none" id="'+row.faqId+'" onClick="project_stop(this,'+row.faqId+')" href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
+                            return ' <td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="' + row.faqId + '" /*onclick="project_start(this,' + row.faqId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+                                    '<a style="text-decoration:none" id="'+row.faqId+'"/* onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.faqId+'" /*onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
                                     '</td>';
                         }else{
                             return ' <td class="f-14 td-manage"></td>';
