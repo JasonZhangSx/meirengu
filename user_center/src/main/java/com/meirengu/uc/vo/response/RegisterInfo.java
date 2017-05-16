@@ -5,15 +5,15 @@ package com.meirengu.uc.vo.response;
  */
 public class RegisterInfo {
 
-    public UserVO userVO;
+    public User user;
     public String token;
 
-    public UserVO getUserVO() {
-        return userVO;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserVO(UserVO userVO) {
-        this.userVO = userVO;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getToken() {
