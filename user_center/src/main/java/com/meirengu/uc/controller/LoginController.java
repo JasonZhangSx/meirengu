@@ -182,7 +182,6 @@ public class LoginController extends BaseController {
             if (StringUtils.isEmpty(registerVO.getMobile()) || !ValidatorUtil.isMobile(registerVO.getMobile())) {
                 return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
             }
-
             //邀请注册校验
             if(!StringUtils.isEmpty(registerVO.getMobile_inviter())){
                 //邀请注册参数校验

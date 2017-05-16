@@ -124,17 +124,17 @@ public class ContractController extends BaseController{
 
                 }else if(type == 2){
                     Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName",Constants.SYZR_FULLNAME);
+                    urlMap.put("contractName",ConfigUtil.getConfig("SYZR_FULLNAME"));
                     urlMap.put("generate", Constants.ZERO_STRING);
                     urlMap.put("url", ConfigUtil.getConfig("USUFRUCT_TRANSFER"));
                     viewUrl.add(urlMap);
                 }else if(type == 3){
                     Map<String,String> urlMap = new HashMap<String,String>();
-                    urlMap.put("contractName",Constants.HHXY_FULLNAME);
+                    urlMap.put("contractName",ConfigUtil.getConfig("HHXY_FULLNAME"));
                     urlMap.put("generate",Constants.ZERO_STRING);
                     urlMap.put("url",ConfigUtil.getConfig("PARTNERSHIP_AGREEMENT"));
                     Map<String,String> urlMap1 = new HashMap<String,String>();
-                    urlMap1.put("contractName",Constants.GQZR_FULLNAME);
+                    urlMap1.put("contractName",ConfigUtil.getConfig("GQZR_FULLNAME"));
                     urlMap1.put("generate",Constants.ZERO_STRING);
                     urlMap1.put("url",ConfigUtil.getConfig("EQUITY_INVESTMENT"));
                     viewUrl.add(urlMap);

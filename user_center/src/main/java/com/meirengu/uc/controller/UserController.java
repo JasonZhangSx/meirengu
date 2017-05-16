@@ -552,6 +552,22 @@ public class UserController extends BaseController{
         if(StringUtil.isEmpty(registerVO.getToken()) || !redisClient.existsObject(registerVO.getToken())){
             return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
+        //第三方绑定校验
+        if (!StringUtils.isEmpty(registerVO.getWx_openid()) || !StringUtils.isEmpty(registerVO.getQq_openid()) || !StringUtils.isEmpty(registerVO.getSina_openid()) ) {
+            User user = new User();
+            if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+                user = userService.retrieveByOpenId(registerVO.getWx_openid());
+            }
+            if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+                user = userService.retrieveByOpenId(registerVO.getQq_openid());
+            }
+            if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+                user = userService.retrieveByOpenId(registerVO.getSina_openid());
+            }
+            if(user !=null){
+                return super.setResult(StatusCode.THE_THIRD_PARTY_IS_BOUND, null, StatusCode.codeMsgMap.get(StatusCode.THE_THIRD_PARTY_IS_BOUND));
+            }
+        }
         int result = userService.bundThirdParty(registerVO);
         if (result == 1){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
