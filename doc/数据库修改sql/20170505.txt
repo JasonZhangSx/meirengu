@@ -1,8 +1,0 @@
-******************trade begin*************************
-
-订单表
-ALTER TABLE `order` ADD `share_hold_rate` decimal(10,4) NOT NULL DEFAULT '0.0000' COMMENT '持股比例' AFTER `item_num`;
-
-******************trade end***************************
-
-

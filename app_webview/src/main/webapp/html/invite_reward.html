@@ -71,12 +71,20 @@
 	<script type="text/javascript" src="./../js/common.js"></script>
 	<!--<button onclick="sendInfoToJava()">App调用JS方法(带参数)</button>-->
 	<script>
+
+		var flag = GetQueryString("flag");
 		function sendInfoToJava(){
 			var name = '我是JS';
 			window.AndroidWebView.showInfoFromJs(name);
 		}
+
+		function showInfoFromAppWithFlag(msg){
+			console.log("来自App的消息: "+msg);
+			flag = msg;
+		}
+
 		function invokeAppMethod(){
-			var flag = GetQueryString("flag");
+			//var flag = GetQueryString("flag");
 			//1为ios
 			if(flag == 1){
 				// JS通知WKWebView
