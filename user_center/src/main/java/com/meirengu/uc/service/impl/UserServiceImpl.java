@@ -103,6 +103,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public User retrieveByPhone(String phone) {
         return userDao.retrieveByPhone(phone);
     }
+    @Override
+    public User selectByPhone(String phone) {
+        return userDao.selectByPhone(phone);
+    }
 
     @Override
     public int updateUserInfo(UserVO userVO) {
