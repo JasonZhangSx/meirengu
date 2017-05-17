@@ -659,10 +659,10 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 用户信息更新
+     * 用户权限信息修改
      * @return
      */
-    @RequestMapping(value = "state/update", method = RequestMethod.POST)
+    @RequestMapping(value = "state/update", method = RequestMethod.PUT)
     public Result updateUserState(@RequestParam(value = "state", required = false) Integer state,
                                   @RequestParam(value = "user_id", required = false) Integer userId,
                                   @RequestParam(value = "is_auth", required = false) Integer isAuth,

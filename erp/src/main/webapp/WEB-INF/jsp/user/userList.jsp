@@ -206,16 +206,16 @@
 //                        return '<td class="f-14 td-manage">'
                         if(row.state=='0') {
                             return '<td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" id="' + row.faqId + '" /*onclick="project_start(this,' + row.faqId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
-                                    '<a style="text-decoration:none" id="'+row.faqId+'"/* onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
-                                    '<a style="text-decoration:none" id="'+row.faqId+'" /*onclick="project_start(this,'+row.faqId+')"*/ href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
+                                    '<a style="text-decoration:none" id="' + row.userId + '" /*onclick="project_start(this,' + row.userId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+                                    '<a style="text-decoration:none" id="'+row.userId+'"/* onClick="project_stop(this,'+row.userId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.userId+'" onclick="user_unlock(this,'+row.userId+')" href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
                                   '</td>'
                         }
                         if(row.state=='1'){
                             return ' <td class="f-14 td-manage">' +
-                                    '<a style="text-decoration:none" id="' + row.faqId + '" /*onclick="project_start(this,' + row.faqId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
-                                    '<a style="text-decoration:none" id="'+row.faqId+'"/* onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
-                                    '<a style="text-decoration:none" id="'+row.faqId+'" /*onClick="project_stop(this,'+row.faqId+')"*/ href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
+                                    '<a style="text-decoration:none" id="' + row.userId + '" /*onclick="project_start(this,' + row.userId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+                                    '<a style="text-decoration:none" id="'+row.userId+'"/* onClick="project_stop(this,'+row.userId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.userId+'" onClick="user_lock(this,'+row.userId+')" href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
                                     '</td>';
                         }else{
                             return ' <td class="f-14 td-manage"></td>';
@@ -288,6 +288,57 @@
         }
         return fmt;
     }
+
+    /*项目-下架*/
+    function user_lock(obj, id) {
+        layer.confirm('确定要锁定该账户吗？', function (index) {
+            $.ajax({
+                url:"user/state/update",
+                data:{
+                    "user_id":id,
+                    "state":"0"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+                        $(obj).remove();
+                        $("#"+id).remove();
+                        $("#"+id+id).remove();
+                        layer.msg('已锁定!', {icon: 5, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
+
+        });
+    }
+    function user_unlock(obj, id) {
+        layer.confirm('确定要解锁该账户吗？', function (index) {
+            $.ajax({
+                url:"user/state/update",
+                data:{
+                    "user_id":id,
+                    "state":"1"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+                        $(obj).remove();
+                        $("#"+id).remove();
+                        $("#"+id+id).remove();
+                        layer.msg('已解锁!', {icon: 5, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
+
+        });
+    }
+
 </script>
 </body>
 </html>
