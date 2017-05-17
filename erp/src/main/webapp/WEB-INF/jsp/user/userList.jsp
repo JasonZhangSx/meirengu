@@ -305,6 +305,7 @@
 //                        $(obj).remove();
 //                        $("#"+id).remove();
                         $("#"+id+id+id).remove();
+                        table.ajax.reload();
                         layer.msg('已锁定!', {icon: 5, time: 1000});
                     }else{
                         alert("操作失败! 请重试");
@@ -329,6 +330,7 @@
 //                        $(obj).remove();
 //                        $("#"+id).remove();
                         $("#"+id+id+id).remove();
+                        table.ajax.reload();
                         layer.msg('已解锁!', {icon: 5, time: 1000});
                     }else{
                         alert("操作失败! 请重试");
