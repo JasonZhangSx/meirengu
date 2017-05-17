@@ -25,8 +25,11 @@ public interface UserService extends BaseService<User>{
     /* 根据会员Id获取会员信息*/
     User retrieveByUserId(int userId);
 
-    /*根据会员手机号获取会员信息*/
+    /*根据会员手机号获取会员信息 state = 1*/
     User retrieveByPhone(String phone);
+
+    /*根据手机号查询账户*/
+    User selectByPhone(String mobile);
 
     /* 更新用户信息*/
     int updateUserInfo(UserVO userVO);
@@ -84,4 +87,5 @@ public interface UserService extends BaseService<User>{
 
     //解除绑定第三方
     int unbund(String userId, Integer type);
+
 }

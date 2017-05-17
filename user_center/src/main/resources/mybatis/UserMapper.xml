@@ -230,6 +230,11 @@
         FROM <include refid="table_name"/>
         WHERE phone=#{phone}         AND state = 1
     </select>
+    <select id="selectByPhone" parameterType="String" resultType="User">
+        SELECT <include refid="select_columns" />
+        FROM <include refid="table_name"/>
+        WHERE phone=#{phone}
+    </select>
     <select id="selectByInviterPhone" parameterType="String" resultType="User">
         SELECT <include refid="select_columns" />
         FROM <include refid="table_name"/>

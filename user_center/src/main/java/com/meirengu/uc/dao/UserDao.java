@@ -47,9 +47,18 @@ public interface UserDao extends BaseDao<User>{
     /**
      * 根据会员手机号查询会员信息
      * @param phone
+     * state = 1[有效账户]
      * @return
      */
     User retrieveByPhone(String phone);
+
+    /**
+     * 根据会员手机号查询会员信息
+     * @param phone
+     * 所有账户
+     * @return
+     */
+    User selectByPhone(String phone);
     /**
      * 根据邀请人手机号查询会员信息
      * @param phone

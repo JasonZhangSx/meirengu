@@ -45,7 +45,7 @@
 	</bean>
 	<!--为 @async 设定线程池-->
 	<task:annotation-driven executor="asyncExecutor" />
-	<task:executor id="asyncExecutor" pool-size="10-10000" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
+	<task:executor id="asyncExecutor" pool-size="50-10000" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
 	<!--设定上传缓存文件路径、大小、编码格式-->
 	<bean id="multipartResolver"
 		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
