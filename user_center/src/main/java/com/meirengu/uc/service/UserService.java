@@ -3,9 +3,8 @@ package com.meirengu.uc.service;
 import com.meirengu.model.Page;
 import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.request.UserVO;
+import com.meirengu.uc.vo.response.AvatarVO;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public interface UserService extends BaseService<User>{
     User selectByPhone(String mobile);
 
     /* 更新用户信息*/
-    int updateUserInfo(UserVO userVO);
+    int updateUserInfo(User user);
 
     /** 用户首次设置密码*/
     int updatePasswordByPhone(User usr);
@@ -88,4 +87,6 @@ public interface UserService extends BaseService<User>{
     //解除绑定第三方
     int unbund(String userId, Integer type);
 
+    /*更新用户状态*/
+    int updateUserState(User user);
 }

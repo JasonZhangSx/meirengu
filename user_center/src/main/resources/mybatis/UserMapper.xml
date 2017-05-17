@@ -170,14 +170,13 @@
             state=1
         </set>
         <where>
-            1 = 1
+            state=1
             <if test="phone != null and phone != ''">
                 AND phone=#{phone}
             </if>
             <if test="userId != null and userId != ''">
                 AND user_id=#{userId}
             </if>
-            AND state=1
         </where>
     </update>
     <update id="updatePasswordByPhone" parameterType="User">
@@ -195,7 +194,7 @@
             <if test="isAuth != null">
                 is_auth=#{isAuth,jdbcType=TINYINT},
             </if>
-            <if test="isBuy != isBuy">
+            <if test="isBuy != null">
                 is_buy=#{isBuy,jdbcType=TINYINT},
             </if>
             <if test="isAllowInform != null">
@@ -204,12 +203,13 @@
             <if test="isAllowTalk != null">
                 is_allow_talk=#{isAllowTalk,jdbcType=TINYINT},
             </if>
-            <if test="state != state">
+            <if test="state != null">
                 state=#{state,jdbcType=TINYINT},
             </if>
+            user_id=#{userId}
         </set>
         <where>
-            user_id=#{userId} and state=1
+            user_id=#{userId}
         </where>
     </update>
 
