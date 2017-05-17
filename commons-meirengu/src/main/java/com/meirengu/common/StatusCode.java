@@ -214,6 +214,9 @@ public class StatusCode {
     public static final int REBATE_RECEIVE_INVALIDITY = 50255;
     public static final int NOT_MATCH_REBATE_BATCH_RULE = 50256;
     public static final int REBATE_USE_FAIL = 50257;
+    public static final int REBATE_RECEIVE_INSERT_ERROR = 50258;
+    public static final int REBATE_UPDATE_ERROR = 50259;
+    public static final int HAS_REACHE_REBATE_LIMIT = 50260;
 
 
 
@@ -470,11 +473,14 @@ public class StatusCode {
         //50251-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");
         codeMsgMap.put(StatusCode.REBATE_SN_REPEAT, "券号生成器重复数量过多，请联系技术部处理");
-        codeMsgMap.put(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE, "该券您已经达到领取上限，不可再次领取");
-        codeMsgMap.put(StatusCode.REBATE_BATCH_INVALIDITY, "该批次抵扣券不可用");
+        codeMsgMap.put(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE, "该批次优惠券已领取完，请及时添加");
+        codeMsgMap.put(StatusCode.REBATE_BATCH_INVALIDITY, "没有有效的该标识下的优惠券");
         codeMsgMap.put(StatusCode.REBATE_RECEIVE_INVALIDITY, "该优惠券已无效，请更换其他优惠券");
         codeMsgMap.put(StatusCode.NOT_MATCH_REBATE_BATCH_RULE, "订单不符合该优惠券使用规则，请更换其他优惠券");
-        codeMsgMap.put(StatusCode.REBATE_USE_FAIL, "优惠券使用失败，请重试");
+        codeMsgMap.put(StatusCode.REBATE_RECEIVE_INSERT_ERROR, "优惠券领取信息插入异常，请重试");
+        codeMsgMap.put(StatusCode.REBATE_UPDATE_ERROR, "优惠券信息更新失败，请重试");
+        codeMsgMap.put(StatusCode.HAS_REACHE_REBATE_LIMIT, "用户领取该优惠券已达限领次数");
+
 
 
 

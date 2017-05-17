@@ -57,6 +57,10 @@ public class Constant {
     public static final int REBATE_RECEIVE_UNUSED = 1;
     public static final int REBATE_RECEIVE_USED = 2;
     public static final int REBATE_RECEIVE_EXPIRED = 3;
+    /** 用户优惠券限领次数：1每天一次，2永久一次，3不限次数 **/
+    public static final int REBATE_LIMIT_DIURNAL = 1;
+    public static final int REBATE_LIMIT_SINGLE = 2;
+    public static final int REBATE_LIMIT_UNLIMITED = 3;
 
 
 
