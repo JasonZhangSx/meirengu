@@ -103,6 +103,14 @@ public class LoginController extends BaseController {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
 
+            if(!StringUtil.isEmpty(mobile)){
+                User user = userService.selectByPhone(mobile);
+                if(user != null){
+                    if(user.getState() == 0){
+                        return super.setResult(StatusCode.USER_IS_LOCKED, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
+                    }
+                }
+            }
             //密码登陆
             if(!StringUtil.isEmpty(password)&&!StringUtil.isEmpty(mobile)){
                 Integer times = 1;

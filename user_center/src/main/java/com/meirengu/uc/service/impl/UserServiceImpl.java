@@ -13,10 +13,8 @@ import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -103,54 +101,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public User retrieveByPhone(String phone) {
         return userDao.retrieveByPhone(phone);
     }
+    @Override
+    public User selectByPhone(String phone) {
+        return userDao.selectByPhone(phone);
+    }
 
     @Override
-    public int updateUserInfo(UserVO userVO) {
-        User user = new User();
-        if(!StringUtil.isEmpty(userVO.getUser_id())){
-            user.setUserId(userVO.getUser_id());
-        }
-        if(!StringUtil.isEmpty(userVO.getNickname())){
-            user.setNickname(userVO.getNickname());
-        }
-        if(!StringUtil.isEmpty(userVO.getAvatar())){
-            user.setAvatar(userVO.getAvatar());
-        }
-        if(!StringUtil.isEmpty(userVO.getPhone())){
-            user.setPhone(userVO.getPhone());
-        }
-        if(!StringUtil.isEmpty(userVO.getRealname())){
-            user.setRealname(userVO.getRealname());
-        }
-        if(!StringUtil.isEmpty(userVO.getEmail())){
-            user.setEmail(userVO.getEmail());
-        }
-        if(!StringUtil.isEmpty(userVO.getBirthday())){
-            user.setBirthday(userVO.getBirthday());
-        }
-        if(!StringUtil.isEmpty(userVO.getSex())){
-            user.setSex(userVO.getSex());
-        }
-        if(!StringUtil.isEmpty(userVO.getQq())){
-            user.setQq(userVO.getQq());
-        }
-        if(!StringUtil.isEmpty(userVO.getQq_openid())){
-            user.setQqOpenid(userVO.getQq_openid());
-        }
-        if(!StringUtil.isEmpty(userVO.getWx())){
-            user.setWx(userVO.getWx());
-        }
-        if(!StringUtil.isEmpty(userVO.getWx_openid())){
-            user.setWxOpenid(userVO.getWx_openid());
-        }
-        if(!StringUtil.isEmpty(userVO.getSina_openid())){
-            user.setSinaOpenid(userVO.getSina_openid());
-        }
-        if(!StringUtil.isEmpty(userVO.getArea_id())){
-            user.setAreaId(userVO.getArea_id());
-        }
+    public int updateUserInfo(User user) {
         return userDao.update(user);
-
     }
 
     @Override
@@ -604,5 +562,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             user.setSinaInfo("");
         }
         return userDao.update(user);
+    }
+
+    @Override
+    public int updateUserState(User user) {
+        return userDao.updateState(user);
     }
 }

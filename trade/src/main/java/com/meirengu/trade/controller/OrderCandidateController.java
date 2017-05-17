@@ -186,7 +186,7 @@ public class OrderCandidateController extends BaseController{
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
     public Result sendMessage(@RequestParam(value = "content")String content) throws Exception{
 
-        Message msg = new Message("deploy", "orderRemindForPay", content.getBytes());
+        Message msg = new Message("trade", "orderRemindForPay", content.getBytes());
         SendResult sendResult = null;
         try {
             sendResult = producer.getDefaultMQProducer().send(msg);
