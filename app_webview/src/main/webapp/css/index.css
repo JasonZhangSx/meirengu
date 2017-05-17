@@ -231,7 +231,7 @@ img{vertical-align: top}
 .pro_det .section3 .leader span{display: block;margin:.26rem 0 .22rem;}
 .pro_det .section3 .leader div{display: flex;justify-content: space-between;align-items: center;font-size: .26rem;}
 .pro_det .section3 .leader div em{line-height: .8rem;}
-.pro_det .section3 .leader div var {width:.8rem;height:.8rem;float:left;display: inline;margin-right: .1rem;overflow: hidden;border-radius: 50%;vertical-align: middle;background-position: center center;background-size: cover;}
+.pro_det .section3 .leader div var {width:.8rem;height:.8rem;float:left;display: inline;margin-right: .1rem;overflow: hidden;border-radius: 50%;vertical-align: middle;background-position: center center;background-size: cover;background-repeat: no-repeat;}
 .pro_det .supporter{display: flex;justify-content: space-between;font-size: .2rem;align-items: center;}
 .pro_det .supporter var{width:.8rem;height:.8rem;overflow: hidden;border-radius: 50%;vertical-align: middle;background-position: center center;background-size: cover;}
 .pro_det  .menu{display: flex;background-color: #fff;margin:0 .3rem;padding:0 .2rem;align-items: center;justify-content: space-between;height:1rem;color:#919191;font-size: .24rem;border-top:1px #e4e4e4 solid;border-bottom:1px #e4e4e4 solid;}

@@ -61,6 +61,7 @@
 <script type="text/javascript">
 
 	var mobile = "";
+	var flag = GetQueryString("flag");
 	function showInfoFromAppWithMsg(msg){
 		console.log("来自App的消息: "+msg);
 		mobile = msg;
@@ -71,14 +72,20 @@
 		}
 	}
 
+	function showInfoFromAppWithFlag(msg){
+		//alert("来自App的消息: "+msg);
+		console.log("来自App的消息: "+msg);
+		flag = msg;
+	}
+
 	function invokeA(){
 
 		if (mobile != null && mobile != ''){
 			//alert('领取成功，可在个人中心，我的抵扣券查看。');
-			/*$('.receive.start').hide();
-			$('.receive.end').show()*/
+			$('.receive.start').hide();
+			$('.receive.end').show();
 		}else {
-			var flag = GetQueryString("flag");
+			//var flag = GetQueryString("flag");
 			//1为ios
 			if(flag == 1){
 				window.webkit.messageHandlers.appLogin.postMessage("");
