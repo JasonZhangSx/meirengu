@@ -1,5 +1,6 @@
 package com.meirengu.trade.controller;
 
+import com.meirengu.rocketmq.Consumer;
 import com.meirengu.utils.NumberUtil;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -44,7 +45,7 @@ public class OrderCandidateController extends BaseController{
     private Producer producer;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private Consumer consumer;
 
     /**
      * 候补预约新增接口
