@@ -1,9 +1,9 @@
 package com.meirengu.trade.controller;
 
+import com.meirengu.common.RedisClient;
 import com.meirengu.rocketmq.Consumer;
 import com.meirengu.utils.NumberUtil;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
@@ -14,12 +14,10 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import com.meirengu.rocketmq.Producer;
 
@@ -40,6 +38,9 @@ public class OrderCandidateController extends BaseController{
 
     @Autowired
     private OrderCandidateService orderCandidateService;
+
+    @Autowired
+    private RedisClient redisClient;
 
     @Autowired
     private Producer producer;
@@ -73,7 +74,7 @@ public class OrderCandidateController extends BaseController{
                           @RequestParam(value = "token", required = false) String token){
 
         //验证密码
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -221,7 +222,7 @@ public class OrderCandidateController extends BaseController{
     public Result authToken(HttpServletRequest request,
                             @RequestParam(value = "key")String key){
         String token = request.getHeader("token");
-        if (TokenUtils.authToken(token)) {
+        if (redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
         return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
