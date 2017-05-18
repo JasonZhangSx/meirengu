@@ -2,7 +2,9 @@ package com.meirengu.trade.controller;
 
 import com.meirengu.common.RedisClient;
 import com.meirengu.rocketmq.Consumer;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.utils.NumberUtil;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -15,9 +17,11 @@ import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.service.OrderCandidateService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import com.meirengu.rocketmq.Producer;
 
@@ -47,6 +51,9 @@ public class OrderCandidateController extends BaseController{
 
     @Autowired
     private Consumer consumer;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 候补预约新增接口
@@ -225,6 +232,17 @@ public class OrderCandidateController extends BaseController{
         if (redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
+        return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
+    @RequestMapping(value = "/test_event", method = RequestMethod.POST)
+    public Result testEvent(HttpServletRequest request,
+                            @RequestParam(value = "key")String key) throws Exception{
+        MessageExt messageExt = new MessageExt();
+        messageExt.setBody(key.getBytes());
+        messageExt.setTopic("trade");
+        messageExt.setTags("orderRemindForPay");
+        applicationContext.publishEvent(new RocketmqEvent(messageExt, new DefaultMQPushConsumer()));
         return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 

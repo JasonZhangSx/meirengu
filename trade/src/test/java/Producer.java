@@ -14,7 +14,7 @@ public class Producer {
         try {
             producer.start();
             Message msg = new Message("trade",
-                    "orderLoseEfficacy",
+                    "orderRemindForPay",
                     "1",
                     "84138239305654648".getBytes());
             SendResult result = producer.send(msg);
