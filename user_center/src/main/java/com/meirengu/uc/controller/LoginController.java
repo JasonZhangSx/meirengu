@@ -89,6 +89,9 @@ public class LoginController extends BaseController {
                 if(user == null){
                     return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
                 }else{
+                    if(userIsLock(user)){
+                        return super.setResult(StatusCode.USER_IS_LOCKED, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
+                    }
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -102,13 +105,11 @@ public class LoginController extends BaseController {
             if (checkCode == null && password == null) {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
-
+            //判断用户是否锁定
             if(!StringUtil.isEmpty(mobile)){
                 User user = userService.selectByPhone(mobile);
-                if(user != null){
-                    if(user.getState() == 0){
-                        return super.setResult(StatusCode.USER_IS_LOCKED, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
-                    }
+                if(userIsLock(user)){
+                    return super.setResult(StatusCode.USER_IS_LOCKED, null, StatusCode.codeMsgMap.get(StatusCode.USER_IS_LOCKED));
                 }
             }
             //密码登陆
@@ -275,5 +276,17 @@ public class LoginController extends BaseController {
             logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
             return  false;
         }
+    }
+
+
+    //用户锁定校验
+    private Boolean userIsLock(User user){
+        Boolean flag = false;
+        if(user != null){
+            if(user.getState() == 0){
+                flag = true;
+            }
+        }
+        return  flag;
     }
 }
