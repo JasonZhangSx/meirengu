@@ -11,7 +11,9 @@
 	<description>Spring公共配置</description>
 
 	<!-- 激活自动代理功能 -->
-	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<!--<aop:aspectj-autoproxy proxy-target-class="true"/>-->
+	<!--扫描注入rocketMQ-->
+	<context:component-scan base-package="com.meirengu.rocketmq"/>
 
 	<!-- 自动扫描且只扫描@Controller -->
 	<context:component-scan base-package="com.meirengu.uc.controller" use-default-filters="false">
@@ -22,8 +24,6 @@
 	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-	<context:component-scan base-package="com.meirengu.uc"/>
-	<context:component-scan base-package="com.meirengu.rocketmq"/>
 
 	<!-- 注解驱动 -->
 	<mvc:annotation-driven>
@@ -43,16 +43,10 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	<!--为 @async 设定线程池-->
-	<task:annotation-driven executor="asyncExecutor" />
-	<task:executor id="asyncExecutor" pool-size="50-10000" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
 	<!--设定上传缓存文件路径、大小、编码格式-->
 	<bean id="multipartResolver"
 		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		  p:defaultEncoding="UTF-8"
 		  p:maxUploadSize="10485760"
 		  p:uploadTempDir="WEB-INF/upload/temp"/>
-	<!--&lt;!&ndash; rocketMQ配置 &ndash;&gt;-->
-	<!--<context:property-placeholder location="classpath:rocketmq.properties"/>-->
-
 </beans>
