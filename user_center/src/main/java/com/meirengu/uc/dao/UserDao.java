@@ -66,12 +66,6 @@ public interface UserDao extends BaseDao<User>{
      */
     User selectByInviterPhone(String phone);
 
-    /**
-     * 根据手机号验证密码是否正确
-     * @param map
-     * @return
-     */
-    User verifyByPasswordAndPhone(Map map);
 
     int updatePasswordByPhone(User user);
 
@@ -89,5 +83,5 @@ public interface UserDao extends BaseDao<User>{
 
     User retrieveByOpenId(String openId);
 
-
+    int updateUserState(String phone, Integer state);
 }

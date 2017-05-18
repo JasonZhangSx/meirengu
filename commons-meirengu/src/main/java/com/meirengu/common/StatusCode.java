@@ -367,7 +367,7 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PASSWORD_IS_MALFORMED, "密码格式错误");
         codeMsgMap.put(StatusCode.MSG_TEMPLATE_INVALID, "消息模板无效");
         codeMsgMap.put(StatusCode.UPLOAD_SIZE_ERROR, "上传文件大小超过限制！");
-        codeMsgMap.put(StatusCode.USER_IS_LOCKED, "您多次密码输入错误，账户已被锁定，请3小时候重试！");
+        codeMsgMap.put(StatusCode.USER_IS_LOCKED, "账户已被锁定，请联系客服！");
         codeMsgMap.put(StatusCode.THE_THIRD_PARTY_IS_BOUND, "该第三方已绑定！");
 
 

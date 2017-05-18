@@ -102,6 +102,7 @@ public class LoginController extends BaseController {
             if (checkCode == null && password == null) {
                 return super.setResult(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY, null, StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_AND_PASSWORD_NOT_EMPTY));
             }
+
             if(!StringUtil.isEmpty(mobile)){
                 User user = userService.selectByPhone(mobile);
                 if(user != null){
