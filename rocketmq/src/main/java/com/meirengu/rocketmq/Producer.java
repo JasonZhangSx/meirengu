@@ -38,6 +38,7 @@ public class Producer {
         defaultMQProducer.setNamesrvAddr(namesrvAddr);
 
         defaultMQProducer.start();
+        logger.info("instanceName: {}",defaultMQProducer.getInstanceName());
         logger.info("DefaultMQProudcer start success!");
 
     }
