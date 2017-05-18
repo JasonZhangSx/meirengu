@@ -14,7 +14,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 
 	<!-- 自动扫描且只扫描@Controller -->
-	<context:component-scan base-package="com.meirengu.uc" use-default-filters="false">
+	<context:component-scan base-package="com.meirengu.uc.controller" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
@@ -54,46 +54,5 @@
 		  p:uploadTempDir="WEB-INF/upload/temp"/>
 	<!--&lt;!&ndash; rocketMQ配置 &ndash;&gt;-->
 	<!--<context:property-placeholder location="classpath:rocketmq.properties"/>-->
-	<!-- redis配置 -->
-	<context:property-placeholder location="classpath:redis.properties"/>
-
-	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="${redis.pool.maxTotal}" />
-		<property name="maxIdle" value="${redis.pool.maxIdle}" />
-		<property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}" />
-		<property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}" />
-		<property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}" />
-		<property name="softMinEvictableIdleTimeMillis" value="${redis.pool.softMinEvictableIdleTimeMillis}" />
-		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
-		<property name="testWhileIdle" value="${redis.pool.testWhileIdle}" />
-		<property name="testOnReturn" value="${redis.pool.testOnReturn}" />
-		<property name="jmxEnabled" value="${redis.pool.jmxEnabled}" />
-		<property name="blockWhenExhausted" value="${redis.pool.blockWhenExhausted}" />
-	</bean>
-
-	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-		<constructor-arg index="0" ref="jedisPoolConfig" />
-		<constructor-arg index="1">
-			<list>
-				<bean name="slaver" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.slaver.host}" />
-					<constructor-arg index="1" value="${redis.slaver.port}"
-									 type="int" />
-					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
-				</bean>
-				<bean name="master" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.master.host}" />
-					<constructor-arg index="1" value="${redis.master.port}"
-									 type="int" />
-					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
-				</bean>
-			</list>
-		</constructor-arg>
-	</bean>
-
-	<bean id="redisClient" class="com.meirengu.common.RedisClient">
-		<constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
-	</bean>
 
 </beans>
