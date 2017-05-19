@@ -130,6 +130,9 @@
             <if test="activityName != null and activityName != ''">
                 AND activity_name=#{activityName}
             </if>
+            <if test="activityType != null and activityType != ''">
+                AND activity_type=#{activityType}
+            </if>
             <if test="activityId != null and activityId != ''">
                 AND activity_id=#{activityId}
             </if>
@@ -150,6 +153,9 @@
             1=1
             <if test="activityName != null and activityName != ''">
                 AND activity_name=#{activityName}
+            </if>
+            <if test="activityType != null and activityType != ''">
+                AND activity_type=#{activityType}
             </if>
             <if test="activityId != null and activityId != ''">
                 AND activity_id=#{activityId}

@@ -45,6 +45,7 @@ public class ActivityController extends BaseController{
                        @RequestParam(value="status", required = false) Integer status,
                        @RequestParam(value="activity_id", required = false) String activityId,
                        @RequestParam(value="activity_name", required = false) String activityName,
+                       @RequestParam(value="activity_type", required = false) Integer activityType,
                        @RequestParam(value="order", required = false) String order){
         Map paramMap = new HashMap<String, Object>();
         Page<Activity> page = super.setPageParams(pageNum,pageSize);
@@ -60,6 +61,7 @@ public class ActivityController extends BaseController{
         paramMap.put("status", status);
         paramMap.put("activityId", activityId);
         paramMap.put("activityName", activityName);
+        paramMap.put("activityType", activityType);
 
         page = activityService.getListByPage(page, paramMap);
         try {

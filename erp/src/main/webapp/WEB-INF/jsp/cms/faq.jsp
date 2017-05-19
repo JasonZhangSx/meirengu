@@ -95,6 +95,12 @@
 
                 }
             },
+            "aoColumnDefs": [
+                {
+                    sDefaultContent: '',
+                    aTargets: [ '_all' ]
+                }
+            ],
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
