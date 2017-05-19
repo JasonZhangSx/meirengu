@@ -4,6 +4,7 @@ import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.utils.ExportExcel;
+import com.meirengu.erp.utils.InfoProcessUtil;
 import com.meirengu.erp.vo.InviterVo;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.DateUtils;
@@ -74,7 +75,9 @@ public class InviterController extends BaseController{
             view.setiTotalRecords(0);//数据库总记录
         }else{
             userList = (List<Map<String,Object>>) map.get("list");
-
+            for(Map user:userList){
+                user.put("invitedIdCard", InfoProcessUtil.generateDefaultIdCard(String.valueOf(user.get("invitedIdCard"))));
+            }
             //保存给datatabls 分页数据
             view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
             view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录

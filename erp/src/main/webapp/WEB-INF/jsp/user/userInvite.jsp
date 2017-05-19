@@ -131,9 +131,25 @@
                 }
             },
             "columns": [
-                { "data": "phone" },
+//                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.phone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "realname" },
-                { "data": "invitedUserPhone" },
+//                { "data": "invitedUserPhone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.invitedUserPhone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.invitedUserPhone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "invitedRealName" },
                 { "data": "invitedIdCard" },
                 { "data": null,
@@ -181,11 +197,11 @@
 </script>
 <script>
     //*项目-编辑*/
-    function userList_detail(title, url, id, w, h) {
+    function userList_detail(title, url, phone, w, h) {
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url+"?phone="+phone
         });
         layer.full(index);
     }
