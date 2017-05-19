@@ -209,7 +209,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             Map<Integer, Map<String, Object>> itemLevelListTemp = new HashMap<Integer, Map<String, Object>>();
             for (Map<String, Object> orderMap : aList){
                 Integer addressId = Integer.parseInt(orderMap.get("userAddressId").toString());
-                addressIdSet.add(addressId);
+                if (!NumberUtil.isNullOrZero(addressId)) {
+                    addressIdSet.add(addressId);
+                }
                 Integer itemLevelId = Integer.parseInt(orderMap.get("itemLevelId").toString());
                 itemLeavelIdSet.add(itemLevelId);
             }
@@ -607,7 +609,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     Integer userId = Integer.parseInt(orderMap.get("userId").toString());
                     userIdsSet.add(userId);
                 }
-                //请求user_center服务获取用户地址信息
+                //请求user_center服务获取用户头像信息
                 String userIdsStr = userIdsSet.toString();
                 String userIds = userIdsStr.substring(userIdsStr.indexOf("[")+1,userIdsStr.indexOf("]"));
                 String userIdsUrl = ConfigUtil.getConfig("avatar.list.url") + "?" + "user_ids="+ URLEncoder.encode(userIds, "UTF-8");
@@ -905,12 +907,35 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 logger.error("oss upload exception: {}", e);
                 e.printStackTrace();
             }
-            //请求用户服务
-            String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileName, "UTF-8") +
-                    "&file_path=" + URLEncoder.encode(foldName, "UTF-8");
-            HttpResult itemResult = HttpUtil.doGet(url);
-            logger.debug("Request: {} getResponse: {}", url, itemResult);
-            //后续处理对方处理失败重新请求
+//            //请求用户服务
+//            String url = ConfigUtil.getConfig("invite.reward.notify.url") + "?file_name=" + URLEncoder.encode(fileName, "UTF-8") +
+//                    "&file_path=" + URLEncoder.encode(foldName, "UTF-8");
+//            HttpResult itemResult = HttpUtil.doGet(url);
+//            logger.debug("Request: {} getResponse: {}", url, itemResult);
+            //消息队列发送
+            JSONObject paramJson = new JSONObject();
+            paramJson.put("file_name",fileName);
+            paramJson.put("file_path",foldName);
+            sendUserInviteRewardNotify(paramJson.toJSONString());
+        }
+    }
+
+    private void sendUserInviteRewardNotify(String paramStr){
+        String key = "UIRN" + com.meirengu.utils.DateUtils.dateToStr(new Date(), "yyyyMMdd");
+        Message msg = new Message("user", "inviteRewardNotify", key, paramStr.getBytes());
+        SendResult sendResult = null;
+        try {
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info("sendResult: {}, key: {}", sendResult, key);
+        } catch (Exception e) {
+            logger.error("发送消息异常：{}", e);
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.error("发送消息失败 sendResult: {}, key: {} ", sendResult, key);
         }
     }
 

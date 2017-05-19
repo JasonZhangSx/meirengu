@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -44,6 +45,8 @@ public class QueryVo implements Serializable {
 	private Integer status;
 	/** 订单状态 */
 	private Integer orderState;
+	/** 订单状态集合 */
+	private List<Integer> orderStateList;
 	/** 退款订单状态 */
 	private Integer refundState;
 
@@ -183,6 +186,14 @@ public class QueryVo implements Serializable {
 		this.orderState = orderState;
 	}
 
+	public List<Integer> getOrderStateList() {
+		return orderStateList;
+	}
+
+	public void setOrderStateList(List<Integer> orderStateList) {
+		this.orderStateList = orderStateList;
+	}
+
 	public Integer getRefundState() {
 		return refundState;
 	}
@@ -231,6 +242,12 @@ public class QueryVo implements Serializable {
 		if (this.getOrderState() != null) {
 			sb.append("order_state=" + this.getOrderState());
 			sb.append("&");
+		}
+		if (this.getOrderStateList() != null) {
+			for (Integer orderStatus : this.getOrderStateList()) {
+				sb.append("order_state_list=" + orderStatus);
+				sb.append("&");
+			}
 		}
 		if (this.getRefundState() != null) {
 			sb.append("refund_state=" + this.getRefundState());

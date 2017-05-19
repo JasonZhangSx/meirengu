@@ -384,7 +384,8 @@ public class OrderController extends BaseController{
                                 @RequestParam(value = "order_sn", required = false) String orderSn,
                                 @RequestParam(value = "user_phone", required = false) String userPhone,
                                 @RequestParam(value = "item_name", required = false) String itemName,
-                                @RequestParam(value = "order_state", required = false) Integer orderState){
+                                @RequestParam(value = "order_state", required = false) Integer orderState,
+                                @RequestParam(value = "order_state_list", required = false) List<Integer> orderStateList){
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isNotBlank(orderSn)) {
             map.put("orderSn", orderSn);
@@ -397,6 +398,9 @@ public class OrderController extends BaseController{
         }
         if (!NumberUtil.isNullOrZero(orderState)) {
             map.put("orderState", orderState);
+        }
+        if (orderStateList != null) {
+            map.put("orderStateList", orderStateList);
         }
         if (StringUtils.isNotBlank(sortBy)) {
             map.put("sortBy", sortBy);
