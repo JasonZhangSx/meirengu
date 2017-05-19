@@ -305,8 +305,8 @@
         LEFT JOIN user a  on a.user_id = ui.user_id
         LEFT JOIN user u ON ui.invited_user_id = u.user_id
         <where> 1=1
-            <if test="investConditions != null and investConditions != ''">
-                AND a.invest_conditions=#{investConditions}
+            <if test="investConditions != null">
+                AND u.invest_conditions=#{investConditions}
             </if>
             <if test="isAuth != null and isAuth != ''">
                 AND a.is_auth=#{isAuth}
@@ -341,8 +341,8 @@
         LEFT JOIN user a  on a.user_id = ui.user_id
         LEFT JOIN user u ON ui.invited_user_id = u.user_id
         <where> 1=1
-            <if test="investConditions != null and investConditions != ''">
-                AND a.invest_conditions=#{investConditions}
+            <if test="investConditions != null">
+                AND u.invest_conditions=#{investConditions}
             </if>
             <if test="isAuth != null and isAuth != ''">
                 AND a.is_auth=#{isAuth}

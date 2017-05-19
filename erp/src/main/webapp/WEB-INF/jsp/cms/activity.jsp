@@ -30,7 +30,8 @@
                 活动名称：<input type="text" id="activity_name" class="input-text" style="width:120px;">　
                 活动类型：
                 <span class="select-box mr-20" style="width:120px">
-                    <select name="activity_type" class="select">
+                    <select id="activity_type" name="activity_type" class="select">
+                            <option value="">请选择</option>
                             <option value="1">拉新</option>
                             <option value="2">促活</option>
                             <option value="3">转化</option>
@@ -39,7 +40,8 @@
                 </span>
                 状态：
                 <span class="select-box mr-20" style="width:120px">
-                    <select name="status" class="select">
+                    <select id="status" name="status" class="select">
+                            <option value="">请选择</option>
                             <option value="1">待发布</option>
                             <option value="2">进行中</option>
                             <option value="3">已结束</option>

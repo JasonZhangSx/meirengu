@@ -48,7 +48,8 @@ public class InviterController extends BaseController{
     public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
                                  @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                  @RequestParam(value="invite_realname", required = false ,defaultValue = "") String inviteRealname,
-                                 @RequestParam(value="invite_idcard", required = false ,defaultValue = "") String inviteIdcard){
+                                 @RequestParam(value="invite_idcard", required = false ,defaultValue = "") String inviteIdcard,
+                                 @RequestParam(value="invest_conditions", required = false ,defaultValue = "") String investConditions){
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
@@ -57,6 +58,7 @@ public class InviterController extends BaseController{
         paramsMap.put("realname",realname);
         paramsMap.put("invite_realname",inviteRealname);
         paramsMap.put("invite_idcard",inviteIdcard);
+        paramsMap.put("invest_conditions",investConditions);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
         paramsMap.put("page",page+"");
@@ -66,16 +68,16 @@ public class InviterController extends BaseController{
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
-        if(map != null){
+        if(map == null){
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(0);//显示总记录
+            view.setiTotalRecords(0);//数据库总记录
+        }else{
             userList = (List<Map<String,Object>>) map.get("list");
 
             //保存给datatabls 分页数据
             view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
             view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
-        }else{
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(0);//显示总记录
-            view.setiTotalRecords(0);//数据库总记录
         }
         view.setAaData(userList);
         return view;

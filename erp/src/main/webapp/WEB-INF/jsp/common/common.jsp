@@ -4,7 +4,7 @@
 <%
     String path = request.getContextPath();
     String basePath = path+"/";
-    String imgPath = "https://test.img.meirenguvip.com/";
+    String imgPath = "http://test.img.meirenguvip.com/";
 
 %>
 

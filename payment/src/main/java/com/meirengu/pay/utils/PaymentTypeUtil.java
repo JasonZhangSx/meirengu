@@ -21,5 +21,6 @@ public class PaymentTypeUtil {
     public static final Integer PaymentStatus_Success=2;
     //失败
     public static final Integer PaymentStatus_Fail=3;
-
+    //分红状态-成功
+    public static final Integer PaymentBonus_Success=1;
 }
