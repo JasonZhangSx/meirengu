@@ -19,10 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by huoyan403 on 4/6/2017.
@@ -47,6 +44,12 @@ public class ActivityController extends BaseController{
         try {
             map = ( Map<String, Object>)super.httpGet(urlAppend);
             map.put("activityId",activityId);
+            String[] imageList = String.valueOf(map.get("activityImage")).split(",");
+            List<String> stringList = new ArrayList<>();
+            for (String image :imageList){
+                stringList.add(image);
+            }
+            map.put("stringList",stringList);
         } catch (Exception e) {
             e.printStackTrace();
         }
