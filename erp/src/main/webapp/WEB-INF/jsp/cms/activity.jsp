@@ -28,6 +28,25 @@
             <div class="text-c">
                 活动编号：<input type="text" id="activity_id" class="input-text" style="width:120px;">　
                 活动名称：<input type="text" id="activity_name" class="input-text" style="width:120px;">　
+                活动类型：
+                <span class="select-box mr-20" style="width:120px">
+                    <select name="activity_type" class="select">
+                            <option value="1">拉新</option>
+                            <option value="2">促活</option>
+                            <option value="3">转化</option>
+                            <option value="4">传播</option>
+                    </select>
+                </span>
+                状态：
+                <span class="select-box mr-20" style="width:120px">
+                    <select name="status" class="select">
+                            <option value="1">待发布</option>
+                            <option value="2">进行中</option>
+                            <option value="3">已结束</option>
+                            <option value="4">已下架</option>
+                    </select>
+                </span>
+
                 <button name="" id="" class="btn btn-success radius"  onclick="search()" type="button"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -103,6 +122,12 @@
                     "sLast": "尾页"
                 }
             },
+            "aoColumnDefs": [
+                {
+                    sDefaultContent: '',
+                    aTargets: [ '_all' ]
+                }
+            ],
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
@@ -111,9 +136,13 @@
                 "data": function ( d ) {
                     var activity_id = $('#activity_id').val();
                     var activity_name = $('#activity_name').val();
+                    var activity_type = $('#activity_type').val();
+                    var status = $('#status').val();
 //                    //添加额外的参数传给服务器
                     d.activity_id = activity_id;
                     d.activity_name = activity_name;
+                    d.activity_type = activity_type;
+                    d.status = status;
                 }
             },
             "columns": [

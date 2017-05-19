@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * 短信配置工具类
+ * 众筹项目配置工具类
  *
  * @author Marvin
  * @create 2017-01-11 下午6:06

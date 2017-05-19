@@ -1,8 +1,11 @@
 package com.meirengu.trade.controller;
 
+import com.meirengu.common.RedisClient;
+import com.meirengu.rocketmq.Consumer;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.utils.NumberUtil;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
@@ -13,8 +16,8 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.OrderCandidate;
 import com.meirengu.trade.service.OrderCandidateService;
-import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +44,13 @@ public class OrderCandidateController extends BaseController{
     private OrderCandidateService orderCandidateService;
 
     @Autowired
+    private RedisClient redisClient;
+
+    @Autowired
     private Producer producer;
+
+    @Autowired
+    private Consumer consumer;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -72,7 +81,7 @@ public class OrderCandidateController extends BaseController{
                           @RequestParam(value = "token", required = false) String token){
 
         //验证密码
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -186,7 +195,7 @@ public class OrderCandidateController extends BaseController{
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
     public Result sendMessage(@RequestParam(value = "content")String content) throws Exception{
 
-        Message msg = new Message("deploy", "orderRemindForPay", content.getBytes());
+        Message msg = new Message("trade", "orderRemindForPay", content.getBytes());
         SendResult sendResult = null;
         try {
             sendResult = producer.getDefaultMQProducer().send(msg);
@@ -220,9 +229,20 @@ public class OrderCandidateController extends BaseController{
     public Result authToken(HttpServletRequest request,
                             @RequestParam(value = "key")String key){
         String token = request.getHeader("token");
-        if (TokenUtils.authToken(token)) {
+        if (redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
+        return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
+    @RequestMapping(value = "/test_event", method = RequestMethod.POST)
+    public Result testEvent(HttpServletRequest request,
+                            @RequestParam(value = "key")String key) throws Exception{
+        MessageExt messageExt = new MessageExt();
+        messageExt.setBody(key.getBytes());
+        messageExt.setTopic("trade");
+        messageExt.setTags("orderRemindForPay");
+        applicationContext.publishEvent(new RocketmqEvent(messageExt, new DefaultMQPushConsumer()));
         return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 

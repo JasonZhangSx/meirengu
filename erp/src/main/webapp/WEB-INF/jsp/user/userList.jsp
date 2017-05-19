@@ -119,6 +119,12 @@
 
                 }
             },
+            "aoColumnDefs": [
+                {
+                    sDefaultContent: '',
+                    aTargets: [ '_all' ]
+                }
+            ],
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
@@ -138,7 +144,15 @@
             },
             "columns": [
                 { "data": "id" },
-                { "data": "phone" },
+//                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                    '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看详情">' +
+                                    '<i class="Hui-iconfont">'+row.phone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.isAuth=='0'){
@@ -182,9 +196,36 @@
                         return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss"); //date的格式 Thu Apr 26 2016 00:00:00 GMT+0800
                     }
                 },
-                { "data": null,
+               /* { "data": null,
                     render: function(data, type, row, meta) {
-                        return '<td><a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看"><i class="Hui-iconfont">&#xe725;</i></a>冻结/解绑银行卡</td>';
+                        return '<td>' +
+//                                    '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看">' +
+//                                    '<i class="Hui-iconfont">&#xe725;</i></a>' +
+                                '冻结/解绑银行卡<br/>' +
+                                '冻结/解绑账户' +
+                                '</td>';
+                    }
+                },*/
+                { "data": null,
+                    "className":"f-14 td-manage",
+                    render: function(data, type, row, meta) {
+//                        return '<td class="f-14 td-manage">'
+                        if(row.state=='0') {
+                            return '<td class="f-14 td-manage">' +
+//                                    '<a style="text-decoration:none" id="' + row.userId + '" /*onclick="project_start(this,' + row.userId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+//                                    '<a style="text-decoration:none" id="'+row.userId+row.userId+'"/* onClick="project_stop(this,'+row.userId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.userId+row.userId+row.userId+'" onclick="user_unlock(this,'+row.userId+')" href="javascript:;" title="解锁账户"><i class="Hui-iconfont">&#xe605;</i>解锁账户</a>' +
+                                  '</td>'
+                        }
+                        if(row.state=='1'){
+                            return ' <td class="f-14 td-manage">' +
+//                                    '<a style="text-decoration:none" id="' + row.userId + '" /*onclick="project_start(this,' + row.userId + ')"*/ href="javascript:;" title="冻结银行卡"><i class="Hui-iconfont">&#xe60e;</i>冻结银行卡</a><br/>'+
+//                                    '<a style="text-decoration:none" id="'+row.userId+row.userId+'"/* onClick="project_stop(this,'+row.userId+')"*/ href="javascript:;"title="解绑银行卡"><i class="Hui-iconfont">&#xe60e;</i>解绑银行卡</a><br/>' +
+                                    '<a style="text-decoration:none" id="'+row.userId+row.userId+row.userId+'" onClick="user_lock(this,'+row.userId+')" href="javascript:;"title="锁定账户"><i class="Hui-iconfont">&#xe60e;</i>锁定账户</a>' +
+                                    '</td>';
+                        }else{
+                            return ' <td class="f-14 td-manage"></td>';
+                        }
                     }
                 }
             ]
@@ -253,6 +294,59 @@
         }
         return fmt;
     }
+
+    /*项目-下架*/
+    function user_lock(obj, id) {
+        layer.confirm('确定要锁定该账户吗？', function (index) {
+            $.ajax({
+                url:"user/state/update",
+                data:{
+                    "user_id":id,
+                    "state":"0"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+//                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+//                        $(obj).remove();
+//                        $("#"+id).remove();
+                        $("#"+id+id+id).remove();
+                        table.ajax.reload();
+                        layer.msg('已锁定!', {icon: 6, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
+
+        });
+    }
+    function user_unlock(obj, id) {
+        layer.confirm('确定要解锁该账户吗？', function (index) {
+            $.ajax({
+                url:"user/state/update",
+                data:{
+                    "user_id":id,
+                    "state":"1"
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        console.log(data);
+//                        $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
+//                        $(obj).remove();
+//                        $("#"+id).remove();
+                        $("#"+id+id+id).remove();
+                        table.ajax.reload();
+                        layer.msg('已解锁!', {icon: 6, time: 1000});
+                    }else{
+                        alert("操作失败! 请重试");
+                    }
+                }
+            })
+
+        });
+    }
+
 </script>
 </body>
 </html>

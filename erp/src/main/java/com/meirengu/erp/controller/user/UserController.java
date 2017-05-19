@@ -1,14 +1,18 @@
 package com.meirengu.erp.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
+import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.model.User;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.utils.ExportExcel;
 import com.meirengu.erp.utils.InfoProcessUtil;
+import com.meirengu.model.Result;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.DateUtils;
+import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +91,48 @@ public class UserController extends BaseController{
         view.setAaData(userList);
         return view;
     }
+
+    /**
+     * 用户权限信息修改
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "state/update", method = RequestMethod.GET)
+    public Result updateUserState(@RequestParam(value = "state", required = false) String state,
+                                  @RequestParam(value = "user_id", required = false) String userId,
+                                  @RequestParam(value = "is_auth", required = false) String isAuth,
+                                  @RequestParam(value = "is_buy", required = false) String isBuy,
+                                  @RequestParam(value = "is_allow_inform", required = false) String isAllowInform,
+                                  @RequestParam(value = "is_allow_talk", required = false) String isAllowTalk) {
+        logger.info("UserController updateUserState userId :{} state :{} isAuth :{} ,isBuy :{} ,isAllowInform :{} ,isAllowTalk :{} ",
+                userId,state,isAuth,isBuy,isAllowInform,isAllowTalk);
+        try {
+            Map<String,String> paramsMap = new HashedMap();
+            paramsMap.put("user_id",userId);
+            paramsMap.put("state",state);
+
+            String url = ConfigUtil.getConfig("user.state.update");
+            HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
+            logger.debug("Request: {} getResponse: {}", url, hr);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
+        } catch (Exception e) {
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
 
     /**
      * 查看个人信息详情

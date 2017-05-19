@@ -7,6 +7,7 @@ import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.TokenUtils;
 import com.meirengu.uc.vo.request.TokenVO;
+import com.meirengu.uc.vo.response.UserVO;
 import com.meirengu.uc.vo.response.RegisterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,20 @@ public class LoginServiceImpl implements LoginService {
 
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setToken(newToken);
-        registerInfo.setUser((User) userRedis);
-        registerInfo.getUser().setPassword("");
+
+        User user = (User) userRedis;
+        UserVO userVO = new UserVO();
+        userVO.setUserId(user.getUserId());
+        userVO.setNickname(user.getNickname());
+        userVO.setAvatar(user.getAvatar());
+        userVO.setPhone(user.getPhone());
+        userVO.setSex(user.getSex());
+        userVO.setQq(user.getQq());
+        userVO.setWx(user.getWx());
+        userVO.setSina(user.getSina());
+        userVO.setAreaId(user.getAreaId());
+        userVO.setIsAuth(user.getIsAuth());
+        registerInfo.setUser(userVO);
         return registerInfo;
     }
 
@@ -65,14 +78,27 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public RegisterInfo setUserToRedis(User usr,String deviceId) {
+    public RegisterInfo setUserToRedis(User user,String deviceId) {
 
-        String key = TokenUtils.getTokenKey(usr.getPhone());
+        String key = TokenUtils.getTokenKey(user.getPhone());
         String token = TokenProccessor.getInstance().makeToken();
         Integer tokenTime = Integer.parseInt(ConfigUtil.getConfig("TOKEN_TIME"));
 
         RegisterInfo registerInfo = new RegisterInfo();
-        registerInfo.setUser(usr);
+
+        UserVO userVO = new UserVO();
+        userVO.setUserId(user.getUserId());
+        userVO.setNickname(user.getNickname());
+        userVO.setAvatar(user.getAvatar());
+        userVO.setPhone(user.getPhone());
+        userVO.setSex(user.getSex());
+        userVO.setQq(user.getQq());
+        userVO.setWx(user.getWx());
+        userVO.setSina(user.getSina());
+        userVO.setAreaId(user.getAreaId());
+        userVO.setIsAuth(user.getIsAuth());
+
+        registerInfo.setUser(userVO);
 
         TokenVO tokenInfo = new TokenVO();
         tokenInfo.setToken(token);
@@ -80,10 +106,9 @@ public class LoginServiceImpl implements LoginService {
         //并发 消费了响应时间 但保证了token的绝对唯一性 一用户一token
         // 分布式下无效    呵呵··
         //你怎么优化呢？ redis分布式锁
-        this.setToken(key,tokenInfo,token,usr,tokenTime);
+        this.setToken(key,tokenInfo,token,user,tokenTime);
 
         registerInfo.setToken(token);
-        registerInfo.getUser().setPassword("");
         return registerInfo;
     }
     @Async

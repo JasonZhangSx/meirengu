@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
        default-lazy-init="true">
 
     <description>Spring公共配置</description>
     <import resource="classpath:applicationContext-datasource.xml"/>
     <import resource="classpath:applicationContext-mybatis.xml"/>
+
 
     <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
     <!-- 加入定制化包路径com.sample -->
@@ -18,5 +19,52 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+    <!-- 激活自动代理功能 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--为 @async 设定线程池-->
+    <task:annotation-driven executor="asyncExecutor" />
+    <task:executor id="asyncExecutor" pool-size="50-10000" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
+
+    <!-- redis配置 -->
+    <context:property-placeholder location="classpath:redis.properties"/>
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.pool.maxTotal}" />
+        <property name="maxIdle" value="${redis.pool.maxIdle}" />
+        <property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}" />
+        <property name="softMinEvictableIdleTimeMillis" value="${redis.pool.softMinEvictableIdleTimeMillis}" />
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+        <property name="testWhileIdle" value="${redis.pool.testWhileIdle}" />
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}" />
+        <property name="jmxEnabled" value="${redis.pool.jmxEnabled}" />
+        <property name="blockWhenExhausted" value="${redis.pool.blockWhenExhausted}" />
+    </bean>
+
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean name="slaver" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" value="${redis.slaver.host}" />
+                    <constructor-arg index="1" value="${redis.slaver.port}"
+                                     type="int" />
+                    <property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
+                </bean>
+                <bean name="master" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" value="${redis.master.host}" />
+                    <constructor-arg index="1" value="${redis.master.port}"
+                                     type="int" />
+                    <property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="redisClient" class="com.meirengu.common.RedisClient">
+        <constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
+    </bean>
 </beans>

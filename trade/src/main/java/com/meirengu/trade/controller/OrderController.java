@@ -1,6 +1,7 @@
 package com.meirengu.trade.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -12,20 +13,15 @@ import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.utils.NumberUtil;
-import com.meirengu.utils.OrderSNUtils;
-import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.EventListener;
 
 /**
  * 订单控制类
@@ -39,6 +35,9 @@ public class OrderController extends BaseController{
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RedisClient redisClient;
 
     /**
      * 预约新增接口
@@ -80,7 +79,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -170,7 +169,7 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -272,7 +271,7 @@ public class OrderController extends BaseController{
                          @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -415,8 +414,6 @@ public class OrderController extends BaseController{
             logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
-
-
     }
     /**
      * 取消预约订单
@@ -428,7 +425,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -593,6 +590,38 @@ public class OrderController extends BaseController{
         }
     }
 
+
+    @RequestMapping(value = "/getOrderInfoList", method = RequestMethod.GET)
+    public Result getSystemPage(@RequestParam(value = "order_sn", required = false) String orderSn,
+                                @RequestParam(value = "user_phone", required = false) String userPhone,
+                                @RequestParam(value = "item_id", required = false) Integer itemId,
+                                @RequestParam(value = "order_state", required = false) Integer orderState,
+                                @RequestParam(value = "item_level_id", required = false) Integer itemLevelId){
+        Map<String, Object> map = new HashMap<>();
+        if (StringUtils.isNotBlank(orderSn)) {
+            map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(userPhone)) {
+            map.put("userPhone", userPhone);
+        }
+        if (NumberUtil.isNullOrZero(itemId)) {
+            map.put("itemId", itemId);
+        }
+        if (!NumberUtil.isNullOrZero(orderState)) {
+            map.put("orderState", orderState);
+        }
+        if (!NumberUtil.isNullOrZero(itemLevelId)) {
+            map.put("itemLevelId", itemLevelId);
+        }
+        try{
+            List<Map<String, Object>> list = orderService.getList(map);
+            return setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
     /**
      * 通过档位ID查询该档位下的投资金额
      * @param levelIds
@@ -611,7 +640,16 @@ public class OrderController extends BaseController{
             e.printStackTrace();
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
+    }
 
+    /**
+     * 手动订单失效消息
+     * @return
+     */
+    @RequestMapping(value = "/order_loss_efficacy")
+    public void orderLoseEfficacy(@RequestParam(value = "order_sn", required = true) String orderSn) throws Exception {
+        logger.info("订单置失效");
+        orderService.orderLoseEfficacy(orderSn);
     }
 
     /**

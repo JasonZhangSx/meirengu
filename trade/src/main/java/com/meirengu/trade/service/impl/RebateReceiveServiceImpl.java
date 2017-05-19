@@ -5,6 +5,7 @@ import com.meirengu.model.Page;
 import com.meirengu.model.Result;
 import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.dao.RebateReceiveDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.Rebate;
@@ -45,11 +46,20 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
 
     @Autowired
     private RebateReceiveDao rebateReceiveDao;
+
     /**
      * 领取优惠券
+     * 1.判断用户是否登录
+     * 2.判断批次是否可用
+     * 3.判断该用户是否已超过该优惠券的领取次数
+     * 4.给用户账号发送优惠券
+     *      -----通过预先生成优惠券存放到队列，领取时从队列POP取出优惠券，再和用户绑定完成发券操作
+     *           当队列pop不到优惠券时，就代表券发完了
+     * 5.给用户发送消息提示优惠券已到账
      * @param userId
      * @param userPhone
      * @param batchIdList
+     * @param activityIdentification
      * @return
      */
     @Transactional
@@ -62,6 +72,8 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         Map<String, Object> paramMap = null;
         Rebate rebate = null;
         RebateBatch rebateBatch = null;
+        Integer code = null;
+        Date currentDate = new Date();
         for (Integer batchId : batchIdList) {
             rebateBatch = rebateBatchService.detail(batchId);
             //验证批次是否有效
@@ -69,19 +81,25 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                 logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：没有有效的该批次的优惠券");
                 result.setCode(StatusCode.REBATE_BATCH_INVALIDITY);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REBATE_BATCH_INVALIDITY));
-                break;
+                continue;
             }
-            //验证用户是否有此类优惠券
-            paramMap = new HashMap<String, Object>();
-            paramMap.put("userId", userId);
-            paramMap.put("rebateBatchId", batchId);
-            int totalCount = rebateReceiveDao.getCount(paramMap);
-            if (totalCount != 0) {
-                logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：该用户领取该优惠券以打次数上限");
-                result.setCode(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE);
-                result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE));
-                break;
+            //领取次数验证
+            Integer rebateLimit = rebateBatch.getRebateLimit();
+            //每天一次暂不处理
+            //永久一次
+            if (rebateLimit.intValue() == Constant.REBATE_LIMIT_SINGLE) {
+                paramMap = new HashMap<String, Object>();
+                paramMap.put("userId", userId);
+                paramMap.put("rebateBatchId", batchId);
+                int totalCount = rebateReceiveDao.getCount(paramMap);
+                if (totalCount != 0) {
+                    logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：该用户领取该优惠券以打次数上限");
+                    result.setCode(StatusCode.HAS_REACHE_REBATE_LIMIT);
+                    result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_REBATE_LIMIT));
+                    continue;
+                }
             }
+
             //验证该批次下是否有可用优惠券
             boolean flag = false;
             //redis中取出优惠券号
@@ -93,7 +111,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                 }
             }
             if (flag) {
-                //优惠券可以使用
+                //用户绑定优惠券
                 rebateReceive = new RebateReceive();
                 rebateReceive.setUserId(userId);
                 rebateReceive.setUserPhone(userPhone);
@@ -101,9 +119,13 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                 rebateReceive.setRebateBatchId(rebateBatch.getBatchId());
                 rebateReceive.setRebateMark(rebateBatch.getRebateMark());
                 rebateReceive.setActivityIdentification(activityIdentification);
-                rebateReceive.setReceiveTime(new Date());
+                rebateReceive.setReceiveTime(currentDate);
                 rebateReceive.setStatus(Constant.REBATE_RECEIVE_UNUSED);//未使用
-                insert(rebateReceive);
+                int i = insert(rebateReceive);
+                if (i != 1) {
+                    code = StatusCode.REBATE_RECEIVE_INSERT_ERROR;
+                    throw new OrderException("优惠券领取信息插入异常 -- StatusCode: " + code, code);
+                }
                 //改变该优惠券过期时间
                 rebate = new Rebate();
                 rebate.setRebateSn(rebateSn);
@@ -113,18 +135,21 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                     rebate.setValidEndTime(rebateBatch.getValidEndTime());
                 } else if (rebateBatch.getValidType() == Constant.REBATE_EXPIRE_BY_RELATIVE_TIME) {
                     //该优惠券按相对时间过期
-                    Date currentDate = new Date();
                     rebate.setValidStartTime(currentDate);
                     rebate.setValidEndTime(DateUtils.addDays(currentDate, rebateBatch.getValidDays()));
                 }
-                rebateService.updateBySn(rebate);
+                int j = rebateService.updateBySn(rebate);
+                if (j != 1) {
+                    code = StatusCode.REBATE_UPDATE_ERROR;
+                    throw new OrderException("优惠券信息更新异常 -- StatusCode: " + code, code);
+                }
                 result.setCode(StatusCode.OK);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
             } else {
-                logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + batchId + "的优惠券，原因：该批次的券已被领取完");
+                logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + rebateBatch.getBatchId() + "的优惠券，原因：该批次的券已被领取完");
                 result.setCode(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE);
                 result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE));
-                break;
+                continue;
             }
         }
         return result;
@@ -132,37 +157,57 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
 
     /**
      * 根据标识领取优惠券
+     * 1.判断用户是否登录
+     * 2.读取该标识下的可用优惠券
+     * 3.判断该用户是否已超过该优惠券的领取次数
+     * 4.给用户账号发送优惠券
+     *      -----通过预先生成优惠券存放到队列，领取时从队列POP取出优惠券，再和用户绑定完成发券操作
+     *           当队列pop不到优惠券时，就代表券发完了
+     * 5.给用户发送消息提示优惠券已到账
      * @param userId
      * @param userPhone
      * @param rebateMark
      * @param activityIdentification
      * @return
      */
+    @Transactional
     public Result receiveRebateByMark(int userId, String userPhone, int rebateMark, String activityIdentification) {
         Result result = new Result();
-        //首先验证是否领取过同一标识下的优惠券
         Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("userId", userId);
-        paramMap.put("rebateMark", rebateMark);
-        int totalCount = rebateReceiveDao.getCount(paramMap);
-        if (totalCount != 0) {
-            logger.error("用户id为: " + userId + "的用户无法领取标签类型为: " + rebateMark + "的优惠券，原因：该用户领取该优惠券已达次数上限");
-            result.setCode(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE);
-            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE));
-            return result;
-        }
-        //查询该标签类型下可用的优惠券
+        //查询该标签下的有效的批次信息
         paramMap = new HashMap<String, Object>();
         paramMap.put("rebateMark", rebateMark);
         paramMap.put("batchStatue", Constant.YES);
         List<RebateBatch> rebateBatchList = rebateBatchService.findByCondition(paramMap);
-        if (rebateBatchList != null && rebateBatchList.size() > 0) {
+        if (rebateBatchList != null && rebateBatchList.size()>0) {
+            RebateBatch rebateBatchLimit = rebateBatchList.get(0);
+            if (rebateBatchLimit != null) {
+                //领取次数验证
+                Integer rebateLimit = rebateBatchLimit.getRebateLimit();
+                //每天一次暂不处理
+                //永久一次
+                if (rebateLimit.intValue() == Constant.REBATE_LIMIT_SINGLE) {
+                    paramMap = new HashMap<String, Object>();
+                    paramMap.put("userId", userId);
+                    paramMap.put("rebateMark", rebateMark);
+                    int totalCount = rebateReceiveDao.getCount(paramMap);
+                    if (totalCount != 0) {
+                        logger.error("用户id为: " + userId + "的用户无法领取标签类型为: " + rebateMark + "的优惠券，原因：用户领取该优惠券已达限领次数");
+                        result.setCode(StatusCode.HAS_REACHE_REBATE_LIMIT);
+                        result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_REBATE_LIMIT));
+                        return result;
+                    }
+                }
+            }
+            //发券操作
             List<String> list = null;
             String rebateSn = null;
             RebateReceive rebateReceive = null;
             Rebate rebate = null;
+            Date currentDate = new Date();
+            Integer code = null;
             for (RebateBatch rebateBatch : rebateBatchList) {
-                //验证该批次下是否有可用优惠券
+                //验证该redis队列中是否有可用优惠券
                 boolean flag = false;
                 //redis中取出优惠券号
                 list = redisClient.blpop(1, "rebate_batch_" + rebateBatch.getBatchId());
@@ -173,7 +218,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                     }
                 }
                 if (flag) {
-                    //优惠券可以使用
+                    //用户绑定优惠券
                     rebateReceive = new RebateReceive();
                     rebateReceive.setUserId(userId);
                     rebateReceive.setUserPhone(userPhone);
@@ -181,9 +226,13 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                     rebateReceive.setRebateBatchId(rebateBatch.getBatchId());
                     rebateReceive.setRebateMark(rebateBatch.getRebateMark());
                     rebateReceive.setActivityIdentification(activityIdentification);
-                    rebateReceive.setReceiveTime(new Date());
+                    rebateReceive.setReceiveTime(currentDate);
                     rebateReceive.setStatus(Constant.REBATE_RECEIVE_UNUSED);//未使用
-                    insert(rebateReceive);
+                    int i = insert(rebateReceive);
+                    if (i != 1) {
+                        code = StatusCode.REBATE_RECEIVE_INSERT_ERROR;
+                        throw new OrderException("优惠券领取信息插入异常 -- StatusCode: " + code, code);
+                    }
                     //改变该优惠券过期时间
                     rebate = new Rebate();
                     rebate.setRebateSn(rebateSn);
@@ -193,22 +242,25 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                         rebate.setValidEndTime(rebateBatch.getValidEndTime());
                     } else if (rebateBatch.getValidType() == Constant.REBATE_EXPIRE_BY_RELATIVE_TIME) {
                         //该优惠券按相对时间过期
-                        Date currentDate = new Date();
                         rebate.setValidStartTime(currentDate);
                         rebate.setValidEndTime(DateUtils.addDays(currentDate, rebateBatch.getValidDays()));
                     }
-                    rebateService.updateBySn(rebate);
+                    int j = rebateService.updateBySn(rebate);
+                    if (j != 1) {
+                        code = StatusCode.REBATE_UPDATE_ERROR;
+                        throw new OrderException("优惠券信息更新异常 -- StatusCode: " + code, code);
+                    }
                     result.setCode(StatusCode.OK);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
                 } else {
                     logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + rebateBatch.getBatchId() + "的优惠券，原因：该批次的券已被领取完");
                     result.setCode(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE));
-                    break;
+                    continue;
                 }
             }
         } else {
-            logger.error("用户id为: " + userId + "的用户无法领取标签类型为: " + rebateMark + "的优惠券，原因：没有有效的该批次的优惠券");
+            logger.error("用户id为: " + userId + "的用户无法领取标签类型为: " + rebateMark + "的优惠券，原因：没有有效的该标识下的优惠券");
             result.setCode(StatusCode.REBATE_BATCH_INVALIDITY);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.REBATE_BATCH_INVALIDITY));
             return result;

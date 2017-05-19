@@ -12,11 +12,10 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
-import com.meirengu.utils.ObjectUtils;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.request.UserVO;
 import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.ApacheBeanUtils;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.collections.map.HashedMap;
@@ -24,11 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -218,28 +217,46 @@ public class UserController extends BaseController{
         }
     }
     /**
-     * 用户信息更新
-     * @param userVO
+     * 用户基本信息修改
      * @return
      */
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public Result updateUserInfo(UserVO userVO) {
-        logger.info("UserController update params :{}",userVO.toString());
+    public Result updateUserInfo(@RequestParam(value="token", required = false) String token,
+                                 @RequestParam(value="user_id", required = false) Integer userId,
+                                 @RequestParam(value="nickname", required = false) String nickname,
+                                 @RequestParam(value="phone", required = false) String phone,
+                                 @RequestParam(value="avatar", required = false) String avatar,
+                                 @RequestParam(value="sex", required = false) Integer sex,
+                                 @RequestParam(value="birthday", required = false) Date birthday,
+                                 @RequestParam(value="email", required = false) String email,
+                                 @RequestParam(value="area_id", required = false) Integer areaId
+                                 ) {
+        logger.info("UserController update params : userId :{},nickname :{},phone :{},avatar :{},sex :{},birthday :{},email :{},areaId:{}"
+                ,userId,nickname,phone,avatar,sex,birthday,email,areaId);
         try {
-            if(!StringUtil.isEmpty(userVO.getToken()) && !redisClient.existsObject(userVO.getToken())){
+            if(!StringUtil.isEmpty(token) && !redisClient.existsObject(token)){
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
             }
-            if (!StringUtils.isEmpty(userVO.getPhone())) {
-                if(!ValidatorUtil.isMobile(userVO.getPhone())) {
+            if (!StringUtils.isEmpty(phone)) {
+                if(!ValidatorUtil.isMobile(phone)) {
                     return super.setResult(StatusCode.MOBILE_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
                 }
             }
-            if(!StringUtil.isEmpty(userVO.getEmail())){
-                if (StringUtils.isEmpty(userVO.getEmail()) || !ValidatorUtil.isEmail(userVO.getEmail())) {
+            if(!StringUtil.isEmpty(email)){
+                if (StringUtils.isEmpty(email) || !ValidatorUtil.isEmail(email)) {
                     return super.setResult(StatusCode.EMAIL_FORMAT_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.EMAIL_FORMAT_ERROR));
                 }
             }
-            int result = userService.updateUserInfo(userVO);
+            User user = new User();
+            user.setUserId(userId);
+            user.setNickname(nickname);
+            user.setPhone(phone);
+            user.setAvatar(avatar);
+            user.setSex(sex);
+            user.setBirthday(birthday);
+            user.setEmail(email);
+            user.setAreaId(areaId);
+            int result = userService.updateUserInfo(user);
             if(result==1){
                 logger.info("UserController.updateUserInfo result << {}, result:{}", result);
                 return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -552,6 +569,22 @@ public class UserController extends BaseController{
         if(StringUtil.isEmpty(registerVO.getToken()) || !redisClient.existsObject(registerVO.getToken())){
             return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
+        //第三方绑定校验
+        if (!StringUtils.isEmpty(registerVO.getWx_openid()) || !StringUtils.isEmpty(registerVO.getQq_openid()) || !StringUtils.isEmpty(registerVO.getSina_openid()) ) {
+            User user = new User();
+            if(!StringUtil.isEmpty(registerVO.getWx_openid())){
+                user = userService.retrieveByOpenId(registerVO.getWx_openid());
+            }
+            if(!StringUtil.isEmpty(registerVO.getQq_openid())){
+                user = userService.retrieveByOpenId(registerVO.getQq_openid());
+            }
+            if(!StringUtil.isEmpty(registerVO.getSina_openid())){
+                user = userService.retrieveByOpenId(registerVO.getSina_openid());
+            }
+            if(user !=null){
+                return super.setResult(StatusCode.THE_THIRD_PARTY_IS_BOUND, null, StatusCode.codeMsgMap.get(StatusCode.THE_THIRD_PARTY_IS_BOUND));
+            }
+        }
         int result = userService.bundThirdParty(registerVO);
         if (result == 1){
             return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -624,6 +657,40 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
+
+    /**
+     * 用户权限信息修改
+     * @return
+     */
+    @RequestMapping(value = "state/update", method = RequestMethod.PUT)
+    public Result updateUserState(@RequestParam(value = "state", required = false) Integer state,
+                                  @RequestParam(value = "user_id", required = false) Integer userId,
+                                  @RequestParam(value = "is_auth", required = false) Integer isAuth,
+                                  @RequestParam(value = "is_buy", required = false) Integer isBuy,
+                                  @RequestParam(value = "is_allow_inform", required = false) Integer isAllowInform,
+                                  @RequestParam(value = "is_allow_talk", required = false) Integer isAllowTalk) {
+        logger.info("UserController updateUserState userId :{} state :{} isAuth :{} ,isBuy :{} ,isAllowInform :{} ,isAllowTalk :{} ",
+                        userId,state,isAuth,isBuy,isAllowInform,isAllowTalk);
+        try {
+            User user = new User();
+            user.setState(state);
+            user.setUserId(userId);
+            user.setIsAuth(isAuth);
+            user.setIsBuy(isBuy);
+            user.setIsAllowInform(isAllowInform);
+            user.setIsAllowTalk(isAllowTalk);
+            int result = userService.updateUserState(user);
+            if(result==1){
+                logger.info("UserController.updateUserState result << {}, result:{}", result);
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else{
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, null, StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+        }catch (Exception e){
+            logger.error("UserController updateUserState throw exception:", e.getMessage());
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
     /**
      * 校验密码方法提取
      * @param password
@@ -638,5 +705,15 @@ public class UserController extends BaseController{
             logger.error("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
             return  false;
         }
+    }
+    /**
+     * 格式化string类型时间
+     * @param binder
+     */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }

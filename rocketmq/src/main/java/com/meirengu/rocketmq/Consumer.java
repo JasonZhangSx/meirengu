@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.List;
 @Component
+@PropertySource("classpath:rocketmq.properties")
 public class Consumer {
 
     private final Logger logger = LoggerFactory.getLogger(Consumer.class);
@@ -86,6 +88,7 @@ public class Consumer {
                     }
                 }
                 // 如果没有return success ，consumer会重新消费该消息，直到return success
+                logger.info("CONSUME_SUCCESS");
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
@@ -104,7 +107,7 @@ public class Consumer {
                         logger.info("DefaultMQPushConsumer start failure!");
                         e.printStackTrace();
                     }
-
+                    logger.info("instanceName: {}",defaultMQPushConsumer.getInstanceName());
                     logger.info("DefaultMQPushConsumer start success!");
 
                 } catch (InterruptedException e) {
