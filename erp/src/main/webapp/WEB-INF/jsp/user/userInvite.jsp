@@ -27,6 +27,7 @@
                 认证条件 ：
                 <span class="select-box mr-20" style="width:120px">
                     <select id="invest_conditions" name="invest_conditions" class="select">
+                        <option value="">请选择</option>
                         <option value="0" >未认证</option>
                         <option value="1" >专业投资人</option>
                         <option value="2" >投资金额30万</option>
@@ -138,7 +139,7 @@
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.invitedInvestConditions=='0'){
-                            return '<label> 未选择 </label>';
+                            return '<label> 未认证 </label>';
                         }
                         if(row.invitedInvestConditions=='1'){
                             return '<label>  专业投资人  </label>';
