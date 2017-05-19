@@ -27,6 +27,7 @@
                 认证条件 ：
                 <span class="select-box mr-20" style="width:120px">
                     <select id="invest_conditions" name="invest_conditions" class="select">
+                        <option value="">请选择</option>
                         <option value="0" >未认证</option>
                         <option value="1" >专业投资人</option>
                         <option value="2" >投资金额30万</option>
@@ -130,15 +131,31 @@
                 }
             },
             "columns": [
-                { "data": "phone" },
+//                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.phone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "realname" },
-                { "data": "invitedUserPhone" },
+//                { "data": "invitedUserPhone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.invitedUserPhone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.invitedUserPhone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "invitedRealName" },
                 { "data": "invitedIdCard" },
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.invitedInvestConditions=='0'){
-                            return '<label> 未选择 </label>';
+                            return '<label> 未认证 </label>';
                         }
                         if(row.invitedInvestConditions=='1'){
                             return '<label>  专业投资人  </label>';
@@ -180,11 +197,11 @@
 </script>
 <script>
     //*项目-编辑*/
-    function userList_detail(title, url, id, w, h) {
+    function userList_detail(title, url, phone, w, h) {
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url+"?phone="+phone
         });
         layer.full(index);
     }
