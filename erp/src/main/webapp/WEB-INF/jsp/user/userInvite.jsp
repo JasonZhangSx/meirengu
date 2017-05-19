@@ -21,9 +21,18 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                邀请人：<input type="text" id="realname" class="input-text" style="width:120px;">　
-                被邀请人：<input type="text" id="invite_realname" class="input-text" style="width:120px;">　
-                身份证号：<input type="text" id="invite_idcard" class="input-text" style="width:120px;">　
+                邀请人 ：<input type="text" id="realname" class="input-text" style="width:120px;">　
+                被邀请人 ：<input type="text" id="invite_realname" class="input-text" style="width:120px;">　
+                身份证号 ：<input type="text" id="invite_idcard" class="input-text" style="width:120px;">　
+                认证条件 ：
+                <span class="select-box mr-20" style="width:120px">
+                    <select id="invest_conditions" name="invest_conditions" class="select">
+                        <option value="0" >未认证</option>
+                        <option value="1" >专业投资人</option>
+                        <option value="2" >投资金额30万</option>
+                        <option value="3" >投资金额100万</option>
+                    </select>
+                </span>
                 <button name="" id="" class="btn btn-success radius" onclick="search()" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -112,10 +121,12 @@
                     var realname = $('#realname').val();
                     var invite_realname = $ ('#invite_realname').val();
                     var invite_idcard = $('#invite_idcard').val();
+                    var invest_conditions = $('#invest_conditions').val();
                     //添加额外的参数传给服务器
                     d.realname = realname;
                     d.invite_realname = invite_realname;
                     d.invite_idcard = invite_idcard;
+                    d.invest_conditions = invest_conditions;
                 }
             },
             "columns": [
