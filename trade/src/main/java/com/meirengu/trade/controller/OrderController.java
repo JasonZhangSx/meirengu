@@ -1,6 +1,7 @@
 package com.meirengu.trade.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -12,20 +13,15 @@ import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.utils.NumberUtil;
-import com.meirengu.utils.OrderSNUtils;
-import com.meirengu.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.EventListener;
 
 /**
  * 订单控制类
@@ -39,6 +35,9 @@ public class OrderController extends BaseController{
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RedisClient redisClient;
 
     /**
      * 预约新增接口
@@ -80,7 +79,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -170,7 +169,7 @@ public class OrderController extends BaseController{
                                       @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -272,7 +271,7 @@ public class OrderController extends BaseController{
                          @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
@@ -426,7 +425,7 @@ public class OrderController extends BaseController{
                                     @RequestParam(value = "token", required = false) String token){
 
         //验证token
-        if (!TokenUtils.authToken(token)) {
+        if (!redisClient.existsObject(token)) {
             return setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
         }
 
