@@ -126,7 +126,56 @@ public class PaymentController extends BaseController {
         super.httpPost(url.toString()+"/capital/withdrawals",map);
         return withdrawalsRecord(null,null,null,null);
     }
-
+    @RequestMapping("bonusRecord")
+    public ModelAndView bonusRecord(String startDate,String endDate,String shouldTimeStart,String shouldTimeEnd,String userId,String itemLevelId) throws IOException {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (startDate!=null&&!startDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&startDate="+startDate);
+            }else {
+                stringBuffer.append("startDate="+startDate);
+            }
+        }
+        if (endDate!=null&&!endDate.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&endDate="+endDate);
+            }else {
+                stringBuffer.append("endDate="+endDate);
+            }
+        }
+        if (shouldTimeStart!=null&&!shouldTimeStart.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&shouldTimeStart="+shouldTimeStart);
+            }else {
+                stringBuffer.append("shouldTimeStart="+shouldTimeStart);
+            }
+        }
+        if (shouldTimeEnd!=null&&!shouldTimeEnd.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&shouldTimeEnd="+shouldTimeEnd);
+            }else {
+                stringBuffer.append("shouldTimeEnd="+shouldTimeEnd);
+            }
+        }
+        if (userId!=null&&!userId.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&userId="+userId);
+            }else {
+                stringBuffer.append("userId="+userId);
+            }
+        }
+        if (itemLevelId!=null&&!itemLevelId.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&itemLevelId="+itemLevelId);
+            }else {
+                stringBuffer.append("itemLevelId="+itemLevelId);
+            }
+        }
+        if (url==null){
+            setUrl();
+        }
+        return new ModelAndView("/payment/paymentCommitBonusList",(Map<String, Object>) super.httpGet(url.toString()+"/paymentCommitBonus?"+stringBuffer.toString()));
+    }
     protected Map<String,Object> recordList(String condition){
         if (url==null){
             setUrl();

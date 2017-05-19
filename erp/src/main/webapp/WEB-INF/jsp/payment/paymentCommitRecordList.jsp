@@ -61,7 +61,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${paymentCommitList}" var="paymentCommit">
+                    <c:forEach items="${paymentCommitRecordList}" var="paymentCommit">
                         <tr class="text-c">
                             <td>${paymentCommit.id}</td>
                             <td>${paymentCommit.partnerName}</td>

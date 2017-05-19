@@ -1,9 +1,13 @@
 package com.meirengu.pay.model;
 
+import com.meirengu.pay.utils.check.AnnotationValidable;
+import com.meirengu.pay.utils.check.ValidateDigit;
+import com.meirengu.pay.utils.check.ValidateNotNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class PaymentCommitBonus {
+public class PaymentCommitBonus implements AnnotationValidable {
     private Integer id;
 
     private Integer userId;
@@ -11,9 +15,10 @@ public class PaymentCommitBonus {
     private String userName;
 
     private String userPhone;
-
+    @ValidateNotNull(attributeValue = "众筹项目id")
+    @ValidateDigit
     private Integer itemId;
-
+    @ValidateNotNull(attributeValue = "众筹项目名称")
     private String itemName;
 
     private Integer itemLevelId;
@@ -35,6 +40,10 @@ public class PaymentCommitBonus {
     private BigDecimal allowance;
 
     private BigDecimal totalAmount;
+
+    private Date shouldTime;
+
+    private Integer status;
 
     private Date bonusTime;
 
@@ -168,6 +177,14 @@ public class PaymentCommitBonus {
         this.totalAmount = totalAmount;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Date getBonusTime() {
         return bonusTime;
     }
@@ -182,5 +199,39 @@ public class PaymentCommitBonus {
 
     public void setBonusAccount(String bonusAccount) {
         this.bonusAccount = bonusAccount == null ? null : bonusAccount.trim();
+    }
+
+    public Date getShouldTime() {
+        return shouldTime;
+    }
+
+    public void setShouldTime(Date shouldTime) {
+        this.shouldTime = shouldTime;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentCommitBonus{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", itemId=" + itemId +
+                ", itemName='" + itemName + '\'' +
+                ", itemLevelId=" + itemLevelId +
+                ", itemLevelName='" + itemLevelName + '\'' +
+                ", number=" + number +
+                ", investPrincipal=" + investPrincipal +
+                ", yearRate=" + yearRate +
+                ", period=" + period +
+                ", principal=" + principal +
+                ", income=" + income +
+                ", allowance=" + allowance +
+                ", totalAmount=" + totalAmount +
+                ", shouldTime=" + shouldTime +
+                ", status=" + status +
+                ", bonusTime=" + bonusTime +
+                ", bonusAccount='" + bonusAccount + '\'' +
+                '}';
     }
 }
