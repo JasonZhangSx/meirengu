@@ -920,6 +920,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         }
     }
 
+    /**
+     * 发送消息：邀请分红通知
+     * @param paramStr
+     */
     private void sendUserInviteRewardNotify(String paramStr){
         String key = "UIRN" + com.meirengu.utils.DateUtils.dateToStr(new Date(), "yyyyMMdd");
         Message msg = new Message("user", "inviteRewardNotify", key, paramStr.getBytes());

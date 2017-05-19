@@ -181,9 +181,13 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />
+		select <include refid="select_columns" />,
+		tbo.item_name AS itemName,
+		tbo.item_level_name AS itemLevelName,
+		tbo.item_num AS itemNum
 		FROM
 		<include refid="table_name" /> tb
+		LEFT JOIN `order` tbo ON tb.order_id = tbo.order_id
 		<include refid="findPage_where"/>
 		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
 			order by ${sortBy} ${order}
