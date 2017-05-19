@@ -183,7 +183,7 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />,
+		select <include refid="select_columns_refund" />,
 		tbo.item_name AS itemName,
 		tbo.item_level_name AS itemLevelName,
 		tbo.item_num AS itemNum
