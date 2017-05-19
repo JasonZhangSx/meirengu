@@ -148,7 +148,7 @@ public class RefundController extends BaseController{
             map.put("sortBy", "tb." + sortBy);
         }
         if (StringUtils.isNotBlank(order)) {
-            map.put("order", "tb." + order);
+            map.put("order", order);
         }
         Page<Refund> page = new Page<Refund>();
         page.setPageNow(pageNum);
