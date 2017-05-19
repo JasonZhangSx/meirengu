@@ -1,27 +1,34 @@
 package com.meirengu.pay.model;
 
+import com.meirengu.pay.utils.check.AnnotationValidable;
+import com.meirengu.pay.utils.check.ValidateDigit;
+import com.meirengu.pay.utils.check.ValidateNotNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class PaymentCollectionList {
+public class PaymentCollectionList implements AnnotationValidable {
     private Integer id;
-
+    @ValidateNotNull(attributeValue = "合作方id")
+    @ValidateDigit
     private Integer partnerId;
-
+    @ValidateNotNull(attributeValue = "合作方名称")
     private String partnerName;
-
+    @ValidateNotNull(attributeValue = "众筹项目id")
+    @ValidateDigit
     private Integer itemId;
-
+    @ValidateNotNull(attributeValue = "众筹项目名称")
     private String itemName;
-
+    @ValidateNotNull(attributeValue = "目标金额")
     private BigDecimal targetAmount;
-
+    @ValidateNotNull(attributeValue = "完成金额")
     private BigDecimal completedAmount;
-
+    //本金
     private BigDecimal principal;
-
+    //利息
     private BigDecimal interest;
 
+    @ValidateNotNull(attributeValue = "收款期数")
     private Integer collectionPeriod;
 
     private Integer receivedPeriod;

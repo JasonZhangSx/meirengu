@@ -22,11 +22,11 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>打款记录</title>
+    <title>放款分红记录</title>
 </head>
 <body>
 <section class="Hui-article-box" style="top: 0; left: 0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 财务管理 <span class="c-gray en">&gt;</span> 待打款记录 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 财务管理 <span class="c-gray en">&gt;</span> 放款分红记录 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
@@ -50,38 +50,44 @@
                 <table class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
-                        <th>序号</th>
-                        <th>合作方名称</th>
+                        <th>用户账号</th>
                         <th>项目名称</th>
-                        <th>打款类型</th>
-                        <th>应付款</th>
-                        <th>实付款</th>
-                        <th>凭据</th>
-                        <th>打款时间</th>
+                        <th>档位名称</th>
+                        <th>份数</th>
+                        <th>期数</th>
+                        <th>年化利率</th>
+                        <th>投资总额</th>
+                        <th>本金</th>
+                        <th>收益</th>
+                        <th>合计金额</th>
+                        <th>是否已分红</th>
+                        <th>应分红时间</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${paymentCommitRecordList}" var="paymentCommit">
+                    <c:forEach items="${paymentCommitBonusList}" var="paymentCommit">
                         <tr class="text-c">
-                            <td>${paymentCommit.id}</td>
-                            <td>${paymentCommit.partnerName}</td>
+                            <td>${paymentCommit.userPhone}</td>
                             <td>${paymentCommit.itemName}</td>
+                            <td>${paymentCommit.itemLevelName}</td>
+                            <td>${paymentCommit.number}</td>
+                            <td>${paymentCommit.period}</td>
+                            <td>${paymentCommit.yearRate}%</td>
+                            <td>${paymentCommit.investPrincipal}</td>
+                            <td>${paymentCommit.principal}</td>
+                            <td>${paymentCommit.income}</td>
+                            <td>${paymentCommit.totalAmount}</td>
                             <c:choose>
-                                <c:when test="${paymentCommit.commitType==1}">
-                                    <td>首款</td>
+                                <c:when test="${paymentCommit.status==0}">
+                                    <td>未分红</td>
                                 </c:when>
-                                <c:when test="${paymentCommit.commitType==2}">
-                                    <td>尾款</td>
+                                <c:when test="${paymentCommit.status==1}">
+                                    <td>已分红</td>
                                 </c:when>
                             </c:choose>
-                            <td>${paymentCommit.shouldAmount}</td>
-                            <td>${paymentCommit.actualAmount}</td>
-                            <td>    <a style="text-decoration:none" class="ml-5" href="javascript:;" onClick="project_edit('财务-打款记录-查看','财务-待打款列表-打款.html','10001')" title="查看">查看</a>
-                                <a style="text-decoration:none" class="ml-5" href="javascript:;" title="下载">下载</a>
-                            </td>
                             <td>
-                                <c:set var="commitTime" value="${paymentCommit.commitTime}" scope="session"/>
-                                <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(String.valueOf(session.getAttribute("commitTime"))))%>
+                                <c:set var="shouldTime" value="${paymentCommit.shouldTime}" scope="session"/>
+                                <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(String.valueOf(session.getAttribute("shouldTime"))))%>
                             </td>
                         </tr>
                     </c:forEach>

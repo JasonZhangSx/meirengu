@@ -106,6 +106,7 @@ public class CollectPaymentController extends BaseController {
                 BigDecimal month = new BigDecimal(rate[1]).divide(new BigDecimal(rate[2]),BigDecimal.ROUND_CEILING, BigDecimal.ROUND_HALF_EVEN).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
                 if (month.compareTo(prepaidBonus)<0){
                     BigDecimal m = month.multiply(new BigDecimal(amount.get(key)).multiply(yearRate).divide(new BigDecimal(12),BigDecimal.ROUND_CEILING, BigDecimal.ROUND_HALF_EVEN)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+                    m = m.add(new BigDecimal(amount.get(key)));
                     amount.put(key,String.valueOf(m));
                 }else {
                     BigDecimal m = prepaidBonus.multiply(new BigDecimal(amount.get(key)).multiply(yearRate).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP).divide(new BigDecimal(12),BigDecimal.ROUND_CEILING, BigDecimal.ROUND_HALF_EVEN));
