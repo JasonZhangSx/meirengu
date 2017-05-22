@@ -214,10 +214,10 @@
      * 检索
      **/
     function search(){
+        var refundSn = $("#refundSn").val();
         var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
-        var itemName = $("#itemName").val();
-        table.column(1).search(orderSn).column(2).search(userPhone).column(3).search(itemName).draw();
+        table.column(1).search(refundSn).column(2).search(orderSn).column(3).search(userPhone).draw();
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

@@ -237,7 +237,6 @@
         var refundSn = $("#refundSn").val();
         var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
-
         table.column(1).search(refundSn).column(2).search(orderSn).column(3).search(userPhone).draw();
     }
 

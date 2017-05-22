@@ -53,7 +53,7 @@ public class RebateController extends BaseController{
                           @RequestParam(value = "order", required = false) String order,
                           @RequestParam(value = "rebate_id", required = false) Integer rebateId,
                           @RequestParam(value = "rebate_sn", required = false) String rebateSn,
-                          @RequestParam(value = "batch_id", required = false) Integer rebateBatchId,
+                          @RequestParam(value = "rebate_batch_id", required = false) Integer rebateBatchId,
                           @RequestParam(value = "channel", required = false) String channel,
                           @RequestParam(value = "user_id", required = false) Integer userId,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
