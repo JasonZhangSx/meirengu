@@ -26,9 +26,9 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
+                订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">
+                退款单编号：<input type="text" class="input-text" style="width:120px;" id="refundSn">　
                 用户账号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
-                项目名称：<input type="text" class="input-text" style="width:120px;" id="itemName">
 
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
@@ -166,9 +166,9 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                { "name": "refundSn", "targets": 1 },
                 { "name": "orderSn",   "targets": 2 },
                 { "name": "userPhone",  "targets": 3 },
-                { "name": "itemName", "targets": 4 },
                 {
                     "targets": 13,
                     "render": function (data, type, row, meta) {
@@ -234,10 +234,11 @@
      * 检索
      **/
     function search(){
+        var refundSn = $("#refundSn").val();
         var orderSn = $("#orderSn").val();
         var userPhone = $("#userPhone").val();
-        var itemName = $("#itemName").val();
-        table.column(2).search(orderSn).column(3).search(userPhone).column(4).search(itemName).draw();
+
+        table.column(1).search(refundSn).column(2).search(orderSn).column(3).search(userPhone).draw();
     }
 
     function zd_alert(){

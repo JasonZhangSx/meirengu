@@ -128,12 +128,16 @@ public class RefundController extends BaseController{
                           @RequestParam(value = "sort_by", required = false) String sortBy,
                           @RequestParam(value = "order", required = false) String order,
                           @RequestParam(value = "order_sn", required = false) String orderSn,
+                          @RequestParam(value = "refund_sn", required = false) String refundSn,
                           @RequestParam(value = "user_id", required = false) Integer userId,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "refund_state", required = false) Integer refundState){
         Map<String, Object> map = new HashMap<>();
         if (StringUtils.isNotBlank(orderSn)) {
             map.put("orderSn", orderSn);
+        }
+        if (StringUtils.isNotBlank(refundSn)) {
+            map.put("refundSn", refundSn);
         }
         if (!NumberUtil.isNullOrZero(userId)) {
             map.put("userId", userId);

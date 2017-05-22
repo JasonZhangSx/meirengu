@@ -55,11 +55,17 @@ public class OrderController extends BaseController{
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
         //查询待支付的订单
+        List<Integer> orderStateList = null;
         if (queryVo.getOrderState() == null || queryVo.getOrderState() == 4) {
             queryVo.setOrderState(null);
-            List<Integer> orderStateList = new ArrayList<Integer>();
+            orderStateList = new ArrayList<Integer>();
             orderStateList.add(2);
             orderStateList.add(4);
+            queryVo.setOrderStateList(orderStateList);
+        } else if (queryVo.getOrderState() == 5) {
+            orderStateList = new ArrayList<Integer>();
+            orderStateList.add(3);
+            orderStateList.add(5);
             queryVo.setOrderStateList(orderStateList);
         }
 

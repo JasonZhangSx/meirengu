@@ -49,6 +49,8 @@ public class QueryVo implements Serializable {
 	private List<Integer> orderStateList;
 	/** 退款订单状态 */
 	private Integer refundState;
+	/** 退款订单编号 */
+	private String refundSn;
 
 	public QueryVo(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
@@ -92,6 +94,9 @@ public class QueryVo implements Serializable {
 					break;
 				case "refundState":
 					this.refundState = Integer.parseInt(parameterSearchValue);
+					break;
+				case "refundSn":
+					this.refundSn = parameterSearchValue;
 					break;
 				default:
 					logger.info("tradeQueryVo中没有: {} 字段", parameterName);
@@ -202,7 +207,13 @@ public class QueryVo implements Serializable {
 		this.refundState = refundState;
 	}
 
+	public String getRefundSn() {
+		return refundSn;
+	}
 
+	public void setRefundSn(String refundSn) {
+		this.refundSn = refundSn;
+	}
 
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
@@ -251,6 +262,10 @@ public class QueryVo implements Serializable {
 		}
 		if (this.getRefundState() != null) {
 			sb.append("refund_state=" + this.getRefundState());
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getRefundSn())) {
+			sb.append("refund_sn=" + this.getRefundSn());
 			sb.append("&");
 		}
 		//去掉最后一个&

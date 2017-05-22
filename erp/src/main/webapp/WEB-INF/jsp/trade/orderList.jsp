@@ -34,6 +34,7 @@
                             <select id="orderState" class="select">
                                 <option value="4" selected>待支付</option>
                                 <option value="6">已支付</option>
+                                <option value="5">已失效</option>
                             </select>
                         </span>
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
@@ -177,7 +178,6 @@
                         if (userAddressId != null && userAddressId != 0) {
                             return row.addUserName + "(" + row.addUserPhone + ")";
                         }
-                        return "";
                     }
                 },
                 {
@@ -187,7 +187,6 @@
                         if (userAddressId != null && userAddressId != 0) {
                             return row.addProvince + row.addCity + row.addArea + row.addUserAddress;
                         }
-                        return "";
                     }
                 },
                 {
@@ -197,8 +196,9 @@
                             return "待支付";
                         } else if (data == 6){
                             return "已支付";
+                        } else if (data == 3 || data == 5){
+                            return "已失效";
                         }
-                        return "数据错误";
                     }
                 },
                 {
@@ -225,10 +225,16 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
                 { "name": "orderSn",   "targets": 1 },
                 { "name": "userPhone",  "targets": 2 },
                 { "name": "itemName", "targets": 3 },
                 { "name": "orderState", "targets": 15 },
+                //default
+                {
+                    "defaultContent": "",
+                    "targets":[13,14,17]
+                },
                 {
                     "targets": 18,
                     "render": function (data, type, row, meta) {
