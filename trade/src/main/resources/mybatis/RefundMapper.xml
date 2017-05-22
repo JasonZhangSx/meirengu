@@ -4,6 +4,8 @@
 	<sql id="table_name">refund</sql>
 	<sql id="select_columns">refund_id as refundId, refund_sn as refundSn, order_id as orderId, order_sn as orderSn, third_order_sn as thirdOrderSn, third_refund_sn as thirdRefundSn, item_id as itemId, partner_id as partnerId, user_id as userId, user_name as userName, user_phone as userPhone, create_time as createTime, order_amount as orderAmount, order_refund as orderRefund, refund_paymentname as refundPaymentname, refund_paymentcode as refundPaymentcode, refund_message as refundMessage, user_message as userMessage, admin_message as adminMessage, partner_time as partnerTime, admin_time as adminTime, confirm_time as confirmTime, refund_type as refundType, refund_state as refundState, user_confirm as userConfirm
 	</sql>
+	<sql id="select_columns_refund">tb.refund_id as refundId, tb.refund_sn as refundSn, tb.order_id as orderId, tb.order_sn as orderSn, tb.third_order_sn as thirdOrderSn, tb.third_refund_sn as thirdRefundSn, tb.item_id as itemId, tb.partner_id as partnerId, tb.user_id as userId, tb.user_name as userName, tb.user_phone as userPhone, tb.create_time as createTime, tb.order_amount as orderAmount, tb.order_refund as orderRefund, tb.refund_paymentname as refundPaymentname, tb.refund_paymentcode as refundPaymentcode, tb.refund_message as refundMessage, tb.user_message as userMessage, tb.admin_message as adminMessage, tb.partner_time as partnerTime, tb.admin_time as adminTime, tb.confirm_time as confirmTime, tb.refund_type as refundType, tb.refund_state as refundState, tb.user_confirm as userConfirm
+	</sql>
 	<insert id="insert" parameterType="refund" useGeneratedKeys="true" keyProperty="refundId" >
 		INSERT INTO <include refid="table_name" />
 			(refund_id, refund_sn, order_id, order_sn, third_order_sn, third_refund_sn, item_id, partner_id, user_id, user_name, user_phone, order_amount, order_refund, refund_paymentname, refund_paymentcode, refund_message, user_message, admin_message, partner_time, admin_time, confirm_time, refund_type, refund_state, user_confirm)
@@ -181,7 +183,7 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />,
+		select <include refid="select_columns_refund" />,
 		tbo.item_name AS itemName,
 		tbo.item_level_name AS itemLevelName,
 		tbo.item_num AS itemNum

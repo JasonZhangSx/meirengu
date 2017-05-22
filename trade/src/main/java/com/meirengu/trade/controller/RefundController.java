@@ -145,7 +145,7 @@ public class RefundController extends BaseController{
             map.put("refundState", refundState);
         }
         if (StringUtils.isNotBlank(sortBy)) {
-            map.put("sortBy", sortBy);
+            map.put("sortBy", "tb." + sortBy);
         }
         if (StringUtils.isNotBlank(order)) {
             map.put("order", order);
