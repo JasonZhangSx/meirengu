@@ -1,6 +1,7 @@
 package com.meirengu.trade.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -8,7 +9,9 @@ import com.meirengu.model.Result;
 import com.meirengu.trade.common.Constant;
 import com.meirengu.trade.model.Rebate;
 import com.meirengu.trade.model.RebateBatch;
+import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateBatchService;
+import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.utils.NumberUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -175,6 +178,18 @@ public class RebateBatchController extends BaseController{
         try{
             page = rebateBatchService.getListByPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @RequestMapping(value = "/{rebate_batch_id}", method = RequestMethod.GET)
+    public Result getRebateBatchInfo(@PathVariable("rebate_batch_id") Integer rebateBatchId){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject = rebateBatchService.getRebateBatchInfo(rebateBatchId);
+            return setResult(StatusCode.OK, jsonObject, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

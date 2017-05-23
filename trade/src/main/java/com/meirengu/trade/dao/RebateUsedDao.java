@@ -18,11 +18,17 @@ public interface RebateUsedDao extends BaseDao<RebateUsed>{
      * @param rowBounds
      * @return
      */
-    public List<Map<String, Object>> getVerifyInfoByPage(Map map, RowBounds rowBounds);
+    List<Map<String, Object>> getVerifyInfoByPage(Map map, RowBounds rowBounds);
     /**
      * 根据条件获取总条数
      * @param map
      * @return
      */
-    public Integer getVerifyInfoCount(Map map);
+    Integer getVerifyInfoCount(Map map);
+//    /**
+//     * 查询符合条件的记录数量
+//     * @param map
+//     * @return
+//     */
+//    Integer getUsedCount(Map map);
 }

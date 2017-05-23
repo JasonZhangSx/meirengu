@@ -32,4 +32,16 @@ public interface RebateUsedService extends BaseService<RebateUsed>{
      * @return
      */
     Page getVerifyInfoByPage(Page page, Map map);
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    Integer getVerifyInfoCount(Map map);
+//    /**
+//     * 查询符合条件的记录数量
+//     * @param map
+//     * @return
+//     */
+//    Integer getUsedCount(Map map);
 }

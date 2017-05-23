@@ -93,4 +93,21 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         LOGGER.info(" page params is "+ JSON.toJSON(map));
         return page;
     }
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    public Integer getVerifyInfoCount(Map map) {
+        return rebateUsedDao.getVerifyInfoCount(map);
+    }
+
+//    /**
+//     * 查询符合条件的记录数量
+//     * @param map
+//     * @return
+//     */
+//    public Integer getUsedCount(Map map){
+//        return rebateUsedDao.getUsedCount(map);
+//    }
 }
