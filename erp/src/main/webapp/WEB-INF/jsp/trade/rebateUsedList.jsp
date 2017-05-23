@@ -120,7 +120,7 @@
                 {"data": "orderAmount"},
                 {"data": "costAmount"},
                 {
-                    "data": "usedTime",
+                    "data": "createTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
                             return new Date(data).Format("yyyy-MM-dd");

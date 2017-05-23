@@ -147,6 +147,7 @@
 		select
 		<include refid="rebate_used_select_columns" />,
 		<include refid="rebate_select_columns" />,
+		<include refid="rebate_batch_select_columns" />,
 		<include refid="order_select_columns" />
 		FROM
 		rebate_used tb
