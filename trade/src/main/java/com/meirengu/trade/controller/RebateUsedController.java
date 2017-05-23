@@ -33,7 +33,7 @@ public class RebateUsedController extends BaseController{
 
     /**
      * 抵扣券核销列表
-     * @param pageNum
+      * @param pageNum
      * @param pageSize
      * @param sortBy
      * @param order
@@ -42,9 +42,10 @@ public class RebateUsedController extends BaseController{
      * @param userId
      * @param userPhone
      * @param orderSn
+     * @param orderState
      * @param verifyStatus
-     * @param usedTimeBegin
-     * @param usedTimeEnd
+     * @param createTimeBegin
+     * @param createTimeEnd
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
@@ -59,8 +60,8 @@ public class RebateUsedController extends BaseController{
                           @RequestParam(value = "order_sn", required = false) String orderSn,
                           @RequestParam(value = "order_state", required = false) String orderState,
                           @RequestParam(value = "verify_status", required = false) Integer verifyStatus,
-                          @RequestParam(value = "used_time_begin", required = false) Date usedTimeBegin,
-                          @RequestParam(value = "used_time_end", required = false) Date usedTimeEnd){
+                          @RequestParam(value = "create_time_begin", required = false) Date createTimeBegin,
+                          @RequestParam(value = "create_time_end", required = false) Date createTimeEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("rebateSn", rebateSn);
         map.put("rebateBatchId", rebateBatchId);
@@ -69,8 +70,8 @@ public class RebateUsedController extends BaseController{
         map.put("orderSn", orderSn);
         map.put("orderState", orderState);
         map.put("verifyStatus", verifyStatus);
-        map.put("usedTimeBegin", usedTimeBegin);
-        map.put("usedTimeEnd", usedTimeEnd);
+        map.put("createTimeBegin", createTimeBegin);
+        map.put("createTimeEnd", createTimeEnd);
         if ("create_time".equals(sortBy)) {
             sortBy = "tb.create_time";
         }

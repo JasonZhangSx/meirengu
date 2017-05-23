@@ -5,11 +5,11 @@
 	<sql id="table_name">`rebate_used`</sql>
 	<sql id="select_columns">
 		id as id, user_id as userId, user_phone as userPhone, rebate_sn as rebateSn, rebate_batch_id as rebateBatchId, activity_identification as activityIdentification,
-		order_sn as orderSn, rebate_amount as rebateAmount, used_time as usedTime, verify_status as verifyStatus, verify_time as verifyTime
+		order_sn as orderSn, rebate_amount as rebateAmount, create_time as createTime, verify_status as verifyStatus, verify_time as verifyTime
 	</sql>
 	<sql id="rebate_used_select_columns">
 		tb.id as id, tb.user_id as userId, tb.user_phone as userPhone, tb.rebate_sn as rebateSn, tb.rebate_batch_id as rebateBatchId, tb.activity_identification as activityIdentification,
-		tb.order_sn as orderSn, tb.rebate_amount as rebateAmount, tb.used_time as usedTime, tb.verify_status as verifyStatus, tb.verify_time as verifyTime
+		tb.order_sn as orderSn, tb.rebate_amount as rebateAmount, tb.create_time as createTime, tb.verify_status as verifyStatus, tb.verify_time as verifyTime
 	</sql>
 	<sql id="rebate_select_columns">
 		tr.valid_end_time as validEndTime
@@ -27,9 +27,9 @@
 
 	<insert id="insert" parameterType="rebateUsed" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, user_id, user_phone, rebate_sn, rebate_batch_id, activity_identification, order_sn, rebate_amount, used_time, verify_status, verify_time)
+			(id, user_id, user_phone, rebate_sn, rebate_batch_id, activity_identification, order_sn, rebate_amount, verify_status, verify_time)
 		VALUES
-			(#{id}, #{userId}, #{userPhone}, #{rebateSn}, #{rebateBatchId}, #{activityIdentification}, #{orderSn}, #{rebateAmount}, #{usedTime}, #{verifyStatus}, #{verifyTime})
+			(#{id}, #{userId}, #{userPhone}, #{rebateSn}, #{rebateBatchId}, #{activityIdentification}, #{orderSn}, #{rebateAmount}, #{verifyStatus}, #{verifyTime})
 	</insert>
 
 	<update id="update" parameterType="rebateUsed">
@@ -56,8 +56,8 @@
 			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				rebate_amount=#{rebateAmount},
 			</if>
-			<if test="@Ognl@isNotEmpty(usedTime)">
-				used_time=#{usedTime},
+			<if test="@Ognl@isNotEmpty(createTime)">
+				create_time=#{createTime},
 			</if>
 			<if test="@Ognl@isNotEmpty(verifyStatus)">
 				verify_status=#{verifyStatus},
@@ -103,11 +103,11 @@
 			<if test="@Ognl@isNotEmpty(rebateAmount)">
 				AND tb.rebate_amount=#{rebateAmount}
 			</if>
-			<if test="@Ognl@isNotEmpty(usedTimeBegin)">
-				AND tb.used_time>=#{usedTimeBegin}
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND tb.create_time>=#{createTimeBegin}
 			</if>
-			<if test="@Ognl@isNotEmpty(usedTimeEnd)">
-				AND tb.used_time &lt;= #{usedTimeEnd}
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND tb.create_time &lt;= #{createTimeEnd}
 			</if>
 			<if test="@Ognl@isNotEmpty(verifyStatus)">
 				AND tb.verify_status &lt;= #{verifyStatus}

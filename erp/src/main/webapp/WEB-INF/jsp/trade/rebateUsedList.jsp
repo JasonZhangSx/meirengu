@@ -44,26 +44,25 @@
             </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="rebateBatchInsert('添加抵扣券批次','/erp/rebate_batch/toAdd')"
-                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加抵扣券批次</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
                         <th></th>
-                        <th>抵扣券ID</th>
                         <th>抵扣券编号</th>
-                        <th>有效期开始时间</th>
-                        <th>有效期截止时间</th>
-                        <th>抵扣券批次ID</th>
                         <th>抵扣券适用范围</th>
                         <th>抵扣券金额</th>
-                        <th>用户手机号</th>
-                        <th>用户领取时间</th>
+                        <th>有效期截止时间</th>
+                        <th>抵扣券批次ID</th>
                         <th>订单编号</th>
+                        <th>用户手机号</th>
+                        <th>订单金额</th>
+                        <th>实际付款</th>
                         <th>使用时间</th>
+                        <th>核销时间</th>
                         <th>状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                 </table>
@@ -92,7 +91,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>rebate'
+                'url': '<%=basePath %>rebate_used'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -104,58 +103,73 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
-                {"data": "rebateId"},
                 {"data": "rebateSn"},
-                {
-                    "data": "validStartTime",
-                    defaultContent:""
-                },
-                {
-                    "data": "validEndTime",
-                    defaultContent:""
-                },
-                {"data": "rebateBatchId"},
                 {"data": "rebateScope"},
                 {"data": "rebateAmount"},
                 {
-                    "data": "userPhone",
-                    defaultContent:""
-                },
-                {
-                    "data": "receiveTime",
-                    defaultContent:""
-                },
-                {
-                    "data": "orderSn",
-                    defaultContent:""
-                },
-                {
-                    "data": "usedTime",
-                    defaultContent:""
-                },
-                {
-                    "data": "receiveStatus",
+                    "data": "validEndTime",
                     "render": function (data, type, row, meta) {
-                        if (data == 1) {
-                            return "未使用";
-                        } else if (data == 2) {
-                            return "已使用";
-                        } else if (data == 3) {
-                            return "已失效";
-                        } else {
-                            return "";
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
                         }
                     }
                 },
+                {"data": "rebateBatchId"},
+                {"data": "orderSn"},
+                {"data": "userPhone"},
+                {"data": "orderAmount"},
+                {"data": "costAmount"},
+                {
+                    "data": "usedTime",
+                    "render": function (data, type, row, meta) {
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
+                        }
+                    }
+                },
+                {
+                    "data": "verifyTime",
+                    "render": function (data, type, row, meta) {
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
+                        }
+                    }
+                },
+                {
+                    "data": "verifyStatus",
+                    "render": function (data, type, row, meta) {
+                        if (data == 1) {
+                            return "已核销";
+                        } else if (data == 0) {
+                            return "未核销";
+                        }
+                    }
+                }
             ],
             "columnDefs": [
                 {
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
-                }
-//                { "name": "batchId",  "targets": 1 },
-//                { "name": "batchStatue", "targets": 12 }
+                },
+                {
+                    "targets": 13,
+                    "render": function (data, type, row, meta) {
+                        var context =
+                                {
+                                    func: [
+                                        {"name": "核销", "fn": "verify(\'" + row.id + "\')", "type": "primary"}
+                                    ]
+                                };
+                        var html = template(context);
+                        return html;
+                    }
+                },
+                //default
+                {
+                    "defaultContent": "",
+                    "targets":[11]
+                },
             ],
             "language": {
                 "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
@@ -206,11 +220,11 @@
      * 检索
      **/
     function search(){
+        var orderSn = $("#orderSn").val();
         var rebateSn = $("#rebateSn").val();
-        var rebateBatchId = $("#rebateBatchId").val();
         var userPhone = $("#userPhone").val();
-        var receiveStatus = $("#receiveStatus").val();
-        table.column(2).search(rebateSn).column(5).search(rebateBatchId).column(8).search(userPhone).column(12).search(receiveStatus).draw();
+        var verifyStatus = $("#verifyStatus").val();
+        table.column(1).search(rebateSn).column(6).search(orderSn).column(7).search(userPhone).column(12).search(verifyStatus).draw();
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

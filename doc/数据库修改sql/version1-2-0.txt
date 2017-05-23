@@ -2,3 +2,8 @@
 修改字段备注
 ALTER TABLE `user_center`.`user`     CHANGE `invest_conditions` `invest_conditions` TINYINT(3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
 ******************user_center end***************************
+******************trade begin*************************
+抵扣券使用表
+ALTER TABLE `rebate_used` CHANGE `used_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '使用时间';
+******************trade end***************************
+

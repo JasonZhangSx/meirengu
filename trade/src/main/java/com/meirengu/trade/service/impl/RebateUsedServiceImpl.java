@@ -66,7 +66,6 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         rebateUsed.setActivityIdentification(rebateReceive.getActivityIdentification());
         rebateUsed.setOrderSn(orderSn);
         rebateUsed.setRebateAmount(rebateBatch.getRebateAmount());
-        rebateUsed.setUsedTime(new Date());
         rebateUsed.setVerifyStatus(Constant.NO);
         int i = insert(rebateUsed);
         if (!(j == 1 && i == 1)) {
