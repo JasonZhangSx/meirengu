@@ -821,7 +821,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return orderDao.updateBySn(order);
     }
     /**
-     * 通过订单编号更新订单消息
+     * 支付回调
      * @param order
      * @return
      */
@@ -829,13 +829,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         int i = updateBySn(order);
         if (i > 0) {
             Map<String, Object> map = orderDao.orderDetailBySn(order.getOrderSn());
-            //下单成功回调修改已筹金额
+            //支付成功回调修改已筹金额
             Map<String, String> paramMap = new HashMap<String, String>();
             paramMap.put("item_id", map.get("itemId").toString());
             paramMap.put("amount", map.get("orderAmount").toString());
             String url = ConfigUtil.getConfig("item.complete.amount.update.url");
             HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
             logger.debug("Request: {} getResponse: {}", url, httpResult);
+            //支付成功修改被邀请人的投资时间
+            JSONObject paramJson = new JSONObject();
+            paramJson.put("invited_user_id",map.get("userId"));
+            paramJson.put("invited_user_phone",map.get("userPhone"));
+            paramJson.put("invest_time",map.get("finishedTime"));
+            sendUserEditInviter(paramJson.toJSONString(), order.getOrderSn());
         }
     }
     /**
@@ -917,6 +923,28 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             paramJson.put("file_name",fileName);
             paramJson.put("file_path",foldName);
             sendUserInviteRewardNotify(paramJson.toJSONString());
+        }
+    }
+    /**
+     * 发送消息：投资时间修改
+     * @param paramStr
+     */
+    private void sendUserEditInviter(String paramStr, String orderSn){
+        String key = "UEI" + orderSn;
+        Message msg = new Message("user", "editInviter", key, paramStr.getBytes());
+        SendResult sendResult = null;
+        try {
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info("sendResult: {}, key: {}", sendResult, key);
+        } catch (Exception e) {
+            logger.error("发送消息异常：{}", e);
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.error("发送消息失败 sendResult: {}, key: {} ", sendResult, key);
         }
     }
 
@@ -1002,17 +1030,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
         Map<String, String> params = null;
         if (orderMap != null) {
-            params = new HashMap<String, String>();
             int orderState = Integer.parseInt(orderMap.get("orderState").toString());
-            //如果已支付，则请求用户服务修改被邀请人的投资时间
-            if (orderState == OrderStateEnum.PAID.getValue()) {
-                String url = ConfigUtil.getConfig("invite.invest.notify.url");
-                params.put("invited_user_id", orderMap.get("userId").toString());
-                params.put("invited_user_phone", orderMap.get("userPhone").toString());
-                params.put("invest_time", orderMap.get("finishedTime").toString());
-                HttpResult inviterResult = HttpUtil.doPut(url, params);
-                logger.debug("Request: {} getResponse: {}", url, inviterResult);
-            }else if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
+            if (orderState == OrderStateEnum.BOOK_ADUIT_PASS.getValue()
                     || orderState == OrderStateEnum.UNPAID.getValue()) {
                 Order order = new Order();
                 order.setOrderSn(orderSn);
