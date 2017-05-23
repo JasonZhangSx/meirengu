@@ -8,6 +8,7 @@
 		batch_id as batchId, rebate_type as rebateType, rebate_limit_amount as rebateLimitAmount, rebate_use_range as rebateUseRange, rebate_use_range_value as rebateUseRangeValue, rebate_mark as rebateMark, rebate_name as rebateName, rebate_scope as rebateScope, rebate_amount as rebateAmount, rebate_limit as rebateLimit, valid_days as validDays, valid_start_time as validStartTime, valid_end_time as validEndTime, valid_type as validType, batch_statue as batchStatue, batch_count as batchCount, channel as channel, budget_amount as budgetAmount, remarks as remarks, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
+
 	<insert id="insert" parameterType="rebateBatch" useGeneratedKeys="true" keyProperty="batchId" >
 		INSERT INTO <include refid="table_name" />
 			(batch_id, rebate_type, rebate_limit_amount, rebate_use_range, rebate_use_range_value, rebate_mark, rebate_name, rebate_scope, rebate_amount, rebate_limit, valid_days, valid_start_time, valid_end_time, valid_type, batch_statue, batch_count, channel, budget_amount, remarks, create_time, operate_account)

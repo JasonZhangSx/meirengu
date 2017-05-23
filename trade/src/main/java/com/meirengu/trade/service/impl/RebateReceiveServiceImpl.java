@@ -253,6 +253,7 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
                     result.setCode(StatusCode.OK);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
                 } else {
+                    //优惠券被领取完后自动置失效
                     logger.error("用户id为: " + userId + "的用户无法领取批次号为: " + rebateBatch.getBatchId() + "的优惠券，原因：该批次的券已被领取完");
                     result.setCode(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE);
                     result.setMsg(StatusCode.codeMsgMap.get(StatusCode.HAS_REACHE_MAXIMUM_NUMBER_OF_REBATE));

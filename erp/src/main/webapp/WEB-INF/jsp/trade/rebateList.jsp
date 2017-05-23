@@ -110,13 +110,17 @@
                 {
                     "data": "validStartTime",
                     "render": function (data, type, row, meta) {
-                        return new Date(data).Format("yyyy-MM-dd");
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
+                        }
                     }
                 },
                 {
                     "data": "validEndTime",
                     "render": function (data, type, row, meta) {
-                        return new Date(data).Format("yyyy-MM-dd");
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
+                        }
                     }
                 },
                 {"data": "rebateBatchId"},
@@ -125,7 +129,14 @@
                 {"data": "userPhone"},
                 {"data": "receiveTime"},
                 {"data": "orderSn"},
-                {"data": "usedTime"},
+                {
+                    "data": "usedTime",
+                    "render": function (data, type, row, meta) {
+                        if (data != null){
+                            return new Date(data).Format("yyyy-MM-dd");
+                        }
+                    }
+                },
                 {
                     "data": "receiveStatus",
                     "render": function (data, type, row, meta) {
@@ -145,9 +156,7 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-//                { "name": "batchId",  "targets": 1 },
-//                { "name": "batchStatue", "targets": 12 }
-                { "name": "rebateSn", "targets": 1 },
+                { "name": "rebateSn", "targets": 2 },
                 { "name": "rebateBatchId",   "targets": 5 },
                 { "name": "userPhone",  "targets": 8 },
                 { "name": "orderSn",  "targets": 10 },

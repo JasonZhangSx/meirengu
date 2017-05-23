@@ -884,7 +884,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 //                    }
                     map = new HashMap<String, Object>();
                     map.put("userId", order.get("userId"));
-                    map.put("costAmount", order.get("costAmount"));
+                    map.put("orderAmount", order.get("orderAmount"));
                     //根据订单编号判断项目类型
                     map.put("itemType", order.get("orderSn").toString().substring(2,3));
                     resultList.add(map);

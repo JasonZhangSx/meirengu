@@ -105,6 +105,15 @@ public class QueryVo implements Serializable {
 				case "refundSn":
 					this.setRefundSn(parameterSearchValue);
 					break;
+				case "rebateSn":
+					this.setRebateSn(parameterSearchValue);
+					break;
+				case "rebateBatchId":
+					this.setRebateBatchId(Integer.parseInt(parameterSearchValue));
+					break;
+				case "receiveStatus":
+					this.setReceiveStatus(Integer.parseInt(parameterSearchValue));
+					break;
 				default:
 					logger.info("tradeQueryVo中没有: {} 字段", parameterName);
 					break;
@@ -303,11 +312,11 @@ public class QueryVo implements Serializable {
 			sb.append("rebate_sn=" + this.getRebateSn());
 			sb.append("&");
 		}
-		if (NumberUtil.isNullOrZero(this.getRebateBatchId())) {
+		if (!NumberUtil.isNullOrZero(this.getRebateBatchId())) {
 			sb.append("rebate_batch_id=" + this.getRebateBatchId());
 			sb.append("&");
 		}
-		if (NumberUtil.isNullOrZero(this.getReceiveStatus())) {
+		if (!NumberUtil.isNullOrZero(this.getReceiveStatus())) {
 			sb.append("receive_status=" + this.getReceiveStatus());
 			sb.append("&");
 		}
