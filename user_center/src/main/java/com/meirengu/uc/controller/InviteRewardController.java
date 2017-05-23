@@ -59,7 +59,7 @@ public class InviteRewardController extends BaseController{
             if(investInfo.size()!=0){
                 for (Map map:investInfo){
                     String userId = String.valueOf(map.get("userId"));
-                    String investMoney = String.valueOf(map.get("costAmount"));
+                    String investMoney = String.valueOf(map.get("orderAmount"));
                     String type = String.valueOf(map.get("itemType"));
 
                     Inviter inviter = new Inviter();
