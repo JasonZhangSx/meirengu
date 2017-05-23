@@ -14,6 +14,7 @@ import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ContractUtil;
 import com.meirengu.uc.utils.NumberToCN;
+import com.meirengu.uc.init.ThemisClientInit;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.HttpUtil;
@@ -45,9 +46,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
-
-import static com.meirengu.uc.utils.ThemisClientInit.getClient;
-
 /**
  * Created by huoyan403 on 4/11/2017.
  */
@@ -65,6 +63,8 @@ public class ContactServiceImpl implements ContactService {
     private ContractDao contractDao;
     @Autowired
     private AddressServiceImpl addressServiceImpl;
+    @Autowired
+    private ThemisClientInit themisClientInit;
 
     @Override
     public Result CreateIncomeContactFile(Map<String,String> map) {
@@ -205,7 +205,7 @@ public class ContactServiceImpl implements ContactService {
 
                     request.setStampParams(stampParams);
                     request.setTaget(html);
-                    ContactHtmlCreateFileResponse response = getClient().getContactHtmlCreateFile(request);
+                    ContactHtmlCreateFileResponse response = themisClientInit.getClient().getContactHtmlCreateFile(request);
 
                     //为生成、保全合同 准备数据
                     map.put("phone",user.getPhone()); //用户手机号
@@ -340,7 +340,7 @@ public class ContactServiceImpl implements ContactService {
         for(Contract contract1:contractList){
             Map<String,String> urlMap = new HashMap<String,String>();
             request.setPreservationId(new Long(contract1.getPreservationId()));
-            ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
+            ContractFileViewUrlResponse response = themisClientInit.getClient().getContactFileViewUrl(request);
             urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
             urlMap.put("generate", Constants.ONE_STRING);
             urlMap.put("url",response.getViewUrl());
@@ -359,7 +359,7 @@ public class ContactServiceImpl implements ContactService {
         List<Map<String, String>> downUrl = new ArrayList<>();
         for(Contract contract1:contractList){
             request.setPreservationId(new Long(contract1.getPreservationId()));
-            ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
+            ContractFileDownloadUrlResponse response = themisClientInit.getClient().getContactFileDownloadUrl(request);
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
                 Map<String,String> urlMap = new HashMap<String,String>();
@@ -405,14 +405,14 @@ public class ContactServiceImpl implements ContactService {
             builder.setComments(map.get("remarks")); //备注
             builder.setIsNeedSign(true);//是否启用保全签章
 
-            PreservationCreateResponse preservationCreateResponse = getClient().createPreservation(builder);
+            PreservationCreateResponse preservationCreateResponse = themisClientInit.getClient().createPreservation(builder);
 
             //根据保全id 下载最终版合同
             if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
                 logger.info("Create a preservation success message:{}",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
                 ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
                 contractFileDownloadUrlRequest.setPreservationId(preservationCreateResponse.getPreservationId());
-                ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
+                ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = themisClientInit.getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
                 //根据下载url 获取文件流 并上传oss服务器
                 if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
                     logger.info("get download link success url :{}",contractFileDownloadUrlResponse.getDownUrl());

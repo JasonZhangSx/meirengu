@@ -1,7 +1,9 @@
-package com.meirengu.uc.utils;
+package com.meirengu.uc.init;
 
 import com.google.common.collect.Maps;
+import com.meirengu.uc.utils.ConfigUtil;
 import org.mapu.themis.ThemisClient;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import java.util.Map;
  * @author luopeng
  *         Created on 2014/5/5.
  */
+@Component
 public class ThemisClientInit {
 
 	//请填入服务地址（根据环境的不同选择不同的服务地址），沙箱环境，正式环境
@@ -34,7 +37,7 @@ public class ThemisClientInit {
 		themisClient = new ThemisClient(SERVICE_URL,APP_KEY,APP_SECRET);
 	}
 
-	public static ThemisClient getClient(){
+	public ThemisClient getClient(){
 		return themisClient;
 	}
 

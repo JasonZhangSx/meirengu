@@ -1,12 +1,13 @@
 package com.meirengu.uc.service;
 
+import com.meirengu.uc.init.ThemisClientInit;
 import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.utils.ThemisClientInit;
 import com.meirengu.utils.OSSFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.mapu.themis.api.request.PingRequest;
 import org.mapu.themis.api.response.PingResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import rop.thirdparty.com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
@@ -46,13 +47,16 @@ public class TestContract extends ThemisClientInit {
         System.out.print("MRG-SYZR-"+sdf.format(new Date().getTime())+"-"+new Random().nextInt(10000));
 //          fileUtils.upload(inputStream,fileName,contractFolderName);
     }
-@Test
+
+    @Autowired
+    private ThemisClientInit themisClientInit;
+    @Test
     public  void ping() {
 //		Timer timer = new Timer();
 //		TimerTask task = new TimerTask() {
 //			public void run() {
         PingRequest request = new PingRequest();
-        PingResponse response = getClient().testPing(request);
+        PingResponse response = themisClientInit.getClient().testPing(request);
         if(!response.isSuccess()){
             try {
                 FileUtils.write(new File("e:\\result.txt"), JSONObject.toJSONString(response), "UTF-8",true);
