@@ -13,12 +13,15 @@ import com.meirengu.erp.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,8 +54,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("create_list")
     public ModelAndView itemCreateList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "1,4");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "1,4");
 
         return new ModelAndView("/item/itemCreateList", map);
     }
@@ -63,8 +66,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("verify_list")
     public ModelAndView itemVerifyList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "2");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "2");
 
         return new ModelAndView("/item/itemVerifyList", map);
     }
@@ -75,8 +78,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("cooperate_list")
     public ModelAndView itemCooperateList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "3");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "3");
 
         return new ModelAndView("/item/itemCooperateList", map);
     }
@@ -87,8 +90,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("review_list")
     public ModelAndView itemReviewList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "5,6");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "5,6");
 
         return new ModelAndView("/item/itemReviewList", map);
     }
@@ -99,8 +102,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("publish_list")
     public ModelAndView itemPublishList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "7,9");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "7,9");
 
         return new ModelAndView("/item/itemPublishList", map);
     }
@@ -111,8 +114,8 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("published_list")
     public ModelAndView itemPublishedList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "10,11");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "10,11");
 
         return new ModelAndView("/item/itemPublishedList", map);
     }
@@ -123,10 +126,35 @@ public class ItemController extends BaseController {
      */
     @RequestMapping("completed_list")
     public ModelAndView itemCompletedList(Integer itemId, String itemName){
-
-        Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "12");
+        Map<String, Object> map = new HashMap<>();
+        //Map<String, Object> map = itemService.getItemListByPage(true, itemId, itemName, "12");
 
         return new ModelAndView("/item/itemCompletedList", map);
+    }
+
+    /**
+     * 项目列表数据请求
+     * @param input
+     * @return
+     */
+    @RequestMapping(value = "query", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesOutput query(@Valid DataTablesInput input, Integer itemId, String itemName, String status) throws IOException {
+
+        List<Map<String,Object>> list = null;
+        int totalCount = 0;
+        int start = input.getStart();
+        int length = input.getLength();
+        int page = start / length + 1;
+        try {
+            Map<String, Object> map = itemService.getItemListByPage(page, length, true, itemId, itemName, status);
+            list = (List<Map<String,Object>>) map.get("list");
+            totalCount = Integer.parseInt(map.get("totalCount").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("throw exception:{}", e);
+        }
+        return setDataTablesOutput(input, list, totalCount);
     }
 
     /**
@@ -440,6 +468,19 @@ public class ItemController extends BaseController {
             e.printStackTrace();
         }
         return new ModelAndView("/item/itemPublish", returnMap);
+    }
+
+    @RequestMapping(value = "to_published")
+    public ModelAndView toPublished(Integer itemId){
+        Map<String, Object> returnMap = null;
+        try {
+            returnMap = getItemInfo(itemId);
+            Map<String, Object> cooperateMap = getCooperateInfo(itemId);
+            returnMap.put("cooperate", cooperateMap);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ModelAndView("/item/itemPublishedDetail", returnMap);
     }
 
     @RequestMapping(value = "publish")

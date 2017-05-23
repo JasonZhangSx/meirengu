@@ -165,13 +165,15 @@
     </c:if>
 
     <div class="bg_fff">
-        <div class="menu">
-            <span class="active"><a href="javascript:void(0)">投资回报</a></span>
-            <c:forEach items="${contentList}" var="content">
-                <span><a href="javascript:void(0)">${content.contentTitle}</a></span>
-            </c:forEach>
-            <%--<span><a href="javascript:void(0)">项目介绍</a></span>
-            <span><a href="javascript:void(0)">投资方案</a></span>--%>
+        <div class="menu_wrapper" style="width:100%;max-width:750px;top:0">
+            <div class="menu">
+                <span class="active"><a href="javascript:void(0)">投资回报</a></span>
+                <c:forEach items="${contentList}" var="content">
+                    <span><a href="javascript:void(0)">${content.contentTitle}</a></span>
+                </c:forEach>
+                <%--<span><a href="javascript:void(0)">项目介绍</a></span>
+                <span><a href="javascript:void(0)">投资方案</a></span>--%>
+            </div>
         </div>
     </div>
 
@@ -265,6 +267,20 @@
             $('.section4').find('.wrapper').hide();
             $(this).addClass('active');
             $('.section4').find('.wrapper').eq(index).show();
+        })
+
+        var m_t = $('.menu_wrapper').offset().top;
+        $(window).scroll(function(){
+            var b_t = $('body').scrollTop();
+            if(b_t < m_t){
+                $('.menu_wrapper').css({
+                    'position':'static'
+                })
+            }else{
+                $('.menu_wrapper').css({
+                    'position':'fixed'
+                })
+            }
         })
 
     });

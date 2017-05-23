@@ -24,7 +24,7 @@ public interface ItemService {
      * @param itemStatus
      * @return
      */
-    Map<String, Object> getItemListByPage(boolean isPage, Integer itemId, String itemName, String itemStatus);
+    Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus);
 
     /**
      * 项目添加
