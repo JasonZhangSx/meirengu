@@ -77,7 +77,16 @@
 				</span>
                 </div>
             </div>
-
+            <div id="image1" class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">活动图片：</label>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <span class="select-box">
+                        <c:forEach items="${stringList}" var="image" varStatus="index">
+                            <img style="width: 150px" src="<%=imgPath %>${image}" href="<%=imgPath %>${image}" onclick="delphoto(this,${index.index+1})"/>
+                        </c:forEach>
+                    </span>
+                </div>
+            </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">列表图：</label>
                 <div class="formControls col-xs-8 col-sm-8">
@@ -146,7 +155,11 @@
     <input type="hidden" name="activity_sort" value="255">
     <input type="hidden" name="status" value="1">
     <input type="hidden" name="activity_id" value="${activityId}">
-    <div id="image"></div>
+    <div id="image">
+        <c:forEach items="${stringList}" var="image" varStatus="index">
+            <input id="${index.index+1}" type="hidden" id="${image}" name="activity_image" value="${image}"/>
+        </c:forEach>
+    </div>
     </form>
 </div>
 <script>$(function () {
@@ -218,6 +231,14 @@
         }else{
             alert("活动图片不能为空！");
         }
+    }
+
+    function delphoto(img,id) {
+        layer.confirm('确认要删除该图片吗？', function (index) {
+            $(img).remove();
+            $('#' + id).remove();
+            layer.msg('已删除!', {icon: 6, time: 1000});
+        });
     }
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({

@@ -1,0 +1,4 @@
+******************user_center begin*************************
+修改字段备注
+ALTER TABLE `user_center`.`user`     CHANGE `invest_conditions` `invest_conditions` TINYINT(3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
+******************user_center end***************************

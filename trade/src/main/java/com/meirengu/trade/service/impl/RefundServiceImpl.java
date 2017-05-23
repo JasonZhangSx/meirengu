@@ -83,6 +83,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setUserMessage(userMessage);
             refund.setRefundType(Constant.REFUND_TYPE_SELLER);//类型:1为买家,2为卖家
             refund.setRefundState(Constant.REFUND_STATE_WAIT);//状态:1为待处理,2为同意,3为拒绝
+            refund.setUserConfirm(Constant.REFUND_USER_WAIT);//确认收款状态:1为待确认,2为已确认,默认为1
             int i = insert(refund);
 
             //修改订单状态

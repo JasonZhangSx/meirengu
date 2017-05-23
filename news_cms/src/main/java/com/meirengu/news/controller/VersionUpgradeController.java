@@ -193,8 +193,8 @@ public class VersionUpgradeController extends com.meirengu.controller.BaseContro
     }
 
     @ResponseBody
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public Result delete(@PathVariable("id")int id){
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public Result delete(int id){
 
         try {
             int deleteNum = versionUpgradeService.delete(id);

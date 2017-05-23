@@ -21,9 +21,8 @@
 	<!--子容器中自动扫描且只扫描@Controller -->
 	<context:component-scan base-package="com.meirengu.trade" />
 	<context:component-scan base-package="com.meirengu.rocketmq" />
-	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
+	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
 	<mvc:annotation-driven >
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -41,49 +40,12 @@
 		<property name="order" value="1" />
 	</bean>
 
-	<!-- redis配置 -->
-	<context:property-placeholder location="classpath:redis.properties"/>
-
-	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="${redis.pool.maxTotal}" />
-		<property name="maxIdle" value="${redis.pool.maxIdle}" />
-		<property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}" />
-		<property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}" />
-		<property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}" />
-		<property name="softMinEvictableIdleTimeMillis" value="${redis.pool.softMinEvictableIdleTimeMillis}" />
-		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
-		<property name="testWhileIdle" value="${redis.pool.testWhileIdle}" />
-		<property name="testOnReturn" value="${redis.pool.testOnReturn}" />
-		<property name="jmxEnabled" value="${redis.pool.jmxEnabled}" />
-		<property name="blockWhenExhausted" value="${redis.pool.blockWhenExhausted}" />
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--设置上传文件的最大尺寸为1MB-->
+		<property name="maxUploadSize" value="1048576" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="resolveLazily" value="true" />
 	</bean>
 
-	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-		<constructor-arg index="0" ref="jedisPoolConfig" />
-		<constructor-arg index="1">
-			<list>
-				<bean name="slaver" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.slaver.host}" />
-					<constructor-arg index="1" value="${redis.slaver.port}"
-									 type="int" />
-					<!--表示当redis.password不为空时，那么返回redis.password，否则返回null -->
-					<property name="password" value="#{'${redis.slaver.password}'?:null}"></property>
-				</bean>
-				<bean name="master" class="redis.clients.jedis.JedisShardInfo">
-					<constructor-arg index="0" value="${redis.master.host}" />
-					<constructor-arg index="1" value="${redis.master.port}"
-									 type="int" />
-					<property name="password" value="#{'${redis.master.password}'?:null}"></property>
-				</bean>
-			</list>
-		</constructor-arg>
-	</bean>
-	<bean id="redisClient" class="com.meirengu.common.RedisClient">
-		<constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
-	</bean>
-	<bean class="com.meirengu.utils.TokenUtils">
-		<property name="redisClient" ref="redisClient"/>
-	</bean>
 
 </beans>

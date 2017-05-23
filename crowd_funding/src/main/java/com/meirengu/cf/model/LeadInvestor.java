@@ -13,6 +13,8 @@ public class LeadInvestor  extends BaseObject {
 	private String investorName;
 	/** 领投人类型    1公司，2个人 */
 	private Integer investorType;
+	/** 公司法人  */
+	private String principalName;
 	/** 营业执照号 */
 	private String investorBusinessLicence;
 	/** 领投人身份证号 */
@@ -118,4 +120,11 @@ public class LeadInvestor  extends BaseObject {
 		return operateAccount;
 	}
 
-}
+	public String getPrincipalName() {
+		return principalName;
+	}
+
+	public void setPrincipalName(String principalName) {
+		this.principalName = principalName;
+	}
+ }

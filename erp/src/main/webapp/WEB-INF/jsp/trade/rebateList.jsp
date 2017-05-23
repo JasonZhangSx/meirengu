@@ -27,6 +27,7 @@
         <article class="cl pd-20">
             <div class="text-c">
                 抵扣券编号：<input type="text" class="input-text" style="width:120px;" id="rebateSn">　
+                关联订单编号：<input type="text" class="input-text" style="width:120px;" id="orderSn">　
                 抵扣券批次号：<input type="text" class="input-text" style="width:120px;" id="rebateBatchId">
                 用户手机号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
                 抵扣券状态状态：
@@ -108,31 +109,23 @@
                 {"data": "rebateSn"},
                 {
                     "data": "validStartTime",
-                    defaultContent:""
+                    "render": function (data, type, row, meta) {
+                        return new Date(data).Format("yyyy-MM-dd");
+                    }
                 },
                 {
                     "data": "validEndTime",
-                    defaultContent:""
+                    "render": function (data, type, row, meta) {
+                        return new Date(data).Format("yyyy-MM-dd");
+                    }
                 },
                 {"data": "rebateBatchId"},
                 {"data": "rebateScope"},
                 {"data": "rebateAmount"},
-                {
-                    "data": "userPhone",
-                    defaultContent:""
-                },
-                {
-                    "data": "receiveTime",
-                    defaultContent:""
-                },
-                {
-                    "data": "orderSn",
-                    defaultContent:""
-                },
-                {
-                    "data": "usedTime",
-                    defaultContent:""
-                },
+                {"data": "userPhone"},
+                {"data": "receiveTime"},
+                {"data": "orderSn"},
+                {"data": "usedTime"},
                 {
                     "data": "receiveStatus",
                     "render": function (data, type, row, meta) {
@@ -142,20 +135,28 @@
                             return "已使用";
                         } else if (data == 3) {
                             return "已失效";
-                        } else {
-                            return "";
                         }
                     }
-                },
+                }
             ],
             "columnDefs": [
                 {
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
-                }
+                },
 //                { "name": "batchId",  "targets": 1 },
 //                { "name": "batchStatue", "targets": 12 }
+                { "name": "rebateSn", "targets": 1 },
+                { "name": "rebateBatchId",   "targets": 5 },
+                { "name": "userPhone",  "targets": 8 },
+                { "name": "orderSn",  "targets": 10 },
+                { "name": "receiveStatus",  "targets": 12 },
+                //default
+                {
+                    "defaultContent": "",
+                    "targets":[3,4,8,9,10,11,12]
+                }
             ],
             "language": {
                 "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
@@ -207,10 +208,11 @@
      **/
     function search(){
         var rebateSn = $("#rebateSn").val();
+        var orderSn = $("#orderSn").val();
         var rebateBatchId = $("#rebateBatchId").val();
         var userPhone = $("#userPhone").val();
         var receiveStatus = $("#receiveStatus").val();
-        table.column(2).search(rebateSn).column(5).search(rebateBatchId).column(8).search(userPhone).column(12).search(receiveStatus).draw();
+        table.column(2).search(rebateSn).column(5).search(rebateBatchId).column(8).search(userPhone).column(10).search(orderSn).column(12).search(receiveStatus).draw();
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

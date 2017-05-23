@@ -19,10 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by huoyan403 on 4/6/2017.
@@ -47,6 +44,12 @@ public class ActivityController extends BaseController{
         try {
             map = ( Map<String, Object>)super.httpGet(urlAppend);
             map.put("activityId",activityId);
+            String[] imageList = String.valueOf(map.get("activityImage")).split(",");
+            List<String> stringList = new ArrayList<>();
+            for (String image :imageList){
+                stringList.add(image);
+            }
+            map.put("stringList",stringList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,6 +118,8 @@ public class ActivityController extends BaseController{
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> list(HttpServletRequest request,
                                  @RequestParam(value="activity_id", required = false ,defaultValue = "") String activityId,
+                                 @RequestParam(value="status", required = false ,defaultValue = "") String status,
+                                 @RequestParam(value="activity_type", required = false ,defaultValue = "") String activityType,
                                  @RequestParam(value="activity_name", required = false ,defaultValue = "") String activityName){
 
         Map<String,String> paramsMap = new HashedMap();
@@ -123,6 +128,8 @@ public class ActivityController extends BaseController{
         //查询参数
         paramsMap.put("activity_id",activityId);
         paramsMap.put("activity_name",activityName);
+        paramsMap.put("activity_type",activityType);
+        paramsMap.put("status",status);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
         paramsMap.put("page",page+"");

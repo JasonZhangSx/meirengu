@@ -125,6 +125,10 @@ public class StatusCode {
     public static final int PAYMENT_COMMIT_RECORD_ERROR_SELECT=40650;
     public static final int PAYMENT_COMMIT_RECORD_SUCCESS_INSERT=40651;
     public static final int PAYMENT_COMMIT_RECORD_ERROR_INSERT=40652;
+    public static final int PAYMENT_COMMIT_BONUS_SUCCESS_INSERT=40653;
+    public static final int PAYMENT_COMMIT_BONUS_ERROR_INSERT=40654;
+    public static final int PAYMENT_COMMIT_BONUS_ERROR_SELECT=40655;
+    public static final int PAYMENT_COMMIT_BONUS_SUCCESS_SELECT=40656;
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
     public static final int KEYWORD_MATCHING = 40702;
@@ -579,6 +583,10 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_ERROR_SELECT, "打款记录查询失败");
         codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_SUCCESS_INSERT, "打款记录添加成功");
         codeMsgMap.put(StatusCode.PAYMENT_COMMIT_RECORD_ERROR_INSERT, "打款记录添加失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_BONUS_SUCCESS_INSERT, "分红记录添加成功");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_BONUS_ERROR_INSERT, "分红记录添加失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_BONUS_ERROR_SELECT, "分红记录查询失败");
+        codeMsgMap.put(StatusCode.PAYMENT_COMMIT_BONUS_SUCCESS_SELECT, "分红记录查询成功");
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");

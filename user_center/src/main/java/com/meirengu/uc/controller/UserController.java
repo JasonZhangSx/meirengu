@@ -51,7 +51,7 @@ public class UserController extends BaseController{
     private RedisClient redisClient;
 
 
-    /**邀请人分页查询 cms使用
+    /**邀请人分页查询 erp使用
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
      * @param sortBy 排序字段
@@ -95,12 +95,12 @@ public class UserController extends BaseController{
             }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
-            if(list.size() == 1){
-                //获取余额信息
-                userService.getUserRestMoney(list.get(0));
-                //取累计投资额
-                userService.getUserTotalInvestMoney(list.get(0));
-            }
+//            if(list.size() == 1){
+//                //获取余额信息
+//                userService.getUserRestMoney(list.get(0));
+//                //取累计投资额
+//                userService.getUserTotalInvestMoney(list.get(0));
+//            }
 
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -199,12 +199,14 @@ public class UserController extends BaseController{
                 page = userService.getUserList(page,paramMap);
             }
             List<Map<String,Object>> list = page.getList();
-            for(Map map:list){
-                map.remove("password");
-                userService.getUserRestMoney(map);
-                userService.getUserTotalInvestMoney(map);
-                userService.getWithdrawalsAmount(map);
-                userService.getBankName(map);
+            if(list.size() == 1){
+                for(Map map:list){
+                    map.remove("password");
+                    userService.getUserRestMoney(map);
+                    userService.getUserTotalInvestMoney(map);
+                    userService.getWithdrawalsAmount(map);
+                    userService.getBankName(map);
+                }
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));

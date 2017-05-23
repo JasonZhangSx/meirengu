@@ -36,9 +36,9 @@ public class Producer {
         // 初始化
         defaultMQProducer = new DefaultMQProducer(producerGroup);
         defaultMQProducer.setNamesrvAddr(namesrvAddr);
-        defaultMQProducer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 
         defaultMQProducer.start();
+        logger.info("instanceName: {}",defaultMQProducer.getInstanceName());
         logger.info("DefaultMQProudcer start success!");
 
     }

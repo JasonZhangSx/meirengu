@@ -21,9 +21,19 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                邀请人：<input type="text" id="realname" class="input-text" style="width:120px;">　
-                被邀请人：<input type="text" id="invite_realname" class="input-text" style="width:120px;">　
-                身份证号：<input type="text" id="invite_idcard" class="input-text" style="width:120px;">　
+                邀请人 ：<input type="text" id="realname" class="input-text" style="width:120px;">　
+                被邀请人 ：<input type="text" id="invite_realname" class="input-text" style="width:120px;">　
+                身份证号 ：<input type="text" id="invite_idcard" class="input-text" style="width:120px;">　
+                认证条件 ：
+                <span class="select-box mr-20" style="width:120px">
+                    <select id="invest_conditions" name="invest_conditions" class="select">
+                        <option value="">请选择</option>
+                        <option value="0" >未认证</option>
+                        <option value="1" >专业投资人</option>
+                        <option value="2" >投资金额30万</option>
+                        <option value="3" >投资金额100万</option>
+                    </select>
+                </span>
                 <button name="" id="" class="btn btn-success radius" onclick="search()" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -97,6 +107,12 @@
 
                 }
             },
+            "aoColumnDefs": [
+                {
+                    sDefaultContent: '',
+                    aTargets: [ '_all' ]
+                }
+            ],
             "processing": true, //打开数据加载时的等待效果
             "serverSide": true,//打开后台分页
             "ajax": {
@@ -106,22 +122,40 @@
                     var realname = $('#realname').val();
                     var invite_realname = $ ('#invite_realname').val();
                     var invite_idcard = $('#invite_idcard').val();
+                    var invest_conditions = $('#invest_conditions').val();
                     //添加额外的参数传给服务器
                     d.realname = realname;
                     d.invite_realname = invite_realname;
                     d.invite_idcard = invite_idcard;
+                    d.invest_conditions = invest_conditions;
                 }
             },
             "columns": [
-                { "data": "phone" },
+//                { "data": "phone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.phone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.phone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "realname" },
-                { "data": "invitedUserPhone" },
+//                { "data": "invitedUserPhone" },
+                { "data": null,
+                    render: function(data, type, row, meta) {
+                        return '<td>' +
+                                '<a style="text-decoration:none" class="ml-5"onClick="userList_detail(\'用户-用户列表-详情\',\'user/detail\','+row.invitedUserPhone+')" href="javascript:;"title="查看详情">' +
+                                '<i class="Hui-iconfont">'+row.invitedUserPhone+'</i></a>' +
+                                '</td>';
+                    }
+                },
                 { "data": "invitedRealName" },
                 { "data": "invitedIdCard" },
                 { "data": null,
                     render: function(data, type, row, meta) {
                         if(row.invitedInvestConditions=='0'){
-                            return '<label> 未选择 </label>';
+                            return '<label> 未认证 </label>';
                         }
                         if(row.invitedInvestConditions=='1'){
                             return '<label>  专业投资人  </label>';
@@ -163,11 +197,11 @@
 </script>
 <script>
     //*项目-编辑*/
-    function userList_detail(title, url, id, w, h) {
+    function userList_detail(title, url, phone, w, h) {
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url+"?phone="+phone
         });
         layer.full(index);
     }

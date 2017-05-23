@@ -1,5 +1,6 @@
 package com.meirengu.erp.vo;
 
+import com.meirengu.utils.NumberUtil;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -44,8 +46,18 @@ public class QueryVo implements Serializable {
 	private Integer status;
 	/** 订单状态 */
 	private Integer orderState;
+	/** 订单状态集合 */
+	private List<Integer> orderStateList;
 	/** 退款订单状态 */
 	private Integer refundState;
+	/** 退款订单编号 */
+	private String refundSn;
+	/** 抵扣券编号 */
+	private String rebateSn;
+	/** 抵扣券批次ID */
+	private Integer rebateBatchId;
+	/** 抵扣券状态 */
+	private Integer receiveStatus;
 
 	public QueryVo(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
@@ -73,22 +85,25 @@ public class QueryVo implements Serializable {
 			}
 			switch (parameterName) {
 				case "userPhone":
-					this.userPhone = parameterSearchValue;
+					this.setUserPhone(parameterSearchValue);
 					break;
 				case "itemName":
-					this.itemName = parameterSearchValue;
+					this.setItemName(parameterSearchValue);
 					break;
 				case "orderSn":
-					this.orderSn = parameterSearchValue;
+					this.setOrderSn(parameterSearchValue);
 					break;
 				case "status":
-					this.status = Integer.parseInt(parameterSearchValue);
+					this.setStatus(Integer.parseInt(parameterSearchValue));
 					break;
 				case "orderState":
-					this.orderState = Integer.parseInt(parameterSearchValue);
+					this.setOrderState(Integer.parseInt(parameterSearchValue));
 					break;
 				case "refundState":
-					this.refundState = Integer.parseInt(parameterSearchValue);
+					this.setRefundState(Integer.parseInt(parameterSearchValue));
+					break;
+				case "refundSn":
+					this.setRefundSn(parameterSearchValue);
 					break;
 				default:
 					logger.info("tradeQueryVo中没有: {} 字段", parameterName);
@@ -183,6 +198,14 @@ public class QueryVo implements Serializable {
 		this.orderState = orderState;
 	}
 
+	public List<Integer> getOrderStateList() {
+		return orderStateList;
+	}
+
+	public void setOrderStateList(List<Integer> orderStateList) {
+		this.orderStateList = orderStateList;
+	}
+
 	public Integer getRefundState() {
 		return refundState;
 	}
@@ -191,7 +214,37 @@ public class QueryVo implements Serializable {
 		this.refundState = refundState;
 	}
 
+	public String getRefundSn() {
+		return refundSn;
+	}
 
+	public void setRefundSn(String refundSn) {
+		this.refundSn = refundSn;
+	}
+
+	public String getRebateSn() {
+		return rebateSn;
+	}
+
+	public void setRebateSn(String rebateSn) {
+		this.rebateSn = rebateSn;
+	}
+
+	public Integer getRebateBatchId() {
+		return rebateBatchId;
+	}
+
+	public void setRebateBatchId(Integer rebateBatchId) {
+		this.rebateBatchId = rebateBatchId;
+	}
+
+	public Integer getReceiveStatus() {
+		return receiveStatus;
+	}
+
+	public void setReceiveStatus(Integer receiveStatus) {
+		this.receiveStatus = receiveStatus;
+	}
 
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
@@ -232,8 +285,30 @@ public class QueryVo implements Serializable {
 			sb.append("order_state=" + this.getOrderState());
 			sb.append("&");
 		}
+		if (this.getOrderStateList() != null) {
+			for (Integer orderStatus : this.getOrderStateList()) {
+				sb.append("order_state_list=" + orderStatus);
+				sb.append("&");
+			}
+		}
 		if (this.getRefundState() != null) {
 			sb.append("refund_state=" + this.getRefundState());
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getRefundSn())) {
+			sb.append("refund_sn=" + this.getRefundSn());
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getRebateSn())) {
+			sb.append("rebate_sn=" + this.getRebateSn());
+			sb.append("&");
+		}
+		if (NumberUtil.isNullOrZero(this.getRebateBatchId())) {
+			sb.append("rebate_batch_id=" + this.getRebateBatchId());
+			sb.append("&");
+		}
+		if (NumberUtil.isNullOrZero(this.getReceiveStatus())) {
+			sb.append("receive_status=" + this.getReceiveStatus());
 			sb.append("&");
 		}
 		//去掉最后一个&

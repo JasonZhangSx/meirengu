@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentCommitBonusDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentCommitBonus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="item_level_id" property="itemLevelId" jdbcType="INTEGER" />
+    <result column="item_level_name" property="itemLevelName" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="invest_principal" property="investPrincipal" jdbcType="DECIMAL" />
+    <result column="year_rate" property="yearRate" jdbcType="INTEGER" />
+    <result column="period" property="period" jdbcType="INTEGER" />
+    <result column="principal" property="principal" jdbcType="DECIMAL" />
+    <result column="income" property="income" jdbcType="DECIMAL" />
+    <result column="allowance" property="allowance" jdbcType="DECIMAL" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="should_time" property="shouldTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="bonus_time" property="bonusTime" jdbcType="TIMESTAMP" />
+    <result column="bonus_account" property="bonusAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, user_phone, item_id, item_name, item_level_id, item_level_name, 
+    number, invest_principal, year_rate, period, principal, income, allowance, total_amount, 
+    should_time, status, bonus_time, bonus_account
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="com.meirengu.pay.vo.PaymentCommitBonusVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from payment_commit_bonus
+    where 1=1
+    <if test="id != null" >
+     AND id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null" >
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="itemId != null" >
+      AND item_id = #{itemId,jdbcType=INTEGER}
+    </if>
+    <if test="itemName != null" >
+      AND item_name = #{itemName,jdbcType=VARCHAR}
+    </if>
+    <if test="itemLevelId != null" >
+      AND item_level_id = #{itemLevelId,jdbcType=INTEGER}
+    </if>
+    <if test="itemLevelName != null" >
+      AND item_level_name = #{itemLevelName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="startDate != null" >
+      AND bonus_time <![CDATA[>=#{startDate,jdbcType=VARCHAR} ]]>
+    </if>
+    <if test="endDate != null" >
+      AND bonus_time <![CDATA[<=#{endDate,jdbcType=VARCHAR} ]]>
+    </if>
+    <if test="shouldTimeStart != null" >
+      AND should_time <![CDATA[>=#{shouldTimeStart,jdbcType=VARCHAR} ]]>
+    </if>
+    <if test="shouldTimeEnd != null" >
+      AND should_time <![CDATA[<=#{shouldTimeEnd,jdbcType=VARCHAR} ]]>
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from payment_commit_bonus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into payment_commit_bonus ( user_id, user_name,
+    user_phone, item_id, item_name,
+    item_level_id, item_level_name, number,
+    invest_principal, year_rate, period,
+    principal, income, allowance,
+    total_amount, should_time,
+    bonus_time, bonus_account)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.userId,jdbcType=INTEGER}, #{item.userName,jdbcType=VARCHAR},
+      #{item.userPhone,jdbcType=VARCHAR}, #{item.itemId,jdbcType=INTEGER}, #{item.itemName,jdbcType=VARCHAR},
+      #{item.itemLevelId,jdbcType=INTEGER}, #{item.itemLevelName,jdbcType=VARCHAR}, #{item.number,jdbcType=INTEGER},
+      #{item.investPrincipal,jdbcType=DECIMAL}, #{item.yearRate,jdbcType=INTEGER}, #{item.period,jdbcType=INTEGER},
+      #{item.principal,jdbcType=DECIMAL}, #{item.income,jdbcType=DECIMAL}, #{item.allowance,jdbcType=DECIMAL},
+      #{item.totalAmount,jdbcType=DECIMAL}, #{item.shouldTime,jdbcType=TIMESTAMP},
+      #{item.bonusTime,jdbcType=TIMESTAMP}, #{item.bonusAccount,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insert" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
+    insert into payment_commit_bonus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="itemLevelId != null" >
+        item_level_id,
+      </if>
+      <if test="itemLevelName != null" >
+        item_level_name,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="investPrincipal != null" >
+        invest_principal,
+      </if>
+      <if test="yearRate != null" >
+        year_rate,
+      </if>
+      <if test="period != null" >
+        period,
+      </if>
+      <if test="principal != null" >
+        principal,
+      </if>
+      <if test="income != null" >
+        income,
+      </if>
+      <if test="allowance != null" >
+        allowance,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+      <if test="shouldTime != null" >
+        should_time,
+      </if>
+      <if test="bonusTime != null" >
+        bonus_time,
+      </if>
+      <if test="bonusAccount != null" >
+        bonus_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemLevelId != null" >
+        #{itemLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="itemLevelName != null" >
+        #{itemLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="investPrincipal != null" >
+        #{investPrincipal,jdbcType=DECIMAL},
+      </if>
+      <if test="yearRate != null" >
+        #{yearRate,jdbcType=INTEGER},
+      </if>
+      <if test="period != null" >
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="principal != null" >
+        #{principal,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null" >
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="allowance != null" >
+        #{allowance,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldTime != null" >
+        #{shouldTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bonusTime != null" >
+        #{bonusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bonusAccount != null" >
+        #{bonusAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
+    update payment_commit_bonus
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemLevelId != null" >
+        item_level_id = #{itemLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="itemLevelName != null" >
+        item_level_name = #{itemLevelName,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="investPrincipal != null" >
+        invest_principal = #{investPrincipal,jdbcType=DECIMAL},
+      </if>
+      <if test="yearRate != null" >
+        year_rate = #{yearRate,jdbcType=INTEGER},
+      </if>
+      <if test="period != null" >
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="principal != null" >
+        principal = #{principal,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null" >
+        income = #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="allowance != null" >
+        allowance = #{allowance,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="shouldTime != null" >
+        should_time = #{shouldTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bonusTime != null" >
+        bonus_time = #{bonusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bonusAccount != null" >
+        bonus_account = #{bonusAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateStatus" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
+    update payment_commit_bonus
+  set
+      status = #{status,jdbcType=INTEGER},
+      bonus_time = #{bonusTime,jdbcType=TIMESTAMP},
+      bonus_account = #{bonusAccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -6,7 +6,6 @@
     String path = request.getContextPath();
     String basePath = path+"/";
     String imgPath = ConfigUtil.getConfig("image.show.url");
-
 %>
 
 <!--[if lt IE 9]>

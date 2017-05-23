@@ -18,26 +18,23 @@
 
 	<sql id="table_name">`lead_investor`</sql>
 	<sql id="select_columns">
-		id as id, investor_name as investorName, investor_type as investorType, investor_business_licence as investorBusinessLicence, investor_idcard as investorIdcard, investor_address as investorAddress, investor_telphone as investorTelphone, investor_image as investorImage, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		id as id, investor_name as investorName, principal_name as principalName, investor_type as investorType, investor_business_licence as investorBusinessLicence, investor_idcard as investorIdcard, investor_address as investorAddress, investor_telphone as investorTelphone, investor_image as investorImage, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="leadInvestor" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, investor_name, investor_type, investor_business_licence, investor_idcard, investor_address, investor_telphone, investor_image, create_time, update_time, operate_account)
+			(id, investor_name, investor_type, principal_name, investor_business_licence, investor_idcard, investor_address, investor_telphone, investor_image, create_time, update_time, operate_account)
 		VALUES
-			(#{id}, #{investorName}, #{investorType}, #{investorBusinessLicence}, #{investorIdcard}, #{investorAddress}, #{investorTelphone}, #{investorImage}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{id}, #{investorName}, #{investorType}, #{principalName}, #{investorBusinessLicence}, #{investorIdcard}, #{investorAddress}, #{investorTelphone}, #{investorImage}, #{createTime}, #{updateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="leadInvestor">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
-				id=#{id},
-			</if>
 			<if test="investorName != null and investorName != ''">
 				investor_name=#{investorName},
 			</if>
-			<if test="investorType != null and investorType != ''">
+			<if test="investorType != null">
 				investor_type=#{investorType},
 			</if>
 			<if test="investorBusinessLicence != null and investorBusinessLicence != ''">
@@ -55,14 +52,17 @@
 			<if test="investorImage != null and investorImage != ''">
 				investor_image=#{investorImage},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time=#{createTime},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">
 				operate_account=#{operateAccount},
+			</if>
+			<if test="principalName != null">
+				principal_name=#{principalName}
 			</if>
 		</set>
 		<where>
@@ -74,6 +74,10 @@
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where id=#{id}
 	</select>
+
+	<delete id="delete" parameterType="integer">
+		delete from <include refid="table_name"/> where id=#{id}
+	</delete>
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">

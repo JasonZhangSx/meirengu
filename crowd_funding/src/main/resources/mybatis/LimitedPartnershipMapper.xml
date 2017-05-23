@@ -33,16 +33,13 @@
 	<update id="update" parameterType="limitedPartnership">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
-				id=#{id},
-			</if>
 			<if test="companyName != null and companyName != ''">
 				company_name=#{companyName},
 			</if>
-			<if test="establishmentTime != null and establishmentTime != ''">
+			<if test="establishmentTime != null">
 				establishment_time=#{establishmentTime},
 			</if>
-			<if test="limitNum != null and limitNum != ''">
+			<if test="limitNum != null">
 				limit_num=#{limitNum},
 			</if>
 			<if test="idcard != null and idcard != ''">
@@ -63,10 +60,10 @@
 			<if test="imageProfessionalLicense != null and imageProfessionalLicense != ''">
 				image_professional_license=#{imageProfessionalLicense},
 			</if>
-			<if test="createTime != null and createTime != ''">
+			<if test="createTime != null">
 				create_time=#{createTime},
 			</if>
-			<if test="updateTime != null and updateTime != ''">
+			<if test="updateTime != null">
 				update_time=#{updateTime},
 			</if>
 			<if test="operateAccount != null and operateAccount != ''">

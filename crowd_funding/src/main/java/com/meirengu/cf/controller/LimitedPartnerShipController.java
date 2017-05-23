@@ -10,6 +10,7 @@ import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -22,6 +23,8 @@ import java.util.Map;
  * @author 建新
  * @create 2017-05-08 14:22
  */
+@RequestMapping("partner_ship")
+@Controller
 public class LimitedPartnerShipController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LimitedPartnerShipController.class);
@@ -166,7 +169,7 @@ public class LimitedPartnerShipController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result delete(@RequestParam(value = "id", required = false)Integer id){
         try {
             int deleteNum = limitedPartnershipService.delete(id);

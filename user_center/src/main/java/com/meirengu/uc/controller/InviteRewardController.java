@@ -3,6 +3,7 @@ package com.meirengu.uc.controller;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
+import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.uc.model.Inviter;
 import com.meirengu.uc.service.InviterService;
 import com.meirengu.uc.utils.ConfigUtil;
@@ -11,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -121,4 +123,25 @@ public class InviteRewardController extends BaseController{
         }
     }
 
+
+
+    /** rocketMQ接收消息
+     * 修改邀请人投资时间
+     */
+    @EventListener(condition = "#event.topic=='user' && #event.tag=='inviteRewardNotify'")
+    public void listeneditInviter(RocketmqEvent event) throws Exception {
+        logger.info("从rocketMQ 接收批处理分红消息 listeneditInviter event :{} ",event.getMsg());
+
+        String message = event.getMsg();
+        Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
+
+        String fileName = String.valueOf(map.get("file_name"));
+        String filePath = String.valueOf(map.get("file_path"));
+
+        Result result = this.notify(fileName,filePath);
+        if(result.getCode() != StatusCode.OK){
+            throw new Exception("邀请分红批处理 处理失败");
+        }
+
+    }
 }
