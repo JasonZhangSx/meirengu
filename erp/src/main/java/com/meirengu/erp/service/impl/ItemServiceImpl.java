@@ -31,14 +31,14 @@ public class ItemServiceImpl implements ItemService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
 
     @Override
-    public Map<String, Object> getItemListByPage(boolean isPage, Integer itemId, String itemName, String itemStatus) {
+    public Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus) {
 
         Map<String, Object> map = new HashMap<>();
 
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.list"));
 
         url.append("?is_page=").append(isPage);
-        url.append("&per_page=100&page=1");
+        url.append("&per_page=").append(perPage).append("&page=").append(page);
         if(!StringUtil.isEmpty(itemId)){
             url.append("&item_id=").append(itemId);
         }

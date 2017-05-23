@@ -86,15 +86,16 @@ public class LeadInvestorController extends BaseController{
     @RequestMapping(method = RequestMethod.POST)
     public Result insert(@RequestParam(value = "investor_name", required = false) String investorName,
                          @RequestParam(value = "investor_type", required = false) Integer investorType,
+                         @RequestParam(value = "principal_name", required = false) String principalName,
                          @RequestParam(value = "investor_business_licence", required = false) String investorBusinessLicence,
                          @RequestParam(value = "investor_idcard", required = false) String investorIdcard,
                          @RequestParam(value = "investor_address", required = false) String investorAddress,
                          @RequestParam(value = "investor_telphone", required = false) String investorTelphone,
                          @RequestParam(value = "investor_image", required = false) String investorImage,
-                         @RequestParam(value = "operate_account", required = false) String operateAccount ){
+                         @RequestParam(value = "operate_account", required = false) String operateAccount){
 
         LeadInvestor li = setEntity(0, investorName, investorType, investorBusinessLicence,
-                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount);
+                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName);
         try {
             int insertNum = leadInvestorService.insert(li);
             if(insertNum == 1){
@@ -133,6 +134,7 @@ public class LeadInvestorController extends BaseController{
     public Result update(@RequestParam(value = "id", required = false) Integer id,
                          @RequestParam(value = "investor_name", required = false) String investorName,
                          @RequestParam(value = "investor_type", required = false) Integer investorType,
+                         @RequestParam(value = "principal_name", required = false) String principalName,
                          @RequestParam(value = "investor_business_licence", required = false) String investorBusinessLicence,
                          @RequestParam(value = "investor_idcard", required = false) String investorIdcard,
                          @RequestParam(value = "investor_address", required = false) String investorAddress,
@@ -141,7 +143,7 @@ public class LeadInvestorController extends BaseController{
                          @RequestParam(value = "operate_account", required = false) String operateAccount ){
 
         LeadInvestor li = setEntity(id, investorName, investorType, investorBusinessLicence,
-                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount);
+                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName);
         try {
             int updateNum = leadInvestorService.update(li);
             if(updateNum == 1){
@@ -161,7 +163,7 @@ public class LeadInvestorController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
     public Result delete(@RequestParam(value = "id", required = false)Integer id){
         try {
             int deleteNum = leadInvestorService.delete(id);
@@ -178,22 +180,23 @@ public class LeadInvestorController extends BaseController{
 
     private LeadInvestor setEntity(Integer id, String investorName, Integer investorType, String investorBusinessLicence,
                                     String investorIdcard, String investorAddress, String investorTelphone, String investorImage,
-                                    Date createTime, String operateAccount) {
+                                    Date createTime, String operateAccount, String principalName) {
         LeadInvestor li = new LeadInvestor();
         if(id == null || id == 0){
             li.setId(null);
         }else{
             li.setId(id);
         }
-        li.setInvestorName(investorName);
+        li.setInvestorName(investorName == null ? "" : investorName);
         li.setInvestorType(investorType);
-        li.setInvestorBusinessLicence(investorBusinessLicence);
-        li.setInvestorIdcard(investorIdcard);
-        li.setInvestorAddress(investorAddress);
-        li.setInvestorTelphone(investorTelphone);
-        li.setInvestorImage(investorImage);
+        li.setInvestorBusinessLicence(investorBusinessLicence == null ? "" : investorBusinessLicence);
+        li.setInvestorIdcard(investorIdcard == null ? "" : investorIdcard);
+        li.setInvestorAddress(investorAddress == null ? "" : investorAddress);
+        li.setInvestorTelphone(investorTelphone == null ? "" : investorTelphone);
+        li.setInvestorImage(investorImage == null ? "" : investorImage);
         li.setCreateTime(createTime);
-        li.setOperateAccount(operateAccount);
+        li.setOperateAccount(operateAccount == null ? "" : operateAccount);
+        li.setPrincipalName(principalName == null ? "" : principalName);
         return li;
     }
 }
