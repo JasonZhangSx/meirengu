@@ -68,13 +68,12 @@ public class InviteRewardController extends BaseController{
                     if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
                     // 根据注册时间  投资时间 校验是否有效期
                         Date registerTime = inviter.getRegisterTime();
-                        Date investTime = inviter.getInvestTime();
                         try {
                             int i  = DateAndTime.dateDiff("dd",DateAndTime.convertDateToString(registerTime,"yyyy-MM-dd HH:mm:ss"),
-                                    DateAndTime.convertDateToString(investTime,"yyyy-MM-dd HH:mm:ss"));
+                                    DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss"));
 
                             // 封装入结构 写入文件
-                            if(i<34){
+                            if(i<=34){
                                 String[] arr = new String[3];
 //                                arr[0] = String.valueOf(userId);//被邀请人id
                                 arr[0] = inviter.getUserId()+"";//邀请人id
