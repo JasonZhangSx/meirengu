@@ -167,9 +167,14 @@
     <div class="bg_fff">
         <div class="menu_wrapper" style="width:100%;max-width:750px;top:0">
             <div class="menu">
-                <span class="active"><a href="javascript:void(0)">投资回报</a></span>
-                <c:forEach items="${contentList}" var="content">
-                    <span><a href="javascript:void(0)">${content.contentTitle}</a></span>
+                <span><a href="javascript:void(0)">投资回报</a></span>
+                <c:forEach items="${contentList}" var="content" varStatus="c">
+                    <c:if test="${c.index == 0}">
+                        <span class="active"><a href="javascript:void(0)">${content.contentTitle}</a></span>
+                    </c:if>
+                    <c:if test="${c.index != 0}">
+                        <span><a href="javascript:void(0)">${content.contentTitle}</a></span>
+                    </c:if>
                 </c:forEach>
                 <%--<span><a href="javascript:void(0)">项目介绍</a></span>
                 <span><a href="javascript:void(0)">投资方案</a></span>--%>
@@ -178,7 +183,7 @@
     </div>
 
     <div class="section4">
-        <div class="wrapper huibao" style="display:block">
+        <div class="wrapper huibao">
             <c:forEach items="${levelList}" var="level">
                 <div class="item">
                     <div class="top">
@@ -217,12 +222,21 @@
                 </div>
             </c:forEach>
         </div>
-        <c:forEach items="${contentList}" var="content">
-            <div class="wrapper intro">
-            <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
-                <img src="<%=imgURI%>${imgs}" width="100%" alt="" />
-            </c:forEach>
-            </div>
+        <c:forEach items="${contentList}" var="content" varStatus="c">
+            <c:if test="${c.index == 0}">
+                <div class="wrapper intro" style="display:block">
+                    <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
+                        <img src="<%=imgURI%>${imgs}" width="100%" alt="" />
+                    </c:forEach>
+                </div>
+            </c:if>
+            <c:if test="${c.index != 0}">
+                <div class="wrapper intro">
+                    <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
+                        <img src="<%=imgURI%>${imgs}" width="100%" alt="" />
+                    </c:forEach>
+                </div>
+            </c:if>
         </c:forEach>
     </div>
 
