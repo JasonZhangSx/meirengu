@@ -337,4 +337,13 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         return page;
     }
 
+    /**
+     * 查询符合条件的记录数量
+     * @param map
+     * @return
+     */
+    public Integer getCount(Map map){
+        return rebateReceiveDao.getCount(map);
+    }
+
 }

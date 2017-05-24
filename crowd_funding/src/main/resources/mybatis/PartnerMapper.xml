@@ -35,14 +35,24 @@
 
 	<sql id="table_name">partner</sql>
 	<sql id="select_columns">
-		partner_id as partnerId, type_id as typeId, partner_name as partnerName, partner_create_day as partnerCreateDay, partner_regist_capital as partnerRegistCapital, partner_valuation as partnerValuation, account_id as accountId, enterprise_name as enterpriseName, id_number as idNumber, enterprise_address as enterpriseAddress, principal_name as principalName, principal_idcard as principalIdcard, principal_telephone as principalTelephone, principal_fax as principalFax, principal_address as principalAddress, contacts_name as contactsName, contacts_idcard as contactsIdcard, contacts_telephone as contactsTelephone, contacts_fax as contactsFax, contacts_address as contactsAddress, bank_name as bankName, bank_account as bankAccount, bank_card as bankCard, image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank, image_professional_license as imageProfessionalLicense, flag as flag, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		partner_id as partnerId, type_id as typeId, partner_name as partnerName, partner_label as partnerLabel,
+		partner_telphone as partnerTelphone, partner_img as partnerImg, partner_create_day as partnerCreateDay,
+		partner_regist_capital as partnerRegistCapital, partner_valuation as partnerValuation, account_id as accountId,
+		enterprise_name as enterpriseName, id_number as idNumber, enterprise_address as enterpriseAddress,
+		principal_name as principalName, principal_idcard as principalIdcard, principal_telephone as principalTelephone,
+		principal_fax as principalFax, principal_address as principalAddress, contacts_name as contactsName,
+		contacts_idcard as contactsIdcard, contacts_telephone as contactsTelephone, contacts_fax as contactsFax,
+		contacts_address as contactsAddress, bank_name as bankName, bank_account as bankAccount, bank_card as bankCard,
+		image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank,
+		image_professional_license as imageProfessionalLicense, flag as flag, create_time as createTime,
+		update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="partner" useGeneratedKeys="true" keyProperty="partnerId" >
 		INSERT INTO <include refid="table_name" />
-			(type_id, partner_name, partner_create_day, partner_regist_capital, partner_valuation, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, flag, create_time, operate_account)
+			(type_id, partner_name, partner_label, partner_telphone, partner_img, partner_create_day, partner_regist_capital, partner_valuation, account_id, enterprise_name, id_number, enterprise_address, principal_name, principal_idcard, principal_telephone, principal_fax, principal_address, contacts_name, contacts_idcard, contacts_telephone, contacts_fax, contacts_address, bank_name, bank_account, bank_card, image_principal, image_business_licence, image_bank, image_professional_license, flag, create_time, operate_account)
 		VALUES
-			(#{typeId}, #{partnerName}, #{partnerCreateDay,jdbcType=DATE}, #{partnerRegistCapital}, #{partnerValuation}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{flag}, #{createTime,jdbcType=TIMESTAMP}, #{operateAccount})
+			(#{typeId}, #{partnerName}, #{partnerLabel}, #{partnerTelphone}, #{partnerImg}, #{partnerCreateDay,jdbcType=DATE}, #{partnerRegistCapital}, #{partnerValuation}, #{accountId}, #{enterpriseName}, #{idNumber}, #{enterpriseAddress}, #{principalName}, #{principalIdcard}, #{principalTelephone}, #{principalFax}, #{principalAddress}, #{contactsName}, #{contactsIdcard}, #{contactsTelephone}, #{contactsFax}, #{contactsAddress}, #{bankName}, #{bankAccount}, #{bankCard}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{flag}, #{createTime,jdbcType=TIMESTAMP}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="partner">
@@ -53,6 +63,15 @@
 			</if>
 			<if test="partnerName != null and partnerName != ''">
 				partner_name=#{partnerName},
+			</if>
+			<if test="partnerLabel != null and partnerLabel != ''">
+				partner_label=#{partnerLabel},
+			</if>
+			<if test="partnerTelphone != null and partnerTelphone != ''">
+				partner_telphone=#{partnerTelphone},
+			</if>
+			<if test="partnerImg != null and partnerImg != ''">
+				partner_img=#{partnerImg},
 			</if>
 			<if test="partnerCreateDay != null">
 				partner_create_day=#{partnerCreateDay},
@@ -151,7 +170,14 @@
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		select
+		<if test="fields != null and fields != ''">
+			${fields}
+		</if>
+		<if test="fields == null or fields == ''">
+			<include refid="select_columns" />
+		</if>
+		FROM <include refid="table_name" />
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">

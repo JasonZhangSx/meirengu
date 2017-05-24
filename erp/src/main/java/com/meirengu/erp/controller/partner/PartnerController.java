@@ -1,213 +1,116 @@
 package com.meirengu.erp.controller.partner;
 
-import com.alibaba.fastjson.JSONObject;
-import com.meirengu.common.StatusCode;
-import com.meirengu.controller.BaseController;
+import com.meirengu.erp.controller.BaseController;
+import com.meirengu.erp.model.LeadInvestor;
 import com.meirengu.erp.model.Partner;
+import com.meirengu.erp.model.PartnerClass;
+import com.meirengu.erp.service.InvestorService;
+import com.meirengu.erp.service.PartnerClassService;
 import com.meirengu.erp.service.PartnerService;
-import com.meirengu.erp.utils.ConfigUtil;
-import com.meirengu.model.Result;
-import com.meirengu.utils.HttpUtil;
-import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 合作伙伴控制层
+ * 领投人控制层
+ *
  * @author 建新
- * @create 2017-03-25 17:47
+ * @create 2017-05-17 17:15
  */
-@RestController
+@Controller
 @RequestMapping("partner")
 public class PartnerController extends BaseController{
 
-    private static Logger logger = LoggerFactory.getLogger(PartnerController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PartnerController.class);
 
     @Autowired
     PartnerService partnerService;
+    @Autowired
+    PartnerClassService partnerClassService;
 
-
-    @RequestMapping("list")
-    public ModelAndView partnerList(){
-        Map<String, Object> map = new HashMap<>();
-
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.list"));
-        url.append("?is_page=true");
-        try {
-            HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null && code.equals(200)){
-                    JSONObject data = (JSONObject) jsonObject.get("data");
-                    map = data;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List classList = partnerService.getPartnerClassList();
-        map.put("classList", classList);
-        return new ModelAndView("/partner/partnerList", map);
+    /**
+     * 跳转到行业分类信息列表页面
+     * @return
+     */
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    public String view() {
+        return "partner/partnerList";
     }
 
+    /**
+     * 领投人信息列表数据请求
+     * @param input
+     * @return
+     */
+    @RequestMapping(value = "query", method = RequestMethod.GET)
+    @ResponseBody
+    public DataTablesOutput query(@Valid DataTablesInput input) throws IOException {
 
-    @RequestMapping("class/list")
-    public ModelAndView partnerClassList(HttpServletRequest request, String className) throws UnsupportedEncodingException {
-
-        Map<String, Object> map = new HashMap<>();
-
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.list"));
-        url.append("?is_page=true");
-        if(!StringUtil.isEmpty(className)){
-            className = new String(className.getBytes("ISO-8859-1"), "utf-8");
-            url.append("&class_name=").append(className);
-        }
+        List<Map<String,Object>> list = null;
+        int totalCount = 0;
+        int start = input.getStart();
+        int length = input.getLength();
+        int page = start / length + 1;
         try {
-            HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null && code.equals(200)){
-                    JSONObject data = (JSONObject) jsonObject.get("data");
-                    map = data;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        map.put("className", className);
-        return new ModelAndView("/partner/partnerClassList", map);
-    }
-
-    @RequestMapping("class/to_add")
-    public ModelAndView toClassAdd(){
-
-        return new ModelAndView("/partner/partnerClassAdd");
-    }
-
-    @RequestMapping("class/add")
-    public ModelAndView classAdd(String className, String classDescription, HttpServletRequest request){
-
-        try {
-            Map<String,Object> map = new HashMap<>();
-            String url = ConfigUtil.getConfig("partner.class.insert");
-            Map<String, String> params = new HashMap<>();
-            params.put("class_name", className);
-            params.put("class_description", classDescription);
-            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null && code.equals(200)){
-                    JSONObject data = (JSONObject) jsonObject.get("data");
-                    map = data;
-                }
-            }
+            Map<String, Object> map = partnerService.query(page, length, true);
+            list = (List<Map<String,Object>>) map.get("list");
+            List classList = (List) partnerClassService.query(0,0,false);
+            totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("throw exception:{}", e);
         }
-        return new ModelAndView("redirect:/partner/class/list");
+        return setDataTablesOutput(input, list, totalCount);
     }
 
-    @RequestMapping("class/delete")
-    public ModelAndView classDelete(String classDescription, HttpServletRequest request){
-
-        try {
-            request.setCharacterEncoding("utf-8");
-            String className = request.getParameter("className");
-            Map<String,Object> map = new HashMap<>();
-            String url = ConfigUtil.getConfig("partner.class.insert");
-            Map<String, String> params = new HashMap<>();
-            params.put("class_name", className);
-            params.put("class_description", classDescription);
-            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
-            int statusCode = hr.getStatusCode();
-            if(statusCode == StatusCode.OK){
-                String content = hr.getContent();
-                JSONObject jsonObject = JSONObject.parseObject(content);
-                Object code = jsonObject.get("code");
-                if(code != null && code.equals(200)){
-                    JSONObject data = (JSONObject) jsonObject.get("data");
-                    map = data;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * 跳转到行业分类信息页
+     * @return
+     */
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public ModelAndView detail(Integer id) {
+        if(id == null){
+            return new ModelAndView("partner/partnerDetail");
+        }else {
+            Map<String, Object>  map = partnerService.detail(id);
+            return new ModelAndView("partner/partnerDetail", map);
         }
-        return new ModelAndView("redirect:/partner/class/list");
     }
 
-    @RequestMapping("to_add")
-    public ModelAndView toAdd(){
-        Map<String, Object> map = new HashMap<>();
-        List classList = partnerService.getPartnerClassList();
-        map.put("classList", classList);
-        return new ModelAndView("/partner/partnerAdd", map);
+    /**
+     * 保存版本信息（新增和更新）
+     * @param partner
+     * @return
+     */
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> save(Partner partner) {
+        Map<String, Object> map ;
+        //id为空 新增
+        if(partner.getPartnerId() == null || partner.getPartnerId() == 0){
+            map = partnerService.add(partner);
+        }else {
+            map = partnerService.update(partner);
+        }
+        return map;
     }
 
-    @RequestMapping("add")
-    public ModelAndView add(Integer typeId, String partnerName, Date partnerCreateDay, Integer partnerRegistCapital, Integer partnerValuation,
-                            Integer accountId, String enterpriseName, String idNumber, String enterpriseAddress, String principalName,
-                            String principalIdcard, String principalTelephone, String principalFax, String principalAddress, String contactsName,
-                            String contactsIdcard, String contactsTelephone, String contactsFax, String bankName, String bankAccount,
-                            String bankCard, String imagePrincipal, String imageBusinessLicence, String imageBank, String imageProfessionalLicense,
-                            String contactsAddress){
-        Map<String, String> params = new HashMap<String, String>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        params.put("type_id", String.valueOf(typeId));
-        params.put("partner_name", partnerName);
-        params.put("partner_create_day", format.format(partnerCreateDay).toString());
-        params.put("partner_regist_capital", String.valueOf(partnerRegistCapital));
-        params.put("partner_valuation", String.valueOf(partnerValuation));
-        params.put("account_id", String.valueOf(accountId));
-        params.put("enterprise_name", enterpriseName);
-        params.put("id_number", idNumber);
-        params.put("enterprise_address", enterpriseAddress);
-        params.put("principal_name", principalName);
-        params.put("principal_idcard", principalIdcard);
-        params.put("principal_telephone", principalTelephone);
-        params.put("principal_fax", principalFax);
-        params.put("principal_address", principalAddress);
-        params.put("contacts_name", contactsName);
-        params.put("contacts_idcard", contactsIdcard);
-        params.put("contacts_telephone", contactsTelephone);
-        params.put("contacts_fax", contactsFax);
-        params.put("bank_name", bankName);
-        params.put("bank_account", bankAccount);
-        params.put("bank_card", bankCard);
-        params.put("image_principal", String.valueOf(imagePrincipal));
-        params.put("image_business_licence", imageBusinessLicence);
-        params.put("image_bank", imageBank);
-        params.put("image_professional_license", imageProfessionalLicense);
-        params.put("contacts_address", contactsAddress);
-        params.put("operate_account", "admin");
-        partnerService.partnerAdd(params);
-        return new ModelAndView("redirect:/partner/list");
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public Map<String, Object> delete(int id) {
+        Map<String, Object> map = partnerService.delete(id);
+        return map;
     }
 }
-
-

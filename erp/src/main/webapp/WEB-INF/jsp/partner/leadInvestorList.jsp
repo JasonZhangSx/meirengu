@@ -116,7 +116,6 @@
             ],
             "columnDefs": [
                 {
-
                     "defaultContent":'',
                     "searchable": false,
                     "orderable": false,

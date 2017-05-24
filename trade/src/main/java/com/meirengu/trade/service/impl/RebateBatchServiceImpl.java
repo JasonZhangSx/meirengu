@@ -1,13 +1,19 @@
 package com.meirengu.trade.service.impl;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.Constant;
+import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.RebateBatchDao;
 import com.meirengu.trade.dao.RebateDao;
 import com.meirengu.trade.model.Rebate;
 import com.meirengu.trade.model.RebateBatch;
+import com.meirengu.trade.model.RebateReceive;
 import com.meirengu.trade.service.RebateBatchService;
 import com.meirengu.service.impl.BaseServiceImpl;
+import com.meirengu.trade.service.RebateReceiveService;
+import com.meirengu.trade.service.RebateUsedService;
 import com.meirengu.trade.utils.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +32,17 @@ import java.util.*;
  */
 @Service
 public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> implements RebateBatchService{
+
     private static final Logger logger = LoggerFactory.getLogger(RebateBatchServiceImpl.class);
 
     @Autowired
     private RedisClient redisClient;
+
+    @Autowired
+    private RebateReceiveService rebateReceiveService;
+
+    @Autowired
+    private RebateUsedService rebateUsedService;
 
     @Autowired
     private RebateBatchDao rebateBatchDao;
@@ -142,5 +155,50 @@ public class RebateBatchServiceImpl extends BaseServiceImpl<RebateBatch> impleme
 
     public List<RebateBatch> findByCondition(Map<String, Object> paramMap){
         return rebateBatchDao.findByCondition(paramMap);
+    }
+
+    /**
+     * 查看批次详情
+     * @param rebateBatchId
+     * @return
+     */
+    public JSONObject getRebateBatchInfo(Integer rebateBatchId) {
+        JSONObject jsonObject = new JSONObject();
+        RebateBatch rebateBatch = detail(rebateBatchId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("rebateBatchId", rebateBatchId);
+        map.put("status", Constant.REBATE_RECEIVE_UNUSED);
+        //已领取未使用
+        Integer receiveCount = rebateReceiveService.getCount(map);
+        map.put("status", Constant.REBATE_RECEIVE_USED);
+        //已使用
+        Integer useCount = rebateReceiveService.getCount(map);
+        map.put("status", Constant.REBATE_RECEIVE_EXPIRED);
+        //已失效
+        Integer expiredCount = rebateReceiveService.getCount(map);
+        //已使用优惠券信息
+//        //已核销
+//        map.put("verifyStatus", Constant.YES);
+//        Integer verifyedCount = rebateUsedService.getVerifyInfoCount(map);
+//        //订单待支付
+//        map.put("verifyStatus", Constant.NO);
+//        map.put("orderState", OrderStateEnum.PAID.getValue());
+//        Integer unPaidCount = rebateUsedService.getVerifyInfoCount(map);
+//        //订单已支付
+//        map.put("verifyStatus", Constant.NO);
+//        map.put("orderState", OrderStateEnum.PAID.getValue());
+//        Integer verifyCount = rebateUsedService.getVerifyInfoCount(map);
+        //已失效(订单已失效)
+        map.put("verifyStatus", Constant.NO);
+        map.put("orderState", OrderStateEnum.LOSS_EFFICACY.getValue());
+        Integer failureCount = rebateUsedService.getVerifyInfoCount(map);
+        jsonObject.put("rebateBatch", rebateBatch);
+        jsonObject.put("receiveCount", receiveCount);
+        jsonObject.put("useCount", useCount);
+        jsonObject.put("expiredCount", expiredCount);
+//        jsonObject.put("verifyedCount", verifyedCount);
+//        jsonObject.put("verifyCount", verifyCount);
+        jsonObject.put("failureCount", failureCount);
+        return jsonObject;
     }
 }

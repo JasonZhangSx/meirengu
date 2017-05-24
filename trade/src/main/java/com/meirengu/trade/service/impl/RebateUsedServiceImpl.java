@@ -66,7 +66,6 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         rebateUsed.setActivityIdentification(rebateReceive.getActivityIdentification());
         rebateUsed.setOrderSn(orderSn);
         rebateUsed.setRebateAmount(rebateBatch.getRebateAmount());
-        rebateUsed.setUsedTime(new Date());
         rebateUsed.setVerifyStatus(Constant.NO);
         int i = insert(rebateUsed);
         if (!(j == 1 && i == 1)) {
@@ -93,4 +92,37 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         LOGGER.info(" page params is "+ JSON.toJSON(map));
         return page;
     }
+    /**
+     * 根据条件获取总条数
+     * @param map
+     * @return
+     */
+    public Integer getVerifyInfoCount(Map map) {
+        return rebateUsedDao.getVerifyInfoCount(map);
+    }
+
+    /**
+     * 更新抵扣券使用记录
+     * @param id
+     * @param verifyStatus
+     */
+    public void updateRebateUsed(Integer id, Integer verifyStatus) {
+        RebateUsed rebateUsed = new RebateUsed();
+        rebateUsed.setId(id);
+        rebateUsed.setVerifyStatus(verifyStatus);
+        rebateUsed.setVerifyTime(new Date());
+        int i = update(rebateUsed);
+        if (i!=1) {
+            throw new OrderException("抵扣券使用记录跟新失败", 50261);
+        }
+    }
+
+//    /**
+//     * 查询符合条件的记录数量
+//     * @param map
+//     * @return
+//     */
+//    public Integer getUsedCount(Map map){
+//        return rebateUsedDao.getUsedCount(map);
+//    }
 }

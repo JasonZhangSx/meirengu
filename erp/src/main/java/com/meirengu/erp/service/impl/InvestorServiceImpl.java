@@ -76,6 +76,10 @@ public class InvestorServiceImpl implements InvestorService{
         params.put("investor_address", investor.getInvestorAddress());
         params.put("investor_telphone", investor.getInvestorTelphone());
         params.put("investor_image", investor.getInvestorImage());
+        params.put("investor_introduction", investor.getInvestorIntroduction());
+        params.put("investor_company", investor.getInvestorCompany());
+        params.put("investor_position", investor.getInvestorPosition());
+        params.put("investor_idea", investor.getInvestorIdea());
         params.put("operate_account", "admin");
 
         try {
@@ -105,6 +109,10 @@ public class InvestorServiceImpl implements InvestorService{
         params.put("investor_address", investor.getInvestorAddress());
         params.put("investor_telphone", investor.getInvestorTelphone());
         params.put("investor_image", investor.getInvestorImage());
+        params.put("investor_introduction", investor.getInvestorIntroduction());
+        params.put("investor_company", investor.getInvestorCompany());
+        params.put("investor_position", investor.getInvestorPosition());
+        params.put("investor_idea", investor.getInvestorIdea());
         params.put("operate_account", investor.getOperateAccount());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);

@@ -83,6 +83,22 @@ public class PartnerController extends BaseController{
         }
     }
 
+
+    @ResponseBody
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
+                       @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("fields", "partner_name as partnerName, partner_label as partnerLabel, partner_img as partnerImg, partner_telphone as partnerTelphone, enterprise_address as enterpriseAddress, partner_id as partnerId");
+
+        Page<Partner> page = new Page<>();
+        page.setPageNow(pageNum);
+        page.setPageSize(pageSize);
+        page = partnerService.getListByPage(page, map);
+        return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
+
     /**
      * 新增合作伙伴
      */

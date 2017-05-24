@@ -202,12 +202,20 @@
                                 {
                                     func: [
                                         {"name": "失效处理", "fn": "edit(\'" + row.batchId + "\')", "type": "primary"},
+                                        {"name": "查看", "fn": "show(\'" + row.batchId + "\')", "type": "default"}
                                     ]
                                 };
                             var html = template(context);
                             return html;
                         } else {
-                            return "";
+                            var context =
+                                {
+                                    func: [
+                                        {"name": "查看", "fn": "show(\'" + row.batchId + "\')", "type": "default"}
+                                    ]
+                                };
+                            var html = template(context);
+                            return html;
                         }
                     }
                 }
@@ -267,7 +275,7 @@
         table.column(1).search(batchId).column(12).search(batchStatue).draw();
     }
 
-    /*候补预约订单处理*/
+    /*失效处理*/
     function edit(id) {
         layer.confirm('是否失效处理？', {
                 btn: ['失效', '取消'],
@@ -284,6 +292,20 @@
                 }
             });
     }
+
+    /*查看*/
+    function show(id) {
+        var title = "抵扣券统计信息";
+        var url = 'rebate_batch/toDetail/'+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
+    }
+
+
     function ajaxHandle(id) {
         var url = "<%=basePath %>rebate_batch/lose_efficacy/"+id;
         var flag=false;

@@ -221,6 +221,7 @@ public class StatusCode {
     public static final int REBATE_RECEIVE_INSERT_ERROR = 50258;
     public static final int REBATE_UPDATE_ERROR = 50259;
     public static final int HAS_REACHE_REBATE_LIMIT = 50260;
+    public static final int REACHE_USED_INSERT_ERROR = 50261;
 
 
 
@@ -484,6 +485,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.REBATE_RECEIVE_INSERT_ERROR, "优惠券领取信息插入异常，请重试");
         codeMsgMap.put(StatusCode.REBATE_UPDATE_ERROR, "优惠券信息更新失败，请重试");
         codeMsgMap.put(StatusCode.HAS_REACHE_REBATE_LIMIT, "用户领取该优惠券已达限领次数");
+        codeMsgMap.put(StatusCode.REACHE_USED_INSERT_ERROR, "抵扣券使用记录跟新失败");
+
 
 
 
