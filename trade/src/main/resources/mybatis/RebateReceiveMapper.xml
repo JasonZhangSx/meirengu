@@ -92,18 +92,28 @@
 	</sql>
 	<!-- 分页相关开始 -->
 	<select id="getRebateInfoByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_tbcolumns" />,trb.rebate_amount AS rebateAmount, trb.rebate_name AS rebateName, trb.rebate_scope AS rebateScope, trb.rebate_limit_amount AS rebateLimitAmount, tr.valid_start_time AS validStartTime, tr.valid_end_time AS validEndTime
+		select <include refid="select_tbcolumns" />,
+			trb.rebate_amount AS rebateAmount,
+			trb.rebate_name AS rebateName,
+			trb.rebate_scope AS rebateScope,
+			trb.rebate_limit_amount AS rebateLimitAmount,
+			tr.valid_start_time AS validStartTime,
+			tr.valid_end_time AS validEndTime
 		FROM
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr
 		ON tb.rebate_sn = tr.rebate_sn
-		AND tb.user_id = #{userId}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND tb.user_id = #{userId}
+		</if>
 		<if test="@Ognl@isNotEmpty(status)">
 			AND tb.status = #{status}
 		</if>
 		LEFT JOIN rebate_batch trb
 		ON tb.rebate_batch_id = trb.batch_id
-		AND tb.user_id = #{userId}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND tb.user_id = #{userId}
+		</if>
 		<if test="@Ognl@isNotEmpty(status)">
 			AND tb.status = #{status}
 		</if>
@@ -116,13 +126,17 @@
 		<include refid="table_name" /> tb
 		LEFT JOIN rebate tr
 		ON tb.rebate_sn = tr.rebate_sn
-		AND tb.user_id = #{userId}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND tb.user_id = #{userId}
+		</if>
 		<if test="@Ognl@isNotEmpty(status)">
 			AND tb.status = #{status}
 		</if>
 		LEFT JOIN rebate_batch trb
 		ON tb.rebate_batch_id = trb.batch_id
-		AND tb.user_id = #{userId}
+		<if test="@Ognl@isNotEmpty(userId)">
+			AND tb.user_id = #{userId}
+		</if>
 		<if test="@Ognl@isNotEmpty(status)">
 			AND tb.status = #{status}
 		</if>

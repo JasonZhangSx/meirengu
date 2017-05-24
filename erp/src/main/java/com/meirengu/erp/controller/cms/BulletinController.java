@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,6 +50,32 @@ public class BulletinController extends BaseController{
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
     public String bulletinAddView() throws IOException {
         return "/cms/bulletinAdd";
+    }
+
+    /**
+     * 公告修改
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toUpdate/{id}", method = RequestMethod.GET)
+    public String bulletinUpdateView(@PathVariable("id") Integer bulletinId, ModelMap model) throws IOException {
+        String url = ConfigUtil.getConfig("news.bulletin.detail") + "/" + bulletinId;
+        Map<String,Object> httpData = (Map<String,Object>)httpGet(url);
+        model.addAttribute("bulletin", httpData);
+        return "/cms/bulletinUpdate";
+    }
+
+    /**
+     * 公告详情
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toDetail/{id}", method = RequestMethod.GET)
+    public String bulletinDetailView(@PathVariable("id") Integer bulletinId, ModelMap model) throws IOException {
+        String url = ConfigUtil.getConfig("news.bulletin.detail") + "/" + bulletinId;
+        Map<String,Object> httpData = (Map<String,Object>)httpGet(url);
+        model.addAttribute("bulletin", httpData);
+        return "/cms/bulletinDetail";
     }
 
 
@@ -141,7 +168,9 @@ public class BulletinController extends BaseController{
         Map<String, String> params = new HashMap<String, String>();
         params.put("bulletin_title", bulletinTitle);
         params.put("bulletin_content", bulletinContent);
-        params.put("status", status.toString());
+        if (status != null) {
+            params.put("status", status.toString());
+        }
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();

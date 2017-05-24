@@ -1,19 +1,23 @@
 package com.meirengu.erp.controller.trade;
 
+import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
+import com.meirengu.model.Result;
+import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.NumberUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,5 +67,40 @@ public class RebateUsedController extends BaseController{
         return setDataTablesOutput(input, list, totalCount);
     }
 
+    /**
+     * 核销抵扣券
+     * @param rebateUsedId
+     * @return
+     */
+    @RequestMapping(value = "/verifyRebateUsed/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result verifyRebateUsed(@PathVariable("id") Integer rebateUsedId) {
+        if (NumberUtil.isNullOrZero(rebateUsedId)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        String url = ConfigUtil.getConfig("rebate.used.update.url");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("rebate_used_id", rebateUsedId.toString());
+        params.put("verify_status", 1 + "");
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
+        } catch (Exception e) {
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
 
 }

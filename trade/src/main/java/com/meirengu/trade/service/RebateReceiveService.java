@@ -50,4 +50,10 @@ public interface RebateReceiveService extends BaseService<RebateReceive>{
      * @return
      */
     Page getRebateInfoListByPage(Page page, Map map);
+    /**
+     * 查询符合条件的记录数量
+     * @param map
+     * @return
+     */
+    Integer getCount(Map map);
 }

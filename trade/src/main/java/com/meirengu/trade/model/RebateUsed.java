@@ -25,7 +25,7 @@ public class RebateUsed  extends BaseObject {
 	/** 抵扣券金额 */
 	private BigDecimal rebateAmount;
 	/** 使用时间 */
-	private Date usedTime;
+	private Date createTime;
 	/** 核销状态 */
 	private Integer verifyStatus;
 	 /** 核销时间 */
@@ -95,12 +95,12 @@ public class RebateUsed  extends BaseObject {
 		return rebateAmount;
 	}
 
-	public void setUsedTime(Date usedTime){
-		this.usedTime = usedTime;
+	public void setCreateTime(Date createTime){
+		this.createTime = createTime;
 	}
 
-	public Date getUsedTime(){
-		return usedTime;
+	public Date getCreateTimeTime(){
+		return createTime;
 	}
 
 	 public Integer getVerifyStatus() {

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,8 +52,21 @@ public class RebateBatchController extends BaseController{
      * @throws IOException
      */
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
-    public String bulletinAddView() throws IOException {
+    public String rebateBatchAddView() throws IOException {
         return "/trade/rebateBatchAdd";
+    }
+
+    /**
+     * 抵扣券批次统计信息
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toDetail/{id}", method = RequestMethod.GET)
+    public String rebateBatchDetailView(ModelMap model, @PathVariable Integer id) throws IOException {
+        String url = ConfigUtil.getConfig("rebate.batch.url") + "/" + id;
+        Map<String,Object> httpData = (Map<String,Object>)httpGet(url);
+        model.addAllAttributes(httpData);
+        return "/trade/rebateBatchDetail";
     }
 
     /**

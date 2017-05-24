@@ -112,7 +112,8 @@
                                 {
                                     func: [
                                         {"name": "上架", "fn": "edit(\'" + row.bulletinId + "\',1)", "type": "primary"},
-                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
+                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"},
+                                        {"name": "修改", "fn": "update(\'" + row.bulletinId + "\')", "type": "primary"}
 
                                     ]
                                 };
@@ -121,7 +122,8 @@
                                 {
                                     func: [
                                         {"name": "下架", "fn": "edit(\'" + row.bulletinId + "\',0)", "type": "primary"},
-                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
+                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"},
+                                        {"name": "修改", "fn": "update(\'" + row.bulletinId + "\')", "type": "primary"}
 
                                     ]
                                 };
@@ -199,8 +201,33 @@
             }
         });
     }
-    //*项目-编辑*/
+    //*公告-新增*/
     function bulletin_insert(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            end: function(){
+                table.ajax.reload();
+            }
+        });
+        layer.full(index);
+    }
+    //*公告-详情*/
+    function detail(id) {
+        var title = "公告详情";
+        var url = "bulletin/toDetail/"+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
+    }
+    //*公告-修改*/
+    function update(id) {
+        var title = "公告修改";
+        var url = "bulletin/toUpdate/"+id;
         var index = layer.open({
             type: 2,
             title: title,

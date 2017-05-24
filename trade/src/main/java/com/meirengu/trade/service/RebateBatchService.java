@@ -1,4 +1,5 @@
 package com.meirengu.trade.service;
+import com.alibaba.fastjson.JSONObject;
 import com.meirengu.model.Result;
 import com.meirengu.trade.model.RebateBatch;
 import com.meirengu.service.BaseService;
@@ -26,4 +27,11 @@ public interface RebateBatchService extends BaseService<RebateBatch>{
      * @return
      */
     List<RebateBatch> findByCondition(Map<String, Object> paramMap);
+
+    /**
+     * 查看批次详情
+     * @param rebateBatchId
+     * @return
+     */
+    JSONObject getRebateBatchInfo(Integer rebateBatchId);
 }
