@@ -4,6 +4,7 @@ import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
 import com.meirengu.model.Result;
+import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.service.RebateService;
 import com.meirengu.trade.service.RebateUsedService;
 import org.slf4j.Logger;
@@ -83,6 +84,31 @@ public class RebateUsedController extends BaseController{
         try{
             page = rebateUsedService.getVerifyInfoByPage(page, map);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * 更新抵扣券使用记录
+     * @param id
+     * @param verifyStatus
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Result updateRebateUsed(@RequestParam(value = "rebate_used_id", required = false) Integer id,
+                                   @RequestParam(value = "verify_status", required = false) Integer verifyStatus){
+        try{
+            rebateUsedService.updateRebateUsed(id, verifyStatus);
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (OrderException oe){
+            logger.error("throw OrderException: {}", oe);
+            if (oe.getErrorCode()!= null && StatusCode.codeMsgMap.get(oe.getErrorCode()) != null) {
+                return setResult(oe.getErrorCode(), null, StatusCode.codeMsgMap.get(oe.getErrorCode()));
+            } else {
+                return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+            }
         }catch (Exception e){
             logger.error("throw exception: {}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

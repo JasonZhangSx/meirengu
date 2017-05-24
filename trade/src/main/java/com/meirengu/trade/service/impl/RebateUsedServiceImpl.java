@@ -101,6 +101,22 @@ public class RebateUsedServiceImpl extends BaseServiceImpl<RebateUsed> implement
         return rebateUsedDao.getVerifyInfoCount(map);
     }
 
+    /**
+     * 更新抵扣券使用记录
+     * @param id
+     * @param verifyStatus
+     */
+    public void updateRebateUsed(Integer id, Integer verifyStatus) {
+        RebateUsed rebateUsed = new RebateUsed();
+        rebateUsed.setId(id);
+        rebateUsed.setVerifyStatus(verifyStatus);
+        rebateUsed.setVerifyTime(new Date());
+        int i = update(rebateUsed);
+        if (i!=1) {
+            throw new OrderException("抵扣券使用记录跟新失败", 50261);
+        }
+    }
+
 //    /**
 //     * 查询符合条件的记录数量
 //     * @param map
