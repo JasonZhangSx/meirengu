@@ -128,13 +128,48 @@
                 </div>
             </div>
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">公司：</label>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <input type="text" class="input-text" value="${investorCompany}" id="investorCompany" name="investorCompany" minlength="1" maxlength="30">
+                </div>
+                <label class="form-label col-xs-4 col-sm-2">职位：</label>
+                <div class="formControls col-xs-8 col-sm-3">
+                    <input type="text" class="input-text" value="${investorPosition}" id="investorPosition" name="investorPosition" minlength="1" maxlength="30">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">简介：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea id="investorIntroduction" name="investorIntroduction" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100" dragonfly="true"
+                              nullmsg="简介不能为空！">${investorIntroduction}</textarea>
+                    <%--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>--%>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">投资理念：</label>
+                <div class="formControls col-xs-8 col-sm-8">
+                    <textarea id="investorIdea" name="investorIdea" cols="" rows="" class="textarea" placeholder="..." datatype="*10-100" dragonfly="true"
+                              nullmsg="简介不能为空！">${investorIdea}</textarea>
+                    <%--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>--%>
+                </div>
+            </div>
+            <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">领投人头像：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="hidden" id="investorImage" name="investorImage">
                     <div class="img-box full">
                         <section class=" img-section">
                             <div class="z_photo upimg-div clearfix">
-                                <div id="imgParent" class="clearfix"></div>
+                                <div id="imgParent" class="clearfix">
+                                    <section class="up-section fl">
+                                        <span class="up-span"></span>
+                                        <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">
+                                        <img class="up-img" src="http://test.img.meirenguvip.com/${investorImage}">
+                                        <p class="img-name-p">${investorImage}</p>
+                                        <input id="taglocation" name="taglocation" value="" type="hidden">
+                                        <input id="tags" name="tags" value="" type="hidden">
+                                    </section>
+                                </div>
                                 <section class="z_file fl">
                                     <img src="static/upload-file/a11.png" class="add-img">
                                     <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file','investor','imgParent','investorImage')">
@@ -310,6 +345,11 @@
         var investorTelphone = $("#investorTelphone").val();
         var investorAddress = $("#investorAddress").val();
         var investorImage = $("#investorImage").val();
+        var investorCompany = $("#investorCompany").val();
+        var investorPosition = $("#investorPosition").val();
+        var investorIntroduction = $("#investorIntroduction").val();
+        var investorIdea = $("#investorIdea").val();
+
         if(investorName == null || investorName == '' || investorName == undefined){
             alert("投资人名称不能为空");
             return;
@@ -338,6 +378,22 @@
         }
         if(investorAddress == null || investorAddress == "" || investorAddress == undefined){
             alert("请填写地址！");
+            return false;
+        }
+        if(investorCompany == null || investorCompany == "" || investorCompany == undefined){
+            alert("请填写公司！");
+            return false;
+        }
+        if(investorPosition == null || investorPosition == "" || investorPosition == undefined){
+            alert("请填写职位！");
+            return false;
+        }
+        if(investorIntroduction == null || investorIntroduction == "" || investorIntroduction == undefined){
+            alert("请填写简介！");
+            return false;
+        }
+        if(investorIdea == null || investorIdea == "" || investorIdea == undefined){
+            alert("请填写投资理念！");
             return false;
         }
         if(investorImage == null || investorImage == "" || investorImage == undefined){

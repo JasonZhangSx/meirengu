@@ -77,10 +77,6 @@ public class LimitedPartnerShipController extends BaseController{
      * @param limitNum
      * @param idcard
      * @param companyAddress
-     * @param imagePrincipal
-     * @param imageBusinessLicence
-     * @param imageBank
-     * @param imageProfessionalLicense
      * @param operateAccount
      * @return
      */
@@ -91,15 +87,13 @@ public class LimitedPartnerShipController extends BaseController{
                          @RequestParam(value = "limit_num", required = false) Integer limitNum,
                          @RequestParam(value = "idcard", required = false) String idcard,
                          @RequestParam(value = "company_address", required = false) String companyAddress,
-                         @RequestParam(value = "image_principal", required = false) String imagePrincipal,
-                         @RequestParam(value = "image_businessLicence", required = false) String imageBusinessLicence,
-                         @RequestParam(value = "image_bank", required = false) String imageBank,
-                         @RequestParam(value = "image_professional_license", required = false) String imageProfessionalLicense,
+                         @RequestParam(value = "item_name", required = false) String itemName,
+                         @RequestParam(value = "status", required = false) Integer status,
+                         @RequestParam(value = "executive_partner", required = false) String executivePartner,
                          @RequestParam(value = "operate_account", required = false) String operateAccount ){
 
         LimitedPartnership li = setEntity(0, companyName, establishmentTime, limitNum,
-                idcard, companyAddress, imagePrincipal, imageBusinessLicence,
-                imageBank, imageProfessionalLicense, new Date(), operateAccount);
+                idcard, companyAddress, itemName, status, executivePartner, new Date(), operateAccount);
         try {
             int insertNum = limitedPartnershipService.insert(li);
             if(insertNum == 1){
@@ -141,15 +135,13 @@ public class LimitedPartnerShipController extends BaseController{
                          @RequestParam(value = "limit_num", required = false) Integer limitNum,
                          @RequestParam(value = "idcard", required = false) String idcard,
                          @RequestParam(value = "company_address", required = false) String companyAddress,
-                         @RequestParam(value = "image_principal", required = false) String imagePrincipal,
-                         @RequestParam(value = "image_businessLicence", required = false) String imageBusinessLicence,
-                         @RequestParam(value = "image_bank", required = false) String imageBank,
-                         @RequestParam(value = "image_professional_license", required = false) String imageProfessionalLicense,
+                         @RequestParam(value = "item_name", required = false) String itemName,
+                         @RequestParam(value = "executive_partner", required = false) String executivePartner,
+                         @RequestParam(value = "status", required = false) Integer status,
                          @RequestParam(value = "operate_account", required = false) String operateAccount ){
 
         LimitedPartnership li = setEntity(id, companyName, establishmentTime, limitNum,
-                idcard, companyAddress, imagePrincipal, imageBusinessLicence,
-                imageBank, imageProfessionalLicense, new Date(), operateAccount);
+                idcard, companyAddress, itemName, status, executivePartner, new Date(), operateAccount);
         try {
             int updateNum = limitedPartnershipService.update(li);
             if(updateNum == 1){
@@ -185,25 +177,23 @@ public class LimitedPartnerShipController extends BaseController{
     }
 
     private LimitedPartnership setEntity(Integer id, String companyName, Date establishmentTime, Integer limitNum,
-                                         String idcard, String companyAddress, String imagePrincipal, String imageBusinessLicence,
-                                         String imageBank, String imageProfessionalLicense, Date createTime, String operateAccount) {
+                                         String idcard, String companyAddress, String itemName, Integer status, String executivePartner, Date createTime, String operateAccount) {
         LimitedPartnership li = new LimitedPartnership();
         if(id == null || id == 0){
             li.setId(null);
         }else{
             li.setId(id);
         }
-        li.setCompanyName(companyName);
+        li.setCompanyName(companyName == null ? "" : companyName);
         li.setEstablishmentTime(establishmentTime);
-        li.setLimitNum(limitNum);
-        li.setIdcard(idcard);
-        li.setCompanyAddress(companyAddress);
-        li.setImageProfessionalLicense(imageProfessionalLicense);
-        li.setImageBank(imageBank);
-        li.setImagePrincipal(imagePrincipal);
-        li.setImageBusinessLicence(imageBusinessLicence);
+        li.setLimitNum(limitNum == null ? 0 : limitNum);
+        li.setIdcard(idcard == null ? "" : idcard);
+        li.setCompanyAddress(companyAddress == null ? "" : companyAddress);
+        li.setStatus(status == null ? 0 : status);
+        li.setItemName(itemName == null ? "" : itemName);
+        li.setExecutivePartner(executivePartner == null ? "" : executivePartner);
         li.setCreateTime(createTime);
-        li.setOperateAccount(operateAccount);
+        li.setOperateAccount(operateAccount == null ? "" : operateAccount);
         return li;
     }
 }

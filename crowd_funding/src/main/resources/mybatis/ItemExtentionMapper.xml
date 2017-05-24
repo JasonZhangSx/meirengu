@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.ItemExtentionDao" >
+
+	<resultMap id="itemExtentionMap" type="ItemExtention">
+		<id column="item_id" property="itemId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="sell_share" property="sellShare" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="finance_amount" property="financeAmount" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="register_capital" property="registerCapital" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="captital_reserve" property="captitalReserve" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="after_register_capital" property="afterRegisterCapital" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="lead_investor_id" property="leadInvestorId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="lead_investor_amount" property="leadInvestorAmount" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="executive_partner" property="executivePartner" jdbcType="VARCHAR" javaType="String"/>
+		<result column="lead_investor_reason" property="leadInvestorReason" jdbcType="VARCHAR" javaType="String"/>
+		<result column="limited_partnership_id1" property="limitedPartnershipId1" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="limited_partnership_id2" property="limitedPartnershipId2" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="limited_partnership_id3" property="limitedPartnershipId3" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="limited_partnership_id4" property="limitedPartnershipId4" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="equity_template" property="equityTemplate" jdbcType="VARCHAR" javaType="String"/>
+		<result column="partnership_template" property="partnershipTemplate" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+
+	<sql id="table_name">`item_extention`</sql>
+	<sql id="select_columns">
+		item_id as itemId, sell_share as sellShare, finance_amount as financeAmount, register_capital as registerCapital, captital_reserve as captitalReserve, after_register_capital as afterRegisterCapital, lead_investor_id as leadInvestorId, lead_investor_amount as leadInvestorAmount, executive_partner as executivePartner, lead_investor_reason as leadInvestorReason, limited_partnership_id1 as limitedPartnershipId1, limited_partnership_id2 as limitedPartnershipId2, limited_partnership_id3 as limitedPartnershipId3, limited_partnership_id4 as limitedPartnershipId4, equity_template as equityTemplate, partnership_template as partnershipTemplate
+	</sql>
+
+	<insert id="insert" parameterType="itemExtention" useGeneratedKeys="true" keyProperty="itemId" >
+		INSERT INTO <include refid="table_name" />
+			(item_id, sell_share, finance_amount, register_capital, captital_reserve, after_register_capital, lead_investor_id, lead_investor_amount, executive_partner, lead_investor_reason, limited_partnership_id1, limited_partnership_id2, limited_partnership_id3, limited_partnership_id4, equity_template, partnership_template)
+		VALUES
+			(#{itemId}, #{sellShare}, #{financeAmount}, #{registerCapital}, #{captitalReserve}, #{afterRegisterCapital}, #{leadInvestorId}, #{leadInvestorAmount}, #{executivePartner}, #{leadInvestorReason}, #{limitedPartnershipId1}, #{limitedPartnershipId2}, #{limitedPartnershipId3}, #{limitedPartnershipId4}, #{equityTemplate}, #{partnershipTemplate})
+	</insert>
+
+	<update id="update" parameterType="itemExtention">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="sellShare != null and sellShare != ''">
+				sell_share=#{sellShare},
+			</if>
+			<if test="financeAmount != null and financeAmount != ''">
+				finance_amount=#{financeAmount},
+			</if>
+			<if test="registerCapital != null and registerCapital != ''">
+				register_capital=#{registerCapital},
+			</if>
+			<if test="captitalReserve != null and captitalReserve != ''">
+				captital_reserve=#{captitalReserve},
+			</if>
+			<if test="afterRegisterCapital != null and afterRegisterCapital != ''">
+				after_register_capital=#{afterRegisterCapital},
+			</if>
+			<if test="leadInvestorId != null and leadInvestorId != ''">
+				lead_investor_id=#{leadInvestorId},
+			</if>
+			<if test="leadInvestorAmount != null and leadInvestorAmount != ''">
+				lead_investor_amount=#{leadInvestorAmount},
+			</if>
+			<if test="executivePartner != null and executivePartner != ''">
+				executive_partner=#{executivePartner},
+			</if>
+			<if test="leadInvestorReason != null and leadInvestorReason != ''">
+				lead_investor_reason=#{leadInvestorReason},
+			</if>
+			<if test="limitedPartnershipId1 != null and limitedPartnershipId1 != ''">
+				limited_partnership_id1=#{limitedPartnershipId1},
+			</if>
+			<if test="limitedPartnershipId2 != null and limitedPartnershipId2 != ''">
+				limited_partnership_id2=#{limitedPartnershipId2},
+			</if>
+			<if test="limitedPartnershipId3 != null and limitedPartnershipId3 != ''">
+				limited_partnership_id3=#{limitedPartnershipId3},
+			</if>
+			<if test="limitedPartnershipId4 != null and limitedPartnershipId4 != ''">
+				limited_partnership_id4=#{limitedPartnershipId4},
+			</if>
+			<if test="equityTemplate != null and equityTemplate != ''">
+				equity_template=#{equityTemplate},
+			</if>
+			<if test="partnershipTemplate != null and partnershipTemplate != ''">
+				partnership_template=#{partnershipTemplate},
+			</if>
+		</set>
+		<where>
+			item_id = #{itemId}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="itemExtention">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where item_id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>

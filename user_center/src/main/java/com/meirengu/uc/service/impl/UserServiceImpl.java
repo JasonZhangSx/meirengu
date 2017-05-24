@@ -166,6 +166,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
         user.setPassword("");
+        user.setLevel(1);
+        user.setCompany("");
+        user.setPosition("");
+        user.setIntroduction("");
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -216,16 +220,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             user.setWxOpenid(registerVO.getWx_openid());
             user.setWxInfo(registerVO.getWx_info());
             user.setWx(registerVO.getWx_name());
+            user.setNickname(registerVO.getWx_name());
         }
         if(!StringUtil.isEmpty(registerVO.getQq_openid())) {
             user.setQqOpenid(registerVO.getQq_openid());
             user.setQqInfo(registerVO.getQq_info());
             user.setQq(registerVO.getQq_name());
+            user.setNickname(registerVO.getQq_name());
         }
         if(!StringUtil.isEmpty(registerVO.getSina_openid())) {
             user.setSinaOpenid(registerVO.getSina_openid());
             user.setSinaInfo(registerVO.getSina_info());
             user.setSina(registerVO.getSina_name());
+            user.setNickname(registerVO.getSina_name());
         }
         user.setLoginNum(1);
         user.setRegisterFrom(registerVO.getFrom());
@@ -235,6 +242,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsAllowTalk(1);
         user.setState(1);
         user.setIsBuy(1);
+        user.setLevel(1);
+        user.setCompany("");
+        user.setPosition("");
+        user.setIntroduction("");
         try {
             if(!StringUtil.isEmpty(registerVO.getPassword())){
                 String password = PasswordEncryption.createHash(registerVO.getPassword());

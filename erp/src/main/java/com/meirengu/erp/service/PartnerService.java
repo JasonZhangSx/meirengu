@@ -13,10 +13,14 @@ import java.util.Map;
  */
 public interface PartnerService {
 
-    List getPartnerList();
+    Map<String, Object> query(int page, int perPage, boolean isPage);
 
-    List getPartnerClassList();
+    Map<String, Object> detail(int id);
 
-    boolean partnerAdd(Map<String, String> params);
+    Map<String, Object> add(Partner partner);
+
+    Map<String, Object> update(Partner partner);
+
+    Map<String, Object> delete(int id);
 
 }

@@ -18,14 +18,14 @@
 
 	<sql id="table_name">`lead_investor`</sql>
 	<sql id="select_columns">
-		id as id, investor_name as investorName, principal_name as principalName, investor_type as investorType, investor_business_licence as investorBusinessLicence, investor_idcard as investorIdcard, investor_address as investorAddress, investor_telphone as investorTelphone, investor_image as investorImage, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		id as id, investor_name as investorName, principal_name as principalName, investor_type as investorType, investor_introduction as investorIntroduction, investor_company as investorCompany, investor_position as investorPosition, investor_idea as investorIdea,  investor_business_licence as investorBusinessLicence, investor_idcard as investorIdcard, investor_address as investorAddress, investor_telphone as investorTelphone, investor_image as investorImage, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="leadInvestor" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, investor_name, investor_type, principal_name, investor_business_licence, investor_idcard, investor_address, investor_telphone, investor_image, create_time, update_time, operate_account)
+			(id, investor_name, investor_type, principal_name, investor_introduction, investor_company, investor_position, investor_idea, investor_business_licence, investor_idcard, investor_address, investor_telphone, investor_image, create_time, update_time, operate_account)
 		VALUES
-			(#{id}, #{investorName}, #{investorType}, #{principalName}, #{investorBusinessLicence}, #{investorIdcard}, #{investorAddress}, #{investorTelphone}, #{investorImage}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{id}, #{investorName}, #{investorType}, #{principalName}, #{investorIntroduction}, #{investorCompany}, #{investorPosition}, #{investorIdea}, #{investorBusinessLicence}, #{investorIdcard}, #{investorAddress}, #{investorTelphone}, #{investorImage}, #{createTime}, #{updateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="leadInvestor">
@@ -63,6 +63,18 @@
 			</if>
 			<if test="principalName != null">
 				principal_name=#{principalName}
+			</if>
+			<if test="investorIntroduction != null and investorIntroduction != ''">
+				investor_introduction=#{investorIntroduction},
+			</if>
+			<if test="investorCompany != null and investorCompany != ''">
+				investor_company=#{investorCompany},
+			</if>
+			<if test="investorPosition != null and investorPosition != ''">
+				investor_position=#{investorPosition},
+			</if>
+			<if test="investorIdea != null and investorIdea != ''">
+				investor_idea=#{investorIdea},
 			</if>
 		</set>
 		<where>

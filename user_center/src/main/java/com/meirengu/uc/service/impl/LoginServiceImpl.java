@@ -97,7 +97,10 @@ public class LoginServiceImpl implements LoginService {
         userVO.setSina(user.getSina());
         userVO.setAreaId(user.getAreaId());
         userVO.setIsAuth(user.getIsAuth());
-
+        userVO.setLevel(user.getLevel());
+        userVO.setCompany(user.getCompany());
+        userVO.setPosition(user.getPosition());
+        userVO.setIntroduction(user.getIntroduction());
         registerInfo.setUser(userVO);
 
         TokenVO tokenInfo = new TokenVO();

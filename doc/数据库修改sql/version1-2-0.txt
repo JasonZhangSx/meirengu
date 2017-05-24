@@ -1,7 +1,23 @@
 ******************user_center begin*************************
 修改字段备注
-ALTER TABLE `user_center`.`user`     CHANGE `invest_conditions` `invest_conditions` TINYINT(3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
+ALTER TABLE `user_center`.`user`
+ ADD COLUMN `level` TINYINT (3) DEFAULT '1' NOT NULL COMMENT '用户等级 1：新手（返利1%） 2：投资达人（邀请好友累计认购≥10万，返利1.5%） 3：投资大佬（邀请好友累计认购≥30W，返利2%） 4：天使投资人（邀请好友累计认购≥50W，返利2.5%） 5：美丽财富规划师（邀请好友累计认购≥100W，返利3%）' AFTER `invest_conditions`,
+ ADD COLUMN `company` VARCHAR (50) DEFAULT '' NOT NULL COMMENT '所属公司' AFTER `level`,
+ ADD COLUMN `position` VARCHAR (30) DEFAULT '' NOT NULL COMMENT '所在公司职位' AFTER `company`,
+ ADD COLUMN `introduction` VARCHAR (255) DEFAULT '' NOT NULL COMMENT '个人简介' AFTER `position`,
+ CHANGE `invest_conditions` `invest_conditions` TINYINT (3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
+
+
+
 ******************user_center end***************************
+
+******************crowd_funding start******************************
+****合作方新增标签字段*****
+ALTER TABLE `partner` ADD `partner_label` varchar(100) NOT NULL DEFAULT '' COMMENT '合作方标签（多个以,隔开）' AFTER `partner_name`;
+ALTER TABLE `partner` ADD `partner_img` varchar(50) NOT NULL DEFAULT '' COMMENT '合作方图片' AFTER `partner_label`;
+ALTER TABLE `partner` ADD `partner_telphone` varchar(20) NOT NULL DEFAULT '' COMMENT '合作方联系方式' AFTER `partner_label`;
+******************crowd_funding end *******************************
+
 ******************trade begin*************************
 抵扣券使用表
 ALTER TABLE `rebate_used` CHANGE `used_time` `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '使用时间';

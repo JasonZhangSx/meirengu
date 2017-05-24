@@ -12,12 +12,12 @@ public interface ContactService {
     //    生成盖章合同 并创建保全  并把保全文本下载到本地一份
     Result CreateIncomeContactFile(Map<String,String> map);
 
-    Result CreateEquityContactFile(Map<String, String> map);
-
-
     //返回查看保全合同地址
     List<Map<String,String>> ViewContactFile(Map<String,String> map);
     //返回下载地址
     List<Map<String,String>> DownContactFile(Map<String, String> map);
-
+    //生成合伙协议
+    Result CreateHHXYContactFile(Map<String, String> map);
+    //生成股权投资协议
+    Result CreateEquityContactFile(Map<String, String> map);
 }

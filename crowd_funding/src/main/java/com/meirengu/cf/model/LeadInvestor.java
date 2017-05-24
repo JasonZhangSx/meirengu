@@ -25,6 +25,14 @@ public class LeadInvestor  extends BaseObject {
 	private String investorTelphone;
 	/** 领投人头像 */
 	private String investorImage;
+	/** 领投人简介 */
+	private String investorIntroduction;
+	/** 领投人公司 */
+	private String investorCompany;
+	/** 领投人职位 */
+	private String investorPosition;
+	/** 领投人投资理念 */
+	private String investorIdea;
 	/** 创建时间 */
 	private Date createTime;
 	/** 更新时间 */
@@ -127,4 +135,36 @@ public class LeadInvestor  extends BaseObject {
 	public void setPrincipalName(String principalName) {
 		this.principalName = principalName;
 	}
+
+	 public String getInvestorIntroduction() {
+		 return investorIntroduction;
+	 }
+
+	 public void setInvestorIntroduction(String investorIntroduction) {
+		 this.investorIntroduction = investorIntroduction;
+	 }
+
+	 public String getInvestorCompany() {
+		 return investorCompany;
+	 }
+
+	 public void setInvestorCompany(String investorCompany) {
+		 this.investorCompany = investorCompany;
+	 }
+
+	 public String getInvestorPosition() {
+		 return investorPosition;
+	 }
+
+	 public void setInvestorPosition(String investorPosition) {
+		 this.investorPosition = investorPosition;
+	 }
+
+	 public String getInvestorIdea() {
+		 return investorIdea;
+	 }
+
+	 public void setInvestorIdea(String investorIdea) {
+		 this.investorIdea = investorIdea;
+	 }
  }

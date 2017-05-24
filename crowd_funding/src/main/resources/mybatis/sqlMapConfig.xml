@@ -19,5 +19,7 @@
 		<typeAlias alias="type" type="com.meirengu.cf.model.Type" />
 		<typeAlias alias="leadInvestor" type="com.meirengu.cf.model.LeadInvestor" />
 		<typeAlias alias="limitedPartnership" type="com.meirengu.cf.model.LimitedPartnership" />
+		<typeAlias alias="itemExtention" type="com.meirengu.cf.model.ItemExtention" />
+		<typeAlias alias="itemShareholder" type="com.meirengu.cf.model.ItemShareholder" />
 	</typeAliases>
 </configuration>

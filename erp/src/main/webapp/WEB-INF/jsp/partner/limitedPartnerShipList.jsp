@@ -23,15 +23,15 @@
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 合作方管理 <span class="c-gray en">&gt;</span> 版本列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 合作方管理 <span class="c-gray en">&gt;</span> 有限合伙列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加版本信息','version/detail')"
-                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加版本信息</a></span>
+                <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加有限合伙公司','partner_ship/detail')"
+                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加有限合伙公司</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
@@ -69,7 +69,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>version/query'
+                'url': '<%=basePath %>partner_ship/query'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -81,37 +81,30 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "companyName"},
+                {"data": "companyAddress"},
                 {
-                    "data": "appId",
+                    "data": "status",
                     "render": function (data, type, row, meta) {
                         if(data == 1){
-                            return "安卓";
+                            return "已使用";
                         }else {
-                            return "IOS";
+                            return "未使用";
                         }
                     }
                 },
-                {"data": "appName"},
-                {"data": "appChannel"},
-                {"data": "versionCode"},
-                {"data": "versionCodeBefore"},
-                {"data": "versionSize"},
-                {
-                    "data": "createTime",
-                    "render": function (data, type, row, meta) {
-                        return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
-                    }
-                },
+                {"data": "itemName"},
                 {"data": null}
             ],
             "columnDefs": [
                 {
+                    "defaultContent":'',
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
                 },
                 {
-                    "targets": 8,
+                    "targets": 5,
                     "render": function (data, type, row, meta) {
                         var context =
                         {
@@ -186,7 +179,7 @@
     function project_confirm(obj, id) {
         layer.confirm('确认要删除吗？', function (index) {
             $.ajax({
-                url:"version/delete",
+                url:"partner_ship/delete",
                 data:{
                     "id":id,
                     "status":"0"
@@ -213,7 +206,7 @@
         var index = layer.open({
             type: 2,
             title: "版本修改",
-            content: "version/detail?id="+id
+            content: "partner_ship/detail?id="+id
         });
         layer.full(index);
     }
