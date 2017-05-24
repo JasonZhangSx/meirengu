@@ -468,6 +468,24 @@ public class OrderController extends BaseController{
     }
 
     /**
+     * 订单详情(后台)
+     * @return
+     */
+    @RequestMapping(value = "/system/detail/{order_id}",  method = RequestMethod.GET)
+    public Result systemDetail(@PathVariable("order_id") Integer orderId){
+        if (NumberUtil.isNullOrZero(orderId)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try{
+            Map<String, Object> orderDetailMap = orderService.systemOrderDetail(orderId);
+            return setResult(StatusCode.OK, orderDetailMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception: {}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
      * 订单详情
      * @return
      */
