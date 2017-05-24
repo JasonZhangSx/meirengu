@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.cf.dao.ItemShareholderDao" >
+
+	<resultMap id="itemShareholderMap" type="ItemShareholder">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="item_id" property="itemId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="shareholder_name" property="shareholderName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_idcard" property="shareholderIdcard" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_address" property="shareholderAddress" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_telphone" property="shareholderTelphone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="shareholder_amount" property="shareholderAmount" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="before_invest_rate" property="beforeInvestRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
+		<result column="after_invest_rate" property="afterInvestRate" jdbcType="DECIMAL" javaType="BigDecimal"/>
+	</resultMap>
+
+	<sql id="table_name">`item_shareholder`</sql>
+	<sql id="select_columns">
+		id as id, item_id as itemId, shareholder_name as shareholderName, shareholder_idcard as shareholderIdcard, shareholder_address as shareholderAddress, shareholder_telphone as shareholderTelphone, shareholder_amount as shareholderAmount, before_invest_rate as beforeInvestRate, after_invest_rate as afterInvestRate
+	</sql>
+
+	<insert id="insert" parameterType="itemShareholder" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO <include refid="table_name" />
+			(id, item_id, shareholder_name, shareholder_idcard, shareholder_address, shareholder_telphone, shareholder_amount, before_invest_rate, after_invest_rate)
+		VALUES
+			(#{id}, #{itemId}, #{shareholderName}, #{shareholderIdcard}, #{shareholderAddress}, #{shareholderTelphone}, #{shareholderAmount}, #{beforeInvestRate}, #{afterInvestRate})
+	</insert>
+
+	<update id="update" parameterType="itemShareholder">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="id != null and id != ''">
+				id=#{id},
+			</if>
+			<if test="itemId != null and itemId != ''">
+				item_id=#{itemId},
+			</if>
+			<if test="shareholderName != null and shareholderName != ''">
+				shareholder_name=#{shareholderName},
+			</if>
+			<if test="shareholderIdcard != null and shareholderIdcard != ''">
+				shareholder_idcard=#{shareholderIdcard},
+			</if>
+			<if test="shareholderAddress != null and shareholderAddress != ''">
+				shareholder_address=#{shareholderAddress},
+			</if>
+			<if test="shareholderTelphone != null and shareholderTelphone != ''">
+				shareholder_telphone=#{shareholderTelphone},
+			</if>
+			<if test="shareholderAmount != null and shareholderAmount != ''">
+				shareholder_amount=#{shareholderAmount},
+			</if>
+			<if test="beforeInvestRate != null and beforeInvestRate != ''">
+				before_invest_rate=#{beforeInvestRate},
+			</if>
+			<if test="afterInvestRate != null and afterInvestRate != ''">
+				after_invest_rate=#{afterInvestRate},
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<select id="detail" parameterType="integer" resultType="itemShareholder">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where id=#{id}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>
