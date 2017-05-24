@@ -9,10 +9,9 @@
 		<result column="limit_num" property="limitNum" jdbcType="INTEGER" javaType="Integer"/>
 		<result column="idcard" property="idcard" jdbcType="VARCHAR" javaType="String"/>
 		<result column="company_address" property="companyAddress" jdbcType="VARCHAR" javaType="String"/>
-		<result column="image_principal" property="imagePrincipal" jdbcType="VARCHAR" javaType="String"/>
-		<result column="image_business_licence" property="imageBusinessLicence" jdbcType="VARCHAR" javaType="String"/>
-		<result column="image_bank" property="imageBank" jdbcType="VARCHAR" javaType="String"/>
-		<result column="image_professional_license" property="imageProfessionalLicense" jdbcType="VARCHAR" javaType="String"/>
+		<result column="executive_partner" property="executivePartner" jdbcType="VARCHAR" javaType="String"/>
+		<result column="item_name" property="itemName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="status" property="status" jdbcType="TINYINT" javaType="Integer"/>
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="Date"/>
 		<result column="update_time" property="updateTime" jdbcType="DATE" javaType="Date"/>
 		<result column="operate_account" property="operateAccount" jdbcType="VARCHAR" javaType="String"/>
@@ -20,14 +19,14 @@
 
 	<sql id="table_name">`limited_partnership`</sql>
 	<sql id="select_columns">
-		id as id, company_name as companyName, establishment_time as establishmentTime, limit_num as limitNum, idcard as idcard, company_address as companyAddress, image_principal as imagePrincipal, image_business_licence as imageBusinessLicence, image_bank as imageBank, image_professional_license as imageProfessionalLicense, create_time as createTime, update_time as updateTime, operate_account as operateAccount
+		id as id, company_name as companyName, establishment_time as establishmentTime, limit_num as limitNum, idcard as idcard, company_address as companyAddress, executive_partner as executivePartner, item_name as itemName, status as status, create_time as createTime, update_time as updateTime, operate_account as operateAccount
 	</sql>
 
 	<insert id="insert" parameterType="limitedPartnership" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, company_name, establishment_time, limit_num, idcard, company_address, image_principal, image_business_licence, image_bank, image_professional_license, create_time, update_time, operate_account)
+			(id, company_name, establishment_time, limit_num, idcard, company_address, executive_partner, item_name, status, create_time, update_time, operate_account)
 		VALUES
-			(#{id}, #{companyName}, #{establishmentTime}, #{limitNum}, #{idcard}, #{companyAddress}, #{imagePrincipal}, #{imageBusinessLicence}, #{imageBank}, #{imageProfessionalLicense}, #{createTime}, #{updateTime}, #{operateAccount})
+			(#{id}, #{companyName}, #{establishmentTime}, #{limitNum}, #{idcard}, #{companyAddress}, #{executivePartner}, #{itemName}, #{status}, #{createTime}, #{updateTime}, #{operateAccount})
 	</insert>
 
 	<update id="update" parameterType="limitedPartnership">
@@ -48,17 +47,14 @@
 			<if test="companyAddress != null and companyAddress != ''">
 				company_address=#{companyAddress},
 			</if>
-			<if test="imagePrincipal != null and imagePrincipal != ''">
-				image_principal=#{imagePrincipal},
+			<if test="executivePartner != null and executivePartner != ''">
+				executive_partner=#{executivePartner},
 			</if>
-			<if test="imageBusinessLicence != null and imageBusinessLicence != ''">
-				image_business_licence=#{imageBusinessLicence},
+			<if test="itemName != null and itemName != ''">
+				item_name=#{itemName},
 			</if>
-			<if test="imageBank != null and imageBank != ''">
-				image_bank=#{imageBank},
-			</if>
-			<if test="imageProfessionalLicense != null and imageProfessionalLicense != ''">
-				image_professional_license=#{imageProfessionalLicense},
+			<if test="status != null">
+				status=#{status},
 			</if>
 			<if test="createTime != null">
 				create_time=#{createTime},
@@ -79,6 +75,10 @@
 		select <include refid="select_columns" /> from <include refid="table_name"/>
 		where id=#{id}
 	</select>
+
+	<delete id="delete" parameterType="integer">
+		delete from <include refid="table_name" /> where id=#{id}
+	</delete>
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">

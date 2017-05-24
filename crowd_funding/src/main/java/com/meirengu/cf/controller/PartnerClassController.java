@@ -131,7 +131,7 @@ public class PartnerClassController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result update(@RequestParam(value = "class_id", required = false)int classId,
                          @RequestParam(value = "class_name", required = false)String className,
                          @RequestParam(value = "class_description", required = false)String classDescription,
@@ -159,8 +159,8 @@ public class PartnerClassController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "{class_id}", method = RequestMethod.DELETE)
-    public Result delete(@PathVariable(value = "class_id", required = false)int classId){
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public Result delete(@RequestParam(value = "class_id", required = false)int classId){
         try {
             int deleteNum = partnerClassService.delete(classId);
             if(deleteNum == 1){
@@ -174,7 +174,7 @@ public class PartnerClassController extends BaseController{
         }
     }
 
-    private PartnerClass setPartnerClass(int classId, String className, String classDescription, int classSort, int partnerNum, int flag, Date createTime){
+    private PartnerClass setPartnerClass(int classId, String className, String classDescription, Integer classSort, Integer partnerNum, Integer flag, Date createTime){
         PartnerClass pc = new PartnerClass();
         if(classId != 0){
             pc.setClassId(classId);

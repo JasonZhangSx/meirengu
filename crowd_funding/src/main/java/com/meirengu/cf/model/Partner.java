@@ -15,6 +15,12 @@ public class Partner  extends BaseObject {
 	private int typeId;
 	/** 合作方名称 */
 	private String partnerName;
+	/** 合作方标签 */
+	private String partnerLabel;
+	/** 合作方联系方式 */
+	private String partnerTelphone;
+	/** 合作方图标 */
+	private String partnerImg;
 	/** 公司成立日 **/
 	private Date partnerCreateDay;
 	/** 公司注册资金 **/
@@ -318,5 +324,29 @@ public class Partner  extends BaseObject {
 
 	 public void setOperateAccount(String operateAccount) {
 		 this.operateAccount = operateAccount;
+	 }
+
+	 public String getPartnerLabel() {
+		 return partnerLabel;
+	 }
+
+	 public void setPartnerLabel(String partnerLabel) {
+		 this.partnerLabel = partnerLabel;
+	 }
+
+	 public String getPartnerTelphone() {
+		 return partnerTelphone;
+	 }
+
+	 public void setPartnerTelphone(String partnerTelphone) {
+		 this.partnerTelphone = partnerTelphone;
+	 }
+
+	 public String getPartnerImg() {
+		 return partnerImg;
+	 }
+
+	 public void setPartnerImg(String partnerImg) {
+		 this.partnerImg = partnerImg;
 	 }
  }

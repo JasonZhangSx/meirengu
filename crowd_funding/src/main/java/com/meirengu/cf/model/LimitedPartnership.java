@@ -4,7 +4,7 @@ import com.meirengu.model.BaseObject;
 import java.util.Date;
  /*
   * LimitedPartnership 实体类
-  * Mon May 08 11:33:33 CST 2017 建新
+  * Tue May 23 14:41:52 CST 2017 建新
   */
 public class LimitedPartnership  extends BaseObject {
 	/** 有限合伙id */
@@ -19,14 +19,12 @@ public class LimitedPartnership  extends BaseObject {
 	private String idcard;
 	/** 企业地址 */
 	private String companyAddress;
-	/** 负责人身份证图片 */
-	private String imagePrincipal;
-	/** 营业执照照片 */
-	private String imageBusinessLicence;
-	/** 开户行 */
-	private String imageBank;
-	/** 医疗机构执业许可证照片 */
-	private String imageProfessionalLicense;
+	/** 执行事务合伙人 */
+	private String executivePartner;
+	/** 关联项目名称 */
+	private String itemName;
+	/** 是否使用 0未使用 1使用 */
+	private Integer status;
 	/** 创建时间 */
 	private Date createTime;
 	/** 更新时间 */
@@ -82,36 +80,28 @@ public class LimitedPartnership  extends BaseObject {
 		return companyAddress;
 	}
 
-	public void setImagePrincipal(String imagePrincipal){
-		this.imagePrincipal = imagePrincipal;
+	public void setExecutivePartner(String executivePartner){
+		this.executivePartner = executivePartner;
 	}
 
-	public String getImagePrincipal(){
-		return imagePrincipal;
+	public String getExecutivePartner(){
+		return executivePartner;
 	}
 
-	public void setImageBusinessLicence(String imageBusinessLicence){
-		this.imageBusinessLicence = imageBusinessLicence;
+	public void setItemName(String itemName){
+		this.itemName = itemName;
 	}
 
-	public String getImageBusinessLicence(){
-		return imageBusinessLicence;
+	public String getItemName(){
+		return itemName;
 	}
 
-	public void setImageBank(String imageBank){
-		this.imageBank = imageBank;
+	public void setStatus(Integer status){
+		this.status = status;
 	}
 
-	public String getImageBank(){
-		return imageBank;
-	}
-
-	public void setImageProfessionalLicense(String imageProfessionalLicense){
-		this.imageProfessionalLicense = imageProfessionalLicense;
-	}
-
-	public String getImageProfessionalLicense(){
-		return imageProfessionalLicense;
+	public Integer getStatus(){
+		return status;
 	}
 
 	public void setCreateTime(Date createTime){

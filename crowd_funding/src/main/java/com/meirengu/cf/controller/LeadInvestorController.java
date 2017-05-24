@@ -92,10 +92,15 @@ public class LeadInvestorController extends BaseController{
                          @RequestParam(value = "investor_address", required = false) String investorAddress,
                          @RequestParam(value = "investor_telphone", required = false) String investorTelphone,
                          @RequestParam(value = "investor_image", required = false) String investorImage,
+                         @RequestParam(value = "investor_introduction", required = false) String investorIntroduction,
+                         @RequestParam(value = "investor_company", required = false) String investorCompany,
+                         @RequestParam(value = "investor_position", required = false) String investorPosition,
+                         @RequestParam(value = "investor_idea", required = false) String investorIdea,
                          @RequestParam(value = "operate_account", required = false) String operateAccount){
 
         LeadInvestor li = setEntity(0, investorName, investorType, investorBusinessLicence,
-                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName);
+                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName,
+                investorIntroduction, investorCompany, investorPosition, investorIdea);
         try {
             int insertNum = leadInvestorService.insert(li);
             if(insertNum == 1){
@@ -140,10 +145,15 @@ public class LeadInvestorController extends BaseController{
                          @RequestParam(value = "investor_address", required = false) String investorAddress,
                          @RequestParam(value = "investor_telphone", required = false) String investorTelphone,
                          @RequestParam(value = "investor_image", required = false) String investorImage,
+                         @RequestParam(value = "investor_introduction", required = false) String investorIntroduction,
+                         @RequestParam(value = "investor_company", required = false) String investorCompany,
+                         @RequestParam(value = "investor_position", required = false) String investorPosition,
+                         @RequestParam(value = "investor_idea", required = false) String investorIdea,
                          @RequestParam(value = "operate_account", required = false) String operateAccount ){
 
         LeadInvestor li = setEntity(id, investorName, investorType, investorBusinessLicence,
-                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName);
+                investorIdcard, investorAddress, investorTelphone, investorImage, new Date(), operateAccount, principalName,
+                investorIntroduction, investorCompany, investorPosition, investorIdea);
         try {
             int updateNum = leadInvestorService.update(li);
             if(updateNum == 1){
@@ -180,7 +190,8 @@ public class LeadInvestorController extends BaseController{
 
     private LeadInvestor setEntity(Integer id, String investorName, Integer investorType, String investorBusinessLicence,
                                     String investorIdcard, String investorAddress, String investorTelphone, String investorImage,
-                                    Date createTime, String operateAccount, String principalName) {
+                                    Date createTime, String operateAccount, String principalName, String investorIntroduction,
+                                   String investorCompany, String investorPosition, String investorIdea) {
         LeadInvestor li = new LeadInvestor();
         if(id == null || id == 0){
             li.setId(null);
@@ -197,6 +208,10 @@ public class LeadInvestorController extends BaseController{
         li.setCreateTime(createTime);
         li.setOperateAccount(operateAccount == null ? "" : operateAccount);
         li.setPrincipalName(principalName == null ? "" : principalName);
+        li.setInvestorIntroduction(investorIntroduction == null ? "" : investorIntroduction);
+        li.setInvestorCompany(investorCompany == null ? "" : investorCompany);
+        li.setInvestorPosition(investorPosition == null ? "" : investorPosition);
+        li.setInvestorIdea(investorIdea == null ? "" : investorIdea);
         return li;
     }
 }
