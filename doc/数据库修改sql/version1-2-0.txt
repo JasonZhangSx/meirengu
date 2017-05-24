@@ -1,6 +1,14 @@
 ******************user_center begin*************************
 修改字段备注
-ALTER TABLE `user_center`.`user`     CHANGE `invest_conditions` `invest_conditions` TINYINT(3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
+ALTER TABLE `user_center`.`user`
+ ADD COLUMN `level` TINYINT (3) DEFAULT '1' NOT NULL COMMENT '用户等级 1：新手（返利1%） 2：投资达人（邀请好友累计认购≥10万，返利1.5%） 3：投资大佬（邀请好友累计认购≥30W，返利2%） 4：天使投资人（邀请好友累计认购≥50W，返利2.5%） 5：美丽财富规划师（邀请好友累计认购≥100W，返利3%）' AFTER `invest_conditions`,
+ ADD COLUMN `company` VARCHAR (50) DEFAULT '' NOT NULL COMMENT '所属公司' AFTER `level`,
+ ADD COLUMN `position` VARCHAR (30) DEFAULT '' NOT NULL COMMENT '所在公司职位' AFTER `company`,
+ ADD COLUMN `introduction` VARCHAR (255) DEFAULT '' NOT NULL COMMENT '个人简介' AFTER `position`,
+ CHANGE `invest_conditions` `invest_conditions` TINYINT (3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
+
+
+
 ******************user_center end***************************
 
 ******************crowd_funding start******************************
