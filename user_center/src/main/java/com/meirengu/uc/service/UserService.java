@@ -60,6 +60,7 @@ public interface UserService extends BaseService<User>{
     /*获取银行名称*/
     void getBankName(Map map);
 
+    void getArea(Map map);
     /*分页获取用户信息*/
     Page<User> getByPage(Page<User> page, Map paramMap);
 
@@ -89,4 +90,5 @@ public interface UserService extends BaseService<User>{
 
     /*更新用户状态*/
     int updateUserState(User user);
+
 }

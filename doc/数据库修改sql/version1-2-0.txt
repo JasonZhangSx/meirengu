@@ -7,8 +7,6 @@ ALTER TABLE `user_center`.`user`
  ADD COLUMN `introduction` VARCHAR (255) DEFAULT '' NOT NULL COMMENT '个人简介' AFTER `position`,
  CHANGE `invest_conditions` `invest_conditions` TINYINT (3) DEFAULT '0' NOT NULL COMMENT '投资人条件：0未认证 1专业投资人 2: 30w 3: 100w';
 
-
-
 ******************user_center end***************************
 
 ******************crowd_funding start******************************
