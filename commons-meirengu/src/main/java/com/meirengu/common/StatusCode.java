@@ -56,6 +56,7 @@ public class StatusCode {
     public static final int THE_THIRD_PARTY_IS_BOUND = 40109;
 
     //40200-40300//news_cms
+    public static final int TELPHONE_EXIST = 40200;
 
     //40300-40400//medical_beauty
     public static final int MB_CORRECT = 40300;
@@ -377,6 +378,7 @@ public class StatusCode {
 
 
         //40200-40300//news_cms
+        codeMsgMap.put(StatusCode.TELPHONE_EXIST, "该电话已报名！");
 
         //40300-40400//medical_beauty
         codeMsgMap.put(StatusCode.MB_CORRECT, "操作成功");
