@@ -166,6 +166,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setRegisterFrom(from);
         user.setRegisterTime(new Date());
         user.setPassword("");
+        user.setLevel(1);
+        user.setCompany("");
+        user.setPosition("");
+        user.setIntroduction("");
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -238,6 +242,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setIsAllowTalk(1);
         user.setState(1);
         user.setIsBuy(1);
+        user.setLevel(1);
+        user.setCompany("");
+        user.setPosition("");
+        user.setIntroduction("");
         try {
             if(!StringUtil.isEmpty(registerVO.getPassword())){
                 String password = PasswordEncryption.createHash(registerVO.getPassword());

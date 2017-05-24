@@ -89,7 +89,7 @@ public class ContractController extends BaseController{
                 Result result1 = contactService.CreateHHXYContactFile(map);
 
 
-//                Result result = contactService.CreateIncomeContactFile(map);
+                Result result = contactService.CreateIncomeContactFile(map);
 //                if(result.getCode() == StatusCode.OK){
 //                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
 //                }else{

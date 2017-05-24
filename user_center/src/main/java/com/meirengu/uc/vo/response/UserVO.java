@@ -50,6 +50,48 @@ public class UserVO {
      **/
     private Integer isAuth;
 
+    //等级
+    private Integer level;
+    //公司
+    private String company;
+    //职位
+    private String position;
+    //个人简介
+    private String introduction;
+
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     public Integer getUserId() {
         return userId;
     }

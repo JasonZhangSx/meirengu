@@ -231,7 +231,11 @@ public class UserController extends BaseController{
                                  @RequestParam(value="sex", required = false) Integer sex,
                                  @RequestParam(value="birthday", required = false) Date birthday,
                                  @RequestParam(value="email", required = false) String email,
-                                 @RequestParam(value="area_id", required = false) Integer areaId
+                                 @RequestParam(value="area_id", required = false) Integer areaId,
+                                 @RequestParam(value="level", required = false) Integer level,
+                                 @RequestParam(value="company", required = false) String company,
+                                 @RequestParam(value="position", required = false) String position,
+                                 @RequestParam(value="introduction", required = false) String introduction
                                  ) {
         logger.info("UserController update params : userId :{},nickname :{},phone :{},avatar :{},sex :{},birthday :{},email :{},areaId:{}"
                 ,userId,nickname,phone,avatar,sex,birthday,email,areaId);
@@ -258,6 +262,10 @@ public class UserController extends BaseController{
             user.setBirthday(birthday);
             user.setEmail(email);
             user.setAreaId(areaId);
+            user.setLevel(level);
+            user.setCompany(company);
+            user.setPosition(position);
+            user.setIntroduction(introduction);
             int result = userService.updateUserInfo(user);
             if(result==1){
                 logger.info("UserController.updateUserInfo result << {}, result:{}", result);
@@ -693,6 +701,9 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+
+
     /**
      * 校验密码方法提取
      * @param password
