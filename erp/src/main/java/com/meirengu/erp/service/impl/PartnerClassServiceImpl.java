@@ -3,7 +3,9 @@ package com.meirengu.erp.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.model.LeadInvestor;
+import com.meirengu.erp.model.PartnerClass;
 import com.meirengu.erp.service.InvestorService;
+import com.meirengu.erp.service.PartnerClassService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import org.springframework.stereotype.Service;
@@ -13,18 +15,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ${DESCRIPTION}
- *
+ * 行业分类service实现层
  * @author 建新
  * @create 2017-05-19 11:36
  */
 @Service
-public class InvestorServiceImpl implements InvestorService{
+public class PartnerClassServiceImpl implements PartnerClassService{
     @Override
-    public Map<String, Object> query(int page, int perPage, boolean isPage) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.list"));
+    public Object query(int page, int perPage, boolean isPage) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
-
+        url.append("&flag=1");
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
             int statusCode = hr.getStatusCode();
@@ -33,7 +34,7 @@ public class InvestorServiceImpl implements InvestorService{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Object code = jsonObject.get("code");
                 if(code != null && code.equals(200)){
-                    return (Map) jsonObject.get("data");
+                    return jsonObject.get("data");
                 }
             }
         } catch (IOException e) {
@@ -44,7 +45,7 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> detail(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.detail"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.detail"));
         url.append("/").append(id);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
@@ -64,23 +65,12 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> add(LeadInvestor investor) {
+    public Map<String, Object> add(PartnerClass partnerClass) {
 
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.add"));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
-        params.put("operate_account", "admin");
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.insert"));
+        params.put("class_name", partnerClass.getClassName());
+        params.put("class_description", partnerClass.getClassDescription());
 
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
@@ -97,23 +87,12 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> update(LeadInvestor investor) {
+    public Map<String, Object> update(PartnerClass partnerClass) {
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.update"));
-        params.put("id", String.valueOf(investor.getId()));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
-        params.put("operate_account", investor.getOperateAccount());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.update"));
+        params.put("class_id", String.valueOf(partnerClass.getClassId()));
+        params.put("class_name", partnerClass.getClassName());
+        params.put("class_description", partnerClass.getClassDescription());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
             int statusCode = hr.getStatusCode();
@@ -130,9 +109,9 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> delete(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.delete"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.class.delete"));
         Map<String, String> params = new HashMap<String, String>();
-        params.put("id", String.valueOf(id));
+        params.put("class_id", String.valueOf(id));
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
             int statusCode = hr.getStatusCode();

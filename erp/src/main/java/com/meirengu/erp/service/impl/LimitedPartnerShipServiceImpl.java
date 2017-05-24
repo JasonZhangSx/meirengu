@@ -3,7 +3,9 @@ package com.meirengu.erp.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.model.LeadInvestor;
+import com.meirengu.erp.model.LimitedPartnership;
 import com.meirengu.erp.service.InvestorService;
+import com.meirengu.erp.service.LimitedPartnerShipService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,10 @@ import java.util.Map;
  * @create 2017-05-19 11:36
  */
 @Service
-public class InvestorServiceImpl implements InvestorService{
+public class LimitedPartnerShipServiceImpl implements LimitedPartnerShipService{
     @Override
     public Map<String, Object> query(int page, int perPage, boolean isPage) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.list"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partnerShip.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
 
         try {
@@ -44,7 +46,7 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> detail(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.detail"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partnerShip.detail"));
         url.append("/").append(id);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
@@ -64,22 +66,16 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> add(LeadInvestor investor) {
+    public Map<String, Object> add(LimitedPartnership partnership) {
 
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.add"));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partnerShip.add"));
+        params.put("company_name", partnership.getCompanyName());
+        params.put("establishment_time", String.valueOf(partnership.getEstablishmentTime()));
+        params.put("limit_num", String.valueOf(partnership.getLimitNum()));
+        params.put("idcard", partnership.getIdcard());
+        params.put("company_address", partnership.getCompanyAddress());
+        params.put("executive_partner", partnership.getExecutivePartner());
         params.put("operate_account", "admin");
 
         try {
@@ -97,23 +93,17 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> update(LeadInvestor investor) {
+    public Map<String, Object> update(LimitedPartnership partnership) {
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.update"));
-        params.put("id", String.valueOf(investor.getId()));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
-        params.put("operate_account", investor.getOperateAccount());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partnerShip.update"));
+        params.put("id", String.valueOf(partnership.getId()));
+        params.put("company_name", partnership.getCompanyName());
+        params.put("establishment_time", String.valueOf(partnership.getEstablishmentTime()));
+        params.put("limit_num", String.valueOf(partnership.getLimitNum()));
+        params.put("idcard", partnership.getIdcard());
+        params.put("company_address", partnership.getCompanyAddress());
+        params.put("executive_partner", partnership.getExecutivePartner());
+        params.put("operate_account", "admin");
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
             int statusCode = hr.getStatusCode();
@@ -130,7 +120,7 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> delete(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.delete"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partnerShip.delete"));
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
         try {
