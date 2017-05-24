@@ -143,6 +143,7 @@ public class UserController extends BaseController{
             userService.getUserTotalInvestMoney(map);//获取累计投资额
             userService.getWithdrawalsAmount(map);//获取体现中金额
             userService.getBankName(map);//获取银行名称
+            userService.getArea(map);//获取地址
             return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("UserController detail  throw exception:", e.getMessage());
@@ -202,10 +203,11 @@ public class UserController extends BaseController{
             if(list.size() == 1){
                 for(Map map:list){
                     map.remove("password");
-                    userService.getUserRestMoney(map);
-                    userService.getUserTotalInvestMoney(map);
-                    userService.getWithdrawalsAmount(map);
-                    userService.getBankName(map);
+                    userService.getUserRestMoney(map);//获取支付账户余额
+                    userService.getUserTotalInvestMoney(map);//获取累计投资额
+                    userService.getWithdrawalsAmount(map);//获取体现中金额
+                    userService.getBankName(map);//获取银行名称
+                    userService.getArea(map);//获取地址
                 }
             }
             if(page.getList().size() != 0){

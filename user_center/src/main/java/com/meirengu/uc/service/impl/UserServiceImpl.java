@@ -8,12 +8,14 @@ import com.meirengu.service.impl.BaseServiceImpl;
 import com.meirengu.uc.dao.InviterDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.User;
+import com.meirengu.uc.service.AddressService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.thread.InitInviterThread;
 import com.meirengu.uc.thread.InitPayAccountThread;
 import com.meirengu.uc.thread.ReceiveCouponsThread;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ThreadPoolSingleton;
+import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.*;
@@ -48,6 +50,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     UserDao userDao;
     @Autowired
     InviterDao inviterDao;
+    @Autowired
+    AddressService addressService;
 
     @Transactional
     public User create(User user){
@@ -392,6 +396,16 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
         }
     }
+
+    @Override
+    public void getArea(Map map) {
+        map.put("area","");//防止为空客户端崩溃
+        AddressVO addressVO = addressService.showAddress(Integer.parseInt(String.valueOf(map.get("areaId"))));
+        if(addressVO != null){
+            map.put("area",addressVO.getProvince()+addressVO.getCity()+addressVO.getArea());
+        }
+    }
+
     @Override
     public Page<User> getByPage(Page<User> page, Map paramMap) {
 
