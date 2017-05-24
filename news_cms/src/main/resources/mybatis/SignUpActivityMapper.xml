@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.news.dao.SignUpActivityDao" >
+
+	<resultMap id="signUpActivityMap" type="SignUpActivity">
+		<id column="name" property="name" jdbcType="VARCHAR" javaType="String"/>
+		<result column="telphone" property="telphone" jdbcType="VARCHAR" javaType="String"/>
+		<result column="city" property="city" jdbcType="VARCHAR" javaType="String"/>
+		<result column="type" property="type" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="Date"/>
+	</resultMap>
+
+	<sql id="table_name">`sign_up_activity`</sql>
+	<sql id="select_columns">
+		`name`, telphone, city, `type`, create_time as createTime
+	</sql>
+
+	<insert id="insert" parameterType="signUpActivity" useGeneratedKeys="true" keyProperty="name" >
+		INSERT INTO <include refid="table_name" />
+			(`name`, telphone, city, `type`, create_time)
+		VALUES
+			(#{name}, #{telphone}, #{city}, #{type}, #{createTime})
+	</insert>
+
+	<select id="check" resultType="integer" parameterType="signUpActivity">
+		select count(1) from <include refid="table_name"/>
+		where telphone=#{telphone} and `type`=#{type}
+	</select>
+
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="name != null and name != ''">
+			and `name` like '%${name}%'
+		</if>
+		<if test="telphone != null and telphone != ''">
+			and `telphone` like '%${telphone}%'
+		</if>
+		<if test="type != null">
+			and `type`=#{type}
+		</if>
+		<if test="city != null and city != ''">
+			and `city` like '%${city}%'
+		</if>
+		order by create_time desc;
+	</select>
+
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="name != null and name != ''">
+			and `name` like '%${name}%'
+		</if>
+		<if test="telphone != null and telphone != ''">
+			and `telphone` like '%${telphone}%'
+		</if>
+		<if test="type != null">
+			and `type`=#{type}
+		</if>
+		<if test="city != null and city != ''">
+			and `city` like '%${city}%'
+		</if>
+	</select>
+	<!-- 分页相关结束 -->
+</mapper>
