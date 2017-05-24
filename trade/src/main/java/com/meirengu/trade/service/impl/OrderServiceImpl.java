@@ -1138,16 +1138,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * @param levelIds
      * @return
      */
-    public List<Map<String, Object>> getSumAmountByLevelIds(String levelIds) {
-        String[] levelIdsArr = levelIds.split(",");
-        List<String> levelIdList = new ArrayList<String>();
-        for (int i=0; i<levelIdsArr.length; i++) {
-            if (StringUtils.isNotBlank(levelIdsArr[i])) {
-                levelIdList.add(levelIdsArr[i]);
+    public List<Map<String, Object>> getSumAmountByLevelIds(String levelIds, String itemIds) {
+        List<String> levelIdList = null;
+        if (StringUtils.isNotBlank(levelIds)){
+            String[] levelIdsArr = levelIds.split(",");
+            levelIdList = new ArrayList<String>();
+            for (int i=0; i<levelIdsArr.length; i++) {
+                if (StringUtils.isNotBlank(levelIdsArr[i])) {
+                    levelIdList.add(levelIdsArr[i]);
+                }
+            }
+        }
+        List<String> itemIdList = null;
+        if (StringUtils.isNotBlank(itemIds)){
+            String[] itemIdsArr = itemIds.split(",");
+            itemIdList = new ArrayList<String>();
+            for (int i=0; i<itemIdsArr.length; i++) {
+                if (StringUtils.isNotBlank(itemIdsArr[i])) {
+                    itemIdList.add(itemIdsArr[i]);
+                }
             }
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("levelIdList", levelIdList);
+        params.put("itemIdList", itemIdList);
         params.put("orderState", OrderStateEnum.PAID.getValue());
 
         List<Map<String, Object>> list = orderDao.getSumAmountByLevelIds(params);

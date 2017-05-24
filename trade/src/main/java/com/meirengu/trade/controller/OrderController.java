@@ -632,12 +632,13 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/get_sum_amount_by_level_ids")
-    public Result getSumAmountByLevelIds(@RequestParam(value = "level_ids", required = true) String levelIds) {
-        if (StringUtils.isEmpty(levelIds)) {
+    public Result getSumAmountByLevelIds(@RequestParam(value = "level_ids", required = false) String levelIds,
+                                         @RequestParam(value = "item_ids", required = false) String itemIds) {
+        if (StringUtils.isEmpty(levelIds)&&StringUtils.isEmpty(itemIds)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         try {
-            List<Map<String, Object>> sumAmountMap = orderService.getSumAmountByLevelIds(levelIds);
+            List<Map<String, Object>> sumAmountMap = orderService.getSumAmountByLevelIds(levelIds,itemIds);
             return setResult(StatusCode.OK, sumAmountMap, StatusCode.codeMsgMap.get(StatusCode.OK));
         } catch (Exception e) {
             logger.error("throw exception: {}", e);
