@@ -245,7 +245,6 @@
      * 编辑方法
      **/
     function edit(orderId) {
-        console.log(orderId);
         layer.confirm('是否通过？', {
                 btn: ['通过', '不通过', '取消'],
                 shade: false,

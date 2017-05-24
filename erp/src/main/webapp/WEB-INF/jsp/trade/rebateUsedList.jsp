@@ -155,14 +155,21 @@
                 {
                     "targets": 13,
                     "render": function (data, type, row, meta) {
-                        var context =
+                        var verifyStatus = row.verifyStatus;
+                        if (verifyStatus == 0){
+                            var context =
                                 {
                                     func: [
                                         {"name": "核销", "fn": "verify(\'" + row.id + "\')", "type": "primary"}
                                     ]
                                 };
-                        var html = template(context);
-                        return html;
+                            var html = template(context);
+                            return html;
+                        }else{
+                            return "";
+                        }
+
+
                     }
                 },
                 //default
@@ -226,6 +233,46 @@
         var verifyStatus = $("#verifyStatus").val();
         table.column(1).search(rebateSn).column(6).search(orderSn).column(7).search(userPhone).column(12).search(verifyStatus).draw();
     }
+
+    function verify(id) {
+        layer.confirm('是否核销？', {
+                btn: ['核销', '取消'],
+                shade: false,
+                closeBtn: 0
+            },
+            function () {
+                if (verifyRebateUsed(id)) {
+                    layer.msg('已核销', {icon: 6, time: 1000});
+                    table.ajax.reload();
+                } else {
+                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
+                }
+            });
+    }
+
+    function verifyRebateUsed(id) {
+        var url = "<%=basePath %>rebate_used/verifyRebateUsed/" + id;
+        var flag=false;
+        $.ajax({
+            type: "post",
+            url: url,
+            cache:false,
+            async:false,
+            dataType:"json",
+            success: function(data){
+                var code = data.code;//200是成功，其他是失败
+                if(code=="200"){
+                    flag=true;
+                }else{
+                    $("#errcode").val(data.code);
+                    $("#errmsg").val(data.msg);
+                    flag=false;
+                }
+            }
+        });
+        return flag;
+    }
+
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
