@@ -143,6 +143,7 @@ public class UserController extends BaseController{
             userService.getUserTotalInvestMoney(map);//获取累计投资额
             userService.getWithdrawalsAmount(map);//获取体现中金额
             userService.getBankName(map);//获取银行名称
+            userService.getArea(map);//获取地址
             return super.setResult(StatusCode.OK, map, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("UserController detail  throw exception:", e.getMessage());
@@ -202,10 +203,11 @@ public class UserController extends BaseController{
             if(list.size() == 1){
                 for(Map map:list){
                     map.remove("password");
-                    userService.getUserRestMoney(map);
-                    userService.getUserTotalInvestMoney(map);
-                    userService.getWithdrawalsAmount(map);
-                    userService.getBankName(map);
+                    userService.getUserRestMoney(map);//获取支付账户余额
+                    userService.getUserTotalInvestMoney(map);//获取累计投资额
+                    userService.getWithdrawalsAmount(map);//获取体现中金额
+                    userService.getBankName(map);//获取银行名称
+                    userService.getArea(map);//获取地址
                 }
             }
             if(page.getList().size() != 0){
@@ -231,7 +233,11 @@ public class UserController extends BaseController{
                                  @RequestParam(value="sex", required = false) Integer sex,
                                  @RequestParam(value="birthday", required = false) Date birthday,
                                  @RequestParam(value="email", required = false) String email,
-                                 @RequestParam(value="area_id", required = false) Integer areaId
+                                 @RequestParam(value="area_id", required = false) Integer areaId,
+                                 @RequestParam(value="level", required = false) Integer level,
+                                 @RequestParam(value="company", required = false) String company,
+                                 @RequestParam(value="position", required = false) String position,
+                                 @RequestParam(value="introduction", required = false) String introduction
                                  ) {
         logger.info("UserController update params : userId :{},nickname :{},phone :{},avatar :{},sex :{},birthday :{},email :{},areaId:{}"
                 ,userId,nickname,phone,avatar,sex,birthday,email,areaId);
@@ -258,6 +264,10 @@ public class UserController extends BaseController{
             user.setBirthday(birthday);
             user.setEmail(email);
             user.setAreaId(areaId);
+            user.setLevel(level);
+            user.setCompany(company);
+            user.setPosition(position);
+            user.setIntroduction(introduction);
             int result = userService.updateUserInfo(user);
             if(result==1){
                 logger.info("UserController.updateUserInfo result << {}, result:{}", result);
@@ -693,6 +703,9 @@ public class UserController extends BaseController{
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
+
+
+
     /**
      * 校验密码方法提取
      * @param password

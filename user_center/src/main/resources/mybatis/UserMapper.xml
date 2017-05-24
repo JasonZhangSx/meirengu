@@ -33,11 +33,15 @@
         <result column="qq_info" property="qqInfo" jdbcType="VARCHAR" javaType="string"/>
         <result column="sina_openid" property="sinaOpenid" jdbcType="VARCHAR" javaType="string"/>
         <result column="sina_info" property="sinaInfo" jdbcType="VARCHAR" javaType="string"/>
-        <result column="is_auth" property="isAuth" jdbcType="TINYINT" javaType="Boolean"/>
-        <result column="is_buy" property="isBuy" jdbcType="TINYINT" javaType="Boolean"/>
-        <result column="is_allow_inform" property="isAllowInform" jdbcType="TINYINT" javaType="Boolean"/>
-        <result column="is_allow_talk" property="isAllowTalk" jdbcType="TINYINT" javaType="Boolean"/>
-        <result column="state" property="state" jdbcType="TINYINT" javaType="Boolean"/>
+        <result column="is_auth" property="isAuth" jdbcType="TINYINT" javaType="int"/>
+        <result column="is_buy" property="isBuy" jdbcType="TINYINT" javaType="int"/>
+        <result column="is_allow_inform" property="isAllowInform" jdbcType="TINYINT" javaType="int"/>
+        <result column="is_allow_talk" property="isAllowTalk" jdbcType="TINYINT" javaType="int"/>
+        <result column="state" property="state" jdbcType="TINYINT" javaType="int"/>
+        <result column="level" property="level" jdbcType="TINYINT" javaType="int"/>
+        <result column="company" property="company" jdbcType="VARCHAR" javaType="string"/>
+        <result column="position" property="position" jdbcType="VARCHAR" javaType="string"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR" javaType="string"/>
     </resultMap>
 
     <sql id='table_name'>user</sql>
@@ -45,7 +49,7 @@
         user_id as userId, nickname, realname, phone, idcard as idCard, password,bank_code AS bankCode, bank_idcard as bankIdCard,bank_phone as bankPhone, avatar, sex,
         birthday,email,qq,wx,sina,area_id as areaId,register_from as registerFrom,register_time as registerTime,login_time as loginTime,last_login_time as lastLoginTime,
         login_ip as loginIp,last_login_ip as lastLoginIp,login_from as loginFrom,login_num as loginNum,wx_openid as wxOpenid,wx_info as wxInfo,qq_openid as qqOpenid,qq_info as qqInfo,sina_openid as sinaOpenid,sina_info as sinaInfo,
-        is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state,invest_conditions AS investConditions
+        is_auth as isAuth,is_buy as isBuy,is_allow_inform as isAllowInform,is_allow_talk as isAllowTalk,state,invest_conditions AS investConditions,level,company,`position`,introduction
     </sql>
 
     <insert id="create" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
@@ -54,12 +58,12 @@
         (user_id, nickname, realname, phone, idcard, password, bank_idcard,bank_phone, avatar, sex,
         birthday,email,qq,wx,sina,area_id,register_from,register_time,login_time,last_login_time,
         login_ip,last_login_ip,login_from,login_num,wx_openid,wx_info,qq_openid,qq_info,sina_openid,
-        sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state)
+        sina_info,is_auth,is_buy,is_allow_inform,is_allow_talk,state,level,company,`position`,introduction)
         VALUES
         (#{userId}, #{nickname}, #{realname}, #{phone}, #{idCard}, #{password}, #{bankIdCard}, #{bankPhone}, #{avatar},#{sex},
         #{birthday}, #{email}, #{qq}, #{wx},  #{sina}, #{areaId}, #{registerFrom}, now(), now(),#{lastLoginTime},
         #{loginIp},#{lastLoginIp},#{loginFrom},#{loginNum},#{wxOpenid},#{wxInfo},#{qqOpenid},#{qqInfo},#{sinaOpenid},#{sinaInfo},
-        #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state});
+        #{isAuth}, #{isBuy}, #{isAllowInform}, #{isAllowTalk}, #{state},#{level},#{company},#{position},#{introduction});
     </insert>
 
     <update id="update" parameterType="User">
@@ -160,6 +164,18 @@
             </if>
             <if test="investConditions != null">
                 invest_conditions=#{investConditions,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                level=#{level},
+            </if>
+            <if test="company != null">
+                company=#{company},
+            </if>
+            <if test="position != null">
+                position=#{position},
+            </if>
+            <if test="introduction != null">
+                introduction=#{introduction},
             </if>
             <if test="phone != null">
                  phone=#{phone},

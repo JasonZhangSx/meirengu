@@ -129,6 +129,6 @@ public interface OrderService extends BaseService<Order>{
      * @param levelIds
      * @return
      */
-    List<Map<String, Object>> getSumAmountByLevelIds(String levelIds);
+    List<Map<String, Object>> getSumAmountByLevelIds(String levelIds, String itemIds);
 
 }

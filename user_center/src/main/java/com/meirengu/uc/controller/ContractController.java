@@ -84,12 +84,17 @@ public class ContractController extends BaseController{
                 map.put("levelId",levelId);
                 map.put("userId",userId);
                 map.put("orderId",orderId);
+
+
+                Result result1 = contactService.CreateHHXYContactFile(map);
+
+
                 Result result = contactService.CreateIncomeContactFile(map);
-                if(result.getCode() == StatusCode.OK){
-                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-                }else{
-                    return contactService.CreateIncomeContactFile(map);
-                }
+//                if(result.getCode() == StatusCode.OK){
+//                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+//                }else{
+//                    return contactService.CreateIncomeContactFile(map);
+//                }
             }
             if(type == 3){
                 Map<String,String> map = new HashMap();
@@ -112,7 +117,8 @@ public class ContractController extends BaseController{
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result viewContactFile(@RequestParam(value = "order_id",required = true) String orderId,
+    public Result viewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
+                                  @RequestParam(value = "order_id",required = true) String orderId,
                                   @RequestParam(value = "type",required = true) Integer type) {
         logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
         try {

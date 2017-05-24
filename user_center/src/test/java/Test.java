@@ -1,3 +1,4 @@
+import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class Test {
 
 
     }
+
     @org.junit.Test
     public void testSubString(){
         String string = "MRG-SYZR-20170503-3551";
@@ -35,7 +37,13 @@ public class Test {
         logger.info(result);
 
     }
-
+     @org.junit.Test
+    public void testdatadiff() throws Exception{
+         int i  = DateAndTime.dateDiff("dd","2011-11-04 12:00:00","2011-10-01 10:00:00");
+         int j  = DateAndTime.dateDiff("dd","2011-10-01 00:00:00","2011-11-04 00:00:59");
+         logger.info(i+"");
+         logger.info(j+"");
+     }
 
     
 

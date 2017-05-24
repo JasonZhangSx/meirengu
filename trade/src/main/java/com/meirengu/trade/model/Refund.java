@@ -39,10 +39,14 @@ public class Refund{
 	private String refundPaymentname;
 	/** 支付方式代码 */
 	private String refundPaymentcode;
+	/** 退款发起人 */
+	private String refundSponsor;
 	/** 退款备注 */
 	private String refundMessage;
 	/** 退款原因 */
 	private String userMessage;
+	 /** 退款审核人*/
+	 private String operateAccount;
 	/** 管理员处理原因 */
 	private String adminMessage;
 	/** 合作方处理时间 */
@@ -258,4 +262,19 @@ public class Refund{
 		return userConfirm;
 	}
 
-}
+	 public String getRefundSponsor() {
+		 return refundSponsor;
+	 }
+
+	 public void setRefundSponsor(String refundSponsor) {
+		 this.refundSponsor = refundSponsor;
+	 }
+
+	 public String getOperateAccount() {
+		 return operateAccount;
+	 }
+
+	 public void setOperateAccount(String operateAccount) {
+		 this.operateAccount = operateAccount;
+	 }
+ }

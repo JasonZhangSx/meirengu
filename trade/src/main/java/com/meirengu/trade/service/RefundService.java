@@ -16,10 +16,11 @@ public interface RefundService extends BaseService<Refund>{
      * @param orderId
      * @param refundMessage
      * @param userMessage
+     * @param refundSponsor
      * @return
      * @throws Exception
      */
-    Result refundApply(int orderId, String refundMessage, String userMessage)throws Exception;
+    Result refundApply(int orderId, String refundMessage, String userMessage, String refundSponsor)throws Exception;
 
     /**
      * 退款审核
@@ -27,10 +28,11 @@ public interface RefundService extends BaseService<Refund>{
      * @param orderId
      * @param refundState
      * @param adminMessage
+     * @param operateAccount
      * @return
      * @throws Exception
      */
-    Result refundAudit(int refundId, int orderId, int refundState, String adminMessage)throws Exception;
+    Result refundAudit(int refundId, int orderId, int refundState, String adminMessage, String operateAccount)throws Exception;
 
     /**
      * 退款回调

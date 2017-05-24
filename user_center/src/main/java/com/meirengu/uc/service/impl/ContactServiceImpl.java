@@ -14,6 +14,7 @@ import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ContractUtil;
 import com.meirengu.uc.utils.NumberToCN;
+import com.meirengu.uc.init.ThemisClientInit;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.utils.DateUtils;
 import com.meirengu.utils.HttpUtil;
@@ -39,14 +40,12 @@ import rop.request.UploadFile;
 import rop.thirdparty.com.alibaba.fastjson.JSONArray;
 import rop.thirdparty.com.alibaba.fastjson.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
-
-import static com.meirengu.uc.utils.ThemisClientInit.getClient;
-
 /**
  * Created by huoyan403 on 4/11/2017.
  */
@@ -64,6 +63,8 @@ public class ContactServiceImpl implements ContactService {
     private ContractDao contractDao;
     @Autowired
     private AddressServiceImpl addressServiceImpl;
+    @Autowired
+    private ThemisClientInit themisClientInit;
 
     @Override
     public Result CreateIncomeContactFile(Map<String,String> map) {
@@ -119,7 +120,7 @@ public class ContactServiceImpl implements ContactService {
                     String callback = ConfigUtil.getConfig("callbackUrl");
 
                     OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-                    String html = IOUtils.toString(fileUtils.download("contract","contract001.html"),"UTF-8");
+                    String html = IOUtils.toString(fileUtils.download(contractFolderName,"usufruct_transfer.html"),"UTF-8");
                     //合同内容替换
                     html = html.replace("{signatureDate}","<em>"+ DateUtils.getPrintDate()+"</em>");//签署日期
                     html = html.replace("{signatureArea}", ConfigUtil.getConfig("SIGNATUREAREA"));//签署地点
@@ -148,23 +149,23 @@ public class ContactServiceImpl implements ContactService {
                     html = html.replace("{projectBonusAndReturnStatement}",data.get("projectBonusAndReturnStatement"));//项目分红及回报说明
 
                     Integer manageMoney = Integer.valueOf(String.valueOf(data.get("manageMoney")));
-                    html = html.replace("{manageMoney}",String.valueOf(manageMoney/10000));//项目公司注册资金 （万元）1
+                    html = html.replace("{manageMoney}",String.valueOf(manageMoney/10000));//项目公司注册资金 （万元）
                     html = html.replace("{manageDate}","<em>"+String.valueOf(data.get("manageYear"))+"</em>年<em>"+String.valueOf(data.get("manageMonth"))+"</em>月<em>"+String.valueOf(data.get("manageDay"))+"</em>日");//项目公司成立于1
-                    html = html.replace("{platformServiceFee}",String.valueOf(data.get("platformServiceFee"))+"%");//平台服务费1
+                    html = html.replace("{platformServiceFee}",String.valueOf(data.get("platformServiceFee"))+"%");//平台服务费
 
-                    html = html.replace("{shareholder}",data.get("shareholder"));//股东1
-                    html = html.replace("{shareholderIdCard}",data.get("shareholderArea"));//股东身份证号1
-                    html = html.replace("{shareholderArea}",data.get("shareholderArea"));//股东地址1
-                    html = html.replace("{guarantor}",data.get("guarantor"));//担保人1
-                    html = html.replace("{guarantorIdCard}",data.get("guarantorIdCard"));//担保人身份证号1
-                    html = html.replace("{guarantorArea}",data.get("guarantorArea"));//担保人地址1
+                    html = html.replace("{shareholder}",data.get("shareholder"));//股东
+                    html = html.replace("{shareholderIdCard}",data.get("shareholderArea"));//股东身份证号
+                    html = html.replace("{shareholderArea}",data.get("shareholderArea"));//股东地址
+                    html = html.replace("{guarantor}",data.get("guarantor"));//担保人
+                    html = html.replace("{guarantorIdCard}",data.get("guarantorIdCard"));//担保人身份证号
+                    html = html.replace("{guarantorArea}",data.get("guarantorArea"));//担保人地址
 
-                    html = html.replace("{investmentTerm}",String.valueOf(data.get("investmentTerm")));//投资期限1
-                    html = html.replace("{investmentAmount}",String.valueOf(data.get("investmentAmount")));//投资金额1
+                    html = html.replace("{investmentTerm}",String.valueOf(data.get("investmentTerm")));//投资期限
+                    html = html.replace("{investmentAmount}",String.valueOf(data.get("investmentAmount")));//投资金额
 
                     String investmentAmountUpCase = NumberToCN.number2CNMontrayUnit(new BigDecimal(String.valueOf(data.get("investmentAmount"))));
-                    html = html.replace("{investmentAmountUpCase}",investmentAmountUpCase);//人民币大写2
-                    html = html.replace("{investmentStalls}",data.get("investmentStalls"));//投资档位1
+                    html = html.replace("{investmentAmountUpCase}",investmentAmountUpCase);//人民币大写
+                    html = html.replace("{investmentStalls}",data.get("investmentStalls"));//投资档位
 
                     String flag = String.valueOf(data.get("flag"));
                     if(Constants.ONE_STRING.equals(flag)){
@@ -204,7 +205,7 @@ public class ContactServiceImpl implements ContactService {
 
                     request.setStampParams(stampParams);
                     request.setTaget(html);
-                    ContactHtmlCreateFileResponse response = getClient().getContactHtmlCreateFile(request);
+                    ContactHtmlCreateFileResponse response = themisClientInit.getClient().getContactHtmlCreateFile(request);
 
                     //为生成、保全合同 准备数据
                     map.put("phone",user.getPhone()); //用户手机号
@@ -236,29 +237,52 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public Result CreateHHXYContactFile(Map<String, String> map) {
+
+
+        //oss配置信息  从oss读取文件
+        String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+        String endpoint = ConfigUtil.getConfig("endpoint");
+        String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+        String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+        String bucketName = ConfigUtil.getConfig("bucketName");
+        String callback = ConfigUtil.getConfig("callbackUrl");
+
+        OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+        try {
+            String html = IOUtils.toString(fileUtils.download(contractFolderName,"partner_lp_agreement.html"),"UTF-8");
+            logger.info(html);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //合同内容替换
+
+
+
+        return null;
+    }
+    @Override
     public Result CreateEquityContactFile(Map<String, String> map) {
 
-//        // TODO 准备合同数据
-//
-//        try {
-//            //生成盖章合同
-//            ContactHtmlCreateFileRequest request=new ContactHtmlCreateFileRequest();
-//            /**模版类型，TPL_TYPE_HTML使用html文件方式,TPL_TYPE_URL使用url地址方式*/
-//            request.setTplType(ContactHtmlCreateFileRequest.TPL_TYPE_HTML);//使用html内容上传方式
-//            /**html内容*/
-//
-//            //oss配置信息  从oss读取文件
-//            String contractFolderName = ConfigUtil.getConfig("contractFolderName");
-//            String endpoint = ConfigUtil.getConfig("endpoint");
-//            String accessKeyId = ConfigUtil.getConfig("accessKeyId");
-//            String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
-//            String bucketName = ConfigUtil.getConfig("bucketName");
-//            String callback = ConfigUtil.getConfig("callbackUrl");
-//
-//            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-//            String partnershipAgreement = IOUtils.toString(fileUtils.download("contract","contract002.html"),"UTF-8");//合伙协议模板
-//            String equityIncome = IOUtils.toString(fileUtils.download("contract","contract003.html"),"UTF-8");//股权收益模板
-//
+        // TODO 准备股权合同数据
+        try {
+            //生成盖章合同
+            ContactHtmlCreateFileRequest request=new ContactHtmlCreateFileRequest();
+            /**模版类型，TPL_TYPE_HTML使用html文件方式,TPL_TYPE_URL使用url地址方式*/
+            request.setTplType(ContactHtmlCreateFileRequest.TPL_TYPE_HTML);//使用html内容上传方式
+            /**html内容*/
+
+            //oss配置信息  从oss读取文件
+            String contractFolderName = ConfigUtil.getConfig("contractFolderName");
+            String endpoint = ConfigUtil.getConfig("endpoint");
+            String accessKeyId = ConfigUtil.getConfig("accessKeyId");
+            String accessKeySecret = ConfigUtil.getConfig("accessKeySecret");
+            String bucketName = ConfigUtil.getConfig("bucketName");
+            String callback = ConfigUtil.getConfig("callbackUrl");
+
+            OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
+            String equityIncome = IOUtils.toString(fileUtils.download(contractFolderName,"equity_investment_agreement.html"),"UTF-8");//股权收益模板
+
 //            partnershipAgreement = partnershipAgreement.replace("","");
 //            equityIncome = equityIncome.replace("","");
 //
@@ -298,10 +322,10 @@ public class ContactServiceImpl implements ContactService {
 //
 //
 //            return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-//        }catch (Exception e){
-//            logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
-//            return this.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-//        }
+        }catch (Exception e){
+            logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
+            return this.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+        }
         return null;
     }
 
@@ -316,7 +340,7 @@ public class ContactServiceImpl implements ContactService {
         for(Contract contract1:contractList){
             Map<String,String> urlMap = new HashMap<String,String>();
             request.setPreservationId(new Long(contract1.getPreservationId()));
-            ContractFileViewUrlResponse response = getClient().getContactFileViewUrl(request);
+            ContractFileViewUrlResponse response = themisClientInit.getClient().getContactFileViewUrl(request);
             urlMap.put("contractName",ContractUtil.returnContractName(contract1.getContractNo()));
             urlMap.put("generate", Constants.ONE_STRING);
             urlMap.put("url",response.getViewUrl());
@@ -335,7 +359,7 @@ public class ContactServiceImpl implements ContactService {
         List<Map<String, String>> downUrl = new ArrayList<>();
         for(Contract contract1:contractList){
             request.setPreservationId(new Long(contract1.getPreservationId()));
-            ContractFileDownloadUrlResponse response = getClient().getContactFileDownloadUrl(request);
+            ContractFileDownloadUrlResponse response = themisClientInit.getClient().getContactFileDownloadUrl(request);
             if (response.isSuccess() && response.getDownUrl() != null) {
                 logger.info("Get the connection to see success",response.getDownUrl());
                 Map<String,String> urlMap = new HashMap<String,String>();
@@ -381,14 +405,14 @@ public class ContactServiceImpl implements ContactService {
             builder.setComments(map.get("remarks")); //备注
             builder.setIsNeedSign(true);//是否启用保全签章
 
-            PreservationCreateResponse preservationCreateResponse = getClient().createPreservation(builder);
+            PreservationCreateResponse preservationCreateResponse = themisClientInit.getClient().createPreservation(builder);
 
             //根据保全id 下载最终版合同
             if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
                 logger.info("Create a preservation success message:{}",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
                 ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
                 contractFileDownloadUrlRequest.setPreservationId(preservationCreateResponse.getPreservationId());
-                ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
+                ContractFileDownloadUrlResponse contractFileDownloadUrlResponse = themisClientInit.getClient().getContactFileDownloadUrl(contractFileDownloadUrlRequest);
                 //根据下载url 获取文件流 并上传oss服务器
                 if (contractFileDownloadUrlResponse.isSuccess() && contractFileDownloadUrlResponse.getDownUrl() != null) {
                     logger.info("get download link success url :{}",contractFileDownloadUrlResponse.getDownUrl());
@@ -408,7 +432,7 @@ public class ContactServiceImpl implements ContactService {
                     String callback = ConfigUtil.getConfig("callbackUrl");
 
                     OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
-                    fileUpload.upload(inputStream,map.get("fileName"),map.get("contractFolderName"));
+                    fileUpload.upload(inputStream,map.get("fileName"),contractFolderName);
 
                     //更新用户合同表
                     Contract contract = new Contract();
@@ -419,7 +443,7 @@ public class ContactServiceImpl implements ContactService {
                     contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
                     contract.setContractNo(map.get("contractNo"));
                     contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
-                    contract.setContractFilepath(map.get("contractFolderName")+"/"+map.get("fileName"));
+                    contract.setContractFilepath(contractFolderName+"/"+map.get("fileName"));
 
                     int count = contractDao.insert(contract);
                     if(count != 1){ //重试一次
