@@ -287,6 +287,12 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="@Ognl@isNotEmpty(itemIdList)">
+				AND item_id in
+				<foreach collection="itemIdList" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 		</where>
 	</sql>
 	<!-- 分页相关开始 -->
@@ -323,11 +329,19 @@
 		select SUM(order_amount) AS sumOrderAmount,
 		SUM(rebate_amount) AS sumRebateAmount,
 		SUM(cost_amount) AS sumCostAmount,
-		item_level_id AS itemLevelId
+		item_level_id AS itemLevelId,
+		item_id AS itemId
 		FROM
 		<include refid="table_name" />
 		<include refid="findPage_where"/>
-		GROUP BY item_level_id
+		GROUP BY
+		<if test="@Ognl@isNotEmpty(levelIdList)">
+			 item_level_id
+		</if>
+		<if test="@Ognl@isNotEmpty(itemIdList)">
+			item_id
+		</if>
+
 	</select>
 
 </mapper>
