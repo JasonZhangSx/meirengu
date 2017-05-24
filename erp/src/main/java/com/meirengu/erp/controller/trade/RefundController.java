@@ -105,6 +105,7 @@ public class RefundController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("refund_state", refundState.toString());
         params.put("admin_message", adminMessage);
+        params.put("operate_account", "admin");
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();

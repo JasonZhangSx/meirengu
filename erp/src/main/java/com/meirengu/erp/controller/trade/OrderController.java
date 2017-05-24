@@ -68,6 +68,15 @@ public class OrderController extends BaseController{
             orderStateList.add(5);
             queryVo.setOrderStateList(orderStateList);
         }
+        else if (queryVo.getOrderState() == 6) {
+            orderStateList = new ArrayList<Integer>();
+            orderStateList.add(6);
+            orderStateList.add(7);
+            orderStateList.add(8);
+            orderStateList.add(9);
+            orderStateList.add(11);
+            queryVo.setOrderStateList(orderStateList);
+        }
 
         String url = ConfigUtil.getConfig("order.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
@@ -104,6 +113,7 @@ public class OrderController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("user_message", userMessage);
         params.put("refund_message", refundMessage);
+        params.put("refund_sponsor", "admin");
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
