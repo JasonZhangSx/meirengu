@@ -12,9 +12,12 @@ import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
+import com.meirengu.trade.model.RebateUsed;
+import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
+import com.meirengu.trade.service.RefundService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -58,6 +61,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private RebateUsedService rebateUsedService;
 
     @Autowired
+    private RefundService refundService;
+
+    @Autowired
     private OrderDao orderDao;
 
     @Autowired
@@ -72,6 +78,122 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> map = orderDao.orderDetailBySn(orderSn);
         return map;
     }
+
+    /**
+     * 后台订单详情
+     * @param orderId
+     * @return
+     */
+    public Map<String, Object> systemOrderDetail(Integer orderId) throws Exception{
+        Map<String, Object> map = orderDao.orderDetail(orderId);
+        if (map != null && map.size()>0) {
+            String orderSn = map.get("orderSn").toString();
+            int orderState = Integer.parseInt(map.get("orderState").toString());
+            //项目类型
+            int itemType = Integer.parseInt(orderSn.substring(2,3));
+            map.put("itemType", itemType);
+            //查询地址信息
+            if (map.get("userAddressId") != null) {
+                Integer userAddressId = Integer.parseInt(map.get("userAddressId").toString());
+                if (!NumberUtil.isNullOrZero(userAddressId)) {
+                    //请求user_center服务获取用户地址信息
+                    String addressUrl = ConfigUtil.getConfig("address.url") + "?" + "address_id="+ userAddressId;;
+                    HttpResult addressHttpResult = HttpUtil.doGet(addressUrl);
+                    logger.debug("Request: {} getResponse: {}", addressUrl, addressHttpResult);
+                    if (addressHttpResult.getStatusCode() == HttpStatus.SC_OK) {
+                        JSONObject resultJson = JSON.parseObject(addressHttpResult.getContent());
+                        int code = resultJson.getIntValue("code");
+                        if (code == StatusCode.OK) {
+                            JSONArray addressArray = resultJson.getJSONArray("data");
+                            for (int i = 0; i < addressArray.size(); i++) {
+                                JSONObject addressJson = addressArray.getJSONObject(i);
+                                int addressId = addressJson.getIntValue("addressId");
+                                Map<String, Object> addressMap = new HashMap<String, Object>();
+                                addressMap.put("userName", addressJson.getString("userName"));
+                                addressMap.put("userPhone", addressJson.getString("userPhone"));
+                                addressMap.put("province", addressJson.getString("province"));
+                                addressMap.put("city", addressJson.getString("city"));
+                                addressMap.put("areas", addressJson.getString("area"));
+                                addressMap.put("userAddress", addressJson.getString("userAddress"));
+                                map.putAll(addressMap);
+                            }
+                        }
+                    }
+                }
+            }
+            if (map.get("itemId") != null) {
+                Integer itemId = Integer.parseInt(map.get("itemId").toString());
+                if (!NumberUtil.isNullOrZero(itemId)) {
+                    //查询项目头图
+                    String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
+                    HttpResult itemResult = HttpUtil.doGet(url);
+                    logger.debug("Request: {} getResponse: {}", url, itemResult);
+                    if (itemResult.getStatusCode() == HttpStatus.SC_OK) {
+                        JSONObject resultJson = JSON.parseObject(itemResult.getContent());
+                        int code = resultJson.getIntValue("code");
+                        if (code == StatusCode.OK) {
+                            JSONObject item = resultJson.getJSONObject("data");
+                            String headerImagePath = item.getString("headerImage");
+                            String itemStatus = item.getString("itemStatus");
+                            int partnerId = item.getIntValue("partnerId");
+                            map.put("headerImage", headerImagePath);
+                            map.put("itemStatus", itemStatus);
+                            map.put("partnerId", partnerId);
+                        }
+                    }
+                }
+            }
+            if (map.get("itemLevelId")!= null) {
+                Integer itemLevelId = Integer.parseInt(map.get("itemLevelId").toString());
+                if (!NumberUtil.isNullOrZero(itemLevelId)) {
+                    //查询项目头图
+                    String itemLevelInfoUrl = ConfigUtil.getConfig("item.level.url") + "/" + itemLevelId;
+                    HttpResult itemLevelInfoResult = HttpUtil.doGet(itemLevelInfoUrl);
+                    logger.debug("Request: {} getResponse: {}", itemLevelInfoUrl, itemLevelInfoResult);
+                    if (itemLevelInfoResult.getStatusCode() == HttpStatus.SC_OK) {
+                        JSONObject resultJson = JSON.parseObject(itemLevelInfoResult.getContent());
+                        int code = resultJson.getIntValue("code");
+                        if (code == StatusCode.OK) {
+                            JSONObject itemLevel = resultJson.getJSONObject("data");
+                            Integer isShareBonus = itemLevel.getIntValue("isShareBonus");
+                            String levelDesc = itemLevel.getString("levelDesc");
+                            map.put("isShareBonus", isShareBonus);
+                            map.put("levelDesc", levelDesc);
+                        }
+                    }
+                }
+            }
+            //优惠券信息
+            Map<String, Object> paramMap = null;
+            paramMap = new HashMap<>();
+            paramMap.put("orderSn", orderSn);
+            Page page = rebateUsedService.getVerifyInfoByPage(new Page(), paramMap);
+            if (page.getList()!=null&&page.getList().size()>0) {
+                List<Map<String, Object>> rebateUsedList = page.getList();
+                Map<String, Object> rebateUsedMap = rebateUsedList.get(0);
+                map.put("rebateName", rebateUsedMap.get("rebateName"));
+                map.put("orderSn", rebateUsedMap.get("orderSn"));
+                map.put("rebateAmount", rebateUsedMap.get("rebateAmount"));
+                map.put("rebateScope", rebateUsedMap.get("rebateScope"));
+            }
+            //退款信息
+            if (orderState==OrderStateEnum.REFUND_SUCCESS.getValue()) {
+                List<Map<String, Object>> refundList = refundService.getList(paramMap);
+                Map<String, Object> refundMap = refundList.get(0);
+                map.put("createTime", refundMap.get("createTime"));
+                map.put("refundSponsor", refundMap.get("orderSn"));
+                map.put("refundMessage", refundMap.get("refundMessage"));
+                map.put("userMessage", refundMap.get("userMessage"));
+                map.put("adminTime", refundMap.get("adminTime"));
+                map.put("operateAccount", refundMap.get("operateAccount"));
+                map.put("refundState", refundMap.get("refundState"));
+                map.put("adminMessage", refundMap.get("adminMessage"));
+            }
+
+        }
+        return map;
+    }
+
     /**
      * 获取订单详情
      * @param orderId

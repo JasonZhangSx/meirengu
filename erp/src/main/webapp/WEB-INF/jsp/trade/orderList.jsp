@@ -194,7 +194,7 @@
                     "render": function (data, type, row, meta) {
                         if (data == 4 || data == 2) {
                             return "待支付";
-                        } else if (data == 6){
+                        } else if (data == 6 || data == 7 || data == 8 || data == 9 || data == 11){
                             return "已支付";
                         } else if (data == 3 || data == 5){
                             return "已失效";

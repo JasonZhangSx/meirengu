@@ -51,7 +51,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
      * @return
      */
     @Transactional
-    public Result refundApply(int orderId, String refundMessage, String userMessage) throws Exception{
+    public Result refundApply(int orderId, String refundMessage, String userMessage, String refundSponsor) throws Exception{
         Result result = new Result();
         //查询该订单记录
         Order order = orderService.detail(orderId);
@@ -71,7 +71,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setOrderSn(order.getOrderSn());
             refund.setThirdOrderSn(order.getOutSn());
             refund.setItemId(order.getItemId());
-            refund.setPartnerId(0);//目前退款只从平台退，不涉及合作方
+            refund.setPartnerId(order.getPartnerId());
             refund.setUserId(order.getUserId());
             refund.setUserName(order.getUserName());
             refund.setUserPhone(order.getUserPhone());
@@ -79,6 +79,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             refund.setOrderRefund(order.getCostAmount());
             refund.setRefundPaymentcode("");//支付方式名称申请时为空
             refund.setRefundPaymentname("");//支付方式代码申请时为空
+            refund.setRefundSponsor(refundSponsor);//退款发起人
             refund.setRefundMessage(refundMessage);
             refund.setUserMessage(userMessage);
             refund.setRefundType(Constant.REFUND_TYPE_SELLER);//类型:1为买家,2为卖家
@@ -115,7 +116,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
      * @throws Exception
      */
     @Transactional
-    public Result refundAudit(int refundId, int orderId, int refundState, String adminMessage) throws Exception{
+    public Result refundAudit(int refundId, int orderId, int refundState, String adminMessage, String operateAccount) throws Exception{
         Result result = new Result();
         //退款申请记录表修改信息
         Refund refund = new Refund();
@@ -123,6 +124,7 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
         refund.setAdminMessage(adminMessage);
         refund.setAdminTime(new Date());
         refund.setRefundState(refundState);
+        refund.setOperateAccount(operateAccount);
         int i = update(refund);
 
         //订单表修改信息

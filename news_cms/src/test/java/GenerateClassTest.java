@@ -35,7 +35,7 @@ public class GenerateClassTest {
         gm.initParams(basePath, projectName, packageFather, packageModel, packageDao, packageService,
                 packageServiceImpl, packageController, mapperPath, authorName, url,
                 username, password, driver, databaseName);
-        gm.start("version_upgrade");
+        gm.start("sign_up_activity");
     }
 
 }

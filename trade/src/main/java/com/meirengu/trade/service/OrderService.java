@@ -25,6 +25,13 @@ public interface OrderService extends BaseService<Order>{
      */
     Map<String, Object> orderDetail (Integer orderId) throws ParseException, IOException ;
     /**
+     * 获取订单详情(后台)
+     * @param orderId
+     * @return
+     */
+    Map<String, Object> systemOrderDetail (Integer orderId) throws Exception ;
+
+    /**
      * 获取订单详情
      * @param orderSn
      * @return

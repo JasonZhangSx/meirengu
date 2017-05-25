@@ -51,14 +51,15 @@ public class RefundController extends BaseController{
     @RequestMapping(value = "/application", method = RequestMethod.POST)
     public Result refundApply(@RequestParam(value = "order_id", required = false)Integer orderId,
                               @RequestParam(value = "refund_message", required = false) String refundMessage,
-                              @RequestParam(value = "user_message", required = false) String userMessage){
+                              @RequestParam(value = "user_message", required = false) String userMessage,
+                              @RequestParam(value = "refund_sponsor", required = false) String refundSponsor){
 
-        if (NumberUtil.isNullOrZero(orderId) || StringUtils.isEmpty(refundMessage) || StringUtils.isEmpty(userMessage)){
+        if (NumberUtil.isNullOrZero(orderId) || StringUtils.isEmpty(refundMessage) ||
+                StringUtils.isEmpty(userMessage) || StringUtils.isEmpty(refundSponsor)){
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
-
         try {
-            Result result = refundService.refundApply(orderId, refundMessage, userMessage);
+            Result result = refundService.refundApply(orderId, refundMessage, userMessage, refundSponsor);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         }  catch (OrderException oe){
@@ -87,14 +88,16 @@ public class RefundController extends BaseController{
     public Result refundAudit(@PathVariable("refund_id") Integer refundId,
                               @RequestParam(value = "order_id", required = false) Integer orderId,
                               @RequestParam(value = "refund_state", required = false) Integer refundState,
-                              @RequestParam(value = "admin_message", required = false) String adminMessage) {
+                              @RequestParam(value = "admin_message", required = false) String adminMessage,
+                              @RequestParam(value = "operate_account", required = false) String operateAccount) {
 
-        if (NumberUtil.isNullOrZero(refundId) || NumberUtil.isNullOrZero(orderId) || NumberUtil.isNullOrZero(refundState) || StringUtils.isEmpty(adminMessage)) {
+        if (NumberUtil.isNullOrZero(refundId) || NumberUtil.isNullOrZero(orderId) || NumberUtil.isNullOrZero(refundState) ||
+                StringUtils.isEmpty(adminMessage) || StringUtils.isEmpty(operateAccount)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
 
         try {
-            Result result = refundService.refundAudit(refundId, orderId, refundState, adminMessage);
+            Result result = refundService.refundAudit(refundId, orderId, refundState, adminMessage, operateAccount);
             logger.info("Request getResponse: {}", JSON.toJSON(result));
             return result;
         } catch (OrderException oe){
