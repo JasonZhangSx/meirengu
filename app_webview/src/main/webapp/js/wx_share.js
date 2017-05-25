@@ -27,31 +27,31 @@ jQuery(document).ready(function(){
 		 // “分享到朋友圈”
 		 wx.onMenuShareTimeline({
 		      title: '美丽邀约-加入2017海伦合伙人计划',
-		      link: 'http://test.api.meirenguvip.com/webview/activity/signup',
-		      imgUrl: 'http://test.api.meirenguvip.com/webview/img/signup_share.jpg'
+		      link: 'https://api.meirenguvip.com/webview/activity/signup',
+		      imgUrl: 'https://api.meirenguvip.com/webview/img/signup_share.jpg'
 		    });
 		    
 		  // “分享给朋友”		
 	    wx.onMenuShareAppMessage({
 	      	title: '美丽邀约-加入2017海伦合伙人计划',
 	      	desc: '股权分红+专享折扣+现金返利+医美项目赠送。享有股权分红，预期年化高达15%,股东专享折扣低至6折！更有现金返现10%，尊享推荐奖励！以及最高价值143700元医美项目免费赠送。',
-			link: 'http://test.api.meirenguvip.com/webview/activity/signup',
-			imgUrl: 'http://test.api.meirenguvip.com/webview/img/signup_share.jpg'
+			link: 'https://api.meirenguvip.com/webview/activity/signup',
+			imgUrl: 'https://api.meirenguvip.com/webview/img/signup_share.jpg'
 	    });
 	    
 	    //“分享到QQ”
 	    wx.onMenuShareQQ({
 			title: '美丽邀约-加入2017海伦合伙人计划',
 			desc: '股权分红+专享折扣+现金返利+医美项目赠送。享有股权分红，预期年化高达15%,股东专享折扣低至6折！更有现金返现10%，尊享推荐奖励！以及最高价值143700元医美项目免费赠送。',
-			link: 'http://test.api.meirenguvip.com/webview/activity/signup',
-			imgUrl: 'http://test.api.meirenguvip.com/webview/img/signup_share.jpg'
+			link: 'https://api.meirenguvip.com/webview/activity/signup',
+			imgUrl: 'https://api.meirenguvip.com/webview/img/signup_share.jpg'
 		});
 		//“分享到微博”
 	    wx.onMenuShareWeibo({
 			title: '美丽邀约-加入2017海伦合伙人计划',
 			desc: '股权分红+专享折扣+现金返利+医美项目赠送。享有股权分红，预期年化高达15%,股东专享折扣低至6折！更有现金返现10%，尊享推荐奖励！以及最高价值143700元医美项目免费赠送。',
-			link: 'http://test.api.meirenguvip.com/webview/activity/signup',
-			imgUrl: 'http://test.api.meirenguvip.com/webview/img/signup_share.jpg'
+			link: 'https://api.meirenguvip.com/webview/activity/signup',
+			imgUrl: 'https://api.meirenguvip.com/webview/img/signup_share.jpg'
 		});
 	    
 	});
