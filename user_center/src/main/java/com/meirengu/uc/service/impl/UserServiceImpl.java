@@ -599,5 +599,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         map.remove("qqInfo");
         map.remove("wxInfo");
         map.remove("sinaInfo");
+        map.remove("qqOpenid");
+        map.remove("wxOpenid");
+        map.remove("sinaOpenid");
     }
 }
