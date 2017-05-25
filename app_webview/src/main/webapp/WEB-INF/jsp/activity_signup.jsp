@@ -132,7 +132,7 @@
                 <input type="text" placeholder="电话" maxlength='11' name="tel" value="">
                 <input type="text" placeholder="城市" maxlength='10' name="city" value="">
                 <div class="err_msg"></div>
-                <input type="button" name="name" value="立即报名”" class="submit">
+                <input type="button" name="name" value="立即报名" class="submit">
             </div>
 
         </div>

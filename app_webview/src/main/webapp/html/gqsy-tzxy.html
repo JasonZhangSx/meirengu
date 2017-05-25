@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="css/index.css" media="screen" charset="utf-8">
+	<style media="screen">
+		body{text-align: center;}
+		img{width: 100%;}
+	</style>
+</head>
+<body style='background-color:#fff;'>
+	<script type="text/javascript">
+		window.Echo=(function(window,document,undefined){'use strict';var store=[],offset,throttle,poll;var _inView=function(el){var coords=el.getBoundingClientRect();return((coords.top>=0&&coords.left>=0&&coords.top)<=(window.innerHeight||document.documentElement.clientHeight)+parseInt(offset));};var _pollImages=function(){for(var i=store.length;i--;){var self=store[i];if(_inView(self)){self.src=self.getAttribute('data-echo');store.splice(i,1);}}};var _throttle=function(){clearTimeout(poll);poll=setTimeout(_pollImages,throttle);};var init=function(obj){var nodes=document.querySelectorAll('[data-echo]');var opts=obj||{};offset=opts.offset||0;throttle=opts.throttle||250;for(var i=0;i<nodes.length;i++){store.push(nodes[i]);}_throttle();if(document.addEventListener){window.addEventListener('scroll',_throttle,false);}else{window.attachEvent('onscroll',_throttle);}};return{init:init,render:_throttle};})(window,document);
+	</script>
+
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-1.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-2.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-3.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-4.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-5.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-6.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-7.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-8.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-9.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-10.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-11.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-12.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-13.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-14.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-15.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-16.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-17.jpg">
+	<img src="img/loading.gif" data-echo="img/gqsy-tzxy-18.jpg">
+</body>
+<script type="text/javascript">
+	Echo.init({offset: 0,throttle: 250});
+</script>
+</html>
