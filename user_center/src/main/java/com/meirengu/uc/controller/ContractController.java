@@ -45,10 +45,10 @@ public class ContractController extends BaseController{
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>)JacksonUtil.readValue(message,Map.class);
 
-        String itemId = String.valueOf(map.get("itemId"));
-        String levelId = String.valueOf(map.get("levelId"));
-        String userId = String.valueOf(map.get("userId"));
-        String orderId = String.valueOf(map.get("orderId"));
+        String itemId = String.valueOf(map.get("item_id"));
+        String levelId = String.valueOf(map.get("level_id"));
+        String userId = String.valueOf(map.get("user_id"));
+        String orderId = String.valueOf(map.get("order_id"));
         Integer type = Integer.parseInt(String.valueOf(map.get("type")));
 
         Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
