@@ -91,4 +91,5 @@ public interface UserService extends BaseService<User>{
     /*更新用户状态*/
     int updateUserState(User user);
 
+    void removeColumns(Map map);
 }

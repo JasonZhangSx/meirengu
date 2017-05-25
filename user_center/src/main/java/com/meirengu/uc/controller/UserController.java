@@ -139,6 +139,7 @@ public class UserController extends BaseController{
                user = userService.retrieveByPhone(user.getPhone());
                map = ApacheBeanUtils.objectToMap(user);
            }
+            userService.removeColumns(map);
             userService.getUserRestMoney(map);//获取支付账户余额
             userService.getUserTotalInvestMoney(map);//获取累计投资额
             userService.getWithdrawalsAmount(map);//获取体现中金额
@@ -202,7 +203,7 @@ public class UserController extends BaseController{
             List<Map<String,Object>> list = page.getList();
             if(list.size() == 1){
                 for(Map map:list){
-                    map.remove("password");
+                    userService.removeColumns(map);
                     userService.getUserRestMoney(map);//获取支付账户余额
                     userService.getUserTotalInvestMoney(map);//获取累计投资额
                     userService.getWithdrawalsAmount(map);//获取体现中金额
