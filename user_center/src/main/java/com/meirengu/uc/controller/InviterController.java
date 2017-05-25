@@ -187,9 +187,9 @@ public class InviterController extends BaseController{
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
 
-        String invitedUserPhone = String.valueOf(map.get("invitedUserPhone"));
-        Integer invitedUserId = Integer.parseInt(String.valueOf(map.get("invitedUserId")));
-        Date investTime = new Date((Long) map.get("investTime"));
+        String invitedUserPhone = String.valueOf(map.get("invited_user_phone"));
+        Integer invitedUserId = Integer.parseInt(String.valueOf(map.get("invited_user_id")));
+        Date investTime = new Date((Long) map.get("invest_time"));
 
         Inviter inviter = new Inviter();
         inviter.setInvitedUserId(invitedUserId);
