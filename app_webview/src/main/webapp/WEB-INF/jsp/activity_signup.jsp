@@ -29,7 +29,7 @@
         a:focus,button:focus{outline:none;}
 
         .helen{background-color: #82e5f0;color:#333;padding:0 .3rem;box-sizing: border-box;font-size: .3rem;}
-        .banner{background:url(./hb_static/img/hl_banner.jpg) center 0 no-repeat;background-size:100%;padding-top: 4.75rem;}
+        .banner{background:url(img/hl_banner.jpg) center 0 no-repeat;background-size:100%;padding-top: 4.75rem;}
         .section1{padding:.5rem 0 .6rem;line-height: .54rem;position: relative;text-align: center;background-color: rgba(255,255,255,0.9);}
         .section1 span{font-size: .36rem;color:#9a7760}
         .section1 .img1{position: absolute;top:0;left:0;transform: translate(0,-100%);-webkit-transform: translate(0,-100%)}
