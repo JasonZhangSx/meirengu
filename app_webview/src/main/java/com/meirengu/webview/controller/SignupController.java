@@ -39,9 +39,10 @@ public class SignupController extends BaseController{
     @ResponseBody
     public JSONObject submit(String telphone, String name, Integer type, String city) throws UnsupportedEncodingException {
 
-        name = new String(name.getBytes("ISO-8859-1"), "UTF-8");
-        city = new String(city.getBytes("ISO-8859-1"), "UTF-8");
-        logger.info("name: {}   city: {}",name,city);
+        logger.info("before name: {}   city: {}",name,city);
+//        name = new String(name.getBytes("ISO-8859-1"), "UTF-8");
+//        city = new String(city.getBytes("ISO-8859-1"), "UTF-8");
+//        logger.info("after name: {}   city: {}",name,city);
 
         JSONObject result = null;
         if(StringUtil.isEmpty(telphone) || StringUtil.isEmpty(name) || StringUtil.isEmpty(type) || StringUtil.isEmpty(city)){
