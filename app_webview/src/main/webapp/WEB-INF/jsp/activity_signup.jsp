@@ -177,14 +177,18 @@
         var name = $('.bot input[name="name"]').val(),
                 tel = $('.bot input[name="tel"]').val(),
                 city = $('.bot input[name="city"]').val();
-        if (!emp_test(name)) {
-            $('.bot .err_msg').show().text('* 姓名不能为空')
-        }else if(!emp_test(tel)){
+//        if (!emp_test(name)) {
+//            $('.bot .err_msg').show().text('* 姓名不能为空')
+//        }else if(!emp_test(tel)){
+//            $('.bot .err_msg').show().text('* 手机号码不能为空')
+//        }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){
+//            $('.bot .err_msg').show().text('* 手机号码格式不正确')
+//        }else if(!emp_test(city)){
+//            $('.bot .err_msg').show().text('* 城市不能为空')
+        if(!emp_test(tel)){
             $('.bot .err_msg').show().text('* 手机号码不能为空')
         }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){
             $('.bot .err_msg').show().text('* 手机号码格式不正确')
-        }else if(!emp_test(city)){
-            $('.bot .err_msg').show().text('* 城市不能为空')
         }else{
             $.ajax({
                 url:"activity/signup/submit",
