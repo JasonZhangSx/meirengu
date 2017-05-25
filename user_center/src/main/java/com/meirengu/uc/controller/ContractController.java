@@ -45,10 +45,10 @@ public class ContractController extends BaseController{
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>)JacksonUtil.readValue(message,Map.class);
 
-        String itemId = String.valueOf(map.get("itemId"));
-        String levelId = String.valueOf(map.get("levelId"));
-        String userId = String.valueOf(map.get("userId"));
-        String orderId = String.valueOf(map.get("orderId"));
+        String itemId = String.valueOf(map.get("item_id"));
+        String levelId = String.valueOf(map.get("level_id"));
+        String userId = String.valueOf(map.get("user_id"));
+        String orderId = String.valueOf(map.get("order_id"));
         Integer type = Integer.parseInt(String.valueOf(map.get("type")));
 
         Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
@@ -117,7 +117,7 @@ public class ContractController extends BaseController{
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result viewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
+    public Result viewContactFile(@RequestParam(value = "item_id",required = false) String itemId,
                                   @RequestParam(value = "order_id",required = true) String orderId,
                                   @RequestParam(value = "type",required = true) Integer type) {
         logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
