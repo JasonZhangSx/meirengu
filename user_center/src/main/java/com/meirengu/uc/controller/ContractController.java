@@ -117,7 +117,7 @@ public class ContractController extends BaseController{
      * @return generate 1已生成 0未生成
      */
     @RequestMapping(value = "/view",method = RequestMethod.GET)
-    public Result viewContactFile(@RequestParam(value = "item_id",required = true) String itemId,
+    public Result viewContactFile(@RequestParam(value = "item_id",required = false) String itemId,
                                   @RequestParam(value = "order_id",required = true) String orderId,
                                   @RequestParam(value = "type",required = true) Integer type) {
         logger.info("ContactController ViewContactFile orderId:{} type:{}",orderId,type);
