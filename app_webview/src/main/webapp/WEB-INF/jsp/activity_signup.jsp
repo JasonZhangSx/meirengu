@@ -7,7 +7,7 @@
 <head>
     <base href="<%=path%>">
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>美丽邀约-成为海伦合伙人</title>
     <meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
     <meta name="format-detection" content="telephone=no" />
     <style media="screen">
@@ -22,6 +22,7 @@
         .clearfix{display:block}.clearfix:after{content:'';display:block;clear:both;overflow:hidden;line-height:0}
         .clear{clear:both;height:0;line-height: 0;overflow: hidden;}
         img{vertical-align: top;}
+        input[type="button"]{-webkit-appearance:none}
 
         html {height:auto;min-height: 100%;position:relative;margin:0 auto;max-width: 750px;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;}
         body {height:auto;min-height: 100%;position:absolute;top:0;width:100%;line-height:1;color:#202020;-webkit-tap-highlight-color: rgba(0,0,0,0);background-color: #fff;}
@@ -56,9 +57,9 @@
         .bot .img1{margin:.7rem 0 .51rem;}
         .bot .wrapper{background-color: #fff;padding:.39rem 0;border-radius: .1rem;}
         .bot .wrapper .top{padding: 0 .38rem;}
-        .bot input{width:100%;height:.98rem;padding:0 .23rem;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
-        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;line-height:0.98rem;border-radius: .1rem;font-size: .32rem;color:#fff;background-color: #62eefd;}
-        .bot input[disabled=""]{background-color: #ddd;color:#929292}
+        .bot input{width:100%;height:.98rem;padding:0 .23rem;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
+        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;box-shadow: 0 0 .1rem .04rem rgba(84,232,254,0.4);line-height:0.98rem;border-radius: .14rem;font-size: .32rem;font-weight: bold;color:#fff;background-color: #62eefd;}
+        .bot input[disabled=""]{background-color: #ddd;color:#929292;box-shadow: 0 0 .1rem .04rem rgba(0,0,0,0);}
         .err_msg{color:red;margin:0 0 .3rem;}
         .waiter{display: block;margin:.3rem .3rem .5rem;font-weight: bold;font-size: .38rem;height:.92rem;line-height: .92rem;color:#fff;text-align: center;border-radius: .1rem;}
 
@@ -66,7 +67,7 @@
         .sub_ok .wrapper{width:6.08rem;background-color: #fff;text-align: center;line-height: .4rem;padding: 1.1rem 0;position: relative;left:50%;top:1.42rem;transform:translate(-50%,0);-webkit-transform:translate(-50%,0)}
         .sub_ok .wrapper h4{font-size: .42rem;}
         .sub_ok small{font-size: .26rem;display: block;margin-top: .26rem;}
-        .sub_ok em{position: absolute;font-weight: bold;display: block;width:.6rem;height:.6rem;right:-.2rem;top:-.2rem;background-color: #5c5c5c;color:#fff;text-align: center;line-height: .6rem;border-radius: 50%;}
+        .sub_ok em{position: absolute;font-weight: bold;display: block;width:.6rem;height:.6rem;left:50%;margin-left:-0.3rem;bottom:-.2rem;background-color: #5c5c5c;color:#fff;text-align: center;line-height: .6rem;border-radius: 50%;}
     </style>
 </head>
 <body>
@@ -127,9 +128,9 @@
         <img src="img/blank.gif" data-echo="img/hl_img11.jpg" class="img1" style="height:3.91rem" alt="" />
         <div class="wrapper">
             <div class="top">
-                <input type="text" placeholder="姓名" name="name" value="">
+                <input type="text" placeholder="姓名" maxlength='10' name="name" value="">
                 <input type="text" placeholder="电话" maxlength='11' name="tel" value="">
-                <input type="text" placeholder="城市" name="city" value="">
+                <input type="text" placeholder="城市" maxlength='10' name="city" value="">
                 <div class="err_msg"></div>
                 <input type="button" name="name" value="点击成为“2017海伦合伙人”" class="submit">
             </div>
