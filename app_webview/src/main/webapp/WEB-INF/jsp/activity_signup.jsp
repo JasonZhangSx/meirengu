@@ -17,7 +17,7 @@
         input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
         h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}
         small{line-height:1}ul,ol{list-style:none}a{text-decoration:none;color:inherit}
-        input:focus{outline:0}a:hover{text-decoration:none}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
+        input:focus{outline:0}a:hover{text-decoration:npne}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
         button,input,select,textarea{font-size:100%}table{border-collapse:collapse;border-spacing:0}
         .clearfix{display:block}.clearfix:after{content:'';display:block;clear:both;overflow:hidden;line-height:0}
         .clear{clear:both;height:0;line-height: 0;overflow: hidden;}
@@ -29,7 +29,7 @@
         a:focus,button:focus{outline:none;}
 
         .helen{background-color: #82e5f0;color:#333;padding:0 .3rem;box-sizing: border-box;font-size: .3rem;}
-        .banner{background:url(img/hl_banner.jpg) center 0 no-repeat;background-size:100%;padding-top: 4.75rem;}
+        .banner{background:url(./hb_static/img/hl_banner.jpg) center 0 no-repeat;background-size:100%;padding-top: 4.75rem;}
         .section1{padding:.5rem 0 .6rem;line-height: .54rem;position: relative;text-align: center;background-color: rgba(255,255,255,0.9);}
         .section1 span{font-size: .36rem;color:#9a7760}
         .section1 .img1{position: absolute;top:0;left:0;transform: translate(0,-100%);-webkit-transform: translate(0,-100%)}
@@ -58,10 +58,17 @@
         .bot .wrapper{background-color: #fff;padding:.39rem 0;border-radius: .1rem;}
         .bot .wrapper .top{padding: 0 .38rem;}
         .bot input{width:100%;height:.98rem;padding:0 .23rem;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
-        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;box-shadow: 0 0 .1rem .04rem rgba(84,232,254,0.4);line-height:0.98rem;border-radius: .14rem;font-size: .32rem;font-weight: bold;color:#fff;background-color: #62eefd;}
-        .bot input[disabled=""]{background-color: #ddd;color:#929292;box-shadow: 0 0 .1rem .04rem rgba(0,0,0,0);}
+        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;line-height:0.98rem;border-radius: .14rem;font-size: .42rem;letter-spacing: .02rem;font-weight: bold;color:#fff;
+            background-color: #62eefd;
+            background: -webkit-linear-gradient(top,#feee59,#ffcb3c);
+            box-shadow: 0 0 .1rem .03rem rgba(251,190,60,0.4);
+        }
+        .bot input[disabled=""]{
+            background-color: #ddd;background: -webkit-linear-gradient(top,#ddd,#ddd);
+            color:#bdbdbd;
+            box-shadow: 0 0 .08rem .03rem rgba(0,0,0,0);}
         .err_msg{color:red;margin:0 0 .3rem;}
-        .waiter{display: block;margin:.3rem .3rem .5rem;font-weight: bold;font-size: .38rem;height:.92rem;line-height: .92rem;color:#fff;text-align: center;border-radius: .1rem;}
+        .waiter{display: block;margin:.3rem .3rem .5rem;font-weight: bold;font-size: .32rem;height:.92rem;line-height: .92rem;color:#fff;text-align: center;border-radius: .1rem;}
 
         .sub_ok{position: fixed;top:0;width:100%;left:0;bottom:0;background-color: rgba(0,0,0,0.4);display: none;border-radius: .12rem;}
         .sub_ok .wrapper{width:6.08rem;background-color: #fff;text-align: center;line-height: .4rem;padding: 1.1rem 0;position: relative;left:50%;top:1.42rem;transform:translate(-50%,0);-webkit-transform:translate(-50%,0)}
@@ -91,7 +98,7 @@
                 <span>股权<br/>分红</span><em>+</em><span>专享<br/>折扣</span><em>+</em><span>现金<br/>返利</span><em>+</em><span>医美项<br/>目赠送</span>
             </div>
             <p>
-                <img src="img/blank.gif" data-echo="img/hl_icon5.png" style="height:4.29rem"class="img3" alt="" />
+                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1532" width="100%" style="height:5.2rem"class="img3" alt="" />
             </p>
         </div>
     </div>
