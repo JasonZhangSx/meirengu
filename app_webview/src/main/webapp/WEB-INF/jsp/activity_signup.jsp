@@ -63,7 +63,7 @@
             background: -webkit-linear-gradient(top,#feee59,#ffcb3c);
             box-shadow: 0 0 .1rem .03rem rgba(251,190,60,0.4);
         }
-        .bot input[disabled=""]{
+        .bot input[disabled="disabled"]{
             background-color: #ddd;background: -webkit-linear-gradient(top,#ddd,#ddd);
             color:#bdbdbd;
             box-shadow: 0 0 .08rem .03rem rgba(0,0,0,0);}
@@ -98,7 +98,7 @@
                 <span>股权<br/>分红</span><em>+</em><span>专享<br/>折扣</span><em>+</em><span>现金<br/>返利</span><em>+</em><span>医美项<br/>目赠送</span>
             </div>
             <p>
-                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1532" width="100%" style="height:5.2rem"class="img3" alt="" />
+                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1732" style="height:4.97rem"class="img3" alt="" />
             </p>
         </div>
     </div>
