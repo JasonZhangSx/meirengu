@@ -138,6 +138,10 @@ public class UserController extends BaseController{
                User user = (User)redisClient.getObject(token);
                user = userService.retrieveByPhone(user.getPhone());
                map = ApacheBeanUtils.objectToMap(user);
+               map.remove("password");
+               map.remove("qqInfo");
+               map.remove("wxInfo");
+               map.remove("sinaInfo");
            }
             userService.getUserRestMoney(map);//获取支付账户余额
             userService.getUserTotalInvestMoney(map);//获取累计投资额
@@ -203,6 +207,9 @@ public class UserController extends BaseController{
             if(list.size() == 1){
                 for(Map map:list){
                     map.remove("password");
+                    map.remove("qqInfo");
+                    map.remove("wxInfo");
+                    map.remove("sinaInfo");
                     userService.getUserRestMoney(map);//获取支付账户余额
                     userService.getUserTotalInvestMoney(map);//获取累计投资额
                     userService.getWithdrawalsAmount(map);//获取体现中金额
