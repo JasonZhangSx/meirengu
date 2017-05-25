@@ -13,9 +13,11 @@ import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.dao.OrderDao;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.model.RebateUsed;
+import com.meirengu.trade.model.Refund;
 import com.meirengu.trade.service.OrderService;
 import com.meirengu.trade.service.RebateReceiveService;
 import com.meirengu.trade.service.RebateUsedService;
+import com.meirengu.trade.service.RefundService;
 import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
@@ -59,6 +61,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     private RebateUsedService rebateUsedService;
 
     @Autowired
+    private RefundService refundService;
+
+    @Autowired
     private OrderDao orderDao;
 
     @Autowired
@@ -83,6 +88,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         Map<String, Object> map = orderDao.orderDetail(orderId);
         if (map != null && map.size()>0) {
             String orderSn = map.get("orderSn").toString();
+            int orderState = Integer.parseInt(map.get("orderState").toString());
             //项目类型
             int itemType = Integer.parseInt(orderSn.substring(2,3));
             map.put("itemType", itemType);
@@ -158,7 +164,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
             }
             //优惠券信息
-            Map<String, Object> paramMap = new HashMap<>();
+            Map<String, Object> paramMap = null;
+            paramMap = new HashMap<>();
             paramMap.put("orderSn", orderSn);
             Page page = rebateUsedService.getVerifyInfoByPage(new Page(), paramMap);
             if (page.getList()!=null&&page.getList().size()>0) {
@@ -170,6 +177,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 map.put("rebateScope", rebateUsedMap.get("rebateScope"));
             }
             //退款信息
+            if (orderState==OrderStateEnum.REFUND_SUCCESS.getValue()) {
+                List<Map<String, Object>> refundList = refundService.getList(paramMap);
+                Map<String, Object> refundMap = refundList.get(0);
+                map.put("createTime", refundMap.get("createTime"));
+                map.put("refundSponsor", refundMap.get("orderSn"));
+                map.put("refundMessage", refundMap.get("refundMessage"));
+                map.put("userMessage", refundMap.get("userMessage"));
+                map.put("adminTime", refundMap.get("adminTime"));
+                map.put("operateAccount", refundMap.get("operateAccount"));
+                map.put("refundState", refundMap.get("refundState"));
+                map.put("adminMessage", refundMap.get("adminMessage"));
+            }
 
         }
         return map;

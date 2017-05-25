@@ -57,7 +57,6 @@ public class OrderController extends BaseController{
         //查询待支付的订单
         List<Integer> orderStateList = null;
         if (queryVo.getOrderState() == null || queryVo.getOrderState() == 4) {
-            queryVo.setOrderState(null);
             orderStateList = new ArrayList<Integer>();
             orderStateList.add(2);
             orderStateList.add(4);
@@ -77,7 +76,7 @@ public class OrderController extends BaseController{
             orderStateList.add(11);
             queryVo.setOrderStateList(orderStateList);
         }
-
+        queryVo.setOrderState(null);
         String url = ConfigUtil.getConfig("order.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;

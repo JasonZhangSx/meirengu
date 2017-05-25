@@ -593,4 +593,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public int updateUserState(User user) {
         return userDao.updateState(user);
     }
+    @Override
+    public void removeColumns(Map map) {
+        map.remove("password");
+        map.remove("qqInfo");
+        map.remove("wxInfo");
+        map.remove("sinaInfo");
+    }
 }

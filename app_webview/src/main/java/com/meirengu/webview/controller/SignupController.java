@@ -6,6 +6,8 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import com.meirengu.webview.service.SignupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("activity/signup")
 public class SignupController extends BaseController{
 
+    private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
+
     @Autowired
     SignupService signupService;
 
@@ -37,6 +41,8 @@ public class SignupController extends BaseController{
 
         name = new String(name.getBytes("ISO-8859-1"), "UTF-8");
         city = new String(city.getBytes("ISO-8859-1"), "UTF-8");
+        logger.info("name: {}   city: {}",name,city);
+
         JSONObject result = null;
         if(StringUtil.isEmpty(telphone) || StringUtil.isEmpty(name) || StringUtil.isEmpty(type) || StringUtil.isEmpty(city)){
             result = new JSONObject();
@@ -47,6 +53,10 @@ public class SignupController extends BaseController{
                 result = new JSONObject();
                 result.put("code", StatusCode.MOBILE_FORMAT_ERROR);
                 result.put("msg", StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
+            }else if(name.length()>10 || city.length()>10){
+                result = new JSONObject();
+                result.put("code", StatusCode.INVALID_ARGUMENT);
+                result.put("msg", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
             }else {
                 result = signupService.signup(name, telphone, type, city);
             }
