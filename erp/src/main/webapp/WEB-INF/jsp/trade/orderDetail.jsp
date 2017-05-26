@@ -113,6 +113,158 @@
         <div class="row cl">
             <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">购买信息</h3>
         </div>
+        <div class="content_set">
+            <div class="item">
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.itemName}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <c:choose>
+                            <c:when test="${order.itemType eq 1}">产品众筹</c:when>
+                            <c:when test="${order.itemType eq 2}">收益权众筹</c:when>
+                            <c:when test="${order.itemType eq 3}">股权众筹</c:when>
+                        </c:choose>
+
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">回报档位：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.itemLevelName}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">是否分红档：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <c:choose>
+                            <c:when test="${order.isShareBonus eq 1}">是</c:when>
+                            <c:when test="${order.isShareBonus eq 0}">否</c:when>
+                        </c:choose>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">持股比例：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.shareHoldRate}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">总金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.orderAmount}
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">回报内容：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        ${order.levelDesc}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <c:if test="${order.orderState ge 6}">
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">支付信息</h3>
+        </div>
+        <div class="content_set">
+            <div class="item">
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">合计金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.orderAmount}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">实付金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.costAmount}
+                    </div>
+                </div>
+                <c:if test="${empty order.rebateSn}">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">抵扣券金额：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                                ${order.rebateAmount}
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">抵扣券编号：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                                ${order.rebateSn}
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">抵扣券名称：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                                ${order.rebateName}
+                        </div>
+                        <label class="form-label col-xs-4 col-sm-2">抵扣券适用范围：</label>
+                        <div class="formControls col-xs-8 col-sm-3">
+                                ${order.rebateScope}
+                        </div>
+                    </div>
+                </c:if>
+
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">付款方式：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <c:choose>
+                            <c:when test="${order.paymentMethod eq 0}">余额支付</c:when>
+                            <c:when test="${order.paymentMethod eq 1}">第三方支付</c:when>
+                        </c:choose>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">支付单号：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        ${order.outSn}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </c:if>
+        <c:if test="${order.orderState eq 12}">
+        <div class="row cl">
+            <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10 mt-20">退款信息</h3>
+        </div>
+            <div class="content_set">
+            <div class="item">
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">申请退款时间：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.refundCreateTime}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">后台申请人员：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.refundSponsor}
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">申请退款原因：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.userMessage}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">备注：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.refundMessage}
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">审核退款时间：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.adminTime}
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">审核退款人员：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.refundOperateAccount}
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">审核：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            审核通过
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">备注：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                            ${order.adminMessage}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </c:if>
     </span>
 </div>
 </body>

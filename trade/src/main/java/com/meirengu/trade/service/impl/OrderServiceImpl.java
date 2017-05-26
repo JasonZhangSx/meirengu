@@ -172,7 +172,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 List<Map<String, Object>> rebateUsedList = page.getList();
                 Map<String, Object> rebateUsedMap = rebateUsedList.get(0);
                 map.put("rebateName", rebateUsedMap.get("rebateName"));
-                map.put("orderSn", rebateUsedMap.get("orderSn"));
+                map.put("rebateSn", rebateUsedMap.get("rebateSn"));
                 map.put("rebateAmount", rebateUsedMap.get("rebateAmount"));
                 map.put("rebateScope", rebateUsedMap.get("rebateScope"));
             }
@@ -180,12 +180,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (orderState==OrderStateEnum.REFUND_SUCCESS.getValue()) {
                 List<Map<String, Object>> refundList = refundService.getList(paramMap);
                 Map<String, Object> refundMap = refundList.get(0);
-                map.put("createTime", refundMap.get("createTime"));
+                map.put("refundCreateTime", refundMap.get("createTime"));
                 map.put("refundSponsor", refundMap.get("orderSn"));
                 map.put("refundMessage", refundMap.get("refundMessage"));
                 map.put("userMessage", refundMap.get("userMessage"));
                 map.put("adminTime", refundMap.get("adminTime"));
-                map.put("operateAccount", refundMap.get("operateAccount"));
+                map.put("refundOperateAccount", refundMap.get("operateAccount"));
                 map.put("refundState", refundMap.get("refundState"));
                 map.put("adminMessage", refundMap.get("adminMessage"));
             }
