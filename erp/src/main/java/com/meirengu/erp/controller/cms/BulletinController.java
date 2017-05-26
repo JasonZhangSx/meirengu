@@ -91,7 +91,7 @@ public class BulletinController extends BaseController{
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
         String paramStr = queryVo.getParamsStr();
-        paramStr = paramStr.replace("pageNum", "page").replace("pageSize", "per_page").replace("sortColumn", "sortby");
+        paramStr = paramStr.replace("page_num", "page").replace("page_size", "per_page").replace("sort_by", "sortby");
 
         String url = ConfigUtil.getConfig("news.bulletin.list") + "?" + paramStr;
         Map<String,Object> httpData = null;

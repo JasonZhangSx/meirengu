@@ -26,7 +26,7 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                抵扣券批次号：<input type="text" class="input-text" style="width:120px;" id="batchId">　
+                抵扣券批次号：<input type="text" class="input-text" style="width:120px;" id="rebateBatchId">　
                 批次状态：
                         <span class="select-box mr-20" style="width:120px" >
                             <select id="batchStatue" class="select">
@@ -191,7 +191,7 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
-                { "name": "batchId",  "targets": 1 },
+                { "name": "rebateBatchId",  "targets": 1 },
                 { "name": "batchStatue", "targets": 12 },
                 {
                     "targets": 14,
@@ -270,9 +270,9 @@
      * 检索
      **/
     function search(){
-        var batchId = $("#batchId").val();
+        var rebateBatchId = $("#rebateBatchId").val();
         var batchStatue = $("#batchStatue").val();
-        table.column(1).search(batchId).column(12).search(batchStatue).draw();
+        table.column(1).search(rebateBatchId).column(12).search(batchStatue).draw();
     }
 
     /*失效处理*/

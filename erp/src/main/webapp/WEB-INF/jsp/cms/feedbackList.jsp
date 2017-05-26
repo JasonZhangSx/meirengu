@@ -25,6 +25,12 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
+            <div class="text-c">
+                用户手机号：<input type="text" class="input-text" style="width:120px;" id="userPhone">　
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
@@ -35,6 +41,7 @@
                         <th></th>
                         <th>问题内容</th>
                         <th>提交人</th>
+                        <th>提交人手机号</th>
                         <th>提交时间</th>
                         <th>状态</th>
                         <th>操作</th>
@@ -77,6 +84,7 @@
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
                 {"data": "feedbackContent"},
+                {"data": "userName"},
                 {"data": "userPhone"},
                 {
                     "data": "createTime",
@@ -103,8 +111,10 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
+                { "name": "userPhone",   "targets": 3 },
                 {
-                    "targets": 5,
+                    "targets": 6,
                     "render": function (data, type, row, meta) {
                         var status = row.status;
                         var context;
@@ -170,6 +180,13 @@
         $("#totalCount").html(totalCount);
     }
 
+    /**
+     * 检索
+     **/
+    function search(){
+        var userPhone = $("#userPhone").val();
+        table.column(3).search(userPhone).draw();
+    }
 
     /*处理*/
     function edit(feedbackId) {

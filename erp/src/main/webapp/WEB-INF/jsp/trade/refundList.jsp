@@ -175,7 +175,7 @@
                         var context =
                             {
                                 func: [
-                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"},
+                                    {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"},
                                     {"name": "审核", "fn": "edit(\'" + row.refundId + "\',\'" + row.orderId + "\')", "type": "primary"}
                                 ]
                             };
@@ -291,6 +291,17 @@
                 $("#adminMessage").val("");
             }
         });
+    }
+    /*查看*/
+    function show(id) {
+        var title = "订单详情";
+        var url = 'order/toDetail/'+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

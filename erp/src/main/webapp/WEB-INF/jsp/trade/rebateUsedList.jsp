@@ -152,6 +152,11 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
+                { "name": "rebateSn",  "targets": 1 },
+                { "name": "orderSn",   "targets": 6 },
+                { "name": "userPhone", "targets": 7 },
+                { "name": "verifyStatus", "targets": 12 },
                 {
                     "targets": 13,
                     "render": function (data, type, row, meta) {

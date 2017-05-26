@@ -36,6 +36,8 @@ public class QueryVo implements Serializable {
 	private String order;
 
 
+	/** 记录id */
+	private Integer id;
 	/** 用户电话号码 */
 	private String userPhone;
 	/** 项目名称 */
@@ -165,6 +167,14 @@ public class QueryVo implements Serializable {
 
 	public void setOrder(String order) {
 		this.order = order;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getUserPhone() {

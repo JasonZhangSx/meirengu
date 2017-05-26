@@ -80,7 +80,8 @@ public class RebateBatchController extends BaseController{
     public DataTablesOutput rebateBatchList(@Valid DataTablesInput input) throws IOException {
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
-
+        String paramsStr = queryVo.getParamsStr();
+        paramsStr = paramsStr.replace("rebate_batch_id", "batch_id");
         String url = ConfigUtil.getConfig("rebate.batch.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
