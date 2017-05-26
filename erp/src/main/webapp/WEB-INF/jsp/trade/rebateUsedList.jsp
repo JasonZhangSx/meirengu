@@ -294,8 +294,7 @@
 //        timepicker: false,
 //        format: 'yy-m-d h:i',
 //        formatDate: 'yyyy-mm-dd hh:ii:ss'
-        format: "Y-m-d  h:i:s",
-        formatDate: 'Y/m/d',
+        format: "Y-m-d H:i:s",
         autoclose: true,
         todayBtn: true,
         pickerPosition: "bottom-left"
