@@ -4,7 +4,6 @@ import com.meirengu.model.Page;
 import com.meirengu.service.BaseService;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.response.AvatarVO;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ public interface UserService extends BaseService<User>{
     User createUserInfo(RegisterVO registerVO);
 
     /* 获取用户头像*/
-    List<AvatarVO> listUserAvatar(List<String> listUserIds);
+    List<Map<String,Object>> listUserAvatar(List<String> listUserIds);
 
     /*调用支付系统获取余额信息 */
     void getUserRestMoney(Map map);
