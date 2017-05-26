@@ -76,7 +76,10 @@
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">创建时间：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <fmt:formatDate value="${order.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                        <jsp:useBean id="dateValue" class="java.util.Date"/>
+                        <jsp:setProperty name="dateValue" property="time" value="${order.createTime}"/>
+                        <%--<fmt:parseDate value="${order.createTime}" pattern="yyyy-MM-dd HH:mm" var="createTime"/>--%>
+                        <fmt:formatDate value="${dateValue}" pattern="yyyy-MM-dd HH:mm:ss"/>
                     </div>
                 </div>
                 <div class="row cl">
