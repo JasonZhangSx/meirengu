@@ -38,9 +38,8 @@
                             </select>
                         </span>
                 生效时间：
-                    <input type="datetime" class="input-text" style="width: 40%;float:left;" value="" id="createTimeBegin" placeholder="开始日期">
-                    <input type="datetime" class="input-text" style="width: 40%;float:right;" value="" id="createTimeEnd" placeholder="结束日期">
-
+                    <input type="datetime" class="input-text" style="width: 10%;" value="" id="createTimeBegin" placeholder="开始日期">
+                    <input type="datetime" class="input-text" style="width: 10%;" value="" id="createTimeEnd" placeholder="结束日期">
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -86,6 +85,7 @@
 
 <script type="text/javascript">
 
+
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -94,9 +94,11 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'data': {
-                    createTimeBegin:$('createTimeBegin').val(),
-                    createTimeEnd:$('createTimeEnd').val()
+                "data": function ( d ) {
+                    return $.extend( {}, d, {
+                        "createTimeBegin": $('#createTimeBegin').val(),
+                        "createTimeEnd": $('#createTimeEnd').val()
+                    } );
                 },
                 'url': '<%=basePath %>rebate_used'
             },
@@ -285,6 +287,19 @@
         return flag;
     }
 
+    // 时间
+    $('#createTimeBegin,#createTimeEnd').datetimepicker({
+//        yearOffset: 0,
+        lang: $.datetimepicker.setLocale('ch'),
+//        timepicker: false,
+//        format: 'yy-m-d h:i',
+//        formatDate: 'yyyy-mm-dd hh:ii:ss'
+        format: "Y-m-d  h:i:s",
+        formatDate: 'Y/m/d',
+        autoclose: true,
+        todayBtn: true,
+        pickerPosition: "bottom-left"
+    });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

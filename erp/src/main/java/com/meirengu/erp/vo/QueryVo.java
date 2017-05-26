@@ -355,11 +355,11 @@ public class QueryVo implements Serializable {
 			sb.append("&");
 		}
 		if (StringUtils.isNotBlank(this.getCreateTimeBegin())) {
-			sb.append("create_time_begin=" + this.getCreateTimeBegin());
+			sb.append("create_time_begin=" + URLEncoder.encode(this.getCreateTimeBegin(), "UTF-8"));
 			sb.append("&");
 		}
 		if (StringUtils.isNotBlank(this.getCreateTimeEnd())) {
-			sb.append("create_time_end=" + this.getCreateTimeEnd());
+			sb.append("create_time_end=" + URLEncoder.encode(this.getCreateTimeEnd(), "UTF-8"));
 			sb.append("&");
 		}
 		//去掉最后一个&
