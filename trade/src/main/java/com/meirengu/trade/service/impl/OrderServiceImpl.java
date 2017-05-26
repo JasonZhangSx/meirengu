@@ -109,12 +109,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                                 JSONObject addressJson = addressArray.getJSONObject(i);
                                 int addressId = addressJson.getIntValue("addressId");
                                 Map<String, Object> addressMap = new HashMap<String, Object>();
-                                addressMap.put("userName", addressJson.getString("userName"));
-                                addressMap.put("userPhone", addressJson.getString("userPhone"));
-                                addressMap.put("province", addressJson.getString("province"));
-                                addressMap.put("city", addressJson.getString("city"));
-                                addressMap.put("areas", addressJson.getString("area"));
-                                addressMap.put("userAddress", addressJson.getString("userAddress"));
+                                addressMap.put("addUserName", addressJson.getString("userName"));
+                                addressMap.put("addUserPhone", addressJson.getString("userPhone"));
+                                addressMap.put("addProvince", addressJson.getString("province"));
+                                addressMap.put("addCity", addressJson.getString("city"));
+                                addressMap.put("addArea", addressJson.getString("area"));
+                                addressMap.put("addUserAddress", addressJson.getString("userAddress"));
                                 map.putAll(addressMap);
                             }
                         }
