@@ -182,6 +182,12 @@
 			<if test="@Ognl@isNotEmpty(orderSn)">
 				AND tru.order_sn=#{orderSn}
 			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeBegin)">
+				AND tru.create_time >= #{usedTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeEnd)">
+				AND tru.create_time &lt;= #{usedTimeEnd}
+			</if>
 		</where>
 	</sql>
 

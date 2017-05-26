@@ -39,6 +39,9 @@
                                 <option value="3">已失效</option>
                             </select>
                         </span>
+                生效时间：
+                <input type="datetime" class="input-text" style="width: 10%;" value="" id="usedTimeBegin" placeholder="开始日期">
+                <input type="datetime" class="input-text" style="width: 10%;" value="" id="usedTimeEnd" placeholder="结束日期">
 
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
@@ -93,6 +96,12 @@
         table = $('#dt').DataTable({
 
             'ajax': {
+                "data": function ( d ) {
+                    return $.extend( {}, d, {
+                        "usedTimeBegin": $('#usedTimeBegin').val(),
+                        "usedTimeEnd": $('#usedTimeEnd').val()
+                    } );
+                },
                 'url': '<%=basePath %>rebate'
             },
             "rowCallback": function( row, data, index ) {
@@ -130,10 +139,10 @@
                 {"data": "receiveTime"},
                 {"data": "orderSn"},
                 {
-                    "data": "cteateTime",
+                    "data": "usedTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
-                            return new Date(data).Format("yyyy-MM-dd");
+                            return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                 },
@@ -223,6 +232,13 @@
         var receiveStatus = $("#receiveStatus").val();
         table.column(2).search(rebateSn).column(5).search(rebateBatchId).column(8).search(userPhone).column(10).search(orderSn).column(12).search(receiveStatus).draw();
     }
+    $('#usedTimeBegin,#usedTimeEnd').datetimepicker({
+        lang: $.datetimepicker.setLocale('ch'),
+        format: "Y-m-d H:i:s",
+        autoclose: true,
+        todayBtn: true,
+        pickerPosition: "bottom-left"
+    });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

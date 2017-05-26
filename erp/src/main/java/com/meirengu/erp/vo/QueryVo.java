@@ -64,6 +64,10 @@ public class QueryVo implements Serializable {
 	private String createTimeBegin;
 	/** 结束时间 */
 	private String createTimeEnd;
+	/** 开始时间 */
+	private String usedTimeBegin;
+	/** 结束时间 */
+	private String usedTimeEnd;
 
 	public QueryVo(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
@@ -288,6 +292,22 @@ public class QueryVo implements Serializable {
 		this.createTimeEnd = createTimeEnd;
 	}
 
+	public String getUsedTimeBegin() {
+		return usedTimeBegin;
+	}
+
+	public void setUsedTimeBegin(String usedTimeBegin) {
+		this.usedTimeBegin = usedTimeBegin;
+	}
+
+	public String getUsedTimeEnd() {
+		return usedTimeEnd;
+	}
+
+	public void setUsedTimeEnd(String usedTimeEnd) {
+		this.usedTimeEnd = usedTimeEnd;
+	}
+
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
 		String paramsStr = sb.toString();
@@ -363,6 +383,14 @@ public class QueryVo implements Serializable {
 		}
 		if (StringUtils.isNotBlank(this.getCreateTimeEnd())) {
 			sb.append("create_time_end=" + URLEncoder.encode(this.getCreateTimeEnd(), "UTF-8"));
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getUsedTimeBegin())) {
+			sb.append("used_time_begin=" + URLEncoder.encode(this.getUsedTimeBegin(), "UTF-8"));
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getUsedTimeEnd())) {
+			sb.append("used_time_end=" + URLEncoder.encode(this.getUsedTimeEnd(), "UTF-8"));
 			sb.append("&");
 		}
 		//去掉最后一个&

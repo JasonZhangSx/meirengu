@@ -289,11 +289,7 @@
 
     // 时间
     $('#createTimeBegin,#createTimeEnd').datetimepicker({
-//        yearOffset: 0,
         lang: $.datetimepicker.setLocale('ch'),
-//        timepicker: false,
-//        format: 'yy-m-d h:i',
-//        formatDate: 'yyyy-mm-dd hh:ii:ss'
         format: "Y-m-d H:i:s",
         autoclose: true,
         todayBtn: true,

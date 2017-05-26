@@ -58,7 +58,9 @@ public class RebateController extends BaseController{
                           @RequestParam(value = "user_id", required = false) Integer userId,
                           @RequestParam(value = "user_phone", required = false) String userPhone,
                           @RequestParam(value = "receive_status", required = false) Integer receiveStatus,
-                          @RequestParam(value = "order_sn", required = false) String orderSn){
+                          @RequestParam(value = "order_sn", required = false) String orderSn,
+                          @RequestParam(value = "used_time_begin", required = false) Date usedTimeBegin,
+                          @RequestParam(value = "used_time_end", required = false) Date usedTimeEnd){
         Map<String, Object> map = new HashMap<>();
         map.put("rebateId", rebateId);
         map.put("rebateSn", rebateSn);
@@ -68,6 +70,8 @@ public class RebateController extends BaseController{
         map.put("userPhone", userPhone);
         map.put("receiveStatus", receiveStatus);
         map.put("orderSn", orderSn);
+        map.put("usedTimeBegin", usedTimeBegin);
+        map.put("usedTimeEnd", usedTimeEnd);
         if ("create_time".equals(sortBy)) {
             sortBy = "tb.create_time";
         }

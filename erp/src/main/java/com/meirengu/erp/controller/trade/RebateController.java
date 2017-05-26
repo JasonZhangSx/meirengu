@@ -51,9 +51,13 @@ public class RebateController extends BaseController{
      */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput rebateBatchList(@Valid DataTablesInput input) throws IOException {
+    public DataTablesOutput rebateBatchList(@Valid DataTablesInput input,
+                                            @RequestParam(value = "usedTimeBegin", required = false) String usedTimeBegin,
+                                            @RequestParam(value = "usedTimeEnd", required = false) String usedTimeEnd) throws IOException {
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
+        queryVo.setUsedTimeBegin(usedTimeBegin);
+        queryVo.setUsedTimeEnd(usedTimeEnd);
 
         String url = ConfigUtil.getConfig("rebate.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;
