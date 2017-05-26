@@ -106,7 +106,7 @@
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-2">地址：</label>
                         <div class="formControls col-xs-8 col-sm-8">
-                                ${order.addProvince + order.addCity + order.addArea + order.addUserAddress}
+                                ${order.addProvince} ${order.addCity} ${order.addArea} ${order.addUserAddress}
                         </div>
                     </div>
                 </c:if>

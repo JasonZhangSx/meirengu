@@ -73,6 +73,7 @@
             <div class="formControls col-xs-8 col-sm-8">
                   <span class="select-box">
                       <select id="refundState" class="select">
+                            <option value="0">请选择</option>
                             <option value="2">同意</option>
                             <option value="3">拒绝</option>
                       </select>
@@ -264,6 +265,13 @@
         var orderId = $("#orderId").val();
         var refundState = $("#refundState").val();
         var adminMessage = $("#adminMessage").val();
+        if (refundState == 0){
+            layer.msg('请选择审核结果！', {icon: 6, time: 5000});
+            return;
+        } else if (adminMessage == ""){
+            layer.msg('请填写备注！', {icon: 6, time: 5000});
+            return;
+        }
         var url = "<%=basePath %>refund/audit";
         $.ajax({
             type: "post",
