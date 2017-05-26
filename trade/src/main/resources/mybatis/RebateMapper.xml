@@ -33,7 +33,7 @@
 	</sql>
 	<sql id="rebate_used_select_columns">
 		tru.order_sn as orderSn,
-		tru.used_time as usedTime
+		tru.create_time as usedTime
 	</sql>
 
 	<insert id="insert" parameterType="rebate" useGeneratedKeys="true" keyProperty="rebateId" >

@@ -130,7 +130,7 @@
                 {"data": "receiveTime"},
                 {"data": "orderSn"},
                 {
-                    "data": "usedTime",
+                    "data": "cteateTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
                             return new Date(data).Format("yyyy-MM-dd");
