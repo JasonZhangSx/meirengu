@@ -57,13 +57,14 @@
         .bot .img1{margin:.7rem 0 .51rem;}
         .bot .wrapper{background-color: #fff;padding:.39rem 0;border-radius: .1rem;}
         .bot .wrapper .top{padding: 0 .38rem;}
-        .bot input{width:100%;height:.98rem;padding:0 .23rem;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
-        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;line-height:0.98rem;border-radius: .14rem;font-size: .42rem;letter-spacing: .02rem;font-weight: bold;color:#fff;
+        .bot input{width:100%;height:.98rem;padding:0 .23rem;-webkit-appearance:none;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
+        .bot input[type="button"]{display: block;text-shadow: margin:auto;height:0.98rem;border:none;line-height:100%;border-radius: .14rem;font-size: .42rem;letter-spacing: .02rem;font-weight: bold;color:#fff;
             background-color: #62eefd;
             background: -webkit-linear-gradient(top,#feee59,#ffcb3c);
             box-shadow: 0 0 .1rem .03rem rgba(251,190,60,0.4);
+            text-shadow: 0.03rem 0.03rem 0.03rem rgba(0,0,0,0.2)
         }
-        .bot input[disabled="disabled"]{
+        .bot input[disabled=""]{
             background-color: #ddd;background: -webkit-linear-gradient(top,#ddd,#ddd);
             color:#bdbdbd;
             box-shadow: 0 0 .08rem .03rem rgba(0,0,0,0);}
@@ -98,7 +99,7 @@
                 <span>股权<br/>分红</span><em>+</em><span>专享<br/>折扣</span><em>+</em><span>现金<br/>返利</span><em>+</em><span>医美项<br/>目赠送</span>
             </div>
             <p>
-                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1732" style="height:4.97rem"class="img3" alt="" />
+                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1120" style="height:4.97rem"class="img3" alt="" />
             </p>
         </div>
     </div>

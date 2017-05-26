@@ -112,21 +112,15 @@
                             context =
                                 {
                                     func: [
-                                        {"name": "处理", "fn": "edit(\'" + row.feedbackId + "\')", "type": "primary"},
-                                        {"name": "查看", "fn": "detail(\'" + row.feedbackId + "\')", "type": "default"}
-
+                                        {"name": "处理", "fn": "edit(\'" + row.feedbackId + "\')", "type": "primary"}
                                     ]
                                 };
-                        } else if (status == 1) {
-                            context =
-                                {
-                                    func: [
-                                        {"name": "查看", "fn": "detail(\'" + row.bulletinId + "\')", "type": "default"}
-                                    ]
-                                };
+                            var html = template(context);
+                            return html;
+                        }else {
+                            return "";
                         }
-                        var html = template(context);
-                        return html;
+
                     }
                 }
 
