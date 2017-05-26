@@ -90,6 +90,9 @@ public class QueryVo implements Serializable {
 				continue;
 			}
 			switch (parameterName) {
+				case "id":
+					this.setId(Integer.parseInt(parameterSearchValue));
+					break;
 				case "userPhone":
 					this.setUserPhone(parameterSearchValue);
 					break;
