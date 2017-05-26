@@ -121,12 +121,14 @@ public class BulletinController extends BaseController {
                        @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value = "sortby", required = false) String sortBy,
                        @RequestParam(value = "order", required = false) String order,
-                       @RequestParam(value = "status", required = false) Integer status){
+                       @RequestParam(value = "status", required = false) Integer status,
+                       @RequestParam(value = "id", required = false) Integer bulletinId){
         Map paramMap = new HashMap<String, Object>();
         Page<Bulletin> page = super.setPageParams(pageNum, pageSize);
         paramMap.put("sortBy", sortBy);
         paramMap.put("order", order);
         paramMap.put("status", status);
+        paramMap.put("bulletinId", bulletinId);
         try {
             page = blletinService.getPageList(page, paramMap);
             return setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));

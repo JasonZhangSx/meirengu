@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -41,6 +42,19 @@ public class OrderController extends BaseController{
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String orderView() throws IOException {
         return "/trade/orderList";
+    }
+
+    /**
+     * 订单详情
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/toDetail/{id}", method = RequestMethod.GET)
+    public String rebateBatchDetailView(ModelMap model, @PathVariable Integer id) throws IOException {
+        String url = ConfigUtil.getConfig("order.detail.url") + "/" + id;
+        Map<String,Object> httpData = (Map<String,Object>)httpGet(url);
+        model.addAttribute("order", httpData);
+        return "/trade/orderDetail";
     }
 
     /**

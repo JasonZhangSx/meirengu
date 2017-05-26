@@ -25,6 +25,12 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
+            <div class="text-c">
+                编号：<input type="text" class="input-text" style="width:120px;" id="bulletinId">　
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><a class="btn btn-primary radius" onClick="bulletin_insert('添加公告','bulletin/toAdd')"
@@ -35,6 +41,7 @@
                     <thead>
                     <tr class="text-c">
                         <th></th>
+                        <th>编号</th>
                         <th>标题</th>
                         <th>状态</th>
                         <th>添加时间</th>
@@ -77,6 +84,7 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "bulletinId"},
                 {"data": "bulletinTitle"},
                 {
                     "data": "status",
@@ -102,8 +110,10 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
+                { "name": "id",   "targets": 1 },
                 {
-                    "targets": 4,
+                    "targets": 5,
                     "render": function (data, type, row, meta) {
                         var status = row.status;
                         var context;
@@ -178,7 +188,13 @@
         var totalCount = info.recordsTotal;
         $("#totalCount").html(totalCount);
     }
-
+    /**
+     * 检索
+     **/
+    function search(){
+        var bulletinId = $("#bulletinId").val();
+        table.column(1).search(bulletinId).draw();
+    }
 
     /*上，下架处理*/
     function edit(bulletinId, status) {

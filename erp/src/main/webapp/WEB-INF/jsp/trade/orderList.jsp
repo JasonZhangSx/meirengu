@@ -84,6 +84,7 @@
                 <div class="formControls col-xs-8 col-sm-8">
                   <span class="select-box">
                       <select id="userMessage" class="select">
+                            <option value="0">请选择</option>
                             <option value="1">3天无理由退款</option>
                             <option value="2">不想投了</option>
                             <option value="3">资金有其他用途</option>
@@ -254,7 +255,7 @@
                             context =
                                 {
                                     func: [
-                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"},
+                                        {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"},
                                         {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"}
                                     ]
                                 };
@@ -262,7 +263,7 @@
                             context =
                                 {
                                     func: [
-                                        {"name": "查看", "fn": "detail(\'" + row.orderId + "\')", "type": "default"}
+                                        {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"}
                                     ]
                                 };
                         }
@@ -348,8 +349,16 @@
     }
     function refundApplyAjax() {
         var orderId = $("#orderId").val();
+        var userMessageVal = $("#userMessage").val();
         var userMessage = $("#userMessage").find("option:selected").text();
         var refundMessage = $("#refundMessage").val();
+        if (userMessageVal == 0){
+            layer.msg('请选择退款原因！', {icon: 6, time: 5000});
+            return;
+        } else if (refundMessage == ""){
+            layer.msg('请填写备注！', {icon: 6, time: 5000});
+            return;
+        }
         var url = "<%=basePath %>order/refund/application";
         $.ajax({
             type: "post",
@@ -376,6 +385,17 @@
                 $("#refundMessage").val("");
             }
         });
+    }
+    /*查看*/
+    function show(id) {
+        var title = "订单详情";
+        var url = 'order/toDetail/'+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

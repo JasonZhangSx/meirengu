@@ -17,7 +17,7 @@
         input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
         h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}
         small{line-height:1}ul,ol{list-style:none}a{text-decoration:none;color:inherit}
-        input:focus{outline:0}a:hover{text-decoration:none}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
+        input:focus{outline:0}a:hover{text-decoration:npne}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
         button,input,select,textarea{font-size:100%}table{border-collapse:collapse;border-spacing:0}
         .clearfix{display:block}.clearfix:after{content:'';display:block;clear:both;overflow:hidden;line-height:0}
         .clear{clear:both;height:0;line-height: 0;overflow: hidden;}
@@ -57,11 +57,19 @@
         .bot .img1{margin:.7rem 0 .51rem;}
         .bot .wrapper{background-color: #fff;padding:.39rem 0;border-radius: .1rem;}
         .bot .wrapper .top{padding: 0 .38rem;}
-        .bot input{width:100%;height:.98rem;padding:0 .23rem;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
-        .bot input[type="button"]{display: block;margin:auto;height:0.98rem;box-shadow: 0 0 .1rem .04rem rgba(84,232,254,0.4);line-height:0.98rem;border-radius: .14rem;font-size: .32rem;font-weight: bold;color:#fff;background-color: #62eefd;}
-        .bot input[disabled=""]{background-color: #ddd;color:#929292;box-shadow: 0 0 .1rem .04rem rgba(0,0,0,0);}
+        .bot input{width:100%;height:.98rem;padding:0 .23rem;-webkit-appearance:none;box-shadow: none;font-size: .3rem;box-sizing: border-box;border:none;border:1px #e5e5e5 solid;margin-bottom: .34rem;border-radius: .1rem;}
+        .bot input[type="button"]{display: block;text-shadow: margin:auto;height:0.98rem;border:none;line-height:100%;border-radius: .14rem;font-size: .42rem;letter-spacing: .02rem;font-weight: bold;color:#fff;
+            background-color: #62eefd;
+            background: -webkit-linear-gradient(top,#feee59,#ffcb3c);
+            box-shadow: 0 0 .1rem .03rem rgba(251,190,60,0.4);
+            text-shadow: 0.03rem 0.03rem 0.03rem rgba(0,0,0,0.2)
+        }
+        .bot input[disabled=""]{
+            background-color: #ddd;background: -webkit-linear-gradient(top,#ddd,#ddd);
+            color:#bdbdbd;
+            box-shadow: 0 0 .08rem .03rem rgba(0,0,0,0);}
         .err_msg{color:red;margin:0 0 .3rem;}
-        .waiter{display: block;margin:.3rem .3rem .5rem;font-weight: bold;font-size: .38rem;height:.92rem;line-height: .92rem;color:#fff;text-align: center;border-radius: .1rem;}
+        .waiter{display: block;margin:.3rem .3rem .5rem;font-weight: bold;font-size: .32rem;height:.92rem;line-height: .92rem;color:#fff;text-align: center;border-radius: .1rem;}
 
         .sub_ok{position: fixed;top:0;width:100%;left:0;bottom:0;background-color: rgba(0,0,0,0.4);display: none;border-radius: .12rem;}
         .sub_ok .wrapper{width:6.08rem;background-color: #fff;text-align: center;line-height: .4rem;padding: 1.1rem 0;position: relative;left:50%;top:1.42rem;transform:translate(-50%,0);-webkit-transform:translate(-50%,0)}
@@ -91,7 +99,7 @@
                 <span>股权<br/>分红</span><em>+</em><span>专享<br/>折扣</span><em>+</em><span>现金<br/>返利</span><em>+</em><span>医美项<br/>目赠送</span>
             </div>
             <p>
-                <img src="img/blank.gif" data-echo="img/hl_icon5.png" style="height:4.29rem"class="img3" alt="" />
+                <img src="img/blank.gif" data-echo="img/hl_icon5.png?v=1120" style="height:4.97rem"class="img3" alt="" />
             </p>
         </div>
     </div>
@@ -132,7 +140,7 @@
                 <input type="text" placeholder="电话" maxlength='11' name="tel" value="">
                 <input type="text" placeholder="城市" maxlength='10' name="city" value="">
                 <div class="err_msg"></div>
-                <input type="button" name="name" value="立即报名”" class="submit">
+                <input type="button" name="name" value="立即报名" class="submit">
             </div>
 
         </div>
@@ -177,14 +185,18 @@
         var name = $('.bot input[name="name"]').val(),
                 tel = $('.bot input[name="tel"]').val(),
                 city = $('.bot input[name="city"]').val();
-        if (!emp_test(name)) {
-            $('.bot .err_msg').show().text('* 姓名不能为空')
-        }else if(!emp_test(tel)){
+//        if (!emp_test(name)) {
+//            $('.bot .err_msg').show().text('* 姓名不能为空')
+//        }else if(!emp_test(tel)){
+//            $('.bot .err_msg').show().text('* 手机号码不能为空')
+//        }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){
+//            $('.bot .err_msg').show().text('* 手机号码格式不正确')
+//        }else if(!emp_test(city)){
+//            $('.bot .err_msg').show().text('* 城市不能为空')
+        if(!emp_test(tel)){
             $('.bot .err_msg').show().text('* 手机号码不能为空')
         }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){
             $('.bot .err_msg').show().text('* 手机号码格式不正确')
-        }else if(!emp_test(city)){
-            $('.bot .err_msg').show().text('* 城市不能为空')
         }else{
             $.ajax({
                 url:"activity/signup/submit",

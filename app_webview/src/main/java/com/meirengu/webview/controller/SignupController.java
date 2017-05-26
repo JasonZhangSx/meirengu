@@ -6,6 +6,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import com.meirengu.webview.service.SignupService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class SignupController extends BaseController{
 //        logger.info("after name: {}   city: {}",name,city);
 
         JSONObject result = null;
-        if(StringUtil.isEmpty(telphone) || StringUtil.isEmpty(name) || StringUtil.isEmpty(type) || StringUtil.isEmpty(city)){
+        if(StringUtil.isEmpty(telphone) || StringUtil.isEmpty(type)){
             result = new JSONObject();
             result.put("code", StatusCode.MISSING_ARGUMENT);
             result.put("msg", StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
@@ -54,7 +55,7 @@ public class SignupController extends BaseController{
                 result = new JSONObject();
                 result.put("code", StatusCode.MOBILE_FORMAT_ERROR);
                 result.put("msg", StatusCode.codeMsgMap.get(StatusCode.MOBILE_FORMAT_ERROR));
-            }else if(name.length()>10 || city.length()>10){
+            }else if((StringUtils.isNotBlank(name) && name.length()>10) || (StringUtils.isNotBlank(city) && city.length()>10)){
                 result = new JSONObject();
                 result.put("code", StatusCode.INVALID_ARGUMENT);
                 result.put("msg", StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));

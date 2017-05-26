@@ -178,6 +178,7 @@
                             {
                                 func: [
                                     {"name": "审核", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"},
+                                    {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"}
                                 ]
                             };
                         var html = template(context);
@@ -269,34 +270,6 @@
             });
     }
 
-    /*预约订单审核*/
-    function appointment_audit(obj, orderId) {
-        layer.confirm('是否通过？', {
-                btn: ['通过', '不通过', '取消'],
-                shade: false,
-                closeBtn: 0
-            },
-            //order_state 通过是2，不通过是3
-            function () {
-                if (appointmentAduitAjax(orderId, 2)) {
-                    $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已通过</span>');
-                    $(obj).remove();
-                    layer.msg('已通过', {icon: 6, time: 1000});
-                } else {
-                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
-                }
-            },
-            function () {
-                if (appointmentAduitAjax(orderId, 3)) {
-                    $(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
-                    $(obj).remove();
-                    layer.msg('未通过', {icon: 5, time: 1000});
-                } else {
-                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
-                }
-            });
-    }
-
     function appointmentAduitAjax(orderId, orderState) {
         var url = "<%=basePath %>order_appointment/"+orderId;
         var flag=false;
@@ -320,7 +293,17 @@
         });
         return flag;
     }
-
+    /*查看*/
+    function show(id) {
+        var title = "订单详情";
+        var url = 'order/toDetail/'+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
+    }
 
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

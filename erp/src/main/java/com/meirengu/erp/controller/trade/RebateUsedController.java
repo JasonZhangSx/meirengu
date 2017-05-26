@@ -48,9 +48,13 @@ public class RebateUsedController extends BaseController{
      */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DataTablesOutput rebateUsedList(@Valid DataTablesInput input) throws IOException {
+    public DataTablesOutput rebateUsedList(@Valid DataTablesInput input,
+                                           @RequestParam(value = "createTimeBegin", required = false) String createTimeBegin,
+                                           @RequestParam(value = "createTimeEnd", required = false) String createTimeEnd) throws IOException {
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
+        queryVo.setCreateTimeBegin(createTimeBegin);
+        queryVo.setCreateTimeEnd(createTimeEnd);
         queryVo.setOrderState(6);//核销已支付订单的优惠券
         String url = ConfigUtil.getConfig("rebate.used.list.url") + "?" + queryVo.getParamsStr();
         Map<String,Object> httpData = null;

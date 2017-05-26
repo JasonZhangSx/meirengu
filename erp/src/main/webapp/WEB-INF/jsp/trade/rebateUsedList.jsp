@@ -37,7 +37,9 @@
                                 <option value="1">已核销</option>
                             </select>
                         </span>
-
+                生效时间：
+                    <input type="datetime" class="input-text" style="width: 10%;" value="" id="createTimeBegin" placeholder="开始日期">
+                    <input type="datetime" class="input-text" style="width: 10%;" value="" id="createTimeEnd" placeholder="结束日期">
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -83,6 +85,7 @@
 
 <script type="text/javascript">
 
+
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -91,6 +94,12 @@
         table = $('#dt').DataTable({
 
             'ajax': {
+                "data": function ( d ) {
+                    return $.extend( {}, d, {
+                        "createTimeBegin": $('#createTimeBegin').val(),
+                        "createTimeEnd": $('#createTimeEnd').val()
+                    } );
+                },
                 'url': '<%=basePath %>rebate_used'
             },
             "rowCallback": function( row, data, index ) {
@@ -123,7 +132,7 @@
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
-                            return new Date(data).Format("yyyy-MM-dd");
+                            return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                 },
@@ -131,7 +140,7 @@
                     "data": "verifyTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
-                            return new Date(data).Format("yyyy-MM-dd");
+                            return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                 },
@@ -152,6 +161,11 @@
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
+                { "name": "rebateSn",  "targets": 1 },
+                { "name": "orderSn",   "targets": 6 },
+                { "name": "userPhone", "targets": 7 },
+                { "name": "verifyStatus", "targets": 12 },
                 {
                     "targets": 13,
                     "render": function (data, type, row, meta) {
@@ -273,6 +287,14 @@
         return flag;
     }
 
+    // 时间
+    $('#createTimeBegin,#createTimeEnd').datetimepicker({
+        lang: $.datetimepicker.setLocale('ch'),
+        format: "Y-m-d H:i:s",
+        autoclose: true,
+        todayBtn: true,
+        pickerPosition: "bottom-left"
+    });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

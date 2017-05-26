@@ -73,6 +73,7 @@
             <div class="formControls col-xs-8 col-sm-8">
                   <span class="select-box">
                       <select id="refundState" class="select">
+                            <option value="0">请选择</option>
                             <option value="2">同意</option>
                             <option value="3">拒绝</option>
                       </select>
@@ -175,7 +176,7 @@
                         var context =
                             {
                                 func: [
-                                    {"name": "查看", "fn": "detail(\'" + row.refundId + "\')", "type": "default"},
+                                    {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"},
                                     {"name": "审核", "fn": "edit(\'" + row.refundId + "\',\'" + row.orderId + "\')", "type": "primary"}
                                 ]
                             };
@@ -264,6 +265,13 @@
         var orderId = $("#orderId").val();
         var refundState = $("#refundState").val();
         var adminMessage = $("#adminMessage").val();
+        if (refundState == 0){
+            layer.msg('请选择审核结果！', {icon: 6, time: 5000});
+            return;
+        } else if (adminMessage == ""){
+            layer.msg('请填写备注！', {icon: 6, time: 5000});
+            return;
+        }
         var url = "<%=basePath %>refund/audit";
         $.ajax({
             type: "post",
@@ -291,6 +299,17 @@
                 $("#adminMessage").val("");
             }
         });
+    }
+    /*查看*/
+    function show(id) {
+        var title = "订单详情";
+        var url = 'order/toDetail/'+id;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+        });
+        layer.full(index);
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

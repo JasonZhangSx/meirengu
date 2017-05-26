@@ -33,7 +33,7 @@
 	</sql>
 	<sql id="rebate_used_select_columns">
 		tru.order_sn as orderSn,
-		tru.used_time as usedTime
+		tru.create_time as usedTime
 	</sql>
 
 	<insert id="insert" parameterType="rebate" useGeneratedKeys="true" keyProperty="rebateId" >
@@ -181,6 +181,12 @@
 			<!-- 抵扣券使用查询条件 -->
 			<if test="@Ognl@isNotEmpty(orderSn)">
 				AND tru.order_sn=#{orderSn}
+			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeBegin)">
+				AND tru.create_time >= #{usedTimeBegin}
+			</if>
+			<if test="@Ognl@isNotEmpty(usedTimeEnd)">
+				AND tru.create_time &lt;= #{usedTimeEnd}
 			</if>
 		</where>
 	</sql>
