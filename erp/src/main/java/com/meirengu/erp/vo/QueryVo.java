@@ -304,7 +304,7 @@ public class QueryVo implements Serializable {
 			sb.append("order=" + this.getOrder());
 			sb.append("&");
 		}
-		if (NumberUtil.isNullOrZero(this.getId())) {
+		if (!NumberUtil.isNullOrZero(this.getId())) {
 			sb.append("id=" + this.getId());
 			sb.append("&");
 		}
