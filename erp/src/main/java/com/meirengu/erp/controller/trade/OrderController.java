@@ -45,7 +45,7 @@ public class OrderController extends BaseController{
     }
 
     /**
-     * 抵扣券批次统计信息
+     * 订单详情
      * @return
      * @throws IOException
      */

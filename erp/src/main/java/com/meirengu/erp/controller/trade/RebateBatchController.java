@@ -82,7 +82,7 @@ public class RebateBatchController extends BaseController{
         QueryVo queryVo = new QueryVo(input);
         String paramsStr = queryVo.getParamsStr();
         paramsStr = paramsStr.replace("rebate_batch_id", "batch_id");
-        String url = ConfigUtil.getConfig("rebate.batch.list.url") + "?" + queryVo.getParamsStr();
+        String url = ConfigUtil.getConfig("rebate.batch.list.url") + "?" + paramsStr;
         Map<String,Object> httpData = null;
         List<Map<String,Object>> list = null;
         int totalCount = 0;

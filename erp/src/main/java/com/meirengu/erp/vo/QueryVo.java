@@ -60,6 +60,10 @@ public class QueryVo implements Serializable {
 	private Integer rebateBatchId;
 	/** 抵扣券状态 */
 	private Integer receiveStatus;
+	/** 开始时间 */
+	private String createTimeBegin;
+	/** 结束时间 */
+	private String createTimeEnd;
 
 	public QueryVo(int pageNum, int pageSize, String sortColumn, String order){
 		this.pageNum = pageNum;
@@ -265,6 +269,22 @@ public class QueryVo implements Serializable {
 		this.receiveStatus = receiveStatus;
 	}
 
+	public String getCreateTimeBegin() {
+		return createTimeBegin;
+	}
+
+	public void setCreateTimeBegin(String createTimeBegin) {
+		this.createTimeBegin = createTimeBegin;
+	}
+
+	public String getCreateTimeEnd() {
+		return createTimeEnd;
+	}
+
+	public void setCreateTimeEnd(String createTimeEnd) {
+		this.createTimeEnd = createTimeEnd;
+	}
+
 	public String getParamsStr() throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();
 		String paramsStr = sb.toString();
@@ -282,6 +302,10 @@ public class QueryVo implements Serializable {
 		}
 		if (StringUtils.isNotBlank(this.getOrder())) {
 			sb.append("order=" + this.getOrder());
+			sb.append("&");
+		}
+		if (NumberUtil.isNullOrZero(this.getId())) {
+			sb.append("id=" + this.getId());
 			sb.append("&");
 		}
 		if (StringUtils.isNotBlank(this.getOrderSn())) {
@@ -328,6 +352,14 @@ public class QueryVo implements Serializable {
 		}
 		if (!NumberUtil.isNullOrZero(this.getReceiveStatus())) {
 			sb.append("receive_status=" + this.getReceiveStatus());
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getCreateTimeBegin())) {
+			sb.append("create_time_begin=" + this.getCreateTimeBegin());
+			sb.append("&");
+		}
+		if (StringUtils.isNotBlank(this.getCreateTimeEnd())) {
+			sb.append("create_time_end=" + this.getCreateTimeEnd());
 			sb.append("&");
 		}
 		//去掉最后一个&

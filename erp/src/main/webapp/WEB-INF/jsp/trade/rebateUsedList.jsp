@@ -37,6 +37,9 @@
                                 <option value="1">已核销</option>
                             </select>
                         </span>
+                生效时间：
+                    <input type="datetime" class="input-text" style="width: 40%;float:left;" value="" id="createTimeBegin" placeholder="开始日期">
+                    <input type="datetime" class="input-text" style="width: 40%;float:right;" value="" id="createTimeEnd" placeholder="结束日期">
 
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
@@ -91,6 +94,10 @@
         table = $('#dt').DataTable({
 
             'ajax': {
+                'data': {
+                    createTimeBegin:$('createTimeBegin').val(),
+                    createTimeEnd:$('createTimeEnd').val()
+                },
                 'url': '<%=basePath %>rebate_used'
             },
             "rowCallback": function( row, data, index ) {
@@ -123,7 +130,7 @@
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
-                            return new Date(data).Format("yyyy-MM-dd");
+                            return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                 },
@@ -131,7 +138,7 @@
                     "data": "verifyTime",
                     "render": function (data, type, row, meta) {
                         if (data != null){
-                            return new Date(data).Format("yyyy-MM-dd");
+                            return new Date(data).Format("yyyy-MM-dd HH:mm:ss");
                         }
                     }
                 },
