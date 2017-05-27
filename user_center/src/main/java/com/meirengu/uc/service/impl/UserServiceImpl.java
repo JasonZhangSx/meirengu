@@ -273,6 +273,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             map.put("userId",user.getUserId());
             map.put("nickname",user.getNickname());
             map.put("avatar",user.getAvatar());
+            map.put("introduction",user.getIntroduction());
             avatarVOs.add(map);
         }
         return avatarVOs;

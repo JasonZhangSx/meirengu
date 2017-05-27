@@ -257,7 +257,7 @@
         WHERE phone=#{mobileInviter}   AND state = 1
     </select>
     <select id="listUserAvatar" parameterType="List" resultType="User">
-        SELECT user_id as userId,nickname,avatar
+        SELECT user_id as userId,nickname,avatar,introduction
         FROM <include refid="table_name"/>
         WHERE state = 1 AND user_id IN
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
