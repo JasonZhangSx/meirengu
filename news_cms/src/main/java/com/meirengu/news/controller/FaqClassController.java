@@ -37,22 +37,11 @@ public class FaqClassController extends BaseController{
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value="class_id", required = false) Integer classId,
-                       @RequestParam(value="status", required = false) Integer status,
-                       @RequestParam(value="sortby", required = false) String sortBy,
-                       @RequestParam(value="order", required = false) String order){
+                       @RequestParam(value="status", required = false) Integer status){
         Map paramMap = new HashMap<String, Object>();
         Page<FaqClass> page = super.setPageParams(pageNum,pageSize);
         paramMap.put("classId", classId);
         paramMap.put("status", status);
-        paramMap.put("sortBy", sortBy);
-        if(order != null){
-            if(order.contains("desc") || order.contains("DESC")){
-                paramMap.put("order", "DESC");
-            }
-            if(order.contains("asc") || order.contains("ASC")){
-                paramMap.put("order", "ASC");
-            }
-        }
         try{
             page = faqClassService.getPageList(page, paramMap);
             if(page.getList().size() != 0){
