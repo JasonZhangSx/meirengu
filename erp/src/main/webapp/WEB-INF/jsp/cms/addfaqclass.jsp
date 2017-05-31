@@ -38,7 +38,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">分类名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" id="articletitle" name="class_name" maxlength="30"
+                    <input type="text" class="input-text" value="" id="class_name" name="class_name" maxlength="30"
                            placeholder="项目标题最多30字">
                 </div>
             </div>
@@ -115,10 +115,6 @@
             layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
         }
     }
-    function tijiao() {
-        $('#form-add').ajaxSubmit(options);
-    }
-
 
     // 时间
     $('#datetimepicker2,#datetimepicker3').datetimepicker({
@@ -702,7 +698,15 @@
         });
 
     })(jQuery);
+    function tijiao() {
+        var class_name = $("#class_name").val();
+        if(class_name==null || class_name==""){
+            alert("请填写类别名称！");
+            return false;
+        }
+        $('#form-add').ajaxSubmit(options);
 
+    }
 
 </script>
 

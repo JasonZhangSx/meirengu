@@ -17,7 +17,6 @@ import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.utils.ThreadPoolSingleton;
 import com.meirengu.uc.vo.request.AddressVO;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.*;
 import com.meirengu.utils.HttpUtil.HttpResult;
 import org.apache.commons.collections.map.HashedMap;
@@ -143,7 +142,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User createUserInfo(String mobile,Integer from, String ip,String avatar) {
+    public User createUserInfo(String mobile,Integer from, String ip,String avatar,String mobileInviter) {
 
         //创建用户
         User user = new User();
@@ -174,6 +173,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setCompany("");
         user.setPosition("");
         user.setIntroduction("");
+        user.setMobileInviter(mobileInviter);
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -265,15 +265,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public List<AvatarVO> listUserAvatar(List<String> listUserIds) {
+    public List<Map<String,Object>> listUserAvatar(List<String> listUserIds) {
 
         List<User> list =  userDao.listUserAvatar(listUserIds);
-        List<AvatarVO> avatarVOs = new ArrayList<>();
+        List<Map<String,Object>> avatarVOs = new ArrayList<>();
         for(User user :list){
-            AvatarVO avatarVO = new AvatarVO();
-            avatarVO.setUserId(user.getUserId());
-            avatarVO.setAvatar(user.getAvatar());
-            avatarVOs.add(avatarVO);
+            Map<String,Object> map = new HashedMap();
+            map.put("userId",user.getUserId());
+            map.put("nickname",user.getNickname());
+            map.put("avatar",user.getAvatar());
+            map.put("introduction",user.getIntroduction());
+            avatarVOs.add(map);
         }
         return avatarVOs;
     }

@@ -13,9 +13,7 @@ import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
 import com.meirengu.uc.vo.request.RegisterVO;
-import com.meirengu.uc.vo.response.AvatarVO;
 import com.meirengu.utils.ApacheBeanUtils;
-import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.collections.map.HashedMap;
@@ -427,8 +425,8 @@ public class UserController extends BaseController{
             for (String id :userId){
                 listUserIds.add(id);
             }
-            List<AvatarVO> user = userService.listUserAvatar(listUserIds);
-           return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(user,List.class,AvatarVO.class), StatusCode.codeMsgMap.get(StatusCode.OK));
+            List<Map<String,Object>> user = userService.listUserAvatar(listUserIds);
+           return super.setResult(StatusCode.OK, user, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
             logger.error("UserController listUserAvatar throw exception:", e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));

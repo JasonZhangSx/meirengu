@@ -84,17 +84,7 @@ public class ContractController extends BaseController{
                 map.put("levelId",levelId);
                 map.put("userId",userId);
                 map.put("orderId",orderId);
-
-
-                Result result1 = contactService.CreateHHXYContactFile(map);
-
-
-                Result result = contactService.CreateIncomeContactFile(map);
-//                if(result.getCode() == StatusCode.OK){
-//                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-//                }else{
-//                    return contactService.CreateIncomeContactFile(map);
-//                }
+                return contactService.CreateIncomeContactFile(map);
             }
             if(type == 3){
                 Map<String,String> map = new HashMap();
@@ -102,7 +92,17 @@ public class ContractController extends BaseController{
                 map.put("levelId",levelId);
                 map.put("userId",userId);
                 map.put("orderId",orderId);
-                return contactService.CreateEquityContactFile(map);
+
+
+                Result result1 = contactService.CreateHHXYContactFile(map);//合伙协议
+
+
+                Result result = contactService.CreateEquityContactFile(map);//股权协议
+//                if(result.getCode() == StatusCode.OK){
+//                    return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+//                }else{
+//                    return contactService.CreateIncomeContactFile(map);
+//                }
             }
         }catch (Exception e){
             logger.error("ContactController createContactFile throws Exception :{}",e.getMessage());

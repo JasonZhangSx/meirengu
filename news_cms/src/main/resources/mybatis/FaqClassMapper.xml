@@ -117,9 +117,7 @@
         <if test="operateAccount != null and operateAccount != ''">
             AND operate_account=#{operateAccount}
         </if>
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} ${order}
-        </if>
+        order by create_time DESC
     </select>
 
     <select id="getTotalCount" parameterType="Map" resultType="Integer">
@@ -145,6 +143,7 @@
         <if test="operateAccount != null and operateAccount != ''">
             AND operate_account=#{operateAccount}
         </if>
+        order by create_time DESC
     </select>
     <!-- 分页相关结束 -->
 </mapper>
