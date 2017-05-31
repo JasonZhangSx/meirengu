@@ -220,6 +220,9 @@ public class LoginController extends BaseController {
                 int updateResult = checkCodeService.update(code);
                 logger.info("LoginController.register update code result:{}", updateResult);
             }
+//            else{
+//                return super.setResult(StatusCode.CAPTCHA_INVALID, null, StatusCode.codeMsgMap.get(StatusCode.CAPTCHA_INVALID));
+//            }
 
             //验证手机号是否注册
             User user = userService.retrieveByPhone(registerVO.getMobile());
