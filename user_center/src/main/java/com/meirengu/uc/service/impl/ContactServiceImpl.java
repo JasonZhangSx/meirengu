@@ -73,7 +73,7 @@ public class ContactServiceImpl implements ContactService {
         Result result = new Result();
         String url = ConfigUtil.getConfig("URI_GET_CONTACT_INFO");
         String urlAppend = url+"?item_id="+map.get("itemId")+"&level_id="+map.get("levelId");
-        logger.info("ContactServiceImpl.CreateContactFile send get >> uri :{}, params:{}", new Object[]{url});
+        logger.info("ContactServiceImpl.CreateContactFile send get >> uri :{}",urlAppend);
         try {
             hr = HttpUtil.doGet(urlAppend);
         } catch (Exception e) {

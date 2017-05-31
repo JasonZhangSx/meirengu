@@ -28,8 +28,9 @@ public class AddressToRedisInit implements Runnable{
     @Autowired
     private RedisClient redisClient;
 
-//    @PostConstruct  启动开关
     @Override
+//    @PostConstruct
+//    启动开关
     public void run() {
         /**
          * 异步保存国家地址表到Redis
