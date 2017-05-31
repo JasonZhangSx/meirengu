@@ -59,16 +59,17 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Result login(@RequestParam(value = "mobile", required = false) String mobile,
+                        @RequestParam(value = "mobile_inviter", required = false,defaultValue = "") String mobileInviter,
                         @RequestParam(value = "openid", required = false) String openId,
                         @RequestParam(value = "token", required = false) String token,
                         @RequestParam(value = "avatar", required = false) String avatar,//用户头像
                         @RequestParam(value = "check_code", required = false) Integer checkCode,
                         @RequestParam(value = "password", required = false) String password,
                         @RequestParam(value = "from", required = true) Integer from,
-                        @RequestParam(value = "ip", required = true) String ip,
+                        @RequestParam(value = "ip", required = false,defaultValue = "") String ip,
                         @RequestParam(value = "device_id", required = false,defaultValue = "") String deviceId) {
-        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} deviceId:{} time :{}", new
-                Object[]{mobile, checkCode, password, from, ip,deviceId,new Date()});
+        logger.info("LoginController.login params >> mobile:{}, checkCode:{}, password:{}, from:{}, ip:{} deviceId:{} time :{}",
+                new Object[]{mobile, checkCode, password, from, ip,deviceId,new Date()});
         try{
             //token自动登陆
             if(!StringUtil.isEmpty(token)){
@@ -152,7 +153,7 @@ public class LoginController extends BaseController {
                 User user = userService.retrieveByPhone(mobile);
                 if(user==null || StringUtil.isEmpty(user.getUserId())){
                     try {
-                        User usr = userService.createUserInfo(mobile,from,ip,avatar);
+                        User usr = userService.createUserInfo(mobile,from,ip,avatar,mobileInviter);
                         if (usr != null){
                             RegisterInfo registerInfo = loginService.setUserToRedis(usr,deviceId);
                             return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class), StatusCode.codeMsgMap.get(StatusCode.OK));
