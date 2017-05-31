@@ -114,5 +114,10 @@ public class Constant {
     public static final int TYPE_PROFIT = 2;
     /** 3 股权众筹 */
     public static final int TYPE_SHARES = 3;
+    /** 支持列表用户分类 */
+    /** 1 领投人 */
+    public static final int USER_TYPE_LEAD = 1;
+    /** 2 跟投人 */
+    public static final int USER_TYPE_FOLLOW = 2;
 
 }

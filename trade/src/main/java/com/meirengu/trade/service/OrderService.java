@@ -138,4 +138,11 @@ public interface OrderService extends BaseService<Order>{
      */
     List<Map<String, Object>> getSumAmountByLevelIds(String levelIds, String itemIds);
 
+    /**
+     * 支持列表用户详情
+     * @param userId
+     * @return
+     */
+    Map<String, Object> getUserDetails(Integer userId)  throws Exception ;
+
 }
