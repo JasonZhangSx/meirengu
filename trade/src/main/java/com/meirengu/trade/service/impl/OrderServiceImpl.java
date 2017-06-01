@@ -146,7 +146,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (map.get("itemLevelId")!= null) {
                 Integer itemLevelId = Integer.parseInt(map.get("itemLevelId").toString());
                 if (!NumberUtil.isNullOrZero(itemLevelId)) {
-                    //查询项目头图
+                    //查询档位信息
                     String itemLevelInfoUrl = ConfigUtil.getConfig("item.level.url") + "/" + itemLevelId;
                     HttpResult itemLevelInfoResult = HttpUtil.doGet(itemLevelInfoUrl);
                     logger.debug("Request: {} getResponse: {}", itemLevelInfoUrl, itemLevelInfoResult);
@@ -258,7 +258,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             if (map.get("itemId") != null) {
                 Integer itemId = Integer.parseInt(map.get("itemId").toString());
                 if (!NumberUtil.isNullOrZero(itemId)) {
-                    //查询项目头图
+                    //查询项目信息
                     String url = ConfigUtil.getConfig("item.url") + "/" + itemId + "?user_id=0";
                     HttpResult itemResult = HttpUtil.doGet(url);
                     logger.debug("Request: {} getResponse: {}", url, itemResult);
@@ -285,7 +285,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             map.put("contractGenerate", contractGenerate);
             map.put("contractList", null);
             //合同链接
-            String contractUrl = ConfigUtil.getConfig("contract.view.api") + "?order_id=" + orderId + "&type=" + itemType;
+            String contractUrl = ConfigUtil.getConfig("contract.view.url") + "?order_id=" + orderId + "&type=" + itemType;
             HttpResult contractResult = HttpUtil.doGet(contractUrl);
             logger.debug("Request: {} getResponse: {}", contractUrl, contractResult);
             if (contractResult.getStatusCode() == HttpStatus.SC_OK) {
@@ -749,6 +749,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             avatarMap = new HashMap<String, Object>();
                             avatarMap.put("userId", avatarJson.getIntValue("userId"));
                             avatarMap.put("avatar", avatarJson.getString("avatar"));
+                            avatarMap.put("nickname", avatarJson.getString("nickname"));
+                            avatarMap.put("introduction", avatarJson.getString("introduction"));
                             userListTemp.put(userId, avatarMap);
                         }
                         //将获取的信息组装到原data中
@@ -1290,27 +1292,82 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         return list;
     }
 
-//    /**
-//     * 订单失效消息监听
-//     * @return
-//     */
-//    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderLoseEfficacy'")
-//    public void listenOrderLoseEfficacy(RocketmqEvent event) throws Exception {
-//        logger.info("listenOrderLoseEfficacy: {}", event.getMsg());
-//        String orderSn = event.getMsg();
-//        //TODO 进行业务处理
-//        orderLoseEfficacy(orderSn);
-//    }
-//
-//    /**
-//     * 订单失效前提醒消息监听
-//     * @return
-//     */
-//    @EventListener(condition = "#event.topic=='trade' && #event.tag=='orderRemindForPay'")
-//    public void listenOrderRemindForPay(RocketmqEvent event) throws Exception {
-//        logger.info("listenOrderRemindForPay: {}", event.getMsg());
-//        String orderSn = event.getMsg();
-//        orderRemindForPay(orderSn);
-//    }
-
+    /**
+     * 支持列表用户详情
+     * @param userId
+     * @return
+     */
+    public Map<String, Object> getUserDetails(Integer userId) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        List<Integer> orderStateList = new ArrayList<Integer>();
+        orderStateList.add(OrderStateEnum.BOOK.getValue());
+        orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
+        orderStateList.add(OrderStateEnum.UNPAID.getValue());
+        orderStateList.add(OrderStateEnum.PAID.getValue());
+        map.put("orderStateList", orderStateList);
+        List<Map<String, Object>> list = getList(map);
+        if (list!=null && list.size()>0) {
+            String userPhone = list.get(0).get("userPhone").toString();
+            //查询用户信息
+            String userDetailUrl = ConfigUtil.getConfig("user.detail.url") + "?phone=" + userPhone;
+            HttpResult userHttpResult = HttpUtil.doGet(userDetailUrl);
+            logger.debug("Request: {} getResponse: {}", userDetailUrl, userHttpResult);
+            if (userHttpResult.getStatusCode() == HttpStatus.SC_OK) {
+                JSONObject resultJson = JSON.parseObject(userHttpResult.getContent());
+                int code = resultJson.getIntValue("code");
+                if (code == StatusCode.OK) {
+                    JSONObject userDetailJson = resultJson.getJSONObject("data");
+                    String nickname = userDetailJson.getString("nickname");
+                    String avatar = userDetailJson.getString("avatar");
+                    String introduction = userDetailJson.getString("introduction");
+                    map.put("nickname", nickname);
+                    map.put("avatar", avatar);
+                    map.put("introduction", introduction);
+                } else {
+                    logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
+                    throw new OrderException("请求用户服务异常 -- StatusCode: " + code, code);
+                }
+            } else {
+                logger.error("httpcode: {}--httpcontent: {}" , userHttpResult.getStatusCode(), userHttpResult.getContent());
+                throw new OrderException("请求用户服务异常 -- httpCode: " + userHttpResult.getStatusCode(), userHttpResult.getStatusCode());
+            }
+            //查询项目信息
+            Set<Integer> itemIdSet = new HashSet<Integer>();
+            for (Map<String, Object> orderMap : list) {
+                Integer itemId = Integer.parseInt(orderMap.get("itemId").toString());
+                itemIdSet.add(itemId);
+            }
+            String itemIdsStr = itemIdSet.toString();
+            String itemIds = itemIdsStr.substring(itemIdsStr.indexOf("[")+1,itemIdsStr.indexOf("]"));
+            String itemsUrl = ConfigUtil.getConfig("item.url") + "?" + "item_id="+ URLEncoder.encode(itemIds, "UTF-8");;
+            HttpResult itemsHttpResult = HttpUtil.doGet(itemsUrl);
+            logger.debug("Request: {} getResponse: {}", itemsUrl, itemsHttpResult);
+            if (itemsHttpResult.getStatusCode() == HttpStatus.SC_OK) {
+                JSONObject resultJson = JSON.parseObject(itemsHttpResult.getContent());
+                int code = resultJson.getIntValue("code");
+                if (code == StatusCode.OK) {
+                    JSONArray itemsArray = resultJson.getJSONArray("data");
+                    JSONArray returnArray = new JSONArray();
+                    JSONObject returnObject = null;
+                    for (int i=0; i<itemsArray.size(); i++) {
+                        returnObject = new JSONObject();
+                        JSONObject itemJson = itemsArray.getJSONObject(i);
+                        returnObject.put("itemName",itemJson.get("itemName"));
+                        returnObject.put("itemProfile",itemJson.get("itemProfile"));
+                        returnObject.put("headerImage",itemJson.get("headerImage"));
+                        returnArray.add(resultJson);
+                    }
+                    map.put("itemList",returnArray);
+                } else {
+                    logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
+                    throw new OrderException("请求用户服务异常 -- StatusCode: " + code, code);
+                }
+            } else {
+                logger.error("httpcode: {}--httpcontent: {}" , userHttpResult.getStatusCode(), userHttpResult.getContent());
+                throw new OrderException("请求用户服务异常 -- httpCode: " + userHttpResult.getStatusCode(), userHttpResult.getStatusCode());
+            }
+        }
+        return map;
+    }
 }

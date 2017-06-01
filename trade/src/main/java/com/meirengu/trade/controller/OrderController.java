@@ -666,6 +666,26 @@ public class OrderController extends BaseController{
     }
 
     /**
+     * 支持列表用户详情
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/userDetails")
+    public Result userDetails(@RequestParam(value = "user_id", required = false) Integer userId) {
+        if (!NumberUtil.isNullOrZero(userId)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        try {
+            Map<String, Object> userDetailsMap = orderService.getUserDetails(userId);
+            return setResult(StatusCode.OK, userDetailsMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception: {}", e);
+            e.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
      * 手动订单失效消息
      * @return
      */
