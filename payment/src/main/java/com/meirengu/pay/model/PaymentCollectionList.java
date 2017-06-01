@@ -21,14 +21,14 @@ public class PaymentCollectionList implements AnnotationValidable {
     private String itemName;
     @ValidateNotNull(attributeValue = "目标金额")
     private BigDecimal targetAmount;
-    @ValidateNotNull(attributeValue = "完成金额")
+//    @ValidateNotNull(attributeValue = "完成金额")
     private BigDecimal completedAmount;
     //本金
     private BigDecimal principal;
     //利息
     private BigDecimal interest;
 
-    @ValidateNotNull(attributeValue = "收款期数")
+//    @ValidateNotNull(attributeValue = "收款期数")
     private Integer collectionPeriod;
 
     private Integer receivedPeriod;

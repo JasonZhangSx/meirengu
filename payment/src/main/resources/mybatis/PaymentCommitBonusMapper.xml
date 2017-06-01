@@ -29,12 +29,12 @@
     should_time, status, bonus_time, bonus_account
   </sql>
   <select id="select" resultMap="BaseResultMap" parameterType="com.meirengu.pay.vo.PaymentCommitBonusVo" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from payment_commit_bonus
     where 1=1
     <if test="id != null" >
-     AND id = #{id,jdbcType=INTEGER}
+      AND id = #{id,jdbcType=INTEGER}
     </if>
     <if test="userId != null" >
       AND user_id = #{userId,jdbcType=INTEGER}
@@ -66,6 +66,32 @@
     <if test="shouldTimeEnd != null" >
       AND should_time <![CDATA[<=#{shouldTimeEnd,jdbcType=VARCHAR} ]]>
     </if>
+  </select>
+  <select id="sumMoney" resultType="java.math.BigDecimal" >
+    SELECT
+    SUM(total_amount)
+    FROM
+    payment_commit_bonus
+    WHERE
+    item_id = #{itemId,jdbcType=INTEGER}
+    AND period = #{period,jdbcType=INTEGER}
+  </select>
+  <select id="itemSumMoney" resultType="java.math.BigDecimal" >
+    SELECT
+    SUM(income)
+    FROM
+    payment_commit_bonus
+    WHERE
+    item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <select id="selectMoney" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    payment_commit_bonus
+    WHERE
+    item_id = #{itemId,jdbcType=INTEGER}
+    AND period = #{period,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from payment_commit_bonus
@@ -211,7 +237,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
+  <update id="update" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
     update payment_commit_bonus
     <set >
       <if test="userId != null" >
@@ -277,6 +303,14 @@
       status = #{status,jdbcType=INTEGER},
       bonus_time = #{bonusTime,jdbcType=TIMESTAMP},
       bonus_account = #{bonusAccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateIncome" parameterType="com.meirengu.pay.model.PaymentCommitBonus" >
+    update payment_commit_bonus
+    set
+    income = #{income,jdbcType=DECIMAL},
+    total_amount = #{totalAmount,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
