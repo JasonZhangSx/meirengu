@@ -19,7 +19,7 @@ import java.util.List;
  * Created by huoyan403 on 3/22/2017.
  */
 @Component
-public class AddressToRedisInit implements Runnable{
+public class AddressToRedisInit{
 
 
     private static final Logger logger = LoggerFactory.getLogger(AddressToRedisInit.class);
@@ -28,10 +28,9 @@ public class AddressToRedisInit implements Runnable{
     @Autowired
     private RedisClient redisClient;
 
-    @Override
-//    @PostConstruct
 //    启动开关
-    public void run() {
+//    @PostConstruct
+    public void AddressToRedisInit() {
         /**
          * 异步保存国家地址表到Redis
          * key---area_+ areaId
