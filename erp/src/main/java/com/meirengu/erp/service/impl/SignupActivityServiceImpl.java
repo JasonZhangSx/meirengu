@@ -20,11 +20,11 @@ import java.util.Map;
 @Service
 public class SignupActivityServiceImpl implements SignupActivityService{
     @Override
-    public Map<String, Object> query(int page, int perPage, boolean isPage, Integer type, String name, String
+    public Map<String, Object> query(int page, int perPage, boolean isPage, String type, String name, String
             telphone, String city) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("activity.signup.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
-        if(type != null && type != 0){
+        if(!StringUtil.isEmpty(type)){
             url.append("&type=").append(type);
         }
         if(!StringUtil.isEmpty(name)){
