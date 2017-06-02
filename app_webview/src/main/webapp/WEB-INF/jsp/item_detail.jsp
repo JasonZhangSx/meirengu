@@ -44,7 +44,7 @@
                 <div class="pointer" style="left:${itemDetail.appointPercent>1?100:itemDetail.appointPercent*100}%">
                     <em></em>
                     <div class="top">
-                        <fmt:formatNumber type="number" value="${itemDetail.appointPercent*100}" maxFractionDigits="0"/>%
+                        <fmt:formatNumber type="number" value="${itemDetail.appointPercent*100 - 0.5}" pattern="#"/>%
                     </div>
                 </div>
             </c:if>
@@ -52,7 +52,7 @@
                 <div class="pointer" style="left:${itemDetail.completedPercent>1?100:itemDetail.completedPercent*100}%">
                     <em></em>
                     <div class="top">
-                        <fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%
+                        <fmt:formatNumber type="number" value="${itemDetail.completedPercent*100 - 0.5}" pattern="#"/>%
                     </div>
                 </div>
             </c:if>
@@ -60,7 +60,7 @@
                 <div class="pointer" style="left:${itemDetail.completedPercent>1?100:itemDetail.completedPercent*100}%">
                     <em></em>
                     <div class="top">
-                        <fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%
+                        <fmt:formatNumber type="number" value="${itemDetail.completedPercent*100 - 0.5}" pattern="#"/>%
                     </div>
                 </div>
             </c:if>
@@ -81,7 +81,7 @@
                     <span><b><fmt:formatNumber value="${itemDetail.appointAmount/10000}" pattern="#,#00.00"/>万</b>已约金额</span>
                 </c:if>
 
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.appointPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
+                <span><b><fmt:formatNumber type="number" value="${itemDetail.appointPercent*100 - 0.5}" pattern="#"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
             <c:if test="${itemDetail.itemStatus == 11}">
@@ -97,7 +97,7 @@
                 <c:if test="${itemDetail.completedAmount >= 10000}">
                     <span><b><fmt:formatNumber value="${itemDetail.completedAmount/10000}" pattern="#,#00.00"/>万</b>已筹金额</span>
                 </c:if>
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
+                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100 - 0.5}" pattern="#"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
             <c:if test="${itemDetail.itemStatus == 12}">
@@ -113,7 +113,7 @@
                 <c:if test="${itemDetail.completedAmount >= 10000}">
                     <span><b><fmt:formatNumber value="${itemDetail.completedAmount/10000}" pattern="#,#00.00"/>万</b>已筹金额</span>
                 </c:if>
-                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100}" maxFractionDigits="0"/>%</b>完成度</span>
+                <span><b><fmt:formatNumber type="number" value="${itemDetail.completedPercent*100 - 0.5}" pattern="#"/>%</b>完成度</span>
                 <span><b>${itemDetail.leavelDay}</b>剩余时间</span>
             </c:if>
 
