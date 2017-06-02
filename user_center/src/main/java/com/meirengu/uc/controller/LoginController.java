@@ -175,7 +175,7 @@ public class LoginController extends BaseController {
             }
         }catch (Exception e){
             logger.error("LoginController.login throws Exception:{}",e.getMessage());
-            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
         }
     }
 
