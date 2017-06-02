@@ -31,10 +31,11 @@
 
             <div class="text-c">
                 活动类型：　　
-                        <span class="select-box mr-20" style="width:120px" >
+                        <span class="select-box mr-20" style="width:auto;" >
                             <select id="type" class="select">
                                 <option value="1" selected>海伦合伙人报名邀约</option>
                                 <option value="2">美丽代言人</option>
+                                <option value="3">美丽0元购</option>
                             </select>
                         </span>
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
@@ -102,6 +103,10 @@
                             return "海伦合伙人邀约";
                         }else if(data == 2){
                             return "美丽代言人";
+                        }else if(data == 3){
+                            return "美丽0元购";
+                        }else{
+                            return "未知活动";
                         }
                     }
                 },
