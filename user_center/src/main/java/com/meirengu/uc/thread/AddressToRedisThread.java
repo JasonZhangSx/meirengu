@@ -39,14 +39,13 @@ public class AddressToRedisThread implements Runnable{
     @Override
     public void run() {
         /**
-         * 异步保存国家地址表到Redis
+         * 异步保存国家地址表到Redis 每年更新一次redis
          * key---area_+ areaId
          */
         List<Area> list = new ArrayList<Area>();
         list = areasMapper.getAreaData();
         logger.info("set area to redis start :{} ");
         for (Area area:list){
-            redisClient.delkeyObject("area_"+area.getAreaId());
             String value = JacksonUtil.toJSon(area);
             redisClient.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }

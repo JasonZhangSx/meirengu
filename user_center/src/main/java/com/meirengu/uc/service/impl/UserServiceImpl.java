@@ -142,7 +142,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User createUserInfo(String mobile,Integer from, String ip,String avatar) {
+    public User createUserInfo(String mobile,Integer from, String ip,String avatar,String mobileInviter) {
 
         //创建用户
         User user = new User();
@@ -173,6 +173,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         user.setCompany("");
         user.setPosition("");
         user.setIntroduction("");
+        user.setMobileInviter(mobileInviter);
         ObjectUtils.getNotNullObject(user,User.class);
         return this.create(user);
     }
@@ -273,6 +274,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             map.put("userId",user.getUserId());
             map.put("nickname",user.getNickname());
             map.put("avatar",user.getAvatar());
+            map.put("introduction",user.getIntroduction());
             avatarVOs.add(map);
         }
         return avatarVOs;

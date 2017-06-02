@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentCollectionRecordDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentCollectionRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="payment_collection_id" property="paymentCollectionId" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="partner_name" property="partnerName" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="collection_period" property="collectionPeriod" jdbcType="INTEGER" />
+    <result column="collection_type" property="collectionType" jdbcType="INTEGER" />
+    <result column="should_amount" property="shouldAmount" jdbcType="DECIMAL" />
+    <result column="actual_amount" property="actualAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="image_credential" property="imageCredential" jdbcType="VARCHAR" />
+    <result column="collection_time" property="collectionTime" jdbcType="TIMESTAMP" />
+    <result column="collection_account" property="collectionAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, payment_collection_id, partner_id, partner_name, item_id, item_name, collection_period,
+    collection_type, should_amount, actual_amount, status, image_credential, collection_time,
+    collection_account
+  </sql>
+    <select id="select" resultMap="BaseResultMap" parameterType="com.meirengu.pay.model.PaymentCollectionRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from payment_collection_record
+    where 1=1
+    <if test="id != null" >
+      AND id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="paymentCollectionId != null" >
+      AND payment_collection_id = #{paymentCollectionId,jdbcType=INTEGER}
+    </if>
+    <if test="partnerId != null" >
+      AND partner_id = #{partnerId,jdbcType=INTEGER}
+    </if>
+    <if test="partnerName != null" >
+      AND partner_name =  #{partnerName,jdbcType=VARCHAR}
+    </if>
+    <if test="itemId != null" >
+      AND item_id = #{itemId,jdbcType=INTEGER}
+    </if>
+    <if test="itemName != null" >
+      AND item_name = #{itemName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from payment_collection_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into payment_collection_record ( payment_collection_id,partner_id, partner_name,
+    item_id, item_name, collection_period,
+    collection_type, should_amount, actual_amount,
+    status, image_credential, collection_time,
+    collection_account) values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.paymentCollectionId,jdbcType=INTEGER},#{item.partnerId,jdbcType=INTEGER}, #{item.partnerName,jdbcType=VARCHAR},
+      #{item.itemId,jdbcType=INTEGER}, #{item.itemName,jdbcType=VARCHAR}, #{item.collectionPeriod,jdbcType=INTEGER},
+      #{item.collectionType,jdbcType=INTEGER}, #{item.shouldAmount,jdbcType=DECIMAL}, #{item.actualAmount,jdbcType=DECIMAL},
+      #{item.status,jdbcType=INTEGER}, #{item.imageCredential,jdbcType=VARCHAR}, #{item.collectionTime,jdbcType=TIMESTAMP},
+      #{item.collectionAccount,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insert" parameterType="com.meirengu.pay.model.PaymentCollectionRecord" >
+    insert into payment_collection_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="partnerId != null" >
+        partner_id,
+      </if>
+      <if test="partnerName != null" >
+        partner_name,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="collectionPeriod != null" >
+        collection_period,
+      </if>
+      <if test="collectionType != null" >
+        collection_type,
+      </if>
+      <if test="shouldAmount != null" >
+        should_amount,
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="imageCredential != null" >
+        image_credential,
+      </if>
+      <if test="collectionTime != null" >
+        collection_time,
+      </if>
+      <if test="collectionAccount != null" >
+        collection_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="partnerId != null" >
+        #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionPeriod != null" >
+        #{collectionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="collectionType != null" >
+        #{collectionType,jdbcType=INTEGER},
+      </if>
+      <if test="shouldAmount != null" >
+        #{shouldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="imageCredential != null" >
+        #{imageCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionTime != null" >
+        #{collectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionAccount != null" >
+        #{collectionAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.meirengu.pay.model.PaymentCollectionRecord" >
+    update payment_collection_record
+    <set >
+      <if test="partnerId != null" >
+        partner_id = #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        partner_name = #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionPeriod != null" >
+        collection_period = #{collectionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="collectionType != null" >
+        collection_type = #{collectionType,jdbcType=INTEGER},
+      </if>
+      <if test="shouldAmount != null" >
+        should_amount = #{shouldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="imageCredential != null" >
+        image_credential = #{imageCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionTime != null" >
+        collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionAccount != null" >
+        collection_account = #{collectionAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateStatus" parameterType="com.meirengu.pay.model.PaymentCollectionRecord" >
+    update payment_collection_record
+    set
+      should_amount = #{shouldAmount,jdbcType=DECIMAL},
+      actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      image_credential = #{imageCredential,jdbcType=VARCHAR},
+      collection_time = #{collectionTime,jdbcType=TIMESTAMP}
+    where collection_period = #{collectionPeriod,jdbcType=INTEGER}
+    AND item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

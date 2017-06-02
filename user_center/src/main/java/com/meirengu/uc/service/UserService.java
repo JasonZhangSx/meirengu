@@ -39,7 +39,7 @@ public interface UserService extends BaseService<User>{
     int updateUserInfo(User user, String mobile, String ip, Integer from);
 
     /* 用户动态密码登陆创建用户*/
-    User createUserInfo(String mobile,Integer from, String ip,String avatar);
+    User createUserInfo(String mobile,Integer from, String ip,String avatar,String mobileInviter);
 
     /** 用户注册方式 创建用户*/
     User createUserInfo(RegisterVO registerVO);

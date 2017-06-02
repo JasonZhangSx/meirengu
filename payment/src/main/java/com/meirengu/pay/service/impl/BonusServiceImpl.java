@@ -49,7 +49,7 @@ public class BonusServiceImpl extends BaseServiceImpl implements BonusService {
                 String[] str = string.split(",");
                 if (!str[2].equals("1")){
                     BigDecimal bigDecimal = new BigDecimal(str[1]);
-                    BigDecimal money = bigDecimal.multiply(BigDecimal.valueOf(0.01)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
+                    BigDecimal money = bigDecimal.multiply(BigDecimal.valueOf(0.05)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
                     for (int i=0;i<str.length-2;i++){
                         Integer userId = Integer.valueOf(str[i]);
                         PaymentAccount paymentAccount = paymentAccountDao.selectByUserId(userId);

@@ -140,8 +140,8 @@
         var value = $("#selected").val();
         var htmlvalue = $("#selected").find("option:selected").text();
         $("#className").val(htmlvalue);
-        alert(value);
-        alert(htmlvalue);
+//        alert(value);
+//        alert(htmlvalue);
     }
     function tijiao() {
         var class_id = $("#selected").val();

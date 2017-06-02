@@ -19,7 +19,7 @@ import java.util.List;
  * Created by huoyan403 on 3/22/2017.
  */
 @Component
-public class AddressToRedisInit implements Runnable{
+public class AddressToRedisInit{
 
 
     private static final Logger logger = LoggerFactory.getLogger(AddressToRedisInit.class);
@@ -28,9 +28,9 @@ public class AddressToRedisInit implements Runnable{
     @Autowired
     private RedisClient redisClient;
 
-//    @PostConstruct  启动开关
-    @Override
-    public void run() {
+//    启动开关
+//    @PostConstruct
+    public void AddressToRedisInit() {
         /**
          * 异步保存国家地址表到Redis
          * key---area_+ areaId
@@ -40,7 +40,6 @@ public class AddressToRedisInit implements Runnable{
         logger.info("set area form redis start time :{} ",new Date());
         logger.info("set area form redis start :{} ",list);
         for (Area area:list){
-            redisClient.delkeyObject("area_"+area.getAreaId());
             String value = JacksonUtil.toJSon(area);
             redisClient.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
