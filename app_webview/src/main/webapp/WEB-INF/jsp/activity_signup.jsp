@@ -17,7 +17,7 @@
         input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
         h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}
         small{line-height:1}ul,ol{list-style:none}a{text-decoration:none;color:inherit}
-        input:focus{outline:0}a:hover{text-decoration:npne}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
+        input:focus{outline:0}a:hover{text-decoration:none}q:before,q:after{content:''}legend{color:#000}fieldset,img{border:0}
         button,input,select,textarea{font-size:100%}table{border-collapse:collapse;border-spacing:0}
         .clearfix{display:block}.clearfix:after{content:'';display:block;clear:both;overflow:hidden;line-height:0}
         .clear{clear:both;height:0;line-height: 0;overflow: hidden;}
@@ -38,7 +38,8 @@
         .section2{margin-top:1.26rem;}
         .section2 .img1{vertical-align: top;}
         .section2 .wrapper{background-color: #eefdfc;overflow: hidden}
-        .section2 .top{width:100%;margin-top:.66rem;display: flex;color:#fff;justify-content: center;align-items: center;}
+        .section2 .top{width:100%;margin-top:.66rem;color:#fff;text-align: center;}
+        .section2 .top span,.section2 .top em{display: inline-block;vertical-align: middle;}
         .section2 .top span{width:1.2rem;height:1.2rem;background-color: #ff6d5a;border-radius: 50%;text-align: center;box-sizing: border-box;padding:.25rem 0;line-height: .36rem;}
         .section2 .top em{color:#000;font-size: .36rem;margin:0 .1rem;}
         .section2 p{line-height: .78rem;padding: .5rem 0 .75rem;text-align: center;}

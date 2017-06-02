@@ -43,18 +43,22 @@
         .section2{margin-top:.5rem;}
         .section2 .img1{vertical-align: top;}
         .section2 .wrapper{background-color: #eefdfc;overflow: hidden}
-        .section2 .top{width:100%;margin-top:.66rem;display: flex;color:#fff;justify-content: center;align-items: center;}
+        .section2 .top{width:100%;margin-top:.66rem;color:#fff;text-align: center;
+
+        }
+        .section2 .top span,.section2 .top em{vertical-align:middle;;display: inline-block;}
         .section2 .top span{width:1.2rem;height:1.2rem;background-color: #ff6d5a;border-radius: 50%;text-align: center;box-sizing: border-box;padding:.25rem 0;line-height: .36rem;}
         .section2 .top em{color:#000;font-size: .36rem;margin:0 .1rem;}
+
         .section2 p{line-height: .78rem;padding: .5rem 0 .75rem;text-align: center;}
         .section2 p b{color: #fd426a;font-size: .46rem;font-family: 'SimSun'}
 
         .section5{background-color: #e3fbfb;margin-top: .58rem;padding:.65rem .38rem;text-align: center;}
         .section4{padding:.41rem .3rem 0;}
-        .section4 input[type="text"]{width:100%;-webkit-appearance:none;border-radius: .2rem;border:1px #e5e5e5 solid;line-height: .88rem;box-sizing: border-box;font-size: .28rem;padding:0 .35rem;}
+        .section4 input[type="text"]{width:100%;vertical-align:middle;-webkit-appearance:none;border-radius: .2rem;border:1px #e5e5e5 solid;height: .88rem;line-height: 100%;box-sizing: border-box;font-size: .28rem;padding:0 .35rem;}
         .section4>input,.section4>div{margin:.16rem 0;}
         .v_code{position: relative;}
-        .v_code input[type="button"]{-webkit-appearance:none;border:none;background:none;position: absolute;display: block;right:0;top:0;line-height: .88rem;width: 2.18rem;text-align: center;border-left:1px #e5e5e5 solid;color:#82e5f0;}
+        .v_code input[type="button"]{-webkit-appearance:none;border:none;background:none;position: absolute;display: block;right:0;top:0;height: .88rem;width: 2.18rem;text-align: center;border-left:1px #e5e5e5 solid;color:#82e5f0;}
         .err_msg{color:red;margin:.3rem 0 ;text-align: center;}
 
         .section6{text-align: center;}
