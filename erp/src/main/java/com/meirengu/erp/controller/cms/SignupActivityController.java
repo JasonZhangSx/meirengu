@@ -5,6 +5,7 @@ import com.meirengu.erp.service.SignupActivityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
@@ -55,8 +56,9 @@ public class SignupActivityController extends BaseController{
         int start = input.getStart();
         int length = input.getLength();
         int page = start / length + 1;
+        Column type = input.getColumn("type");
         try {
-            Map<String, Object> map = signupActivityService.query(page, length, true, null, "", "", "");
+            Map<String, Object> map = signupActivityService.query(page, length, true, type.getSearch().getValue(), "", "", "");
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {

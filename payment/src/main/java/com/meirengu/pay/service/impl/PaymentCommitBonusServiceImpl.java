@@ -35,7 +35,7 @@ public class PaymentCommitBonusServiceImpl extends BaseServiceImpl  implements P
     private PaymentCommitBonusDao paymentCommitBonusDao;
     @Autowired
     private PaymentAccountDao paymentAccountDao;
-
+    @Transactional
     @Override
     public String bonus(String content) {
         PaymentCommitBonus paymentCommit = new PaymentCommitBonus();

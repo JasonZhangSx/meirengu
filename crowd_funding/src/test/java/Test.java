@@ -29,5 +29,6 @@ public class Test {
 
         System.out.println(DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", dat, 3)));*/
         System.out.println(Math.ceil(3.54343));
+        System.out.println(Math.round(3.1 - 0.5));
     }
 }
