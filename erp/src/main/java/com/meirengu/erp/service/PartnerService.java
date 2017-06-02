@@ -1,6 +1,7 @@
 package com.meirengu.erp.service;
 
 import com.meirengu.erp.model.Partner;
+import com.meirengu.utils.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public interface PartnerService {
 
-    Map<String, Object> query(int page, int perPage, boolean isPage);
+    Object query(int page, int perPage, boolean isPage);
 
     Map<String, Object> detail(int id);
 

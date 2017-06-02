@@ -64,7 +64,7 @@ public class PartnerController extends BaseController{
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = partnerService.query(page, length, true);
+            Map<String, Object> map = (Map)partnerService.query(page, length, true);
             list = (List<Map<String,Object>>) map.get("list");
             List classList = (List) partnerClassService.query(0,0,false);
             totalCount = Integer.parseInt(map.get("totalCount").toString());

@@ -167,7 +167,7 @@ public class ItemController extends BaseController {
         try {
             List itemClassData = itemService.getItemClassList();
             List typeData = typeService.getTypeList();
-            List partnerData = (List) partnerService.query(0,0,false).get("data");
+            List partnerData = (List) partnerService.query(0,0,false);
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
             returnMap.put("itemClass", itemClassData);
             returnMap.put("type", typeData);
@@ -499,7 +499,7 @@ public class ItemController extends BaseController {
         Map<String, Object> returnMap = new HashMap<>();
         List itemClassData = itemService.getItemClassList();
         List typeData = typeService.getTypeList();
-        List partnerData = (List) partnerService.query(0,0, false).get("data");
+        List partnerData = (List) partnerService.query(0,0, false);
         List provinceData = addressService.getProvinceList();
         Map item = itemService.itemDetail(itemId);
         List contentData = itemService.getContentList(itemId, null);

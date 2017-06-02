@@ -31,7 +31,7 @@
 <header class=navbar-wrapper>
     <div class="navbar navbar-fixed-top" style=background-color:#44b549>
         <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs"
-                                           href="/aboutHui.shtml" >Meirengu-ERP</a> <a
+                                           href="/aboutHui.shtml" >美融城管理系统</a> <a
                 class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml" >H-ui</a> <span
                 class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0.0</span> <a aria-hidden=false
                                                                                 class="nav-toggle Hui-iconfont visible-xs"
@@ -73,13 +73,13 @@
                                        onclick=displaynavbar(this)></a></div>
 <!-- wrapper -->
 <section class="Hui-article-box">
-    <iframe src="item/create_list" width="100%" class="content_iframe" height="100%" scrolling="yes"></iframe>
+    <iframe src="blank.html" width="100%" class="content_iframe" height="100%" scrolling="yes"></iframe>
 </section>
 <%--<section class="Hui-article-box">
 	<nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/" class="maincolor">首页</a> <span class="c-999 en">&gt;</span><span class="c-666">我的桌面</span> <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<p class="f-20 text-success">欢迎回来！</p>
+			<p class="f-20 text-success" style="text-align: center;">欢迎登录美融城管理系统！</p>
 			<p>登录次数：18 </p>
 			<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
 

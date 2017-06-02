@@ -64,8 +64,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">链接地址：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" maxlength="30"
-                           placeholder="项目标题最多30字" id="slideshowLink" name="slideshowLink">
+                    <input type="text" class="input-text" value="" placeholder="项目标题最多30字" id="slideshowLink" name="slideshowLink">
                 </div>
             </div>
             <div class="row cl">
