@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,30 +21,22 @@ public class AddressToRedisThread implements Runnable{
     private static final Logger logger = LoggerFactory.getLogger(AddressToRedisThread.class);
     private AreasMapper areasMapper;
     private RedisClient redisClient;
-    public AreasMapper getAreasMapper() {
-        return areasMapper;
-    }
 
     public void setAreasMapper(AreasMapper areasMapper) {
         this.areasMapper = areasMapper;
-    }
-
-    public RedisClient getRedisClient() {
-        return redisClient;
     }
 
     public void setRedisClient(RedisClient redisClient) {
         this.redisClient = redisClient;
     }
 
+    /**
+     * 异步保存国家地址表到Redis
+     * key---area_+ areaId
+     */
     @Override
     public void run() {
-        /**
-         * 异步保存国家地址表到Redis
-         * key---area_+ areaId
-         */
-        List<Area> list = new ArrayList<Area>();
-        list = areasMapper.getAreaData();
+        List<Area> list = areasMapper.getAreaData();
         logger.info("set area to redis start time :{} ",new Date());
         this.setAreaList(list);
         logger.info("set area to redis end time :{} ",new Date());

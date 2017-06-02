@@ -1,11 +1,8 @@
 package com.meirengu.uc.init;
 
-import com.google.common.collect.Maps;
 import com.meirengu.uc.utils.ConfigUtil;
 import org.mapu.themis.ThemisClient;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * 保全客户端初始化，这里只作演示，实际项目中可将ThemisClient类配置成spring bean方式
@@ -23,8 +20,6 @@ public class ThemisClientInit {
 
 	//请填入你的APPSecret
 	public static final String APP_SECRET;
-
-	protected static Map<String,String> props = Maps.newHashMap();
 
 	private static ThemisClient themisClient;
 
