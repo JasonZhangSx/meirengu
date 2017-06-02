@@ -7,7 +7,7 @@
 <head>
     <base href="<%=path%>">
     <meta charset="UTF-8">
-    <title>美丽0元购，即可变女神</title>
+    <title>美丽0元购，即刻变女神</title>
     <meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
     <meta name="format-detection" content="telephone=no" />
     <style media="screen">
@@ -206,10 +206,10 @@
 <script src="js/jquery.min.js"></script>
 <script type="text/javascript">
 
-    var title = '美丽0元购，即可变女神',
-        desc = '即可变女神，美丽到身边，美版超声刀、自体活细胞填充、线雕、乌金翘睫双眼皮，只要0元。',
-        link = 'http://test.api.meirenguvip.com/webview/activity/signup/ml0shop',
-        imgUrl = 'http://test.api.meirenguvip.com/webview/img/share_0_shop.png';
+    var title = '美丽0元购，即刻变女神',
+        desc = '即刻变女神，美丽到身边，美版超声刀、自体活细胞填充、线雕、乌金翘睫双眼皮，只要0元。',
+        link = 'https://api.meirenguvip.com/webview/activity/signup/ml0shop',
+        imgUrl = 'https://api.meirenguvip.com/webview/img/share_0_shop.png';
     function emp_test(a){return 0==a.replace(/^\s+|\s+$/g,"").length?!1:!0};
 
     $('.share').click(function(){
