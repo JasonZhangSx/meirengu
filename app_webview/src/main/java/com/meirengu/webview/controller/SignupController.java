@@ -33,7 +33,12 @@ public class SignupController extends BaseController{
 
     @RequestMapping
     public String signup(){
-        return "activity_signup";
+        return "helen_activity/activity_signup";
+    }
+
+    @RequestMapping("ml0shop")
+    public String ml0shop(){
+        return "helen_activity/ml_0_shop";
     }
 
     @RequestMapping(value = "submit", method = RequestMethod.POST)
