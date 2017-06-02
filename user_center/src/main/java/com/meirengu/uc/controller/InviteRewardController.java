@@ -47,14 +47,11 @@ public class InviteRewardController extends BaseController{
     public Result notify(@RequestParam(value="file_name", required = true) String fileName,
                          @RequestParam(value="file_path", required = true) String filePath) {
         try {
-
-//            List<Map<String,String>> investInfo =  ObjectToFile.readObject(fileName);
-
+            List<String[]> list = new ArrayList<>();
             OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
             String order = IOUtils.toString(fileUtils.download(filePath,fileName),"UTF-8");
             List<Map<String,String>> investInfo = JacksonUtil.readValue(order,List.class);
 
-            List<String[]> list = new ArrayList<>();
             // 根据用户id 获取邀请人信息 判断是否为空
             if(investInfo.size()!=0){
                 for (Map map:investInfo){
@@ -66,12 +63,11 @@ public class InviteRewardController extends BaseController{
                     inviter.setInvitedUserId(Integer.parseInt(userId+""));
                     inviter = inviterService.detail(inviter);
                     if(inviter!=null && !StringUtil.isEmpty(inviter.getId())){
-                    // 根据注册时间  投资时间 校验是否有效期
+                    // 根据注册时间  当前时间 校验是否有效期
                         Date registerTime = inviter.getRegisterTime();
                         try {
                             int i  = DateAndTime.dateDiff("dd",DateAndTime.convertDateToString(registerTime,"yyyy-MM-dd HH:mm:ss"),
                                     DateAndTime.convertDateToString(new Date(),"yyyy-MM-dd HH:mm:ss"));
-
                             // 封装入结构 写入文件
                             if(i<=34){
                                 String[] arr = new String[3];
@@ -122,11 +118,7 @@ public class InviteRewardController extends BaseController{
         }
     }
 
-
-
-    /** rocketMQ接收消息
-     * 修改邀请人投资时间
-     */
+    /** rocketMQ接收消息  */
     @EventListener(condition = "#event.topic=='user' && #event.tag=='inviteRewardNotify'")
     public void listeneditInviter(RocketmqEvent event) throws Exception {
         logger.info("从rocketMQ 接收批处理分红消息 listeneditInviter event :{} ",event.getMsg());
@@ -139,8 +131,7 @@ public class InviteRewardController extends BaseController{
 
         Result result = this.notify(fileName,filePath);
         if(result.getCode() != StatusCode.OK){
-            throw new Exception("邀请分红批处理 处理失败");
+            throw new Exception("邀请分红批处理 处理失败! ");
         }
-
     }
 }

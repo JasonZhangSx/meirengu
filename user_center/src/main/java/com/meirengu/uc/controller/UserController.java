@@ -33,6 +33,21 @@ import java.util.*;
  *
  * @author Marvin
  * @create 2017-01-10 下午7:10
+ * 邀请人分页查询 erp使用
+ * 获取用户详细信息
+ * 获取用户信息 分页
+ * 用户基本信息修改
+ * 登陆密码找回
+ * 修改登陆密码
+ * 用户使用动态密码登陆 设置密码接口
+ * 获取头像 订单系统获取头像
+ * 获取用户权限
+ * 修改交易密码
+ * 交易密码找回
+ * 绑定第三方
+ * 解除绑定
+ * 验证用户是否存在
+ * 用户权限信息修改
  */
 @RestController
 @RequestMapping("user")
@@ -99,7 +114,6 @@ public class UserController extends BaseController{
 //                //取累计投资额
 //                userService.getUserTotalInvestMoney(list.get(0));
 //            }
-
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
@@ -151,16 +165,6 @@ public class UserController extends BaseController{
     }
     /**
      * 获取用户信息
-     * @param pageNum
-     * @param pageSize
-     * @param investConditions
-     * @param isAuth
-     * @param phone
-     * @param realname
-     * @param idcard
-     * @param sortBy
-     * @param order
-     * @return
      */
     @RequestMapping(value = "list",method = {RequestMethod.POST})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
@@ -606,10 +610,6 @@ public class UserController extends BaseController{
 
     /**
      * 解除绑定
-     * @param token
-     * @param userId
-     * @param type
-     * @return
      */
     @RequestMapping(value = "thirdParty/unbund", method = RequestMethod.POST)
     public Result unbund(@RequestParam(value = "token", required = true) String token,
@@ -703,8 +703,7 @@ public class UserController extends BaseController{
         }
     }
 
-
-
+    //=======================================================方法提取分割线===============
     /**
      * 校验密码方法提取
      * @param password
