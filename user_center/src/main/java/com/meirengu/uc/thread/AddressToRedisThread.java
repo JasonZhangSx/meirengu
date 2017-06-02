@@ -3,12 +3,14 @@ package com.meirengu.uc.thread;
 import com.meirengu.common.RedisClient;
 import com.meirengu.uc.dao.AreasMapper;
 import com.meirengu.uc.model.Area;
-import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,16 +41,25 @@ public class AddressToRedisThread implements Runnable{
     @Override
     public void run() {
         /**
-         * 异步保存国家地址表到Redis 每年更新一次redis
+         * 异步保存国家地址表到Redis
          * key---area_+ areaId
          */
         List<Area> list = new ArrayList<Area>();
         list = areasMapper.getAreaData();
-        logger.info("set area to redis start :{} ");
+        logger.info("set area to redis start time :{} ",new Date());
+        this.setAreaList(list);
+        logger.info("set area to redis end time :{} ",new Date());
+    }
+
+    public void setAreaList(List<Area> list) {
+
+        ShardedJedis jedis = redisClient.getShardedJedisPool().getResource();
+        ShardedJedisPipeline pipeline = jedis.pipelined();
         for (Area area:list){
             String value = JacksonUtil.toJSon(area);
-            redisClient.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
+            pipeline.set("area_"+area.getAreaId(),value);
         }
-        logger.info("set area to redis end  :{}");
+        pipeline.sync();
+        jedis.close();
     }
 }

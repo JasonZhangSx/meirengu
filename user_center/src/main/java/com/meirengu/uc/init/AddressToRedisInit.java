@@ -3,13 +3,15 @@ package com.meirengu.uc.init;
 import com.meirengu.common.RedisClient;
 import com.meirengu.uc.dao.AreasMapper;
 import com.meirengu.uc.model.Area;
-import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +31,7 @@ public class AddressToRedisInit{
     private RedisClient redisClient;
 
 //    启动开关
-//    @PostConstruct
+    @PostConstruct
     public void AddressToRedisInit() {
         /**
          * 异步保存国家地址表到Redis
@@ -37,14 +39,20 @@ public class AddressToRedisInit{
          */
         List<Area> list = new ArrayList<Area>();
         list = areasMapper.getAreaData();
-        logger.info("set area form redis start time :{} ",new Date());
-        logger.info("set area form redis start :{} ",list);
+        logger.info("set area to redis start time :{} ",new Date());
+        this.setAreaList(list);
+        logger.info("set area to redis end time :{} ",new Date());
+    }
+
+    public void setAreaList(List<Area> list) {
+
+        ShardedJedis jedis = redisClient.getShardedJedisPool().getResource();
+        ShardedJedisPipeline pipeline = jedis.pipelined();
         for (Area area:list){
-            redisClient.delkeyObject("area_"+area.getAreaId());
             String value = JacksonUtil.toJSon(area);
-            redisClient.setObject("area_"+area.getAreaId(),value,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
+            pipeline.set("area_"+area.getAreaId(),value);
         }
-        logger.info("set area form redis end  :{}",list);
-        logger.info("set area form redis end time :{} ",new Date());
+        pipeline.sync();
+        jedis.close();
     }
 }
