@@ -1,6 +1,9 @@
 package com.meirengu.cf.controller;
 
+import com.meirengu.cf.model.ItemExtention;
 import com.meirengu.cf.model.LeadInvestor;
+import com.meirengu.cf.service.ItemExtentionService;
+import com.meirengu.cf.service.ItemService;
 import com.meirengu.cf.service.LeadInvestorService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -31,6 +34,10 @@ public class LeadInvestorController extends BaseController{
 
     @Autowired
     LeadInvestorService leadInvestorService;
+    @Autowired
+    ItemExtentionService itemExtentionService;
+    @Autowired
+    ItemService itemService;
 
     /**
      * 获取请求列表
@@ -184,6 +191,40 @@ public class LeadInvestorController extends BaseController{
             }
         }catch (Exception e){
             LOGGER.error(">> delete lead investor detail throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "home/{id}", method = RequestMethod.GET)
+    public Result home(@PathVariable(value = "id", required = false)Integer id){
+        try {
+            LeadInvestor p = leadInvestorService.detail(id);
+            if(p == null){
+                LOGGER.info("LeadInvestorController.home get detail is null, id is {}", id);
+                return super.setResult(StatusCode.RECORD_NOT_EXISTED, "", StatusCode.codeMsgMap.get(StatusCode.RECORD_NOT_EXISTED));
+            }
+
+            Map<String, Object> returnMap = new HashMap<String, Object>();
+
+            returnMap.put("id", p.getId());
+            returnMap.put("investorImage", p.getInvestorImage());
+            returnMap.put("investorName", p.getInvestorName());
+            returnMap.put("investorIntroduction", p.getInvestorIntroduction());
+
+            String itemIds = itemExtentionService.getIdsByInvestorId(p.getId());
+            if(!StringUtil.isEmpty(itemIds)){
+                Map<String, Object> itemParams = new HashMap<>();
+                itemParams.put("itemId", itemIds);
+                List<Map<String, Object>> itemList = itemService.getList(itemParams);
+                returnMap.put("itemList", itemList);
+            }else {
+                returnMap.put("itemList", null);
+            }
+
+            return super.setResult(StatusCode.OK, returnMap, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            LOGGER.error(">> get lead investor throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
