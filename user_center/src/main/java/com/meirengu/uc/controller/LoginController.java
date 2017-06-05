@@ -176,6 +176,8 @@ public class LoginController extends BaseController {
         }catch (Exception e){
             logger.error("LoginController.login throws Exception:{}",e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+//            return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            //1.2.0 抛异常 促使用户更新token  1.2.0以后改回来
         }
     }
 
