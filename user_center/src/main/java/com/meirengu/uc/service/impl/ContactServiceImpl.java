@@ -377,6 +377,8 @@ public class ContactServiceImpl implements ContactService {
         return  downUrl;
     }
 
+
+
     public Result setResult(int code, Object data, String msg){
         Result result = new Result();
         result.setCode(code);
