@@ -181,19 +181,32 @@
 
     function emp_test(a){return 0==a.replace(/^\s+|\s+$/g,"").length?!1:!0};
 
+    var title='美丽邀约：加入成为海伦合伙人';
+    var desc='股权权分红+专享折扣+现金返利+医美项目赠送。享有股权分红，预期年化高达15%。专享折扣低至6折！更有现金返现10%，尊享推荐奖励！以及最高价值143700元医美项目免费赠送。';
+    var link='https://api.meirenguvip.com/webview/activity/signup';
+    var imgUrl='https://api.meirenguvip.com/webview/img/signup_share.jpg';
+
+    var flag = "";
+
+    function showInfoFromAppWithFlag(msg){
+
+        console.log("来自App的消息: "+msg);
+        flag = msg;
+        if(flag == 2){
+            //1 分享  2 不分享
+            window.AndroidWebView.shareAppTag(1, link, title, desc, imgUrl);
+            return;
+        }else if(flag == 1){
+            window.webkit.messageHandlers.shareAppTag.postMessage({"tag":1, "url":link, "title":title, "description":desc, "thumbUrl":imgUrl});
+            return;
+        }
+    }
+
     $('.bot').on('click','.submit',function(){
         $('.bot .err_msg').hide();
         var name = $('.bot input[name="name"]').val(),
                 tel = $('.bot input[name="tel"]').val(),
                 city = $('.bot input[name="city"]').val();
-//        if (!emp_test(name)) {
-//            $('.bot .err_msg').show().text('* 姓名不能为空')
-//        }else if(!emp_test(tel)){
-//            $('.bot .err_msg').show().text('* 手机号码不能为空')
-//        }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){
-//            $('.bot .err_msg').show().text('* 手机号码格式不正确')
-//        }else if(!emp_test(city)){
-//            $('.bot .err_msg').show().text('* 城市不能为空')
         if(!emp_test(tel)){
             $('.bot .err_msg').show().text('* 手机号码不能为空')
         }else if(!(/^1(3|4|5|7|8)\d{9}$/.test(tel))){

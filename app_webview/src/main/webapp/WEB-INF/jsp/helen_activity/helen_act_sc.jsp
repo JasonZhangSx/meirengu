@@ -194,6 +194,11 @@
     var flag = '';
     var loginFlag = '';
 
+    var title='美丽邀约：加入成为海伦代言人';
+    var desc='股权权分红+专享折扣+现金返利+医美项目赠送。享有股权分红，预期年化高达15%。专享折扣低至6折！更有现金返现10%，尊享推荐奖励！以及最高价值143700元医美项目免费赠送。';
+    var link='https://api.meirenguvip.com/webview/helen';
+    var imgUrl='https://api.meirenguvip.com/webview/img/helen_share.jpg';
+
     function showInfoFromAppWithMsg(mobile){
         //alert("来自App的消息: "+mobile);
         telPhone = mobile;
@@ -211,6 +216,14 @@
     function showInfoFromAppWithFlag(msg){
         console.log("来自App的消息: "+msg);
         flag = msg;
+        if(flag == 2){
+            //1 分享  2 不分享
+            window.AndroidWebView.shareAppTag(1, link, title, desc, imgUrl);
+            return;
+        }else if(flag == 1){
+            window.webkit.messageHandlers.shareAppTag.postMessage({"tag":1, "url":link, "title":title, "description":desc, "thumbUrl":imgUrl});
+            return;
+        }
     }
 
     //app登录成功通知   1 成功  2 失败
