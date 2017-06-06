@@ -220,7 +220,7 @@ public class ContactServiceImpl implements ContactService {
                     map.put("remarks","备注信息");//备注信息
 
                     //保全合同、更新到oss、 落地数据
-                    return this.createContract(response,map);
+                    return this.rescueContract(response,map);
 
                 }catch (Exception e){
                     logger.error("ContactServiceImpl.CreateContactFile failed :{}",e.getMessage());
@@ -377,6 +377,8 @@ public class ContactServiceImpl implements ContactService {
         return  downUrl;
     }
 
+
+
     public Result setResult(int code, Object data, String msg){
         Result result = new Result();
         result.setCode(code);
@@ -388,11 +390,9 @@ public class ContactServiceImpl implements ContactService {
         return result;
     }
 
-    public Result createContract(ContactHtmlCreateFileResponse response,Map<String,String> map) throws Exception{
-
+    //盖章成功后 创建保全
+    public Result rescueContract(ContactHtmlCreateFileResponse response,Map<String,String> map) throws Exception{
         if(response.isSuccess()&&response.getByteArrayFile()!=null){
-
-            //盖章成功后 创建保全
             ContractFilePreservationCreateRequest builder = new ContractFilePreservationCreateRequest();
             builder.setFile(new UploadFile(map.get("fileName"),response.getByteArrayFile()));
             builder.setPreservationTitle(map.get("title"));//保全标题
@@ -406,8 +406,18 @@ public class ContactServiceImpl implements ContactService {
             builder.setIsNeedSign(true);//是否启用保全签章
 
             PreservationCreateResponse preservationCreateResponse = themisClientInit.getClient().createPreservation(builder);
+            return this.saveContract(preservationCreateResponse,map);
+        }else{
+            logger.info("Upload html stamp failed!");
+            logger.info("Main Error Code:{}"+response.getError().getCode());
+            logger.info("Main Error Message:{}"+response.getError().getMessage());
+            logger.info("Main Error Solution:{}"+response.getError().getSolution());
+            return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
+        }
+    }
 
-            //根据保全id 下载最终版合同
+    //根据保全id 下载最终版合同
+    public Result saveContract(PreservationCreateResponse preservationCreateResponse,Map<String,String> map) throws Exception{
             if(preservationCreateResponse.isSuccess()&&preservationCreateResponse.getPreservationId()!=null) {
                 logger.info("Create a preservation success message:{}",preservationCreateResponse.getPreservationId()+" time "+preservationCreateResponse.getPreservationTime());
                 ContractFileDownloadUrlRequest contractFileDownloadUrlRequest = new ContractFileDownloadUrlRequest();
@@ -434,28 +444,7 @@ public class ContactServiceImpl implements ContactService {
                     OSSFileUtils fileUpload = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
                     fileUpload.upload(inputStream,map.get("fileName"),contractFolderName);
 
-                    //更新用户合同表
-                    Contract contract = new Contract();
-                    contract.setUserId(Integer.parseInt(map.get("userId")));
-                    contract.setItemId(Integer.parseInt(map.get("itemId")));
-                    contract.setLevelId(Integer.parseInt(map.get("levelId")));
-                    contract.setOrderId(Integer.parseInt(map.get("orderId")));
-                    contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
-                    contract.setContractNo(map.get("contractNo"));
-                    contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
-                    contract.setContractFilepath(contractFolderName+"/"+map.get("fileName"));
-
-                    int count = contractDao.insert(contract);
-                    if(count != 1){ //重试一次
-                        Thread.sleep(500L);
-                        count = contractDao.insert(contract);
-                    }
-                    if(count != 1){
-                        // TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
-                        return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
-                    }else{
-                        return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-                    }
+                    return this.floorData(preservationCreateResponse,map,contractFolderName);
                 }else{
                     logger.info("get download link failed");
                     logger.info("Main Error Code:{}"+contractFileDownloadUrlResponse.getError().getCode());
@@ -470,13 +459,31 @@ public class ContactServiceImpl implements ContactService {
                 logger.info("Main Error Solution:{}"+preservationCreateResponse.getError().getSolution());
                 return this.setResult(StatusCode.UPLOAD_PDF_FIX_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_PDF_FIX_FAILED));
             }
+    }
 
+    //落地数据
+    public Result floorData(PreservationCreateResponse preservationCreateResponse,Map<String,String> map,String contractFolderName) throws Exception{
+        //更新用户合同表
+        Contract contract = new Contract();
+        contract.setUserId(Integer.parseInt(map.get("userId")));
+        contract.setItemId(Integer.parseInt(map.get("itemId")));
+        contract.setLevelId(Integer.parseInt(map.get("levelId")));
+        contract.setOrderId(Integer.parseInt(map.get("orderId")));
+        contract.setPreservationId(preservationCreateResponse.getPreservationId().intValue());
+        contract.setContractNo(map.get("contractNo"));
+        contract.setPreservationTime(new Date(preservationCreateResponse.getPreservationTime()));
+        contract.setContractFilepath(contractFolderName+"/"+map.get("fileName"));
+
+        int count = contractDao.insert(contract);
+        if(count != 1){ //重试一次
+            Thread.sleep(500L);
+            count = contractDao.insert(contract);
+        }
+        if(count != 1){
+            // TODO: 4/13/2017  拿着保全信息通知管理员 添加失败 并记录保全信息
+            return this.setResult(StatusCode.FAILED_UPDATE_USER_CONTRACT, null, StatusCode.codeMsgMap.get(StatusCode.FAILED_UPDATE_USER_CONTRACT));
         }else{
-            logger.info("Upload html stamp failed!");
-            logger.info("Main Error Code:{}"+response.getError().getCode());
-            logger.info("Main Error Message:{}"+response.getError().getMessage());
-            logger.info("Main Error Solution:{}"+response.getError().getSolution());
-            return this.setResult(StatusCode.UPLOAD_HTML_STAMP_FAILED, null, StatusCode.codeMsgMap.get(StatusCode.UPLOAD_HTML_STAMP_FAILED));
+            return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 }

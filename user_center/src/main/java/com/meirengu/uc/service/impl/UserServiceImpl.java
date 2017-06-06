@@ -370,32 +370,33 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void getBankName(Map map) {
         map.put("bankName","");//防止为空客户端崩溃
+        if(!map.get("bankCode").equals("0")){//过滤数据库默认值
+            try {
+                HttpResult hr = null;
+                String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
+                String urlAppend = url+"?bankCode="+ map.get("bankCode");
+                hr = HttpUtil.doGet(urlAppend);
+                logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
+                if(hr.getStatusCode()== StatusCode.OK){
+                    Map<String,Object> account = new HashedMap();
+                    account = JacksonUtil.readValue(hr.getContent(),Map.class);
+                    if(account!=null){
+                        Map mapData = (Map)account.get("data");
+                        if(mapData!=null){
+                            ArrayList channelBank = (ArrayList) mapData.get("channelBank");
+                            if(channelBank.size()!=0){
+                                Map channel = (Map)channelBank.get(0);
+                                map.put("bankName",channel.get("bankName"));
+                            }
 
-        try {
-            HttpResult hr = null;
-            String url = ConfigUtil.getConfig("URI_GET_CHANNELBANK");
-            String urlAppend = url+"?bankCode="+ map.get("bankCode");
-            hr = HttpUtil.doGet(urlAppend);
-            logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
-            if(hr.getStatusCode()== StatusCode.OK){
-                Map<String,Object> account = new HashedMap();
-                account = JacksonUtil.readValue(hr.getContent(),Map.class);
-                if(account!=null){
-                    Map mapData = (Map)account.get("data");
-                    if(mapData!=null){
-                        ArrayList channelBank = (ArrayList) mapData.get("channelBank");
-                        if(channelBank.size()!=0){
-                            Map channel = (Map)channelBank.get(0);
-                            map.put("bankName",channel.get("bankName"));
                         }
-
                     }
+                }else{
+                    logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
                 }
-            }else{
-                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+            } catch (Exception e) {
+                logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
             }
-        } catch (Exception e) {
-            logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
         }
     }
 

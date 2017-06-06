@@ -195,6 +195,7 @@ public class InviterController extends BaseController{
         inviter.setInvitedUserId(invitedUserId);
         inviter.setInvitedUserPhone(invitedUserPhone);
         inviter.setInvestTime(investTime);
-        inviterService.update(inviter);
+        int result = inviterService.update(inviter);
+        logger.info("ContactController listeneditInviter result :{} ",result);
     }
 }

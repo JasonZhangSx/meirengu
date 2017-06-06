@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.meirengu.uc.dao.AreasMapper" >
+<mapper namespace="com.meirengu.uc.dao.AreasDao" >
   <!-- 根据city的id来查询所有的区、县 -->
     <resultMap id="BaseResultMap" type="com.meirengu.uc.model.Area" >
         <id column="area_id" property="areaId" jdbcType="INTEGER" />

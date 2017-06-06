@@ -1,7 +1,7 @@
 package com.meirengu.uc.service.impl;
 
 import com.meirengu.service.impl.BaseServiceImpl;
-import com.meirengu.uc.dao.AreasMapper;
+import com.meirengu.uc.dao.AreasDao;
 import com.meirengu.uc.dao.UserAddressDao;
 import com.meirengu.uc.model.Area;
 import com.meirengu.uc.model.UserAddress;
@@ -24,7 +24,7 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
     @Autowired
     private UserAddressDao userAddressDao;
     @Autowired
-    AreasMapper areasMapper;
+    AreasDao areasDao;
     @Override
     @Transactional
     public int insert(UserAddress userAddress) {
@@ -78,19 +78,19 @@ public class UserAddressServiceImpl  extends BaseServiceImpl<UserAddress> implem
 
         if (addressList != null && addressList.size() > 0) {
             for(Map<String, Object> addressMap:addressList){
-                Area area = areasMapper.getArea((int)addressMap.get("areaId"));
+                Area area = areasDao.getArea((int)addressMap.get("areaId"));
                 if(area!=null && area.getAreaDeep() == 3){
                     addressMap.put("area", area.getAreaName());
 
-                    Area city = areasMapper.getArea(area.getAreaParentId());
+                    Area city = areasDao.getArea(area.getAreaParentId());
                     addressMap.put("city", city.getAreaName());
 
-                    Area province = areasMapper.getArea(city.getAreaParentId());
+                    Area province = areasDao.getArea(city.getAreaParentId());
                     addressMap.put("province", province.getAreaName());
                 }else if(area!=null && area.getAreaDeep()== 2){
                     addressMap.put("city", area.getAreaName());
 
-                    Area province = areasMapper.getArea(area.getAreaParentId());
+                    Area province = areasDao.getArea(area.getAreaParentId());
                     addressMap.put("province", province.getAreaName());
                 }else if(area!=null && area.getAreaDeep()==1){
                     addressMap.put("province", area.getAreaName());

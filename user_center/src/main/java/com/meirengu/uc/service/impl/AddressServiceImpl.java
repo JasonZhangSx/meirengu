@@ -1,7 +1,7 @@
 package com.meirengu.uc.service.impl;
 
 import com.meirengu.common.RedisClient;
-import com.meirengu.uc.dao.AreasMapper;
+import com.meirengu.uc.dao.AreasDao;
 import com.meirengu.uc.dao.UserDao;
 import com.meirengu.uc.model.Area;
 import com.meirengu.uc.vo.request.AddressVO;
@@ -20,7 +20,7 @@ import java.util.List;
 public class AddressServiceImpl implements AddressService {
 
     @Autowired
-    AreasMapper areasMapper;
+    AreasDao areasDao;
     @Autowired
     UserDao userDao;
     @Autowired
@@ -33,7 +33,7 @@ public class AddressServiceImpl implements AddressService {
         if(redisClient.existsObject("provinceList")){
             provinceList = (List<Area>)redisClient.getList("provinceList");
         }else{
-            provinceList = areasMapper.showProvinceList();
+            provinceList = areasDao.showProvinceList();
             redisClient.setList("provinceList",provinceList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
         return provinceList;
@@ -46,7 +46,7 @@ public class AddressServiceImpl implements AddressService {
         if(redisClient.existsObject("cityList_"+pid)){
             cityList = (List<Area>)redisClient.getList("cityList_"+pid);
         }else{
-            cityList = areasMapper.showCityListByPid(pid);
+            cityList = areasDao.showCityListByPid(pid);
             redisClient.setList("cityList_"+pid,cityList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
         return cityList;
@@ -60,7 +60,7 @@ public class AddressServiceImpl implements AddressService {
         if(redisClient.existsObject("areaList_"+cid)){
             areaList = (List<Area>)redisClient.getList("areaList_"+cid);
         }else{
-            areaList = areasMapper.showAreaListBycid(cid);
+            areaList = areasDao.showAreaListBycid(cid);
             redisClient.setList("areaList_"+cid,areaList,Integer.parseInt(ConfigUtil.getConfig("ADDRESS_TIME_REDIS")));
         }
         return areaList;
@@ -99,23 +99,23 @@ public class AddressServiceImpl implements AddressService {
         }else{
             //异步存储redis
             AddressToRedisThread addressToRedisThread = new AddressToRedisThread();
-            addressToRedisThread.setAreasMapper(areasMapper);
+            addressToRedisThread.setAreasDao(areasDao);
             addressToRedisThread.setRedisClient(redisClient);
             addressToRedisThread.run();
 
             if(!StringUtil.isEmpty(area_id)){
                 AddressVO addressVO = new AddressVO();
 
-                Area area = areasMapper.getArea(area_id);
+                Area area = areasDao.getArea(area_id);
                 if(area!=null && area.getAreaDeep() == 3){
                     addressVO.setAreaId(area_id);
                     addressVO.setArea(area.getAreaName());
 
-                    Area city = areasMapper.getArea(area.getAreaParentId());
+                    Area city = areasDao.getArea(area.getAreaParentId());
                     addressVO.setCityId(city.getAreaId());
                     addressVO.setCity(city.getAreaName());
 
-                    Area province = areasMapper.getArea(city.getAreaParentId());
+                    Area province = areasDao.getArea(city.getAreaParentId());
                     addressVO.setProvinceId(city.getAreaParentId());
                     addressVO.setProvince(province.getAreaName());
                     return addressVO;
@@ -124,7 +124,7 @@ public class AddressServiceImpl implements AddressService {
                     addressVO.setCityId(area_id);
                     addressVO.setCity(area.getAreaName());
 
-                    Area province = areasMapper.getArea(area.getAreaParentId());
+                    Area province = areasDao.getArea(area.getAreaParentId());
                     addressVO.setProvinceId(area.getAreaParentId());
                     addressVO.setProvince(province.getAreaName());
                     return addressVO;
