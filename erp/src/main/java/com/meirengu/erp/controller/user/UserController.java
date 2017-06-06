@@ -75,14 +75,20 @@ public class UserController extends BaseController{
             paramsMap.put("per_page", request.getParameter("length"));
 
             map = (Map<String, Object>) super.httpPost(url, paramsMap);
-            userList = (List<Map<String,Object>>) map.get("list");
-            //后台处理数据 保存编号 没有编号的不需要这一步
-            for (int i = 0;i<userList.size();i++){
-                userList.get(i).put("id",i+1);
+            if(map == null){
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(0);//显示总记录
+                view.setiTotalRecords(0);//数据库总记录
+            }else{
+                userList = (List<Map<String,Object>>) map.get("list");
+                //后台处理数据 保存编号 没有编号的不需要这一步
+                for (int i = 0;i<userList.size();i++){
+                    userList.get(i).put("id",i+1);
+                }
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+                view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
             }
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
         }else{
             //保存给datatabls 分页数据
             view.setiTotalDisplayRecords(0);//显示总记录
