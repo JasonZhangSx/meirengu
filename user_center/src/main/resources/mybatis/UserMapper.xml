@@ -347,7 +347,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} ${order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 
@@ -383,7 +383,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} ${order}
+            order by ${sortBy} ${order}
         </if>
     </select>
     <!-- 分页相关结束 -->
@@ -411,7 +411,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} ${order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 
@@ -437,7 +437,7 @@
             </if>
         </where>
         <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} ${order}
+            order by ${sortBy} ${order}
         </if>
     </select>
 

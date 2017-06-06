@@ -113,6 +113,7 @@ public class UserController extends BaseController{
                 userService.getUserRestMoney(map);
                 //取累计投资额
                 userService.getUserTotalInvestMoney(map);
+                Thread.sleep(50L);
             }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
