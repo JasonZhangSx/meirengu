@@ -672,7 +672,7 @@ public class OrderController extends BaseController{
      */
     @RequestMapping(value = "/userDetails")
     public Result userDetails(@RequestParam(value = "user_id", required = false) Integer userId) {
-        if (!NumberUtil.isNullOrZero(userId)) {
+        if (NumberUtil.isNullOrZero(userId)) {
             return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
         }
         try {
