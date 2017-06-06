@@ -130,10 +130,9 @@ public class InviteRewardController extends BaseController{
         String filePath = String.valueOf(map.get("file_path"));
 
         Result result = this.notify(fileName,filePath);
+        logger.info("rocketMQ 接收批处理分红消息 inviteRewardNotify result :{} ",result);
         if(result.getCode() != StatusCode.OK){
             throw new Exception("邀请分红批处理 处理失败! ");
-        }else{
-            logger.info("rocketMQ 接收批处理分红消息 inviteRewardNotify result :{} ",result);
         }
     }
 }
