@@ -3,6 +3,8 @@ package com.meirengu.cf.controller;
 import com.meirengu.cf.common.Constants;
 import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemCooperation;
+import com.meirengu.cf.model.ItemExtention;
+import com.meirengu.cf.model.LeadInvestor;
 import com.meirengu.cf.service.*;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -43,6 +45,10 @@ public class ItemController extends BaseController {
     PartnerService partnerService;
     @Autowired
     OtherService otherService;
+    @Autowired
+    ItemExtentionService itemExtentionService;
+    @Autowired
+    LeadInvestorService leadInvestorService;
 
     /**
      * 获取项目列表
@@ -192,6 +198,8 @@ public class ItemController extends BaseController {
                 beanMap.put("isInterested", null);
             }
             if(beanMap != null){
+                //领投时间
+                beanMap.put("leadInvestorTime", beanMap.get("preheatingStartTime"));
                 Integer areaId = StringUtil.isEmpty(beanMap.get("areaId")) ? null : Integer.parseInt(beanMap.get("areaId").toString());
                 Map<String, Object> areaMap = otherService.getAreasByLastLevel(areaId);
                 if(areaMap != null){
@@ -205,6 +213,33 @@ public class ItemController extends BaseController {
                         beanMap.put("city", city);
                     }
                 }
+            }
+            ItemExtention itemExtention = itemExtentionService.detail(itemId);
+            int leadInvestorId;
+            if(itemExtention != null){
+                leadInvestorId = itemExtention.getLeadInvestorId();
+                //领投金额
+                beanMap.put("leadInvestorAmount", itemExtention.getLeadInvestorAmount());
+                //领投原因
+                beanMap.put("leadInvestorReason", itemExtention.getLeadInvestorReason());
+                beanMap.put("leadInvestorId", itemExtention.getLeadInvestorId());
+                LeadInvestor li = leadInvestorService.detail(leadInvestorId);
+
+                if(li != null){
+                    //领投人名称
+                    beanMap.put("leadInvestorName", li.getInvestorName());
+                    beanMap.put("leadInvestorHeader", li.getInvestorImage());
+                }else{
+                    beanMap.put("leadInvestorName", "");
+                    beanMap.put("leadInvestorHeader", "");
+                }
+            }else {
+                beanMap.put("leadInvestorAmount", null);
+                //领投原因
+                beanMap.put("leadInvestorReason", "");
+                beanMap.put("leadInvestorId", null);
+                beanMap.put("leadInvestorName", "");
+                beanMap.put("leadInvestorHeader", "");
             }
 
             return super.setResult(StatusCode.OK, beanMap, StatusCode.codeMsgMap.get(StatusCode.OK));

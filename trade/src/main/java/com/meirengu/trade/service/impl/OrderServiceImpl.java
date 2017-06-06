@@ -1299,14 +1299,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     public Map<String, Object> getUserDetails(Integer userId) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("userId", userId);
         List<Integer> orderStateList = new ArrayList<Integer>();
         orderStateList.add(OrderStateEnum.BOOK.getValue());
         orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
         orderStateList.add(OrderStateEnum.UNPAID.getValue());
         orderStateList.add(OrderStateEnum.PAID.getValue());
-        map.put("orderStateList", orderStateList);
-        List<Map<String, Object>> list = getList(map);
+        paramsMap.put("orderStateList", orderStateList);
+        List<Map<String, Object>> list = getList(paramsMap);
         if (list!=null && list.size()>0) {
             String userPhone = list.get(0).get("userPhone").toString();
             //查询用户信息
@@ -1353,10 +1354,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                     for (int i=0; i<itemsArray.size(); i++) {
                         returnObject = new JSONObject();
                         JSONObject itemJson = itemsArray.getJSONObject(i);
+                        returnObject.put("itemId",itemJson.get("itemId"));
                         returnObject.put("itemName",itemJson.get("itemName"));
                         returnObject.put("itemProfile",itemJson.get("itemProfile"));
                         returnObject.put("headerImage",itemJson.get("headerImage"));
-                        returnArray.add(resultJson);
+                        returnArray.add(returnObject);
                     }
                     map.put("itemList",returnArray);
                 } else {
