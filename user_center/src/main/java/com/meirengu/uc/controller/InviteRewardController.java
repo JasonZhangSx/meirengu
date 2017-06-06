@@ -120,8 +120,8 @@ public class InviteRewardController extends BaseController{
 
     /** rocketMQ接收消息  */
     @EventListener(condition = "#event.topic=='user' && #event.tag=='inviteRewardNotify'")
-    public void listeneditInviter(RocketmqEvent event) throws Exception {
-        logger.info("从rocketMQ 接收批处理分红消息 listeneditInviter event :{} ",event.getMsg());
+    public void inviteRewardNotify(RocketmqEvent event) throws Exception {
+        logger.info("从rocketMQ 接收批处理分红消息 inviteRewardNotify event :{} ",event.getMsg());
 
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>) JacksonUtil.readValue(message,Map.class);
@@ -132,6 +132,8 @@ public class InviteRewardController extends BaseController{
         Result result = this.notify(fileName,filePath);
         if(result.getCode() != StatusCode.OK){
             throw new Exception("邀请分红批处理 处理失败! ");
+        }else{
+            logger.info("rocketMQ 接收批处理分红消息 inviteRewardNotify result :{} ",result);
         }
     }
 }
