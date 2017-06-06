@@ -11,7 +11,7 @@ import java.util.List;
  * @author Zhang wenmeng
  * 
  */
-public interface AreasMapper {
+public interface AreasDao {
 
 	List<Area> showProvinceList();
 

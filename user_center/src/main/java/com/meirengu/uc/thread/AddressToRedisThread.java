@@ -1,7 +1,7 @@
 package com.meirengu.uc.thread;
 
 import com.meirengu.common.RedisClient;
-import com.meirengu.uc.dao.AreasMapper;
+import com.meirengu.uc.dao.AreasDao;
 import com.meirengu.uc.model.Area;
 import com.meirengu.utils.JacksonUtil;
 import org.slf4j.Logger;
@@ -19,11 +19,11 @@ public class AddressToRedisThread implements Runnable{
 
 
     private static final Logger logger = LoggerFactory.getLogger(AddressToRedisThread.class);
-    private AreasMapper areasMapper;
+    private AreasDao areasDao;
     private RedisClient redisClient;
 
-    public void setAreasMapper(AreasMapper areasMapper) {
-        this.areasMapper = areasMapper;
+    public void setAreasDao(AreasDao areasDao) {
+        this.areasDao = areasDao;
     }
 
     public void setRedisClient(RedisClient redisClient) {
@@ -36,7 +36,7 @@ public class AddressToRedisThread implements Runnable{
      */
     @Override
     public void run() {
-        List<Area> list = areasMapper.getAreaData();
+        List<Area> list = areasDao.getAreaData();
         logger.info("set area to redis start time :{} ",new Date());
         this.setAreaList(list);
         logger.info("set area to redis end time :{} ",new Date());

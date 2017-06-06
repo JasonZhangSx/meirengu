@@ -1,7 +1,7 @@
 package com.meirengu.uc.init;
 
 import com.meirengu.common.RedisClient;
-import com.meirengu.uc.dao.AreasMapper;
+import com.meirengu.uc.dao.AreasDao;
 import com.meirengu.uc.thread.AddressToRedisThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class AddressToRedisInit{
 
     private static final Logger logger = LoggerFactory.getLogger(AddressToRedisInit.class);
     @Autowired
-    private AreasMapper areasMapper;
+    private AreasDao areasDao;
     @Autowired
     private RedisClient redisClient;
 
@@ -29,7 +29,7 @@ public class AddressToRedisInit{
 
         AddressToRedisThread addressToRedisThread = new AddressToRedisThread();
         addressToRedisThread.setRedisClient(redisClient);
-        addressToRedisThread.setAreasMapper(areasMapper);
+        addressToRedisThread.setAreasDao(areasDao);
         addressToRedisThread.run();
 
     }
