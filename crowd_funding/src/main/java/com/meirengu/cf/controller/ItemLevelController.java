@@ -120,9 +120,11 @@ public class ItemLevelController extends BaseController{
             int itemId = itemLevel.getItemId();
             Item item = itemService.detail(itemId);
             if(item != null){
-                map.put("partnerId", item.getPartnerId());
-                map.put("itemName", item.getItemName());
-                map.put("typeId", item.getTypeId());
+                Map<String, Object> itemMap = ObjectUtils.bean2Map(item);
+                map.putAll(itemMap);
+//                map.put("partnerId", item.getPartnerId());
+//                map.put("itemName", item.getItemName());
+//                map.put("typeId", item.getTypeId());
                 String agreementNames = "";
                 String agreementUrls = "";
                 //根据不同的行业分类获取不同的协议地址

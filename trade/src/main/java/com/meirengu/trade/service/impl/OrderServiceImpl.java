@@ -533,9 +533,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             sendRocketMQDeployQueue4Sms(order.getOrderSn());
 
             // 组织数据返回给客户端
-            result.setCode(StatusCode.OK);
-            result.setData(order);
-            result.setMsg(StatusCode.codeMsgMap.get(StatusCode.OK));
+            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
+            tempMap.putAll(orderMap);
+            result.setData(tempMap);
         } else {
             result.setCode(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.SUBSCRIPTIONS_ORDER_ERROR_INSERT));
@@ -628,6 +628,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 tempMap.put("itemName", itemLevel.getString("itemName"));
                 tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
                 tempMap.put("typeId", itemLevel.getIntValue("typeId"));
+                tempMap.put("headerImage", itemLevel.getString("headerImage"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
@@ -867,7 +868,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             itemLevelUpdate(order);
 
             // 组织数据返回给客户端
-            result.setData(order);
+            Map<String, Object> orderMap = ObjectUtils.bean2Map(order);
+            tempMap.putAll(orderMap);
+            result.setData(tempMap);
         } else {
             result.setCode(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.APPOINTMENT_ORDER_ERROR_INSERT));
