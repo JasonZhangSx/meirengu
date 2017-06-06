@@ -629,6 +629,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
                 tempMap.put("typeId", itemLevel.getIntValue("typeId"));
                 tempMap.put("headerImage", itemLevel.getString("headerImage"));
+                tempMap.put("itemProfile", itemLevel.getString("itemProfile"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
