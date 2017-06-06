@@ -108,12 +108,12 @@ public class UserController extends BaseController{
             }
             page = userService.getListByPage(page, paramMap);
             List<Map<String,Object>> list = page.getList();
-//            if(list.size() == 1){
-//                //获取余额信息
-//                userService.getUserRestMoney(list.get(0));
-//                //取累计投资额
-//                userService.getUserTotalInvestMoney(list.get(0));
-//            }
+            for(Map<String,Object> map:list){
+                //获取余额信息
+                userService.getUserRestMoney(map);
+                //取累计投资额
+                userService.getUserTotalInvestMoney(map);
+            }
             if(page.getList().size() != 0){
                 return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{

@@ -215,8 +215,23 @@ public class InviterVo {
     }
 
     @ExcelField(title="邀请人注册来源",align=2, sort=180)
-    public Integer getRegisterFrom() {
-        return registerFrom;
+    public String getRegisterFrom() {
+        if(registerFrom == 1){
+            return "PC";
+        }
+        if(registerFrom == 2){
+            return "H5";
+        }
+        if(registerFrom == 3){
+            return "IOS";
+        }
+        if(registerFrom == 4){
+            return "android";
+        }
+        if(registerFrom == 5){
+            return "三方";
+        }
+        return  null;
     }
     public void setRegisterFrom(Integer registerFrom) {
         this.registerFrom = registerFrom;
