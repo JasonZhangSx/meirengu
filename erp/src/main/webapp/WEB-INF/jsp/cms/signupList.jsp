@@ -29,6 +29,20 @@
     <div class="Hui-article">
         <article class="cl pd-20">
 
+            <div class="text-c">
+                活动类型：　　
+                        <span class="select-box mr-20" style="width:auto;" >
+                            <select id="type" class="select">
+                                <option value="1" selected>海伦合伙人报名邀约</option>
+                                <option value="2">美丽代言人</option>
+                                <option value="3">美丽0元购</option>
+                            </select>
+                        </span>
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
+
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
@@ -87,6 +101,12 @@
                     "render": function(data, type, row, meta){
                         if(data == 1){
                             return "海伦合伙人邀约";
+                        }else if(data == 2){
+                            return "美丽代言人";
+                        }else if(data == 3){
+                            return "美丽0元购";
+                        }else{
+                            return "未知活动";
                         }
                     }
                 },
@@ -103,7 +123,9 @@
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
-                }
+                },
+                //search
+                { "name": "type",   "targets": 4 },
             ],
             "language": {
                 "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
@@ -148,6 +170,14 @@
         var info = table.page.info();
         var totalCount = info.recordsTotal;
         $("#totalCount").html(totalCount);
+    }
+
+    /**
+     * 检索
+     **/
+    function search(){
+        var type = $("#type").val();
+        table.column(4).search(type).draw();
     }
 
 </script>

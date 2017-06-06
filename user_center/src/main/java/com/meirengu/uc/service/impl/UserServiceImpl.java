@@ -402,9 +402,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void getArea(Map map) {
         map.put("area","");//防止为空客户端崩溃
-        AddressVO addressVO = addressService.showAddress(Integer.parseInt(String.valueOf(map.get("areaId"))));
-        if(addressVO != null){
-            map.put("area",addressVO.getProvince()+addressVO.getCity()+addressVO.getArea());
+        if(Integer.parseInt(String.valueOf(map.get("areaId")))!=0){
+            AddressVO addressVO = addressService.showAddress(Integer.parseInt(String.valueOf(map.get("areaId"))));
+            if(addressVO != null){
+                map.put("area",addressVO.getProvince()+addressVO.getCity()+addressVO.getArea());
+            }
         }
     }
 

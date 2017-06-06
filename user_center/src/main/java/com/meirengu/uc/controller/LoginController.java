@@ -29,7 +29,7 @@ import java.util.Date;
 
 /**
  * 登录控制类
- * 登陆、注册、退出接口
+ * 登陆、注册、注销接口
  * @author huoyan403
  * @create 2017-01-12 下午12:37
  */
@@ -175,7 +175,9 @@ public class LoginController extends BaseController {
             }
         }catch (Exception e){
             logger.error("LoginController.login throws Exception:{}",e.getMessage());
-            return super.setResult(StatusCode.INVALID_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.INVALID_ARGUMENT));
+            return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
+//            return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));
+            //1.2.0 抛异常 促使用户更新token  1.2.0以后改回来
         }
     }
 
@@ -256,7 +258,7 @@ public class LoginController extends BaseController {
         }
     }
 
-    //退出
+    //注销
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     public Result logout(@RequestParam(value = "token", required = false) String token,
                          @RequestParam(value = "registration_id", required = false) String registrationId){
@@ -272,6 +274,8 @@ public class LoginController extends BaseController {
         }
     }
 
+
+    //==========================================方法提取分割线=====================================
     //用户密码校验
     private Boolean validatePassword(String password,User user){
         try {
@@ -281,7 +285,6 @@ public class LoginController extends BaseController {
             return  false;
         }
     }
-
 
     //用户锁定校验
     private Boolean userIsLock(User user){

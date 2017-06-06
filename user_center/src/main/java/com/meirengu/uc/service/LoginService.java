@@ -12,15 +12,15 @@ import com.meirengu.uc.vo.response.RegisterInfo;
  */
 public interface LoginService {
 
-
+    /**
+     * 获取一个新的token
+     * @return
+     */
     RegisterInfo getNewToken(String token, Object object);
 
     /**
      * 给用户绑定token
      * 第二设备登陆 第一设备无效
-     * @param usr
-     * @param deviceId
-     * @return
      */
     RegisterInfo setUserToRedis(User usr,String deviceId);
 }

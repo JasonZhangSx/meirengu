@@ -12,6 +12,6 @@ import java.util.Map;
  */
 public interface SignupActivityService {
 
-    Map<String, Object> query(int page, int perPage, boolean isPage, Integer type, String name, String telphone, String city);
+    Map<String, Object> query(int page, int perPage, boolean isPage, String type, String name, String telphone, String city);
 
 }

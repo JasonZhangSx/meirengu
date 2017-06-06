@@ -15,40 +15,26 @@ public interface CheckCodeService {
 
     /**
      * 生成验证码
-     * @return
      */
     int generate();
 
     /**
      * 发送验证码
-     * @param mobile
-     * @param code
-     * @return
      */
     HttpResult send(String mobile, int code, String ip,String type);
 
     /**
      * 保存验证码
-     *
-     * @param checkCode
-     * @return
      */
     int create(CheckCode checkCode);
 
     /**
      * 修改验证码
-     *
-     * @param checkCode
-     * @return
      */
     int update(CheckCode checkCode);
 
     /**
      * 获取验证码
-     *
-     * @param mobile
-     * @param code
-     * @return
      */
     CheckCode retrieve(String mobile, int code);
 

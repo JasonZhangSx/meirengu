@@ -26,6 +26,7 @@ import java.util.Map;
 
 /**
  * Created by huoyan403 on 3/14/2017.
+ * 用户地址增、该、删、分页查询、地址详情、订单查询地址
  */
 @RestController
 @RequestMapping("address")
@@ -48,7 +49,6 @@ public class UserAddressController extends BaseController{
                                 @RequestParam(value = "user_address", required = true) String userAddress,
                                 @RequestParam(value = "area_id", required = true) Integer areaId,
                                 @RequestParam(value = "is_default", defaultValue = "0",required = false) Integer isDefault){
-
         logger.info("UserAddressController insert UserAddress ,mobile:{},token:{},userAddress:{},userId:{},areaId:{},isDefault:{}"
                 ,mobile,token,userAddress,userId,areaId,isDefault);
         try{
@@ -74,8 +74,7 @@ public class UserAddressController extends BaseController{
                     userAddressBean.setAddressId(UuidUtils.getShortUuid());
                     userAddressService.insert(userAddressBean);
                 }
-                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode
-                        .OK));
+                return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
             }else{
                 //无效token返回登陆
                 return super.setResult(StatusCode.TOKEN_IS_TIMEOUT, null, StatusCode.codeMsgMap.get(StatusCode.TOKEN_IS_TIMEOUT));

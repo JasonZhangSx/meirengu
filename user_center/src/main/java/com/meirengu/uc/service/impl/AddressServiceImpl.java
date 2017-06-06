@@ -68,32 +68,32 @@ public class AddressServiceImpl implements AddressService {
 
     public AddressVO showAddress(Integer area_id) {
 
-        if(redisClient.existsObject("area_"+area_id)){
-            Area area = JacksonUtil.readValue((String) redisClient.getObject("area_"+area_id),Area.class);
+        Area areas = JacksonUtil.readValue((String)redisClient.get("area_"+area_id),Area.class);
+        if(areas != null){
             AddressVO addressVO = new AddressVO();
-            if(area.getAreaDeep()==3){
+            if(areas.getAreaDeep()==3){
                 addressVO.setAreaId(area_id);
-                addressVO.setArea(area.getAreaName());
+                addressVO.setArea(areas.getAreaName());
 
-                Area city = JacksonUtil.readValue((String) redisClient.getObject("area_"+area.getAreaParentId()),Area.class);
+                Area city = JacksonUtil.readValue((String) redisClient.get("area_"+areas.getAreaParentId()),Area.class);
                 addressVO.setCity(city.getAreaName());
                 addressVO.setCityId(city.getAreaId());
 
-                Area province = JacksonUtil.readValue((String) redisClient.getObject("area_"+city.getAreaParentId()),Area.class);
+                Area province = JacksonUtil.readValue((String) redisClient.get("area_"+city.getAreaParentId()),Area.class);
                 addressVO.setProvince(province.getAreaName());
                 addressVO.setProvinceId(province.getAreaId());
                 return addressVO;
-            }else if(area.getAreaDeep()==2){
+            }else if(areas.getAreaDeep()==2){
                 addressVO.setCityId(area_id);
-                addressVO.setCity(area.getAreaName());
+                addressVO.setCity(areas.getAreaName());
 
-                Area province = JacksonUtil.readValue((String) redisClient.getObject("area_"+area.getAreaParentId()),Area.class);
+                Area province = JacksonUtil.readValue((String) redisClient.get("area_"+areas.getAreaParentId()),Area.class);
                 addressVO.setProvince(province.getAreaName());
                 addressVO.setProvinceId(province.getAreaId());
                 return addressVO;
-            }else if(area.getAreaDeep()==1){
-                addressVO.setProvince(area.getAreaName());
-                addressVO.setProvinceId(area.getAreaId());
+            }else if(areas.getAreaDeep()==1){
+                addressVO.setProvince(areas.getAreaName());
+                addressVO.setProvinceId(areas.getAreaId());
                 return addressVO;
             }
         }else{

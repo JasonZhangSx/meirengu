@@ -94,11 +94,8 @@ public class CheckCodeController extends BaseController {
                         return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                     }
                 }
-
             }
-            return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, hr.getContent(), StatusCode.codeMsgMap.get(StatusCode
-                    .CHECK_CODE_SEND_ERROR));
-
+            return super.setResult(StatusCode.CHECK_CODE_SEND_ERROR, hr.getContent(), StatusCode.codeMsgMap.get(StatusCode.CHECK_CODE_SEND_ERROR));
         }catch (Exception e){
             logger.error("checkCodeService.send check_code throws Exceprion :{}",e.getMessage());
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage(), StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));

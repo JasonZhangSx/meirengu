@@ -1,6 +1,5 @@
 package com.meirengu.common;
 
-import com.meirengu.model.Result;
 import com.meirengu.utils.SerializableUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
@@ -10,6 +9,8 @@ import org.springframework.util.StringUtils;
 import redis.clients.jedis.*;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 全局状态码常量类
@@ -45,7 +46,7 @@ public class RedisClient {
         this.shardedJedisPool = shardedJedisPool;
     }
 
-    ShardedJedisPool getShardedJedisPool() {
+    public ShardedJedisPool getShardedJedisPool() {
         return shardedJedisPool;
     }
 
@@ -518,18 +519,47 @@ public class RedisClient {
     /*以上方法 key都经过了key.getByte()处理 --------------end*/
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         JedisPoolConfig config = new JedisPoolConfig();
         RedisClient redisService = new RedisClient(config, "192.168.0.135:6379");
-        
-        ShardedJedis jedis = redisService.getShardedJedisPool().getResource();
-        String key = "test_incr1";
-        redisService.setObject("123",new Result());
-        System.err.print(redisService.getObject(""));
-//        long a = jedis.incr(key);
 
-//        System.out.println(a);
-        System.out.println(jedis.get(key));
+//        ShardedJedis jedis = redisService.getShardedJedisPool().getResource();
+//        String key = "test_incr1";
+//        redisService.setObject("123",new Result());
+//        System.err.print(redisService.getObject(""));
+////        long a = jedis.incr(key);
+//
+////        System.out.println(a);
+//        System.out.println(jedis.get(key));
+
+
+        ShardedJedis sj = redisService.getShardedJedisPool().getResource();
+        int count = 10000;
+        long begin = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
+            sj.set("a" + i, "v" + i);
+        }
+        sj.close();
+        System.out.println(System.currentTimeMillis() - begin);
+
+
+        sj = redisService.getShardedJedisPool().getResource();
+        ShardedJedisPipeline p = sj.pipelined();
+        begin = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
+            p.set("ap" + i, "vp" + i);
+        }
+        p.sync();
+        sj.close();
+        System.out.println(System.currentTimeMillis() - begin);
+
+
+        BlockingQueue<String> logQueue = new LinkedBlockingQueue<String>();
+        begin = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
+            logQueue.put("i=" + i);
+        }
+        System.out.println(System.currentTimeMillis() - begin);
       
     }
 

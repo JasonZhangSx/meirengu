@@ -30,6 +30,7 @@
     <if test="status != null" >
       AND status = #{status,jdbcType=INTEGER}
     </if>
+    order by create_time desc;
   </select>
   <insert id="insertSlideshow" parameterType="com.meirengu.news.model.Slideshow" >
     insert into slideshow

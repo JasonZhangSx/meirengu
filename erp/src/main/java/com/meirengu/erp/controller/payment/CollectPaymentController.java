@@ -119,8 +119,8 @@ public class CollectPaymentController extends BaseController {
             }
             bankCommission.put("prepaidBonusMoney",m);
         }else {
-            bankCommission.put("prepaidBonus","非收益权众筹无分红");
-            bankCommission.put("prepaidBonusMoney","非收益权众筹无分红");
+            bankCommission.put("prepaidBonus","0.00");
+            bankCommission.put("prepaidBonusMoney","0.00");
         }
 
         modelAndView.addObject("bankCommission",bankCommission);
@@ -178,6 +178,94 @@ public class CollectPaymentController extends BaseController {
             }
         }
         return new ModelAndView("/payment/paymentCommitRecordList", recordList("paymentCommitRecord?"+stringBuffer.toString()));
+    }
+
+    /**
+     * 查询待收款
+     * @param partnerName
+     * @param itemName
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/getPaymentCollection",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getPaymentCollection(String partnerName,String itemName) throws UnsupportedEncodingException {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (partnerName!=null&&!partnerName.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&partnerName="+new String((partnerName).getBytes("ISO-8859-1"),"utf8"));
+            }else {
+                stringBuffer.append("partnerName="+new String((partnerName).getBytes("ISO-8859-1"),"utf8"));
+            }
+        }
+        if (itemName!=null&&!itemName.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&itemName="+new String((itemName).getBytes("ISO-8859-1"),"utf8"));
+            }else {
+                stringBuffer.append("itemName="+new String((itemName).getBytes("ISO-8859-1"),"utf8"));
+            }
+        }
+        return new ModelAndView("/payment/paymentCollectionList", recordList("paymentCollectionList?"+stringBuffer.toString()));
+    }
+    @RequestMapping(value = "/getPaymentCollectionList",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getPaymentCollectionList(String paymentCollectionId) throws UnsupportedEncodingException {
+        ModelAndView modelAndView = new ModelAndView("/payment/paymentCollection");
+        modelAndView.addObject("paymentCollectionList",recordList("paymentCollectionList?id="+paymentCollectionId));
+        modelAndView.addObject("paymentCollectionRecord",recordList("paymentCollectionList/record?paymentCollectionId="+paymentCollectionId));
+        return modelAndView;
+    }
+    /**
+     * 查询收款记录
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getPaymentCollectionRecord",method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getPaymentCollectionRecord(String partnerName,String itemName) throws UnsupportedEncodingException {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (partnerName!=null&&!partnerName.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&partnerName="+new String((partnerName).getBytes("ISO-8859-1"),"utf8"));
+            }else {
+                stringBuffer.append("partnerName="+new String((partnerName).getBytes("ISO-8859-1"),"utf8"));
+            }
+        }
+        if (itemName!=null&&!itemName.isEmpty()){
+            if (stringBuffer.length()>=0){
+                stringBuffer.append("&itemName="+new String((itemName).getBytes("ISO-8859-1"),"utf8"));
+            }else {
+                stringBuffer.append("itemName="+new String((itemName).getBytes("ISO-8859-1"),"utf8"));
+            }
+        }
+        return new ModelAndView("/payment/paymentCollectionRecordList", recordList("paymentCollectionList/record?"+stringBuffer.toString()));
+    }
+    @RequestMapping(value = "/savePaymentCollectionRecord",method = RequestMethod.POST)
+    @ResponseBody
+    public Object addPaymentCollection(String collectionPeriod,String interestRate,String actualAmount,MultipartHttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView();
+        UploadController uploadController = new UploadController();
+        Result result = uploadController.uploadMultiple(request,"paymentCollection");
+        List<String> list = new ArrayList<>();
+        list = (List<String>) result.getData();
+        StringBuffer imageCredential = new StringBuffer();
+        for (int i=0;i<list.size();i++){
+            if (i==list.size()-1){
+                imageCredential.append(list.get(i));
+            }else {
+                imageCredential.append(list.get(i)+",");
+            }
+        }
+        if (result.getData()==null || result.getData().toString() == ""){
+            return "";
+        }
+        Map<String,String> paramsMap = new HashMap<String,String>();
+        paramsMap.put("collectionPeriod",collectionPeriod);
+        paramsMap.put("interestRate",interestRate);
+        paramsMap.put("actualAmount",actualAmount);
+        paramsMap.put("imageCredential",imageCredential.toString());
+        paramsMap.put("content",JSONObject.toJSONString(paramsMap));
+        return HttpUtil.doPostForm(url.toString()+"/paymentCommitRecord",paramsMap).getContent();
     }
     protected Map<String,Object> recordList(String condition){
         if (url==null){

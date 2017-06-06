@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meirengu.pay.dao.PaymentCollectionListDao" >
+  <resultMap id="BaseResultMap" type="com.meirengu.pay.model.PaymentCollectionList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="partner_name" property="partnerName" jdbcType="VARCHAR" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="target_amount" property="targetAmount" jdbcType="DECIMAL" />
+    <result column="completed_amount" property="completedAmount" jdbcType="DECIMAL" />
+    <result column="principal" property="principal" jdbcType="DECIMAL" />
+    <result column="Interest" property="interest" jdbcType="DECIMAL" />
+    <result column="collection_period" property="collectionPeriod" jdbcType="INTEGER" />
+    <result column="received_period" property="receivedPeriod" jdbcType="INTEGER" />
+    <result column="surplus_period" property="surplusPeriod" jdbcType="INTEGER" />
+    <result column="surplus_time" property="surplusTime" jdbcType="TIMESTAMP" />
+    <result column="countdown" property="countdown" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="collection_time" property="collectionTime" jdbcType="TIMESTAMP" />
+    <result column="collectionaccount" property="collectionaccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, partner_id, partner_name, item_id, item_name, target_amount, completed_amount, 
+    principal, Interest, collection_period, received_period, surplus_period, surplus_time, 
+    countdown, status, collection_time, collectionaccount
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="com.meirengu.pay.model.PaymentCollectionList" >
+    select 
+    <include refid="Base_Column_List" />
+    from payment_collection_list
+    where 1=1
+    <if test="id != null" >
+      AND id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="partnerId != null" >
+      AND partner_id = #{partnerId,jdbcType=INTEGER}
+    </if>
+    <if test="partnerName != null" >
+      AND partner_name =  #{partnerName,jdbcType=VARCHAR}
+    </if>
+    <if test="itemId != null" >
+      AND item_id = #{itemId,jdbcType=INTEGER}
+    </if>
+    <if test="itemName != null" >
+      AND item_name = #{itemName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+      AND status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from payment_collection_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from payment_collection_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.meirengu.pay.model.PaymentCollectionList"  useGeneratedKeys="true" keyProperty="id">
+    insert into payment_collection_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="partnerId != null" >
+        partner_id,
+      </if>
+      <if test="partnerName != null" >
+        partner_name,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="targetAmount != null" >
+        target_amount,
+      </if>
+      <if test="completedAmount != null" >
+        completed_amount,
+      </if>
+      <if test="principal != null" >
+        principal,
+      </if>
+      <if test="interest != null" >
+        Interest,
+      </if>
+      <if test="collectionPeriod != null" >
+        collection_period,
+      </if>
+      <if test="receivedPeriod != null" >
+        received_period,
+      </if>
+      <if test="surplusPeriod != null" >
+        surplus_period,
+      </if>
+      <if test="surplusTime != null" >
+        surplus_time,
+      </if>
+      <if test="countdown != null" >
+        countdown,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="collectionTime != null" >
+        collection_time,
+      </if>
+      <if test="collectionaccount != null" >
+        collectionaccount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="partnerId != null" >
+        #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetAmount != null" >
+        #{targetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="completedAmount != null" >
+        #{completedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="principal != null" >
+        #{principal,jdbcType=DECIMAL},
+      </if>
+      <if test="interest != null" >
+        #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="collectionPeriod != null" >
+        #{collectionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="receivedPeriod != null" >
+        #{receivedPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="surplusPeriod != null" >
+        #{surplusPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="surplusTime != null" >
+        #{surplusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="countdown != null" >
+        #{countdown,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="collectionTime != null" >
+        #{collectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionaccount != null" >
+        #{collectionaccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.meirengu.pay.model.PaymentCollectionList" >
+    update payment_collection_list
+    <set >
+      <if test="partnerId != null" >
+        partner_id = #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="partnerName != null" >
+        partner_name = #{partnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetAmount != null" >
+        target_amount = #{targetAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="completedAmount != null" >
+        completed_amount = #{completedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="principal != null" >
+        principal = #{principal,jdbcType=DECIMAL},
+      </if>
+      <if test="interest != null" >
+        Interest = #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="collectionPeriod != null" >
+        collection_period = #{collectionPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="receivedPeriod != null" >
+        received_period = #{receivedPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="surplusPeriod != null" >
+        surplus_period = #{surplusPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="surplusTime != null" >
+        surplus_time = #{surplusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="countdown != null" >
+        countdown = #{countdown,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="collectionTime != null" >
+        collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionaccount != null" >
+        collectionaccount = #{collectionaccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.meirengu.pay.model.PaymentCollectionList" >
+    update payment_collection_list
+    set partner_id = #{partnerId,jdbcType=INTEGER},
+      partner_name = #{partnerName,jdbcType=VARCHAR},
+      item_id = #{itemId,jdbcType=INTEGER},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      target_amount = #{targetAmount,jdbcType=DECIMAL},
+      completed_amount = #{completedAmount,jdbcType=DECIMAL},
+      principal = #{principal,jdbcType=DECIMAL},
+      Interest = #{interest,jdbcType=DECIMAL},
+      collection_period = #{collectionPeriod,jdbcType=INTEGER},
+      received_period = #{receivedPeriod,jdbcType=INTEGER},
+      surplus_period = #{surplusPeriod,jdbcType=INTEGER},
+      surplus_time = #{surplusTime,jdbcType=TIMESTAMP},
+      countdown = #{countdown,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+      collectionaccount = #{collectionaccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

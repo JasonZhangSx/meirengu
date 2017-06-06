@@ -29,7 +29,6 @@
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
     <title>项目添加</title>
     <style>
         .select-box1 {
@@ -95,9 +94,6 @@
         .img-box .upimg-div .z_file{overflow: hidden}
     </style>
     <script type="text/javascript">
-        $('#datetimepicker').datetimepicker({
-            lang: $.datetimepicker.setLocale('ch'),
-        });
 
         var xhr;
         if(window.XMLHttpRequest){
@@ -189,6 +185,24 @@
 
         }
 
+        /*$("#typeId").click(function(){
+            var typeId = $("#typeId").val();
+            if(typeId == 1){
+
+            }
+
+            if(typeId == 2){
+
+            }
+
+            if(typeId == 3){
+                $("#extentionDiv").show();
+                $("#shareholderDiv").show();
+            }else{
+                $("#extentionDiv").hide();
+                $("#shareholderDiv").hide();
+            }
+        });*/
     </script>
 </head>
 <body>
@@ -303,7 +317,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row cl">
+                <%--<div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">领投人名称：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="leadInvestorName"
@@ -331,6 +345,161 @@
                                  </div>
                              </section>
                         </div>
+                    </div>
+                </div>--%>
+
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                        <button class="btn btn-primary radius" type="button" onclick="itemAdd()">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="extentionDiv" style="display: none;">
+            <form action="add" id="itemExtentionForm" method="post">
+
+                <input type="hidden" name="itemId" id="itemId30">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">股权众筹补充信息(融资信息)</h3>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">出让股份：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="sellShare" name="sellShare" >
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">融资金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="financeAmount" name="financeAmount" >
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">进入注册资本：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="registerCapital" name="registerCapital" >
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">进入资本公积金：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="captitalReserve" name="captitalReserve" >
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">融资后注册资本：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="afterRegisterCapital" name="afterRegisterCapital" >
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">选择领投人：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="leadInvestorId" id="leadInvestorId" class="select">
+                            <%--<c:forEach items="${type}" var="type">
+                                <option value="${type.typeId}">${type.typeName}</option>
+                            </c:forEach>--%>
+                            <option value="1">领投人1</option>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">领投金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" id="leadInvestorAmount" name="leadInvestorAmount" >
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">领投原因：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <textarea id="leadInvestorReason" name="leadInvestorReason" cols="" rows="" class="textarea" placeholder="..."
+                                  datatype="*10-100"
+                                  dragonfly="true" nullmsg="备注不能为空！"></textarea>
+                        <%--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>--%>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
+                            <%--<c:forEach items="${partner}" var="partner">
+                                <option value="${partner.partnerId}">${partner.partnerName}</option>
+                            </c:forEach>--%>
+                            <option value="">合伙公司1</option>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
+                            <%--<c:forEach items="${partner}" var="partner">
+                                <option value="${partner.partnerId}">${partner.partnerName}</option>
+                            </c:forEach>--%>
+                            <option value="">合伙公司1</option>
+                        </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司(附加)：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
+                            <%--<c:forEach items="${partner}" var="partner">
+                                <option value="${partner.partnerId}">${partner.partnerName}</option>
+                            </c:forEach>--%>
+                            <option value="">合伙公司1</option>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
+                            <%--<c:forEach items="${partner}" var="partner">
+                                <option value="${partner.partnerId}">${partner.partnerName}</option>
+                            </c:forEach>--%>
+                            <option value="">合伙公司1</option>
+                        </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">股权收益权投资协议模板：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder="" id="leadInvestorName"
+                               name="leadInvestorName" required>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">合伙协议模板：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="" placeholder=""
+                               id="leadInvestorAmount" name="leadInvestorAmount">
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                        <button class="btn btn-primary radius" type="button" onclick="itemAdd()">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="shareholderDiv" style="display: none;">
+            <form action="add" id="itemShareHolderForm" method="post">
+
+                <input type="hidden" name="itemId" id="itemId31">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">股权众筹补充信息(股东信息)</h3>
+                </div>
+                <div class="row cl">
+                    <div class="mt-20">
+                        <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort" style="width: 75%;margin-left: 110px;">
+                            <thead>
+                            <tr class="text-c">
+                                <th>名称</th>
+                                <th>身份证号</th>
+                                <th>住址</th>
+                                <th>联系方式</th>
+                                <th>出资额</th>
+                                <th>投前占比</th>
+                                <th>投后占比</th>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
 
@@ -625,15 +794,6 @@
 <script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
-<script type="text/javascript" src="lib/datetimepicker/datetimepicker.js"></script>
 <script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
-
-<script type="text/javascript">
-
-    $('#datetimepicker').datetimepicker({
-        lang: $.datetimepicker.setLocale('ch'),
-    });
-
-</script>
 </body>
 </html>
