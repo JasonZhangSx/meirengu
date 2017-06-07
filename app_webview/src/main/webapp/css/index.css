@@ -263,3 +263,18 @@ img{vertical-align: top}
 .pro_det .fixed a{width:2rem;height:.6rem;background-color: #fff;text-align: center;line-height: .6rem;color:#202020;font-size: .28rem;border-radius: .12rem;}
 
 .user_guide ul a{display: block;width:100%;height:.98rem;line-height: .98rem;border-bottom:1px #e4e4e4 solid;font-size: .28rem;color:#202020;box-sizing: border-box;padding-left:.3rem;}
+
+.find_contus{color:#333;}
+.find_contus ul{background-color: #fff;padding:0 .32rem;}
+.find_contus li{font-size: .3rem;line-height: 1rem;border-bottom:1px #e5e5e5 solid;}
+.find_contus>ul li:nth-last-child(1){border:none}
+.find_contus li img{vertical-align: middle;margin-left:.3rem;}
+.find_contus li var,.find_contus li em{float:right;display: inline;}
+.find_contus li em{vertical-align: middle;width:.96rem;height:.45rem;margin:.26rem 0 0 .3rem;line-height: .45rem;text-align: center;border:1px #333 solid;border-radius: .16rem;}
+
+.meit_bd .wrapper{padding: 0 .32rem;}
+.meit_bd .item{padding:.2rem 0;border-bottom:1px #f1f1f1 solid;}
+.meit_bd .left{float:left;display: inline;width:2.34rem;height:1.5rem;background-size: contain;background-position: 0 center;background-repeat: no-repeat;}
+.meit_bd .right{float:right;display: inline;width:4.22rem;position: relative;height:1.5rem}
+.meit_bd h4{font-weight: normal;font-size: .32rem;line-height: .5rem;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.meit_bd var{font-size: .24rem;color:#b5b5b5;position:absolute;right:0;bottom:0;}

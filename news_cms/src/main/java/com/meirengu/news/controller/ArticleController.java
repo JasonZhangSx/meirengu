@@ -1,23 +1,33 @@
 package com.meirengu.news.controller;
 
-import com.meirengu.news.common.StatusCode;
+import com.meirengu.common.StatusCode;
+import com.meirengu.controller.BaseController;
+import com.meirengu.model.Page;
+import com.meirengu.model.Result;
 import com.meirengu.news.model.Article;
-import com.meirengu.news.model.Page;
 import com.meirengu.news.service.ArticleService;
+import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Created by 建新 on 2016/12/27.
+ * 文章控制层
+ * @author 建新
+ * @create 2017-05-08 14:21
  */
 @Controller
-@RequestMapping("/article")
+@RequestMapping("article")
 public class ArticleController extends BaseController{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
@@ -26,172 +36,101 @@ public class ArticleController extends BaseController{
     ArticleService articleService;
 
     /**
-     * 获取文章列表
+     * 获取请求列表
+     * @param pageSize
+     * @param pageNum
+     * @param isPage
+     * @param sortBy
+     * @param order
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/list", method = {RequestMethod.POST})
-    public Map<String, Object> list(@RequestParam(value = "ac_id", required = false, defaultValue = "0") int acId,
-                                    @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
-                                    @RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
-                                    @RequestParam(value = "sortby", required = false) String sortBy,
-                                    @RequestParam(value = "order", required = false) String order,
-                                    @RequestParam(value = "search_text", required = false) String searchText,
-                                    @RequestParam(value = "is_commend", required = false, defaultValue = "0") int isCommend,
-                                    @RequestParam(value = "create_user", required = false) Integer createUser,
-                                    @RequestParam(value = "create_user_type", required = false) Integer createUserType){
+    @RequestMapping(method = RequestMethod.GET)
+    public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
+                       @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
+                       @RequestParam(value = "is_page", required = false) boolean isPage,
+                       @RequestParam(value = "ac_id", required = false) Integer acId,
+                       @RequestParam(value = "sortby", required = false, defaultValue = "create_time") String sortBy,
+                       @RequestParam(value = "order", required = false, defaultValue = "desc") String order){
 
-        Map paramMap = new HashMap<String, Object>();
-        Page<Article> page = super.setPageParams(pageSize,pageNum);
-        paramMap.put("sortBy", sortBy);
-        paramMap.put("order", order);
-        paramMap.put("searchText", searchText);
-        paramMap.put("acId", acId);
-        paramMap.put("isCommend", isCommend);
-        paramMap.put("isPublish", 1);
-        paramMap.put("createUser", createUser);
-        paramMap.put("createUserType", createUserType);
+        //默认不分页
+        if(StringUtil.isEmpty(isPage)){
+            isPage = false;
+        }
 
-        try{
-            page = articleService.getPageList(page, paramMap);
-            if(page.getList().size() != 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        Map<String, Object> map = new HashMap<>();
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+        map.put("acId", acId);
+
+        if(isPage){
+            Page<Article> page = new Page<Article>();
+            page.setPageNow(pageNum);
+            page.setPageSize(pageSize);
+            page = articleService.getListByPage(page, map);
+            return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            List<Map<String, Object>> list = articleService.getList(map);
+            return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 
     /**
-     * 文章新增
+     * 插入文章
      * @param acId
-     * @param url
-     * @param show
-     * @param sort
-     * @param title
-     * @param content
+     * @param articleUrl
+     * @param articleLabel
+     * @param articleShow
+     * @param articleSort
+     * @param articleImg
+     * @param articleTitle
+     * @param articleContent
+     * @param articleIsBanner
+     * @param articleIsCommend
+     * @param articleIsPublish
+     * @param flag
+     * @param createUser
+     * @param createUserName
+     * @param createUserImg
+     * @param articleTime
+     * @param createUserType
      * @return
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insert(@RequestParam(value = "ac_id", required = false) Integer acId,
-                                     @RequestParam(value = "url", required = false) String url,
-                                     @RequestParam(value = "show",required = false) Integer show,
-                                     @RequestParam(value = "img", required = false) String img,
-                                     @RequestParam(value = "sort", required = false) Integer sort,
-                                     @RequestParam(value = "title", required = false) String title,
-                                     @RequestParam(value = "content", required = false) String content,
-                                     @RequestParam(value = "is_banner", required = false) Integer isBanner,
-                                     @RequestParam(value = "is_commend", required = false) Integer isCommend,
-                                     @RequestParam(value = "is_publish", required = false) Integer isPublish){
+    @RequestMapping(method = RequestMethod.POST)
+    public Result insert(@RequestParam(value = "ac_id", required = false) Integer acId,
+                         @RequestParam(value = "article_url", required = false) String articleUrl,
+                         @RequestParam(value = "article_label", required = false) String articleLabel,
+                         @RequestParam(value = "article_show", required = false) Integer articleShow,
+                         @RequestParam(value = "article_sort", required = false) Integer articleSort,
+                         @RequestParam(value = "article_img", required = false) String articleImg,
+                         @RequestParam(value = "article_title", required = false) String articleTitle,
+                         @RequestParam(value = "article_content", required = false) String articleContent,
+                         @RequestParam(value = "article_is_banner", required = false) Integer articleIsBanner,
+                         @RequestParam(value = "article_is_commend", required = false) Integer articleIsCommend,
+                         @RequestParam(value = "article_is_publish", required = false) Integer articleIsPublish,
+                         @RequestParam(value = "flag", required = false) Integer flag,
+                         @RequestParam(value = "create_user", required = false) Integer createUser,
+                         @RequestParam(value = "create_user_name", required = false) String createUserName,
+                         @RequestParam(value = "create_user_img", required = false) String createUserImg,
+                         @RequestParam(value = "article_time", required = false) Date articleTime,
+                         @RequestParam(value = "create_user_type", required = false) Integer createUserType){
 
-        if(null == acId){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "ac_id"));
-        }
-
-        if(null == url){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "url"));
-        }
-
-        if(null == show){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "show"));
-        }
-
-        if(null == img){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "img"));
-        }
-
-        if(null == sort){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "sort"));
-        }
-
-        if(null == title){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "title"));
-        }
-
-        if(null == content){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "content"));
-        }
-
-        if(null == isBanner){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_banner"));
-        }
-
-        if(null == isCommend){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_commend"));
-        }
-
-        if(null == isPublish){
-            return super.setReturnMsg(StatusCode.STATUS_4210, null, String.format(StatusCode.STATUS_4210_MSG, "is_publish"));
-        }
-
-        Article article = this.packageA(0, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
-        try{
-            int i = this.articleService.insert(article);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        Article article = setEntity(null, acId, articleUrl, articleLabel, articleShow,
+                    articleSort, articleImg, articleTitle, articleContent,
+                    articleIsBanner, articleIsCommend, articleIsPublish, articleTime,
+                    flag, createUser, createUserName, createUserImg,
+                    createUserType, new Date());
+        try {
+            int insertNum = articleService.insert(article);
+            if(insertNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ERROR_INSERT));
             }
         }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
-        }
-    }
-
-    /**
-     * 文章删除
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public Map<String,Object> delete(@PathVariable("id") int id){
-        try{
-            int i = this.articleService.delete(id);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
-        }
-    }
-
-    /**
-     * 文章修改
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public Map<String,Object> update(@PathVariable("id") int id,
-                                     @RequestParam(value = "ac_id") int acId,
-                                     @RequestParam(value = "url") String url,
-                                     @RequestParam(value = "show") int show,
-                                     @RequestParam(value = "sort") int sort,
-                                     @RequestParam(value = "img") String img,
-                                     @RequestParam(value = "title") String title,
-                                     @RequestParam(value = "content") String content,
-                                     @RequestParam(value = "is_banner") int isBanner,
-                                     @RequestParam(value = "is_commend") int isCommend,
-                                     @RequestParam(value = "is_publish") int isPublish){
-        Article article = this.packageA(id, acId, url, show, sort, title, content, 1, img, isBanner, isCommend, isPublish);
-        try{
-            int i = this.articleService.update(article);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+            LOGGER.error(">> insert article throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -200,61 +139,114 @@ public class ArticleController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> detail(@PathVariable("id") String id){
-        try{
-            Map<String, Object> map = articleService.detail(Integer.parseInt(id));
-            if(null != map){
-                return super.setReturnMsg(StatusCode.STATUS_200, map, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_501, map, StatusCode.STATUS_501_MSG);
-            }
-        }catch (ClassCastException e){
-            LOGGER.error("class cast exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public Result detail(@PathVariable(value = "id", required = false)Integer id){
+        try {
+            Article article = articleService.detail(id);
+            return super.setResult(StatusCode.OK, article, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            LOGGER.error("other exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+            LOGGER.error(">> get article throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
     /**
-     * 发布文章
-     * @param id
-     * @return
+     * 修改文章
      */
-    @RequestMapping(value = "/publish", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> publish(@RequestParam(value = "id") int id, @RequestParam(value = "is_publish") int isPublish){
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "article_id", required = false) Integer articleId,
+                         @RequestParam(value = "ac_id", required = false) Integer acId,
+                         @RequestParam(value = "article_url", required = false) String articleUrl,
+                         @RequestParam(value = "article_label", required = false) String articleLabel,
+                         @RequestParam(value = "article_show", required = false) Integer articleShow,
+                         @RequestParam(value = "article_sort", required = false) Integer articleSort,
+                         @RequestParam(value = "article_img", required = false) String articleImg,
+                         @RequestParam(value = "article_title", required = false) String articleTitle,
+                         @RequestParam(value = "article_content", required = false) String articleContent,
+                         @RequestParam(value = "article_is_banner", required = false) Integer articleIsBanner,
+                         @RequestParam(value = "article_is_commend", required = false) Integer articleIsCommend,
+                         @RequestParam(value = "article_is_publish", required = false) Integer articleIsPublish,
+                         @RequestParam(value = "flag", required = false) Integer flag,
+                         @RequestParam(value = "create_user", required = false) Integer createUser,
+                         @RequestParam(value = "create_user_name", required = false) String createUserName,
+                         @RequestParam(value = "create_user_img", required = false) String createUserImg,
+                         @RequestParam(value = "article_time", required = false) Date articleTime,
+                         @RequestParam(value = "create_user_type", required = false) Integer createUserType){
+
+        Article article = setEntity(articleId, acId, articleUrl, articleLabel, articleShow,
+                articleSort, articleImg, articleTitle, articleContent,
+                articleIsBanner, articleIsCommend, articleIsPublish, articleTime,
+                flag, createUser, createUserName, createUserImg,
+                createUserType, new Date());
         try {
-            if(articleService.publish(id, isPublish)){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+            int updateNum = articleService.update(article);
+            if(updateNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ERROR_UPDATE));
             }
-        } catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+        }catch (Exception e){
+            LOGGER.error(">> update article throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
-    private Article packageA(int id, int acId, String url, int show, int sort,
-                             String title, String content, int flag, String img,
-                             int isBanner, int isCommend, int isPublish){
+    /*
+     * 删除文章
+     * @param classId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public Result delete(@RequestParam(value = "id", required = false)Integer id){
+        try {
+            int deleteNum = articleService.delete(id);
+            if(deleteNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ALREADY_DELETE));
+            }
+        }catch (Exception e){
+            LOGGER.error(">> delete article detail throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+    private Article setEntity(Integer articleId, Integer acId, String articleUrl, String articleLabel, Integer articleShow,
+                              Integer articleSort, String articleImg, String articleTitle, String articleContent, Integer
+                                      articleIsBanner, Integer articleIsCommend, Integer articleIsPublish, Date articleTime,
+                              Integer flag, Integer createUser, String createUserName, String createUserImg, Integer
+                                      createUserType, Date createTime) {
         Article article = new Article();
-        article.setId(id);
+        article.setArticleId(articleId);
         article.setAcId(acId);
-        article.setUrl(url);
-        article.setShow(show);
-        article.setSort(sort);
-        article.setTitle(title);
-        article.setContent(content);
+        article.setArticleUrl(articleUrl == null ? "" : articleUrl);
+        article.setArticleImg(articleImg == null ? "" : articleImg);
+        article.setArticleLabel(articleLabel == null ? "" : articleLabel);
+        article.setArticleShow(articleShow);
+        article.setArticleSort(articleSort);
+        article.setArticleTitle(articleTitle == null ? "" : articleTitle);
+        article.setArticleContent(articleContent == null ? "" : articleContent);
+        article.setArticleIsBanner(articleIsBanner);
+        article.setArticleIsCommend(articleIsCommend);
+        article.setArticleIsPublish(articleIsPublish);
+        article.setArticleTime(articleTime);
         article.setFlag(flag);
-        article.setImg(img);
-        article.setIsBanner(isBanner);
-        article.setIsCommend(isCommend);
-        article.setIsPublish(isPublish);
+        article.setCreateUser(createUser);
+        article.setCreateUserName(createUserName == null ? "" : createUserName);
+        article.setCreateUserImg(createUserImg == null ? "" : createUserImg);
+        article.setCreateUserType(createUserType);
+        article.setCreateTime(createTime);
+
         return article;
     }
 }

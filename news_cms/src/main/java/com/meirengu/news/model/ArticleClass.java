@@ -1,81 +1,81 @@
 package com.meirengu.news.model;
 
+import com.meirengu.model.BaseObject;
 import java.util.Date;
+ /*
+  * ArticleClass 实体类
+  * Tue Jun 06 10:57:35 CST 2017 建新
+  */
+public class ArticleClass  extends BaseObject {
+	/** 索引ID */
+	private Integer acId;
+	/** 分类标识码 */
+	private String acCode;
+	/** 分类名称 */
+	private String acName;
+	/** 父ID */
+	private Integer acParentId;
+	/** 排序 */
+	private Integer acSort;
+	/** 删除标识，0为删除，1为未删除 */
+	private Integer flag;
+	/** 创建时间 */
+	private Date createTime;
 
-/**
- * 文章分类实体
- * Created by 建新 on 2016/12/27.
- */
+	public void setAcId(Integer acId){
+		this.acId = acId;
+	}
 
-public class ArticleClass extends BaseEntity {
+	public Integer getAcId(){
+		return acId;
+	}
 
-    private int id;
-    /** 分类标识码 **/
-    private String code;
-    /** 分类名称 **/
-    private String name;
-    /** 分类父ID **/
-    private int parentId;
-    /** 分类排序 **/
-    private int sort;
-    /** 删除标识，0为删除，1为未删除 **/
-    private int flag;
-    /** 创建时间 **/
-    private Date createTime;
+	public void setAcCode(String acCode){
+		this.acCode = acCode;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public String getAcCode(){
+		return acCode;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setAcName(String acName){
+		this.acName = acName;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getAcName(){
+		return acName;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public void setAcParentId(Integer acParentId){
+		this.acParentId = acParentId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Integer getAcParentId(){
+		return acParentId;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setAcSort(Integer acSort){
+		this.acSort = acSort;
+	}
 
-    public int getParentId() {
-        return parentId;
-    }
+	public Integer getAcSort(){
+		return acSort;
+	}
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
-    }
+	public void setFlag(Integer flag){
+		this.flag = flag;
+	}
 
-    public int getSort() {
-        return sort;
-    }
+	public Integer getFlag(){
+		return flag;
+	}
 
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
+	public void setCreateTime(Date createTime){
+		this.createTime = createTime;
+	}
 
-    public int getFlag() {
-        return flag;
-    }
+	public Date getCreateTime(){
+		return createTime;
+	}
 
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

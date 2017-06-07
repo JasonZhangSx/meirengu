@@ -1,16 +1,21 @@
 package com.meirengu.news.controller;
 
-import com.meirengu.news.common.StatusCode;
-import com.meirengu.news.common.Constants;
+import com.meirengu.common.StatusCode;
+import com.meirengu.model.Page;
+import com.meirengu.model.Result;
 import com.meirengu.news.model.ArticleClass;
-import com.meirengu.news.model.Page;
 import com.meirengu.news.service.ArticleClassService;
+import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,123 +30,69 @@ public class ArticleClassController extends BaseController{
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleClassController.class);
 
     @Autowired
-    private ArticleClassService articleClassService;
+    ArticleClassService articleClassService;
 
     /**
-     * @param searchText 搜索框内容
-     * @param pageNum 当前页
-     * @param pageSize 每页显示的条数
-     * @param sortBy 排序字段
-     * @param order 升序/降序
+     * 获取请求列表
+     * @param pageSize
+     * @param pageNum
+     * @param isPage
+     * @param sortBy
+     * @param order
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "list", method = {RequestMethod.POST})
-    public Map<String, Object> list(@RequestParam(value="search_text", required = false) String searchText,
-                                    @RequestParam(value="page", required = false, defaultValue = "1") int pageNum,
-                                    @RequestParam(value="per_page", required = false, defaultValue = "10") int pageSize,
-                                    @RequestParam(value="sortby", required = false) String sortBy,
-                                    @RequestParam(value="order", required = false) String order){
-        Map paramMap = new HashMap<String, Object>();
-        Page<ArticleClass> page = super.setPageParams(pageSize,pageNum);
-        paramMap.put("sortBy", sortBy);
-        paramMap.put("order", order);
-        paramMap.put("searchText", searchText);
-        try{
-            page = articleClassService.getPageList(page, paramMap);
-            if(page.getList().size() != 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, page, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_501, page, StatusCode.STATUS_501_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+    @RequestMapping(method = RequestMethod.GET)
+    public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
+                       @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
+                       @RequestParam(value = "is_page", required = false) boolean isPage,
+                       @RequestParam(value = "sortby", required = false, defaultValue = "create_time") String sortBy,
+                       @RequestParam(value = "order", required = false, defaultValue = "desc") String order){
+
+        //默认不分页
+        if(StringUtil.isEmpty(isPage)){
+            isPage = false;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sortBy", sortBy);
+        map.put("order", order);
+
+        if(isPage){
+            Page<ArticleClass> page = new Page<ArticleClass>();
+            page.setPageNow(pageNum);
+            page.setPageSize(pageSize);
+            page = articleClassService.getListByPage(page, map);
+            return super.setResult(StatusCode.OK, page, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }else {
+            List<Map<String, Object>> list = articleClassService.getList(map);
+            return super.setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
 
     /**
-     * 文章分类新增
-     * @param code
-     * @param name
-     * @param parentId
-     * @param sort
+     * 插入文章分类
      * @return
      */
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insert(@RequestParam("code") String code,
-                                     @RequestParam("name") String name,
-                                     @RequestParam("parent_id") int parentId,
-                                     @RequestParam("sort") String sort){
+    @RequestMapping(method = RequestMethod.POST)
+    public Result insert(@RequestParam(value = "ac_code", required = false) String acCode,
+                         @RequestParam(value = "ac_name", required = false) String acName,
+                         @RequestParam(value = "ac_parent_id", required = false) Integer acParentId,
+                         @RequestParam(value = "ac_sort", required = false) Integer acSort,
+                         @RequestParam(value = "flag", required = false) Integer flag){
 
-        ArticleClass ac = this.packageAc(0, code, name, parentId, Constants.DEL_FLAG_FALSE);
-        try{
-            //先判断code和name是否有重复
-            List<ArticleClass> acList = articleClassService.getByCodeOrName(ac);
-            if(acList.size() > 0){
-                return super.setReturnMsg(StatusCode.STATUS_503, null, String.format(StatusCode.STATUS_503_MSG, "code")+"/"+String.format(StatusCode.STATUS_503_MSG, "name"));
-            }
-            int i = articleClassService.insert(ac);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            } else {
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
+        ArticleClass articleClass = setEntity(null, acCode, acName, acParentId, acSort, flag, new Date());
+        try {
+            int insertNum = articleClassService.insert(articleClass);
+            if(insertNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(com.meirengu.common.StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ERROR_INSERT, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ERROR_INSERT));
             }
         }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
-        }
-    }
-
-    /**
-     * 文章删除
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public Map<String,Object> delete(@PathVariable("id") int id){
-        try{
-            ArticleClass ac = articleClassService.detail(id);
-            if(null == ac){
-                return super.setReturnMsg(StatusCode.STATUS_500, null, "该项不存在");
-            }
-            int i = articleClassService.delete(id);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            } else {
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
-        }
-    }
-
-    /**
-     * 文章修改
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public Map<String,Object> update(@PathVariable("id") int id,
-                                     @RequestParam(value="code", required = false) String code,
-                                     @RequestParam(value = "name", required = false) String name,
-                                     @RequestParam(value = "parent_id") int parentId,
-                                     @RequestParam(value = "sort", required = false) String sort){
-        ArticleClass ac = this.packageAc(id, code, name, parentId, Constants.DEL_FLAG_FALSE);
-        try{
-            int i = articleClassService.update(ac);
-            if(i > 0){
-                return super.setReturnMsg(StatusCode.STATUS_200, null, StatusCode.STATUS_200_MSG);
-            } else {
-                return super.setReturnMsg(StatusCode.STATUS_500, null, StatusCode.STATUS_500_MSG);
-            }
-        }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+            LOGGER.error(">> insert article class throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -150,31 +101,83 @@ public class ArticleClassController extends BaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> detail(@PathVariable("id") int id){
-        try{
-            ArticleClass ac = articleClassService.detail(id);
-            if(null != ac){
-                return super.setReturnMsg(StatusCode.STATUS_200, ac, StatusCode.STATUS_200_MSG);
-            }else{
-                return super.setReturnMsg(StatusCode.STATUS_501, ac, StatusCode.STATUS_501_MSG);
-            }
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public Result detail(@PathVariable(value = "id", required = false)Integer id){
+        try {
+            ArticleClass articleClass = articleClassService.detail(id);
+            return super.setResult(StatusCode.OK, articleClass, StatusCode.codeMsgMap.get(StatusCode.OK));
         }catch (Exception e){
-            LOGGER.error("throw exception:", e);
-            return super.setReturnMsg(StatusCode.STATUS_400, null, e.getMessage());
+            LOGGER.error(">> get article class throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }
 
+    /**
+     * 修改文章
+     */
+    @ResponseBody
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "ac_id", required = false) Integer acId,
+                         @RequestParam(value = "ac_code", required = false) String acCode,
+                         @RequestParam(value = "ac_name", required = false) String acName,
+                         @RequestParam(value = "ac_parent_id", required = false) Integer acParentId,
+                         @RequestParam(value = "ac_sort", required = false) Integer acSort,
+                         @RequestParam(value = "flag", required = false) Integer flag){
 
-    public ArticleClass packageAc(int id, String code, String name, int parentId, int flag){
-        ArticleClass ac = new ArticleClass();
-        ac.setId(id);
-        ac.setCode(code);
-        ac.setName(name);
-        ac.setParentId(parentId);
-        ac.setFlag(flag);
-        return ac;
+        ArticleClass articleClass = setEntity(acId, acCode, acName, acParentId, acSort, flag, null);
+        try {
+            int updateNum = articleClassService.update(articleClass);
+            if(updateNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ERROR_UPDATE, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ERROR_UPDATE));
+            }
+        }catch (Exception e){
+            LOGGER.error(">> update article class throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
     }
 
+    /*
+     * 删除文章
+     * @param classId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public Result delete(@RequestParam(value = "id", required = false)Integer id){
+        try {
+            int deleteNum = articleClassService.delete(id);
+            if(deleteNum == 1){
+                return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+            }else {
+                return super.setResult(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ALREADY_DELETE));
+            }
+        }catch (Exception e){
+            LOGGER.error(">> delete article class throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+    private ArticleClass setEntity(Integer acId, String acCode, String acName, Integer acParentId, Integer acSort, Integer flag,
+                              Date createTime) {
+        ArticleClass articleClass = new ArticleClass();
+
+        articleClass.setAcId(acId);
+        articleClass.setAcCode(acCode == null ? "" : acCode);
+        articleClass.setAcName(acName == null ? "" : acName);
+        articleClass.setAcParentId(acParentId);
+        articleClass.setAcSort(acSort);
+        articleClass.setFlag(flag);
+        articleClass.setCreateTime(createTime);
+        return articleClass;
+    }
 }

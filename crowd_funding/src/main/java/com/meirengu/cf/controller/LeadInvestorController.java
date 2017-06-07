@@ -1,6 +1,5 @@
 package com.meirengu.cf.controller;
 
-import com.meirengu.cf.model.ItemExtention;
 import com.meirengu.cf.model.LeadInvestor;
 import com.meirengu.cf.service.ItemExtentionService;
 import com.meirengu.cf.service.ItemService;

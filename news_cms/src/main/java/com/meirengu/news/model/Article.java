@@ -1,182 +1,201 @@
 package com.meirengu.news.model;
 
-import org.springframework.data.jpa.repository.EntityGraph;
-
+import com.meirengu.model.BaseObject;
 import java.util.Date;
+ /*
+  * Article 实体类
+  * Tue Jun 06 10:57:35 CST 2017 建新
+  */
+public class Article  extends BaseObject {
+	/** 索引id */
+	private Integer articleId;
+	/** 分类id */
+	private Integer acId;
+	/** 跳转链接 */
+	private String articleUrl;
+	/** 文章标签 */
+	private String articleLabel;
+	/** 是否显示，0为否，1为是，默认为1 */
+	private Integer articleShow;
+	/** 排序 */
+	private Integer articleSort;
+	/** 文章头图 */
+	private String articleImg;
+	/** 标题 */
+	private String articleTitle;
+	/** 内容 */
+	private String articleContent;
+	/** 是否为轮播图文章，0为非轮播图，1为轮播图 */
+	private Integer articleIsBanner;
+	/** 0为不推荐，1为推荐 */
+	private Integer articleIsCommend;
+	/** 是否发布，1为发布，0为未发布 */
+	private Integer articleIsPublish;
+	/** 发布时间 */
+	private Date articleTime;
+	/** 删除标识  0为删除，1为未删除 */
+	private Integer flag;
+	/** 创建人 */
+	private Integer createUser;
+	/** 创建人姓名 */
+	private String createUserName;
+	/** 创建人头像 */
+	private String createUserImg;
+	/** 创建人类型 1会员用户 2系统用户 3医生用户 */
+	private Integer createUserType;
+	/** 创建时间 */
+	private Date createTime;
 
-/**
- * 文章实体
- * Created by 建新 on 2016/12/27.
- */
-public class Article  extends BaseEntity {
+	public void setArticleId(Integer articleId){
+		this.articleId = articleId;
+	}
 
-    private int id;
-    /** 文章分类ID **/
-    private int acId;
-    /** 文章URL **/
-    private String url;
-    /** 文章标签 **/
-    private String label;
-    /** 文章是否展示 0为否，1为是 **/
-    private int show;
-    /** 文章排序 **/
-    private int sort;
-    /** 文章头图 **/
-    private String img;
-    /** 文章标题 **/
-    private String title;
-    /** 文章内容 **/
-    private String content;
-    /** 是否为轮播图文章，0为非轮播图，1为轮播图 **/
-    private int isBanner;
-    /** 是否推荐 0为不推荐，1为推荐 **/
-    private int isCommend;
-    /** 文章发布时间 **/
-    private Date time;
-    /** 是否发布， 1为发布，0为未发布**/
-    private int isPublish;
-    /** 删除标识，0为删除，1为未删除 **/
-    private int flag;
-    /** 创建人 **/
-    private int createUser;
-    /** 创建人类型 1后台用户 2客户端用户 **/
-    private int createUserType;
-    /** 创建时间 **/
-    private Date createTime;
+	public Integer getArticleId(){
+		return articleId;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public void setAcId(Integer acId){
+		this.acId = acId;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public Integer getAcId(){
+		return acId;
+	}
 
-    public int getAcId() {
-        return acId;
-    }
+	public void setArticleUrl(String articleUrl){
+		this.articleUrl = articleUrl;
+	}
 
-    public void setAcId(int acId) {
-        this.acId = acId;
-    }
+	public String getArticleUrl(){
+		return articleUrl;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public void setArticleLabel(String articleLabel){
+		this.articleLabel = articleLabel;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public String getArticleLabel(){
+		return articleLabel;
+	}
 
-    public int getShow() {
-        return show;
-    }
+	public void setArticleShow(Integer articleShow){
+		this.articleShow = articleShow;
+	}
 
-    public void setShow(int show) {
-        this.show = show;
-    }
+	public Integer getArticleShow(){
+		return articleShow;
+	}
 
-    public int getSort() {
-        return sort;
-    }
+	public void setArticleSort(Integer articleSort){
+		this.articleSort = articleSort;
+	}
 
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
+	public Integer getArticleSort(){
+		return articleSort;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setArticleImg(String articleImg){
+		this.articleImg = articleImg;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getArticleImg(){
+		return articleImg;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public void setArticleTitle(String articleTitle){
+		this.articleTitle = articleTitle;
+	}
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+	public String getArticleTitle(){
+		return articleTitle;
+	}
 
-    public Date getTime() {
-        return time;
-    }
+	public void setArticleContent(String articleContent){
+		this.articleContent = articleContent;
+	}
 
-    public void setTime(Date time) {
-        this.time = time;
-    }
+	public String getArticleContent(){
+		return articleContent;
+	}
 
-    public String getImg() {
-        return img;
-    }
+	public void setArticleIsBanner(Integer articleIsBanner){
+		this.articleIsBanner = articleIsBanner;
+	}
 
-    public void setImg(String img) {
-        this.img = img;
-    }
+	public Integer getArticleIsBanner(){
+		return articleIsBanner;
+	}
 
-    public int getIsBanner() {
-        return isBanner;
-    }
+	public void setArticleIsCommend(Integer articleIsCommend){
+		this.articleIsCommend = articleIsCommend;
+	}
 
-    public void setIsBanner(int isBanner) {
-        this.isBanner = isBanner;
-    }
+	public Integer getArticleIsCommend(){
+		return articleIsCommend;
+	}
 
-    public int getIsCommend() {
-        return isCommend;
-    }
+	public void setArticleIsPublish(Integer articleIsPublish){
+		this.articleIsPublish = articleIsPublish;
+	}
 
-    public void setIsCommend(int isCommend) {
-        this.isCommend = isCommend;
-    }
+	public Integer getArticleIsPublish(){
+		return articleIsPublish;
+	}
 
-    public int getIsPublish() {
-        return isPublish;
-    }
+	public void setArticleTime(Date articleTime){
+		this.articleTime = articleTime;
+	}
 
-    public void setIsPublish(int isPublish) {
-        this.isPublish = isPublish;
-    }
+	public Date getArticleTime(){
+		return articleTime;
+	}
 
-    public int getFlag() {
-        return flag;
-    }
+	public void setFlag(Integer flag){
+		this.flag = flag;
+	}
 
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
+	public Integer getFlag(){
+		return flag;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setCreateUser(Integer createUser){
+		this.createUser = createUser;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Integer getCreateUser(){
+		return createUser;
+	}
 
-    public int getCreateUser() {
-        return createUser;
-    }
+	public void setCreateUserName(String createUserName){
+		this.createUserName = createUserName;
+	}
 
-    public void setCreateUser(int createUser) {
-        this.createUser = createUser;
-    }
+	public String getCreateUserName(){
+		return createUserName;
+	}
 
-    public int getCreateUserType() {
-        return createUserType;
-    }
+	public void setCreateUserImg(String createUserImg){
+		this.createUserImg = createUserImg;
+	}
 
-    public void setCreateUserType(int createUserType) {
-        this.createUserType = createUserType;
-    }
+	public String getCreateUserImg(){
+		return createUserImg;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public void setCreateUserType(Integer createUserType){
+		this.createUserType = createUserType;
+	}
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
-}
+	public Integer getCreateUserType(){
+		return createUserType;
+	}
+
+	public void setCreateTime(Date createTime){
+		this.createTime = createTime;
+	}
+
+	public Date getCreateTime(){
+		return createTime;
+	}
+
+ }
