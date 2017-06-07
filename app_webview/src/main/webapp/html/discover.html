@@ -8,92 +8,92 @@
 	<link rel="stylesheet" href="./../css/index.css" media="screen" charset="utf-8">
 </head>
 <body style="background-color:#f8f8f8">
-	<script type="text/javascript">
+<script type="text/javascript">
 	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
-	</script>
+</script>
 
-	<header>
-		<div class="swiper-container head_swiper" style="height:4.8rem;overflow:hidden;">
-			<div class="swiper-wrapper">
-				<div class="swiper-slide">
-					<img src="https://img.meirenguvip.com/slideshow/1492602770444.png" width="100%" alt="" />
-				</div>
-				<!--<div class="swiper-slide">
-					<img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
-				</div>
-				<div class="swiper-slide">
-					<img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
-				</div>-->
+<header>
+	<div class="swiper-container head_swiper" style="height:4.8rem;overflow:hidden;">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				<img src="https://img.meirenguvip.com/slideshow/1492602770444.png" width="100%" alt="" />
 			</div>
-			<div class="pagination"></div>
+			<!--<div class="swiper-slide">
+                <img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
+            </div>
+            <div class="swiper-slide">
+                <img src="https://dummyimage.com/750x480/b293a4/fff&text=someImg" width="100%" alt="" />
+            </div>-->
 		</div>
-	</header>
-	<div class="find_cont">
-		<ul class="wrapper">
-			<li>
-				<a href="../activities">
-					<img src="./../img/find_list1.jpg" alt="" style="width:.48rem" />
-					热门活动
-				</a>
-			</li>
-			<li>
-				<a href="../bulletins">
-					<img src="./../img/find_list2.jpg" alt="" style="width:.48rem" />
-					平台公告<!--<em></em>-->
-				</a>
-			</li>
-			<li>
-				<a href="../faqs">
-					<img src="./../img/find_list3.jpg" alt="" style="width:.48rem" />
-					常见问题
-				</a>
-			</li>
-			<li>
-				<a href="./user_guide.html">
-					<img src="./../img/find_list4.jpg" alt="" style="width:.48rem" />
-					使用指南
-				</a>
-			</li>
-			<li>
-				<a href="../article/view?acId=8">
-					<img src="./../img/find_list5.jpg" alt="" style="width:.48rem" />
-					媒体报道
-				</a>
-			</li>
-			<li>
-				<a href="../article/view?acId=9">
-					<img src="./../img/find_list6.jpg" alt="" style="width:.48rem" />
-					最新资讯
-				</a>
-			</li>
-		</ul>
-		<ul class="wrapper" style="margin:.2rem 0;">
-			<li>
-				<a href="contact_us.html">
-					<img src="./../img/find_list7.jpg" alt="" style="width:.48rem" />
-					联系我们
-				</a>
-			</li>
-		</ul>
+		<div class="pagination"></div>
 	</div>
+</header>
+<div class="find_cont">
+	<ul class="wrapper">
+		<li>
+			<a href="../activities">
+				<img src="./../img/find_list1.jpg" alt="" style="width:.48rem" />
+				热门活动
+			</a>
+		</li>
+		<li>
+			<a href="../bulletins">
+				<img src="./../img/find_list2.jpg" alt="" style="width:.48rem" />
+				平台公告<!--<em></em>-->
+			</a>
+		</li>
+		<li>
+			<a href="../faqs">
+				<img src="./../img/find_list3.jpg" alt="" style="width:.48rem" />
+				常见问题
+			</a>
+		</li>
+		<li>
+			<a href="./user_guide.html">
+				<img src="./../img/find_list4.jpg" alt="" style="width:.48rem" />
+				使用指南
+			</a>
+		</li>
+		<li>
+			<a href="../article/view?acId=8">
+				<img src="./../img/find_list5.jpg" alt="" style="width:.48rem" />
+				媒体报道
+			</a>
+		</li>
+		<li>
+			<a href="../article/view?acId=9">
+				<img src="./../img/find_list6.jpg" alt="" style="width:.48rem" />
+				最新资讯
+			</a>
+		</li>
+	</ul>
+	<ul class="wrapper" style="margin:.2rem 0;">
+		<li>
+			<a href="contact_us.html">
+				<img src="./../img/find_list7.jpg" alt="" style="width:.48rem" />
+				联系我们
+			</a>
+		</li>
+	</ul>
+</div>
 </body>
 <script type="text/javascript" src="./../js/zepto.js"></script>
 <script type="text/javascript" src="./../js/swiper.js"></script>
 <script type="text/javascript">
 	$(function(){
 		var head_swiper= new Swiper('.head_swiper',{
-       pagination: '.pagination',
-       paginationClickable: true,
-       autoplay:3000,
-       speed:800,
-       calculateHeight:true,
-       onTouchStart:function(){
-         head_swiper.stopAutoplay();
-       },
-       onTouchEnd:function(){
-         head_swiper.startAutoplay();
-       }
-     });
+			pagination: '.pagination',
+			paginationClickable: true,
+			autoplay:3000,
+			speed:800,
+			calculateHeight:true,
+			onTouchStart:function(){
+				head_swiper.stopAutoplay();
+			},
+			onTouchEnd:function(){
+				head_swiper.startAutoplay();
+			}
+		});
 	})
 </script>
 
