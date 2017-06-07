@@ -45,17 +45,17 @@
 
         .edit_h31 {
             border-bottom: 1px #ddd solid;
-            overflow: hidden;
+            overflow:hidden;
         }
 
         .tabCon {
-            width: 100%;
+            width:100%;
         }
 
         .tabCon {
             display: none;
             overflow: hidden;
-            width：100%;
+            width:100%;
         }
 
         .tabBar {
@@ -264,7 +264,7 @@
                 <label class="form-label col-xs-4 col-sm-2">项目名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
                     <input type="text" class="input-text" value="${item.itemName}" disabled id="articletitle" name="articletitle"
-                           maxlength="30" placeholder="项目标题最多30字" id="" name="">
+                           maxlength="30" placeholder="项目标题最多30字" id="itemName" name="itemName">
                 </div>
             </div>
             <div class="row cl">
@@ -515,18 +515,18 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
+                        <input type="text" onblur="verifyCommissionRate()" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
                     </div>
                 </div>
                 <c:if test="${item.typeId != 3}">
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-2">保证金：</label>
                         <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
+                            <input type="text" class="input-text" onblur="verifyGuaranteeRate()" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
                         </div>
                         <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
                         <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
+                            <input type="text" class="input-text"  onblur="verifyprepaidBonus()" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
                         </div>
                     </div>
                 </c:if>
@@ -567,7 +567,7 @@
                         <tbody>
                         <tr class="text-c">
                             <td>发起人身份证正反面
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="sponsorIdcard" name="sponsorIdcard">
@@ -578,7 +578,7 @@
                                             </div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','headerImage', 1)">
+                                                <input type="file" name="file" id="file0" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file0','item','imgParent0','sponsorIdcard', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -587,7 +587,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>发起人征信报告
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="sponsorCredit" name="sponsorCredit">
@@ -613,7 +613,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>企业法人身份证正反面
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="principalIdcard" name="principalIdcard">
@@ -632,7 +632,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>企业法人征信报告
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="principalCredit" name="principalCredit">
@@ -651,7 +651,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>营业执照
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="businessLicence" name="businessLicence">
@@ -670,7 +670,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>场地/土地租赁协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="venueRentalAgreement" name="venueRentalAgreement">
@@ -680,7 +680,7 @@
                                             <div id="imgParent5" class="clearfix"></div>
                                             <section class="z_file fl" style="width:100px;height:30px;">
                                                 <label class="u_img">上传图片</label>
-                                                <input type="file" name="file" id="file5" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file5','item','imgParent5','venueRentalAgreement, 1')">
+                                                <input type="file" name="file" id="file5" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file5','item','imgParent5','venueRentalAgreement', 1)">
                                             </section>
                                         </div>
                                     </section>
@@ -689,7 +689,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>新店装修效果图
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="storeRenderings" name="storeRenderings">
@@ -708,7 +708,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>公司章程
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="corporateArticles" name="corporateArticles">
@@ -727,7 +727,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>近一年流水，资产负债表
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="assetWaterLiabilities" name="assetWaterLiabilities">
@@ -763,7 +763,7 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">股东身份证号：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="shareholderIdcard" name="shareholderIdcard">
+                        <input type="text" class="input-text" onblur="verifyShareholderIdcard()" value="" id="shareholderIdcard" name="shareholderIdcard">
                     </div>
                 </div>
                 <div class="row cl">
@@ -781,7 +781,7 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">担保人身份证号：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="" id="guaranteeIdcard" name="guaranteeIdcard">
+                        <input type="text" class="input-text" onblur="verifyGuaranteeIdcard()" value="" placeholder="" id="guaranteeIdcard" name="guaranteeIdcard">
                     </div>
                 </div>
                 <div class="row cl">
@@ -792,7 +792,7 @@
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-8 col-sm-8  col-sm-offset-1" style="text-align:left;">投资人每投资100万元，股东向管理公司质押不低于
-                        <input type="text" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width: 50px; text-align: center;" id="pledgedShares" name="pledgedShares">
+                        <input type="text" onblur="verifyPledgedShares()" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width: 50px; text-align: center;" id="pledgedShares" name="pledgedShares">
                         %的股份</label>
 
                 </div>
@@ -832,7 +832,7 @@
                         <tbody>
                         <tr class="text-c">
                             <td>托管协议书
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="escrowAgreement" name="escrowAgreement">
@@ -851,7 +851,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>融资服务协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="financeService" name="financeService">
@@ -870,7 +870,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>融资管理协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="financeManage" name="financeManage">
@@ -889,7 +889,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>股权质押合同
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="sharePledgeAgreement" name="sharePledgeAgreement">
@@ -908,7 +908,7 @@
                         </tr>
                         <tr class="text-c">
                             <td>保证合同
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
+                                <%--<button class="btn btn-link radius ml-10" type="button">下载</button>--%>
                             </td>
                             <td class="text-l">
                                 <input type="hidden" id="guarantyAgreement" name="guarantyAgreement">
@@ -976,7 +976,7 @@
                 <div class="cl"></div>
                 <div class="row cl">
                     <div class="formControls col-xs-8 col-sm-8 text-c">
-                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">提交审核
+                        <button class="btn btn-danger radius size-L mt-20 mb-30" style="padding:0 30px" onclick="tijiao()" type="button">提交审核
                         </button>
                     </div>
                 </div>
@@ -1035,7 +1035,176 @@
            $("#firstRatioDiv").hide();
        }
     });
+    
+    function verifyCommissionRate() {
+//      var reg = /^\+?(\d{2}\.\d*)$/;
+        var value = $("#commissionRate").val();
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value!="" && !reg.test(value)){
+            alert("佣金比例不正确！");
+            $("#commissionRate").val("");
+        }
+    }
+    function verifyGuaranteeRate() {
+        var value = $("#guaranteeRate").val();
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value!="" && !reg.test(value)){
+            alert("保证金比例不正确！");
+            $("#guaranteeRate").val("");
+        }
+    }
+    function verifyprepaidBonus() {
+        var value = $("#prepaidBonus").val();
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value!="" && !reg.test(value)){
+            alert("预付分红金不正确！");
+            $("#prepaidBonus").val("");
+        }
+    }
+    function verifyPledgedShares() {
+        var value = $("#pledgedShares").val();
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value!="" && !reg.test(value)){
+            alert("股东向管理公司质押抵押股份不正确！");
+            $("#pledgedShares").val("");
+        }
+    }
+    function verifyGuaranteeIdcard() {
+        var value = $("#guaranteeIdcard").val();
+        if(value != ""){
+            IdentityCodeValid(value);
+        }
+    }
+    function verifyShareholderIdcard() {
+        var value = $("#shareholderIdcard").val();
+        if(value != ""){
+            IdentityCodeValid(value);
+        }
+    }
+    function IdentityCodeValid(code) {
+        var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
+        var tip = "";
+        var pass= true;
 
+        if(!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(code)){
+            tip = "身份证号格式错误";
+            pass = false;
+        }
+
+        else if(!city[code.substr(0,2)]){
+            tip = "地址编码错误";
+            pass = false;
+        }
+        else{
+            //18位身份证需要验证最后一位校验位
+            if(code.length == 18){
+                code = code.split('');
+                //∑(ai×Wi)(mod 11)
+                //加权因子
+                var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
+                //校验位
+                var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
+                var sum = 0;
+                var ai = 0;
+                var wi = 0;
+                for (var i = 0; i < 17; i++)
+                {
+                    ai = code[i];
+                    wi = factor[i];
+                    sum += ai * wi;
+                }
+                var last = parity[sum % 11];
+                if(parity[sum % 11] != code[17]){
+                    tip = "校验位错误";
+                    pass =false;
+                }
+            }
+        }
+        if(!pass) alert(tip);
+        return pass;
+    }
+</script>
+<script type="text/javascript">
+    var flag = 1;
+    function verifyRate(value,message) {
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value=="" && !reg.test(value)){
+            alert(message+"不正确！");
+            flag = 0;
+        }
+    }
+    function verifyBonus(value,message) {
+        var reg = /^(?:0|[1-9][0-9]?|100)$/;
+        if(value=="" && !reg.test(value)){
+            alert(message+"不正确！");
+            flag = 0;
+        }
+    }
+    function verifyValue(value,message) {
+        if(value==""){
+            alert(message+"不正确！");
+            flag = 0;
+        }
+    }
+    function tijiao() {
+        var commissionRate = $("#commissionRate").val();//佣金比例
+        verifyRate(commissionRate,"佣金比例");
+        var guaranteeRate = $("#guaranteeRate").val();//保证金
+        verifyRate(guaranteeRate,"保证金");
+        var prepaidBonus = $("#prepaidBonus").val();//预付分红金
+        verifyBonus(prepaidBonus,"预付分红金");
+        var sponsorIdcard = $("#sponsorIdcard").val();//身份证
+        verifyValue(sponsorIdcard,"身份证");
+        var sponsorCredit = $("#sponsorCredit").val();//发起人征信报告
+        verifyValue(sponsorCredit,"发起人征信报告");
+        var principalIdcard = $("#principalIdcard").val();//企业法人身份证正反面
+        verifyValue(principalIdcard,"企业法人身份证正反面");
+        var principalCredit = $("#principalCredit").val();//企业法人征信报告
+        verifyValue(principalCredit,"企业法人征信报告");
+        var businessLicence = $("#businessLicence").val();//营业执照
+        verifyValue(businessLicence,"营业执照");
+        var venueRentalAgreement = $("#venueRentalAgreement").val();//场地/土地租赁协议
+        verifyValue(venueRentalAgreement,"场地/土地租赁协议");
+        var storeRenderings = $("#storeRenderings").val();//新店装修效果图
+        verifyValue(storeRenderings,"新店装修效果图");
+        var corporateArticles = $("#corporateArticles").val();//公司章程
+        verifyValue(corporateArticles,"公司章程");
+        var assetWaterLiabilities = $("#assetWaterLiabilities").val();//近一年流水，资产负债表
+        verifyValue(assetWaterLiabilities,"近一年流水，资产负债表");
+
+
+        var shareholderName = $("#shareholderName").val();//股东姓名
+        verifyValue(shareholderName,"股东姓名");
+        var shareholderIdcard = $("#shareholderIdcard").val();//股东身份证号
+        verifyValue(shareholderIdcard,"股东身份证号");
+        var shareholderAddress = $("#shareholderAddress").val();//股东地址
+        verifyValue(shareholderAddress,"股东地址");
+        var guaranteeName = $("#guaranteeName").val();//担保人姓名
+        verifyValue(guaranteeName,"担保人姓名");
+        var guaranteeIdcard = $("#guaranteeIdcard").val();//担保人身份证号
+        verifyValue(guaranteeIdcard,"担保人身份证号");
+        var guaranteeAddress = $("#guaranteeAddress").val();//担保人地址
+        verifyValue(guaranteeAddress,"担保人地址");
+        var pledgedShares = $("#pledgedShares").val();//股东向管理公司质押股份
+        verifyBonus(pledgedShares,"股东向管理公司质押股份");
+        var partnerSeal = $("#partnerSeal").val();//项目方印章
+        verifyValue(partnerSeal,"项目方印章");
+
+
+        var escrowAgreement = $("#escrowAgreement").val();//托管协议书
+        verifyValue(escrowAgreement,"托管协议书");
+        var financeService = $("#financeService").val();//融资服务协议
+        verifyValue(financeService,"融资服务协议");
+        var financeManage = $("#financeManage").val();//融资管理协议
+        verifyValue(financeManage,"融资管理协议");
+        var sharePledgeAgreement = $("#sharePledgeAgreement").val();//股权质押合同
+        verifyValue(sharePledgeAgreement,"股权质押合同");
+        var guarantyAgreement = $("#guarantyAgreement").val();//保证合同
+        verifyValue(guarantyAgreement,"保证合同");
+        if(flag == 1){
+            $("#form-article-add").ajaxSubmit();
+        }
+    }
 </script>
 </body>
 </html>
