@@ -112,7 +112,7 @@
                         {
                             func: [
                                 {"name": "修改", "fn": "detail(\'" + row.itemId + "\')", "type": "default"},
-                                {"name": "下架", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "删除", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);
@@ -179,9 +179,9 @@
 
     /*删除*/
     function project_confirm(obj, id) {
-        layer.confirm('确认要下架吗？', function (index) {
+        layer.confirm('确认要删除吗？', function (index) {
             $.ajax({
-                url:"item/off",
+                url:"item/delete",
                 data:{
                     "id":id
                 },
@@ -189,7 +189,7 @@
                     if(data.code==200){
                         console.log(data);
                         $(obj).parents("tr").remove();
-                        layer.msg('已下架!', {icon: 1, time: 1000});
+                        layer.msg('已删除!', {icon: 1, time: 1000});
                     }else{
                         alert("操作失败! 请重试");
                     }
@@ -206,8 +206,8 @@
     function detail(id){
         var index = layer.open({
             type: 2,
-            title: "已发布项目详情",
-            content: "item/to_published?itemId="+id
+            title: "新建项目详情",
+            content: "/erp/item/to_edit?itemId="+id
         });
         layer.full(index);
     }

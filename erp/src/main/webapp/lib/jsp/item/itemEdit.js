@@ -513,4 +513,24 @@ $(function () {
         }
     });
 
+
+    function typeChange(){
+        var typeId = $("#typeId").val();
+        if(typeId == 1){
+
+        }
+
+        if(typeId == 2){
+
+        }
+
+        if(typeId == 3){
+            $("#extentionDiv").show();
+            $("#shareholderDiv").show();
+        }else{
+            $("#extentionDiv").hide();
+            $("#shareholderDiv").hide();
+        }
+    }
+
 });

@@ -29,6 +29,8 @@
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
     <title>项目添加</title>
     <style>
         .select-box1 {
@@ -185,24 +187,6 @@
 
         }
 
-        /*$("#typeId").click(function(){
-            var typeId = $("#typeId").val();
-            if(typeId == 1){
-
-            }
-
-            if(typeId == 2){
-
-            }
-
-            if(typeId == 3){
-                $("#extentionDiv").show();
-                $("#shareholderDiv").show();
-            }else{
-                $("#extentionDiv").hide();
-                $("#shareholderDiv").hide();
-            }
-        });*/
     </script>
 </head>
 <body>
@@ -238,7 +222,7 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="typeId" id="typeId" class="select">
+                        <select name="typeId" id="typeId" class="select" onchange="typeChange()">
                             <c:forEach items="${type}" var="type">
                                 <option value="${type.typeId}">${type.typeName}</option>
                             </c:forEach>
@@ -431,7 +415,7 @@
                             <%--<c:forEach items="${partner}" var="partner">
                                 <option value="${partner.partnerId}">${partner.partnerName}</option>
                             </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                            <option value="">合伙公司2</option>
                         </select>
                         </span>
                     </div>
@@ -439,17 +423,17 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司(附加)：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId3" class="select">
                             <%--<c:forEach items="${partner}" var="partner">
                                 <option value="${partner.partnerId}">${partner.partnerName}</option>
                             </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                            <option value="">合伙公司3</option>
                         </select>
                         </span>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId4" class="select">
                             <%--<c:forEach items="${partner}" var="partner">
                                 <option value="${partner.partnerId}">${partner.partnerName}</option>
                             </c:forEach>--%>
@@ -776,7 +760,6 @@
 
     </span>
 </div>
-
 <script src=lib/jquery/1.9.1/jquery.min.js></script>
 <script src=lib/layer/2.4/layer.js></script>
 <script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
@@ -785,15 +768,10 @@
 <script src=static/h-ui/js/H-ui.js></script>
 <script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
-<script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 </body>
 </html>
