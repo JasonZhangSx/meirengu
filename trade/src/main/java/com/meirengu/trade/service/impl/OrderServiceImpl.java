@@ -269,10 +269,12 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                             JSONObject item = resultJson.getJSONObject("data");
                             String headerImagePath = item.getString("headerImage");
                             String itemStatus = item.getString("itemStatus");
+                            String itemProfile = item.getString("itemProfile");
                             int partnerId = item.getIntValue("partnerId");
                             map.put("headerImage", headerImagePath);
                             map.put("itemStatus", itemStatus);
                             map.put("partnerId", partnerId);
+                            map.put("itemProfile", itemProfile);
                         }
                     }
                 }
@@ -629,6 +631,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 tempMap.put("partnerId", itemLevel.getIntValue("partnerId"));
                 tempMap.put("typeId", itemLevel.getIntValue("typeId"));
                 tempMap.put("headerImage", itemLevel.getString("headerImage"));
+                tempMap.put("itemProfile", itemLevel.getString("itemProfile"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
