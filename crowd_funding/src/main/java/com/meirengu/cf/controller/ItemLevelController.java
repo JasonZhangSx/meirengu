@@ -77,23 +77,25 @@ public class ItemLevelController extends BaseController{
                          @RequestParam(value = "level_name", required = false) String levelName,
                          @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
                          @RequestParam(value = "level_desc", required = false) String levelDesc,
-                         @RequestParam(value = "total_number", required = false) int totalNumber,
-                         @RequestParam(value = "single_limit_number", required = false) int singleLimitNumber,
-                         @RequestParam(value = "payback_days", required = false) int paybackDays,
-                         @RequestParam(value = "is_share_bonus", required = false) int isShareBonus,
+                         @RequestParam(value = "total_number", required = false) Integer totalNumber,
+                         @RequestParam(value = "single_limit_number", required = false) Integer singleLimitNumber,
+                         @RequestParam(value = "payback_days", required = false) Integer paybackDays,
+                         @RequestParam(value = "is_share_bonus", required = false) Integer isShareBonus,
                          @RequestParam(value = "year_rate", required = false) double yearRate,
-                         @RequestParam(value = "investment_period", required = false) int investmentPeriod,
+                         @RequestParam(value = "investment_period", required = false) Integer investmentPeriod,
                          @RequestParam(value = "revenue_model", required = false) int revenueModel,
-                         @RequestParam(value = "share_bonus_period", required = false) int shareBonusPeriod,
-                         @RequestParam(value = "is_need_address", required = false) int isNeedAddress,
-                         @RequestParam(value = "is_need_agreement", required = false) int isNeedAgreement,
+                         @RequestParam(value = "share_bonus_period", required = false) Integer shareBonusPeriod,
+                         @RequestParam(value = "is_need_address", required = false) Integer isNeedAddress,
+                         @RequestParam(value = "is_need_agreement", required = false) Integer isNeedAgreement,
+                         @RequestParam(value = "share_hold_rate", required = false) BigDecimal shareHoldRate,
+                         @RequestParam(value = "year_rate_max", required = false) Double yearRateMax,
                          @RequestParam(value = "operate_account", required = false) String operateAccount){
 
         ItemLevel itemLevel = this.setEntity(0, itemId, levelName, levelAmount, levelDesc,
                 totalNumber, singleLimitNumber, 0, 0, paybackDays,
                 null, isShareBonus, yearRate, investmentPeriod, revenueModel,
                 shareBonusPeriod, isNeedAddress, isNeedAgreement, 1, 255,
-                new Date(), operateAccount);
+                new Date(), operateAccount, shareHoldRate, yearRateMax);
         try {
             int insertNum = itemLevelService.insert(itemLevel);
             if(insertNum == 1){
@@ -205,13 +207,15 @@ public class ItemLevelController extends BaseController{
                          @RequestParam(value = "book_number", required = false) Integer bookNumber,
                          @RequestParam(value = "completed_number", required = false) Integer completedNumber,
                          @RequestParam(value = "level_status", required = false) Integer levelStatus,
-                         @RequestParam(value = "level_sort", required = false) Integer levelSort){
+                         @RequestParam(value = "level_sort", required = false) Integer levelSort,
+                         @RequestParam(value = "share_hold_rate", required = false) BigDecimal shareHoldRate,
+                         @RequestParam(value = "year_rate_max", required = false) double yearRateMax){
 
        ItemLevel itemLevel = this.setEntity(levelId, 0, levelName, levelAmount, levelDesc,
                 totalNumber, singleLimitNumber, bookNumber, completedNumber, paybackDays,
                 null, isShareBonus, yearRate, investmentPeriod, revenueModel,
                 shareBonusPeriod, isNeedAddress, isNeedAgreement, levelStatus, levelSort,
-                new Date(), operateAccount);
+                new Date(), operateAccount, shareHoldRate, yearRateMax);
         try {
             int updateNum = itemLevelService.update(itemLevel);
             if(updateNum == 1){
@@ -230,7 +234,7 @@ public class ItemLevelController extends BaseController{
                                 Integer totalNumber, Integer singleLimitNumber, Integer bookNumber, Integer completedNumber, Integer paybackDays,
                                 Date paybackTime, Integer isShareBonus, double yearRate, Integer investmentPeriod, Integer revenueModel,
                                 Integer shareBonusPeriod, Integer isNeedAddress, Integer isNeedAgreement, Integer levelStatus, Integer levelSort,
-                                Date createTime, String operateAccount){
+                                Date createTime, String operateAccount, BigDecimal shareHoldRate, Double yearRateMax){
         ItemLevel entity = new ItemLevel();
         entity.setLevelId(levelId);
         entity.setItemId(itemId);
@@ -254,6 +258,8 @@ public class ItemLevelController extends BaseController{
         entity.setLevelSort(levelSort);
         entity.setCreateTime(createTime);
         entity.setOperateAccount(operateAccount);
+        entity.setShareHoldRate(shareHoldRate);
+        entity.setYearRateMax(yearRateMax);
         return entity;
     }
 }
