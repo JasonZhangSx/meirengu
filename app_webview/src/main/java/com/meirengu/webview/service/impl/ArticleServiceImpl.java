@@ -7,6 +7,7 @@ import com.meirengu.webview.service.ArticleService;
 import com.meirengu.webview.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author 建新
  * @create 2017-06-07 11:17
  */
+@Service
 public class ArticleServiceImpl implements ArticleService{
 
     private Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
