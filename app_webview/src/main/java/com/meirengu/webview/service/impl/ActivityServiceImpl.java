@@ -30,11 +30,12 @@ public class ActivityServiceImpl implements ActivityService{
         params.put("per_page", "20");
         params.put("sortby", "create_time");
         params.put("order", "desc");
+        params.put("status", "2");
         String url = ConfigUtil.getConfig("URI_ACTIVITIES");
         logger.info("activities http >> url:{}, params:{}", new Object[]{url, params});
         HttpResult hr = null;
         try {
-            hr = HttpUtil.doPost(url, params);
+            hr = HttpUtil.doPostForm(url, params);
         } catch (Exception e) {
             logger.error("activities http exception << url:{},  params:{}, exception:{}", new Object[]{url, params, e});
         }
