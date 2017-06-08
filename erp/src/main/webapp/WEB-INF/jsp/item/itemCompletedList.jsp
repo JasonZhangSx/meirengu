@@ -111,8 +111,8 @@
                         var context =
                         {
                             func: [
-                                {"name": "修改", "fn": "detail(\'" + row.itemId + "\')", "type": "default"},
-                                {"name": "下架", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "查看", "fn": "detail(\'" + row.itemId + "\')", "type": "primary"},
+                                {"name": "分红", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);

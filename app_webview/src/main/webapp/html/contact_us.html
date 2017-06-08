@@ -50,9 +50,15 @@
 		user_phone = userPhone;
 	}
 
+	function showInfoFromAppWithFlag(msg){
+
+		console.log("来自App的消息: "+msg);
+		flag = msg;
+	}
+
 	function toFeedBack(){
-		if(user_id == null || user_id == ""){
-			var flag = GetQueryString("flag");
+		if(user_id == null || user_id == "" || user_id == undefined){
+			//var flag = GetQueryString("flag");
 			//1为ios
 			if(flag == 1){
 				window.webkit.messageHandlers.appLogin.postMessage("");

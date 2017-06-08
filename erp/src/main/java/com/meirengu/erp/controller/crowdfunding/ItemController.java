@@ -200,8 +200,8 @@ public class ItemController extends BaseController {
         params.put("header_image", item.getHeaderImage());
         params.put("operate_account", "jason");
         params.put("sponsor_name","jason");
-        params.put("lead_investor_name", item.getLeadInvestorName());
-        params.put("lead_investor_amount", String.valueOf(item.getLeadInvestorAmount()));
+        params.put("lead_investor_name", item.getLeadInvestorName() == null ? "" : item.getLeadInvestorName());
+        params.put("lead_investor_amount", String.valueOf(item.getLeadInvestorAmount() == null ? 0 : item.getLeadInvestorAmount()));
         params.put("lead_investor_header", item.getLeadInvestorHeader());
 
         try {
@@ -304,6 +304,7 @@ public class ItemController extends BaseController {
         params.put("share_bonus_period", String.valueOf(itemLevel.getShareBonusPeriod()));
         params.put("is_need_address", String.valueOf(itemLevel.getIsNeedAddress()));
         params.put("is_need_agreement", String.valueOf(itemLevel.getIsNeedAgreement()));
+        params.put("share_hold_rate", String.valueOf(itemLevel.getShareHoldRate() == null ? 0 : itemLevel.getShareHoldRate()));
         params.put("operate_account", "jason");
         try {
             if(itemLevel.getLevelId() == 0 || itemLevel.getLevelId() == null){

@@ -30,7 +30,6 @@
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
 
-    <script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
     <title>项目添加</title>
     <style>
         .select-box1 {
@@ -96,7 +95,6 @@
         .img-box .upimg-div .z_file{overflow: hidden}
     </style>
     <script type="text/javascript">
-
         var xhr;
         if(window.XMLHttpRequest){
             xhr = new XMLHttpRequest();
@@ -186,7 +184,6 @@
             }
 
         }
-
     </script>
 </head>
 <body>
@@ -243,12 +240,12 @@
                     <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="targetAmount"
-                               name="targetAmount" required>
+                               name="targetAmount" style="width: 272px;">&nbsp;&nbsp;元
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder=""
-                               id="preheatingDays" name="preheatingDays">
+                               id="preheatingDays" name="preheatingDays" style="width: 272px;">&nbsp;&nbsp;天
                     </div>
                 </div>
                 <div class="row cl">
@@ -264,7 +261,7 @@
                     <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="crowdDays"
-                               name="crowdDays">
+                               name="crowdDays" style="width: 272px;">&nbsp;&nbsp;天
                     </div>
                 </div>
                 <div class="row cl">
@@ -635,12 +632,12 @@
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount" style="width: 272px;">&nbsp;&nbsp;元
                                 </div>
 
                                 <label class="form-label col-xs-4 col-sm-2">持股比例：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate" style="width: 272px;">&nbsp;&nbsp;%
                                 </div>
                             </div>
                             <div class="row cl">
@@ -657,19 +654,19 @@
                                 <label class="form-label col-xs-4 col-sm-2">总份数：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber0"
-                                           name="totalNumber">
+                                           name="totalNumber" style="width: 272px;">&nbsp;&nbsp;份
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber0"
-                                           name="singleLimitNumber">
+                                           name="singleLimitNumber" style="width: 272px;">&nbsp;&nbsp;份
                                 </div>
                             </div>
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays0"
-                                           name="paybackDays">
+                                           name="paybackDays" style="width: 272px;">&nbsp;&nbsp;天
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
                                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
@@ -685,12 +682,12 @@
                                     <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
-                                               name="yearRate">
+                                               name="yearRate" style="width: 272px;">&nbsp;&nbsp;%
                                     </div>
                                     <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod0"
-                                               name="investmentPeriod">
+                                               name="investmentPeriod" style="width: 272px;">&nbsp;&nbsp;月
                                     </div>
                                 </div>
                                 <div class="row cl">
@@ -760,6 +757,8 @@
 
     </span>
 </div>
+
+<script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 <script src=lib/jquery/1.9.1/jquery.min.js></script>
 <script src=lib/layer/2.4/layer.js></script>
 <script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>

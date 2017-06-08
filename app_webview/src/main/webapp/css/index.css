@@ -20,15 +20,13 @@ img{vertical-align: top}
 .bg_fff{background-color: #fff;}
 
 .find_cont .wrapper{
-  font-size:.2rem;color:#909090;padding:.3rem;
+  font-size:.2rem;color:#909090;
 }
-.find_cont .wrapper>div{display: table;text-align: left;vertical-align: center;}
-.find_cont .wrapper>div a{width:3.45rem;display: table-cell;text-align: center;height:1.6rem;vertical-align: middle;box-sizing:border-box;}
-.find_cont .wrapper>div a:nth-child(2n-1){border-right:0.03rem #f5f2f2 solid;border-top:0.03rem #f5f2f2 solid;}
-.find_cont .wrapper>div a:nth-child(2n){border-top:0.03rem #f5f2f2 solid;}
-.find_cont .wrapper>div:nth-child(1) a{border-top:none;}
-.find_cont .wrapper>div a img{margin-bottom: .3rem;}
-
+.find_cont ul li:nth-last-child(1){border:none;}
+.find_cont li{height:1rem;line-height: 1rem;background-color: #fff;border-bottom: 1px #e5e5e5 solid;padding:0 .32rem;}
+.find_cont li img{vertical-align: middle;margin-right: .2rem;}
+/*.find_cont li em{position: relative;display:block;border:1px blue solid;}*/
+.find_cont li em{display:inline-block;width:.14rem;height:.14rem;border-radius: 50%;margin-left: .08rem;position: relative;top:-.14rem;background-color: #fd4142;}
 
 .findHotAct_cont .item{background-color: #fff;margin-bottom: .25rem;}
 .findHotAct_cont .item .top{position: relative;height:4.8rem;overflow: hidden;}
@@ -278,3 +276,18 @@ img{vertical-align: top}
 .meit_bd .right{float:right;display: inline;width:4.22rem;position: relative;height:1.5rem}
 .meit_bd h4{font-weight: normal;font-size: .32rem;line-height: .5rem;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
 .meit_bd var{font-size: .24rem;color:#b5b5b5;position:absolute;right:0;bottom:0;}
+.meit_bd .js-load-more{
+    height:.8rem;
+    width:60%;
+    box-sizing: border-box;
+    background-color:#fff;
+    color:#555;
+    line-height:.8rem;
+    text-align:center;
+    border-radius:.15rem;
+    margin:.4rem auto .2rem;
+    border:0 none;
+    border:1px #d4d3d3 solid;
+    font-size:.22rem;
+    color:#a19f9f;
+}

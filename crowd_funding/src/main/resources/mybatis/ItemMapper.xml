@@ -126,7 +126,7 @@
 			<if test="leadInvestorName != null and leadInvestorName != ''">
 				lead_investor_name=#{leadInvestorName},
 			</if>
-			<if test="leadInvestorAmount != null">
+			<if test="leadInvestorAmount != null and leadInvestorAmount != '0'">
 				lead_investor_amount=#{leadInvestorAmount},
 			</if>
 			<if test="leadInvestorHeader != null and leadInvestorHeader != ''">

@@ -2,6 +2,24 @@
 var contentIndex = 0;
 var levelIndex = 0;
 
+function typeChange(){
+    var typeId = $("#typeId").val();
+    if(typeId == 1){
+
+    }
+
+    if(typeId == 2){
+
+    }
+
+    if(typeId == 3){
+        $("#extentionDiv").show();
+        $("#shareholderDiv").show();
+    }else{
+        $("#extentionDiv").hide();
+        $("#shareholderDiv").hide();
+    }
+}
 /**
  * 是否分红
  */
@@ -175,25 +193,6 @@ function itemValidate(){
     //if(targetAmount.len)
 
 }
-
-function itemValidate(){
-    var contentTitle = $("#contentTitle").val();
-    var contentInfo = $("#contentInfo").val();
-
-    if(itemName.length > 30){
-        alert("项目名称不能超过30字");
-        return false;
-    }
-
-    if(itemProfile.length > 200){
-        alert("项目简介不能超过200字");
-        return false;
-    }
-
-    //if(targetAmount.len)
-
-}
-
 
 //提交审核
 function verify() {
@@ -496,41 +495,6 @@ $(function () {
         radioClass: 'iradio-blue',
         increaseArea: '20%'
     });
-    $("#form-article-add").validate({
-        rules: {
-            articletitle: {
-                required: true,
-            }
-        },
-        onkeyup: false,
-        focusCleanup: true,
-        success: "valid",
-        submitHandler: function (form) {
-            //$(form).ajaxSubmit();
-            var index = parent.layer.getFrameIndex(window.name);
-            //parent.$('.btn-refresh').click();
-            parent.layer.close(index);
-        }
-    });
 
-
-    function typeChange(){
-        var typeId = $("#typeId").val();
-        if(typeId == 1){
-
-        }
-
-        if(typeId == 2){
-
-        }
-
-        if(typeId == 3){
-            $("#extentionDiv").show();
-            $("#shareholderDiv").show();
-        }else{
-            $("#extentionDiv").hide();
-            $("#shareholderDiv").hide();
-        }
-    }
-
+    
 });
