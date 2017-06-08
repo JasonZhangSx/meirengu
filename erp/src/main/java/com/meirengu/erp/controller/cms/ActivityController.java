@@ -129,6 +129,8 @@ public class ActivityController extends BaseController{
         paramsMap.put("activity_id",activityId);
         paramsMap.put("activity_name",activityName);
         paramsMap.put("activity_type",activityType);
+        paramsMap.put("sortBy","create_time");
+        paramsMap.put("order","DESC");
         paramsMap.put("status",status);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
         int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;

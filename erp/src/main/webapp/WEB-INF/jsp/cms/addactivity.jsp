@@ -187,11 +187,39 @@
         }
     }
     function tijiao() {
-        var length = $("input[name='activity_image']").length
-        if(length!=0){
-            $("#form-horizontal").ajaxSubmit(options);
-        }else{
+        var length = $("input[name='activity_image']").length;
+        var activity_name = $("#activity_name").val();
+        var activity_link = $("#activity_link").val();
+        var remarks = $("#remarks").val();
+        var datetimepicker2 = $("#datetimepicker2").val();
+        var datetimepicker3 = $("#datetimepicker3").val();
+        var flag = 1;
+        if(activity_name ==""){
+            flag = 0;
+            alert("活动名称不能为空！");
+        }
+        if(activity_link ==""){
+            flag = 0;
+            alert("活动链接不能为空！");
+        }
+        if(remarks ==""){
+            flag = 0;
+            alert("备注不能为空！");
+        }
+        if(datetimepicker2 ==""){
+            flag = 0;
+            alert("开始时间不能为空！");
+        }
+        if(datetimepicker3 ==""){
+            flag = 0;
+            alert("结束时间不能为空！");
+        }
+        if(length==0){
+            flag = 0;
             alert("活动图片不能为空！");
+        }
+        if(flag == 1){
+            $("#form-horizontal").ajaxSubmit(options);
         }
     }
     // 时间
