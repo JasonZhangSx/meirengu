@@ -274,6 +274,12 @@ public class StatusCode {
     public static final int ITEM_TYPE_DELETE_ERROR = 50532;
     public static final int OPERATE_RECORD_INSERT_ERROR = 50533;
     public static final int LEVEL_ROLLBACK_OUT_NUMBER = 50534;
+    public static final int SHAREHOLDER_INSERT_ERROR = 50535;
+    public static final int SHAREHOLDER_UPDATE_ERROR = 50536;
+    public static final int SHAREHOLDER_DELETE_ERROR = 50537;
+    public static final int EXTENTION_INSERT_ERROR = 50538;
+    public static final int EXTENTION_UPDATE_ERROR = 50539;
+    public static final int EXTENTION_DELETE_ERROR = 50540;
 
     //50600-50700//payment
 
@@ -539,6 +545,12 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.ITEM_TYPE_DELETE_ERROR, "众筹项目分类删除失败");
         codeMsgMap.put(StatusCode.OPERATE_RECORD_INSERT_ERROR, "操作记录插入失败");
         codeMsgMap.put(StatusCode.LEVEL_ROLLBACK_OUT_NUMBER, "回滚档位数量超过已筹数量");
+        codeMsgMap.put(StatusCode.SHAREHOLDER_INSERT_ERROR, "插入项目股东失败");
+        codeMsgMap.put(StatusCode.SHAREHOLDER_UPDATE_ERROR, "更新项目股东失败");
+        codeMsgMap.put(StatusCode.SHAREHOLDER_DELETE_ERROR, "删除项目股东失败");
+        codeMsgMap.put(StatusCode.EXTENTION_INSERT_ERROR, "新增项目扩展信息失败");
+        codeMsgMap.put(StatusCode.EXTENTION_UPDATE_ERROR, "更新项目扩展信息失败");
+        codeMsgMap.put(StatusCode.EXTENTION_DELETE_ERROR, "删除项目扩展信息失败");
 
         //40600-40700//payment
         codeMsgMap.put(StatusCode.PAYMENT_ACCOUNT_ERROR_INSERT_REPEAT, "该用户资金账户已存在");
