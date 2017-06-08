@@ -179,19 +179,18 @@
 
     /*删除*/
     function project_confirm(obj, id) {
-        layer.confirm('确认要下架吗？', function (index) {
+        layer.confirm('确认进行分红吗？', function (index) {
             $.ajax({
-                url:"item/off",
+                url:"item/dividends",
                 data:{
-                    "id":id
+                    "itemId":id
                 },
                 success : function(data) {
-                    if(data.code==200){
+                    if(data == "SUCCESS"){
                         console.log(data);
-                        $(obj).parents("tr").remove();
-                        layer.msg('已下架!', {icon: 1, time: 1000});
+                        layer.msg('操作成功!', {icon: 6, time: 1000});
                     }else{
-                        alert("操作失败! 请重试");
+                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
                     }
                 }
             })

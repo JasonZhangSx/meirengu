@@ -32,19 +32,19 @@
     <link href="lib/datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css"/>
     <style>
         .select-box1 {
-            padding-left: 0;
+            padding-left:0;
         }
 
         .select-box1 select {
-            font-size: 14px;
-            height: 31px;
-            line-height: 1.42857;
-            padding: 4px;
-            border: 1px #ddd solid;
+            font-size:14px;
+            height:31px;
+            line-height:1.42857;
+            padding:4px;
+            border:1px #ddd solid;
         }
 
         .edit_h31 {
-            border-bottom: 1px #ddd solid;
+            border-bottom:1px #dbd8dd solid;
             overflow:hidden;
         }
 
@@ -53,100 +53,100 @@
         }
 
         .tabCon {
-            display: none;
-            overflow: hidden;
+            display:none;
+            overflow:hidden;
             width:100%;
         }
 
         .tabBar {
-            border: none;
-            position: fixed;
-            top: 30px;
-            right: 20px;
-            z-index: 9999;
+            border:none;
+            position:fixed;
+            top:30px;
+            right:20px;
+            z-index:9999;
         }
 
         .tabBar span {
-            display: block;
-            float: none;
-            font-size: 20px;
-            line-height: 30px;
-            padding: 5px 15px;
-            font-weight: normal;
-            color: #a7a5a5
+            display:block;
+            float:none;
+            font-size:20px;
+            line-height:30px;
+            padding:5px 15px;
+            font-weight:normal;
+            color:#a7a5a5
         }
 
         .tabBar span.current {
-            background-color: #5a98de;
+            background-color:#5a98de;
         }
 
         .tabCon .form-label {
-            margin-top: 3px;
-            cursor: text;
-            text-align: right;
+            margin-top:3px;
+            cursor:text;
+            text-align:right;
         }
 
         .tabCon .row {
-            margin-top: 15px;
+            margin-top:15px;
         }
 
 
         .huibao_tab_menu,.content_tab_menu  {
-            border-bottom: 1px #ddd solid;
+            border-bottom:1px #ddd solid;
         }
 
         .huibao_tab_menu span,.content_tab_menu span {
-            float: left;
-            display: inline;
-            line-height: 28px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            color: #a7a5a5;
-            padding: 5px 15px;
-            cursor: pointer;
-            background-color: #e8e8e8;
+            float:left;
+            display:inline;
+            line-height:28px;
+            border-top-left-radius:8px;
+            border-top-right-radius:8px;
+            color:#a7a5a5;
+            padding:5px 15px;
+            cursor:pointer;
+            background-color:#e8e8e8;
         }
 
         .huibao_tab_menu span.current ,.content_tab_menu span.current{
-            background-color: #5a98de;
-            color: #fff;
+            background-color:#5a98de;
+            color:#fff;
         }
 
         .huibao_set .huibao_tab {
-            display: none;
+            display:none;
         }
 
         /* 去掉输入样式 */
         .jiben_info input[type="text"], .jiben_info select, .jiben_info textarea, .jiben_info option, .jiben_info .select-box,
         .neirong_set input[type="text"], .neirong_set select, .neirong_set textarea, .neirong_set option, .neirong_set .select-box,
         .huibao_set input[type="text"], .huibao_set select, .huibao_set textarea, .huibao_set option, .huibao_set .select-box {
-            -webkit-appearance: initial;
-            border: none !important;
-            cursor: auto
+            -webkit-appearance:initial;
+            border:none !important;
+            cursor:auto
         }
 
         input[disabled=""],textarea[disabled=""] {
-            background-color: #fff;
+            background-color:#fff;
         }
         .uploader-thum-container1 .uploader-list .item {
-            float: left;
-            display: inline;
-            width: 25%;
+            float:left;
+            display:inline;
+            width:25%;
         }
         .clearfix section,.clearfix{float:left;display:inline;}
-        .img-box .upimg-div .z_file{overflow: hidden}
+        .img-box .upimg-div .z_file{overflow:hidden}
 
         .u_img, .fl{
-            background: #00b7ee;
-            cursor: pointer;
-            width: 100px;
-            height: 30px;
-            color: #fff;
-            text-align: center;
-            border-radius: 3px;
-            overflow: hidden;
-            padding-top: 8px;
-            border: none;
+            background:#00b7ee;
+            cursor:pointer;
+            width:100px;
+            height:30px;
+            color:#fff;
+            text-align:center;
+            border-radius:3px;
+            overflow:hidden;
+            padding-top:8px;
+            border:none;
         }
     </style>
     <script>
@@ -223,7 +223,7 @@
                                 $("#"+inputId).val(imgs+","+data[i]);
                             }
                             if(type == 1){
-                                imgStr += '<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">'
+                                imgStr += '<div class="picbox" style="margin:5px; width:100px; height:100px;">'
                                         + '   <a href="http://test.img.meirenguvip.com/'+data[i]+'" data-lightbox="gallery">'
                                         + '   <img src="http://test.img.meirenguvip.com/'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
                                         + '</div>';
@@ -376,7 +376,7 @@
                 <div class="item">
                     </c:if>
                     <c:if test="${status.count != 1}">
-                    <div class="item" style="display: none;">
+                    <div class="item" style="display:none;">
                         </c:if>
                         <input type="hidden" name="itemId" id="itemId${status.count-1}"  value="${item.itemId}">
                         <input type="hidden" name="contentType" value="1">
@@ -394,7 +394,7 @@
 
                                 <c:forEach items="${fn:split(content.contentInfo, ',')}" var="imgs">
                                     <!-- 审核模式 查看图 -->
-                                    <div class="portfoliobox" style="float: left;">
+                                    <div class="portfoliobox" style="float:left;">
                                         <div class="picbox">
                                             <a href="${imageUrl}${imgs}" data-lightbox="gallery">
                                                 <img src="${imageUrl}${imgs}?x-oss-process=image/resize,m_lfit,h_200,w_200" /></a>
@@ -539,7 +539,7 @@
                         </select>
                         </span>
                     </div>
-                    <div id="firstRatioDiv" style="display: none;">
+                    <div id="firstRatioDiv" style="display:none;">
                         <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
                         <div class="formControls col-xs-8 col-sm-3">
                             <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">
@@ -596,13 +596,13 @@
                                         <div class="z_photo upimg-div clearfix">
                                             <div id="imgParent1" class="clearfix">
                                                 <%--<div class="portfoliobox">--%>
-                                                    <%--<div class="picbox" style="margin: 5px; width: 100px; height: 100px;">
+                                                    <%--<div class="picbox" style="margin:5px; width:100px; height:100px;">
                                                         <a href="http://test.img.meirenguvip.com/item/1493870878824.jpg" data-lightbox="gallery">
                                                             <img src="http://test.img.meirenguvip.com/item/1493870878824.jpg?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>
                                                     </div>--%>
                                                 <%--</div>--%>
                                             </div>
-                                            <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
+                                            <section class="z_file fl" style="width:100px;height:30px;text-align:center;">
                                                 <label class="u_img">上传图片</label>
                                                 <input type="file" name="file" id="file1" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file1','item','imgParent1','sponsorCredit', 1)">
                                             </section>
@@ -792,7 +792,7 @@
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-8 col-sm-8  col-sm-offset-1" style="text-align:left;">投资人每投资100万元，股东向管理公司质押不低于
-                        <input type="text" onblur="verifyPledgedShares()" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width: 50px; text-align: center;" id="pledgedShares" name="pledgedShares">
+                        <input type="text" onblur="verifyPledgedShares()" style="border-left-width:0px;border-top-width:0px;border-right-width:0px;border-bottom-color:black; width:50px; text-align:center;" id="pledgedShares" name="pledgedShares">
                         %的股份</label>
 
                 </div>

@@ -1,10 +1,5 @@
 package com.meirengu.erp.service;
 
-import com.meirengu.erp.model.Item;
-import com.meirengu.erp.model.ItemContent;
-import com.meirengu.erp.model.ItemCooperation;
-import com.meirengu.erp.model.ItemLevel;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -140,4 +135,10 @@ public interface ItemService {
      * @param publishTime
      */
     boolean publish(Date publishTime, Integer type, Integer itemId, String operateAccount);
+    //项目分红列表
+    Integer notifyPaymentCommitBonus(Map<String, String> map);
+    //项目增加待打款
+    Integer notifyPaymentCommit(Map<String, String> map);
+    //项目增加待收款
+    Integer notifyPaymentCollectionList(Map<String, String> map);
 }

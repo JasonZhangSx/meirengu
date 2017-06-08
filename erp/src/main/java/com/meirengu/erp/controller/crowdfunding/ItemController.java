@@ -1,10 +1,11 @@
 package com.meirengu.erp.controller.crowdfunding;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
-import com.meirengu.erp.model.*;
+import com.meirengu.erp.model.Item;
+import com.meirengu.erp.model.ItemContent;
+import com.meirengu.erp.model.ItemCooperation;
+import com.meirengu.erp.model.ItemLevel;
 import com.meirengu.erp.service.*;
 import com.meirengu.erp.utils.ConfigUtil;
 import org.slf4j.Logger;
@@ -494,7 +495,30 @@ public class ItemController extends BaseController {
         itemService.publish(publishTime, publishType, itemId, "admin");
         return new ModelAndView("redirect:/item/published_list");
     }
+    @RequestMapping(value = "dividends")
+    @ResponseBody
+    public String dividends(Integer itemId){
+        Integer flag = 0;
 
+        Map<String,String> map =itemService.itemDetail(itemId);
+        Map<String,String> CooperateInfoMap = itemService.getCooperateInfo(itemId);
+        map.putAll(CooperateInfoMap);
+        logger.info("map:{}",map);
+        flag = itemService.notifyPaymentCommitBonus(map);//项目分红
+        if(flag == 0){
+            return "项目分红失败！";
+        }
+        flag = itemService.notifyPaymentCommit(map);//项目增加待打款
+        if(flag == 0){
+            return "项目增加待打款失败！";
+        }
+        flag = itemService.notifyPaymentCollectionList(map);//项目增加待收款
+        if(flag == 0){
+            return "项目增加待收款失败！";
+        }else{
+            return "SUCCESS";
+        }
+    }
     private Map getCooperateInfo(Integer itemId){
         return itemService.getCooperateInfo(itemId);
     }
