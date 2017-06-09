@@ -144,7 +144,7 @@ public class HttpUtil {
                     params.add(new BasicNameValuePair(key, parameters.get(key)));
                 }
                 str = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
-                url +=str;
+                url = url + "?" +str;
             }
             HttpGet httpget = new HttpGet(url);
 //           httpget参数设置修改  -- modify by maoruxin20170609
