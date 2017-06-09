@@ -41,23 +41,12 @@ public class ActivityController extends BaseController{
     @RequestMapping(value = "list",method = {RequestMethod.POST})
     public Result list(@RequestParam(value="page", required = false, defaultValue = "1") Integer pageNum,
                        @RequestParam(value="per_page", required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(value="sortby", required = false) String sortBy,
                        @RequestParam(value="status", required = false) Integer status,
                        @RequestParam(value="activity_id", required = false) String activityId,
                        @RequestParam(value="activity_name", required = false) String activityName,
-                       @RequestParam(value="activity_type", required = false) Integer activityType,
-                       @RequestParam(value="order", required = false) String order){
+                       @RequestParam(value="activity_type", required = false) Integer activityType){
         Map paramMap = new HashMap<String, Object>();
         Page<Activity> page = super.setPageParams(pageNum,pageSize);
-        paramMap.put("sortBy", sortBy);
-        if(order != null){
-            if(order.contains("desc") || order.contains("DESC")){
-                paramMap.put("order", "DESC");
-            }
-            if(order.contains("asc") || order.contains("ASC")){
-                paramMap.put("order", "ASC");
-            }
-        }
         paramMap.put("status", status);
         paramMap.put("activityId", activityId);
         paramMap.put("activityName", activityName);

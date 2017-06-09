@@ -222,8 +222,14 @@
                                         'onClick="project_edit(\'运营-活动列表-修改\',\'activity/toedit\','+row.activityId+')" href="javascript:;"title="项目编辑"><i class="Hui-iconfont">&#xe6df;' +
                                             '</i></a>' +
                                     '</td>';
+                        }else if(row.status=='3'){
+                            return '<td class="f-14 td-manage">' +
+                                    '<a style="text-decoration:none" id="'+row.activityId+'" onclick="project_start(this,'+row.activityId+')" href="javascript:;" title="发布"><i class="Hui-iconfont">' +
+                                    '</i></a><a style="text-decoration:none" class="ml-5"  id="'+row.activityId+row.activityId+'" ' +
+                                    'onclick="project_edit(\'运营-活动列表-修改\',\'activity/toedit\','+row.activityId+')" href="javascript:;" title="项目编辑">' +
+                                    '<i class="Hui-iconfont"></i></a> </td>'
                         }else{
-                            return ' <td class="f-14 td-manage"></td>';
+                            return '<label></label>';
                         }
                     }
                 }
@@ -304,10 +310,11 @@
                 success : function(data) {
                     if(data.code==200){
                         console.log(data);
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" id="'+id+'" onClick="project_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
                         $(obj).parents("tr").find(".td-status").html('<span>已结束</span>');
                         $(obj).remove();
-                        $("#"+id).remove();
-                        $("#"+id+id).remove();
+//                        $("#"+id).remove();
+//                        $("#"+id+id).remove();
                         layer.msg('已下架!', {icon: 5, time: 1000});
                     }else{
                         alert("操作失败! 请重试");

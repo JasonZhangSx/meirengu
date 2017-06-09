@@ -100,7 +100,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">开始时间：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="datetime" class="input-text" value="" id="datetimepicker2" placeholder="" name="start_time">
+                    <input type="datetime" class="input-text" value="${date}" id="datetimepicker2" placeholder="" name="start_time">
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">结束时间：</label>
                 <div class="formControls col-xs-8 col-sm-3">

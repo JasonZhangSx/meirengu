@@ -140,9 +140,7 @@
                 AND status=#{status}
             </if>
         </where>
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by ${sortBy} ${order}
-        </if>
+        order by create_time DESC
     </select>
 
     <select id="getCount" parameterType="Map" resultType="Integer">
@@ -164,10 +162,7 @@
                 AND status=#{status}
             </if>
         </where>
-        order by create_time desc
-        <!--<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by ${sortBy} ${order}
-        </if>-->
+        order by create_time DESC
     </select>
     <!-- 分页相关结束 -->
 </mapper>
