@@ -100,7 +100,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">开始时间：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="datetime" class="input-text" value="" id="datetimepicker2" placeholder="" name="start_time">
+                    <input type="datetime" class="input-text" value="${date}" id="datetimepicker2" placeholder="" name="start_time">
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">结束时间：</label>
                 <div class="formControls col-xs-8 col-sm-3">
@@ -187,11 +187,35 @@
         }
     }
     function tijiao() {
-        var length = $("input[name='activity_image']").length
-        if(length!=0){
-            $("#form-horizontal").ajaxSubmit(options);
-        }else{
+        var length = $("input[name='activity_image']").length;
+        var activity_name = $("#activity_name").val();
+        var activity_link = $("#activity_link").val();
+        var remarks = $("#remarks").val();
+        var datetimepicker2 = $("#datetimepicker2").val();
+        var datetimepicker3 = $("#datetimepicker3").val();
+        var flag = 1;
+        if(activity_name ==""){
+            flag = 0;
+            alert("活动名称不能为空！");
+        }
+        if(activity_link ==""){
+            flag = 0;
+            alert("活动链接不能为空！");
+        }
+        if(datetimepicker2 ==""){
+            flag = 0;
+            alert("开始时间不能为空！");
+        }
+        if(datetimepicker3 ==""){
+            flag = 0;
+            alert("结束时间不能为空！");
+        }
+        if(length==0){
+            flag = 0;
             alert("活动图片不能为空！");
+        }
+        if(flag == 1){
+            $("#form-horizontal").ajaxSubmit(options);
         }
     }
     // 时间

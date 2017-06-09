@@ -29,6 +29,7 @@
     <script>DD_belatedPNG.fix('*');</script><![endif]-->
     <link href="lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
     <link href="lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css"/>
+
     <title>项目添加</title>
     <style>
         .select-box1 {
@@ -94,7 +95,6 @@
         .img-box .upimg-div .z_file{overflow: hidden}
     </style>
     <script type="text/javascript">
-
         var xhr;
         if(window.XMLHttpRequest){
             xhr = new XMLHttpRequest();
@@ -184,25 +184,6 @@
             }
 
         }
-
-        /*$("#typeId").click(function(){
-            var typeId = $("#typeId").val();
-            if(typeId == 1){
-
-            }
-
-            if(typeId == 2){
-
-            }
-
-            if(typeId == 3){
-                $("#extentionDiv").show();
-                $("#shareholderDiv").show();
-            }else{
-                $("#extentionDiv").hide();
-                $("#shareholderDiv").hide();
-            }
-        });*/
     </script>
 </head>
 <body>
@@ -238,7 +219,7 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">众筹类型：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="typeId" id="typeId" class="select">
+                        <select name="typeId" id="typeId" class="select" onchange="typeChange()">
                             <c:forEach items="${type}" var="type">
                                 <option value="${type.typeId}">${type.typeName}</option>
                             </c:forEach>
@@ -259,12 +240,12 @@
                     <label class="form-label col-xs-4 col-sm-2">目标金额：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="targetAmount"
-                               name="targetAmount" required>
+                               name="targetAmount" style="width: 272px;">&nbsp;&nbsp;元
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">预热天数：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder=""
-                               id="preheatingDays" name="preheatingDays">
+                               id="preheatingDays" name="preheatingDays" style="width: 272px;">&nbsp;&nbsp;天
                     </div>
                 </div>
                 <div class="row cl">
@@ -280,7 +261,7 @@
                     <label class="form-label col-xs-4 col-sm-2">众筹天数：</label>
                     <div class="formControls col-xs-8 col-sm-3">
                         <input type="text" class="input-text" value="" placeholder="" id="crowdDays"
-                               name="crowdDays">
+                               name="crowdDays" style="width: 272px;">&nbsp;&nbsp;天
                     </div>
                 </div>
                 <div class="row cl">
@@ -366,43 +347,42 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">出让股份：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="sellShare" name="sellShare" >
+                        <input type="text" class="input-text" value="" id="sellShare" name="sellShare" placeholder="0.0000" style="width: 265px;">&nbsp;&nbsp;%
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">融资金额：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="financeAmount" name="financeAmount" >
+                        <input type="text" class="input-text" value="" id="financeAmount" name="financeAmount" style="width: 265px;">&nbsp;万元
                     </div>
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">进入注册资本：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="registerCapital" name="registerCapital" >
+                        <input type="text" class="input-text" value="" id="registerCapital" name="registerCapital" style="width: 265px;">&nbsp;万元
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">进入资本公积金：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="captitalReserve" name="captitalReserve" >
+                        <input type="text" class="input-text" value="" id="captitalReserve" name="captitalReserve" style="width: 265px;">&nbsp;万元
                     </div>
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">融资后注册资本：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="afterRegisterCapital" name="afterRegisterCapital" >
+                        <input type="text" class="input-text" value="" id="afterRegisterCapital" name="afterRegisterCapital" style="width: 265px;">&nbsp;万元
                     </div>
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">选择领投人：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
                         <select name="leadInvestorId" id="leadInvestorId" class="select">
-                            <%--<c:forEach items="${type}" var="type">
-                                <option value="${type.typeId}">${type.typeName}</option>
-                            </c:forEach>--%>
-                            <option value="1">领投人1</option>
+                            <c:forEach items="${investorList}" var="investor">
+                                <option value="${investor.id}">${investor.investorName}</option>
+                            </c:forEach>
                         </select>
                         </span>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">领投金额：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" id="leadInvestorAmount" name="leadInvestorAmount" >
+                        <input type="text" class="input-text" value="" id="leadInvestorAmount" name="leadInvestorAmount" style="width: 265px;">万元
                     </div>
                 </div>
                 <div class="row cl">
@@ -418,20 +398,18 @@
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
                         <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
-                            <%--<c:forEach items="${partner}" var="partner">
-                                <option value="${partner.partnerId}">${partner.partnerName}</option>
-                            </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
                         </select>
                         </span>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
                         <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
-                            <%--<c:forEach items="${partner}" var="partner">
-                                <option value="${partner.partnerId}">${partner.partnerName}</option>
-                            </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
                         </select>
                         </span>
                     </div>
@@ -439,21 +417,19 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司(附加)：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
-                            <%--<c:forEach items="${partner}" var="partner">
-                                <option value="${partner.partnerId}">${partner.partnerName}</option>
-                            </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId3" class="select">
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
                         </select>
                         </span>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                        <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
-                            <%--<c:forEach items="${partner}" var="partner">
-                                <option value="${partner.partnerId}">${partner.partnerName}</option>
-                            </c:forEach>--%>
-                            <option value="">合伙公司1</option>
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId4" class="select">
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
                         </select>
                         </span>
                     </div>
@@ -461,18 +437,18 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">股权收益权投资协议模板：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder="" id="leadInvestorName"
+                        <input type="file" class="input-text" value="" placeholder="" id="leadInvestorName"
                                name="leadInvestorName" required>
                     </div>
                     <label class="form-label col-xs-4 col-sm-2">合伙协议模板：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" class="input-text" value="" placeholder=""
+                        <input type="file" class="input-text" value="" placeholder=""
                                id="leadInvestorAmount" name="leadInvestorAmount">
                     </div>
                 </div>
                 <div class="row cl">
                     <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                        <button class="btn btn-primary radius" type="button" onclick="itemAdd()">保存</button>
+                        <button class="btn btn-primary radius" type="button" onclick="extentionSave()">保存</button>
                     </div>
                 </div>
             </form>
@@ -556,7 +532,7 @@
                         </div>
 
                         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
-                            <button class="btn btn-primary radius" id="contentAddBtn0" type="button"  onclick="contentAdd()"><i
+                            <button class="btn btn-primary radius" id="contentAddBtn0" type="button"  onclick="shareHolderSave()"><i
                                     class="Hui-iconfont">&#xe632;</i> 保存</button>
                         </div>
                     </form>
@@ -651,12 +627,12 @@
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">支持金额：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount" style="width: 272px;">&nbsp;&nbsp;元
                                 </div>
 
                                 <label class="form-label col-xs-4 col-sm-2">持股比例：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate">
+                                    <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate" style="width: 272px;">&nbsp;&nbsp;%
                                 </div>
                             </div>
                             <div class="row cl">
@@ -673,19 +649,19 @@
                                 <label class="form-label col-xs-4 col-sm-2">总份数：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber0"
-                                           name="totalNumber">
+                                           name="totalNumber" style="width: 272px;">&nbsp;&nbsp;份
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">单人限额：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber0"
-                                           name="singleLimitNumber">
+                                           name="singleLimitNumber" style="width: 272px;">&nbsp;&nbsp;份
                                 </div>
                             </div>
                             <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-2">回报时间：</label>
                                 <div class="formControls col-xs-8 col-sm-3">
                                     <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays0"
-                                           name="paybackDays">
+                                           name="paybackDays" style="width: 272px;">&nbsp;&nbsp;天
                                 </div>
                                 <label class="form-label col-xs-4 col-sm-2">是否分红：</label>
                                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
@@ -701,12 +677,12 @@
                                     <label class="form-label col-xs-4 col-sm-2">年化利率：</label>
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
-                                               name="yearRate">
+                                               name="yearRate" style="width: 272px;">&nbsp;&nbsp;%
                                     </div>
                                     <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" placeholder=" 月" maxlength="30" id="investmentPeriod0"
-                                               name="investmentPeriod">
+                                               name="investmentPeriod" style="width: 272px;">&nbsp;&nbsp;月
                                     </div>
                                 </div>
                                 <div class="row cl">
@@ -777,6 +753,7 @@
     </span>
 </div>
 
+<script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 <script src=lib/jquery/1.9.1/jquery.min.js></script>
 <script src=lib/layer/2.4/layer.js></script>
 <script src=lib/jquery.validation/1.14.0/jquery.validate.js></script>
@@ -785,15 +762,10 @@
 <script src=static/h-ui/js/H-ui.js></script>
 <script src=static/h-ui.admin/js/H-ui.admin.page.js></script>
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
-<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.min.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 <script type="text/javascript" src="lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <!-- 换灯箱 -->
 <script type="text/javascript" src="lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
-<script type="text/javascript" src="lib/jsp/item/itemEdit.js"/>
 </body>
 </html>

@@ -322,7 +322,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             String urlAppend = url+"?user_ids="+ map.get("userId");
             hr = HttpUtil.doGet(urlAppend);
             logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
-            if(hr.getStatusCode()== StatusCode.OK){
+            if(hr !=null && hr.getStatusCode()== StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
@@ -334,7 +334,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                     }
                 }
             }else{
-                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+                logger.error("UserServiceImpl.getUserTotalInvestMoney connected refused ! :{}",urlAppend);
             }
         } catch (Exception e) {
             logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
@@ -350,7 +350,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             String urlAppend = url+"?userId="+ map.get("userId");
             hr = HttpUtil.doGet(urlAppend);
             logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
-            if(hr.getStatusCode()== StatusCode.OK){
+            if(hr !=null && hr.getStatusCode()== StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
@@ -360,7 +360,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                     }
                 }
             }else{
-                logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+                logger.error("UserServiceImpl.getWithdrawalsAmount connected refused ! :{}",urlAppend);
             }
         } catch (Exception e) {
             logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
@@ -377,7 +377,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 String urlAppend = url+"?bankCode="+ map.get("bankCode");
                 hr = HttpUtil.doGet(urlAppend);
                 logger.info("UserServiceImpl.send get >> uri :{}, params:{}", new Object[]{urlAppend});
-                if(hr.getStatusCode()== StatusCode.OK){
+                if(hr !=null && hr.getStatusCode()== StatusCode.OK){
                     Map<String,Object> account = new HashedMap();
                     account = JacksonUtil.readValue(hr.getContent(),Map.class);
                     if(account!=null){
@@ -392,7 +392,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                         }
                     }
                 }else{
-                    logger.error("UserServiceImpl.back code >> params:{}, exception:{}");
+                    logger.error("UserServiceImpl.getBankName connected refused ! :{}",urlAppend);
                 }
             } catch (Exception e) {
                 logger.error("UserServiceImpl.send error >> params:{}, exception:{}", new Object[]{ e});
@@ -456,7 +456,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
             } catch (Exception e) {
                 logger.error("UserServiceImpl.modifyPayPassword send error >> params:{}, exception:{}", new Object[]{params, e});
             }
-            if(hr.getStatusCode() == StatusCode.OK){
+            if(hr!=null && hr.getStatusCode() == StatusCode.OK){
                 Map<String,Object> account = new HashedMap();
                 account = JacksonUtil.readValue(hr.getContent(),Map.class);
                 if(account!=null){
@@ -489,7 +489,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                     }
                 }
             }else{
-                logger.error("UserServiceImpl.modifyPayPassword back code >> params:{}, exception:{}", hr.getStatusCode(),hr.getContent());
+                logger.error("UserServiceImpl.modifyPayPassword connected refused, url:{}", urlAppend);
             }
         }catch (Exception e){
             logger.error("UserServiceImpl.modifyPayPassword back code >> throws exception:{}", e.getMessage());

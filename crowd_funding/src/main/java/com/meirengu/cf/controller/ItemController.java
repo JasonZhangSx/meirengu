@@ -673,8 +673,6 @@ public class ItemController extends BaseController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
-
-
     public Item setEntity(Integer itemId, String itemName, String itemProfile, Integer typeId, Integer classId,
                           BigDecimal targetAmount, BigDecimal appointAmount, BigDecimal completedAmount,
                           Integer preheatingDays, Date preheatingStartTime, Date preheatingEndTime, Integer crowdDays,

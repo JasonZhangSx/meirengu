@@ -1,6 +1,7 @@
 package com.meirengu.erp.service;
 
 import com.meirengu.erp.model.LimitedPartnership;
+import com.meirengu.utils.ObjectUtils;
 
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 public interface LimitedPartnerShipService {
 
-    Map<String, Object> query(int page, int perPage, boolean isPage);
+    Object query(int page, int perPage, boolean isPage);
 
     Map<String, Object> detail(int id);
 

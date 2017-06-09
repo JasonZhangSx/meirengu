@@ -33,7 +33,9 @@ public class ActivityController extends BaseController{
 
     @RequestMapping("toadd")
     public ModelAndView toadd(){
-        return new ModelAndView("/cms/addactivity");
+        Map map = new HashedMap();
+        map.put("date", DateAndTime.getCurrentDateTime());
+        return new ModelAndView("/cms/addactivity",map);
     }
     @RequestMapping("toedit")
     public ModelAndView toedit(@RequestParam(value="activity_id", required = false ,defaultValue = "") String activityId){

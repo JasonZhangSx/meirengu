@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>发现</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="./../css/index.css" media="screen" charset="utf-8">
+</head>
+<body>
+	<script type="text/javascript">
+	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
+	</script>
+
+	<header>
+		<div class="swiper-container head_swiper" style="height:4.8rem;overflow:hidden;">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img src="https://img.meirenguvip.com/slideshow/1492602770444.png" width="100%" alt="" />
+				</div>
+			</div>
+			<div class="pagination"></div>
+		</div>
+	</header>
+	<div class="find_cont">
+		<div class="wrapper">
+			<div>
+				<a href="../activities">
+					<img src="./../img/find_icon1.png" alt="" style="width:.36rem" /><br/>
+					热门活动
+				</a>
+				<a href="../bulletins">
+					<img src="./../img/find_icon2.png" alt="" style="width:.29rem" /><br/>
+					平台公告
+				</a>
+			</div>
+			<div>
+				<a href="../faqs">
+					<img src="./../img/find_icon3.png" alt="" style="width:.36rem" /><br/>
+					常见问题
+				</a>
+				<a href="javascript: toFeedBack();">
+					<img src="./../img/find_icon4.png" alt="" style="width:.36rem" /><br/>
+					意见反馈
+				</a>
+			</div>
+			<div>
+				<a href="./user_guide.html">
+					<img src="./../img/find_icon6.png" alt="" style="width:.41rem" /><br/>
+					使用指南
+				</a>
+				<a href="./about.html">
+					<img src="./../img/find_icon5.png" alt="" style="width:.33rem" /><br/>
+					关于我们
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="./../js/zepto.js"></script>
+<script type="text/javascript" src="./../js/swiper.js"></script>
+<script type="text/javascript" src="./../js/common.js"></script>
+<script type="text/javascript">
+
+	var user_id = "";
+	var user_name = "";
+	var user_phone = "";
+	$(function(){
+		var head_swiper= new Swiper('.head_swiper',{
+       pagination: '.pagination',
+       paginationClickable: true,
+       autoplay:3000,
+       speed:800,
+       calculateHeight:true,
+       onTouchStart:function(){
+         head_swiper.stopAutoplay();
+       },
+       onTouchEnd:function(){
+         head_swiper.startAutoplay();
+       }
+     });
+	})
+
+	/*function showInfoFromAppWithMsg(userId, userName, userPhone){
+		alert("来自App的消息: "+userId+" | "+userName+" | "+userPhone);
+		user_idd = user_id;
+		user_name = user_name;
+		user_phone = user_phone;
+	}*/
+
+	function showInfoFromAppWithUserId(userId){
+		//alert("来自App的消息: "+userId);
+		user_id = userId;
+	}
+
+	function showInfoFromAppWithUserName(userName){
+		//alert("来自App的消息: "+userName);
+		user_name = userName;
+	}
+
+	function showInfoFromAppWithUserPhone(userPhone){
+		//alert("来自App的消息: "+userPhone);
+		user_phone = userPhone;
+	}
+
+	function toFeedBack(){
+		if(user_id == null || user_id == ""){
+			var flag = GetQueryString("flag");
+			//1为ios
+			if(flag == 1){
+				window.webkit.messageHandlers.appLogin.postMessage("");
+			}else {
+				window.AndroidWebView.appLogin();
+			}
+		}else{
+			if(user_name == null || user_name == ''){
+				user_name = "default";
+			}
+			if(user_phone == null || user_phone == ''){
+				user_phone = "0";
+			}
+			window.location.href = "../feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
+		}
+		/*window.location.href = "../feedback?userId=1&userName=123&userPhone=";*/
+	}
+
+</script>
+
+</html>

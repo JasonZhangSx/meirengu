@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface InvestorService {
 
-    Map<String, Object> query(int page, int perPage, boolean isPage);
+    Object query(int page, int perPage, boolean isPage);
 
     Map<String, Object> detail(int id);
 

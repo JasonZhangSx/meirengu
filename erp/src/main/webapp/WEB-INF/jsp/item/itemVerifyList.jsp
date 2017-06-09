@@ -111,8 +111,7 @@
                         var context =
                         {
                             func: [
-                                {"name": "修改", "fn": "detail(\'" + row.itemId + "\')", "type": "default"},
-                                {"name": "下架", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "审核", "fn": "detail(\'" + row.itemId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);
@@ -207,7 +206,7 @@
         var index = layer.open({
             type: 2,
             title: "已发布项目详情",
-            content: "item/to_published?itemId="+id
+            content: "item/to_verify?itemId="+id
         });
         layer.full(index);
     }

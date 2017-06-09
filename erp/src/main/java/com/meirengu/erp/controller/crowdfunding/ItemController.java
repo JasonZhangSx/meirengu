@@ -1,14 +1,12 @@
 package com.meirengu.erp.controller.crowdfunding;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
 import com.meirengu.erp.controller.BaseController;
-import com.meirengu.erp.model.*;
-import com.meirengu.erp.service.AddressService;
-import com.meirengu.erp.service.ItemService;
-import com.meirengu.erp.service.PartnerService;
-import com.meirengu.erp.service.TypeService;
+import com.meirengu.erp.model.Item;
+import com.meirengu.erp.model.ItemContent;
+import com.meirengu.erp.model.ItemCooperation;
+import com.meirengu.erp.model.ItemLevel;
+import com.meirengu.erp.service.*;
 import com.meirengu.erp.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +45,10 @@ public class ItemController extends BaseController {
     PartnerService partnerService;
     @Autowired
     AddressService addressService;
+    @Autowired
+    InvestorService investorService;
+    @Autowired
+    LimitedPartnerShipService limitedPartnerShipService;
 
     /**
      * 新建list
@@ -169,6 +171,10 @@ public class ItemController extends BaseController {
             List typeData = typeService.getTypeList();
             List partnerData = (List) partnerService.query(0,0,false);
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
+            List partnerShip = (List) limitedPartnerShipService.query(0, 0, false);
+            List investorList = (List) investorService.query(0, 0, false);
+            returnMap.put("shipList", partnerShip);
+            returnMap.put("investorList", investorList);
             returnMap.put("itemClass", itemClassData);
             returnMap.put("type", typeData);
             returnMap.put("partner", partnerData);
@@ -200,8 +206,8 @@ public class ItemController extends BaseController {
         params.put("header_image", item.getHeaderImage());
         params.put("operate_account", "jason");
         params.put("sponsor_name","jason");
-        params.put("lead_investor_name", item.getLeadInvestorName());
-        params.put("lead_investor_amount", String.valueOf(item.getLeadInvestorAmount()));
+        params.put("lead_investor_name", item.getLeadInvestorName() == null ? "" : item.getLeadInvestorName());
+        params.put("lead_investor_amount", String.valueOf(item.getLeadInvestorAmount() == null ? 0 : item.getLeadInvestorAmount()));
         params.put("lead_investor_header", item.getLeadInvestorHeader());
 
         try {
@@ -304,6 +310,7 @@ public class ItemController extends BaseController {
         params.put("share_bonus_period", String.valueOf(itemLevel.getShareBonusPeriod()));
         params.put("is_need_address", String.valueOf(itemLevel.getIsNeedAddress()));
         params.put("is_need_agreement", String.valueOf(itemLevel.getIsNeedAgreement()));
+        params.put("share_hold_rate", String.valueOf(itemLevel.getShareHoldRate() == null ? 0 : itemLevel.getShareHoldRate()));
         params.put("operate_account", "jason");
         try {
             if(itemLevel.getLevelId() == 0 || itemLevel.getLevelId() == null){
@@ -488,7 +495,30 @@ public class ItemController extends BaseController {
         itemService.publish(publishTime, publishType, itemId, "admin");
         return new ModelAndView("redirect:/item/published_list");
     }
+    @RequestMapping(value = "dividends")
+    @ResponseBody
+    public String dividends(Integer itemId){
+        Integer flag = 0;
 
+        Map<String,String> map =itemService.itemDetail(itemId);
+        Map<String,String> CooperateInfoMap = itemService.getCooperateInfo(itemId);
+        map.putAll(CooperateInfoMap);
+        logger.info("map:{}",map);
+        flag = itemService.notifyPaymentCommitBonus(map);//项目分红
+        if(flag == 0){
+            return "项目分红失败！";
+        }
+        flag = itemService.notifyPaymentCommit(map);//项目增加待打款
+        if(flag == 0){
+            return "项目增加待打款失败！";
+        }
+        flag = itemService.notifyPaymentCollectionList(map);//项目增加待收款
+        if(flag == 0){
+            return "项目增加待收款失败！";
+        }else{
+            return "SUCCESS";
+        }
+    }
     private Map getCooperateInfo(Integer itemId){
         return itemService.getCooperateInfo(itemId);
     }
@@ -505,6 +535,10 @@ public class ItemController extends BaseController {
         List contentData = itemService.getContentList(itemId, null);
         List levelData = itemService.getLevelList(itemId);
         List recordData = itemService.getOperateRecordList(itemId);
+        List partnerShip = (List) limitedPartnerShipService.query(0, 0, false);
+        List investorList = (List) investorService.query(0, 0, false);
+        returnMap.put("shipList", partnerShip);
+        returnMap.put("investorList", investorList);
         returnMap.put("itemClass", itemClassData);
         returnMap.put("type", typeData);
         returnMap.put("partner", partnerData);

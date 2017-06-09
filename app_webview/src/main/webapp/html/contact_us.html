@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>联系我们</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="stylesheet" href="./../css/index.css" media="screen" charset="utf-8">
+	<style media="screen">
+		button{-webkit-appearance:none;background: none;border:none}
+		.mask{position: fixed;width:100%;left:0;top:0;bottom: 0;background-color: rgba(0, 0, 0, 0);display:none;}
+		.mask span{display: inline-block;background-color: #e7e7e7;color:#5e5e5e;font-size: .32rem;padding:.4rem;border-radius:.3rem;
+		position: absolute;left:50%;top:40%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);}
+	</style>
+</head>
+<body style='background-color:#f8f8f8;'>
+	<script type="text/javascript">
+	!function(e,t){var n=e.documentElement,i="orientationchange"in window?"orientationchange":"resize",d=(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream,function(){var t=n.clientWidth;t&&(t>=750?(t=750,e.body.style.width="750px"):e.body.style.width=t+"px",n.style.fontSize=100*(t/750)+"px",n.dataset.width=t,n.dataset.percent=100*(t/750))});d(),e.documentElement.classList.add("iosx"+t.devicePixelRatio),e.addEventListener&&t.addEventListener(i,d,!1)}(document,window)
+	</script>
+  <div class="find_contus">
+		<ul class="ul1">
+			<li>客服电话 <var><a href="tel:400-4342-2323">400-4342-2323<img src="../img/tel_icon.png" style="width:.46rem" alt="" /></a></var></li>
+			<li>微信公众号<em><button class="btn1" data-clipboard-text="meirenguvip">复制</button></em><var>meirenguvip</var></li>
+			<li>客服微信号<em><button class="btn2" data-clipboard-text="BeautyValley_00">复制</button></em><var>BeautyValley_00</var></li>
+			<li style="border:none">邮箱<em><button class="btn3" data-clipboard-text="BeautyValley_00">复制</button></em><var>BeautyValley_00</var></li>
+		</ul>
+		<ul style="margin-top:.2rem;">
+			<li><a href="javascript: toFeedBack();">意见反馈<var><img src="../img/right_icon.png" style="width:.16rem" alt="" /></var></a></li>
+		</ul>
+  </div>
+	<div class="mask">
+		<span>复制成功</span>
+	</div>
+</body>
+<script type="text/javascript" src="./../js/zepto.js"></script>
+<script src="./../js/clipboard.min.js"></script>
+<script type="text/javascript">
+
+	var user_id = "";
+	var user_name = "";
+	var user_phone = "";
+
+	function showInfoFromAppWithUserId(userId){
+		//alert("来自App的消息: "+userId);
+		user_id = userId;
+	}
+
+	function showInfoFromAppWithUserName(userName){
+		//alert("来自App的消息: "+userName);
+		user_name = userName;
+	}
+
+	function showInfoFromAppWithUserPhone(userPhone){
+		//alert("来自App的消息: "+userPhone);
+		user_phone = userPhone;
+	}
+
+	function showInfoFromAppWithFlag(msg){
+
+		console.log("来自App的消息: "+msg);
+		flag = msg;
+	}
+
+	function toFeedBack(){
+		if(user_id == null || user_id == "" || user_id == undefined){
+			//var flag = GetQueryString("flag");
+			//1为ios
+			if(flag == 1){
+				window.webkit.messageHandlers.appLogin.postMessage("");
+			}else {
+				window.AndroidWebView.appLogin();
+			}
+		}else{
+			if(user_name == null || user_name == ''){
+				user_name = "default";
+			}
+			if(user_phone == null || user_phone == ''){
+				user_phone = "0";
+			}
+			window.location.href = "../feedback?userId="+user_id+"&userName="+user_name+"&userPhone="+user_phone;
+		}
+		/*window.location.href = "../feedback?userId=1&userName=123&userPhone=";*/
+	}
+
+	$(function () {
+		var clipboard = new Clipboard('.btn1, .btn2, .btn3');
+		//复制成功执行的回调，可选
+		clipboard.on('success', function(e) {
+			$('.mask').fadeIn();
+			setTimeout(function(){
+				$('.mask').fadeOut();
+			},1000)
+		});
+	})
+</script>
+</html>

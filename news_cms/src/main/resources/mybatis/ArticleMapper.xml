@@ -2,163 +2,126 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.news.dao.ArticleDao" >
 
-    <resultMap id="article" type="article">
-        <id column="article_id" property="id" jdbcType="INTEGER" javaType="int"/>
-        <result column="ac_id" property="acId" jdbcType="INTEGER" javaType="int"/>
-        <result column="article_url" property="url" jdbcType="VARCHAR" javaType="string"/>
-        <result column="article_show" property="show" jdbcType="TINYINT" javaType="int"/>
-        <result column="article_sort" property="sort" jdbcType="TINYINT" javaType="int"/>
-        <result column="article_title" property="title" jdbcType="VARCHAR" javaType="string"/>
-        <result column="article_content" property="content" jdbcType="VARCHAR" javaType="string"/>
-        <result column="article_time" property="time" jdbcType="DATE" javaType="Date"/>
-        <result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
-    </resultMap>
+	<resultMap id="articleMap" type="Article">
+		<id column="article_id" property="articleId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="ac_id" property="acId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="article_url" property="articleUrl" jdbcType="VARCHAR" javaType="String"/>
+		<result column="article_label" property="articleLabel" jdbcType="VARCHAR" javaType="String"/>
+		<result column="article_show" property="articleShow" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="article_sort" property="articleSort" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="article_img" property="articleImg" jdbcType="VARCHAR" javaType="String"/>
+		<result column="article_title" property="articleTitle" jdbcType="VARCHAR" javaType="String"/>
+		<result column="article_content" property="articleContent" jdbcType="LONGVARCHAR" javaType="String"/>
+		<result column="article_is_banner" property="articleIsBanner" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="article_is_commend" property="articleIsCommend" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="article_is_publish" property="articleIsPublish" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="article_time" property="articleTime" jdbcType="DATE" javaType="Date"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="create_user" property="createUser" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_user_img" property="createUserImg" jdbcType="VARCHAR" javaType="String"/>
+		<result column="create_user_type" property="createUserType" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="Date"/>
+	</resultMap>
 
-    <sql id='table_name'>article</sql>
-    <sql id="select_columns">
-        article_id as id, ac_id as acId, article_url as url, article_show as `show`,
-        article_sort as sort, article_img as img, article_title as title, article_content as content,
-        article_is_banner as isBanner, article_is_commend as isCommend, article_time as `time`,
-        article_is_publish as isPublish, flag , DATE_FORMAT(create_time, "%Y-%c-%d %h:%m:%s") as createTime, create_user as createUser,
-        create_user_type as createUserType, IFNULL(create_user_name, '') as createUserName, IFNULL(create_user_img, '') as createUserImg,
-        article_label as labe
-    </sql>
+	<sql id="table_name">`article`</sql>
+	<sql id="select_columns">
+		article_id as articleId, ac_id as acId, article_url as articleUrl, article_label as articleLabel, article_show as articleShow, article_sort as articleSort, article_img as articleImg, article_title as articleTitle, article_content as articleContent, article_is_banner as articleIsBanner, article_is_commend as articleIsCommend, article_is_publish as articleIsPublish, article_time as articleTime, flag as flag, create_user as createUser, create_user_name as createUserName, create_user_img as createUserImg, create_user_type as createUserType, create_time as createTime
+	</sql>
 
-    <insert id="insert" parameterType="article" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO <include refid="table_name" />
-        (article_id, ac_id, article_url, article_show, article_sort, article_img, article_title,
-        article_content, article_is_banner, article_is_commend, article_is_publish)
-        VALUES
-        (#{id}, #{acId}, #{url}, #{show}, #{sort}, #{img}, #{title}, #{content}, #{isBanner}, #{isCommend}, #{isPublish});
-    </insert>
-    <update id="update" parameterType="article">
-        update <include refid="table_name" />
-        <set>
-            <if test="acId != null and acId != '' and acId != 0">
-                ac_id=#{acId},
-            </if>
-            <if test="url != null and url != ''">
-                article_url=#{url},
-            </if>
-            <if test="show != null and show != ''">
-                article_show=#{show},
-            </if>
-            <if test="sort != null and sort != ''">
-                article_sort=#{sort},
-            </if>
-            <if test="title != null and title != ''">
-                article_title=#{title},
-            </if>
-            <if test="content != null and content != ''">
-                article_content=#{content},
-            </if>
-            <if test="img != null and img != ''">
-                article_img=#{img},
-            </if>
-                article_is_banner=#{isBanner},
-                article_is_commend=#{isCommend},
-                article_is_publish=#{isPublish}
-        </set>
-        <where>
-            article_id = #{id} and flag=1
-        </where>
-    </update>
+	<insert id="insert" parameterType="article" useGeneratedKeys="true" keyProperty="articleId" >
+		INSERT INTO <include refid="table_name" />
+			(article_id, ac_id, article_url, article_label, article_show, article_sort, article_img, article_title, article_content, article_is_banner, article_is_commend, article_is_publish, article_time, flag, create_user, create_user_name, create_user_img, create_user_type, create_time)
+		VALUES
+			(#{articleId}, #{acId}, #{articleUrl}, #{articleLabel}, #{articleShow}, #{articleSort}, #{articleImg}, #{articleTitle}, #{articleContent}, #{articleIsBanner}, #{articleIsCommend}, #{articleIsPublish}, #{articleTime}, #{flag}, #{createUser}, #{createUserName}, #{createUserImg}, #{createUserType}, #{createTime})
+	</insert>
 
-    <update id="delete" parameterType="INTEGER">
-        update <include refid="table_name" /> set flag=0 WHERE article_id=#{id}
-    </update>
+	<update id="update" parameterType="article">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="acId != null">
+				ac_id=#{acId},
+			</if>
+			<if test="articleUrl != null and articleUrl != ''">
+				article_url=#{articleUrl},
+			</if>
+			<if test="articleLabel != null and articleLabel != ''">
+				article_label=#{articleLabel},
+			</if>
+			<if test="articleShow != null">
+				article_show=#{articleShow},
+			</if>
+			<if test="articleSort != null">
+				article_sort=#{articleSort},
+			</if>
+			<if test="articleImg != null and articleImg != ''">
+				article_img=#{articleImg},
+			</if>
+			<if test="articleTitle != null and articleTitle != ''">
+				article_title=#{articleTitle},
+			</if>
+			<if test="articleContent != null and articleContent != ''">
+				article_content=#{articleContent},
+			</if>
+			<if test="articleIsBanner != null">
+				article_is_banner=#{articleIsBanner},
+			</if>
+			<if test="articleIsCommend != null">
+				article_is_commend=#{articleIsCommend},
+			</if>
+			<if test="articleIsPublish != null">
+				article_is_publish=#{articleIsPublish},
+			</if>
+			<if test="articleTime != null">
+				article_time=#{articleTime},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				create_user=#{createUser},
+			</if>
+			<if test="createUserName != null and createUserName != ''">
+				create_user_name=#{createUserName},
+			</if>
+			<if test="createUserImg != null and createUserImg != ''">
+				create_user_img=#{createUserImg},
+			</if>
+			<if test="createUserType != null">
+				create_user_type=#{createUserType},
+			</if>
+		</set>
+		<where>
+			article_id = #{articleId}
+		</where>
+	</update>
 
-    <select id="detail" parameterType="INTEGER" resultType="Map">
-        SELECT <include refid="select_columns" />
-        FROM article WHERE article_id=#{id} AND flag=1
-    </select>
+	<select id="detail" parameterType="integer" resultType="article">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where article_id=#{id}
+	</select>
 
-    <update id="publish" parameterType="Map" >
-        update <include refid="table_name" /> set article_is_publish=#{isPublish}, article_time=now() WHERE article_id=#{id} and flag=1
-    </update>
+	<update id="delete" parameterType="integer">
+		update <include refid="table_name" /> SET flag=0 WHERE article_id=#{id} AND flag=1
+	</update>
 
-    <!-- 分页相关开始 -->
-    <select id="getByPage" resultType="Map" parameterType="Map">
-        select a.article_id as id, a.ac_id as acId, a.article_url as url, a.article_show as `show`,
-        a.article_sort as sort, a.article_img as img, a.article_title as title, a.article_content as content,
-        a.article_is_banner as isBanner, a.article_is_commend as isCommend, a.article_time as `time`,
-        a.article_is_publish as isPublish, a.flag , DATE_FORMAT(a.create_time, "%Y-%c-%d %h:%m:%s") as createTime, a.create_user as createUser,
-        a.create_user_type as createUserType, IFNULL(a.create_user_name, '') as createUserName, IFNULL(a.create_user_img, '') as createUserImg,
-        a.article_label as labe, ac.ac_name,
-        0 AS readNum, 0 AS commentNum, 0 AS collectNum,
-        (SELECT ac_name FROM article_class ac WHERE ac.ac_id=a.ac_id) AS className
-        from
-        <include refid="table_name" /> a
-        left JOIN article_class ac ON a.ac_id=ac.ac_id
-        where a.flag=1
-        <if test="id != null and id != '' and id != 0">
-            AND a.article_id=#{id}
-        </if>
-        <if test="acId != null and acId != '' and acId != 0">
-            AND a.ac_id=#{acId}
-        </if>
-        <if test="isBanner != null and isBanner != ''">
-            AND a.article_is_banner=#{isBanner}
-        </if>
-        <if test="show != null and show != ''">
-            AND a.article_show=#{show}
-        </if>
-        <if test="isCommend != null and isCommend != ''">
-            AND a.article_is_commend=#{isCommend}
-        </if>
-        <if test="isPublish != null and isPublish != ''">
-            AND a.article_is_publish=#{isPublish}
-        </if>
-        <if test="createUser != null and createUser != '' and createUser != 0 and
-                  createUserType != null and createUserType != '' and createUserType != 0">
-            AND a.create_user=#{createUser}
-            AND a.create_user_type=#{createUserType}
-        </if>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="acId != null and acId != ''">
+			and ac_id=#{acId}
+		</if>
+		order by article_sort asc, article_time desc
+	</select>
 
-        order by a.article_is_banner desc,a.create_time desc
-        <!--<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
-        </if>-->
-    </select>
-
-    <select id="getTotalCount" parameterType="Map" resultType="Integer">
-        select count(*)
-        from
-        <include refid="table_name" /> a
-        left JOIN article_class ac ON a.ac_id=ac.ac_id
-        where a.flag=1
-        <if test="id != null and id != '' and id != 0">
-            AND a.article_id=#{id}
-        </if>
-        <if test="acId != null and acId != '' and acId != 0">
-            AND a.ac_id=#{acId}
-        </if>
-        <if test="isBanner != null and isBanner != ''">
-            AND a.article_is_banner=#{isBanner}
-        </if>
-        <if test="show != null and show != ''">
-            AND a.article_show=#{show}
-        </if>
-        <if test="isCommend != null and isCommend != ''">
-            AND a.article_is_commend=#{isCommend}
-        </if>
-        <if test="isPublish != null and isPublish != ''">
-            AND a.article_is_publish=#{isPublish}
-        </if>
-        <if test="createUser != null and createUser != '' and createUser != 0 and
-                  createUserType != null and createUserType != '' and createUserType != 0">
-            AND a.create_user=#{createUser}
-            AND a.create_user_type=#{createUserType}
-        </if>
-
-        <if test="createUser != null and createUser != ''">
-            AND a.create_user=#{createUser}
-        </if>
-
-        order by a.article_is_banner desc,a.create_time desc
-        <!--<if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
-        </if>-->
-    </select>
-    <!-- 分页相关结束 -->
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="acId != null and acId != ''">
+			and ac_id=#{acId}
+		</if>
+		order by article_sort asc, article_time desc
+	</select>
+	<!-- 分页相关结束 -->
 </mapper>

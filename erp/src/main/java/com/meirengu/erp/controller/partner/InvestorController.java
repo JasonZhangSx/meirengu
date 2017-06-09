@@ -58,7 +58,7 @@ public class InvestorController extends BaseController{
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = investorService.query(page, length, true);
+            Map<String, Object> map = (Map<String, Object>) investorService.query(page, length, true);
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {

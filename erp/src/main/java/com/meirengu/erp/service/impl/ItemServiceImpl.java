@@ -8,6 +8,7 @@ import com.meirengu.erp.model.*;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -426,5 +427,104 @@ public class ItemServiceImpl implements ItemService{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public Integer notifyPaymentCommitBonus(Map<String, String> map) {
+        LOGGER.info("ItemServiceImpl notifyPaymentCommitBonus started :{}",new Date());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.notify.paymentCommitBonus"));
+        Map<String, String> params = new HashMap<>();
+
+        params.put("itemId",map.get("itemId"));
+        params.put("itemName", map.get("itemName"));
+
+        Map<String, String> contentParams = new HashMap<>();
+        contentParams.put("content",JacksonUtil.toJSon(params));
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), contentParams);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    LOGGER.info("ItemServiceImpl notifyPaymentCommitBonus successful :{}",new Date());
+                    return 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer notifyPaymentCommit(Map<String, String> map) {
+        LOGGER.info("ItemServiceImpl notifyPaymentCommit started :{}",new Date());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.notify.paymentCommit"));
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("itemId",map.get("itemId"));
+        params.put("itemName", map.get("itemName"));
+        params.put("partnerId", map.get("partnerId"));
+        params.put("partnerName", map.get("partnerName"));
+        params.put("targetAmount", map.get("targetAmount"));
+        params.put("completedAmount", map.get("completedAmount"));
+        params.put("endDate", map.get("crowdEndTime"));
+        params.put("firstRatio", map.get("firstRatio"));
+        Integer firstRatio = (Integer) params.get("firstRatio");
+        params.put("endRatio", String.valueOf(100 - firstRatio));
+        params.put("loanMode", map.get("loanMode"));
+
+        Map<String, String> contentParams = new HashMap<>();
+        contentParams.put("content",JacksonUtil.toJSon(params));
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(),contentParams);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    LOGGER.info("ItemServiceImpl notifyPaymentCommit successful :{}",new Date());
+                    return 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer notifyPaymentCollectionList(Map<String, String> map) {
+        LOGGER.info("ItemServiceImpl notifyPaymentCollectionList started :{}",new Date());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.notify.paymentCollectionList"));
+        Map<String, String> params = new HashMap<>();
+
+        params.put("itemId",map.get("itemId"));
+        params.put("itemName", map.get("itemName"));
+        params.put("partnerId", map.get("partnerId"));
+        params.put("partnerName", map.get("partnerName"));
+        params.put("targetAmount", map.get("targetAmount"));
+
+        Map<String, String> contentParams = new HashMap<>();
+        contentParams.put("content",JacksonUtil.toJSon(params));
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), contentParams);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Object code = jsonObject.get("code");
+                if(code != null && code.equals(StatusCode.OK)){
+                    LOGGER.info("ItemServiceImpl notifyPaymentCollectionList successful :{}",new Date());
+                    return 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

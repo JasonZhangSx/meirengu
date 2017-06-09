@@ -2,83 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.meirengu.news.dao.ArticleClassDao" >
 
-    <resultMap id="articleClassMap" type="articleClass">
-        <id column="ac_id" property="id" jdbcType="INTEGER" javaType="int"/>
-        <result column="ac_code" property="code" jdbcType="VARCHAR" javaType="string"/>
-        <result column="ac_name" property="name" jdbcType="VARCHAR" javaType="string"/>
-        <result column="ac_parent_id" property="parentId" jdbcType="INTEGER" javaType="int"/>
-        <result column="ac_sort" property="sort" jdbcType="TINYINT" javaType="int"/>
-        <result column="flag" property="flag" jdbcType="TINYINT" javaType="int"/>
-        <result column="create_time" property="createTime" jdbcType="DATE" javaType="Date"/>
-    </resultMap>
-    <sql id="select_columns">
-        ac_id as id, ac_code as code, ac_name as `name`, ac_parent_id as parentId,
-        ac_sort as sort, flag, create_time as createTime
-    </sql>
-    <sql id='table_name'>article_class</sql>
+	<resultMap id="articleClassMap" type="ArticleClass">
+		<id column="ac_id" property="acId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="ac_code" property="acCode" jdbcType="VARCHAR" javaType="String"/>
+		<result column="ac_name" property="acName" jdbcType="VARCHAR" javaType="String"/>
+		<result column="ac_parent_id" property="acParentId" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="ac_sort" property="acSort" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="flag" property="flag" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="Date"/>
+	</resultMap>
 
-    <insert id="insert" parameterType="articleClass" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO <include refid="table_name" />
-        (ac_id, ac_code, ac_name, ac_parent_id, ac_sort)
-        VALUES
-        (#{id}, #{code}, #{name}, #{parentId}, #{sort});
-    </insert>
-    <update id="update" parameterType="articleClass">
-        update <include refid="table_name" />
-        <set>
-            ac_parent_id=#{parentId},
-            <if test="code != null and code != ''">
-                ac_code=#{code},
-            </if>
-            <if test="name != null and name != ''">
-                ac_name=#{name},
-            </if>
-            <if test="sort != null and sort != ''">
-                ac_sort=#{sort}
-            </if>
-        </set>
-        <where>
-            ac_id = #{id} and flag=1
-        </where>
-    </update>
+	<sql id="table_name">`article_class`</sql>
+	<sql id="select_columns">
+		ac_id as acId, ac_code as acCode, ac_name as acName, ac_parent_id as acParentId, ac_sort as acSort, flag as flag, create_time as createTime
+	</sql>
 
-    <update id="delete" parameterType="INTEGER">
-        update <include refid="table_name" /> set flag=0 WHERE ac_id=#{id} and flag=1
-    </update>
+	<insert id="insert" parameterType="articleClass" useGeneratedKeys="true" keyProperty="acId" >
+		INSERT INTO <include refid="table_name" />
+			(ac_id, ac_code, ac_name, ac_parent_id, ac_sort, flag, create_time)
+		VALUES
+			(#{acId}, #{acCode}, #{acName}, #{acParentId}, #{acSort}, #{flag}, #{createTime})
+	</insert>
 
-    <select id="detail" parameterType="INTEGER" resultType="articleClass">
-        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE ac_id=#{id} and flag=1
-    </select>
+	<update id="update" parameterType="articleClass">
+		UPDATE <include refid="table_name" />
+		<set>
+			<if test="acCode != null and acCode != ''">
+				ac_code=#{acCode},
+			</if>
+			<if test="acName != null and acName != ''">
+				ac_name=#{acName},
+			</if>
+			<if test="acParentId != null and acParentId != ''">
+				ac_parent_id=#{acParentId},
+			</if>
+			<if test="acSort != null">
+				ac_sort=#{acSort},
+			</if>
+			<if test="flag != null">
+				flag=#{flag},
+			</if>
+		</set>
+		<where>
+			ac_id = #{acId}
+		</where>
+	</update>
 
-    <select id="getByCodeOrName" parameterType="articleClass" resultType="articleClass">
-        SELECT <include refid="select_columns" /> FROM <include refid="table_name" /> WHERE flag=1
-        AND ac_parent_id = #{parentId}
-        AND (ac_code = #{code} OR ac_name = #{name})
-    </select>
+	<select id="detail" parameterType="integer" resultType="articleClass">
+		select <include refid="select_columns" /> from <include refid="table_name"/>
+		where ac_id=#{id}
+	</select>
 
-    <!-- 分页相关开始 -->
-    <select id="getByPage" resultType="Map" parameterType="Map">
-        select <include refid="select_columns" />
-        from
-        <include refid="table_name" />
-        <where>
+	<update id="delete" parameterType="integer">
+		update <include refid="table_name" /> SET flag=0 WHERE ac_id=#{id} AND flag=1
+	</update>
 
-        </where>
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
-        </if>
-    </select>
+	<!-- 分页相关开始 -->
+	<select id="getByPage" resultType="Map" parameterType="Map">
+		select <include refid="select_columns" />  FROM <include refid="table_name" />
+	</select>
 
-    <select id="getTotalCount" parameterType="Map" resultType="Integer">
-        select count(*)
-        from
-        <include refid="table_name" />
-        <where>
-
-        </where>
-        <if test="sortBy != null and sortBy != '' and order != null and order != ''">
-            order by #{sortBy} #{order}
-        </if>
-    </select>
-    <!-- 分页相关结束 -->
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select count(1) FROM <include refid="table_name" />
+	</select>
+	<!-- 分页相关结束 -->
 </mapper>

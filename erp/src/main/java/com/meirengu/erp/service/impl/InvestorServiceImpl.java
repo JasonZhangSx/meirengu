@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class InvestorServiceImpl implements InvestorService{
     @Override
-    public Map<String, Object> query(int page, int perPage, boolean isPage) {
+    public Object query(int page, int perPage, boolean isPage) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
 
@@ -33,7 +33,7 @@ public class InvestorServiceImpl implements InvestorService{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Object code = jsonObject.get("code");
                 if(code != null && code.equals(200)){
-                    return (Map) jsonObject.get("data");
+                    return jsonObject.get("data");
                 }
             }
         } catch (IOException e) {

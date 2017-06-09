@@ -29,10 +29,7 @@
 	<update id="update" parameterType="itemShareholder">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
-				id=#{id},
-			</if>
-			<if test="itemId != null and itemId != ''">
+			<if test="itemId != null">
 				item_id=#{itemId},
 			</if>
 			<if test="shareholderName != null and shareholderName != ''">
@@ -47,13 +44,13 @@
 			<if test="shareholderTelphone != null and shareholderTelphone != ''">
 				shareholder_telphone=#{shareholderTelphone},
 			</if>
-			<if test="shareholderAmount != null and shareholderAmount != ''">
+			<if test="shareholderAmount != null">
 				shareholder_amount=#{shareholderAmount},
 			</if>
-			<if test="beforeInvestRate != null and beforeInvestRate != ''">
+			<if test="beforeInvestRate != null">
 				before_invest_rate=#{beforeInvestRate},
 			</if>
-			<if test="afterInvestRate != null and afterInvestRate != ''">
+			<if test="afterInvestRate != null">
 				after_invest_rate=#{afterInvestRate},
 			</if>
 		</set>
@@ -70,10 +67,18 @@
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
 		select <include refid="select_columns" />  FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null and itemId != ''">
+			and item_id=#{itemId}
+		</if>
 	</select>
 
 	<select id="getCount" parameterType="Map" resultType="Integer">
 		select count(1) FROM <include refid="table_name" />
+		where 1=1
+		<if test="itemId != null and itemId != ''">
+			and item_id=#{itemId}
+		</if>
 	</select>
 	<!-- 分页相关结束 -->
 </mapper>
