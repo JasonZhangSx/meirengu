@@ -2,6 +2,7 @@ package com.meirengu.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
@@ -135,14 +137,24 @@ public class HttpUtil {
             SchemeRegistry sr = ccm.getSchemeRegistry();
             sr.register(new Scheme("https", 443, ssf));
 
-            HttpGet httpget = new HttpGet(url);
+            String str = "";
             if (parameters != null && parameters.size() > 0) {
-                HttpParams params = httpclient.getParams();
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
                 for (String key : parameters.keySet()) {
-                    params.setParameter(key, parameters.get(key));
+                    params.add(new BasicNameValuePair(key, parameters.get(key)));
                 }
-                httpget.setParams(params);
+                str = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
+                url +=str;
             }
+            HttpGet httpget = new HttpGet(url);
+//           httpget参数设置修改  -- modify by maoruxin20170609
+//            if (parameters != null && parameters.size() > 0) {
+//                HttpParams params = httpclient.getParams();
+//                for (String key : parameters.keySet()) {
+//                    params.setParameter(key, parameters.get(key));
+//                }
+//                httpget.setParams(params);
+//            }
             logger.info("REQUEST:" + httpget.getURI());
 
             HttpResponse response = httpclient.execute(httpget);

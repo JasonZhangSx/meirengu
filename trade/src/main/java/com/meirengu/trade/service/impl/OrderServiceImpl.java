@@ -464,7 +464,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 HttpResult httpResult = HttpUtil.doPostForm(url, params);
                 logger.debug("Request: {} getResponse: {}", url, httpResult);
             }
-
         } else {
             result.setCode(StatusCode.ORDER_ERROR_UPDATE);
             result.setMsg(StatusCode.codeMsgMap.get(StatusCode.ORDER_ERROR_UPDATE));
@@ -632,6 +631,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 tempMap.put("typeId", itemLevel.getIntValue("typeId"));
                 tempMap.put("headerImage", itemLevel.getString("headerImage"));
                 tempMap.put("itemProfile", itemLevel.getString("itemProfile"));
+                tempMap.put("customerServiceQRCode", ConfigUtil.getConfig("item.customer.service.qr.code"));
                 result.setData(tempMap);
             } else {
                 logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
