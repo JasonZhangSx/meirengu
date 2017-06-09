@@ -146,6 +146,10 @@ function levelAdd(){
 }
 
 function itemAdd(){
+
+    if(!itemValidate()){
+        return;
+    }
     $.ajax({
         type: "POST",
         url: "item/save",
@@ -164,6 +168,9 @@ function itemAdd(){
 }
 
 function itemValidate(){
+
+    var r = /^\+?[1-9][0-9]*$/;　　//正整数
+
     var itemName = $("#itemName").val();
     var itemProfile = $("#itemProfile").val();
     var typeId = $("#typeId").val();
@@ -185,13 +192,78 @@ function itemValidate(){
         return false;
     }
 
+    if(!r.test(targetAmount)){
+        alert("目标金额必须为整数");
+        return false;
+    }
+
+    if(!r.test(preheatingDays)){
+        alert("预热天数必须为整数且小于5天");
+        return false;
+    }
+
     if(preheatingDays > 5){
         alert("预热天数不能超过5天");
         return false;
     }
 
-    //if(targetAmount.len)
+    if(!r.test(crowdDays)){
+        alert("众筹天数必须为整数");
+        return false;
+    }
 
+    if(headerImage.length <= 0){
+        alert("项目头像不能为空");
+        return false;
+    }
+
+    return true;
+}
+
+//提交股权项目扩展信息
+function extentionSave(){
+    var itemId = $("#itemId30").val();
+    if(itemId == null || itemId == '' || itemId == 0){
+        alert("请先添加项目基本信息");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "item/extention/save",
+        data: $("#itemExtentionForm").serialize(),
+        dataType: "json",
+        success: function(data){
+            console.log(data);
+            if(data.code == '200'){
+                var content = data.data;
+                console.log(content);
+                alert("融资信息添加成功");
+            }
+        }
+    });
+}
+
+//股东信息提交
+function shareHolderSave(){
+    var itemId = $("#itemId31").val();
+    if(itemId == null || itemId == '' || itemId == 0){
+        alert("请先添加项目基本信息");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "item/shareholder/save",
+        data: $("#itemShareHolderForm").serialize(),
+        dataType: "json",
+        success: function(data){
+            console.log(data);
+            if(data.code == '200'){
+                var content = data.data;
+                console.log(content);
+                alert("股东信息添加成功");
+            }
+        }
+    });
 }
 
 //提交审核

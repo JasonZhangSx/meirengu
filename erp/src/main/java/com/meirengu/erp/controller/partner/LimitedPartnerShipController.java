@@ -57,7 +57,7 @@ public class LimitedPartnerShipController extends BaseController{
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = limitedPartnerShipService.query(page, length, true);
+            Map<String, Object> map = (Map<String, Object>) limitedPartnerShipService.query(page, length, true);
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {

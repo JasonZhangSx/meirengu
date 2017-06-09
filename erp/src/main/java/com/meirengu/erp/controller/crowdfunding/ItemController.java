@@ -6,10 +6,7 @@ import com.meirengu.erp.model.Item;
 import com.meirengu.erp.model.ItemContent;
 import com.meirengu.erp.model.ItemCooperation;
 import com.meirengu.erp.model.ItemLevel;
-import com.meirengu.erp.service.AddressService;
-import com.meirengu.erp.service.ItemService;
-import com.meirengu.erp.service.PartnerService;
-import com.meirengu.erp.service.TypeService;
+import com.meirengu.erp.service.*;
 import com.meirengu.erp.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +45,10 @@ public class ItemController extends BaseController {
     PartnerService partnerService;
     @Autowired
     AddressService addressService;
+    @Autowired
+    InvestorService investorService;
+    @Autowired
+    LimitedPartnerShipService limitedPartnerShipService;
 
     /**
      * 新建list
@@ -170,6 +171,10 @@ public class ItemController extends BaseController {
             List typeData = typeService.getTypeList();
             List partnerData = (List) partnerService.query(0,0,false);
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
+            List partnerShip = (List) limitedPartnerShipService.query(0, 0, false);
+            List investorList = (List) investorService.query(0, 0, false);
+            returnMap.put("shipList", partnerShip);
+            returnMap.put("investorList", investorList);
             returnMap.put("itemClass", itemClassData);
             returnMap.put("type", typeData);
             returnMap.put("partner", partnerData);
@@ -530,6 +535,10 @@ public class ItemController extends BaseController {
         List contentData = itemService.getContentList(itemId, null);
         List levelData = itemService.getLevelList(itemId);
         List recordData = itemService.getOperateRecordList(itemId);
+        List partnerShip = (List) limitedPartnerShipService.query(0, 0, false);
+        List investorList = (List) investorService.query(0, 0, false);
+        returnMap.put("shipList", partnerShip);
+        returnMap.put("investorList", investorList);
         returnMap.put("itemClass", itemClassData);
         returnMap.put("type", typeData);
         returnMap.put("partner", partnerData);

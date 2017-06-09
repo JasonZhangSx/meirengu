@@ -2,8 +2,8 @@ package com.meirengu.erp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
-import com.meirengu.erp.model.LeadInvestor;
-import com.meirengu.erp.service.InvestorService;
+import com.meirengu.erp.model.ItemShareholder;
+import com.meirengu.erp.service.ItemShareHolderService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
 import org.springframework.stereotype.Service;
@@ -13,18 +13,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ${DESCRIPTION}
- *
+ * 项目股东服务层
  * @author 建新
- * @create 2017-05-19 11:36
+ * @create 2017-03-29 21:34
  */
 @Service
-public class InvestorServiceImpl implements InvestorService{
+public class ItemShareHolderServiceImpl implements ItemShareHolderService{
     @Override
-    public Object query(int page, int perPage, boolean isPage) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.list"));
+    public Object query(int page, int perPage, boolean isPage, Integer itemId) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
-
+        if(itemId != null && itemId != 0){
+            url.append("&item_id=").append(itemId);
+        }
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
             int statusCode = hr.getStatusCode();
@@ -44,7 +45,7 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> detail(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.detail"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.detail"));
         url.append("/").append(id);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
@@ -64,23 +65,19 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> add(LeadInvestor investor) {
+    public Map<String, Object> add(ItemShareholder shareholder) {
 
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.add"));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
-        params.put("operate_account", "admin");
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.insert"));
+
+        params.put("item_id", String.valueOf(shareholder.getItemId()));
+        params.put("shareholder_name", shareholder.getShareholderName());
+        params.put("shareholder_idcard", shareholder.getShareholderIdcard());
+        params.put("shareholder_address", shareholder.getShareholderAddress());
+        params.put("shareholder_telphone", shareholder.getShareholderTelphone());
+        params.put("shareholder_amount", String.valueOf(shareholder.getShareholderAmount()));
+        params.put("before_invest_rate", String.valueOf(shareholder.getBeforeInvestRate()));
+        params.put("after_invest_rate", String.valueOf(shareholder.getAfterInvestRate()));
 
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
@@ -88,7 +85,7 @@ public class InvestorServiceImpl implements InvestorService{
             if(statusCode == StatusCode.OK){
                 String content = hr.getContent();
                 JSONObject jsonObject = JSONObject.parseObject(content);
-                return (Map) jsonObject;
+                return jsonObject;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,30 +94,27 @@ public class InvestorServiceImpl implements InvestorService{
     }
 
     @Override
-    public Map<String, Object> update(LeadInvestor investor) {
+    public Map<String, Object> update(ItemShareholder shareholder) {
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.update"));
-        params.put("id", String.valueOf(investor.getId()));
-        params.put("investor_name", investor.getInvestorName());
-        params.put("investor_type", String.valueOf(investor.getInvestorType()));
-        params.put("principal_name", investor.getPrincipalName());
-        params.put("investor_business_licence", investor.getInvestorBusinessLicence());
-        params.put("investor_idcard", investor.getInvestorIdcard());
-        params.put("investor_address", investor.getInvestorAddress());
-        params.put("investor_telphone", investor.getInvestorTelphone());
-        params.put("investor_image", investor.getInvestorImage());
-        params.put("investor_introduction", investor.getInvestorIntroduction());
-        params.put("investor_company", investor.getInvestorCompany());
-        params.put("investor_position", investor.getInvestorPosition());
-        params.put("investor_idea", investor.getInvestorIdea());
-        params.put("operate_account", investor.getOperateAccount());
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.update"));
+
+        params.put("id", String.valueOf(shareholder.getId()));
+        params.put("item_id", String.valueOf(shareholder.getItemId()));
+        params.put("shareholder_name", shareholder.getShareholderName());
+        params.put("shareholder_idcard", shareholder.getShareholderIdcard());
+        params.put("shareholder_address", shareholder.getShareholderAddress());
+        params.put("shareholder_telphone", shareholder.getShareholderTelphone());
+        params.put("shareholder_amount", String.valueOf(shareholder.getShareholderAmount()));
+        params.put("before_invest_rate", String.valueOf(shareholder.getBeforeInvestRate()));
+        params.put("after_invest_rate", String.valueOf(shareholder.getAfterInvestRate()));
+
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
             int statusCode = hr.getStatusCode();
             if(statusCode == StatusCode.OK){
                 String content = hr.getContent();
                 JSONObject jsonObject = JSONObject.parseObject(content);
-                return (Map) jsonObject;
+                return jsonObject;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +124,7 @@ public class InvestorServiceImpl implements InvestorService{
 
     @Override
     public Map<String, Object> delete(int id) {
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("investor.delete"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.delete"));
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
         try {
@@ -139,7 +133,7 @@ public class InvestorServiceImpl implements InvestorService{
             if(statusCode == StatusCode.OK){
                 String content = hr.getContent();
                 JSONObject jsonObject = JSONObject.parseObject(content);
-                return (Map) jsonObject;
+                return jsonObject;
             }
         } catch (Exception e) {
             e.printStackTrace();
