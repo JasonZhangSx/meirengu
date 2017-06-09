@@ -202,10 +202,6 @@
             flag = 0;
             alert("活动链接不能为空！");
         }
-        if(remarks ==""){
-            flag = 0;
-            alert("备注不能为空！");
-        }
         if(datetimepicker2 ==""){
             flag = 0;
             alert("开始时间不能为空！");

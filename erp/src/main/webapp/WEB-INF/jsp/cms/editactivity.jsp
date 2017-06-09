@@ -153,7 +153,7 @@
             <br/><br/><br/><br/>
         </div>
     <input type="hidden" name="activity_sort" value="255">
-    <input type="hidden" name="status" value="1">
+    <input type="hidden" name="status" value="${status}">
     <input type="hidden" name="activity_id" value="${activityId}">
     <div id="image">
         <c:forEach items="${stringList}" var="image" varStatus="index">

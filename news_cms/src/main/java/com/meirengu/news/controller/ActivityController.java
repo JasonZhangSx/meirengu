@@ -34,8 +34,6 @@ public class ActivityController extends BaseController{
     /**
      * @param pageNum 当前页
      * @param pageSize 每页显示的条数
-     * @param sortBy 排序字段
-     * @param order 升序/降序
      * @return
      */
     @RequestMapping(value = "list",method = {RequestMethod.POST})
