@@ -25,7 +25,7 @@ public class FeedbackServiceImpl implements FeedbackService{
     private static final Logger logger = LoggerFactory.getLogger(FeedbackServiceImpl.class);
 
     @Override
-    public boolean feedback(Feedback feedback) {
+    public int feedback(Feedback feedback) {
         Map<String, String> paramsMap = new HashMap<String, String>();
         paramsMap.put("feedback_content", feedback.getFeedbackContent());
         paramsMap.put("user_id", feedback.getUserId()+"");
@@ -45,13 +45,13 @@ public class FeedbackServiceImpl implements FeedbackService{
             if(code == StatusCode.OK){
                 JSONObject data = (JSONObject) jsonObject.get("data");
                 logger.info("feedback result success << url:{}, params:{}, data:{}", new Object[]{url, paramsMap, data});
-                return true;
             }else {
                 logger.info("feedback result failure << url:{}, params:{}, code:{}", new Object[]{url, paramsMap, code});
             }
+            return code;
         }else{
             logger.error("feedback http failure << url:{},  params:{}, http_code:{}", new Object[]{url, paramsMap, hr.getStatusCode()});
+            return hr.getStatusCode();
         }
-        return false;
     }
 }

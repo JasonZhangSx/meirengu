@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <!doctype html>
 <html lang="en">
@@ -15,8 +16,18 @@
 
 <div class="no_date fail">
     <img src="<%=request.getContextPath()%>/img/submit_fail.jpg" style="width:2.2rem" alt="" />
-    服务器开小差了,请稍后再试!
-    <a href="javascript:history.go(-1);">返回上一页</a>
+
+    <c:choose>
+        <c:when test="${not empty errorMsg}">${errorMsg}</c:when>
+        <c:otherwise>服务器开小差了,请稍后再试!</c:otherwise>
+    </c:choose>
+    <%--<c:if test="${not empty errorMsg}">
+        ${errorMsg}
+    </c:if>
+    <c:if test="${empty errorMsg}">
+        服务器开小差了,请稍后再试!
+    </c:if>--%>
+    <a href="javascript:history.go(-2);">返回上一页</a>
 </div>
 </body>
 </html>
