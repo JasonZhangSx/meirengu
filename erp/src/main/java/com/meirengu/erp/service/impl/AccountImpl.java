@@ -41,32 +41,32 @@ public class AccountImpl implements AccountService {
     @Override
     public boolean login(Account account) {
         logger.info("Request login parameter:{}", account.toString());
-        Account acc = new Account();
-        acc.setUserName(account.getUserName());
-        acc = iAccountService.findAccount(account);
-        if (acc==null){
+//        Account acc = new Account();
+//        acc.setUserName(account.getUserName());
+//        acc = iAccountService.findAccount(account);
+//        if (acc==null){
+//            return false;
+//        }
+//        if (account.getPassword().equals(acc.getPassword())){
+//            return true;
+//        }
+//        return false;
+        Subject currentUser = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(
+                account.getUserName(),account.getPassword());
+        token.setRememberMe(true);
+        try {
+            currentUser.login(token);
+        } catch (AuthenticationException e) {
+            logger.error("login ErrorMsg:{}",e.getMessage());
             return false;
         }
-        if (account.getPassword().equals(acc.getPassword())){
+        if (currentUser.isAuthenticated()){
             return true;
+        }else{
+            logger.error("login ErrorMsg:{}","账号密码错误");
+            return false;
         }
-        return false;
-//        Subject currentUser = SecurityUtils.getSubject();
-//        UsernamePasswordToken token = new UsernamePasswordToken(
-//                account.getUserName(),account.getPassword());
-//        token.setRememberMe(true);
-//        try {
-//            currentUser.login(token);
-//        } catch (AuthenticationException e) {
-//            logger.error("login ErrorMsg:{}",e.getMessage());
-//            return false;
-//        }
-//        if (currentUser.isAuthenticated()){
-//            return true;
-//        }else{
-//            logger.error("login ErrorMsg:{}","账号密码错误");
-//            return false;
-//        }
     }
 
     @Override

@@ -39,9 +39,9 @@ public class SlideshowController extends BaseController {
         }
         if (slideshowPosition!=null&&!slideshowPosition.isEmpty()){
             if (stringBuffer.length()<=0){
-                stringBuffer.append("&slideshowPosition="+slideshowPosition);
-            }else {
                 stringBuffer.append("slideshowPosition="+slideshowPosition);
+            }else {
+                stringBuffer.append("&slideshowPosition="+slideshowPosition);
             }
         }
         return new ModelAndView("/cms/slideshow", slideshowList(String.valueOf(stringBuffer)));

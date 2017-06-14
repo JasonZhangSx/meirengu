@@ -47,13 +47,13 @@
                 <label class="form-label col-xs-4 col-sm-2">轮播图名称：</label>
                 <div class="formControls col-xs-8 col-sm-8">
                     <input type="text" class="input-text" value=""  maxlength="30"
-                           placeholder="项目标题最多30字" id="slideshowName" name="slideshowName">
+                           placeholder="轮播图名称最多20字" id="slideshowName" name="slideshowName">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">轮播图位置：</label>
                 <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-				<select name="slideshowPosition" class="select">
+				<select name="slideshowPosition" id="slideshowPosition" class="select">
                     <option value="1">PC</option>
                     <option value="2">APP</option>
                     <option value="3">H5</option>
@@ -64,7 +64,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">链接地址：</label>
                 <div class="formControls col-xs-8 col-sm-8">
-                    <input type="text" class="input-text" value="" placeholder="项目标题最多30字" id="slideshowLink" name="slideshowLink">
+                    <input type="text" class="input-text" value="" id="slideshowLink" name="slideshowLink">
                 </div>
             </div>
             <div class="row cl">
@@ -705,6 +705,18 @@
 </script>
 <script>
     function saveReport() {
+        var arr=new Array(
+                new Array('slideshowName','轮播图名称不可为空!'),
+                new Array('slideshowPosition','轮播图位置不可为空!'),
+                new Array('slideshowLink','链接地址不可为空!')
+        );
+            for(var i=0;i<arr.length;i++){
+                if($("#"+arr[i][0]).val()==''){
+                    alert(arr[i][1]);
+                    $("#"+arr[i][0]).focus();
+                    return false;
+                }
+            }
 // jquery 表单提交
         $("#slideshowDataForm").ajaxSubmit(function(result) {
             if (result==""){
