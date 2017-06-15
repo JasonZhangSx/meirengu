@@ -10,16 +10,23 @@ import com.meirengu.erp.service.PartnerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,9 +89,14 @@ public class PartnerController extends BaseController{
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public ModelAndView detail(Integer id) {
         if(id == null){
-            return new ModelAndView("partner/partnerDetail");
+            List list = (List) partnerClassService.query(0, 0, false);
+            Map<String, Object> map = new HashMap<>();
+            map.put("classList", list);
+            return new ModelAndView("partner/partnerDetail", map);
         }else {
             Map<String, Object>  map = partnerService.detail(id);
+            List list = (List) partnerClassService.query(0, 0, false);
+            map.put("classList", list);
             return new ModelAndView("partner/partnerDetail", map);
         }
     }
@@ -112,5 +124,12 @@ public class PartnerController extends BaseController{
     public Map<String, Object> delete(int id) {
         Map<String, Object> map = partnerService.delete(id);
         return map;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }

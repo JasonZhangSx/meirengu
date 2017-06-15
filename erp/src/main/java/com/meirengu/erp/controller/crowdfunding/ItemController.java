@@ -305,6 +305,7 @@ public class ItemController extends BaseController {
         params.put("payback_days", String.valueOf(itemLevel.getPaybackDays()));
         params.put("is_share_bonus", String.valueOf(itemLevel.getIsShareBonus()));
         params.put("year_rate", String.valueOf(itemLevel.getYearRate()));
+        params.put("year_rate_max", String.valueOf(itemLevel.getYearRateMax()));
         params.put("investment_period", String.valueOf(itemLevel.getInvestmentPeriod()));
         params.put("revenue_model", String.valueOf(itemLevel.getRevenueModel()));
         params.put("share_bonus_period", String.valueOf(itemLevel.getShareBonusPeriod()));

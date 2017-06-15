@@ -15,6 +15,7 @@
         <module>commons-authority</module>
         <module>commons-meirengu</module>
         <module>rocketmq</module>
+        <module>meirengu_job</module>
         <module>crowd_funding</module>
         <module>data_operation</module>
         <module>erp</module>
@@ -145,6 +146,9 @@
         <ueditor-json.version>1.0.0</ueditor-json.version>
         <!-- rocketmq clien -->
         <rocketmq-client.version>4.0.0-incubating</rocketmq-client.version>
+        <!-- mj -->
+        <quartz.version>2.2.1</quartz.version>
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
     </properties>
     <prerequisites>
         <maven>3.0.0</maven>
@@ -195,6 +199,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -896,6 +905,13 @@
                 <artifactId>rocketmq-client</artifactId>
                 <version>${rocketmq-client.version}</version>
             </dependency>
+
+            <!-- jackson (support spring json) -->
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson-mapper-asl.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -911,6 +927,7 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
+                        <encoding>UTF-8</encoding>
                         <showWarnings>true</showWarnings>
                     </configuration>
                 </plugin>
@@ -978,6 +995,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.6</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                 </plugin>
 
                 <!-- test插件, 仅测试名称为*Test的类, 使用支持分组测试的surefire-junit47 driver -->
