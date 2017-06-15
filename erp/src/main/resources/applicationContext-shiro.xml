@@ -5,20 +5,17 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
     http://www.springframework.org/schema/util 
     http://www.springframework.org/schema/util/spring-util-3.0.xsd">
-	<description>Shiro 配置</description>
+	<description>Shiro Configuration</description>
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
-		<property name="loginUrl" value="/login.jsp" />
-		<property name="successUrl" value="/login.jsp" />
-		<property name="unauthorizedUrl" value="/error/noperms.jsp" />
+		<property name="loginUrl" value="/index" />
+		<property name="successUrl" value="/" />
+		<property name="unauthorizedUrl" value="/index" />
 		<property name="filterChainDefinitions">
 			<value>
-				/login.jsp* = anon
-				/login.do* = anon
-				/index.jsp*= anon
-				/error/noperms.jsp*= anon
-				/*.jsp* = authc
-				/*.do* = authc
+				/*/* = authc
+				/login = anon
+				/* = authc
 			</value>
 		</property>
 	</bean>
@@ -44,7 +41,9 @@
 	<!-- the lifecycleBeanProcessor has run: -->
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-		depends-on="lifecycleBeanPostProcessor" />
+		depends-on="lifecycleBeanPostProcessor" >
+		<property name="proxyTargetClass" value="true" />
+	</bean>
 	<bean
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />

@@ -13,5 +13,5 @@ public interface FeedbackService {
      * @param feedback
      * @return
      */
-    public boolean feedback(Feedback feedback);
+    public int feedback(Feedback feedback);
 }
