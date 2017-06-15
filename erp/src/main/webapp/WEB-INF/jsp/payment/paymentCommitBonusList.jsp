@@ -31,10 +31,12 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <form action="getPaymentCommitRecord" method="get">
+            <form action="bonusRecord" method="get">
                 <div class="text-c">
                     合作方名称：<input name="partnerName" type="text" class="input-text" style="width:120px;">　
                     项目名称：<input name="itemName" type="text" class="input-text" style="width:120px;">　
+                    分红时间：<input type="text" name="startDate" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
+                        type="text" name="endDate" class="input-text" style="width:120px;" id="datetimepicker3"/>
                     <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                         查 询
                     </button>
