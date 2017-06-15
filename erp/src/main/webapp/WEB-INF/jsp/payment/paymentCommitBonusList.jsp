@@ -37,6 +37,8 @@
                     项目名称：<input name="itemName" type="text" class="input-text" style="width:120px;">　
                     分红时间：<input type="text" name="startDate" class="input-text" style="width:120px;" id="datetimepicker2"/> - <input
                         type="text" name="endDate" class="input-text" style="width:120px;" id="datetimepicker3"/>
+                    应分红时间：<input type="text" name="shouldTimeStart" class="input-text" style="width:120px;" id="shouldTimeStart1"/> - <input
+                        type="text" name="shouldTimeEnd" class="input-text" style="width:120px;" id="shouldTimeStart2"/>
                     <button name="" id="" class="btn btn-success radius" type="submit"><i class="Hui-iconfont">&#xe665;</i>
                         查 询
                     </button>
@@ -159,7 +161,14 @@
         format: 'Y-m-d',
         formatDate: 'Y/m/d',
     });
-
+    // 时间
+    $('#shouldTimeStart1,#shouldTimeStart2').datetimepicker({
+        yearOffset: 0,
+        lang: $.datetimepicker.setLocale('ch'),
+        timepicker: false,
+        format: 'Y-m-d',
+        formatDate: 'Y/m/d',
+    });
 </script>
 </body>
 </html>
