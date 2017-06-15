@@ -12,7 +12,11 @@ import com.meirengu.trade.common.OrderException;
 import com.meirengu.trade.common.OrderStateEnum;
 import com.meirengu.trade.model.Order;
 import com.meirengu.trade.service.OrderService;
+import com.meirengu.trade.utils.ConfigUtil;
 import com.meirengu.utils.NumberUtil;
+import com.meirengu.utils.scheduleUtil.AdminApiUtil;
+import com.meirengu.utils.scheduleUtil.HandleCallbackParam;
+import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -577,18 +581,30 @@ public class OrderController extends BaseController{
      */
     @RequestMapping(value = "/generate_order_txt")
     public Result  generateOrderTxt() {
-        try {
-            orderService.generateOrderTxt();
-            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
-        } catch (IOException ie) {
-            logger.error("throw IOException: {}", ie);
-            ie.printStackTrace();
-            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }  catch (Exception e) {
-            logger.error("throw exception: {}", e);
-            e.printStackTrace();
-            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
-        }
+
+        Thread t=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ReturnT<String> returnT = null;
+                    try {
+                        orderService.generateOrderTxt();
+                        returnT = ReturnT.SUCCESS;
+                    } catch (Exception e) {
+                        returnT = new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
+                        logger.error("throw exception: {}", e);
+                        e.printStackTrace();
+                    }
+                    HandleCallbackParam handleCallbackParam = new HandleCallbackParam(78, returnT);
+                    String apiUrl = ConfigUtil.getConfig("job.callback.url");
+                    AdminApiUtil.triggerCallback(apiUrl, handleCallbackParam);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+        return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
     /**
