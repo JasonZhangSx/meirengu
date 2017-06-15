@@ -303,8 +303,8 @@ public class ItemController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{item_id}", method = RequestMethod.DELETE)
-    public Result delete(@PathVariable(value = "item_id") int itemId){
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public Result delete(@PathVariable(value = "id") int itemId){
         try {
             int deleteNum = itemService.delete(itemId);
             if(deleteNum == 1){

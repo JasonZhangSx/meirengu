@@ -66,7 +66,7 @@ public class ItemExtentionServiceImpl implements ItemExtentionService{
     public Map<String, Object> add(ItemExtention extention) {
 
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.extention.insert"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.extention.add"));
 
         params.put("item_id", String.valueOf(extention.getItemId()));
         params.put("sell_share", String.valueOf(extention.getSellShare()));

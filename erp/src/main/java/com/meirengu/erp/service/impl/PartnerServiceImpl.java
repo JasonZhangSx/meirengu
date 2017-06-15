@@ -74,6 +74,9 @@ public class PartnerServiceImpl implements PartnerService{
 
         params.put("type_id", String.valueOf(partner.getTypeId()));
         params.put("partner_name", partner.getPartnerName());
+        params.put("partner_label", partner.getPartnerLabel());
+        params.put("partner_telphone", partner.getPartnerTelphone());
+        params.put("partner_img", partner.getPartnerImg());
         params.put("partner_create_day", format.format(partner.getPartnerCreateDay()).toString());
         params.put("partner_regist_capital", String.valueOf(partner.getPartnerRegistCapital()));
         params.put("partner_valuation", String.valueOf(partner.getPartnerValuation()));
@@ -122,6 +125,9 @@ public class PartnerServiceImpl implements PartnerService{
 
         params.put("partner_id", String.valueOf(partner.getPartnerId()));
         params.put("type_id", String.valueOf(partner.getTypeId()));
+        params.put("partner_label", partner.getPartnerLabel());
+        params.put("partner_telphone", partner.getPartnerTelphone());
+        params.put("partner_img", partner.getPartnerImg());
         params.put("partner_name", partner.getPartnerName());
         params.put("partner_create_day", format.format(partner.getPartnerCreateDay()).toString());
         params.put("partner_regist_capital", String.valueOf(partner.getPartnerRegistCapital()));

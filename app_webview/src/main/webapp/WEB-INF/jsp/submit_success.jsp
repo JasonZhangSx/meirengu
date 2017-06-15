@@ -17,7 +17,7 @@
     <img src="<%=request.getContextPath()%>/img/submit_sucess.jpg" style="width:2.2rem" alt="" />
     <b>提交成功！</b>
     谢谢您宝贵的意见<br/>我们会第一时间为您解决~
-    <a href="javascript:history.go(-1);">返回上一级</a>
+    <a href="javascript:history.go(-2);">返回上一级</a>
 </div>
 </body>
 </html>

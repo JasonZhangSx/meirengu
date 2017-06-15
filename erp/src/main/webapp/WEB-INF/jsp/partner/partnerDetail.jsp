@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="partner/add" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="partner/save" method="post" class="form form-horizontal" id="form-partner-add">
         <style>
             .select-box1 {
                 padding-left: 0;
@@ -158,12 +158,15 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">合作方名称：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" id="partnerName" name="partnerName" maxlength="30"
+                <input type="hidden" name="partnerId" id="partnerId" value="${partnerId}">
+                <input type="text" class="input-text" value="${partnerName}" id="partnerName" name="partnerName" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
             <label class="form-label col-xs-4 col-sm-2">公司成立日：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value=""
+                <jsp:useBean id="dateValue" class="java.util.Date"/>
+                <jsp:setProperty name="dateValue" property="time" value="${partnerCreateDay}"/>
+                <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value='<fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>'
                        id="partnerCreateDay" name="partnerCreateDay"/>
             </div>
         </div>
@@ -171,11 +174,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">注册资金：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="partnerRegistCapital" name="partnerRegistCapital">
+                <input type="text" class="input-text" value="${partnerRegistCapital}" placeholder="" id="partnerRegistCapital"
+                       name="partnerRegistCapital" style="width: 275px;">&nbsp;元
             </div>
             <label class="form-label col-xs-4 col-sm-2">公司估值：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="partnerValuation" name="partnerValuation">
+                <input type="text" class="input-text" value="${partnerValuation}" placeholder="" id="partnerValuation"
+                       name="partnerValuation" style="width: 275px;">&nbsp;元
             </div>
         </div>
 
@@ -184,7 +189,12 @@
             <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
 				<select name="typeId" id="typeId" class="select">
                     <c:forEach items="${classList}" var="classList">
-                        <option value="${classList.classId}">${classList.className}</option>
+                        <c:if test="${classList.classId == typeId}">
+                            <option value="${classList.classId}" selected>${classList.className}</option>
+                        </c:if>
+                        <c:if test="${classList.classId != typeId}">
+                            <option value="${classList.classId}">${classList.className}</option>
+                        </c:if>
                     </c:forEach>
 				</select>
 				</span>
@@ -200,19 +210,41 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">合作方标签：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="${partnerLabel}" placeholder="多个标签以英文,隔开" id="partnerLabel"
+                       name="partnerLabel">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">合作方联系电话：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${partnerTelphone}" placeholder="" id="partnerTelphone"
+                       name="partnerTelphone">
+            </div>
+        </div>
+        <%--<div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">合作方图标：</label>
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${partnerImg}" placeholder="" id="partnerImg"
+                       name="partnerImg">
+            </div>
+        </div>--%>
+
+        <div class="row cl">
             <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">企业信息</h3>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">企业名称：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="enterpriseName" name="enterpriseName" maxlength="30"
+                <input type="text" class="input-text" value="${enterpriseName}" id="enterpriseName" name="enterpriseName" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">证件号：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="idNumber" name="idNumber" maxlength="30"
+                <input type="text" class="input-text" value="${idNumber}" id="idNumber" name="idNumber" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -221,7 +253,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-                        <input type="text" class="input-text" name="enterpriseAddress" id="enterpriseAddress">
+                        <input type="text" class="input-text" value="${enterpriseAddress}" name="enterpriseAddress" id="enterpriseAddress">
 					</span>
                 </label>
             </div>
@@ -233,26 +265,24 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">负责人姓名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="principalName" name="principalName">
+                <input type="text" class="input-text" value="${principalName}" placeholder="" id="principalName" name="principalName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="principalIdcard"
+                <input type="text" class="input-text" value="${principalIdcard}" placeholder="" id="principalIdcard"
                        name="principalIdcard">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="principalTelephone" name="principalTelephone"
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${principalTelephone}" id="principalTelephone" name="principalTelephone"
                        maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
-        </div>
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="principalFax" name="principalFax" maxlength="30"
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${principalFax}" id="principalFax" name="principalFax" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -261,7 +291,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-                        <input type="text" class="input-text" name="principalAddress" id="principalAddress">
+                        <input type="text" class="input-text" value="${principalAddress}" name="principalAddress" id="principalAddress">
 					</span>
                 </label>
             </div>
@@ -273,25 +303,23 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系人姓名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="contactsName" name="contactsName">
+                <input type="text" class="input-text" value="${contactsName}" placeholder="" id="contactsName" name="contactsName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">身份证号：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="contactsIdcard" name="contactsIdcard">
+                <input type="text" class="input-text" value="${contactsIdcard}" placeholder="" id="contactsIdcard" name="contactsIdcard">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">联系方式：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="contactsTelephone" name="contactsTelephone"
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${contactsTelephone}" id="contactsTelephone" name="contactsTelephone"
                        maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
-        </div>
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
-            <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="contactsFax" name="contactsFax" maxlength="30"
+            <div class="formControls col-xs-8 col-sm-3">
+                <input type="text" class="input-text" value="${contactsFax}" id="contactsFax" name="contactsFax" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -300,7 +328,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <label data-toggle="distpicker" style="display:block;width:100%">
 					<span class="select-box select-box1" style="border:none;">
-                        <input type="text" class="input-text" name="contactsAddress" id="contactsAddress">
+                        <input type="text" class="input-text" value="${contactsAddress}" name="contactsAddress" id="contactsAddress">
 					</span>
                 </label>
             </div>
@@ -312,17 +340,17 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">开户行名称：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="bankName" name="bankName">
+                <input type="text" class="input-text" value="${bankName}" placeholder="" id="bankName" name="bankName">
             </div>
             <label class="form-label col-xs-4 col-sm-2">账户名：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <input type="text" class="input-text" value="" placeholder="" id="bankAccount" name="bankAccount">
+                <input type="text" class="input-text" value="${bankAccount}" placeholder="" id="bankAccount" name="bankAccount">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">银行账号：</label>
             <div class="formControls col-xs-8 col-sm-8">
-                <input type="text" class="input-text" value="" id="bankCard" name="bankCard" maxlength="30"
+                <input type="text" class="input-text" value="${bankCard}" id="bankCard" name="bankCard" maxlength="30"
                        placeholder="项目标题最多30字">
             </div>
         </div>
@@ -344,7 +372,7 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <input type="hidden" id="imagePrincipal" name="imagePrincipal">
+                        <input type="hidden" id="imagePrincipal" name="imagePrincipal" value="${imagePrincipal}">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
@@ -364,7 +392,7 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l"><!-- upload?foldName=item-->
-                        <input type="hidden" id="imageBusinessLicence" name="imageBusinessLicence">
+                        <input type="hidden" id="imageBusinessLicence" name="imageBusinessLicence" value="${imageBusinessLicence}">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
@@ -384,7 +412,7 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <input type="hidden" id="imageBank" name="imageBank">
+                        <input type="hidden" id="imageBank" name="imageBank" value="${imageBank}">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
@@ -404,7 +432,7 @@
                         <button class="btn btn-link radius ml-10" type="button">下载</button>
                     </td>
                     <td class="text-l">
-                        <input type="hidden" id="imageProfessionalLicense" name="imageProfessionalLicense">
+                        <input type="hidden" id="imageProfessionalLicense" name="imageProfessionalLicense" value="${imageProfessionalLicense}">
                         <div class="img-box full">
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
@@ -425,7 +453,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-8 text-c">
-                <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="submit">添 加
+                <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" type="button" onclick="savePartner()">保 存
                 </button>
             </div>
         </div>
@@ -442,6 +470,185 @@
     $('#partnerCreateDay').datetimepicker({
         lang: $.datetimepicker.setLocale('ch'),
     });
+
+    // prepare Options Object
+    var options = {
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        error : function() {
+            alert('error!');
+        },
+        timeout : 3000
+    };
+    // pre-submit callback
+    function showRequest(formData, jqForm, options) {
+        var queryString = $.param(formData);
+        return true;
+    }
+    // post-submit callback
+    function showResponse(responseText, statusText, xhr, $form)  {
+        var data = responseText;
+        var code = data.code;//200 is success，other is fail
+        if(code == "200"){
+            layer.msg('保存成功', {icon: 1, time: 1000});
+            setTimeout(function() {
+                layer_close();
+            }, 2000);
+        }else{
+            layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
+        }
+    }
+    function savePartner() {
+        var partnerName = $("#partnerName").val();
+        var partnerCreateDay = $("#partnerCreateDay").val();
+        var partnerRegistCapital = $("#partnerRegistCapital").val();
+        var partnerValuation = $("#partnerValuation").val();
+        var accountId = $("#accountId").val();
+        var enterpriseName = $("#enterpriseName").val();
+        var idNumber = $("#idNumber").val();
+        var enterpriseAddress = $("#enterpriseAddress").val();
+        var principalName = $("#principalName").val();
+        var principalIdcard = $("#principalIdcard").val();
+        var principalTelephone = $("#principalTelephone").val();
+        var principalFax = $("#principalFax").val();
+        var principalAddress = $("#principalAddress").val();
+        var contactsName = $("#contactsName").val();
+        var contactsIdcard = $("#contactsIdcard").val();
+        var contactsTelephone = $("#contactsTelephone").val();
+        var contactsFax = $("#contactsFax").val();
+        var contactsAddress = $("#contactsAddress").val();
+        var bankName = $("#bankName").val();
+        var bankAccount = $("#bankAccount").val();
+        var bankCard = $("#bankCard").val();
+        var imagePrincipal = $("#imagePrincipal").val();
+        var imageBusinessLicence = $("#imageBusinessLicence").val();
+        var imageBank = $("#imageBank").val();
+        var imageProfessionalLicense = $("#imageProfessionalLicense").val();
+
+        if(partnerName == null || partnerName == '' || partnerName == undefined){
+            alert("请填写合作方名称！");
+            return;
+        }
+        if(partnerCreateDay == null || partnerCreateDay== '' || partnerCreateDay == undefined){
+            alert("请填写公司成立时间！");
+            return false;
+        }
+        if(partnerRegistCapital == null || partnerRegistCapital == "" || partnerRegistCapital == undefined){
+            alert("请填写注册资金！");
+            return false;
+        }
+        if(partnerValuation == null || partnerValuation == "" || partnerValuation == undefined){
+            alert("请填写公司估值！");
+            return false;
+        }
+        if(accountId == null || accountId == "" || accountId == undefined){
+            alert("请填写服务专员！");
+            return false;
+        }
+        if(enterpriseName == null || enterpriseName == "" || enterpriseName == undefined){
+            alert("请填写企业名称！");
+            return false;
+        }
+        if(idNumber == null || idNumber == "" || idNumber == undefined){
+            alert("请填写企业证件号！");
+            return false;
+        }
+        if(enterpriseAddress == null || enterpriseAddress == "" || enterpriseAddress == undefined){
+            alert("请填写企业地址！");
+            return false;
+        }
+        if(principalName == null || principalName == "" || principalName == undefined){
+            alert("请填写企业负责人名称！");
+            return false;
+        }
+        if(principalIdcard == null || principalIdcard == "" || principalIdcard == undefined){
+            alert("请填写企业负责人身份证号！");
+            return false;
+        }
+        if(enterpriseName == null || enterpriseName == "" || enterpriseName == undefined){
+            alert("请填写企业名称！");
+            return false;
+        }
+        if(principalTelephone == null || principalTelephone == "" || principalTelephone == undefined){
+            alert("请填写企业负责人联系电话！");
+            return false;
+        }
+        if(principalFax == null || principalFax == "" || principalFax == undefined){
+            alert("请填写企业负责人传真！");
+            return false;
+        }
+        if(principalAddress == null || principalAddress == "" || principalAddress == undefined){
+            alert("请填写企业负责人联系地址！");
+            return false;
+        }
+        if(contactsName == null || contactsName == "" || contactsName == undefined){
+            alert("请填写企业联系人姓名！");
+            return false;
+        }
+        if(contactsIdcard == null || contactsIdcard == "" || contactsIdcard == undefined){
+            alert("请填写企业联系人身份证号！");
+            return false;
+        }
+        if(contactsFax == null || contactsFax == "" || contactsFax == undefined){
+            alert("请填写企业联系人传真！");
+            return false;
+        }
+
+        if(contactsAddress == null || contactsAddress == "" || contactsAddress == undefined){
+            alert("请填写企业联系人地址！");
+            return false;
+        }
+        if(bankName == null || bankName == "" || bankName == undefined){
+            alert("请填写开户行名称！");
+            return false;
+        }
+        if(bankAccount == null || bankAccount == "" || bankAccount == undefined){
+            alert("请填写账户名！");
+            return false;
+        }
+        if(bankCard == null || bankCard == "" || bankCard == undefined){
+            alert("请填写银行账号！");
+            return false;
+        }
+        /*if(imagePrincipal == null || imagePrincipal == "" || imagePrincipal == undefined){
+            alert("负责人身份证照片不能为空！");
+            return false;
+        }
+        if(imageBusinessLicence == null || imageBusinessLicence == "" || imageBusinessLicence == undefined){
+            alert("营业执照照片不能为空！");
+            return false;
+        }
+        if(imageBank == null || imageBank == "" || imageBank == undefined){
+            alert("开户行照片不能为空！");
+            return false;
+        }
+        if(imageProfessionalLicense == null || imageProfessionalLicense == "" || imageProfessionalLicense == undefined){
+            alert("医疗机构执业许可证不能为空！");
+            return false;
+        }*/
+
+        $('#form-partner-add').ajaxSubmit(options);
+        /*var parentId = $("#partnerId").val();
+        var formData = {"partnerName": partnerName, "partnerCreateDay" : partnerCreateDay, "partnerRegistCapital" : partnerRegistCapital, "partnerValuation" : partnerValuation,
+        "accountId": accountId, "enterpriseName" : enterpriseName, "idNumber" : idNumber, "enterpriseAddress" : enterpriseAddress, "principalName" : principalName,
+        "principalIdcard" : principalIdcard, "principalTelephone" : principalTelephone, "principalFax" : principalFax, "principalAddress" : principalAddress,
+        "contactsName" : contactsName, "contactsIdcard" : contactsIdcard, "contactsTelephone" : contactsTelephone, "contactsFax" : contactsFax, "contactsAddress" : contactsAddress,
+        "bankName" : bankName, "bankAccount" : bankAccount, "bankCard" : bankCard, "imagePrincipal" : imagePrincipal, "imageBusinessLicence" : imageBusinessLicence,
+        "imageBank" : imageBank, "imageProfessionalLicense" : imageProfessionalLicense, "parentId" : parentId};
+        console.log(formData);
+        $.ajax({
+           url : "partner/save",
+           type : "POST",
+           data : formData,
+           beforeSubmit:  showRequest,  // pre-submit callback
+           success:       showResponse,  // post-submit callback
+           error : function() {
+               alert('error!');
+           },
+           timeout : 3000
+        });*/
+
+    }
 
 </script>
 </body>

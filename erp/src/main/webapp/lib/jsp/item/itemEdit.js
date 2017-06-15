@@ -15,9 +15,13 @@ function typeChange(){
     if(typeId == 3){
         $("#extentionDiv").show();
         $("#shareholderDiv").show();
+        $("#shareHoldRateDiv").show();
+        $("#yearRateMaxDiv").show();
     }else{
         $("#extentionDiv").hide();
         $("#shareholderDiv").hide();
+        $("#shareHoldRateDiv").hide();
+        $("#yearRateMaxDiv").hide();
     }
 }
 /**
