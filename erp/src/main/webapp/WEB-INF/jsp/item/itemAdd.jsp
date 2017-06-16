@@ -614,7 +614,7 @@
                                     <input type="text" class="input-text" value="" maxlength="30" id="levelAmount0" name="levelAmount" style="width: 272px;">&nbsp;&nbsp;元
                                 </div>
 
-                                <div id="shareHoldRateDiv" style="display: none;">
+                                <div name="shareHoldRateDiv" style="display: none;">
                                     <label class="form-label col-xs-4 col-sm-2">持股比例：</label>
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate0" name="shareHoldRate" style="width: 272px;">&nbsp;&nbsp;%
@@ -664,10 +664,10 @@
                                     <div class="formControls col-xs-8 col-sm-3">
                                         <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate0"
                                                name="yearRate" style="width: 100px;">&nbsp;&nbsp;%
-                                        <span id="yearRateMaxDiv" style="display: none;">
+                                        <span name="yearRateMaxDiv" style="display: none;">
                                             &nbsp;&nbsp; - &nbsp;&nbsp;
                                             <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRateMax0"
-                                               name="yearRateMax0" style="width: 100px;">&nbsp;&nbsp;%
+                                               name="yearRateMax" style="width: 100px;">&nbsp;&nbsp;%
                                         </span>
                                     </div>
                                     <label class="form-label col-xs-4 col-sm-2">投资期限：</label>
