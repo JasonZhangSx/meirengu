@@ -16,7 +16,7 @@ public enum JobGroup {
 
     UC_GROUP(3, "用户中心项目任务组"),
 
-    PAY_GROUP(3, "用户中心项目任务组");
+    PAY_GROUP(4, "支付网关项目任务组");
 
     private final int id;
 
