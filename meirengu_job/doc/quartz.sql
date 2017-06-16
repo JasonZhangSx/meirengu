@@ -282,19 +282,3 @@ CREATE TABLE `mj_qrtz_trigger_log` (
 -- Records of mj_qrtz_trigger_log
 -- ----------------------------
 
--- ----------------------------
--- Table structure for `mj_qrtz_trigger_registry`
--- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_trigger_registry`;
-CREATE TABLE `mj_qrtz_trigger_registry` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `registry_group` varchar(255) NOT NULL,
-  `registry_key` varchar(255) NOT NULL,
-  `registry_value` varchar(255) NOT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mj_qrtz_trigger_registry
--- ----------------------------

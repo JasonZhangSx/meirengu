@@ -45,7 +45,7 @@
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="MJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM MJ_QRTZ_TRIGGER_INFO AS t
+		FROM mj_qrtz_trigger_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -60,7 +60,7 @@
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM MJ_QRTZ_TRIGGER_INFO AS t
+		FROM mj_qrtz_trigger_info AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -72,7 +72,7 @@
 	</select>
 
 	<insert id="save" parameterType="com.meirengu.mj.core.model.MJobInfo" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO MJ_QRTZ_TRIGGER_INFO (
+		INSERT INTO mj_qrtz_trigger_info (
 			job_group,
 			job_cron,
 			job_desc,
@@ -109,12 +109,12 @@
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="MJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM MJ_QRTZ_TRIGGER_INFO AS t
+		FROM mj_qrtz_trigger_info AS t
 		WHERE t.id = #{id}
 	</select>
 	
 	<update id="update" parameterType="com.meirengu.mj.core.model.MJobInfo" >
-		UPDATE MJ_QRTZ_TRIGGER_INFO
+		UPDATE mj_qrtz_trigger_info
 		SET 
 			job_cron = #{jobCron},
 			job_desc = #{jobDesc},
@@ -132,19 +132,19 @@
 	
 	<delete id="delete" parameterType="java.util.HashMap">
 		DELETE
-		FROM MJ_QRTZ_TRIGGER_INFO
+		FROM mj_qrtz_trigger_info
 		WHERE id = #{id}
 	</delete>
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="MJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM MJ_QRTZ_TRIGGER_INFO AS t
+		FROM mj_qrtz_trigger_info AS t
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
 	<select id="findAllCount" resultType="int">
 		SELECT count(1)
-		FROM MJ_QRTZ_TRIGGER_INFO
+		FROM mj_qrtz_trigger_info
 	</select>
 
 </mapper>
