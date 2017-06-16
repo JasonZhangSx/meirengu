@@ -100,8 +100,8 @@
                         var context =
                         {
                             func: [
-                                {"name": "修改", "fn": "detail(\'" + row.classId + "\')", "type": "default"},
-                                {"name": "删除", "fn": "project_confirm( this,\'" + row.classId + "\')", "type": "primary"}
+                                {"name": "修改", "fn": "detail(\'" + row.partnerId + "\')", "type": "default"},
+                                {"name": "删除", "fn": "project_confirm( this,\'" + row.partnerId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);

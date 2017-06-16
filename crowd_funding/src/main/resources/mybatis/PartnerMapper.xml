@@ -79,7 +79,7 @@
 			<if test="partnerRegistCapital != null">
 				partner_regist_capital=#{partnerRegistCapital},
 			</if>
-			<if test="partner_valuation != null">
+			<if test="partnerValuation != null">
 				partner_valuation=#{partnerValuation},
 			</if>
 			<if test="accountId != null and accountId != ''">

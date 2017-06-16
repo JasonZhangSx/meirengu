@@ -106,6 +106,9 @@ public class PartnerController extends BaseController{
     @RequestMapping(method = RequestMethod.POST)
     public Result insert(@RequestParam(value = "type_id", required = false) Integer typeId,
                          @RequestParam(value = "partner_name", required = false) String partnerName,
+                         @RequestParam(value = "partner_label", required = false) String partnerLabel,
+                         @RequestParam(value = "partner_telphone", required = false) String partnerTelphone,
+                         @RequestParam(value = "partner_img", required = false) String partnerImg,
                          @RequestParam(value = "partner_create_day", required = false) Date partnerCreateDay,
                          @RequestParam(value = "partner_regist_capital", required = false) Integer partnerRegistCapital,
                          @RequestParam(value = "partner_valuation", required = false) Integer partnerValuation,
@@ -140,7 +143,7 @@ public class PartnerController extends BaseController{
                                             contactsIdcard, contactsTelephone, contactsFax, contactsAddress,
                                             bankName, bankAccount, bankCard, imagePrincipal,
                                             imageBusinessLicence, imageBank, imageProfessionalLicense, 1,
-                                            new Date(), operateAccount);
+                                            new Date(), operateAccount, partnerLabel, partnerTelphone, partnerImg);
         try {
             int insertNum = partnerService.insert(partner);
             if(insertNum == 1){
@@ -177,6 +180,9 @@ public class PartnerController extends BaseController{
     public Result update(@RequestParam(value = "partner_id", required = false) Integer partnerId,
                          @RequestParam(value = "type_id", required = false) Integer typeId,
                          @RequestParam(value = "partner_name", required = false) String partnerName,
+                         @RequestParam(value = "partner_label", required = false) String partnerLabel,
+                         @RequestParam(value = "partner_telphone", required = false) String partnerTelphone,
+                         @RequestParam(value = "partner_img", required = false) String partnerImg,
                          @RequestParam(value = "partner_create_day", required = false) Date partnerCreateDay,
                          @RequestParam(value = "partner_regist_capital", required = false) Integer partnerRegistCapital,
                          @RequestParam(value = "partner_valuation", required = false) Integer partnerValuation,
@@ -210,7 +216,7 @@ public class PartnerController extends BaseController{
                 contactsIdcard, contactsTelephone, contactsFax, contactsAddress,
                 bankName, bankAccount, bankCard, imagePrincipal,
                 imageBusinessLicence, imageBank, imageProfessionalLicense, 1,
-                new Date(), operateAccount);
+                new Date(), operateAccount, partnerLabel, partnerTelphone, partnerImg);
         try {
             int updateNum = partnerService.update(partner);
             if(updateNum == 1){
@@ -259,7 +265,7 @@ public class PartnerController extends BaseController{
                            contactsIdcard, String contactsTelephone, String contactsFax, String contactsAddress, String
                            bankName, String bankAccount, String bankCard, String imagePrincipal, String
                            imageBusinessLicence, String imageBank, String imageProfessionalLicense, int flag, Date
-                           createTime, String operateAccount) {
+                           createTime, String operateAccount, String partnerLabel, String partnerTelphone, String partnerImg) {
         Partner partner = new Partner();
         partner.setPartnerId(partnerId);
         partner.setTypeId(typeId);
@@ -291,6 +297,9 @@ public class PartnerController extends BaseController{
         partner.setBankAccount(bankAccount == null ? "":bankAccount);
         partner.setBankCard(bankCard);
         partner.setImagePrincipal(imagePrincipal == null ? "" : imagePrincipal);
+        partner.setPartnerLabel(partnerLabel == null ? "" : partnerLabel);
+        partner.setPartnerTelphone(partnerTelphone == null ? "" : partnerTelphone);
+        partner.setPartnerImg(partnerImg == null ? "" :partnerImg);
 
         return partner;
     }

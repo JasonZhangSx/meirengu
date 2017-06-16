@@ -68,7 +68,7 @@ public class ItemShareHolderServiceImpl implements ItemShareHolderService{
     public Map<String, Object> add(ItemShareholder shareholder) {
 
         Map<String, String> params = new HashMap<>();
-        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.insert"));
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.shareholder.add"));
 
         params.put("item_id", String.valueOf(shareholder.getItemId()));
         params.put("shareholder_name", shareholder.getShareholderName());
