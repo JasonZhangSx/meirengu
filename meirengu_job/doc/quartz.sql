@@ -18,14 +18,14 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `mj_qrtz_blob_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_blob_triggers`;
-CREATE TABLE `mj_qrtz_blob_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_BLOB_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_BLOB_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
   `BLOB_DATA` blob,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `mj_qrtz_blob_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+  CONSTRAINT `MJ_QRTZ_BLOB_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -35,8 +35,8 @@ CREATE TABLE `mj_qrtz_blob_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_calendars`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_calendars`;
-CREATE TABLE `mj_qrtz_calendars` (
+DROP TABLE IF EXISTS `MJ_QRTZ_CALENDARS`;
+CREATE TABLE `MJ_QRTZ_CALENDARS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `CALENDAR_NAME` varchar(200) NOT NULL,
   `CALENDAR` blob NOT NULL,
@@ -50,15 +50,15 @@ CREATE TABLE `mj_qrtz_calendars` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_cron_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_cron_triggers`;
-CREATE TABLE `mj_qrtz_cron_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_CRON_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_CRON_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
   `CRON_EXPRESSION` varchar(200) NOT NULL,
   `TIME_ZONE_ID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `mj_qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+  CONSTRAINT `MJ_QRTZ_CRON_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -68,8 +68,8 @@ CREATE TABLE `mj_qrtz_cron_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_fired_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_fired_triggers`;
-CREATE TABLE `mj_qrtz_fired_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_FIRED_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_FIRED_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `ENTRY_ID` varchar(95) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
@@ -93,8 +93,8 @@ CREATE TABLE `mj_qrtz_fired_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_job_details`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_job_details`;
-CREATE TABLE `mj_qrtz_job_details` (
+DROP TABLE IF EXISTS `MJ_QRTZ_JOB_DETAILS`;
+CREATE TABLE `MJ_QRTZ_JOB_DETAILS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `JOB_NAME` varchar(200) NOT NULL,
   `JOB_GROUP` varchar(200) NOT NULL,
@@ -115,8 +115,8 @@ CREATE TABLE `mj_qrtz_job_details` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_locks`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_locks`;
-CREATE TABLE `mj_qrtz_locks` (
+DROP TABLE IF EXISTS `MJ_QRTZ_LOCKS`;
+CREATE TABLE `MJ_QRTZ_LOCKS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `LOCK_NAME` varchar(40) NOT NULL,
   PRIMARY KEY (`SCHED_NAME`,`LOCK_NAME`)
@@ -129,8 +129,8 @@ CREATE TABLE `mj_qrtz_locks` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_paused_trigger_grps`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_paused_trigger_grps`;
-CREATE TABLE `mj_qrtz_paused_trigger_grps` (
+DROP TABLE IF EXISTS `MJ_QRTZ_PAUSED_TRIGGER_GRPS`;
+CREATE TABLE `MJ_QRTZ_PAUSED_TRIGGER_GRPS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_GROUP`)
@@ -143,8 +143,8 @@ CREATE TABLE `mj_qrtz_paused_trigger_grps` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_scheduler_state`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_scheduler_state`;
-CREATE TABLE `mj_qrtz_scheduler_state` (
+DROP TABLE IF EXISTS `MJ_QRTZ_SCHEDULER_STATE`;
+CREATE TABLE `MJ_QRTZ_SCHEDULER_STATE` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `INSTANCE_NAME` varchar(200) NOT NULL,
   `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
@@ -159,8 +159,8 @@ CREATE TABLE `mj_qrtz_scheduler_state` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_simple_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_simple_triggers`;
-CREATE TABLE `mj_qrtz_simple_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_SIMPLE_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_SIMPLE_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `mj_qrtz_simple_triggers` (
   `REPEAT_INTERVAL` bigint(12) NOT NULL,
   `TIMES_TRIGGERED` bigint(10) NOT NULL,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `mj_qrtz_simple_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+  CONSTRAINT `MJ_QRTZ_SIMPLE_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -178,8 +178,8 @@ CREATE TABLE `mj_qrtz_simple_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_simprop_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_simprop_triggers`;
-CREATE TABLE `mj_qrtz_simprop_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_SIMPROP_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_SIMPROP_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -195,7 +195,7 @@ CREATE TABLE `mj_qrtz_simprop_triggers` (
   `BOOL_PROP_1` varchar(1) DEFAULT NULL,
   `BOOL_PROP_2` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-  CONSTRAINT `mj_qrtz_simprop_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+  CONSTRAINT `MJ_QRTZ_SIMPROP_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `mj_qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -205,8 +205,8 @@ CREATE TABLE `mj_qrtz_simprop_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_triggers`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_triggers`;
-CREATE TABLE `mj_qrtz_triggers` (
+DROP TABLE IF EXISTS `MJ_QRTZ_TRIGGERS`;
+CREATE TABLE `MJ_QRTZ_TRIGGERS` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `TRIGGER_NAME` varchar(200) NOT NULL,
   `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE `mj_qrtz_triggers` (
   `JOB_DATA` blob,
   PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
   KEY `SCHED_NAME` (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
-  CONSTRAINT `mj_qrtz_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `mj_qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
+  CONSTRAINT `MJ_QRTZ_TRIGGERS_IBFK_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `mj_qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -235,8 +235,8 @@ CREATE TABLE `mj_qrtz_triggers` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_trigger_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_trigger_info`;
-CREATE TABLE `mj_qrtz_trigger_info` (
+DROP TABLE IF EXISTS `MJ_QRTZ_TRIGGER_INFO`;
+CREATE TABLE `MJ_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
@@ -261,8 +261,8 @@ CREATE TABLE `mj_qrtz_trigger_info` (
 -- ----------------------------
 -- Table structure for `mj_qrtz_trigger_log`
 -- ----------------------------
-DROP TABLE IF EXISTS `mj_qrtz_trigger_log`;
-CREATE TABLE `mj_qrtz_trigger_log` (
+DROP TABLE IF EXISTS `MJ_QRTZ_TRIGGER_LOG`;
+CREATE TABLE `MJ_QRTZ_TRIGGER_LOG` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_id` int(11) NOT NULL COMMENT '任务，主键ID',

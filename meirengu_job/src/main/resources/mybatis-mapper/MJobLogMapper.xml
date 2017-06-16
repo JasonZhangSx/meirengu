@@ -40,7 +40,7 @@
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="MJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM mj_qrtz_trigger_log AS t
+		FROM MJ_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
@@ -61,7 +61,7 @@
 	
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM mj_qrtz_trigger_log AS t
+		FROM MJ_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup != null and jobGroup != ''">
 				AND t.job_group = #{jobGroup}
@@ -80,13 +80,13 @@
 	
 	<select id="load" parameterType="java.lang.Integer" resultMap="MJobLog">
 		SELECT <include refid="Base_Column_List" />
-		FROM mj_qrtz_trigger_log AS t
+		FROM MJ_QRTZ_TRIGGER_LOG AS t
 		WHERE t.id = #{id}
 	</select>
 
 	
 	<insert id="save" parameterType="com.meirengu.mj.core.model.MJobLog" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO mj_qrtz_trigger_log (
+		INSERT INTO MJ_QRTZ_TRIGGER_LOG (
 			`job_group`,
 			`job_id`
 		) VALUES (
@@ -99,7 +99,7 @@
 	</insert>
 
 	<update id="updateTriggerInfo">
-		UPDATE mj_qrtz_trigger_log
+		UPDATE MJ_QRTZ_TRIGGER_LOG
 		SET
 			`trigger_time`= #{triggerTime},
 			`trigger_code`= #{triggerCode},
@@ -111,7 +111,7 @@
 	</update>
 
 	<update id="updateHandleInfo">
-		UPDATE mj_qrtz_trigger_log
+		UPDATE MJ_QRTZ_TRIGGER_LOG
 		SET 
 			`handle_time`= #{handleTime}, 
 			`handle_code`= #{handleCode},
@@ -120,13 +120,13 @@
 	</update>
 	
 	<delete id="delete">
-		delete from mj_qrtz_trigger_log
+		delete from MJ_QRTZ_TRIGGER_LOG
 		WHERE job_id = #{jobId}
 	</delete>
 
 	<select id="triggerCountByHandleCode" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		SELECT count(1)
-		FROM mj_qrtz_trigger_log AS t
+		FROM MJ_QRTZ_TRIGGER_LOG AS t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="_parameter gt 0">
 				AND t.handle_code = #{handleCode}
@@ -136,7 +136,7 @@
 
     <select id="triggerCountByDay" parameterType="java.util.Map" resultType="java.util.Map" >
         SELECT DATE_FORMAT(trigger_time,'%Y-%m-%d') triggerDay, COUNT(id) triggerCount
-        FROM mj_qrtz_trigger_log
+        FROM MJ_QRTZ_TRIGGER_LOG
         WHERE trigger_time BETWEEN #{from} and #{to}
 		<if test="handleCode gt 0">
 			AND handle_code = #{handleCode}
@@ -145,7 +145,7 @@
     </select>
 
 	<delete id="clearLog" parameterType="java.util.Map" >
-		delete from mj_qrtz_trigger_log
+		delete from MJ_QRTZ_TRIGGER_LOG
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND job_group = #{jobGroup}
@@ -159,7 +159,7 @@
 			<if test="clearBeforeNum gt 0">
 				AND id NOT in(
 					SELECT id FROM(
-						SELECT id FROM mj_qrtz_trigger_log AS t
+						SELECT id FROM MJ_QRTZ_TRIGGER_LOG AS t
 						<trim prefix="WHERE" prefixOverrides="AND | OR" >
 							<if test="jobGroup gt 0">
 								AND t.job_group = #{jobGroup}
