@@ -53,12 +53,13 @@ public class PaymentCommitBonusServiceImpl extends BaseServiceImpl  implements P
             JSONObject item = (JSONObject) JSONObject.parseObject(itemDetail).get("data");
             JSONArray levelList = (JSONArray) item.get("levelList");
             for(int i=0;i<levelList.size();i++){
-                BigDecimal month = levelList.getJSONObject(i).getBigDecimal("investmentPeriod").divide(levelList.getJSONObject(i).getBigDecimal("shareBonusPeriod"));
+                BigDecimal shareBonusPeriod = levelList.getJSONObject(i).getBigDecimal("shareBonusPeriod");
+                BigDecimal month = levelList.getJSONObject(i).getBigDecimal("investmentPeriod").divide(shareBonusPeriod);
                 BigDecimal yearRate = levelList.getJSONObject(i).getBigDecimal("yearRate").divide(new BigDecimal(100)).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
                 JSONArray levelOrder = (JSONArray) JSONObject.parseObject(HttpUtil.httpGet(super.url+"/trade/order/getOrderInfoList?order_state=6&item_level_id="+levelList.getJSONObject(i).getString("levelId"),"UTF-8")).get("data");
                 for (int j=0;j<levelOrder.size();j++){
                     JSONObject orderJson = levelOrder.getJSONObject(j);
-                    BigDecimal money = orderJson.getBigDecimal("orderAmount").multiply(yearRate).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP).divide(month,BigDecimal.ROUND_CEILING, BigDecimal.ROUND_HALF_EVEN);
+                    BigDecimal money = orderJson.getBigDecimal("orderAmount").multiply(yearRate).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP).divide(new BigDecimal(12),BigDecimal.ROUND_CEILING, BigDecimal.ROUND_HALF_EVEN).multiply(shareBonusPeriod).setScale(BigDecimal.ROUND_CEILING,BigDecimal.ROUND_HALF_UP);
                     List<PaymentCommitBonus> paymentCommitBonusList = new ArrayList<>();
                     for (int f=1;f<=month.intValue();f++){
                         PaymentCommitBonus paymentCommitBonus = new PaymentCommitBonus();
@@ -101,8 +102,8 @@ public class PaymentCommitBonusServiceImpl extends BaseServiceImpl  implements P
     @Override
     public String query(PaymentCommitBonusVo paymentCommitBonusVo) {
         try {
-            if (paymentCommitBonusVo.getStartDate()==null){
-                paymentCommitBonusVo.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            if (paymentCommitBonusVo.getShouldTimeStart()==null){
+                paymentCommitBonusVo.setShouldTimeStart(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             }
             Map<String,Object> map = new HashMap<>();
             if (paymentCommitBonusVo.getStartDate()!=null&&!paymentCommitBonusVo.getStartDate().isEmpty()){

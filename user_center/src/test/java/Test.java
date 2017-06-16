@@ -24,7 +24,7 @@ public class Test {
 
     @org.junit.Test
     public void testGetByte(){
-//        System.err.print(StringUtil.isEmpty("") && StringUtil.isEmpty("") && StringUtil.isEmpty(""));
+        System.err.print(StringUtil.isEmpty("") && StringUtil.isEmpty("") && StringUtil.isEmpty(""));
         System.err.print(!StringUtil.isEmpty("1") ||  !StringUtil.isEmpty(null) ||  !StringUtil.isEmpty(null));
 
 

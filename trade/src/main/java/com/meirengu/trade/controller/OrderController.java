@@ -580,7 +580,7 @@ public class OrderController extends BaseController{
      * 生成3天订单txt文件
      */
     @RequestMapping(value = "/generate_order_txt")
-    public Result  generateOrderTxt() {
+    public Result  generateOrderTxt(int logId) {
 
         Thread t=new Thread(new Runnable() {
             @Override
@@ -595,7 +595,7 @@ public class OrderController extends BaseController{
                         logger.error("throw exception: {}", e);
                         e.printStackTrace();
                     }
-                    HandleCallbackParam handleCallbackParam = new HandleCallbackParam(78, returnT);
+                    HandleCallbackParam handleCallbackParam = new HandleCallbackParam(logId, returnT);
                     String apiUrl = ConfigUtil.getConfig("job.callback.url");
                     AdminApiUtil.triggerCallback(apiUrl, handleCallbackParam);
                 } catch (Exception e) {

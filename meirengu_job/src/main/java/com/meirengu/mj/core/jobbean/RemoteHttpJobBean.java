@@ -103,7 +103,12 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 		ReturnT<String> runResult = null;
 		try {
 			String executorParams = triggerParam.getExecutorParams();
-			String url = executorParams;
+			String url = null;
+			if (executorParams.contains("?")) {
+				url = executorParams + "&logId=" + triggerParam.getLogId();
+			} else {
+				url = executorParams + "?logId=" + triggerParam.getLogId();
+			}
 			HttpUtil.HttpResult httpResult = HttpUtil.doGet(url);
 			logger.debug("Request: {} getResponse: {}", url, httpResult);
 			if (httpResult.getStatusCode() == HttpStatus.SC_OK) {
@@ -124,12 +129,10 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 			logger.error("", e);
 			runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
 		}
-
 		StringBuffer sb = new StringBuffer("触发调度：");
 		sb.append("<br>code：").append(runResult.getCode());
 		sb.append("<br>msg：").append(runResult.getMsg());
 		runResult.setMsg(sb.toString());
-
 		return runResult;
 	}
 
