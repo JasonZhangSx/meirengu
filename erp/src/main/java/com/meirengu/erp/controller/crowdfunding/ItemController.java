@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -445,7 +442,7 @@ public class ItemController extends BaseController {
         params.put("guaranty_agreement", cooperation.getGuarantyAgreement());
 
         itemService.setCooperate(params);
-        return new ModelAndView("redirect:/item/to_review");
+        return new ModelAndView("redirect:/item/review_list");
     }
 
     @RequestMapping(value = "to_review")

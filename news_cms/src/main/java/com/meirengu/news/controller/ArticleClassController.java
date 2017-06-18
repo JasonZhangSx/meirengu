@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Created by 建新 on 2016/12/27.
  */
-@RequestMapping("/class")
+@RequestMapping("article/class")
 @Controller
 public class ArticleClassController extends BaseController{
 

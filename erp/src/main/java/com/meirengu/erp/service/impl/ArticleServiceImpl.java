@@ -70,13 +70,13 @@ public class ArticleServiceImpl implements ArticleService{
         Map<String, String> params = new HashMap<>();
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("article.add"));
         params.put("ac_id", String.valueOf(article.getAcId()));
-        params.put("article_url", article.getArticleUrl());
-        params.put("article_label", article.getArticleLabel());
+        params.put("article_url", article.getArticleUrl() == null ? "" : article.getArticleUrl());
+        params.put("article_label", article.getArticleLabel() == null ? "" : article.getArticleLabel());
         params.put("article_show", String.valueOf(article.getArticleShow()));
         params.put("article_sort", String.valueOf(article.getArticleSort()));
-        params.put("article_img", article.getArticleImg());
+        params.put("article_img", article.getArticleImg() == null ? "" : article.getArticleImg());
         params.put("article_title", article.getArticleTitle());
-        params.put("article_content", article.getArticleContent());
+        params.put("article_content", article.getArticleContent() == null ? "" : article.getArticleContent());
         params.put("article_is_banner", String.valueOf(article.getArticleIsBanner()));
         params.put("article_is_commend", String.valueOf(article.getArticleIsCommend()));
         params.put("article_is_publish", String.valueOf(article.getArticleIsPublish()));
@@ -85,11 +85,11 @@ public class ArticleServiceImpl implements ArticleService{
             article.setArticleTime(new Date());
         }
         params.put("article_time", format.format(article.getArticleTime()));
-        params.put("flag", String.valueOf(article.getFlag()));
-        params.put("create_user", String.valueOf(article.getCreateUser()));
-        params.put("create_user_name", article.getCreateUserName());
-        params.put("create_user_img", article.getCreateUserImg());
-        params.put("create_user_type", String.valueOf(article.getCreateUserType()));
+        params.put("flag", String.valueOf(article.getFlag() == null ? "1" : article.getFlag()));
+        params.put("create_user", String.valueOf(article.getCreateUser() == null ? "0" : article.getCreateUser()));
+        params.put("create_user_name", article.getCreateUserName() == null ? "" : article.getCreateUserName());
+        params.put("create_user_img", article.getCreateUserImg() == null ? "" : article.getCreateUserImg());
+        params.put("create_user_type", String.valueOf(article.getCreateUserType() == null ? "0" : article.getCreateUserType()));
 
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
@@ -111,13 +111,13 @@ public class ArticleServiceImpl implements ArticleService{
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("article.update"));
         params.put("article_id", String.valueOf(article.getArticleId()));
         params.put("ac_id", String.valueOf(article.getAcId()));
-        params.put("article_url", article.getArticleUrl());
-        params.put("article_label", article.getArticleLabel());
+        params.put("article_url", article.getArticleUrl() == null ? "" : article.getArticleUrl());
+        params.put("article_label", article.getArticleLabel() == null ? "" : article.getArticleLabel());
         params.put("article_show", String.valueOf(article.getArticleShow()));
         params.put("article_sort", String.valueOf(article.getArticleSort()));
-        params.put("article_img", article.getArticleImg());
+        params.put("article_img", article.getArticleImg() == null ? "" : article.getArticleImg());
         params.put("article_title", article.getArticleTitle());
-        params.put("article_content", article.getArticleContent());
+        params.put("article_content", article.getArticleContent() == null ? "" : article.getArticleContent());
         params.put("article_is_banner", String.valueOf(article.getArticleIsBanner()));
         params.put("article_is_commend", String.valueOf(article.getArticleIsCommend()));
         params.put("article_is_publish", String.valueOf(article.getArticleIsPublish()));
@@ -126,11 +126,11 @@ public class ArticleServiceImpl implements ArticleService{
             article.setArticleTime(new Date());
         }
         params.put("article_time", format.format(article.getArticleTime()));
-        params.put("flag", String.valueOf(article.getFlag()));
-        params.put("create_user", String.valueOf(article.getCreateUser()));
-        params.put("create_user_name", article.getCreateUserName());
-        params.put("create_user_img", article.getCreateUserImg());
-        params.put("create_user_type", String.valueOf(article.getCreateUserType()));
+        params.put("flag", String.valueOf(article.getFlag() == null ? "1" : article.getFlag()));
+        params.put("create_user", String.valueOf(article.getCreateUser() == null ? "0" : article.getCreateUser()));
+        params.put("create_user_name", article.getCreateUserName() == null ? "" : article.getCreateUserName());
+        params.put("create_user_img", article.getCreateUserImg() == null ? "" : article.getCreateUserImg());
+        params.put("create_user_type", String.valueOf(article.getCreateUserType() == null ? "0" : article.getCreateUserType()));
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
             int statusCode = hr.getStatusCode();
