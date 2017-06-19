@@ -12,6 +12,7 @@ import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
+import com.meirengu.uc.utils.Common;
 import com.meirengu.uc.vo.request.RegisterVO;
 import com.meirengu.utils.ApacheBeanUtils;
 import com.meirengu.utils.StringUtil;
@@ -99,11 +100,10 @@ public class UserController extends BaseController{
             paramMap.put("inviteIdcard", inviteIdcard);
             paramMap.put("sortBy", sortBy);
             if(order != null){
-                if(order.contains("desc") || order.contains("DESC")){
-                    paramMap.put("order", "DESC");
-                }
                 if(order.contains("asc") || order.contains("ASC")){
                     paramMap.put("order", "ASC");
+                }else{
+                    paramMap.put("order", "DESC");
                 }
             }
             page = userService.getListByPage(page, paramMap);
@@ -371,7 +371,7 @@ public class UserController extends BaseController{
             if(usr == null){
                 return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
             }
-            if(!validatePassword(oldPassword,usr)){
+            if(!Common.vertifyPassword(oldPassword,usr)){
                 return super.setResult(StatusCode.OLD_PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.OLD_PASSWORD_IS_ERROR));
             }
             usr.setPassword(PasswordEncryption.createHash(newPassword));
@@ -708,21 +708,6 @@ public class UserController extends BaseController{
     }
 
     //=======================================================方法提取分割线===============
-    /**
-     * 校验密码方法提取
-     * @param password
-     * @param user
-     * @return
-     */
-    private Boolean validatePassword(String password,User user){
-        try {
-            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
-            return  result;
-        }catch (Exception e){
-            logger.error("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
-            return  false;
-        }
-    }
     /**
      * 格式化string类型时间
      * @param binder

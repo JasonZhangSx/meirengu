@@ -1,6 +1,5 @@
 package com.meirengu.uc.controller;
 
-import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
@@ -8,6 +7,7 @@ import com.meirengu.model.Result;
 import com.meirengu.uc.model.User;
 import com.meirengu.uc.service.UserService;
 import com.meirengu.uc.service.VerityService;
+import com.meirengu.uc.utils.Common;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.IdentityCardModel;
 import com.meirengu.utils.StringUtil;
@@ -174,7 +174,7 @@ public class VerifyController extends BaseController {
                 }
                 redisClient.setObject(user.getPhone()+"_login_times",String.valueOf(times),0);
 
-                if(validatePassword(password,user)){
+                if(Common.vertifyPassword(password,user)){
                     return super.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else{
                     return super.setResult(StatusCode.PASSWORD_IS_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.PASSWORD_IS_ERROR));
@@ -243,22 +243,6 @@ public class VerifyController extends BaseController {
         }catch (Exception e){
             logger.error("VerifyController user Throws Exception :{}" ,e.getMessage());
             return super.setResult(StatusCode.UNKNOWN_EXCEPTION, null, StatusCode.codeMsgMap.get(StatusCode.UNKNOWN_EXCEPTION));
-        }
-    }
-
-    /**
-     * 校验密码方法提取
-     * @param password
-     * @param user
-     * @return
-     */
-    private Boolean validatePassword(String password,User user){
-        try {
-            Boolean result = PasswordEncryption.validatePassword(password,user.getPassword());
-            return  result;
-        }catch (Exception e){
-            logger.error("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
-            return  false;
         }
     }
 }
