@@ -971,7 +971,7 @@
                             <label class="l" style="line-height:32px">
                                 <input type="radio" class="radio" value="1" name="publishType" id="feedback-1"> 预约发布
                             </label>
-                            <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value="" name="publishTime" id="datetimepicker"/>
+                            <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" name="publishTime" id="datetimepicker"/>
                         </label>
                     </div>
                     <div class="row cl">

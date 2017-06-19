@@ -515,18 +515,18 @@
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">佣金比例：</label>
                     <div class="formControls col-xs-8 col-sm-3">
-                        <input type="text" onblur="verifyCommissionRate()" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate">
+                        <input type="text" onblur="verifyCommissionRate()" class="input-text" value="" placeholder="已筹金额的百分比" id="commissionRate" name="commissionRate" style="width: 272px;"> &nbsp;&nbsp;%
                     </div>
                 </div>
                 <c:if test="${item.typeId != 3}">
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-2">保证金：</label>
                         <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" onblur="verifyGuaranteeRate()" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate">
+                            <input type="text" class="input-text" onblur="verifyGuaranteeRate()" value="" placeholder="已筹金额的百分比" id="guaranteeRate" name="guaranteeRate" style="width: 272px;"> &nbsp;&nbsp;%
                         </div>
                         <label class="form-label col-xs-4 col-sm-2">预付分红金：</label>
                         <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text"  onblur="verifyprepaidBonus()" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus">
+                            <input type="text" class="input-text"  onblur="verifyprepaidBonus()" value="" placeholder="/期" id="prepaidBonus" name="prepaidBonus" style="width: 272px;">&nbsp;期
                         </div>
                     </div>
                 </c:if>
@@ -542,7 +542,7 @@
                     <div id="firstRatioDiv" style="display:none;">
                         <label class="form-label col-xs-4 col-sm-2">首款比例：</label>
                         <div class="formControls col-xs-8 col-sm-3">
-                            <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio">
+                            <input type="text" class="input-text" value="30" placeholder="" id="firstRatio" name="firstRatio" style="width: 272px;"> &nbsp;&nbsp;%
                         </div>
                     </div>
 
@@ -1202,7 +1202,9 @@
         var guarantyAgreement = $("#guarantyAgreement").val();//保证合同
         verifyValue(guarantyAgreement,"保证合同");
         if(flag == 1){
-            $("#form-article-add").ajaxSubmit();
+            $("input[name=file]").val('');
+            $("#form-article-add").submit();
+            //$("#form-article-add").ajaxSubmit();
         }
     }
 </script>

@@ -7,6 +7,7 @@ import com.meirengu.erp.common.Constants;
 import com.meirengu.erp.model.*;
 import com.meirengu.erp.service.ItemService;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.JacksonUtil;
 import com.meirengu.utils.StringUtil;
@@ -470,7 +471,7 @@ public class ItemServiceImpl implements ItemService{
         params.put("partnerName", map.get("partnerName"));
         params.put("targetAmount", map.get("targetAmount"));
         params.put("completedAmount", map.get("completedAmount"));
-        params.put("endDate", map.get("crowdEndTime"));
+        params.put("endDate", DateAndTime.dateFormat(map.get("crowdEndTime").toString(), "yyyy-MM-dd"));
         params.put("firstRatio", map.get("firstRatio"));
         Integer firstRatio = (Integer) params.get("firstRatio");
         params.put("endRatio", String.valueOf(100 - firstRatio));

@@ -116,7 +116,7 @@ public class RemoteHttpJobBean extends QuartzJobBean {
 				int code = resultJson.getIntValue("code");
 				if (code == StatusCode.OK) {
 					//成功
-					runResult = ReturnT.SUCCESS;
+					runResult = new ReturnT<String>(ReturnT.SUCCESS_CODE, resultJson.getString("msg"));
 				} else {
 					//失败
 					runResult = new ReturnT<String>(ReturnT.FAIL_CODE, resultJson.getString("msg"));

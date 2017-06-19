@@ -15,13 +15,13 @@ function typeChange(){
     if(typeId == 3){
         $("#extentionDiv").show();
         $("#shareholderDiv").show();
-        $("#shareHoldRateDiv").show();
-        $("#yearRateMaxDiv").show();
+        $("div[name=shareHoldRateDiv]").show();
+        $("span[name=yearRateMaxDiv]").show();
     }else{
         $("#extentionDiv").hide();
         $("#shareholderDiv").hide();
-        $("#shareHoldRateDiv").hide();
-        $("#yearRateMaxDiv").hide();
+        $("div[name=shareHoldRateDiv]").hide();
+        $("span[name=yearRateMaxDiv]").hide();
     }
 }
 /**
@@ -335,6 +335,34 @@ $(function () {
          var s = String(aObj).replace("#1","2");
          console.log(String(s));*/
         var itemId = $("#itemId").val();
+        var typeId = $("#typeId").val();
+        var shareHolderDiv = '';
+        var yearRateMaxDiv = '';
+        if(typeId == 3){
+            shareHolderDiv = '<div name="shareHoldRateDiv">'+
+                '<label class="form-label col-xs-4 col-sm-2">持股比例：</label>'+
+                '<div class="formControls col-xs-8 col-sm-3">'+
+                '<input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate#1" name="shareHoldRate" style="width: 272px;">&nbsp;&nbsp;%'+
+                '</div>'+
+                '</div>';
+            yearRateMaxDiv = '<span name="yearRateMaxDiv">'+
+                            '&nbsp;&nbsp; - &nbsp;&nbsp;'+
+                            '<input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRateMax#1"'+
+                            'name="yearRateMax" style="width: 100px;">&nbsp;&nbsp;%'+
+                            '</span>';
+        }else{
+            shareHolderDiv = '<div name="shareHoldRateDiv" style="display: none;">'+
+                '<label class="form-label col-xs-4 col-sm-2">持股比例：</label>'+
+                '<div class="formControls col-xs-8 col-sm-3">'+
+                '<input type="text" class="input-text" value="" maxlength="30" id="shareHoldRate#1" name="shareHoldRate" style="width: 272px;">&nbsp;&nbsp;%'+
+                '</div>'+
+                '</div>';
+            yearRateMaxDiv = '<span name="yearRateMaxDiv" style="display: none;">'+
+                '&nbsp;&nbsp; - &nbsp;&nbsp;'+
+                '<input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRateMax#1"'+
+                'name="yearRateMax" style="width: 100px;">&nbsp;&nbsp;%'+
+                '</span>';
+        }
         var aObj = '<div class="huibao_tab" style="display: block;"><form id="levelAddForm#1" >' +
             '<input type="hidden" id="itemId1#1" name="itemId" value="'+itemId+'">' +
             '<input type="hidden" id="levelId#1" name="levelId" value="0">' +
@@ -346,9 +374,10 @@ $(function () {
             '   </div>' +
             '   <div class="row cl">' +
             '   <label class="form-label col-xs-4 col-sm-2">支持金额：</label>' +
-            '<div class="formControls col-xs-8 col-sm-8">' +
-            '   <input type="text" class="input-text" value="" maxlength="30" id="levelAmount#1" name="levelAmount">' +
+            '<div class="formControls col-xs-8 col-sm-3">' +
+            '   <input type="text" class="input-text" value="" maxlength="30" id="levelAmount#1" name="levelAmount" style="width: 272px;">&nbsp;&nbsp;元' +
             '   </div>' +
+            shareHolderDiv +
             '   </div>' +
             '   <div class="row cl">' +
             '    <label class="form-label col-xs-4 col-sm-2">回报描述：</label>' +
@@ -363,23 +392,23 @@ $(function () {
             '   <label class="form-label col-xs-4 col-sm-2">总份数：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
             '   <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="totalNumber#1"' +
-            'name="totalNumber">' +
+            'name="totalNumber" style="width: 272px;">&nbsp;&nbsp;份' +
             '   </div>' +
             '   <label class="form-label col-xs-4 col-sm-2">单人限额：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
             '   <input type="text" class="input-text" value="" placeholder="0即为无限制" maxlength="30" id="singleLimitNumber#1"' +
-            'name="singleLimitNumber">' +
+            'name="singleLimitNumber" style="width: 272px;">&nbsp;&nbsp;份' +
             '   </div>' +
             '   </div>' +
             '   <div class="row cl">' +
             '   <label class="form-label col-xs-4 col-sm-2">回报时间：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
             '   <input type="text" class="input-text" value="" placeholder="100 天" maxlength="30" id="paybackDays#1"' +
-            'name="paybackDays">' +
+            'name="paybackDays" style="width: 272px;">&nbsp;&nbsp;天' +
             '   </div>' +
             '   <label class="form-label col-xs-4 col-sm-2">是否分红：</label>' +
             '<div class="formControls col-xs-8 col-sm-3"> <span class="select-box">' +
-            '   <select id="isShareBonus#1" name="isShareBonus" class="select">' +
+            '   <select id="isShareBonus#1" name="isShareBonus" class="select" onchange="shareBonusChange()">' +
             '   <option value="1">是</option>' +
             '   <option value="0">否</option>' +
             '   </select>' +
@@ -391,7 +420,8 @@ $(function () {
             '   <label class="form-label col-xs-4 col-sm-2">年化利率：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
             '   <input type="text" class="input-text" value="" placeholder="%" maxlength="30" id="yearRate#1"' +
-            'name="yearRate">' +
+            'name="yearRate" style="width: 100px;">&nbsp;&nbsp;%' +
+            yearRateMaxDiv +
             '   </div>' +
             '   <label class="form-label col-xs-4 col-sm-2">投资期限：</label>' +
             '<div class="formControls col-xs-8 col-sm-3">' +
