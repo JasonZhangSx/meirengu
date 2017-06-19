@@ -152,6 +152,9 @@ public class UserController extends BaseController{
                user = userService.retrieveByPhone(user.getPhone());
                map = ApacheBeanUtils.objectToMap(user);
            }
+           if(map ==null){
+               return super.setResult(StatusCode.USER_NOT_EXITS, null, StatusCode.codeMsgMap.get(StatusCode.USER_NOT_EXITS));
+           }
             userService.removeColumns(map);
             userService.getUserRestMoney(map);//获取支付账户余额
             userService.getUserTotalInvestMoney(map);//获取累计投资额
