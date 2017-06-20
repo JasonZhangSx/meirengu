@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
 /**
  * 容器启动后加载redis
  * Created by huoyan403 on 3/22/2017.
@@ -24,7 +22,7 @@ public class AddressToRedisInit{
     private RedisClient redisClient;
 
 //    启动开关
-    @PostConstruct
+//    @PostConstruct
     public void AddressToRedisInit() {
 
         AddressToRedisThread addressToRedisThread = new AddressToRedisThread();

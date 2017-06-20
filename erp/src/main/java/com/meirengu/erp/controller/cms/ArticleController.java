@@ -45,7 +45,7 @@ public class ArticleController extends BaseController{
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public ModelAndView view() {
         Map<String, Object> map = new HashMap<>();
-        List classList = (List) articleClassService.query(0, 0, false);
+        List classList = (List) articleClassService.query(0, 0, false, 1);
         map.put("classList", classList);
         return new ModelAndView("cms/articleList", map);
     }
@@ -65,7 +65,7 @@ public class ArticleController extends BaseController{
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = articleService.query(page, length, true);
+            Map<String, Object> map = articleService.query(page, length, true, 1);
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {
@@ -83,12 +83,12 @@ public class ArticleController extends BaseController{
     public ModelAndView detail(Integer id) {
         if(id == null){
             Map<String, Object>  map = new HashMap<String, Object>();
-            List classList = (List) articleClassService.query(0, 0, false);
+            List classList = (List) articleClassService.query(0, 0, false, 1);
             map.put("classList", classList);
             return new ModelAndView("cms/articleDetail", map);
         }else {
             Map<String, Object>  map = articleService.detail(id);
-            List classList = (List) articleClassService.query(0, 0, false);
+            List classList = (List) articleClassService.query(0, 0, false, 1);
             map.put("classList", classList);
             return new ModelAndView("cms/articleDetail", map);
         }

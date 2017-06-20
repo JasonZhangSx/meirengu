@@ -91,7 +91,7 @@
                 {
                     "data": "articleUrl",
                     "render": function(data, type, row, meta){
-                        return "<a href='"+data+"' target='_blank'>";
+                        return "<a href='"+data+"' target='_blank'>"+data+"</a>";
                     }
                 },
                 {

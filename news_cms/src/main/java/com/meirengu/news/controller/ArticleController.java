@@ -49,6 +49,7 @@ public class ArticleController extends BaseController{
     public Result list(@RequestParam(value = "per_page", required = false, defaultValue = "10") int pageSize,
                        @RequestParam(value = "page", required = false, defaultValue = "1") int pageNum,
                        @RequestParam(value = "is_page", required = false) boolean isPage,
+                       @RequestParam(value = "flag", required = false) Integer flag,
                        @RequestParam(value = "ac_id", required = false) Integer acId,
                        @RequestParam(value = "sortby", required = false, defaultValue = "create_time") String sortBy,
                        @RequestParam(value = "order", required = false, defaultValue = "desc") String order){
@@ -62,6 +63,7 @@ public class ArticleController extends BaseController{
         map.put("sortBy", sortBy);
         map.put("order", order);
         map.put("acId", acId);
+        map.put("flag", flag);
 
         if(isPage){
             Page<Article> page = new Page<Article>();

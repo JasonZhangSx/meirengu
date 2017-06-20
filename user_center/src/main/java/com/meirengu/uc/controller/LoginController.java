@@ -1,19 +1,19 @@
 package com.meirengu.uc.controller;
 
-import com.meirengu.common.PasswordEncryption;
 import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.uc.model.CheckCode;
 import com.meirengu.uc.model.User;
-import com.meirengu.uc.utils.ConfigUtil;
-import com.meirengu.uc.vo.response.RegisterInfo;
 import com.meirengu.uc.service.CheckCodeService;
 import com.meirengu.uc.service.LoginService;
 import com.meirengu.uc.service.UserService;
-import com.meirengu.utils.ObjectUtils;
+import com.meirengu.uc.utils.Common;
+import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.uc.vo.request.RegisterVO;
+import com.meirengu.uc.vo.response.RegisterInfo;
+import com.meirengu.utils.ObjectUtils;
 import com.meirengu.utils.StringUtil;
 import com.meirengu.utils.ValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -125,7 +125,7 @@ public class LoginController extends BaseController {
                 redisClient.setObject(mobile+"_login_times",String.valueOf(times),0);
 
                 User user = userService.retrieveByPhone(mobile);
-                if(user != null && validatePassword(password,user)){
+                if(user != null && Common.vertifyPassword(password,user)){
                     userService.updateUserInfo(user, mobile, ip, from);
                     RegisterInfo registerInfo = loginService.setUserToRedis(user,deviceId);
                     return super.setResult(StatusCode.OK, ObjectUtils.getNotNullObject(registerInfo,RegisterInfo.class),StatusCode.codeMsgMap.get(StatusCode.OK));
@@ -276,16 +276,6 @@ public class LoginController extends BaseController {
 
 
     //==========================================方法提取分割线=====================================
-    //用户密码校验
-    private Boolean validatePassword(String password,User user){
-        try {
-            return  PasswordEncryption.validatePassword(password,user.getPassword());
-        }catch (Exception e){
-            logger.info("PasswordEncryption.validatePassword throws Exception :{}" ,e.getMessage());
-            return  false;
-        }
-    }
-
     //用户锁定校验
     private Boolean userIsLock(User user){
         Boolean flag = false;

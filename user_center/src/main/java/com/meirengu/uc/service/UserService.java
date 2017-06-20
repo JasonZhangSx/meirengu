@@ -73,10 +73,10 @@ public interface UserService extends BaseService<User>{
     int setPayPassword(Integer userId, String newPassword);
 
     //获取银行卡号
-    boolean getBankIdCard(String bankIdcard);
+    Boolean getBankIdCard(String bankIdcard);
 
     //获取身份证
-    boolean getIdCard(String idcard);
+    Boolean getIdCard(String idcard);
 
     //根据openId 查找用户
     User retrieveByOpenId(String openId);

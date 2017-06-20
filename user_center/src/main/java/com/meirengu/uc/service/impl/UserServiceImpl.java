@@ -527,7 +527,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public boolean getBankIdCard(String bankIdcard) {
+    public Boolean getBankIdCard(String bankIdcard) {
         Boolean flag = false;
         if(userDao.getBankIdCard(bankIdcard)==1){
             flag = true;
@@ -536,7 +536,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public boolean getIdCard(String idcard) {
+    public Boolean getIdCard(String idcard) {
         Boolean flag = false;
         if(userDao.getIdCard(idcard)==1){
             flag = true;
