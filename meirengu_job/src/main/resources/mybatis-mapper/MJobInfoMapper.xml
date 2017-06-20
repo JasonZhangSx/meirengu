@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MJobInfoMapper">
 	
-	<resultMap id="MJobInfo" type="com.meirengu.mj.core.model.MJobInfo" >
+	<resultMap id="MJobInfo" type="com.meirengu.utils.scheduleUtil.MJobInfo" >
 		<result column="id" property="id" />
 	
 		<result column="job_group" property="jobGroup" />
@@ -71,7 +71,7 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.meirengu.mj.core.model.MJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.meirengu.utils.scheduleUtil.MJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO MJ_QRTZ_TRIGGER_INFO (
 			job_group,
 			job_cron,
@@ -113,7 +113,7 @@
 		WHERE t.id = #{id}
 	</select>
 	
-	<update id="update" parameterType="com.meirengu.mj.core.model.MJobInfo" >
+	<update id="update" parameterType="com.meirengu.utils.scheduleUtil.MJobInfo" >
 		UPDATE MJ_QRTZ_TRIGGER_INFO
 		SET 
 			job_cron = #{jobCron},

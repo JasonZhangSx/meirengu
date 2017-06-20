@@ -1,7 +1,6 @@
 package com.meirengu.mj.dao;
 
-import com.meirengu.mj.core.model.MJobInfo;
-
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import java.util.List;
 
 

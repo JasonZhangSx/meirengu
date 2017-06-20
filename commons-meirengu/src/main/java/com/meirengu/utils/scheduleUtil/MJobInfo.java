@@ -1,4 +1,4 @@
-package com.meirengu.mj.core.model;
+package com.meirengu.utils.scheduleUtil;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,6 +34,8 @@ public class MJobInfo {
 
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
+
+	private String quartzUrl;		// 调度服务地址
 
 	public int getId() {
 		return id;
@@ -155,4 +157,11 @@ public class MJobInfo {
 		this.jobStatus = jobStatus;
 	}
 
+	public String getQuartzUrl() {
+		return quartzUrl;
+	}
+
+	public void setQuartzUrl(String quartzUrl) {
+		this.quartzUrl = quartzUrl;
+	}
 }

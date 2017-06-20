@@ -1170,6 +1170,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
                 //请求项目服务修改档位状态
                 params = new HashMap<String, String>();
+                Integer operateStatus = (orderState==OrderStateEnum.UNPAID.getValue()?2:1);
+                params.put("operate_status",operateStatus.toString());
                 params.put("item_id", orderMap.get("itemId").toString());
                 params.put("level_id", orderMap.get("itemLevelId").toString());
                 params.put("level_amount", orderMap.get("itemLevelAmount").toString());

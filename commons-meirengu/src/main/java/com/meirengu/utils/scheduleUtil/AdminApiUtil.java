@@ -1,5 +1,6 @@
 package com.meirengu.utils.scheduleUtil;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -12,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Date;
 
 /**
  * @author xuxueli 2017-05-10 21:28:15
@@ -23,12 +21,24 @@ import java.util.Set;
 public class AdminApiUtil {
 	private static Logger logger = LoggerFactory.getLogger(AdminApiUtil.class);
 
-	public static final String CALLBACK = "/api/callback";
 
-	public static ReturnT<String> triggerCallback(String apiUrl, HandleCallbackParam callback) throws Exception {
+	public static ReturnT<String> triggerCallback(HandleCallbackParam callback) throws Exception {
 		ReturnT<String> registryResult = null;
 		try {
-			registryResult = callApi(apiUrl, callback);
+			registryResult = callApi(callback.getCallBackUrl(), callback);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		if (registryResult!=null && registryResult.getCode()==ReturnT.SUCCESS_CODE) {
+			return ReturnT.SUCCESS;
+		}
+		return ReturnT.FAIL;
+	}
+
+	public static ReturnT<String> addJob(MJobInfo jobInfo) throws Exception {
+		ReturnT<String> registryResult = null;
+		try {
+			registryResult = callApi(jobInfo.getQuartzUrl(), jobInfo);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -98,9 +108,20 @@ public class AdminApiUtil {
 	public static void main(String[] args) throws Exception {
 		// new ReturnT<String>(ReturnT.FAIL_CODE, errorMsg)
 		// ReturnT.SUCCESS
-		HandleCallbackParam handleCallbackParam = new HandleCallbackParam(78, new ReturnT<String>(ReturnT.FAIL_CODE, "errmo"));
-		String apiUrl = "http://localhost:8080/api/callback";
-		AdminApiUtil.triggerCallback(apiUrl, handleCallbackParam);
+//		HandleCallbackParam handleCallbackParam = new HandleCallbackParam(78, new ReturnT<String>(ReturnT.FAIL_CODE, "errmo"),"");
+//		String apiUrl = "http://localhost:8080/api/callback";
+//		AdminApiUtil.triggerCallback(handleCallbackParam);
+		MJobInfo jobInfo = new MJobInfo();
+		jobInfo.setJobGroup(1);
+		jobInfo.setTriggerType("SimpleTrigger");
+		jobInfo.setStartTime(DateUtils.addDays(new Date(),3));
+		jobInfo.setJobDesc("项目发布时间修改");
+		jobInfo.setExecutorParam("http://192.168.0.135/trade/order/generate_order_txt");
+		jobInfo.setExecutorFailStrategy("FAIL_RETRY");
+		jobInfo.setAuthor("毛茹新");
+		jobInfo.setAlarmEmail("381775433@qq.com");
+		jobInfo.setQuartzUrl("http://localhost:8080/mj/jobinfo/add");
+		System.out.println(AdminApiUtil.addJob(jobInfo));
 	}
 	
 }

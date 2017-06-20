@@ -1,7 +1,7 @@
 package com.meirengu.mj.dao.impl;
 
 import com.meirengu.mj.dao.IMJobInfoDao;
-import com.meirengu.mj.core.model.MJobInfo;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 

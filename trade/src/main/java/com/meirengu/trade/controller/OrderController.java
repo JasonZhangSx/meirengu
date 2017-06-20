@@ -17,6 +17,7 @@ import com.meirengu.utils.NumberUtil;
 import com.meirengu.utils.scheduleUtil.AdminApiUtil;
 import com.meirengu.utils.scheduleUtil.HandleCallbackParam;
 import com.meirengu.utils.scheduleUtil.ReturnT;
+import com.meirengu.utils.scheduleUtil.TriggerCallbackThread;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -582,28 +583,22 @@ public class OrderController extends BaseController{
     @RequestMapping(value = "/generate_order_txt")
     public Result  generateOrderTxt(int logId) {
 
-        Thread t=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ReturnT<String> returnT = null;
-                    try {
-                        orderService.generateOrderTxt();
-                        returnT = ReturnT.SUCCESS;
-                    } catch (Exception e) {
-                        returnT = new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
-                        logger.error("throw exception: {}", e);
-                        e.printStackTrace();
-                    }
-                    HandleCallbackParam handleCallbackParam = new HandleCallbackParam(logId, returnT);
-                    String apiUrl = ConfigUtil.getConfig("job.callback.url");
-                    AdminApiUtil.triggerCallback(apiUrl, handleCallbackParam);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            ReturnT<String> returnT = null;
+            try {
+                orderService.generateOrderTxt();
+                returnT = new ReturnT<String>(ReturnT.SUCCESS_CODE, "");
+            } catch (Exception e) {
+                returnT = new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
+                logger.error("throw exception: {}", e);
+                e.printStackTrace();
             }
-        });
-        t.start();
+            String apiUrl = ConfigUtil.getConfig("job.callback.url");
+            HandleCallbackParam handleCallbackParam = new HandleCallbackParam(logId, returnT, apiUrl);
+            TriggerCallbackThread.pushCallBack(handleCallbackParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 

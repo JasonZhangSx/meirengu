@@ -10,11 +10,13 @@ public class HandleCallbackParam implements Serializable {
 
     private int logId;
     private ReturnT<String> executeResult;
+    private String callBackUrl;
 
     public HandleCallbackParam(){}
-    public HandleCallbackParam(int logId, ReturnT<String> executeResult) {
+    public HandleCallbackParam(int logId, ReturnT<String> executeResult, String callBackUrl) {
         this.logId = logId;
         this.executeResult = executeResult;
+        this.callBackUrl = callBackUrl;
     }
 
     public int getLogId() {
@@ -31,6 +33,14 @@ public class HandleCallbackParam implements Serializable {
 
     public void setExecuteResult(ReturnT<String> executeResult) {
         this.executeResult = executeResult;
+    }
+
+    public String getCallBackUrl() {
+        return callBackUrl;
+    }
+
+    public void setCallBackUrl(String callBackUrl) {
+        this.callBackUrl = callBackUrl;
     }
 
     @Override

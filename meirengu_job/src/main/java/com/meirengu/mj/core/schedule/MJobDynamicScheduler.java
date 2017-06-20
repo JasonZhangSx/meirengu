@@ -1,7 +1,6 @@
 package com.meirengu.mj.core.schedule;
 
 import com.meirengu.mj.core.jobbean.RemoteHttpJobBean;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.core.thread.JobFailMonitorHelper;
 import com.meirengu.mj.dao.IMJobInfoDao;
 import com.meirengu.mj.dao.IMJobLogDao;
@@ -9,6 +8,7 @@ import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -111,7 +111,7 @@ public final class MJobDynamicScheduler implements ApplicationContextAware, Init
 				jobInfo.setJobCron(cronExpression);
 			}
 
-            if (trigger.getStartTime() != null) {
+            if (trigger!=null && trigger.getStartTime() != null) {
                 jobInfo.setStartTime(trigger.getStartTime());
             }
 
