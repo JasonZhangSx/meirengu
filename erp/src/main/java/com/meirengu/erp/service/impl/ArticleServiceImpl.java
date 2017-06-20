@@ -22,10 +22,12 @@ import java.util.Map;
 @Service
 public class ArticleServiceImpl implements ArticleService{
     @Override
-    public Map<String, Object> query(int page, int perPage, boolean isPage) {
+    public Map<String, Object> query(int page, int perPage, boolean isPage, Integer flag) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("article.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
-
+        if(flag != null){
+            url.append("&flag=").append(flag);
+        }
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
             int statusCode = hr.getStatusCode();

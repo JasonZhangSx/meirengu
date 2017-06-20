@@ -25,7 +25,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form action="investor/save" method="post" class="form form-horizontal" id="form-article-add">
+    <form action="article/save" method="post" class="form form-horizontal" id="form-article-add">
         <style>
             .edit_h31 {
                 border-bottom: 1px #ddd solid;
@@ -46,7 +46,7 @@
                 <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">添加文章</h3>
             </div>
             <div class="row cl">
-                <input type="hidden" id="id" name="id" value="${id}">
+                <input type="hidden" id="id" name="articleId" value="${articleId}">
                 <label class="form-label col-xs-4 col-sm-2">文章标题：</label>
                 <div class="formControls col-xs-8 col-sm-3">
                     <input type="text" class="input-text" value="${articleTitle}" id="articleTitle" name="articleTitle" minlength="1" maxlength="30"
@@ -113,7 +113,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">排序：</label>
                 <div class="formControls col-xs-8 col-sm-3">
-                    <input type="text" class="input-text" value="${articleSort}" id="articleSort" name="articleSort">
+                    <input type="text" class="input-text" value="${articleSort}" id="articleSort" placeholder="排序字段越小越靠前" name="articleSort">
                 </div>
                 <label class="form-label col-xs-4 col-sm-2">是否为轮播图文章：</label>
                 <div class="formControls col-xs-8 col-sm-3">
@@ -184,23 +184,25 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">文章头图：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="hidden" id="investorImage" name="investorImage">
+                    <input type="hidden" id="articleImg" name="articleImg" value="${articleImg}">
                     <div class="img-box full">
                         <section class=" img-section">
                             <div class="z_photo upimg-div clearfix">
                                 <div id="imgParent" class="clearfix">
-                                    <%--<section class="up-section fl">--%>
-                                        <%--<span class="up-span"></span>--%>
-                                        <%--<img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">--%>
-                                        <%--<img class="up-img" src="http://test.img.meirenguvip.com/${investorImage}">--%>
-                                        <%--<p class="img-name-p">${investorImage}</p>--%>
-                                        <%--<input id="taglocation" name="taglocation" value="" type="hidden">--%>
-                                        <%--<input id="tags" name="tags" value="" type="hidden">--%>
-                                    <%--</section>--%>
+                                    <c:if test="${not empty articleImg}">
+                                        <section class="up-section fl">
+                                            <span class="up-span"></span>
+                                            <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">
+                                            <img class="up-img" src="http://test.img.meirenguvip.com/${articleImg}">
+                                            <p class="img-name-p">${articleImg}</p>
+                                            <input id="taglocation" name="taglocation" value="" type="hidden">
+                                            <input id="tags" name="tags" value="" type="hidden">
+                                        </section>
+                                    </c:if>
                                 </div>
                                 <section class="z_file fl">
                                     <img src="static/upload-file/a11.png" class="add-img">
-                                    <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file','investor','imgParent','investorImage')">
+                                    <input type="file" name="file" id="file" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file','article','imgParent','articleImg')">
                                 </section>
                             </div>
                         </section>
@@ -210,10 +212,12 @@
 
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
-                <input type="hidden" name="articleContentTemp" id="articleContentTemp" value="${articleContent}" >
                 <div class="formControls col-xs-8 col-sm-8">
                     <input type="hidden" name="articleContent" id="articleContent">
                     <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                    <code id="articleContentTemp" style="display: none;">
+                        ${articleContent}
+                    </code>
                 </div>
             </div>
 
@@ -221,7 +225,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-2"></label>
                 <div class="formControls col-xs-8 col-sm-8 text-c">
-                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="addVersion()" type="button">保 存
+                    <button class="btn btn-primary radius size-L mt-20 mb-30" style="padding:0 30px" onclick="addArticle()" type="button">保 存
                     </button>
                 </div>
             </div>
@@ -244,9 +248,9 @@
     UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
     UE.Editor.prototype.getActionUrl = function(action) {
         if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
-            return '/news_cms/upload/image';
+            return '/upload?foldName=article';
         } else if (action == 'uploadvideo') {
-            return '/news_cms/upload/video';
+            return '/upload?foldName=article';
         } else {
             return this._bkGetActionUrl.call(this, action);
         }
@@ -254,7 +258,7 @@
     $(document).ready(function(){
         ue.addListener("ready", function () {
             // editor准备好之后才可以使用
-            var content = $("#articleContentTemp").val();
+            var content = $("#articleContentTemp").html();
             ue.setContent(content);
         });
     });
@@ -393,68 +397,31 @@
             layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
         }
     }
-    function addVersion() {
-        var investorName = $("#investorName").val();
-        var investorType = $("#investorType").val();
-        var principalName = $("#principalName").val();
-        var investorBusinessLicence = $("#investorBusinessLicence").val();
-        var investorIdcard = $("#investorIdcard").val();
-        var investorTelphone = $("#investorTelphone").val();
-        var investorAddress = $("#investorAddress").val();
-        var investorImage = $("#investorImage").val();
-        var investorCompany = $("#investorCompany").val();
-        var investorPosition = $("#investorPosition").val();
-        var investorIntroduction = $("#investorIntroduction").val();
-        var investorIdea = $("#investorIdea").val();
+    function addArticle() {
+        var articleTitle = $("#articleTitle").val();
+        var articleUrl = $("#articleUrl").val();
+        var articleImg = $("#articleImg").val();
+        var content = UE.getEditor('editor').getContent();
+        var articleContent = $("#articleContent").val(content);
+        var articleSort = $("#articleSort").val();
 
-        if(investorName == null || investorName == '' || investorName == undefined){
-            alert("投资人名称不能为空");
+        if(articleTitle == null || articleTitle == '' || articleTitle == undefined){
+            alert("文章标题不能为空");
             return;
         }
-        if(investorType == null || investorType== '' || investorType == undefined){
-            alert("请选择投资人类型！");
+        if(articleSort == null || articleSort == '' || articleSort == undefined){
+            alert("文章排序不能为空");
+            return;
+        }
+
+        if(articleImg == null || articleImg == "" || articleImg == undefined){
+            alert("文章头图不能为空！");
             return false;
         }
-        if(investorType == 1){
-            if(investorBusinessLicence == null || investorBusinessLicence == "" || investorBusinessLicence == undefined){
-                alert("请填写营业执照号！");
-                return false;
+        if(articleUrl == null || articleUrl== '' || articleUrl == undefined){
+            if(articleContent == null || articleContent == '' || articleContent == undefined){
+                alert("跳转链接和文章内容二选一！");
             }
-            if(principalName == null || principalName== "" || principalName == undefined){
-                alert("请填写公司法人！");
-                return false;
-            }
-        }
-        if(investorIdcard == null || investorIdcard == "" || investorIdcard == undefined){
-            alert("请填写身份证号！");
-            return false;
-        }
-        if(investorTelphone == null || investorTelphone == "" || investorTelphone == undefined){
-            alert("请填写联系电话！");
-            return false;
-        }
-        if(investorAddress == null || investorAddress == "" || investorAddress == undefined){
-            alert("请填写地址！");
-            return false;
-        }
-        if(investorCompany == null || investorCompany == "" || investorCompany == undefined){
-            alert("请填写公司！");
-            return false;
-        }
-        if(investorPosition == null || investorPosition == "" || investorPosition == undefined){
-            alert("请填写职位！");
-            return false;
-        }
-        if(investorIntroduction == null || investorIntroduction == "" || investorIntroduction == undefined){
-            alert("请填写简介！");
-            return false;
-        }
-        if(investorIdea == null || investorIdea == "" || investorIdea == undefined){
-            alert("请填写投资理念！");
-            return false;
-        }
-        if(investorImage == null || investorImage == "" || investorImage == undefined){
-            alert("请选择领投人头像！");
             return false;
         }
         $('#form-article-add').ajaxSubmit(options);

@@ -58,7 +58,7 @@ public class ArticleClassController extends BaseController{
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = (Map<String, Object>) articleClassService.query(page, length, true);
+            Map<String, Object> map = (Map<String, Object>) articleClassService.query(page, length, true, 1);
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {

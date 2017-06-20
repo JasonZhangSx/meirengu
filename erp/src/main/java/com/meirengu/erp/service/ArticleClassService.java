@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface ArticleClassService {
 
-    Object query(int page, int perPage, boolean isPage);
+    Object query(int page, int perPage, boolean isPage, Integer flag);
 
     Map<String, Object> detail(int id);
 
