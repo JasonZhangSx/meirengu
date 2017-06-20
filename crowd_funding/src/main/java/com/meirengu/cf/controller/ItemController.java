@@ -389,6 +389,7 @@ public class ItemController extends BaseController {
      * @param levelAmount
      * @param itemNum
      * @param totalAmount
+     * @param operateStatus  1 回滚预约和已筹  2回滚已筹
      * @return
      */
     @ResponseBody
@@ -397,9 +398,14 @@ public class ItemController extends BaseController {
                            @RequestParam(value = "level_id", required = false) Integer levelId,
                            @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
                            @RequestParam(value = "item_num", required = false) Integer itemNum,
-                           @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount){
+                           @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount,
+                           @RequestParam(value = "operate_status", required = false) Integer operateStatus){
         try {
-            int code = itemService.completedRollback(itemId, levelAmount, levelId, itemNum, totalAmount);
+            //默认为回滚已筹，回滚预约为特殊情况
+            if(operateStatus == null){
+                operateStatus = 2;
+            }
+            int code = itemService.completedRollback(itemId, levelAmount, levelId, itemNum, totalAmount, operateStatus);
             return super.setResult(code, null, StatusCode.codeMsgMap.get(code));
         }catch (Exception e){
             LOGGER.error(">>ItemController.levelRollback throw exception: {}", e);
