@@ -33,12 +33,12 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<mvc:exclude-mapping path="/jobinfo/add"/>
+			<mvc:exclude-mapping path="/jobinfo/addJob"/>
 			<bean class="com.meirengu.mj.controller.interceptor.PermissionInterceptor"/>
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<mvc:exclude-mapping path="/jobinfo/add"/>
+			<mvc:exclude-mapping path="/jobinfo/addJob"/>
 			<bean class="com.meirengu.mj.controller.interceptor.CookieInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
