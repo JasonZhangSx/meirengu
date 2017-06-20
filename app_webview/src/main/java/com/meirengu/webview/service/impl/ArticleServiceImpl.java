@@ -7,6 +7,7 @@ import com.meirengu.webview.service.ArticleService;
 import com.meirengu.webview.utils.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisClusterNode;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public Object query(int page, int perPage, boolean isPage, int acId) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("URI_ARTICLE"));
-        url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
+        url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage).append("&flag=1");
         if(acId != 0){
             url.append("&ac_id=").append(acId);
         }

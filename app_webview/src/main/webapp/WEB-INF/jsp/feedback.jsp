@@ -7,6 +7,11 @@
 	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
 	<meta name="format-detection" content="telephone=no" />
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css" media="screen" charset="utf-8">
+    <style media="screen">
+        .mask{position: fixed;width:100%;left:0;top:0;bottom: 0;background-color: rgba(0, 0, 0, 0);display:none;}
+        .mask span{display: inline-block;background-color: #e7e7e7;color:#5e5e5e;font-size: .32rem;padding:.4rem;border-radius:.3rem;
+            position: absolute;left:50%;top:40%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);}
+    </style>
 </head>
 <body>
 	<script type="text/javascript">
@@ -20,15 +25,17 @@
                 <input type="hidden" id="user_id" name="user_id">
                 <input type="hidden" id="user_name" name="user_name">
                 <input type="hidden" id="user_phone" name="user_phone">
-                <textarea name="feedback_content" rows="6" cols="40" onkeyup="$.textarealength(this,150)" placeholder="请输入您的问题，我们会第一时间为您解决。"></textarea>
+                <textarea name="feedback_content" id="feedback_content" rows="6" cols="40" onkeyup="$.textarealength(this,150)" placeholder="请输入您的问题，我们会第一时间为您解决。"></textarea>
                 <p class="textarea-numberbar"><em class="textarea-length">0</em> / 150</p>
             </div>
-            <a href="javascript:document.feedbackForm.submit();">提 交</a>
+            <a href="javascript:submitFeedback();">提 交</a>
         </form>
     </div>
   </div>
 
-
+    <div class="mask">
+        <span>反馈内容不能为空</span>
+    </div>
 </body>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/zepto.js"></script>
 <script>
@@ -55,6 +62,18 @@
         $("#user_name").val(GetQueryString("userName"));
         $("#user_phone").val(GetQueryString("userPhone"));
     });
+
+    function submitFeedback(){
+        var content = $("#feedback_content").val();
+        if(content == null || content == '' || content == undefined){
+            $('.mask').fadeIn();
+            setTimeout(function(){
+                $('.mask').fadeOut();
+            },1000)
+            return;
+        }
+        document.feedbackForm.submit();
+    }
 
 
 </script>
