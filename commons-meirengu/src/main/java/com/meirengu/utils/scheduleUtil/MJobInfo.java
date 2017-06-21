@@ -32,6 +32,8 @@ public class MJobInfo {
 	
 	private String childJobKey;		// 子任务Key
 
+	private Integer finalized;		//  a Trigger has reached the condition in which it will never fire again
+
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
 
@@ -163,5 +165,13 @@ public class MJobInfo {
 
 	public void setQuartzUrl(String quartzUrl) {
 		this.quartzUrl = quartzUrl;
+	}
+
+	public Integer getFinalized() {
+		return finalized;
+	}
+
+	public void setFinalized(Integer finalized) {
+		this.finalized = finalized;
 	}
 }

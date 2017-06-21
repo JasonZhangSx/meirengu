@@ -20,6 +20,7 @@ $(function() {
 	        	var obj = {};
                 obj.jobGroup = $('#jobGroup').val();
 	        	obj.executorHandler = $('#executorHandler').val();
+                obj.finalized = $('#finalized').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
