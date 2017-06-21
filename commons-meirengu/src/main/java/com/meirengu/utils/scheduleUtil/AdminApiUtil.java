@@ -114,13 +114,13 @@ public class AdminApiUtil {
 		MJobInfo jobInfo = new MJobInfo();
 		jobInfo.setJobGroup(1);
 		jobInfo.setTriggerType("SimpleTrigger");
-		jobInfo.setStartTime(DateUtils.addDays(new Date(),3));
+		jobInfo.setStartTime(DateUtils.addMinutes(new Date(), 2));
 		jobInfo.setJobDesc("项目发布时间修改");
 		jobInfo.setExecutorParam("http://192.168.0.135/trade/order/generate_order_txt");
 		jobInfo.setExecutorFailStrategy("FAIL_RETRY");
 		jobInfo.setAuthor("毛茹新");
 		jobInfo.setAlarmEmail("381775433@qq.com");
-		jobInfo.setQuartzUrl("http://localhost:8080/mj/jobinfo/add");
+		jobInfo.setQuartzUrl("http://192.168.0.135/mj/jobinfo/addJob");
 		System.out.println(AdminApiUtil.addJob(jobInfo));
 	}
 	

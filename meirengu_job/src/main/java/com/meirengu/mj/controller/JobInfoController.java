@@ -1,8 +1,10 @@
 package com.meirengu.mj.controller;
 
+import com.meirengu.mj.controller.annotation.PermessionLimit;
 import com.meirengu.mj.core.enums.JobGroup;
 import com.meirengu.mj.service.IMJobService;
 import com.meirengu.mj.core.enums.ExecutorFailStrategyEnum;
+import com.meirengu.utils.scheduleUtil.HandleCallbackParam;
 import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.springframework.stereotype.Controller;
@@ -49,9 +51,10 @@ public class JobInfoController {
 		return xxlJobService.add(jobInfo);
 	}
 
-	@RequestMapping(value = "/addJob")
+
+	@RequestMapping(value = "/addJob", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ReturnT<String> addJob(MJobInfo jobInfo) {
+	public ReturnT<String> addJob(@RequestBody MJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
 	
