@@ -99,10 +99,10 @@ public class CapitalServiceImpl extends BaseServiceImpl implements CapitalServic
             paymentRecord.setReturnMsg(msg);
             paymentRecordDao.updatePaymentRecord(paymentRecord);
             sendMsg(record);
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_REFUND_CONFIRM,null);
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_CONFIRM,null);
         } catch (Exception e) {
-            logger.error("Capture confirmRefund ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM), e.getMessage());
-            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_REFUND_CONFIRM,null);
+            logger.error("Capture confirmRefund ErrorMsg:{},{}", StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM), e.getMessage());
+            return ResultUtil.getResult(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM,null);
         }
     }
 
