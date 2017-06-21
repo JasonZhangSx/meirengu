@@ -471,7 +471,8 @@ public class ItemServiceImpl implements ItemService{
         params.put("partnerName", map.get("partnerName"));
         params.put("targetAmount", map.get("targetAmount"));
         params.put("completedAmount", map.get("completedAmount"));
-        params.put("endDate", DateAndTime.dateFormat(map.get("crowdEndTime").toString(), "yyyy-MM-dd"));
+        SimpleDateFormat endDate = new SimpleDateFormat("yyyy-MM-dd");
+        params.put("endDate", endDate.format(map.get("crowdEndTime")));
         params.put("firstRatio", map.get("firstRatio"));
         Integer firstRatio = (Integer) params.get("firstRatio");
         params.put("endRatio", String.valueOf(100 - firstRatio));

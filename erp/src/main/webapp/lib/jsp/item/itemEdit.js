@@ -27,22 +27,21 @@ function typeChange(){
 /**
  * 是否分红
  */
-$("#isShareBonus"+levelIndex).change(function(){
+function shareBonusChange(){
     if($("#isShareBonus"+levelIndex).val() == 1){
         $("#shareBonusDiv"+levelIndex).show();
     }else if($("#isShareBonus"+levelIndex).val() == 0){
         $("#shareBonusDiv"+levelIndex).hide();
     }
-});
+}
 
-$("#revenueModel"+levelIndex).change(function () {
-    alert(levelIndex);
+function revenueModelChange() {
     if($("#revenueModel"+levelIndex).val() == 1){
         $("#shareBonusPeriodDiv"+levelIndex).hide();
     }else if($("#revenueModel"+levelIndex).val() == 2){
         $("#shareBonusPeriodDiv"+levelIndex).show();
     }
-});
+}
 
 function getCity(){
     var pid = $("#provinceSelect").val();
@@ -432,7 +431,7 @@ $(function () {
             '   <div class="row cl">' +
             '   <label class="form-label col-xs-4 col-sm-2">收益方式：</label>' +
             '<div class="formControls col-xs-8 col-sm-3"> <span class="select-box">' +
-            '   <select name="revenueModel" id="revenueModel#1" class="select">' +
+            '   <select name="revenueModel" id="revenueModel#1" onchange="revenueModelChange()" class="select">' +
             '   <option value="1">一次性还款</option>' +
             '   <option value="2">按月还息到期还本</option>' +
             '   </select>' +

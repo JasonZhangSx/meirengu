@@ -37,9 +37,9 @@ public class ItemLevel  extends BaseObject {
    /** 是否分红 */
    private Integer isShareBonus;
    /** 年化利率 */
-   private double yearRate;
+   private Double yearRate;
    /** 年化利率(最大) */
-   private double yearRateMax;
+   private Double yearRateMax;
    /** 投资期限，以月为单位 */
    private Integer investmentPeriod;
    /** 收益方式：1、一次性还款（到期本息到账）；2、按月还息到期还本（每月计息，一月30天，一年360天计算） */
@@ -157,11 +157,11 @@ public class ItemLevel  extends BaseObject {
        return isShareBonus;
    }
 
-   public void setYearRate(double yearRate){
+   public void setYearRate(Double yearRate){
        this.yearRate = yearRate;
    }
 
-   public double getYearRate(){
+   public Double getYearRate(){
        return yearRate;
    }
 
@@ -253,11 +253,11 @@ public class ItemLevel  extends BaseObject {
         this.shareHoldRate = shareHoldRate;
     }
 
-    public double getYearRateMax() {
+    public Double getYearRateMax() {
         return yearRateMax;
     }
 
-    public void setYearRateMax(double yearRateMax) {
+    public void setYearRateMax(Double yearRateMax) {
         this.yearRateMax = yearRateMax;
     }
 }

@@ -302,10 +302,10 @@ public class ItemController extends BaseController {
         params.put("payback_days", String.valueOf(itemLevel.getPaybackDays()));
         params.put("is_share_bonus", String.valueOf(itemLevel.getIsShareBonus()));
         params.put("year_rate", String.valueOf(itemLevel.getYearRate()));
-        params.put("year_rate_max", String.valueOf(itemLevel.getYearRateMax()));
+        params.put("year_rate_max", String.valueOf(itemLevel.getYearRateMax() == null ? 0 : itemLevel.getYearRateMax()));
         params.put("investment_period", String.valueOf(itemLevel.getInvestmentPeriod()));
         params.put("revenue_model", String.valueOf(itemLevel.getRevenueModel()));
-        params.put("share_bonus_period", String.valueOf(itemLevel.getShareBonusPeriod()));
+        params.put("share_bonus_period", String.valueOf(itemLevel.getShareBonusPeriod() == null ? 0 : itemLevel.getShareBonusPeriod()));
         params.put("is_need_address", String.valueOf(itemLevel.getIsNeedAddress()));
         params.put("is_need_agreement", String.valueOf(itemLevel.getIsNeedAgreement()));
         params.put("share_hold_rate", String.valueOf(itemLevel.getShareHoldRate() == null ? 0 : itemLevel.getShareHoldRate()));
@@ -413,11 +413,11 @@ public class ItemController extends BaseController {
         Map<String, Object> returnMap = new HashMap<>();
         Map<String, String> params = new HashMap<>();
         params.put("item_id", String.valueOf(cooperation.getItemId()));
-        params.put("commission_rate", cooperation.getCommissionRate() == null ? "0" : String.valueOf(cooperation.getCommissionRate()));
-        params.put("guarantee_rate", cooperation.getGuaranteeRate() == null ? "0" : String.valueOf(cooperation.getGuaranteeRate()));
-        params.put("prepaid_bonus", cooperation.getPrepaidBonus() == null ? "0" : String.valueOf(cooperation.getPrepaidBonus()));
-        params.put("loan_mode", cooperation.getLoanMode() == null ? "1" : String.valueOf(cooperation.getLoanMode()));
-        params.put("first_ratio", cooperation.getFirstRatio() == null ? "0" : String.valueOf(cooperation.getFirstRatio()));
+        params.put("commission_rate", String.valueOf(cooperation.getCommissionRate() == null ? 0 : cooperation.getCommissionRate()));
+        params.put("guarantee_rate", String.valueOf(cooperation.getGuaranteeRate() == null ? 0 : cooperation.getGuaranteeRate()));
+        params.put("prepaid_bonus", String.valueOf(cooperation.getPrepaidBonus() == null ? 0 : cooperation.getPrepaidBonus()));
+        params.put("loan_mode", String.valueOf(cooperation.getLoanMode() == null ? 1 : cooperation.getLoanMode()));
+        params.put("first_ratio", String.valueOf(cooperation.getFirstRatio() == null ? 0 : cooperation.getFirstRatio()));
         params.put("sponsor_idcard", cooperation.getSponsorIdcard());
         params.put("sponsor_credit", cooperation.getSponsorCredit());
         params.put("principal_idcard", cooperation.getPrincipalIdcard());
@@ -493,6 +493,12 @@ public class ItemController extends BaseController {
         itemService.publish(publishTime, publishType, itemId, "admin");
         return new ModelAndView("redirect:/item/published_list");
     }
+
+    /**
+     * 生成分红记录
+     * @param itemId
+     * @return
+     */
     @RequestMapping(value = "dividends")
     @ResponseBody
     public String dividends(Integer itemId){
@@ -504,19 +510,63 @@ public class ItemController extends BaseController {
         logger.info("map:{}",map);
         flag = itemService.notifyPaymentCommitBonus(map);//项目分红
         if(flag == 0){
+            logger.info("ItemController.dividends return 项目分红失败！");
             return "项目分红失败！";
+        }else{
+            return "SUCCESS";
         }
+
+    }
+
+    /**
+     * 生成待打款记录
+     * @param itemId
+     * @return
+     */
+    @RequestMapping(value = "sendmoney")
+    @ResponseBody
+    public String sendMoney(Integer itemId){
+        Integer flag = 0;
+
+        Map<String,String> map =itemService.itemDetail(itemId);
+        Map<String,String> CooperateInfoMap = itemService.getCooperateInfo(itemId);
+        map.putAll(CooperateInfoMap);
+        logger.info("map:{}",map);
         flag = itemService.notifyPaymentCommit(map);//项目增加待打款
         if(flag == 0){
+            logger.info("ItemController.sendMoney return 项目增加待打款失败！");
             return "项目增加待打款失败！";
+        }else{
+            return "SUCCESS";
         }
+
+    }
+
+    /**
+     * 生成待收款记录
+     * @param itemId
+     * @return
+     */
+    @RequestMapping(value = "receivemoney")
+    @ResponseBody
+    public String receiveMoney(Integer itemId){
+        Integer flag = 0;
+
+        Map<String,String> map =itemService.itemDetail(itemId);
+        Map<String,String> CooperateInfoMap = itemService.getCooperateInfo(itemId);
+        map.putAll(CooperateInfoMap);
+        logger.info("map:{}",map);
         flag = itemService.notifyPaymentCollectionList(map);//项目增加待收款
         if(flag == 0){
+            logger.info("ItemController.receiveMoney return 项目增加待收款失败！");
             return "项目增加待收款失败！";
         }else{
             return "SUCCESS";
         }
+
     }
+
+
     private Map getCooperateInfo(Integer itemId){
         return itemService.getCooperateInfo(itemId);
     }

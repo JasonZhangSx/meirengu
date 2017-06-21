@@ -193,7 +193,7 @@
                                         <section class="up-section fl">
                                             <span class="up-span"></span>
                                             <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">
-                                            <img class="up-img" src="http://test.img.meirenguvip.com/${articleImg}">
+                                            <img class="up-img" src="<%=imgPath%>${articleImg}">
                                             <p class="img-name-p">${articleImg}</p>
                                             <input id="taglocation" name="taglocation" value="" type="hidden">
                                             <input id="tags" name="tags" value="" type="hidden">
