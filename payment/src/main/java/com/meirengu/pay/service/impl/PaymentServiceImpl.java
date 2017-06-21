@@ -358,7 +358,7 @@ public class PaymentServiceImpl extends BaseServiceImpl  implements PaymentServi
         PaymentRecordVo paymentRecord = new PaymentRecordVo();
         try {
             paymentRecord = super.recordUtil(content,paymentRecord, PaymentTypeUtil.PaymentType_Withdrawals);
-            paymentRecord.setOrderSn(OrderSNUtils.CROWD_FUNDING_WITHDRAWALS_SN_PREFIX);
+            paymentRecord.setOrderSn(OrderSNUtils.getOrderSNByPerfix(OrderSNUtils.CROWD_FUNDING_WITHDRAWALS_SN_PREFIX));
             paymentRecordDao.insertPaymentRecord(paymentRecord);
             paymentAccountDao.updateBalance(paymentRecord.getAccountId(),paymentRecord.getPaymentBackBalance());
             LOGGER.info("withdrawals prompt message:{}",StatusCode.codeMsgMap.get(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_APPLY));

@@ -136,6 +136,10 @@ public class StatusCode {
     public static final int PAYMENT_COLLECTION_ERROR_SELECT=40660;
     public static final int PAYMENT_COLLECTION_RECORD_SUCCESS_INSERT=40661;
     public static final int PAYMENT_COLLECTION_RECORD_ERROR_INSERT=40662;
+    public static final int PAYMENT_RECORD_SUCCESS_WITHDRAWALS_CONFIRM=40663;
+    public static final int PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM=40664;
+
+
     //40700-40750//sms
     public static final int ACCOUNT_BALANCE_LESS = 40701;
     public static final int KEYWORD_MATCHING = 40702;
@@ -616,6 +620,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.PAYMENT_COLLECTION_ERROR_SELECT, "待收款记录查询失败");
         codeMsgMap.put(StatusCode.PAYMENT_COLLECTION_RECORD_SUCCESS_INSERT, "收款记录添加成功");
         codeMsgMap.put(StatusCode.PAYMENT_COLLECTION_RECORD_ERROR_INSERT, "收款记录添加失败");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_ERROR_WITHDRAWALS_CONFIRM, "提现确认成功");
+        codeMsgMap.put(StatusCode.PAYMENT_RECORD_SUCCESS_WITHDRAWALS_CONFIRM, "提现确认失败");
         //50700-50750//sms
         codeMsgMap.put(StatusCode.SUBMIT_SMS_FAILED, "发送短信失败");
         codeMsgMap.put(StatusCode.TEMPLATE_NOT_VALID, "模板无效");
