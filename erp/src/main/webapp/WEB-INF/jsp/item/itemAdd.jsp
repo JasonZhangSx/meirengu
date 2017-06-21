@@ -679,7 +679,7 @@
                                 <div class="row cl">
                                     <label class="form-label col-xs-4 col-sm-2">收益方式：</label>
                                     <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
-                                    <select name="revenueModel" id="revenueModel0" class="select">
+                                    <select name="revenueModel" id="revenueModel0" class="select"  onchange="revenueModelChange()">
                                         <option value="1">一次性还款</option>
                                         <option value="2">按月还息到期还本</option>
                                     </select>
