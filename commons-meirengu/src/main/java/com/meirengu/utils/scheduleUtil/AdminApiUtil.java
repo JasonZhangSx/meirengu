@@ -120,7 +120,7 @@ public class AdminApiUtil {
 		jobInfo.setExecutorFailStrategy("FAIL_RETRY");
 		jobInfo.setAuthor("毛茹新");
 		jobInfo.setAlarmEmail("381775433@qq.com");
-		jobInfo.setQuartzUrl("http://localhost:8080/mj/jobinfo/addJob");
+		jobInfo.setQuartzUrl("http://192.168.0.135/mj/jobinfo/addJob");
 		System.out.println(AdminApiUtil.addJob(jobInfo));
 	}
 	
