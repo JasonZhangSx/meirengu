@@ -328,9 +328,13 @@
 	<select id="getSumAmountByLevelIds" parameterType="Map" resultType="Map">
 		select SUM(order_amount) AS sumOrderAmount,
 		SUM(rebate_amount) AS sumRebateAmount,
-		SUM(cost_amount) AS sumCostAmount,
-		item_level_id AS itemLevelId,
-		item_id AS itemId
+		SUM(cost_amount) AS sumCostAmount
+		<if test="@Ognl@isNotEmpty(levelIdList)">
+			,item_level_id AS itemLevelId
+		</if>
+		<if test="@Ognl@isNotEmpty(itemIdList)">
+			,item_id AS itemId
+		</if>
 		FROM
 		<include refid="table_name" />
 		<include refid="findPage_where"/>

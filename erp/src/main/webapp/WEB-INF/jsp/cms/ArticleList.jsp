@@ -84,14 +84,14 @@
                 {
                     "data": "articleImg",
                     "render": function(data, type, row, meta){
-                        return "<img style='width: 50px; height: 50px;' src='http://test.img.meirenguvip.com/"+data+"'>";
+                        return "<img style='width: 50px; height: 50px;' src='<%=imgPath%>"+data+"'>";
                     }
                 },
                 {"data": "articleTitle"},
                 {
                     "data": "articleUrl",
                     "render": function(data, type, row, meta){
-                        return "<a href='"+data+"' target='_blank'>";
+                        return "<a href='"+data+"' target='_blank'>"+data+"</a>";
                     }
                 },
                 {

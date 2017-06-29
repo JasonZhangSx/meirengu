@@ -238,8 +238,8 @@ CREATE TABLE `MJ_QRTZ_TRIGGERS` (
 DROP TABLE IF EXISTS `MJ_QRTZ_TRIGGER_INFO`;
 CREATE TABLE `MJ_QRTZ_TRIGGER_INFO` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
-  `job_cron` varchar(128) NOT NULL COMMENT '任务执行CRON',
+  `job_group` int(11) NOT NULL COMMENT '任务组',
+  `job_cron` varchar(128) DEFAULT NULL COMMENT '任务执行CRON',
   `job_desc` varchar(255) NOT NULL,
   `start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
   `trigger_type` varchar(50) DEFAULT NULL COMMENT '触发器类型',
@@ -251,8 +251,9 @@ CREATE TABLE `MJ_QRTZ_TRIGGER_INFO` (
   `executor_param` varchar(255) DEFAULT NULL COMMENT '执行器任务参数',
   `executor_fail_strategy` varchar(50) DEFAULT NULL COMMENT '失败处理策略',
   `child_jobkey` varchar(255) DEFAULT NULL COMMENT '子任务Key',
+  `finalized` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否完成',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of mj_qrtz_trigger_info
@@ -276,7 +277,7 @@ CREATE TABLE `MJ_QRTZ_TRIGGER_LOG` (
   `handle_code` varchar(255) DEFAULT NULL COMMENT '执行-状态',
   `handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行-日志',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of mj_qrtz_trigger_log

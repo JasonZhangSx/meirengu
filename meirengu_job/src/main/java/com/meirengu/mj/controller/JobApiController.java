@@ -3,12 +3,11 @@ package com.meirengu.mj.controller;
 import com.meirengu.mj.dao.IMJobInfoDao;
 import com.meirengu.mj.dao.IMJobLogDao;
 import com.meirengu.mj.controller.annotation.PermessionLimit;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.core.model.MJobLog;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.mj.core.schedule.MJobDynamicScheduler;
 import com.meirengu.utils.scheduleUtil.HandleCallbackParam;
 import com.meirengu.utils.scheduleUtil.ReturnT;
-import com.meirengu.utils.scheduleUtil.AdminApiUtil;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ public class JobApiController {
     private IMJobInfoDao xxlJobInfoDao;
 
 
-    @RequestMapping(value= AdminApiUtil.CALLBACK, method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value= "/api/callback", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     @PermessionLimit(limit=false)
     public ReturnT<String> callback(@RequestBody HandleCallbackParam handleCallbackParam){

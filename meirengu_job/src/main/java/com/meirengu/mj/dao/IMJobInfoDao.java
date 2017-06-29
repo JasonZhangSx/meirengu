@@ -1,7 +1,6 @@
 package com.meirengu.mj.dao;
 
-import com.meirengu.mj.core.model.MJobInfo;
-
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import java.util.List;
 
 
@@ -11,8 +10,8 @@ import java.util.List;
  */
 public interface IMJobInfoDao {
 
-	public List<MJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler);
-	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler);
+	public List<MJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler, Integer finalized);
+	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler, Integer finalized);
 	
 	public int save(MJobInfo info);
 

@@ -12,8 +12,7 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop.xsd"
-       default-lazy-init="true">
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <description>Spring公共配置</description>
 
@@ -32,6 +31,8 @@
         <context:exclude-filter type="annotation"
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
+
+    <context:component-scan base-package="com.meirengu.rocketmq" />
 
     <!-- redis配置 -->
     <context:property-placeholder location="classpath:redis.properties"/>
@@ -73,6 +74,12 @@
     </bean>
     <bean id="redisClient" class="com.meirengu.common.RedisClient">
         <constructor-arg name="shardedJedisPool" ref="shardedJedisPool"/>
+    </bean>
+
+
+    <bean id="triggerCallbackThread" class="com.meirengu.utils.scheduleUtil.TriggerCallbackThread"
+          init-method="toStart"
+          destroy-method="toStop" >
     </bean>
 
 </beans>

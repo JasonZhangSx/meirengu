@@ -5,6 +5,11 @@ package com.meirengu.common;
  * Created by 建新 on 2016/12/30.
  */
 public class Constants {
+
+    public static final int STATUS_YES = 1;
+
+    public static final int STATUS_NO = 0;
+
     /** 当前页默认值 **/
     public static final int PAGE_NUM_DEFAULT = 1;
     /** 每页显示的条数默认值 **/

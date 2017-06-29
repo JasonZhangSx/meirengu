@@ -1,11 +1,10 @@
 package com.meirengu.mj.controller;
 
 import com.meirengu.mj.core.enums.JobGroup;
-import com.meirengu.mj.core.model.LogResult;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.dao.IMJobInfoDao;
 import com.meirengu.mj.dao.IMJobLogDao;
 import com.meirengu.mj.core.model.MJobLog;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;

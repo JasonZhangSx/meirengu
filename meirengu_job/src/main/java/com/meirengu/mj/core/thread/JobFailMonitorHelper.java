@@ -1,8 +1,8 @@
 package com.meirengu.mj.core.thread;
 
 import com.meirengu.mj.core.enums.JobGroup;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.core.model.MJobLog;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.mj.core.schedule.MJobDynamicScheduler;
 import com.meirengu.mj.core.util.MailUtil;
 import com.meirengu.utils.scheduleUtil.ReturnT;

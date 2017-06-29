@@ -1,4 +1,4 @@
-package com.meirengu.mj.core.model;
+package com.meirengu.utils.scheduleUtil;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,8 +32,12 @@ public class MJobInfo {
 	
 	private String childJobKey;		// 子任务Key
 
+	private Integer finalized;		//  a Trigger has reached the condition in which it will never fire again
+
 	// copy from quartz
 	private String jobStatus;		// 任务状态 【base on quartz】
+
+	private String quartzUrl;		// 调度服务地址
 
 	public int getId() {
 		return id;
@@ -155,4 +159,19 @@ public class MJobInfo {
 		this.jobStatus = jobStatus;
 	}
 
+	public String getQuartzUrl() {
+		return quartzUrl;
+	}
+
+	public void setQuartzUrl(String quartzUrl) {
+		this.quartzUrl = quartzUrl;
+	}
+
+	public Integer getFinalized() {
+		return finalized;
+	}
+
+	public void setFinalized(Integer finalized) {
+		this.finalized = finalized;
+	}
 }

@@ -1,15 +1,15 @@
 package com.meirengu.mj.controller;
 
+import com.meirengu.mj.controller.annotation.PermessionLimit;
 import com.meirengu.mj.core.enums.JobGroup;
 import com.meirengu.mj.service.IMJobService;
 import com.meirengu.mj.core.enums.ExecutorFailStrategyEnum;
-import com.meirengu.mj.core.model.MJobInfo;
+import com.meirengu.utils.scheduleUtil.HandleCallbackParam;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,14 +40,21 @@ public class JobInfoController {
 	@ResponseBody
 	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
 			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, String executorHandler, String filterTime) {
+			int jobGroup, String executorHandler, Integer finalized, String filterTime) {
 		
-		return xxlJobService.pageList(start, length, jobGroup, executorHandler, filterTime);
+		return xxlJobService.pageList(start, length, jobGroup, executorHandler, finalized, filterTime);
 	}
 	
 	@RequestMapping("/add")
 	@ResponseBody
 	public ReturnT<String> add(MJobInfo jobInfo) {
+		return xxlJobService.add(jobInfo);
+	}
+
+
+	@RequestMapping(value = "/addJob", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public ReturnT<String> addJob(@RequestBody MJobInfo jobInfo) {
 		return xxlJobService.add(jobInfo);
 	}
 	

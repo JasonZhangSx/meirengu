@@ -25,9 +25,10 @@ public interface ItemService extends BaseService<Item>{
      * @param levelId
      * @param itemNum
      * @param completedAmount
+     * @param operateStatus  1回滚预约和已筹  2回滚已筹
      * @return
      */
-    int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount);
+    int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount, Integer operateStatus);
 
     /**
      * 已预约金额、档位回滚

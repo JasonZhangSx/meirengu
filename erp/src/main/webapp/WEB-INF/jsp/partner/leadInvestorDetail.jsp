@@ -161,14 +161,16 @@
                         <section class=" img-section">
                             <div class="z_photo upimg-div clearfix">
                                 <div id="imgParent" class="clearfix">
+                                <c:if test="${not empty investorImage}">
                                     <section class="up-section fl">
                                         <span class="up-span"></span>
                                         <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">
-                                        <img class="up-img" src="http://test.img.meirenguvip.com/${investorImage}">
+                                        <img class="up-img" src="<%=imgPath%>${investorImage}">
                                         <p class="img-name-p">${investorImage}</p>
                                         <input id="taglocation" name="taglocation" value="" type="hidden">
                                         <input id="tags" name="tags" value="" type="hidden">
                                     </section>
+                                </c:if>
                                 </div>
                                 <section class="z_file fl">
                                     <img src="static/upload-file/a11.png" class="add-img">
@@ -279,7 +281,7 @@
                         imgStr += '<section class="up-section fl">'
                                 +'  <span class="up-span"></span>'
                                 +'  <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">'
-                                +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
+                                +'  <img class="up-img" src="<%=imgPath %>'+data[i]+'">'
                                 +'  <p class="img-name-p">'+data[i]+'</p>'
                                 +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
                                 +'  <input id="tags" name="tags" value="" type="hidden">'

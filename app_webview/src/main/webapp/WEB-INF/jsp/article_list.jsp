@@ -41,7 +41,7 @@
     <div class="js-load-more">点击加载更多</div>
 </div>
 </body>
-<script type="text/javascript" src="js/zepto.js"></script>
+<script type="text/javascript" src="js/zepto.js?v=20170621"></script>
 <script type="text/javascript">
 
     // 对Date的扩展，将 Date 转化为指定格式的String
@@ -75,7 +75,7 @@
         getData(counter);
 
         /*监听加载更多*/
-        $(document).on('click', '.js-load-more', function(){
+        $('.js-load-more').on('click', function(){
             counter ++;
             getData(counter);
         });

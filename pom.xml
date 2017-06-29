@@ -146,8 +146,6 @@
         <ueditor-json.version>1.0.0</ueditor-json.version>
         <!-- rocketmq clien -->
         <rocketmq-client.version>4.0.0-incubating</rocketmq-client.version>
-        <!-- mj -->
-        <quartz.version>2.2.1</quartz.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
     </properties>
     <prerequisites>
@@ -435,6 +433,12 @@
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
 

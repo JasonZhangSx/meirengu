@@ -172,7 +172,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
      */
     @Override
     @Transactional
-    public int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount){
+    public int completedRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal completedAmount, Integer operateStatus){
 
         try {
             //1.修改订单的已筹金额
@@ -192,6 +192,7 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
 
             BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(itemNum)); //levelAmount x itemNum
             int compareToReturnNum = -1;
+            int totalNumber = il.getTotalNumber();
             int completedNumber = il.getCompletedNumber();
             int currentNumber = completedNumber - itemNum;
             //先比较已完成的数量和要回滚的数量
@@ -219,13 +220,37 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
             }*/
 
             ItemLevel levelParam = new ItemLevel();
-            levelParam.setLevelId(levelId);
 
+            //operateStatus == 1 订单在预约状态下失效通知回滚预约金额和预约的档位份数
+            if(operateStatus == 1){
+
+                int appointNumber = il.getBookNumber();
+                int currentAppointNumber = appointNumber - itemNum;
+                //将预约的档位份数减回去
+                levelParam.setBookNumber(currentAppointNumber);
+                if(totalNumber > currentAppointNumber){
+                    levelParam.setLevelStatus(Constants.LEVEL_APPOINTING);
+                }
+
+                Item item = new Item();
+                item.setItemId(itemId);
+                item.setAppointAmount(totalAmount.multiply(new BigDecimal(-1)));
+                int i = itemDao.changeAmount(item);
+                if(i != 1){
+                    LOGGER.warn(">>ItemServiceImpl.completedRollback update appoint amount fail....");
+                    throw new BusinessException("ItemServiceImpl.completedRollback update appoint amount fail....");
+                }
+
+            }else if(operateStatus == 2 ){  // operateStatus == 2 订单在通知不需要修改预约状态的时候，
+                if(totalNumber > currentNumber){
+                    levelParam.setLevelStatus(Constants.LEVEL_CROWDING);
+                }
+            }
+
+            levelParam.setLevelId(levelId);
             levelParam.setCompletedNumber(currentNumber);
 
-            if(levelStatus == Constants.LEVEL_COMPLETED){
-                levelParam.setLevelStatus(Constants.LEVEL_CROWDING);
-            }
+
             int j = itemLevelService.updateNumber(levelParam);
             if(j != 1){
                 LOGGER.warn(">>ItemServiceImpl.completedRollback update number fail....");

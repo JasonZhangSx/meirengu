@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MJobInfoMapper">
 	
-	<resultMap id="MJobInfo" type="com.meirengu.mj.core.model.MJobInfo" >
+	<resultMap id="MJobInfo" type="com.meirengu.utils.scheduleUtil.MJobInfo" >
 		<result column="id" property="id" />
 	
 		<result column="job_group" property="jobGroup" />
@@ -24,6 +24,8 @@
 		<result column="executor_fail_strategy" property="executorFailStrategy" />
 	    
 		<result column="child_jobkey" property="childJobKey" />
+
+		<result column="finalized" property="finalized" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -40,7 +42,8 @@
 		t.executor_handler,
 		t.executor_param,
 		t.executor_fail_strategy,
-		t.child_jobkey
+		t.child_jobkey,
+		t.finalized
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="MJobInfo">
@@ -52,6 +55,9 @@
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="finalized != null">
+				AND t.finalized = #{finalized}
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -68,10 +74,13 @@
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
 			</if>
+			<if test="finalized != null">
+				AND t.finalized = #{finalized}
+			</if>
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.meirengu.mj.core.model.MJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.meirengu.utils.scheduleUtil.MJobInfo" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO MJ_QRTZ_TRIGGER_INFO (
 			job_group,
 			job_cron,
@@ -113,7 +122,7 @@
 		WHERE t.id = #{id}
 	</select>
 	
-	<update id="update" parameterType="com.meirengu.mj.core.model.MJobInfo" >
+	<update id="update" parameterType="com.meirengu.utils.scheduleUtil.MJobInfo" >
 		UPDATE MJ_QRTZ_TRIGGER_INFO
 		SET 
 			job_cron = #{jobCron},
@@ -126,7 +135,8 @@
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			executor_fail_strategy = #{executorFailStrategy},
-			child_jobkey = #{childJobKey}
+			child_jobkey = #{childJobKey},
+			finalized = #{finalized}
 		WHERE id = #{id}
 	</update>
 	

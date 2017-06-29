@@ -1,7 +1,7 @@
 package com.meirengu.mj.dao.impl;
 
 import com.meirengu.mj.dao.IMJobInfoDao;
-import com.meirengu.mj.core.model.MJobInfo;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,23 +20,25 @@ public class MJobInfoDaoImpl implements IMJobInfoDao {
 	public SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
-	public List<MJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler) {
+	public List<MJobInfo> pageList(int offset, int pagesize, int jobGroup, String executorHandler, Integer finalized) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
 		params.put("executorHandler", executorHandler);
+		params.put("finalized", finalized);
 		
 		return sqlSessionTemplate.selectList("MJobInfoMapper.pageList", params);
 	}
 
 	@Override
-	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler) {
+	public int pageListCount(int offset, int pagesize, int jobGroup, String executorHandler, Integer finalized) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("pagesize", pagesize);
 		params.put("jobGroup", jobGroup);
 		params.put("executorHandler", executorHandler);
+		params.put("finalized", finalized);
 		
 		return sqlSessionTemplate.selectOne("MJobInfoMapper.pageListCount", params);
 	}

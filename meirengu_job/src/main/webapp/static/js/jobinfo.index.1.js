@@ -20,6 +20,7 @@ $(function() {
 	        	var obj = {};
                 obj.jobGroup = $('#jobGroup').val();
 	        	obj.executorHandler = $('#executorHandler').val();
+                obj.finalized = $('#finalized').val();
 	        	obj.start = d.start;
 	        	obj.length = d.length;
                 return obj;
@@ -86,12 +87,14 @@ $(function() {
 	                	"visible" : true,
 	                	"render": function ( data, type, row ) {
 	                		if ('NORMAL' == data) {
-	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
+	                			return '<small class="label label-success" ><i class="fa fa-clock-o"></i>'+ data +'</small>';
 							} else if ('PAUSED' == data){
 								return '<small class="label label-default" title="暂停" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
 							} else if ('BLOCKED' == data){
 								return '<small class="label label-default" title="阻塞[串行]" ><i class="fa fa-clock-o"></i>'+ data +'</small>'; 
-							}
+							} else if ('NONE' == data){
+                                return '<small class="label label-default" ><i class="fa"></i>'+ data +'</small>';
+                            }
 	                		return data;
 	                	}
 	                },
@@ -119,6 +122,13 @@ $(function() {
 									'<button class="btn btn-warning btn-xs update" type="button">编辑</button>  '+
 									'<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">删除</button>  '+
 									'</p>';
+
+                                if ('NONE' == row.jobStatus) {
+                                    html = '<p id="'+ row.id +'" >'+
+                                        '<button class="btn btn-primary btn-xs" type="job_del" type="button" onclick="javascript:window.open(\'' + logUrl + '\')" >日志</button>  '+
+                                        '<button class="btn btn-danger btn-xs job_operate" _type="job_del" type="button">删除</button>  '+
+                                        '</p>';
+                                }
 
 	                			return html;
 							};

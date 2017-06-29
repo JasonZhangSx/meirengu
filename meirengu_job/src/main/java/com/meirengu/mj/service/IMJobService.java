@@ -2,8 +2,8 @@ package com.meirengu.mj.service;
 
 
 
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.utils.scheduleUtil.ReturnT;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface IMJobService {
 	
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, Integer finalized, String filterTime);
 	
 	public ReturnT<String> add(MJobInfo jobInfo);
 	

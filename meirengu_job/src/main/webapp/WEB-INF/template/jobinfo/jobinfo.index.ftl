@@ -39,12 +39,16 @@
                     </div>
                 </div>
                 <input type="hidden" id="executorHandler" value="">
-                <#--<div class="col-xs-4">-->
-                    <#--<div class="input-group">-->
-                        <#--<span class="input-group-addon">JobHandler</span>-->
-                        <#--<input type="text" class="form-control" id="executorHandler" autocomplete="on" >-->
-                    <#--</div>-->
-                <#--</div>-->
+                <div class="col-xs-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">job完成状态</span>
+                        <select class="form-control" id="finalized" >
+                            <option value="" >全部</option>
+                            <option value="0" >未完成</option>
+                            <option value="1" >已完成</option>
+                        </select>
+                    </div>
+                </div>
 	            <div class="col-xs-2">
 	            	<button class="btn btn-block btn-info" id="searchBtn">搜索</button>
 	            </div>

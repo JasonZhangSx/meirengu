@@ -1,15 +1,17 @@
 package com.meirengu.mj.service.impl;
 
+import com.meirengu.common.Constants;
 import com.meirengu.mj.core.schedule.MJobDynamicScheduler;
 import com.meirengu.mj.dao.IMJobInfoDao;
 import com.meirengu.mj.dao.IMJobLogDao;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.service.IMJobService;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.http.Consts;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -33,11 +35,11 @@ public class MJobServiceImpl implements IMJobService {
 	public IMJobLogDao xxlJobLogDao;
 
 	@Override
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, String filterTime) {
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String executorHandler, Integer finalized, String filterTime) {
 
 		// page list
-		List<MJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, executorHandler);
-		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, executorHandler);
+		List<MJobInfo> list = xxlJobInfoDao.pageList(start, length, jobGroup, executorHandler, finalized);
+		int list_count = xxlJobInfoDao.pageListCount(start, length, jobGroup, executorHandler, finalized);
 		
 		// fill job info
 		if (list!=null && list.size()>0) {

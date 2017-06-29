@@ -1,14 +1,16 @@
 package com.meirengu.mj.core.schedule;
 
+import com.meirengu.common.Constants;
 import com.meirengu.mj.core.jobbean.RemoteHttpJobBean;
-import com.meirengu.mj.core.model.MJobInfo;
 import com.meirengu.mj.core.thread.JobFailMonitorHelper;
 import com.meirengu.mj.dao.IMJobInfoDao;
 import com.meirengu.mj.dao.IMJobLogDao;
+import com.meirengu.utils.scheduleUtil.ReturnT;
 import org.quartz.*;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CronTriggerImpl;
+import com.meirengu.utils.scheduleUtil.MJobInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -31,10 +33,14 @@ public final class MJobDynamicScheduler implements ApplicationContextAware, Init
     public void setScheduler(Scheduler scheduler) {
 		MJobDynamicScheduler.scheduler = scheduler;
 	}
+
+	private static MSchedulerListener mSchedulerListener = new MSchedulerListener();
     
     public void init() throws Exception {
         // admin monitor run
         JobFailMonitorHelper.getInstance().start();
+        // add scheduleListener
+        scheduler.getListenerManager().addSchedulerListener(mSchedulerListener);
     }
     
     // destroy
@@ -111,7 +117,7 @@ public final class MJobDynamicScheduler implements ApplicationContextAware, Init
 				jobInfo.setJobCron(cronExpression);
 			}
 
-            if (trigger.getStartTime() != null) {
+            if (trigger!=null && trigger.getStartTime() != null) {
                 jobInfo.setStartTime(trigger.getStartTime());
             }
 
@@ -360,5 +366,20 @@ public final class MJobDynamicScheduler implements ApplicationContextAware, Init
         return result;
     }
 
-
+    // Called by the listener when a Trigger has reached the condition in which it will never fire again.
+    public static ReturnT<String> triggerFinalized(Trigger trigger) {
+        MJobInfo exists_jobInfo = xxlJobInfoDao.loadById(Integer.parseInt(trigger.getKey().getName()));
+        if (exists_jobInfo == null) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "参数异常");
+        }
+        if (exists_jobInfo.getFinalized() == Constants.STATUS_YES) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "任务异常");
+        }
+        exists_jobInfo.setFinalized(Constants.STATUS_YES);
+        int num = xxlJobInfoDao.update(exists_jobInfo);
+        if (num != 1) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "更新任务为Finalized失败");
+        }
+        return ReturnT.SUCCESS;
+    }
 }
