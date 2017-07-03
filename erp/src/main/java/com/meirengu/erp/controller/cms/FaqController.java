@@ -8,6 +8,7 @@ import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -74,12 +75,10 @@ public class FaqController extends BaseController{
     public Result insert(@RequestParam(value = "class_id")String classId,
                          @RequestParam(value = "class_name")String className,
                          @RequestParam(value = "faq_question")String faqQuestion,
-                         @RequestParam(value = "faq_answer")String faqAnswer
-//                             @RequestParam(value = "operate_account")String operateAccount
-                               ){
+                         @RequestParam(value = "faq_answer")String faqAnswer){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
             paramsMap.put("class_id",classId);
             paramsMap.put("class_name",className);
             paramsMap.put("faq_question",faqQuestion);
@@ -152,7 +151,7 @@ public class FaqController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("faq_id",faqId);
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
             if(status!=null){
                 paramsMap.put("status",status);
             }
