@@ -10,6 +10,7 @@ import com.meirengu.utils.DateAndTime;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.StringUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -72,12 +73,10 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "remarks")String remarks,
                          @RequestParam(value = "status")Integer status,
                          @RequestParam(value = "start_time")String startTime,
-                         @RequestParam(value = "end_time")String endTime
-//                             @RequestParam(value = "operate_account")String operateAccount
-                               ){
+                         @RequestParam(value = "end_time")String endTime){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account","暂时保留");
+            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
             paramsMap.put("end_time",endTime+"");
             paramsMap.put("start_time",startTime+"");
             paramsMap.put("activity_link",activityLink);
@@ -168,7 +167,7 @@ public class ActivityController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("activity_id",activityId);
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
             if(!StringUtil.isEmpty(endTime)){
                 paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,"yyyy-MM-dd HH:mm:ss"));
             }if(!StringUtil.isEmpty(startTime)){
