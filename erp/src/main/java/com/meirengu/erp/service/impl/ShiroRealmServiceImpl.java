@@ -2,6 +2,7 @@ package com.meirengu.erp.service.impl;
 
 import com.meirengu.commons.authority.model.Account;
 import com.meirengu.commons.authority.service.IAccountService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -44,6 +45,9 @@ public class ShiroRealmServiceImpl extends AuthorizingRealm {
         logger.info("Request doGetAuthenticationInfo->findAccount parameter:{}",account.toString());
         account = iAccountService.findAccount(account);
         if (account.getPassword().equals(String.valueOf(token.getPassword()))){
+            //add by maoruxin 把登录人员详细信息放入shiro session中
+            //登录人员退出时应该remove该属性
+            SecurityUtils.getSubject().getSession().setAttribute("sessionUser", account);
             return new SimpleAuthenticationInfo(account.getUserName(),account.getPassword(),getName());
         }
         return null;

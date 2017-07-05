@@ -2,13 +2,16 @@ package com.meirengu.erp.controller.trade;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
@@ -31,6 +34,7 @@ import java.util.Map;
 public class OrderAppointmentController extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(OrderAppointmentController.class);
+
 
     /**
      * 跳转到预约列表页面
@@ -88,7 +92,7 @@ public class OrderAppointmentController extends BaseController{
         String url = ConfigUtil.getConfig("order.appointment.audit.url") + "/" + orderId;
         Map<String, String> params = new HashMap<String, String>();
         params.put("status", orderState.toString());
-        params.put("operate_account", "admin");//稍后修改
+        params.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
@@ -97,6 +101,8 @@ public class OrderAppointmentController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("预约订单审核", OperationTypeEnum.UPDATE.getIndex(),orderId.toString(),"order_state|1|"+orderState);
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));
