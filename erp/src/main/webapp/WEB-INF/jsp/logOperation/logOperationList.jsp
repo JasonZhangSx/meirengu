@@ -27,6 +27,7 @@
         <article class="cl pd-20">
             <div class="text-c">
                 用户账号：<input type="text" class="input-text" style="width:120px;" id="userName">　
+                业务模块关键字：<input type="text" class="input-text" style="width:120px;" id="businessName">　
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
@@ -117,7 +118,8 @@
                     "targets": [0.-1]
                 },
                 //search
-                { "name": "id",   "targets": 1 },
+                { "name": "businessName",   "targets": 2 },
+                { "name": "userName",   "targets": 4 },
                 {
                     "targets": 7,
                     "render": function (data, type, row, meta) {
@@ -182,8 +184,9 @@
      * 检索
      **/
     function search(){
+        var businessName = $("#businessName").val();
         var userName = $("#userName").val();
-        table.column(4).search(userName).draw();
+        table.column(2).search(businessName).column(4).search(userName).draw();
     }
 
     //*日志-详情*/

@@ -58,6 +58,9 @@ public class LogOperationController extends BaseController{
         // 组装请求参数
         QueryVo queryVo = new QueryVo(input);
         Map<String, Object> map = new HashMap<>();
+        if (StringUtils.isNotBlank(queryVo.getBusinessName())) {
+            map.put("businessName", queryVo.getBusinessName());
+        }
         if (StringUtils.isNotBlank(queryVo.getUserName())) {
             map.put("userName", queryVo.getUserName());
         }

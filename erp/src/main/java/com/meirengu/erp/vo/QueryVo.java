@@ -40,6 +40,8 @@ public class QueryVo implements Serializable {
 	private Integer id;
 	/** 用户电话号码 */
 	private String userPhone;
+	/** 业务模块 */
+	private String businessName;
 	/** 用户账号 */
 	private String userName;
 	/** 项目名称 */
@@ -104,6 +106,9 @@ public class QueryVo implements Serializable {
 					break;
 				case "userName":
 					this.setUserName(parameterSearchValue);
+					break;
+				case "businessName":
+					this.setBusinessName(parameterSearchValue);
 					break;
 				case "itemName":
 					this.setItemName(parameterSearchValue);
@@ -319,6 +324,14 @@ public class QueryVo implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
 	}
 
 	public String getParamsStr() throws UnsupportedEncodingException {

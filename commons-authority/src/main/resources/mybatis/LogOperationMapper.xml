@@ -88,7 +88,7 @@
 				AND tb.log_id = #{logId}
 			</if>
 	       <if test="@Ognl@isNotEmpty(businessName)">
-				AND tb.business_name = #{businessName}
+				AND tb.business_name LIKE CONCAT(CONCAT('%', #{businessName}),'%')
 			</if>
 	       <if test="@Ognl@isNotEmpty(operationType)">
 				AND tb.operation_type = #{operationType}
