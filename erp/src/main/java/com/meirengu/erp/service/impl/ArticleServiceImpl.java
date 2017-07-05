@@ -6,6 +6,7 @@ import com.meirengu.erp.model.Article;
 import com.meirengu.erp.service.ArticleService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,11 +23,14 @@ import java.util.Map;
 @Service
 public class ArticleServiceImpl implements ArticleService{
     @Override
-    public Map<String, Object> query(int page, int perPage, boolean isPage, Integer flag) {
+    public Map<String, Object> query(int page, int perPage, boolean isPage, Integer flag, String acId) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("article.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
         if(flag != null){
             url.append("&flag=").append(flag);
+        }
+        if(!StringUtil.isEmpty(acId)){
+            url.append("&ac_id=").append(acId);
         }
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());

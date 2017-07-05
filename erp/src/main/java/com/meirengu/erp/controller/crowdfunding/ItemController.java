@@ -166,7 +166,7 @@ public class ItemController extends BaseController {
         try {
             List itemClassData = itemService.getItemClassList();
             List typeData = typeService.getTypeList();
-            List partnerData = (List) partnerService.query(0,0,false);
+            List partnerData = (List) partnerService.query(0,0,false,null);
             List provinceData = (List) httpGet(ConfigUtil.getConfig("address.province.list"));
             List partnerShip = (List) limitedPartnerShipService.query(0, 0, false);
             List investorList = (List) investorService.query(0, 0, false);
@@ -494,6 +494,13 @@ public class ItemController extends BaseController {
         return new ModelAndView("redirect:/item/published_list");
     }
 
+    @RequestMapping(value = "offline")
+    @ResponseBody
+    public Map publish(Integer itemId){
+        Map<String, Object> map = itemService.offline(itemId);
+        return map;
+    }
+
     /**
      * 生成分红记录
      * @param itemId
@@ -577,7 +584,7 @@ public class ItemController extends BaseController {
         Map<String, Object> returnMap = new HashMap<>();
         List itemClassData = itemService.getItemClassList();
         List typeData = typeService.getTypeList();
-        List partnerData = (List) partnerService.query(0,0, false);
+        List partnerData = (List) partnerService.query(0,0, false, null);
         List provinceData = addressService.getProvinceList();
         Map item = itemService.itemDetail(itemId);
         List contentData = itemService.getContentList(itemId, null);

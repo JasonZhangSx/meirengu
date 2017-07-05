@@ -29,6 +29,20 @@
     <div class="Hui-article">
         <article class="cl pd-20">
 
+            <div class="text-c">
+                文章类型：　　
+                        <span class="select-box mr-20" style="width:auto;" >
+                            <select id="acId" class="select">
+                                <option value="0">请选择</option>
+                                <c:forEach items="${classList}" var="list">
+                                    <option value="${list.acId}">${list.acName}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加文章','article/detail')"
                                    href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a></span>
@@ -40,6 +54,7 @@
                         <th>序号</th>
                         <th>文章头图</th>
                         <th>文章标题</th>
+                        <th>文章分类</th>
                         <th>文章链接</th>
                         <th>创建时间</th>
                         <th>操作</th>
@@ -61,6 +76,10 @@
 
 <script type="text/javascript">
 
+    var classMap = {};
+    $("#acId option").each(function(){
+        classMap[$(this).val()]=$(this).text();
+    });
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -89,6 +108,16 @@
                 },
                 {"data": "articleTitle"},
                 {
+                    "data": "acId",
+                    "render": function(data, type, row, meta){
+                        for(var prop in classMap){
+                            if(prop == data){
+                                return classMap[prop];
+                            }
+                        }
+                    }
+                },
+                {
                     "data": "articleUrl",
                     "render": function(data, type, row, meta){
                         return "<a href='"+data+"' target='_blank'>"+data+"</a>";
@@ -110,7 +139,7 @@
                     "targets": [0.-1]
                 },
                 {
-                    "targets": 5,
+                    "targets": 6,
                     "render": function (data, type, row, meta) {
                         var context =
                         {
@@ -162,6 +191,14 @@
         }).draw();
 
     });
+
+    /**
+     * 检索
+     **/
+    function search(){
+        var acId = $("#acId").val();
+        table.column(3).search(acId).draw();
+    }
 
     function loadTotalCount(){
         var info = table.page.info();

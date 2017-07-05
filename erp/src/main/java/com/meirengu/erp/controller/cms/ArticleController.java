@@ -7,6 +7,7 @@ import com.meirengu.erp.service.ArticleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
@@ -64,8 +65,9 @@ public class ArticleController extends BaseController{
         int start = input.getStart();
         int length = input.getLength();
         int page = start / length + 1;
+        Column acId = input.getColumn("acId");
         try {
-            Map<String, Object> map = articleService.query(page, length, true, 1);
+            Map<String, Object> map = articleService.query(page, length, true, 1, acId.getSearch().getValue());
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {

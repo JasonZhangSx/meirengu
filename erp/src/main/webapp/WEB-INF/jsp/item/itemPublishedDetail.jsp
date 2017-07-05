@@ -370,9 +370,7 @@
                         </thead>
                         <tbody>
                         <tr class="text-c">
-                            <td>发起人身份证正反面
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>发起人身份证正反面</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.sponsorIdcard}">
                                     <c:forEach items="${fn:split(cooperate.sponsorIdcard, ',')}" var="imgs">
@@ -389,9 +387,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>发起人征信报告
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>发起人征信报告</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.sponsorCredit}">
                                     <c:forEach items="${fn:split(cooperate.sponsorCredit, ',')}" var="imgs">
@@ -408,9 +404,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>企业法人身份证正反面
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>企业法人身份证正反面</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.principalIdcard}">
                                     <c:forEach items="${fn:split(cooperate.principalIdcard, ',')}" var="imgs">
@@ -427,9 +421,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>企业法人征信报告
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>企业法人征信报告</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.principalCredit}">
                                     <c:forEach items="${fn:split(cooperate.principalCredit, ',')}" var="imgs">
@@ -446,9 +438,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>营业执照
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>营业执照</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.businessLicence}">
                                     <c:forEach items="${fn:split(cooperate.businessLicence, ',')}" var="imgs">
@@ -465,9 +455,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>场地/土地租赁协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>场地/土地租赁协议</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.venueRentalAgreement}">
                                     <c:forEach items="${fn:split(cooperate.venueRentalAgreement, ',')}" var="imgs">
@@ -484,9 +472,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>新店装修效果图
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>新店装修效果图</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.storeRenderings}">
                                     <c:forEach items="${fn:split(cooperate.storeRenderings, ',')}" var="imgs">
@@ -503,9 +489,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>公司章程
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>公司章程</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.corporateArticles}">
                                     <c:forEach items="${fn:split(cooperate.corporateArticles, ',')}" var="imgs">
@@ -522,9 +506,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>近一年流水，资产负债表
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>近一年流水，资产负债表</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.assetWaterLiabilities}">
                                     <c:forEach items="${fn:split(cooperate.assetWaterLiabilities, ',')}" var="imgs">
@@ -616,9 +598,7 @@
                         </thead>
                         <tbody>
                         <tr class="text-c">
-                            <td>托管协议书
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>托管协议书</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.escrowAgreement}">
                                     <c:forEach items="${fn:split(cooperate.escrowAgreement, ',')}" var="imgs">
@@ -635,9 +615,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>融资服务协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>融资服务协议</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.financeService}">
                                     <c:forEach items="${fn:split(cooperate.financeService, ',')}" var="imgs">
@@ -654,9 +632,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>融资管理协议
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>融资管理协议</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.financeManage}">
                                     <c:forEach items="${fn:split(cooperate.financeManage, ',')}" var="imgs">
@@ -673,9 +649,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>股权质押合同
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>股权质押合同</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.sharePledgeAgreement}">
                                     <c:forEach items="${fn:split(cooperate.sharePledgeAgreement, ',')}" var="imgs">
@@ -692,9 +666,7 @@
                             </td>
                         </tr>
                         <tr class="text-c">
-                            <td>保证合同
-                                <button class="btn btn-link radius ml-10" type="button">下载</button>
-                            </td>
+                            <td>保证合同</td>
                             <td class="text-l">
                                 <c:if test="${not empty cooperate.guarantyAgreement}">
                                     <c:forEach items="${fn:split(cooperate.guarantyAgreement, ',')}" var="imgs">
