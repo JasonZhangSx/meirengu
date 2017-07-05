@@ -8,6 +8,7 @@ import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -54,12 +55,10 @@ public class FaqClassController extends BaseController{
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public Result insert(@RequestParam(value = "class_name")String className)
-//                             @RequestParam(value = "operate_account")String operateAccount
-    {
+    public Result insert(@RequestParam(value = "class_name")String className){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
             paramsMap.put("class_name",className);
             String url = ConfigUtil.getConfig("news.faqclass.insert");
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, paramsMap);
@@ -129,7 +128,7 @@ public class FaqClassController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
             if(status!=null){
                 paramsMap.put("status",status);
             }
@@ -150,7 +149,7 @@ public class FaqClassController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account","admin");
+            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
             if(className!=null){
                 paramsMap.put("class_name",className);
             }
