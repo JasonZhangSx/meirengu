@@ -112,7 +112,9 @@
                         {
                             func: [
                                 {"name": "查看", "fn": "detail(\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "分红", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "分红", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"},
+                                {"name": "待打款", "fn": "project_confirm1( this,\'" + row.itemId + "\')", "type": "primary"},
+                                {"name": "待收款", "fn": "project_confirm2( this,\'" + row.itemId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);
@@ -177,11 +179,53 @@
         layer.full(index);
     }
 
-    /*删除*/
+    /*分红*/
     function project_confirm(obj, id) {
         layer.confirm('确认进行分红吗？', function (index) {
             $.ajax({
                 url:"item/dividends",
+                data:{
+                    "itemId":id
+                },
+                success : function(data) {
+                    if(data == "SUCCESS"){
+                        console.log(data);
+                        layer.msg('操作成功!', {icon: 6, time: 1000});
+                    }else{
+                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
+                    }
+                }
+            })
+
+        });
+    }
+
+    /*生成打款*/
+    function project_confirm1(obj, id) {
+        layer.confirm('确认生成打款记录吗？', function (index) {
+            $.ajax({
+                url:"item/sendmoney",
+                data:{
+                    "itemId":id
+                },
+                success : function(data) {
+                    if(data == "SUCCESS"){
+                        console.log(data);
+                        layer.msg('操作成功!', {icon: 6, time: 1000});
+                    }else{
+                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
+                    }
+                }
+            })
+
+        });
+    }
+
+    /*生成待收款记录*/
+    function project_confirm2(obj, id) {
+        layer.confirm('确认生成打款记录吗？', function (index) {
+            $.ajax({
+                url:"item/receivemoney",
                 data:{
                     "itemId":id
                 },

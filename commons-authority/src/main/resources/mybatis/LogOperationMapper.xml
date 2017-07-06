@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.meirengu.commons.authority.dao.LogOperationDao">
+
+	<resultMap id="RM_LogOperation" type="com.meirengu.commons.authority.model.LogOperation">
+        <result property="logId" column="log_id"/>
+        <result property="businessName" column="business_name"/>
+        <result property="operationType" column="operation_type"/>
+        <result property="primaryKey" column="primary_key"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="createTime" column="create_time"/>
+	</resultMap>
+
+	<sql id="select_columns">log_id AS logId,business_name AS businessName,operation_type AS operationType,
+							primary_key AS primaryKey,user_id AS userId,user_name AS userName,create_time AS createTime</sql>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		log_id,business_name,operation_type,primary_key,user_id,user_name,create_time
+	    ]]>
+	</sql>
+
+    <sql id="tbcolumns">
+	    <![CDATA[
+		tb.log_id,tb.business_name,tb.operation_type,tb.primary_key,tb.user_id,tb.user_name,tb.create_time
+	    ]]>
+	</sql>
+	
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="logId">
+    <![CDATA[
+        INSERT INTO log_operation (
+        	log_id ,
+        	business_name ,
+        	operation_type ,
+        	primary_key ,
+        	user_id ,
+        	user_name
+        ) VALUES (
+        	#{logId} ,
+        	#{businessName} ,
+        	#{operationType} ,
+        	#{primaryKey} ,
+        	#{userId} ,
+        	#{userName}
+        )
+    ]]>
+		<!--	
+			oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="userId">
+			SELECT sequenceName.nextval AS ID FROM DUAL 
+        </selectKey>
+		-->
+	</insert>
+    
+	<update id="update" >
+    <![CDATA[
+        UPDATE log_operation SET
+	        business_name = #{businessName} ,
+	        operation_type = #{operationType} ,
+	        primary_key = #{primaryKey} ,
+	        user_id = #{userId} ,
+	        user_name = #{userName} ,
+	        create_time = #{createTime} 
+        WHERE 
+	        log_id = #{logId} 
+    ]]>
+	</update>
+
+    <select id="detail" resultMap="RM_LogOperation">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM log_operation 
+	        WHERE 
+		        log_id = #{id} 
+	    ]]>
+	</select>
+	
+	<sql id="findPage_where">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>	      				
+	       <if test="@Ognl@isNotEmpty(logId)">
+				AND tb.log_id = #{logId}
+			</if>
+	       <if test="@Ognl@isNotEmpty(businessName)">
+				AND tb.business_name LIKE CONCAT(CONCAT('%', #{businessName}),'%')
+			</if>
+	       <if test="@Ognl@isNotEmpty(operationType)">
+				AND tb.operation_type = #{operationType}
+			</if>
+	       <if test="@Ognl@isNotEmpty(primaryKey)">
+				AND tb.primary_key = #{primaryKey}
+			</if>
+	       <if test="@Ognl@isNotEmpty(userId)">
+				AND tb.user_id = #{userId}
+			</if>
+	       <if test="@Ognl@isNotEmpty(userName)">
+				AND tb.user_name = #{userName}
+			</if>
+	       <if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND tb.create_time >= #{createTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND tb.create_time &lt;= #{createTimeEnd}
+		   </if>
+		</where>
+	</sql>
+
+	<select id="getCount" resultType="Integer">
+        SELECT count(1) FROM log_operation tb
+		<include refid="findPage_where"/>
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 offset,pageSize,lastRows 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="getByPage" resultType="Map" parameterType="Map">
+    	SELECT <include refid="select_columns" />
+	    FROM log_operation tb
+		<include refid="findPage_where"/>
+
+		<if test="@Ognl@isNotEmpty(sortBy) and @Ognl@isNotEmpty(order)">
+			order by ${sortBy} ${order}
+		</if>
+    </select>
+
+	
+</mapper>
+

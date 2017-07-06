@@ -24,6 +24,8 @@
 		<result column="executor_fail_strategy" property="executorFailStrategy" />
 	    
 		<result column="child_jobkey" property="childJobKey" />
+
+		<result column="finalized" property="finalized" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -40,7 +42,8 @@
 		t.executor_handler,
 		t.executor_param,
 		t.executor_fail_strategy,
-		t.child_jobkey
+		t.child_jobkey,
+		t.finalized
 	</sql>
 	
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="MJobInfo">
@@ -52,6 +55,9 @@
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="finalized != null">
+				AND t.finalized = #{finalized}
 			</if>
 		</trim>
 		ORDER BY id DESC
@@ -67,6 +73,9 @@
 			</if>
 			<if test="executorHandler != null and executorHandler != ''">
 				AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+			</if>
+			<if test="finalized != null">
+				AND t.finalized = #{finalized}
 			</if>
 		</trim>
 	</select>
@@ -126,7 +135,8 @@
 			executor_handler = #{executorHandler},
 			executor_param = #{executorParam},
 			executor_fail_strategy = #{executorFailStrategy},
-			child_jobkey = #{childJobKey}
+			child_jobkey = #{childJobKey},
+			finalized = #{finalized}
 		WHERE id = #{id}
 	</update>
 	

@@ -272,7 +272,7 @@ img{vertical-align: top}
 
 .meit_bd .wrapper{padding: 0 .32rem;}
 .meit_bd .item{padding:.2rem 0;border-bottom:1px #f1f1f1 solid;}
-.meit_bd .left{float:left;display: inline;width:2.34rem;height:1.5rem;background-size: contain;background-position: 0 center;background-repeat: no-repeat;}
+.meit_bd .left{float:left;display: inline;width:2.34rem;height:1.5rem;background-size: cover;background-position: 0 center;background-repeat: no-repeat;}
 .meit_bd .right{float:right;display: inline;width:4.22rem;position: relative;height:1.5rem}
 .meit_bd h4{font-weight: normal;font-size: .32rem;line-height: .5rem;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
 .meit_bd var{font-size: .24rem;color:#b5b5b5;position:absolute;right:0;bottom:0;}

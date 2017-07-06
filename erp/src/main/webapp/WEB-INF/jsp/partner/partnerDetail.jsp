@@ -131,8 +131,8 @@
                                 }
 
                                 imgStr = '<div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">'
-                                        +'<a href="http://test.img.meirenguvip.com/'+data[i]+'" data-lightbox="gallery">'
-                                        +'<img src="http://test.img.meirenguvip.com/'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
+                                        +'<a href="<%=imgPath%>'+data[i]+'" data-lightbox="gallery">'
+                                        +'<img src="<%=imgPath%>'+data[i]+'?x-oss-process=image/resize,m_lfit,h_100,w_100"></a>'
                                         +'</div>';
 
                                 /*imgStr += '<section class="up-section fl">'
@@ -160,14 +160,20 @@
             <div class="formControls col-xs-8 col-sm-3">
                 <input type="hidden" name="partnerId" id="partnerId" value="${partnerId}">
                 <input type="text" class="input-text" value="${partnerName}" id="partnerName" name="partnerName" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
             <label class="form-label col-xs-4 col-sm-2">公司成立日：</label>
             <div class="formControls col-xs-8 col-sm-3">
-                <jsp:useBean id="dateValue" class="java.util.Date"/>
-                <jsp:setProperty name="dateValue" property="time" value="${partnerCreateDay}"/>
-                <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value='<fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>'
-                       id="partnerCreateDay" name="partnerCreateDay"/>
+                <c:if test="${empty partnerCreateDay}">
+                    <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" id="partnerCreateDay" name="partnerCreateDay"/>
+                </c:if>
+                <c:if test="${not empty partnerCreateDay}">
+                    <jsp:useBean id="dateValue" class="java.util.Date"/>
+                    <jsp:setProperty name="dateValue" property="time" value="${partnerCreateDay}"/>
+                    <input type="text" class="ml-10 input-text" style="width:auto" placeHolder="年/月/日" value='<fmt:formatDate value="${dateValue}" pattern="yyyy/MM/dd HH:mm:ss"/>'
+                           id="partnerCreateDay" name="partnerCreateDay"/>
+                </c:if>
+
             </div>
         </div>
 
@@ -238,14 +244,14 @@
             <label class="form-label col-xs-4 col-sm-2">企业名称：</label>
             <div class="formControls col-xs-8 col-sm-8">
                 <input type="text" class="input-text" value="${enterpriseName}" id="enterpriseName" name="enterpriseName" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">证件号：</label>
             <div class="formControls col-xs-8 col-sm-8">
                 <input type="text" class="input-text" value="${idNumber}" id="idNumber" name="idNumber" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
         </div>
         <div class="row cl">
@@ -278,12 +284,12 @@
             <div class="formControls col-xs-8 col-sm-3">
                 <input type="text" class="input-text" value="${principalTelephone}" id="principalTelephone" name="principalTelephone"
                        maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
             <div class="formControls col-xs-8 col-sm-3">
                 <input type="text" class="input-text" value="${principalFax}" id="principalFax" name="principalFax" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
         </div>
         <div class="row cl">
@@ -315,12 +321,12 @@
             <div class="formControls col-xs-8 col-sm-3">
                 <input type="text" class="input-text" value="${contactsTelephone}" id="contactsTelephone" name="contactsTelephone"
                        maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
             <label class="form-label col-xs-4 col-sm-2">传 真：</label>
             <div class="formControls col-xs-8 col-sm-3">
                 <input type="text" class="input-text" value="${contactsFax}" id="contactsFax" name="contactsFax" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
         </div>
         <div class="row cl">
@@ -351,7 +357,7 @@
             <label class="form-label col-xs-4 col-sm-2">银行账号：</label>
             <div class="formControls col-xs-8 col-sm-8">
                 <input type="text" class="input-text" value="${bankCard}" id="bankCard" name="bankCard" maxlength="30"
-                       placeholder="项目标题最多30字">
+                       placeholder="">
             </div>
         </div>
 
@@ -368,8 +374,8 @@
                 </thead>
                 <tbody>
                 <tr class="text-c">
-                    <td>发起人身份证正反面
-                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    <td>
+                        发起人身份证正反面
                     </td>
                     <td class="text-l">
                         <input type="hidden" id="imagePrincipal" name="imagePrincipal" value="${imagePrincipal}">
@@ -377,6 +383,13 @@
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
                                     <div id="imgParent0" class="clearfix">
+                                        <c:if test="${not empty imagePrincipal}">
+                                            <div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">
+                                                <a href="<%=imgPath%>${imagePrincipal}" data-lightbox="gallery">
+                                                    <img src="<%=imgPath%>${imagePrincipal}?x-oss-process=image/resize,m_lfit,h_100,w_100">
+                                                </a>
+                                            </div>
+                                        </c:if>
                                     </div>
                                     <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
                                         <label class="u_img">上传图片</label>
@@ -388,8 +401,8 @@
                     </td>
                 </tr>
                 <tr class="text-c">
-                    <td>营业执照
-                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    <td>
+                        营业执照
                     </td>
                     <td class="text-l"><!-- upload?foldName=item-->
                         <input type="hidden" id="imageBusinessLicence" name="imageBusinessLicence" value="${imageBusinessLicence}">
@@ -397,6 +410,13 @@
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
                                     <div id="imgParent1" class="clearfix">
+                                        <c:if test="${not empty imageBusinessLicence}">
+                                            <div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">
+                                                <a href="<%=imgPath%>${imageBusinessLicence}" data-lightbox="gallery">
+                                                    <img src="<%=imgPath%>${imageBusinessLicence}?x-oss-process=image/resize,m_lfit,h_100,w_100">
+                                                </a>
+                                            </div>
+                                        </c:if>
                                     </div>
                                     <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
                                         <label class="u_img">上传图片</label>
@@ -408,8 +428,8 @@
                     </td>
                 </tr>
                 <tr class="text-c">
-                    <td>开户行
-                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    <td>
+                        开户行
                     </td>
                     <td class="text-l">
                         <input type="hidden" id="imageBank" name="imageBank" value="${imageBank}">
@@ -417,6 +437,13 @@
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
                                     <div id="imgParent2" class="clearfix">
+                                        <c:if test="${not empty imageBank}">
+                                            <div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">
+                                                <a href="<%=imgPath%>${imageBank}" data-lightbox="gallery">
+                                                    <img src="<%=imgPath%>${imageBank}?x-oss-process=image/resize,m_lfit,h_100,w_100">
+                                                </a>
+                                            </div>
+                                        </c:if>
                                     </div>
                                     <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
                                         <label class="u_img">上传图片</label>
@@ -428,8 +455,8 @@
                     </td>
                 </tr>
                 <tr class="text-c">
-                    <td>医疗机构执业许可证
-                        <button class="btn btn-link radius ml-10" type="button">下载</button>
+                    <td>
+                        医疗机构执业许可证
                     </td>
                     <td class="text-l">
                         <input type="hidden" id="imageProfessionalLicense" name="imageProfessionalLicense" value="${imageProfessionalLicense}">
@@ -437,6 +464,13 @@
                             <section class=" img-section">
                                 <div class="z_photo upimg-div clearfix">
                                     <div id="imgParent3" class="clearfix">
+                                        <c:if test="${not empty imageProfessionalLicense}">
+                                            <div class="picbox" style="margin: 5px; width: 100px; height: 100px; float: left;">
+                                                <a href="<%=imgPath%>${imageProfessionalLicense}" data-lightbox="gallery">
+                                                    <img src="<%=imgPath%>${imageProfessionalLicense}?x-oss-process=image/resize,m_lfit,h_100,w_100">
+                                                </a>
+                                            </div>
+                                        </c:if>
                                     </div>
                                     <section class="z_file fl" style="width:100px;height:30px;text-align: center;">
                                         <label class="u_img">上传图片</label>
@@ -628,25 +662,6 @@
         }*/
 
         $('#form-partner-add').ajaxSubmit(options);
-        /*var parentId = $("#partnerId").val();
-        var formData = {"partnerName": partnerName, "partnerCreateDay" : partnerCreateDay, "partnerRegistCapital" : partnerRegistCapital, "partnerValuation" : partnerValuation,
-        "accountId": accountId, "enterpriseName" : enterpriseName, "idNumber" : idNumber, "enterpriseAddress" : enterpriseAddress, "principalName" : principalName,
-        "principalIdcard" : principalIdcard, "principalTelephone" : principalTelephone, "principalFax" : principalFax, "principalAddress" : principalAddress,
-        "contactsName" : contactsName, "contactsIdcard" : contactsIdcard, "contactsTelephone" : contactsTelephone, "contactsFax" : contactsFax, "contactsAddress" : contactsAddress,
-        "bankName" : bankName, "bankAccount" : bankAccount, "bankCard" : bankCard, "imagePrincipal" : imagePrincipal, "imageBusinessLicence" : imageBusinessLicence,
-        "imageBank" : imageBank, "imageProfessionalLicense" : imageProfessionalLicense, "parentId" : parentId};
-        console.log(formData);
-        $.ajax({
-           url : "partner/save",
-           type : "POST",
-           data : formData,
-           beforeSubmit:  showRequest,  // pre-submit callback
-           success:       showResponse,  // post-submit callback
-           error : function() {
-               alert('error!');
-           },
-           timeout : 3000
-        });*/
 
     }
 

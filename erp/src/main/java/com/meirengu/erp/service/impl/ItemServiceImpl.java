@@ -431,6 +431,25 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
+    public Map<String, Object> offline(Integer itemId) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.offline"));
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("item_id", String.valueOf(itemId));
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                return (Map) jsonObject;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public Integer notifyPaymentCommitBonus(Map<String, String> map) {
         LOGGER.info("ItemServiceImpl notifyPaymentCommitBonus started :{}",new Date());
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.notify.paymentCommitBonus"));
@@ -471,7 +490,8 @@ public class ItemServiceImpl implements ItemService{
         params.put("partnerName", map.get("partnerName"));
         params.put("targetAmount", map.get("targetAmount"));
         params.put("completedAmount", map.get("completedAmount"));
-        params.put("endDate", DateAndTime.dateFormat(map.get("crowdEndTime").toString(), "yyyy-MM-dd"));
+        SimpleDateFormat endDate = new SimpleDateFormat("yyyy-MM-dd");
+        params.put("endDate", endDate.format(map.get("crowdEndTime")));
         params.put("firstRatio", map.get("firstRatio"));
         Integer firstRatio = (Integer) params.get("firstRatio");
         params.put("endRatio", String.valueOf(100 - firstRatio));

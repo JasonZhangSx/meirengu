@@ -672,6 +672,20 @@ public class ItemController extends BaseController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "offline", method = RequestMethod.POST)
+    public Result offline(@RequestParam(value = "item_id", required = false)Integer itemId){
+        Item item = new Item();
+        item.setItemId(itemId);
+        item.setItemStatus(Constants.ITEM_OFF);
+        try {
+            itemService.update(item);
+            return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "" , StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

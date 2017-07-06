@@ -2,12 +2,14 @@ package com.meirengu.erp.controller.trade;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -126,7 +128,8 @@ public class OrderController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("user_message", userMessage);
         params.put("refund_message", refundMessage);
-        params.put("refund_sponsor", "admin");
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        params.put("refund_sponsor", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
@@ -135,6 +138,12 @@ public class OrderController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    String detailStr = "order_id|" + orderId.toString() + "| ," +
+                                        "user_message| |" + userMessage + "," +
+                                        "refund_message| |" + refundMessage + "," +
+                                        "refund_sponsor| |" + userName + "";
+                    addLogOperation("申请订单退款", OperationTypeEnum.INSERT.getIndex(),orderId.toString(),detailStr);
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));
