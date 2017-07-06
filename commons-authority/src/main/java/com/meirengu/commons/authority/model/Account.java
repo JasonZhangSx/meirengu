@@ -1,9 +1,10 @@
 package com.meirengu.commons.authority.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Account {
+public class Account implements Serializable {
     /**
      * 账户主键
      */

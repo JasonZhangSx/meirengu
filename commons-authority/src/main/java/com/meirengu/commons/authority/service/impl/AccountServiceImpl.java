@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class AccountServiceImpl implements IAccountService {
      * @return 树形结构
      */
     public List<Permission> tree(List<Permission> list, int icParentId){
-        List<Permission> permissionList = new ArrayList<>();
+        List<Permission> permissionList = new LinkedList<>();
         for (Permission vo : list){
             if (vo.getParentId()==icParentId){
                 List<Permission> voList=tree(list,vo.getId().intValue());
