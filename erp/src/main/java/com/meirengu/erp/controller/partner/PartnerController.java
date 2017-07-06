@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
@@ -52,12 +53,15 @@ public class PartnerController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public String view() {
-        return "partner/partnerList";
+    public ModelAndView view() {
+        Map<String, Object> map = new HashMap<>();
+        List classList = (List) partnerClassService.query(0, 0, false);
+        map.put("classList", classList);
+        return new ModelAndView("partner/partnerList", map);
     }
 
     /**
-     * 领投人信息列表数据请求
+     * 合作方列表数据请求
      * @param input
      * @return
      */
@@ -70,8 +74,9 @@ public class PartnerController extends BaseController{
         int start = input.getStart();
         int length = input.getLength();
         int page = start / length + 1;
+        Column typeId = input.getColumn("typeId");
         try {
-            Map<String, Object> map = (Map)partnerService.query(page, length, true);
+            Map<String, Object> map = (Map)partnerService.query(page, length, true, typeId.getSearch().getValue());
             list = (List<Map<String,Object>>) map.get("list");
             List classList = (List) partnerClassService.query(0,0,false);
             totalCount = Integer.parseInt(map.get("totalCount").toString());

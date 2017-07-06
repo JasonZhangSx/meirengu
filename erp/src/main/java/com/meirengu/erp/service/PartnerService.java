@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface PartnerService {
 
-    Object query(int page, int perPage, boolean isPage);
+    Object query(int page, int perPage, boolean isPage, String typeId);
 
     Map<String, Object> detail(int id);
 

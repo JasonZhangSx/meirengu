@@ -28,7 +28,20 @@
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-
+            <div class="text-c">
+                行业类型：　　
+                        <span class="select-box mr-20" style="width:auto;" >
+                            <select id="typeId" class="select">
+                                <option value="">请选择</option>
+                                <c:forEach items="${classList}" var="list">
+                                    <option value="${list.classId}">${list.className}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
+                    查 询
+                </button>
+            </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20">
                 <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加合作方','partner/detail')"
                                    href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加合作方</a></span>
@@ -61,6 +74,10 @@
 
 <script type="text/javascript">
 
+    var classMap = {};
+    $("#typeId option").each(function(){
+        classMap[$(this).val()]=$(this).text();
+    });
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -82,7 +99,16 @@
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
                 {"data": "partnerName"},
-                {"data": ""},
+                {
+                    "data": "typeId",
+                    "render": function(data, type, row, meta){
+                        for(var prop in classMap){
+                            if(prop == data){
+                                return classMap[prop];
+                            }
+                        }
+                    }
+                },
                 {"data": "contactsName"},
                 {"data": "contactsTelephone"},
                 {"data": null}
@@ -147,6 +173,14 @@
         }).draw();
 
     });
+
+    /**
+     * 检索
+     **/
+    function search(){
+        var typeId = $("#typeId").val();
+        table.column(2).search(typeId).draw();
+    }
 
     function loadTotalCount(){
         var info = table.page.info();

@@ -236,8 +236,8 @@ public class PartnerController extends BaseController{
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "{partner_id}", method = RequestMethod.DELETE)
-    public Result delete(@PathVariable(value = "partner_id", required = false)Integer partnerId){
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public Result delete(@RequestParam(value = "partner_id", required = false)Integer partnerId){
         try {
             int deleteNum = partnerService.delete(partnerId);
             if(deleteNum == 1){
@@ -246,7 +246,7 @@ public class PartnerController extends BaseController{
                 return super.setResult(StatusCode.PARTNER_CLASS_ALREADY_DELETE, "", StatusCode.codeMsgMap.get(StatusCode.PARTNER_CLASS_ALREADY_DELETE));
             }
         }catch (Exception e){
-            LOGGER.error(">> delete partner class detail throw exception: {}", e);
+            LOGGER.error(">> delete partner throw exception: {}", e);
             return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
         }
     }

@@ -181,9 +181,9 @@
     function project_confirm(obj, id) {
         layer.confirm('确认要下架吗？', function (index) {
             $.ajax({
-                url:"item/off",
+                url:"item/offline",
                 data:{
-                    "id":id
+                    "itemId":id
                 },
                 success : function(data) {
                     if(data.code==200){
