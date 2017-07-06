@@ -7,6 +7,7 @@ import com.meirengu.erp.model.PartnerClass;
 import com.meirengu.erp.service.PartnerService;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,10 +24,13 @@ import java.util.Map;
 @Service
 public class PartnerServiceImpl implements PartnerService{
     @Override
-    public Object query(int page, int perPage, boolean isPage) {
+    public Object query(int page, int perPage, boolean isPage, String typeId) {
         StringBuffer url = new StringBuffer(ConfigUtil.getConfig("partner.list"));
         url.append("?is_page=").append(isPage).append("&page=").append(page).append("&per_page=").append(perPage);
         url.append("&flag=1");
+        if(!StringUtil.isEmpty(typeId)){
+            url.append("&class_id=").append(typeId);
+        }
         try {
             HttpUtil.HttpResult hr = HttpUtil.doGet(url.toString());
             int statusCode = hr.getStatusCode();

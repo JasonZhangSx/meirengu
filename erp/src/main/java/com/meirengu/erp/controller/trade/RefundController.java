@@ -2,12 +2,14 @@ package com.meirengu.erp.controller.trade;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -105,7 +107,8 @@ public class RefundController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("refund_state", refundState.toString());
         params.put("admin_message", adminMessage);
-        params.put("operate_account", "admin");
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        params.put("operate_account", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();
@@ -114,6 +117,11 @@ public class RefundController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    String detailStr = "refund_state|1|" + refundState.toString() + "," +
+                            "admin_message| |" + adminMessage + ", " +
+                            "operate_account| |" + userName ;
+                    addLogOperation("退款订单审核", OperationTypeEnum.UPDATE.getIndex(),refundId + "",detailStr);
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));

@@ -340,7 +340,7 @@
                         imgStr += '<section class="up-section fl">'
                                 +'  <span class="up-span"></span>'
                                 +'  <img class="close-upimg" src="static/upload-file/a7.png" onclick="removePic(this)">'
-                                +'  <img class="up-img" src="http://test.img.meirenguvip.com/'+data[i]+'">'
+                                +'  <img class="up-img" src="<%=imgPath%>'+data[i]+'">'
                                 +'  <p class="img-name-p">'+data[i]+'</p>'
                                 +'  <input id="taglocation" name="taglocation" value="" type="hidden">'
                                 +'  <input id="tags" name="tags" value="" type="hidden">'
@@ -423,6 +423,11 @@
                 alert("跳转链接和文章内容二选一！");
             }
             return false;
+        }else{
+            if(articleUrl.length > 200){
+                alert("跳转链接超过200！请重新填写");
+                return false;
+            }
         }
         $('#form-article-add').ajaxSubmit(options);
 

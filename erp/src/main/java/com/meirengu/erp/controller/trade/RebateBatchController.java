@@ -2,6 +2,7 @@ package com.meirengu.erp.controller.trade;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.common.Constants;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
@@ -10,6 +11,7 @@ import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
 import com.meirengu.utils.NumberUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -177,7 +179,8 @@ public class RebateBatchController extends BaseController{
         params.put("budget_amount", budgetAmount.toString());
         params.put("channel", channel);
         params.put("remarks", remarks);
-        params.put("operate_account", "admin");//稍后修改
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        params.put("operate_account", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             logger.debug("Request: {} getResponse: {}", url, hr);
@@ -187,6 +190,8 @@ public class RebateBatchController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("抵扣券新增", OperationTypeEnum.INSERT.getIndex(),rebateScope,"");
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));
@@ -201,7 +206,7 @@ public class RebateBatchController extends BaseController{
     }
 
     /**
-     * 订单批次置失效
+     * 抵扣券批次置失效
      * @param batchId
      * @return
      */
@@ -222,6 +227,8 @@ public class RebateBatchController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("抵扣券批次置失效", OperationTypeEnum.UPDATE.getIndex(),batchId.toString(),"status|1|0");
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));

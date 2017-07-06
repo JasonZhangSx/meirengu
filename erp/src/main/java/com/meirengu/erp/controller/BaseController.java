@@ -3,14 +3,23 @@ package com.meirengu.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.model.Account;
+import com.meirengu.commons.authority.model.LogOperationDetail;
+import com.meirengu.commons.authority.service.LogOperationService;
 import com.meirengu.model.Result;
 import com.meirengu.utils.HttpUtil;
+import com.meirengu.utils.SecurityUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +32,9 @@ import java.util.Map;
 public class BaseController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+
+    @Autowired
+    private LogOperationService logOperationService;
 
     /**
      * 封装返回数据对象
@@ -100,5 +112,17 @@ public class BaseController {
 
 
         return output;
+    }
+
+    /**
+     * 新增操作日志，在业务方法成功后添加(避免事务问题)
+     * @param businessName  业务模块名称
+     * @param operationType  OperationTypeEnum
+     * @param primaryKey    业务主键
+     * @param detailStr     修改的内容，格式为column_name|column_old_value|column_new_value，多个字段已逗号相隔
+     */
+    public void addLogOperation(String businessName, Integer operationType, String primaryKey, String detailStr){
+        Account account = (Account)SecurityUtils.getSubject().getSession().getAttribute("sessionUser");
+        logOperationService.addLogOperation(businessName,operationType,primaryKey,account.getId(),account.getUserName(),detailStr);
     }
 }

@@ -12,50 +12,39 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>文章列表</title>
+    <title>操作日志列表</title>
     <style type="text/css">
         th,td { white-space: nowrap; }
-        .table tbody tr td{
-            text-align:center;
-        }
         .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
     </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 文章管理 <span class="c-gray en">&gt;</span>文章列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 操作日志 <span class="c-gray en">&gt;</span> 操作日志列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-
             <div class="text-c">
-                文章类型：　　
-                        <span class="select-box mr-20" style="width:auto;" >
-                            <select id="acId" class="select">
-                                <option value="0">请选择</option>
-                                <c:forEach items="${classList}" var="list">
-                                    <option value="${list.acId}">${list.acName}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
+                用户账号：<input type="text" class="input-text" style="width:120px;" id="userName">　
+                业务模块关键字：<input type="text" class="input-text" style="width:120px;" id="businessName">　
                 <button name="" id="" onclick="search()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe665;</i>
                     查 询
                 </button>
             </div>
+
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加文章','article/detail')"
-                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
-                        <th>序号</th>
-                        <th>文章头图</th>
-                        <th>文章标题</th>
-                        <th>文章分类</th>
-                        <th>文章链接</th>
+                        <th></th>
+                        <th>编号</th>
+                        <th>业务模块</th>
+                        <th>业务主键</th>
+                        <th>操作员账号</th>
+                        <th>操作类型</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
@@ -76,10 +65,6 @@
 
 <script type="text/javascript">
 
-    var classMap = {};
-    $("#acId option").each(function(){
-        classMap[$(this).val()]=$(this).text();
-    });
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -88,7 +73,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>article/query'
+                'url': '<%=basePath %>logOperation'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -100,27 +85,22 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
+                {"data": "logId"},
+                {"data": "businessName"},
+                {"data": "primaryKey"},
+                {"data": "userName"},
                 {
-                    "data": "articleImg",
-                    "render": function(data, type, row, meta){
-                        return "<img style='width: 50px; height: 50px;' src='<%=imgPath%>"+data+"'>";
-                    }
-                },
-                {"data": "articleTitle"},
-                {
-                    "data": "acId",
-                    "render": function(data, type, row, meta){
-                        for(var prop in classMap){
-                            if(prop == data){
-                                return classMap[prop];
-                            }
+                    "data": "operationType",
+                    "render": function (data, type, row, meta) {
+                        if (data == 1) {
+                            return "增加";
+                        } else if (data == 2) {
+                            return "删除";
+                        } else if (data == 3) {
+                            return "修改";
+                        } else if (data == 4) {
+                            return "查看";
                         }
-                    }
-                },
-                {
-                    "data": "articleUrl",
-                    "render": function(data, type, row, meta){
-                        return "<a href='"+data+"' target='_blank'>"+data+"</a>";
                     }
                 },
                 {
@@ -133,25 +113,28 @@
             ],
             "columnDefs": [
                 {
-                    "defaultContent":'',
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
                 },
+                //search
+                { "name": "businessName",   "targets": 2 },
+                { "name": "userName",   "targets": 4 },
                 {
-                    "targets": 6,
+                    "targets": 7,
                     "render": function (data, type, row, meta) {
+                        var status = row.status;
                         var context =
-                        {
-                            func: [
-                                {"name": "修改", "fn": "detail(\'" + row.articleId + "\')", "type": "default"},
-                                {"name": "删除", "fn": "project_confirm( this,\'" + row.articleId + "\')", "type": "primary"}
-                            ]
-                        };
+                                {
+                                    func: [
+                                        {"name": "查看", "fn": "detail(\'" + row.logId + "\')", "type": "primary"}
+                                    ]
+                                };
                         var html = template(context);
                         return html;
                     }
                 }
+
             ],
             "language": {
                 "processing": "<div class='myloading'><img src='<%=basePath %>static/h-ui/images/loading/loading-b.gif'> <br/>&nbsp&nbsp&nbsp&nbsp&nbsp努力加载数据中.</div>",
@@ -192,64 +175,30 @@
 
     });
 
-    /**
-     * 检索
-     **/
-    function search(){
-        var acId = $("#acId").val();
-        table.column(3).search(acId).draw();
-    }
-
     function loadTotalCount(){
         var info = table.page.info();
         var totalCount = info.recordsTotal;
         $("#totalCount").html(totalCount);
     }
-
     /**
-     *项目-编辑/新增
-     */
-    function project_edit(title, url, id, w, h) {
+     * 检索
+     **/
+    function search(){
+        var businessName = $("#businessName").val();
+        var userName = $("#userName").val();
+        table.column(2).search(businessName).column(4).search(userName).draw();
+    }
+
+    //*日志-详情*/
+    function detail(id) {
+        var title = "日志详情";
+        var url = "logOperationDetail/view/"+id;
         var index = layer.open({
             type: 2,
             title: title,
             content: url
         });
-        layer.full(index);
-    }
-
-    /*删除*/
-    function project_confirm(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $.ajax({
-                url:"article/delete",
-                data:{
-                    "id":id
-                },
-                success : function(data) {
-                    if(data.code==200){
-                        console.log(data);
-                        $(obj).parents("tr").remove();
-                        layer.msg('已删除!', {icon: 1, time: 1000});
-                    }else{
-                        alert("操作失败! 请重试");
-                    }
-                }
-            })
-
-        });
-    }
-
-    /**
-     * 跳转到修改页面
-     * @param id
-     */
-    function detail(id){
-        var index = layer.open({
-            type: 2,
-            title: "领投人修改",
-            content: "article/detail?id="+id
-        });
+//        layer.iframeAuto(index);
         layer.full(index);
     }
 </script>

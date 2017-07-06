@@ -135,6 +135,13 @@ public interface ItemService {
      * @param publishTime
      */
     boolean publish(Date publishTime, Integer type, Integer itemId, String operateAccount);
+
+    /**
+     * 项目下线
+     * @param itemId
+     * @return
+     */
+    Map offline(Integer itemId);
     //项目分红列表
     Integer notifyPaymentCommitBonus(Map<String, String> map);
     //项目增加待打款
