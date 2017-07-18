@@ -30,6 +30,7 @@
         </foreach>
         )
         )
+        ORDER BY id
     </select>
     <select id="getAllPermission" resultMap="BaseResultMap">
         select

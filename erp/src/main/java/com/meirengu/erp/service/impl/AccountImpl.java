@@ -1,6 +1,7 @@
 package com.meirengu.erp.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.commons.authority.model.Account;
 import com.meirengu.commons.authority.model.Organization;
 import com.meirengu.commons.authority.service.IAccountService;

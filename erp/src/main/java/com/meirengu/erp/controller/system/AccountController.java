@@ -1,5 +1,6 @@
 package com.meirengu.erp.controller.system;
 
+import com.meirengu.common.PasswordEncryption;
 import com.meirengu.commons.authority.model.*;
 import com.meirengu.commons.authority.service.RoleAccountService;
 import com.meirengu.commons.authority.service.RoleService;
@@ -13,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -67,13 +70,14 @@ public class AccountController {
     }
     @RequestMapping(value = "/updateOrAdd",method = RequestMethod.POST)
     @ResponseBody
-    public String updateAdd(Account account,String expireDate,HttpServletRequest request) throws ParseException {
+    public String updateAdd(Account account,String expireDate,HttpServletRequest request) throws ParseException, InvalidKeySpecException, NoSuchAlgorithmException {
         String[] permission = request.getParameterValues("roleId");
         String msg;
         if (expireDate!=null&&!expireDate.isEmpty()){
             expireDate=expireDate+" 00:00:00";
             account.setExpireTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expireDate));
         }
+        account.setPassword(PasswordEncryption.createHash(account.getPassword()));
         if (account.getId()!=null){
             msg = accountService.updateAccount(account);
         }else {

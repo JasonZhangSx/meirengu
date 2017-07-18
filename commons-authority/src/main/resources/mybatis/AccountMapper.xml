@@ -29,9 +29,6 @@
     <if test="userName != null">
       AND a.user_name = #{userName,jdbcType=VARCHAR}
     </if>
-    <if test="password != null">
-      AND a.`password` = #{password,jdbcType=VARCHAR}
-    </if>
   </select>
   <select id="getAllUser" parameterType="com.meirengu.commons.authority.model.Account" resultMap="BaseResultMap">
     select
