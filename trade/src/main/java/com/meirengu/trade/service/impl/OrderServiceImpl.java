@@ -311,6 +311,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 }
             }
         }
+        // 添加客户二维码字段
+        map.put("customerServiceQRCode", ConfigUtil.getConfig("item.customer.service.qr.code"));
         return map;
     }
     /**
