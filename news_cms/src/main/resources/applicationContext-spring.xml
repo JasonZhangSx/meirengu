@@ -23,7 +23,7 @@
     <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
     <!-- 加入定制化包路径com.sample -->
     <!-- 主容器中排除controller -->
-    <context:component-scan base-package="com.meirengu.news">
+    <context:component-scan base-package="com.meirengu">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:exclude-filter type="annotation"
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
@@ -35,4 +35,6 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="resolveLazily" value="true" />
     </bean>
+
+
 </beans>

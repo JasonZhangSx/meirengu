@@ -13,5 +13,6 @@
 		<typeAlias alias="activity" type="com.meirengu.news.model.Activity" />
 		<typeAlias alias="versionUpgrade" type="com.meirengu.news.model.VersionUpgrade" />
 		<typeAlias alias="signUpActivity" type="com.meirengu.news.model.SignUpActivity" />
+		<typeAlias alias="ipWhiteList" type="com.meirengu.news.model.IpWhiteList" />
 	</typeAliases>
 </configuration>

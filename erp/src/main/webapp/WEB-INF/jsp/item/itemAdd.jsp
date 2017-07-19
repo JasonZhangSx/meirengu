@@ -317,6 +317,7 @@
             </form>
         </div>
 
+        <!-- 股权众筹补充信息 -->
         <div id="extentionDiv" style="display: none;">
             <form action="add" id="itemExtentionForm" method="post">
 
@@ -420,14 +421,36 @@
                 </div>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">股权收益权投资协议模板：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="file" class="input-text" value="" placeholder="" id="equityTemplate"
-                               name="equityTemplate" required>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="equityTemplate" name="equityTemplate">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent30" class="clearfix"></div>
+                                    <section class="z_file fl">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file30" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file30','item','imgParent30','equityTemplate')">
+                                    </section>
+                                 </div>
+                             </section>
+                        </div>
                     </div>
+                </div>
+                <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">合伙协议模板：</label>
-                    <div class="formControls col-xs-8 col-sm-3">
-                        <input type="file" class="input-text" value="" placeholder=""
-                               id="partnershipTemplate" name="partnershipTemplate">
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="partnershipTemplate" name="partnershipTemplate">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent31" class="clearfix"></div>
+                                    <section class="z_file fl">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file31" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file31','item','imgParent31','partnershipTemplate')">
+                                    </section>
+                                 </div>
+                             </section>
+                        </div>
                     </div>
                 </div>
                 <div class="row cl">
@@ -438,6 +461,7 @@
             </form>
         </div>
 
+        <!-- 股东信息 -->
         <div id="shareholderDiv" style="display: none;">
             <form action="add" id="itemShareHolderForm" method="post">
 
@@ -463,11 +487,11 @@
                     </div>
                 </div>
 
-                <div class="row cl">
+                <%--<div class="row cl">
                     <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
                         <button class="btn btn-primary radius" type="button" onclick="project_edit('新增股东', 'shareholder', id, '800px', '500px')">新增股东</button>
                     </div>
-                </div>
+                </div>--%>
             </form>
         </div>
 

@@ -304,7 +304,7 @@ public class ItemController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Result delete(@PathVariable(value = "id") int itemId){
+    public Result delete(@RequestParam(value = "id") int itemId){
         try {
             int deleteNum = itemService.delete(itemId);
             if(deleteNum == 1){
@@ -706,10 +706,10 @@ public class ItemController extends BaseController {
         item.setItemProfile(itemProfile);
         item.setTypeId(typeId);
         item.setClassId(classId);
-        item.setLeadInvestorAmount(leadInvestorAmount == null ? BigDecimal.valueOf(0): leadInvestorAmount);
+        item.setLeadInvestorAmount(leadInvestorAmount);
         item.setLeadInvestorName(leadInvestorName == null ? "" : leadInvestorName);
         item.setLeadInvestorHeader(leadInvestorHeader == null ? "" : leadInvestorHeader);
-        item.setTargetAmount(targetAmount == null ? BigDecimal.valueOf(0) : targetAmount.add(item.getLeadInvestorAmount().multiply(BigDecimal.valueOf(10000))));
+        item.setTargetAmount(targetAmount);
         item.setAppointAmount(appointAmount);
         item.setCompletedAmount(completedAmount);
         item.setPreheatingDays(preheatingDays);

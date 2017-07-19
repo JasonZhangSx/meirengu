@@ -113,8 +113,8 @@
                             func: [
                                 {"name": "查看", "fn": "detail(\'" + row.itemId + "\')", "type": "primary"},
                                 {"name": "分红", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "待打款", "fn": "project_confirm1( this,\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "待收款", "fn": "project_confirm2( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "打款", "fn": "project_confirm1( this,\'" + row.itemId + "\')", "type": "primary"},
+                                {"name": "收款", "fn": "project_confirm2( this,\'" + row.itemId + "\')", "type": "primary"}
                             ]
                         };
                         var html = template(context);

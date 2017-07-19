@@ -33,7 +33,7 @@ public class ItemServiceImpl implements ItemService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
 
     @Override
-    public Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus) {
+    public Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus, String flag) {
 
         Map<String, Object> map = new HashMap<>();
 
@@ -49,6 +49,9 @@ public class ItemServiceImpl implements ItemService{
         }
         if(!StringUtil.isEmpty(itemStatus)){
             url.append("&item_status=").append(itemStatus);
+        }
+        if(!StringUtil.isEmpty(flag)){
+            url.append("&flag=").append(flag);
         }
 
         try {
@@ -547,5 +550,24 @@ public class ItemServiceImpl implements ItemService{
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public Map<String, Object> delete(int id) {
+        StringBuffer url = new StringBuffer(ConfigUtil.getConfig("item.delete"));
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("id", String.valueOf(id));
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url.toString(), params);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                return (Map) jsonObject;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

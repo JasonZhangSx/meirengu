@@ -19,7 +19,7 @@ public interface ItemService {
      * @param itemStatus
      * @return
      */
-    Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus);
+    Map<String, Object> getItemListByPage(int page, int perPage, boolean isPage, Integer itemId, String itemName, String itemStatus, String flag);
 
     /**
      * 项目添加
@@ -148,4 +148,11 @@ public interface ItemService {
     Integer notifyPaymentCommit(Map<String, String> map);
     //项目增加待收款
     Integer notifyPaymentCollectionList(Map<String, String> map);
+
+    /**
+     * 删除项目
+     * @param id
+     * @return
+     */
+    Map<String, Object> delete(int id);
 }

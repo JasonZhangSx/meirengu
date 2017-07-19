@@ -340,6 +340,184 @@
             </form>
         </div>
 
+        <!-- 股权众筹补充信息 -->
+        <div id="extentionDiv" style="display: none;">
+            <form action="add" id="itemExtentionForm" method="post">
+
+                <input type="hidden" name="itemId" id="itemId30">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">股权众筹补充信息(融资信息)</h3>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">出让股份：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.sellShare}" id="sellShare" name="sellShare" placeholder="0.0000" style="width: 265px;">&nbsp;&nbsp;%
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">融资金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.financeAmount}" id="financeAmount" name="financeAmount" style="width: 265px;">&nbsp;万元
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">进入注册资本：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.registerCapital}" id="registerCapital" name="registerCapital" style="width: 265px;">&nbsp;万元
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">进入资本公积金：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.captitalReserve}" id="captitalReserve" name="captitalReserve" style="width: 265px;">&nbsp;万元
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">融资后注册资本：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.afterRegisterCapital}" id="afterRegisterCapital" name="afterRegisterCapital" style="width: 265px;">&nbsp;万元
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">选择领投人：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="leadInvestorId" id="leadInvestorId" class="select">
+                            <c:forEach items="${investorList}" var="investor">
+                                <option value="${investor.id}">${investor.investorName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">领投金额：</label>
+                    <div class="formControls col-xs-8 col-sm-3">
+                        <input type="text" class="input-text" value="${extention.leadInvestorAmount}" id="leadInvestorAmount" name="leadInvestorAmount" style="width: 265px;">万元
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">领投原因：</label>
+                    <div class="formControls col-xs-8 col-sm-8">
+                        <textarea id="leadInvestorReason" name="leadInvestorReason" cols="" rows="" class="textarea" placeholder="..."
+                                  datatype="*10-100"
+                                  dragonfly="true" nullmsg="备注不能为空！">${extention.leadInvestorReason}</textarea>
+                        <%--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>--%>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId1" class="select">
+                            <option value="0">无</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId2" class="select">
+                            <option value="0">无</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司(附加)：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId1" id="limitedPartnershipId3" class="select">
+                            <option value="0">无</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                    <label class="form-label col-xs-4 col-sm-2">有限合伙公司（附加）：</label>
+                    <div class="formControls col-xs-8 col-sm-3"> <span class="select-box">
+                        <select name="limitedPartnershipId2" id="limitedPartnershipId4" class="select">
+                            <option value="0">无</option>
+                            <c:forEach items="${shipList}" var="ship">
+                                <option value="${ship.id}">${ship.companyName}</option>
+                            </c:forEach>
+                        </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">股权收益权投资协议模板：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="equityTemplate" name="equityTemplate">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent30" class="clearfix"></div>
+                                    <section class="z_file fl">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file30" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file30','item','imgParent30','equityTemplate')">
+                                    </section>
+                                 </div>
+                             </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-2">合伙协议模板：</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="hidden" id="partnershipTemplate" name="partnershipTemplate">
+                        <div class="img-box full">
+                            <section class=" img-section">
+                                <div class="z_photo upimg-div clearfix">
+                                    <div id="imgParent31" class="clearfix"></div>
+                                    <section class="z_file fl">
+                                        <img src="static/upload-file/a11.png" class="add-img">
+                                        <input type="file" name="file" id="file31" class="file" value="" accept="image/jpg,image/jpeg,image/png,image/bmp" onchange="uploadFile('file31','item','imgParent31','partnershipTemplate')">
+                                    </section>
+                                 </div>
+                             </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                        <button class="btn btn-primary radius" type="button" onclick="extentionSave()">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- 股东信息 -->
+        <div id="shareholderDiv" style="display: none;">
+            <form action="add" id="itemShareHolderForm" method="post">
+
+                <input type="hidden" name="itemId" id="itemId31">
+                <div class="row cl">
+                    <h3 class="edit_h31 col-sm-9 col-sm-offset-1 col-xs-offset-0 mb-10 pb-10">股权众筹补充信息(股东信息)</h3>
+                </div>
+                <div class="row cl">
+                    <div class="mt-20">
+                        <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort" style="width: 75%;margin-left: 110px;">
+                            <thead>
+                            <tr class="text-c">
+                                <th>名称</th>
+                                <th>身份证号</th>
+                                <th>住址</th>
+                                <th>联系方式</th>
+                                <th>出资额</th>
+                                <th>投前占比</th>
+                                <th>投后占比</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <%--<div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-30 mb-20">
+                        <button class="btn btn-primary radius" type="button" onclick="project_edit('新增股东', 'shareholder', id, '800px', '500px')">新增股东</button>
+                    </div>
+                </div>--%>
+            </form>
+        </div>
+
         <!-- 内容设置 -->
         <div>
             <div class="row cl">

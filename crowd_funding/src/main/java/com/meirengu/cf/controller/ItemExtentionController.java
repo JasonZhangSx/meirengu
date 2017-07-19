@@ -1,7 +1,9 @@
 package com.meirengu.cf.controller;
 
+import com.meirengu.cf.model.Item;
 import com.meirengu.cf.model.ItemExtention;
 import com.meirengu.cf.service.ItemExtentionService;
+import com.meirengu.cf.service.ItemService;
 import com.meirengu.common.StatusCode;
 import com.meirengu.controller.BaseController;
 import com.meirengu.model.Page;
@@ -36,6 +38,8 @@ public class ItemExtentionController extends BaseController{
 
     @Autowired
     ItemExtentionService itemExtentionService;
+    @Autowired
+    ItemService itemService;
 
     /**
      * 获取请求列表
@@ -76,7 +80,7 @@ public class ItemExtentionController extends BaseController{
     }
 
     /**
-     * 新增合作伙伴
+     * 新增项目扩展信息
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
@@ -105,6 +109,10 @@ public class ItemExtentionController extends BaseController{
         try {
             int insertNum = itemExtentionService.insert(itemExtention);
             if(insertNum == 1){
+                Item item = new Item();
+                item.setItemId(itemId);
+                item.setLeadInvestorAmount(new BigDecimal(leadInvestorAmount*10000));
+                itemService.update(item);
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.EXTENTION_INSERT_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.EXTENTION_INSERT_ERROR));
@@ -160,6 +168,10 @@ public class ItemExtentionController extends BaseController{
         try {
             int updateNum = itemExtentionService.update(itemExtention);
             if(updateNum == 1){
+                Item item = new Item();
+                item.setItemId(itemId);
+                item.setLeadInvestorAmount(new BigDecimal(leadInvestorAmount*10000));
+                itemService.update(item);
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.EXTENTION_UPDATE_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.EXTENTION_UPDATE_ERROR));
