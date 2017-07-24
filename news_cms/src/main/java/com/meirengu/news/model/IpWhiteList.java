@@ -11,6 +11,8 @@ public class IpWhiteList  extends BaseObject {
 	private Integer id;
 	/** ip */
 	private String ip;
+	/** 描述 */
+	private String description;
 	/** 1 内部  2  合作方 */
 	private Integer type;
 	/** 每个ip对应的开放url， 全部为*，多个以,分割 */
@@ -78,4 +80,11 @@ public class IpWhiteList  extends BaseObject {
 		return updateTime;
 	}
 
-}
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+ }

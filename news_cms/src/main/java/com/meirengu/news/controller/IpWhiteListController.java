@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,14 +32,7 @@ public class IpWhiteListController extends BaseController{
     @Autowired
     IpWhiteListService ipWhiteListService;
 
-    @RequestMapping(value = "list", method = RequestMethod.POST)
-    @ResponseBody
-    public Result getIpWhiteList(){
-        List list = ipWhiteListService.getWhiteList();
-        return setResult(StatusCode.OK, list, StatusCode.codeMsgMap.get(StatusCode.OK));
-    }
-
-    @RequestMapping(value = "setCache", method = RequestMethod.GET)
+    @RequestMapping(value = "cache/set", method = RequestMethod.GET)
     @ResponseBody
     public Result setCache(){
         ipWhiteListService.setCache();
@@ -83,13 +73,14 @@ public class IpWhiteListController extends BaseController{
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public Result insert(@RequestParam(value = "ip", required = false) String ip,
+                         @RequestParam(value = "description", required = false) String description,
                          @RequestParam(value = "type", required = false) Integer type,
                          @RequestParam(value = "url", required = false) String url){
-        IpWhiteList ipWhiteList = setEntity(null, ip, type, url, 1, new Date());
+        IpWhiteList ipWhiteList = setEntity(null, ip, description, type, url, 1, new Date());
         try {
             int insertNum = ipWhiteListService.insert(ipWhiteList);
             if(insertNum == 1){
-                ipWhiteListService.updateWhiteList();
+                ipWhiteListService.setCache();
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(com.meirengu.common.StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.IP_WHITE_INSERT_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.IP_WHITE_INSERT_ERROR));
@@ -104,14 +95,15 @@ public class IpWhiteListController extends BaseController{
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public Result update(@RequestParam(value = "id", required = false) Integer id,
                          @RequestParam(value = "ip", required = false) String ip,
+                         @RequestParam(value = "description", required = false) String description,
                          @RequestParam(value = "type", required = false) Integer type,
                          @RequestParam(value = "url", required = false) String url,
                          @RequestParam(value = "status", required = false) Integer status){
-        IpWhiteList ipWhiteList = setEntity(id, ip, type, url, status, null);
+        IpWhiteList ipWhiteList = setEntity(id, ip, description, type, url, status, null);
         try {
             int insertNum = ipWhiteListService.update(ipWhiteList);
             if(insertNum == 1){
-                ipWhiteListService.updateWhiteList();
+                ipWhiteListService.setCache();
                 return super.setResult(StatusCode.OK, "", StatusCode.codeMsgMap.get(com.meirengu.common.StatusCode.OK));
             }else {
                 return super.setResult(StatusCode.IP_WHITE_UPDATE_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.IP_WHITE_UPDATE_ERROR));
@@ -122,12 +114,20 @@ public class IpWhiteListController extends BaseController{
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public Result detail(@PathVariable(value = "id") Integer id){
+        IpWhiteList ipWhiteList = ipWhiteListService.detail(id);
+        return super.setResult(StatusCode.OK, ipWhiteList, StatusCode.codeMsgMap.get(StatusCode.OK));
+    }
 
-    private IpWhiteList setEntity(Integer id, String ip, Integer type, String url, Integer status, Date createTime){
+
+    private IpWhiteList setEntity(Integer id, String ip, String description, Integer type, String url, Integer status, Date createTime){
 
         IpWhiteList ipWhiteList = new IpWhiteList();
         ipWhiteList.setId(id);
         ipWhiteList.setIp(ip);
+        ipWhiteList.setDescription(description);
         ipWhiteList.setType(type);
         ipWhiteList.setUrl(url);
         ipWhiteList.setStatus(status);

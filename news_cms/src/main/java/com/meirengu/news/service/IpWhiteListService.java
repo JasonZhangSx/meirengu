@@ -12,32 +12,6 @@ import java.util.List;
 public interface IpWhiteListService extends BaseService<IpWhiteList>{
 
     /**
-     * 获取ip白名单
-     * @return
-     */
-    List getWhiteList();
-
-    /**
-     * 更新白名单
-     * @return
-     */
-    List updateWhiteList();
-
-    /**
-     * 新增白名单ip
-     * @param ipWhiteList
-     * @return
-     */
-    boolean insertIp(IpWhiteList ipWhiteList);
-
-    /**
-     * 修改白名单ip
-     * @param ipWhiteList
-     * @return
-     */
-    boolean  updateIp(IpWhiteList ipWhiteList);
-
-    /**
      * 从数据库取出数据放入redis
      */
     void setCache();

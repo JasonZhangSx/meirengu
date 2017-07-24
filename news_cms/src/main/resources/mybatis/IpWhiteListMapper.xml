@@ -14,24 +14,24 @@
 
 	<sql id="table_name">`ip_white_list`</sql>
 	<sql id="select_columns">
-		id as id, ip as ip, type as type, url as url, status as status, create_time as createTime, update_time as updateTime
+		id as id, ip as ip, description, `type`, url as url, status as status, create_time as createTime, update_time as updateTime
 	</sql>
 
 	<insert id="insert" parameterType="ipWhiteList" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO <include refid="table_name" />
-			(id, ip, type, url, status, create_time, update_time)
+			(id, ip, description, `type`, url, status, create_time, update_time)
 		VALUES
-			(#{id}, #{ip}, #{type}, #{url}, #{status}, #{createTime}, #{updateTime})
+			(#{id}, #{ip}, #{description}, #{type}, #{url}, #{status}, #{createTime}, #{updateTime})
 	</insert>
 
 	<update id="update" parameterType="ipWhiteList">
 		UPDATE <include refid="table_name" />
 		<set>
-			<if test="id != null and id != ''">
-				id=#{id},
-			</if>
 			<if test="ip != null and ip != ''">
 				ip=#{ip},
+			</if>
+			<if test="description != null and description != ''">
+				description=#{description},
 			</if>
 			<if test="type != null and type != ''">
 				type=#{type},

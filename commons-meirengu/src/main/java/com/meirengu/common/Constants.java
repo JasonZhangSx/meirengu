@@ -18,4 +18,6 @@ public class Constants {
     public static final int DEL_FLAG_TRUE = 0;
     /** 不删除 **/
     public static final int DEL_FLAG_FALSE = 1;
+    /** redis ip白名单前缀 缓存 */
+    public static final String IP_WHITE_PREFIX = "mrg_white_ip_";
 }
