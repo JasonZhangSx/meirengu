@@ -32,8 +32,12 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <context:component-scan base-package="com.meirengu.rocketmq" />
-
+    <!--<context:component-scan base-package="com.meirengu.rocketmq" />-->
+    <!--modify by maoruxin 20170724 reason:product和concumer不能同时实例化，
+                            consumer中有事件传播，必须在监听器注册以后初始化，而监听器在controller中初始化
+                            product需要注入到service中，所以需要在此文件中配置-->
+    <!--   -->
+    <bean id="producer" class="com.meirengu.rocketmq.Producer"></bean>
     <!-- redis配置 -->
     <context:property-placeholder location="classpath:redis.properties"/>
 
