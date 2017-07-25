@@ -161,6 +161,24 @@ public class RedisClient {
     }
 
     /**
+     * 删除不带前缀的key，跟set，get匹配
+     * @param key
+     * @return
+     */
+    public long removeNoPrefix(String key) {
+        StopWatch watch = new StopWatch();
+        watch.start();
+        ShardedJedis jedis = getShardedJedisPool().getResource();
+        try {
+            return jedis.del(key);
+        } finally {
+            watch.stop();
+            logger.debug("remove:" + key + ":time" + watch.getTotalTimeMillis());
+            getShardedJedisPool().returnResource(jedis);
+        }
+    }
+
+    /**
      * 删除
      * 
      * @param key 缓存KEY

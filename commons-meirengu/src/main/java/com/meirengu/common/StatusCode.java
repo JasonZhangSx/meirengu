@@ -220,6 +220,8 @@ public class StatusCode {
     public static final int VERSION_INSERT_ERROR = 20210;
     public static final int VERSION_UPDATE_ERROR = 20211;
     public static final int VERSION_DELETE_ERROR = 20212;
+    public static final int IP_WHITE_INSERT_ERROR = 20213;
+    public static final int IP_WHITE_UPDATE_ERROR = 20214;
 
     //50251-50300//rebate
     public static final int REBATE_BATCH_ERROR_INSERT = 50251;
@@ -492,6 +494,8 @@ public class StatusCode {
         codeMsgMap.put(StatusCode.VERSION_INSERT_ERROR, "版本信息插入失败");
         codeMsgMap.put(StatusCode.VERSION_UPDATE_ERROR, "版本信息修改失败");
         codeMsgMap.put(StatusCode.VERSION_DELETE_ERROR, "版本信息删除失败");
+        codeMsgMap.put(StatusCode.IP_WHITE_INSERT_ERROR, "IP白名单插入失败");
+        codeMsgMap.put(StatusCode.IP_WHITE_UPDATE_ERROR, "IP白名单修改失败");
 
         //50251-50300//rebate
         codeMsgMap.put(StatusCode.REBATE_BATCH_ERROR_INSERT, "抵扣券批次信息保存失败，请重试");

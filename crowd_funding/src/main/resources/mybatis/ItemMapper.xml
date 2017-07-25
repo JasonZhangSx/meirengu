@@ -153,8 +153,16 @@
 	</update>
 
 	<select id="moreDetail" parameterType="integer" resultType="Map">
-		select <include refid="select_columns" />,  CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
-		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
+		select t.item_id as itemId, t.item_name as itemName, t.item_profile as itemProfile, t.type_id as typeId, t.class_id as classId,
+		t.target_amount as targetAmount, t.appoint_amount+t.lead_investor_amount as appointAmount, t.completed_amount+t.lead_investor_amount as completedAmount,
+		t.preheating_days as preheatingDays, t.preheating_start_time as preheatingStartTime, t.preheating_end_time as preheatingEndTime,
+		t.crowd_days as crowdDays, t.crowd_start_time as crowdStartTime, t.crowd_end_time as crowdEndTime,
+		t.partner_id as partnerId, t.area_id as areaId, t.header_image as headerImage, t.item_status as itemStatus,
+		t.flag as flag, t.item_sort as itemSort, t.create_time as createTime, t.update_time as updateTime,
+		t.operate_account as operateAccount, t.sponsor_name as sponsorName, t.lead_investor_name as leadInvestorName,
+		t.lead_investor_amount as leadInvestorAmount, t.lead_investor_header as leadInvestorHeader,
+		CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
+		(t.completed_amount+t.lead_investor_amount)/t.target_amount as completedPercent, (t.appoint_amount++t.lead_investor_amount)/t.target_amount as appointPercent,
 		t1.type_name as typeName, t2.class_name as className, t3.partner_name as partnerName
 		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`
@@ -172,14 +180,25 @@
 			<if test="appointAmount != null">
 				appoint_amount=appoint_amount+#{appointAmount},
 			</if>
+			<if test="leadInvestorAmount != null">
+				lead_investor_amount=lead_investor_amount+#{leadInvestorAmount},
+			</if>
 		</set>
 		WHERE item_id=#{itemId}
 	</update>
 
 	<!-- 分页相关开始 -->
 	<select id="getByPage" resultType="Map" parameterType="Map">
-		select <include refid="select_columns" />, CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
-		t.completed_amount/t.target_amount as completedPercent, t.appoint_amount/t.target_amount as appointPercent,
+		select t.item_id as itemId, t.item_name as itemName, t.item_profile as itemProfile, t.type_id as typeId, t.class_id as classId,
+		t.target_amount as targetAmount, t.appoint_amount+t.lead_investor_amount as appointAmount, t.completed_amount+t.lead_investor_amount as completedAmount,
+		t.preheating_days as preheatingDays, t.preheating_start_time as preheatingStartTime, t.preheating_end_time as preheatingEndTime,
+		t.crowd_days as crowdDays, t.crowd_start_time as crowdStartTime, t.crowd_end_time as crowdEndTime,
+		t.partner_id as partnerId, t.area_id as areaId, t.header_image as headerImage, t.item_status as itemStatus,
+		t.flag as flag, t.item_sort as itemSort, t.create_time as createTime, t.update_time as updateTime,
+		t.operate_account as operateAccount, t.sponsor_name as sponsorName, t.lead_investor_name as leadInvestorName,
+		t.lead_investor_amount as leadInvestorAmount, t.lead_investor_header as leadInvestorHeader,
+		CASE WHEN TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time)&lt;0 THEN 0 ELSE TIMESTAMPDIFF(DAY,NOW(),t.crowd_end_time) END as leavelDay,
+		(t.completed_amount+t.lead_investor_amount)/t.target_amount as completedPercent, (t.appoint_amount++t.lead_investor_amount)/t.target_amount as appointPercent,
 		t1.type_name as typeName, t2.class_name as className
 		FROM <include refid="table_name" /> t
 		LEFT JOIN `type` t1 ON  t1.`type_id`=t.`type_id`

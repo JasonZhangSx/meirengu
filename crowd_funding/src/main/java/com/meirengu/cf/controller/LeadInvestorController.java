@@ -215,6 +215,7 @@ public class LeadInvestorController extends BaseController{
             if(!StringUtil.isEmpty(itemIds)){
                 Map<String, Object> itemParams = new HashMap<>();
                 itemParams.put("itemId", itemIds);
+                itemParams.put("itemStatus", "10,11,12");
                 List<Map<String, Object>> itemList = itemService.getList(itemParams);
                 returnMap.put("itemList", itemList);
             }else {

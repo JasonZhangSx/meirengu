@@ -243,7 +243,7 @@
     <div style="height:1.5rem"></div>
     <div class="fixed">
         <span>下载美人谷app更多精彩等着你</span>
-        <a href="javascript:openApp()">立即下载</a>
+        <a href="javascript:openApp()" id="openBtn">立即下载</a>
     </div>
 </div>
 
@@ -302,7 +302,7 @@
         var d = new Date();
         var t0 = d.getTime();
         if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
-            location.href = 'https://itunes.apple.com/app/tap-black-to-white/id1226877868';
+            //location.href = 'https://itunes.apple.com/app/tap-black-to-white/id1226877868';
             /*if(navigator.userAgent.indexOf("QQ") != -1){
                 alert("请点击右上角用Safari打开");
                 return;
@@ -310,16 +310,13 @@
             if(navigator.userAgent.indexOf("MicroMessenger") != -1){
                 alert("请点击右上角用Safari打开");
                 return;
-            }
-            */
-            /*location.href = 'meirengu://ios/${itemDetail.itemId}';
+            }*/
+            location.href = 'http://img.api.meirenguvip.com/webview/item/41';
+            //$("#openBtn").attr("href", "http://img.api.meirenguvip.com/webview/item/41");
             setTimeout(function() {
+                $("#openBtn").attr("href", "");
                 location.href = 'https://itunes.apple.com/app/tap-black-to-white/id1226877868';
-            }, 250);
-            setTimeout(function() {
-                location.reload();
-            }, 1000);*/
-
+            }, 500);
         } else if (navigator.userAgent.match(/android/i)) {
             if(jumpToApp('meirengu://android/${itemDetail.itemId}')){
                 //jumpToApp('meirengu://android/${itemDetail.itemId}');

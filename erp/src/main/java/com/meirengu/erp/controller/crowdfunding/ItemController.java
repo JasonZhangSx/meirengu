@@ -8,6 +8,7 @@ import com.meirengu.erp.model.ItemCooperation;
 import com.meirengu.erp.model.ItemLevel;
 import com.meirengu.erp.service.*;
 import com.meirengu.erp.utils.ConfigUtil;
+import com.meirengu.utils.DateAndTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class ItemController extends BaseController {
         int length = input.getLength();
         int page = start / length + 1;
         try {
-            Map<String, Object> map = itemService.getItemListByPage(page, length, true, itemId, itemName, status);
+            Map<String, Object> map = itemService.getItemListByPage(page, length, true, itemId, itemName, status, "1");
             list = (List<Map<String,Object>>) map.get("list");
             totalCount = Integer.parseInt(map.get("totalCount").toString());
         } catch (Exception e) {
@@ -573,6 +574,13 @@ public class ItemController extends BaseController {
 
     }
 
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public Map<String, Object> delete(int id) {
+        Map<String, Object> map = itemService.delete(id);
+        return map;
+    }
+
 
     private Map getCooperateInfo(Integer itemId){
         return itemService.getCooperateInfo(itemId);
@@ -587,6 +595,13 @@ public class ItemController extends BaseController {
         List partnerData = (List) partnerService.query(0,0, false, null);
         List provinceData = addressService.getProvinceList();
         Map item = itemService.itemDetail(itemId);
+        if(item != null){
+            Date preheatingStartTime = (Date) item.get("preheatingStartTime");
+            String s = DateAndTime.convertDateToString(preheatingStartTime, "yyyy-MM-dd HH-mm-ss");
+            item.get("preheatingEndTime");
+            item.get("crowdStartTime");
+            item.get("crowdEndTime");
+        }
         List contentData = itemService.getContentList(itemId, null);
         List levelData = itemService.getLevelList(itemId);
         List recordData = itemService.getOperateRecordList(itemId);

@@ -1,6 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ include file="../common/common.jsp"%>
-<!DOCTYPE html>
 <html>
 <head>
     <base href="<%=basePath %>">
@@ -13,37 +12,41 @@
     <link rel="Shortcut Icon" href=favicon.ico/>
     <meta name=keywords content=xxxxx>
     <meta name=description content=xxxxx>
-    <title>已发布项目列表</title>
+    <title>IP白名单列表</title>
     <style type="text/css">
+        th,td { white-space: nowrap; }
         .table tbody tr td{
             text-align:center;
         }
+        .myloading{position: absolute;left:0;top:0;width:100%;bottom:0;background-color:rgba(0,0,0,0.6);display:flex;justify-content: center;align-items: center;z-index:999999;}
     </style>
 </head>
 <body>
 <section class="Hui-article-box" style="left:0;top:0">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 众筹项目管理 <span class="c-gray en">&gt;</span>已完成项目列表 <a
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> IP白名单管理 <span class="c-gray en">&gt;</span>IP白名单列表 <a
             class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
             href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
 
             <div class="cl pd-5 bg-1 bk-gray mt-20">
-                <%--<span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加版本信息','investor/detail')"
-                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加领投人</a></span>--%>
+                <span class="l"><a class="btn btn-primary radius" onClick="project_edit('添加IP白名单','ip_white/detail')"
+                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加IP白名单</a>
+                &nbsp;&nbsp;
+                <a class="btn btn-primary radius" onClick="updateCache()"
+                                   href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 更新缓存</a></span>
                 <span class="r" style="line-height:30px;">共有数据：<strong><span id="totalCount"></span></strong> 条</span></div>
             <div class="mt-20">
                 <table id="dt" class="table table-border table-bordered table-bg table-hover table-sort">
                     <thead>
                     <tr class="text-c">
                         <th>序号</th>
-                        <th>项目名称</th>
-                        <th>众筹类型</th>
-                        <th>项目分类</th>
-                        <th>众筹金额</th>
-                        <th>预热天数</th>
-                        <th>众筹天数</th>
-                        <th>提交时间</th>
+                        <th>IP</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>开放的URL</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -63,6 +66,10 @@
 
 <script type="text/javascript">
 
+    var classMap = {};
+    $("#acId option").each(function(){
+        classMap[$(this).val()]=$(this).text();
+    });
     var table;
     $(function () {
         var tpl = $("#tpl").html();
@@ -71,7 +78,7 @@
         table = $('#dt').DataTable({
 
             'ajax': {
-                'url': '<%=basePath %>item/query?status=12'
+                'url': '<%=basePath %>ip_white/query'
             },
             "rowCallback": function( row, data, index ) {
                 // 加载总记录数
@@ -83,12 +90,33 @@
             "scrollX": true, //允许水平滚动
             "columns": [
                 {"data": null}, //因为要加行号，所以要多一列，不然会把第一列覆盖
-                {"data": "itemName"},
-                {"data": "className"},
-                {"data": "typeName"},
-                {"data": "targetAmount"},
-                {"data": "preheatingDays"},
-                {"data": "crowdDays"},
+                {"data": "ip"},
+                {"data": "description"},
+                {
+                    "data": "type",
+                    "render": function (data, type, row, meta){
+                        if(data == 1){
+                            return "内部";
+                        }else if(data == 2){
+                            return "合作方";
+                        }else {
+                            return "未知";
+                        }
+                    }
+                },
+                {"data": "url"},
+                {
+                    "data": "status",
+                    "render": function (data, type, row, meta) {
+                        if(data == 1){
+                            return "启用";
+                        }else if(data == 2){
+                            return "禁用";
+                        }else {
+                            return "未知";
+                        }
+                    }
+                },
                 {
                     "data": "createTime",
                     "render": function (data, type, row, meta) {
@@ -99,22 +127,18 @@
             ],
             "columnDefs": [
                 {
-
                     "defaultContent":'',
                     "searchable": false,
                     "orderable": false,
                     "targets": [0.-1]
                 },
                 {
-                    "targets": 8,
+                    "targets": 7,
                     "render": function (data, type, row, meta) {
                         var context =
                         {
                             func: [
-                                {"name": "查看", "fn": "detail(\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "分红", "fn": "project_confirm( this,\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "打款", "fn": "project_confirm1( this,\'" + row.itemId + "\')", "type": "primary"},
-                                {"name": "收款", "fn": "project_confirm2( this,\'" + row.itemId + "\')", "type": "primary"}
+                                {"name": "修改", "fn": "detail(\'" + row.id + "\')", "type": "default"}
                             ]
                         };
                         var html = template(context);
@@ -161,6 +185,14 @@
 
     });
 
+    /**
+     * 检索
+     **/
+    function search(){
+        var acId = $("#acId").val();
+        table.column(3).search(acId).draw();
+    }
+
     function loadTotalCount(){
         var info = table.page.info();
         var totalCount = info.recordsTotal;
@@ -179,69 +211,6 @@
         layer.full(index);
     }
 
-    /*分红*/
-    function project_confirm(obj, id) {
-        layer.confirm('确认进行分红吗？', function (index) {
-            $.ajax({
-                url:"item/dividends",
-                data:{
-                    "itemId":id
-                },
-                success : function(data) {
-                    if(data == "SUCCESS"){
-                        console.log(data);
-                        layer.msg('操作成功!', {icon: 6, time: 1000});
-                    }else{
-                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
-                    }
-                }
-            })
-
-        });
-    }
-
-    /*生成打款*/
-    function project_confirm1(obj, id) {
-        layer.confirm('确认生成打款记录吗？', function (index) {
-            $.ajax({
-                url:"item/sendmoney",
-                data:{
-                    "itemId":id
-                },
-                success : function(data) {
-                    if(data == "SUCCESS"){
-                        console.log(data);
-                        layer.msg('操作成功!', {icon: 6, time: 1000});
-                    }else{
-                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
-                    }
-                }
-            })
-
-        });
-    }
-
-    /*生成待收款记录*/
-    function project_confirm2(obj, id) {
-        layer.confirm('确认生成打款记录吗？', function (index) {
-            $.ajax({
-                url:"item/receivemoney",
-                data:{
-                    "itemId":id
-                },
-                success : function(data) {
-                    if(data == "SUCCESS"){
-                        console.log(data);
-                        layer.msg('操作成功!', {icon: 6, time: 1000});
-                    }else{
-                        layer.msg(data+'请重试！', {icon: 5, time: 1000});
-                    }
-                }
-            })
-
-        });
-    }
-
     /**
      * 跳转到修改页面
      * @param id
@@ -249,13 +218,31 @@
     function detail(id){
         var index = layer.open({
             type: 2,
-            title: "已发布项目详情",
-            content: "item/to_published?itemId="+id
+            title: "IP白名单详情",
+            content: "ip_white/detail?id="+id
         });
         layer.full(index);
+    }
+
+    function updateCache(){
+        $.ajax({
+            url:"ip_white/cache/set",
+            type: "POST",
+            success: function(responseText){
+                var data = responseText;
+                var code = data.code;//200 is success，other is fail
+                if(code == "200"){
+                    layer.msg('缓存更新成功', {icon: 1, time: 1000});
+                    setTimeout(function() {
+                        layer_close();
+                    }, 2000);
+                }else{
+                    layer.msg('错误代码: ' + data.code + ", " + data.msg, {icon: 5, time: 5000});
+                }
+            }
+        });
     }
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>
 </html>
-

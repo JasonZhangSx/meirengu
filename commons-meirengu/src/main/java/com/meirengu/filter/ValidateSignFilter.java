@@ -1,16 +1,19 @@
 package com.meirengu.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.meirengu.common.Constants;
+import com.meirengu.common.RedisClient;
 import com.meirengu.common.StatusCode;
-import com.meirengu.utils.ConfigUtil;
-import com.meirengu.utils.SignParamsUtils;
-import com.meirengu.utils.RequestUtil;
-import com.meirengu.utils.StringUtil;
+import com.meirengu.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +34,10 @@ public class ValidateSignFilter extends OncePerRequestFilter{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidateSignFilter.class);
 
+    RedisClient redisClient;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected synchronized void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         //获取请求的URL
         String requestURL = httpServletRequest.getRequestURI();
@@ -43,33 +48,24 @@ public class ValidateSignFilter extends OncePerRequestFilter{
         LOGGER.info("ip: {}, ip1: {}", ip, ip1);
 
         LOGGER.info("request api filter >> ip: {}, url: {}, params: {}", new Object[]{ip, requestURL, JSON.toJSON(httpServletRequest.getParameterMap())});
-        //内部IP过滤
-        if(ConfigUtil.getConfig("api.filter.ip").contains(ip)){
-            LOGGER.warn(">> IP {} is in white list...",ip);
+        //白名单部分的全部过滤
+        if(requestURL.startsWith(ConfigUtil.getConfig("ip.white.url"))){
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
-        }else if(ConfigUtil.getConfig("api.filter.partner.ip").contains(ip)){ //合作方IP过滤
-            LOGGER.warn(">> IP {} is in our white list of partner...",ip);
-            String openUrlForPartnerStr = ConfigUtil.getConfig("api.filter.partner.url");
-            List<String> openUrlsForPartner = Arrays.asList(openUrlForPartnerStr.split(","));
-            //验证URL是否对合作方开放
-            if(openUrlsForPartner.contains(requestURL)){
-                LOGGER.warn(">> URL {} is in our white list of partner...");
+        }
+
+        String whiteUrl = redisClient.get(Constants.IP_WHITE_PREFIX+ip);
+        if(!StringUtil.isEmpty(whiteUrl)){
+            //*是所有url免验签
+            if("*".equals(whiteUrl)){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+            if(whiteUrl.contains(requestURL)){
                 filterChain.doFilter(httpServletRequest, httpServletResponse);
                 return;
             }
         }
-
-        //验证对外开放的URL
-        String openUrlStr = ConfigUtil.getConfig("api.filter.url");
-        List<String> openUrls = Arrays.asList(openUrlStr.split(","));
-        if(openUrls.contains(requestURL)){
-            LOGGER.warn(">> URL {} is in our white list...");
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-            return;
-        }
-
-
 
         Map<String , Object> map = new HashMap<>();
         map.put("code", StatusCode.SIGN_NOT_VALID);
@@ -173,4 +169,11 @@ public class ValidateSignFilter extends OncePerRequestFilter{
 
     }
 
+    public RedisClient getRedisClient() {
+        return redisClient;
+    }
+
+    public void setRedisClient(RedisClient redisClient) {
+        this.redisClient = redisClient;
+    }
 }
