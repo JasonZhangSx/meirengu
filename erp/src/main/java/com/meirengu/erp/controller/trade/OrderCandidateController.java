@@ -86,7 +86,7 @@ public class OrderCandidateController extends BaseController{
         String url = ConfigUtil.getConfig("order.candidate.handle.url") + "/" + id;
         Map<String, String> params = new HashMap<String, String>();
         params.put("status", status.toString());
-        params.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+        params.put("operate_account", getLoginUser().getUserName());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             int statusCode = hr.getStatusCode();

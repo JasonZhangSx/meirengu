@@ -721,6 +721,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             orderStateList.add(OrderStateEnum.BOOK_ADUIT_PASS.getValue());
             orderStateList.add(OrderStateEnum.UNPAID.getValue());
             orderStateList.add(OrderStateEnum.PAID.getValue());
+            orderStateList.add(OrderStateEnum.REFUND_CONFIRM.getValue());
             map.put("orderStateList", orderStateList);
         }
         //2.查询列表

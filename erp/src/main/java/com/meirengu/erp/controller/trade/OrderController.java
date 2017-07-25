@@ -128,7 +128,7 @@ public class OrderController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("user_message", userMessage);
         params.put("refund_message", refundMessage);
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        String userName = getLoginUser().getUserName();
         params.put("refund_sponsor", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);

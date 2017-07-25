@@ -115,6 +115,14 @@ public class BaseController {
     }
 
     /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    public Account getLoginUser(){
+        return (Account)SecurityUtils.getSubject().getPrincipal();
+    }
+
+    /**
      * 新增操作日志，在业务方法成功后添加(避免事务问题)
      * @param businessName  业务模块名称
      * @param operationType  OperationTypeEnum
@@ -122,7 +130,7 @@ public class BaseController {
      * @param detailStr     修改的内容，格式为column_name|column_old_value|column_new_value，多个字段已逗号相隔
      */
     public void addLogOperation(String businessName, Integer operationType, String primaryKey, String detailStr){
-        Account account = (Account)SecurityUtils.getSubject().getSession().getAttribute("sessionUser");
+        Account account = getLoginUser();
         logOperationService.addLogOperation(businessName,operationType,primaryKey,account.getId(),account.getUserName(),detailStr);
     }
 }
