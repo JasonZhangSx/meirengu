@@ -3,6 +3,7 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -76,7 +77,7 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "end_time")String endTime){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("end_time",endTime+"");
             paramsMap.put("start_time",startTime+"");
             paramsMap.put("activity_link",activityLink);
@@ -167,7 +168,7 @@ public class ActivityController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("activity_id",activityId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(!StringUtil.isEmpty(endTime)){
                 paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,"yyyy-MM-dd HH:mm:ss"));
             }if(!StringUtil.isEmpty(startTime)){

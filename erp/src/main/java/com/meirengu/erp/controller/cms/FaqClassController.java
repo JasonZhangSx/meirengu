@@ -3,6 +3,7 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -58,7 +59,7 @@ public class FaqClassController extends BaseController{
     public Result insert(@RequestParam(value = "class_name")String className){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("class_name",className);
             String url = ConfigUtil.getConfig("news.faqclass.insert");
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, paramsMap);
@@ -128,7 +129,7 @@ public class FaqClassController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(status!=null){
                 paramsMap.put("status",status);
             }
@@ -149,7 +150,7 @@ public class FaqClassController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(className!=null){
                 paramsMap.put("class_name",className);
             }

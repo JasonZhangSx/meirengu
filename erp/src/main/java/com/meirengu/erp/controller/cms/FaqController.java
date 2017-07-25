@@ -3,6 +3,7 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -78,7 +79,7 @@ public class FaqController extends BaseController{
                          @RequestParam(value = "faq_answer")String faqAnswer){
         try {
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("class_id",classId);
             paramsMap.put("class_name",className);
             paramsMap.put("faq_question",faqQuestion);
@@ -151,7 +152,7 @@ public class FaqController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("faq_id",faqId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(status!=null){
                 paramsMap.put("status",status);
             }
