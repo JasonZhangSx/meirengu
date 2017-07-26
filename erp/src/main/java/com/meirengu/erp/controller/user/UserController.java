@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.model.User;
 import com.meirengu.erp.utils.ConfigUtil;
@@ -57,6 +58,9 @@ public class UserController extends BaseController{
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
                                     @RequestParam(value="is_auth", required = false ,defaultValue = "") String isAuth){
+
+        addLogOperation("用户信息查看", OperationTypeEnum.SELECT.getIndex(),phone,"");
+
         Map<String, Object> map = new HashMap<>();
         //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
@@ -112,6 +116,9 @@ public class UserController extends BaseController{
                                   @RequestParam(value = "is_allow_talk", required = false) String isAllowTalk) {
         logger.info("UserController updateUserState userId :{} state :{} isAuth :{} ,isBuy :{} ,isAllowInform :{} ,isAllowTalk :{} ",
                 userId,state,isAuth,isBuy,isAllowInform,isAllowTalk);
+        addLogOperation("用户权限信息修改", OperationTypeEnum.UPDATE.getIndex(),userId,"" +
+                "state||"+state+",isAuth||"+isAuth+",isBuy||"+isBuy+",isAllowInform||"+isAllowInform+",isAllowTalk||"+isAllowTalk+"");
+
         try {
             Map<String,String> paramsMap = new HashedMap();
             paramsMap.put("user_id",userId);
@@ -147,6 +154,8 @@ public class UserController extends BaseController{
      */
     @RequestMapping("detail")
     public ModelAndView userDetail( @RequestParam(value="phone", required = true) String phone){
+        addLogOperation("用户详情信息", OperationTypeEnum.SELECT.getIndex(),phone,"");
+
         Map<String, Object> map = new HashMap<>();
         String urlForGetUser = ConfigUtil.getConfig("user.list");
         String urlForGetUserAddress = ConfigUtil.getConfig("user.address.list");
@@ -177,6 +186,7 @@ public class UserController extends BaseController{
 
     @RequestMapping(value="/export", method= RequestMethod.GET)
     public ModelAndView userExport(HttpServletResponse response){
+        addLogOperation("用户信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
 
         try {
             Map<String,String> paramsMap = new HashedMap();

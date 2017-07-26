@@ -179,7 +179,7 @@ public class RebateBatchController extends BaseController{
         params.put("budget_amount", budgetAmount.toString());
         params.put("channel", channel);
         params.put("remarks", remarks);
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        String userName = getLoginUser().getUserName();
         params.put("operate_account", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);

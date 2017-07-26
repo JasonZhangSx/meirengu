@@ -107,7 +107,7 @@ public class RefundController extends BaseController{
         params.put("order_id", orderId.toString());
         params.put("refund_state", refundState.toString());
         params.put("admin_message", adminMessage);
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        String userName = getLoginUser().getUserName();
         params.put("operate_account", userName);
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);

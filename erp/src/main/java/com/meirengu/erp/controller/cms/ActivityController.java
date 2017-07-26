@@ -3,6 +3,8 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -75,8 +77,13 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "start_time")String startTime,
                          @RequestParam(value = "end_time")String endTime){
         try {
+            addLogOperation("活动信息新增", OperationTypeEnum.INSERT.getIndex(),"","" +
+                    "activityType||"+activityType+",activityName||"+activityName+",activityImage||"+activityImage+",activityLink||"+activityLink+"" +
+                    ",activitySort||"+activitySort+",remarks||"+remarks+",status||"+status+",startTime||"+startTime+",endTime||"+endTime+"");
+
+
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("end_time",endTime+"");
             paramsMap.put("start_time",startTime+"");
             paramsMap.put("activity_link",activityLink);
@@ -122,6 +129,7 @@ public class ActivityController extends BaseController{
                                  @RequestParam(value="status", required = false ,defaultValue = "") String status,
                                  @RequestParam(value="activity_type", required = false ,defaultValue = "") String activityType,
                                  @RequestParam(value="activity_name", required = false ,defaultValue = "") String activityName){
+        addLogOperation("活动信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
@@ -166,8 +174,12 @@ public class ActivityController extends BaseController{
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
+            addLogOperation("活动信息修改", OperationTypeEnum.UPDATE.getIndex(),activityId,"" +
+                    "activityType||"+activityType+",activityName||"+activityName+",activityImage||"+activityImage+",activityLink||"+activityLink+"" +
+                    ",activitySort||"+activitySort+",remarks||"+remarks+",status||"+status+",startTime||"+startTime+",endTime||"+endTime+"");
+
             paramsMap.put("activity_id",activityId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(!StringUtil.isEmpty(endTime)){
                 paramsMap.put("end_time", DateAndTime.convertDateToString(endTime,"yyyy-MM-dd HH:mm:ss"));
             }if(!StringUtil.isEmpty(startTime)){

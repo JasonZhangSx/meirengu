@@ -3,6 +3,8 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -77,8 +79,11 @@ public class FaqController extends BaseController{
                          @RequestParam(value = "faq_question")String faqQuestion,
                          @RequestParam(value = "faq_answer")String faqAnswer){
         try {
+            addLogOperation("常见问题新增", OperationTypeEnum.INSERT.getIndex(),classId,"classId||"+classId+",className||"+className+"" +
+                    ",faqQuestion||"+faqQuestion+",faqAnswer||"+faqAnswer+"");
+
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("class_id",classId);
             paramsMap.put("class_name",className);
             paramsMap.put("faq_question",faqQuestion);
@@ -114,6 +119,8 @@ public class FaqController extends BaseController{
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         try {
+            addLogOperation("常见问题查看", OperationTypeEnum.SELECT.getIndex(),"","");
+
             Map<String, Object> map = new HashMap<>();
             String url = ConfigUtil.getConfig("news.faq.list");
             //查询参数
@@ -146,12 +153,13 @@ public class FaqController extends BaseController{
     @ResponseBody
     public Map update( @RequestParam(value="faq_id", required = true ) String faqId,
                        @RequestParam(value = "status" , required = false)String status){
+        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),faqId,"status||"+status+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("faq_id",faqId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(status!=null){
                 paramsMap.put("status",status);
             }
@@ -170,8 +178,10 @@ public class FaqController extends BaseController{
                              @RequestParam(value = "faq_id")String faqId,
                              @RequestParam(value = "faq_question")String faqQuestion,
                              @RequestParam(value = "faq_answer")String faqAnswer){
-
         try {
+        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+",faqId||"+faqId+"" +
+                ",faqQuestion||"+faqQuestion+",faqAnswer||"+faqAnswer+"");
+
             Map<String,Object> map = new HashedMap();
             Map<String,String> paramsMap = new HashedMap();
             paramsMap.put("faq_id",faqId);

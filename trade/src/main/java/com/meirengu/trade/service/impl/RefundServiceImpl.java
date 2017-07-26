@@ -201,6 +201,30 @@ public class RefundServiceImpl extends BaseServiceImpl<Refund> implements Refund
             updateRefund.setConfirmTime(new Date());
             update(updateRefund);
         }
-        return result;
+        //退款修改项目信息
+        //查询该订单记录
+        Order orderDetail = orderService.detail(refund.getOrderId());
+        Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("item_id", orderDetail.getItemId().toString());
+        paramMap.put("level_id", orderDetail.getItemLevelId().toString());
+        paramMap.put("level_amount", orderDetail.getItemLevelAmount().toString());
+        paramMap.put("item_num", orderDetail.getItemNum().toString());
+        paramMap.put("total_amount", orderDetail.getOrderAmount().toString());
+        String url = ConfigUtil.getConfig("item.refund.rollback.url");
+        HttpUtil.HttpResult httpResult = HttpUtil.doPostForm(url, paramMap);
+        logger.debug("Request: {} getResponse: {}", url, httpResult);
+        if (httpResult.getStatusCode() == HttpStatus.SC_OK) {
+            JSONObject resultJson = JSON.parseObject(httpResult.getContent());
+            int code = resultJson.getIntValue("code");
+            if (code == StatusCode.OK) {
+                return result;
+            } else {
+                logger.error("businesscode: {}--msg: {}" , code, StatusCode.codeMsgMap.get(code));
+                throw new OrderException("请求项目服务异常 -- StatusCode: " + code, code);
+            }
+        } else {
+            logger.error("httpcode: {}--httpcontent: {}" , httpResult.getStatusCode(), httpResult.getContent());
+            throw new OrderException("请求项目服务异常 -- httpCode: " + httpResult.getStatusCode(), httpResult.getStatusCode());
+        }
     }
 }
