@@ -11,7 +11,9 @@ public enum OperationTypeEnum {
 
     UPDATE(3),
 
-    SELECT(4);
+    SELECT(4),
+
+    EXPORT(5);
 
     private int index;
 
