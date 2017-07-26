@@ -21,8 +21,8 @@
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
-                邀请人 ：<input type="text" id="realname" class="input-text" style="width:120px;">　
-                被邀请人 ：<input type="text" id="invite_realname" class="input-text" style="width:120px;">　
+                邀请人 ：<input type="text" id="phone" class="input-text" style="width:120px;">　
+                被邀请人 ：<input type="text" id="invite_phone" class="input-text" style="width:120px;">　
                 身份证号 ：<input type="text" id="invite_idcard" class="input-text" style="width:120px;">　
                 认证条件 ：
                 <span class="select-box mr-20" style="width:120px">

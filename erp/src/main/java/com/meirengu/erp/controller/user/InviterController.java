@@ -1,6 +1,7 @@
 package com.meirengu.erp.controller.user;
 
 import com.meirengu.common.DatatablesViewPage;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.utils.ExportExcel;
@@ -38,26 +39,22 @@ public class InviterController extends BaseController{
 
     /**
      * 分页查看邀请人信息数据
-     * @param request
-     * @param inviteRealname
-     * @param realname
-     * @param inviteIdcard
-     * @return
      */
     @RequestMapping(value="/list", method= RequestMethod.GET)
     @ResponseBody
     public DatatablesViewPage<Map<String,Object>> datatablesTest(HttpServletRequest request,
-                                 @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
-                                 @RequestParam(value="invite_realname", required = false ,defaultValue = "") String inviteRealname,
+                                 @RequestParam(value="phone", required = false ,defaultValue = "") String phone,
+                                 @RequestParam(value="invite_phone", required = false ,defaultValue = "") String invitePhone,
                                  @RequestParam(value="invite_idcard", required = false ,defaultValue = "") String inviteIdcard,
                                  @RequestParam(value="invest_conditions", required = false ,defaultValue = "") String investConditions){
+        addLogOperation("邀请关系信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
 
         Map<String,String> paramsMap = new HashedMap();
         Map<String, Object> map = new HashMap<>();
         String url = ConfigUtil.getConfig("user.inviter.list");
         //查询参数
-        paramsMap.put("realname",realname);
-        paramsMap.put("invite_realname",inviteRealname);
+        paramsMap.put("phone",phone);
+        paramsMap.put("invite_phone",invitePhone);
         paramsMap.put("invite_idcard",inviteIdcard);
         paramsMap.put("invest_conditions",investConditions);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
@@ -90,6 +87,8 @@ public class InviterController extends BaseController{
     public ModelAndView inviterExport(HttpServletResponse response){
 
         try {
+            addLogOperation("邀请关系信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
+
             Map<String,String> paramsMap = new HashedMap();
             Map<String, Object> map = new HashMap<>();
             String url = ConfigUtil.getConfig("user.inviter.list");

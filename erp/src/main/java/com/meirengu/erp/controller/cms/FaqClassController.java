@@ -3,6 +3,8 @@ package com.meirengu.erp.controller.cms;
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.DatatablesViewPage;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
+import com.meirengu.commons.authority.model.Account;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.model.Result;
@@ -57,8 +59,10 @@ public class FaqClassController extends BaseController{
     @ResponseBody
     public Result insert(@RequestParam(value = "class_name")String className){
         try {
+            addLogOperation("常见问题分类新增", OperationTypeEnum.INSERT.getIndex(),"","className||"+className+"");
+
             Map<String,String> paramsMap = new HashMap<String,String>();
-            paramsMap.put("operate_account", SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             paramsMap.put("class_name",className);
             String url = ConfigUtil.getConfig("news.faqclass.insert");
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, paramsMap);
@@ -91,6 +95,8 @@ public class FaqClassController extends BaseController{
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         try {
+            addLogOperation("常见问题分类查看", OperationTypeEnum.SELECT.getIndex(),"","");
+
             Map<String, Object> map = new HashMap<>();
             String url = ConfigUtil.getConfig("news.faqclass.list");
             //查询参数
@@ -123,12 +129,13 @@ public class FaqClassController extends BaseController{
     @ResponseBody
     public Map update( @RequestParam(value="class_id", required = true ) String classId,
                        @RequestParam(value = "status" , required = false)String status){
+        addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"status||"+status+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(status!=null){
                 paramsMap.put("status",status);
             }
@@ -144,12 +151,13 @@ public class FaqClassController extends BaseController{
     @ResponseBody
     public Result edit( @RequestParam(value="class_id", required = true ) String classId,
                        @RequestParam(value = "class_name" , required = false)String className){
+        addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
             paramsMap.put("class_id",classId);
-            paramsMap.put("operate_account",SecurityUtils.getSubject().getPrincipal().toString());
+            paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
             if(className!=null){
                 paramsMap.put("class_name",className);
             }
