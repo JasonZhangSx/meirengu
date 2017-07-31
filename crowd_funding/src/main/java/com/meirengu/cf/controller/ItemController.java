@@ -461,6 +461,33 @@ public class ItemController extends BaseController {
         }
     }
 
+    /**
+     * 退款项目已筹金额和预约金额回滚，档位预约份数和已筹份数回滚，档位状态改变
+     * @param itemId
+     * @param levelId
+     * @param levelAmount
+     * @param itemNum
+     * @param totalAmount
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "refund", method = RequestMethod.POST)
+    public Result refund(@RequestParam(value = "item_id", required = false) Integer itemId,
+                         @RequestParam(value = "level_id", required = false) Integer levelId,
+                         @RequestParam(value = "level_amount", required = false) BigDecimal levelAmount,
+                         @RequestParam(value = "item_num", required = false) Integer itemNum,
+                         @RequestParam(value = "total_amount", required = false) BigDecimal totalAmount){
+
+        try {
+            int code = itemService.refund(itemId, levelAmount, levelId, itemNum, totalAmount);
+            return super.setResult(code, null, StatusCode.codeMsgMap.get(code));
+        }catch (Exception e){
+            LOGGER.error(">>ItemController.refund throw exception: {}", e);
+            return super.setResult(StatusCode.INTERNAL_SERVER_ERROR, "", StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
 
     /**
      * 初审

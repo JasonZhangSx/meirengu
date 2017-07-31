@@ -28,7 +28,32 @@ public class Test {
         String dat = DateAndTime.dateFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
 
         System.out.println(DateAndTime.convertStringToDate(DateAndTime.dateAdd("dd", dat, 3)));*/
-        System.out.println(Math.ceil(3.54343));
-        System.out.println(Math.round(3.1 - 0.5));
+        /*System.out.println(Math.ceil(3.54343));
+        System.out.println(Math.round(3.1 - 0.5));*/
+
+        /*String curIP = "192.168.0.135";
+        String fromIP = "192.168.0.1";
+        String toIP = "192.168.0.255";
+
+        String curSeg[] = curIP.split("\\.", -1);
+        String fromSeg[] = fromIP.split("\\.", -1);
+        String toSeg[] = toIP.split("\\.", -1);
+
+        int iCurIP = 0;
+        int iFromIP = 0;
+        int iToIP = 0;
+
+        //turn ip to int
+        for(int i=0; i<curSeg.length; i++) {
+
+            iCurIP = iCurIP << 8 | Integer.parseInt(curSeg[i]);
+            iFromIP = iFromIP << 8 | Integer.parseInt(fromSeg[i]);
+            iToIP = iToIP << 8 | Integer.parseInt(toSeg[i]);
+        }
+
+
+        System.out.println(iCurIP>=iFromIP && iCurIP<=iToIP);*/
+
+        System.out.println(~2);
     }
 }
