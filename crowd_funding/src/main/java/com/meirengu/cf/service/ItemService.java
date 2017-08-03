@@ -41,6 +41,17 @@ public interface ItemService extends BaseService<Item>{
      */
     int appointRollback(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer itemNum, BigDecimal appointAmount);
 
+    /**
+     * 退款-减已筹金额和份数、预约金额和份数
+     * @param itemId
+     * @param levelAmount
+     * @param levelId
+     * @param levelNum
+     * @param totalAmount
+     * @return
+     */
+    int refund(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer levelNum, BigDecimal totalAmount);
+
     Map<String, Object> moreDetail(int id);
 
     /**

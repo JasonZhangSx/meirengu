@@ -333,6 +333,103 @@ public class ItemServiceImpl extends BaseServiceImpl<Item> implements ItemServic
     }
 
     @Override
+    public int refund(Integer itemId, BigDecimal levelAmount, Integer levelId, Integer levelNum, BigDecimal
+            refundAmount) {
+        try {
+            BigDecimal totalAmount = levelAmount.multiply(new BigDecimal(levelNum)); //levelAmount x itemNum
+            //计算一下传过来的总金额与单价*数量是否相同
+            int compareToReturnNum = totalAmount.compareTo(refundAmount);
+
+            if(compareToReturnNum != 0){
+                LOGGER.warn(">>ItemServiceImpl.refund totalAmount does not equal levelAmount x itemNum... totalAmount: {}, levelAmount: {}, itemNum: {}",
+                        new Object[]{totalAmount, levelAmount, levelNum});
+                return StatusCode.ITEM_LEVEL_TOTAL_AMOUNT_ERROR;
+            }
+
+            //查询项目信息
+            Item item = itemDao.detail(itemId);
+
+            //查询档位信息
+            ItemLevel il = itemLevelService.detail(levelId);
+            if(il == null){
+                LOGGER.warn(">>ItemServiceImpl.refund the level does not exit.... id : ", levelId);
+                return StatusCode.ITEM_LEVEL_NULL;
+            }
+            int levelStatus = il.getLevelStatus();
+            int totalNumber = il.getTotalNumber();
+
+            BigDecimal levelAmount1 = il.getLevelAmount();
+            if(levelAmount.compareTo(levelAmount1) != 0){
+                LOGGER.warn(">>ItemServiceImpl.refund two level amount does not equal... param amount is {}, query amount is {}",
+                        new Object[]{levelAmount, levelAmount1});
+                return StatusCode.ITEM_LEVEL_AMOUNT_NOT_MATCH;
+            }
+
+            int completedNumber = il.getCompletedNumber();
+            int currentNumber = completedNumber - levelNum;
+            //比较已完成的数量和要回滚的数量
+            if(currentNumber < 0){
+                LOGGER.warn(">>ItemServiceImpl.refund two level amount does not equal... param itemNum is {}, completedNumber is {}", new Object[]{levelNum, completedNumber});
+                return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
+            }
+            int appointNumber = il.getBookNumber();
+            int aCurrentNumber = appointNumber - levelNum;
+            //比较已预约的数量和要回滚的数量
+            if(aCurrentNumber < 0){
+                LOGGER.warn(">>ItemServiceImpl.refund two level amount does not equal... param itemNum is {}, appointNumber is {}", new Object[]{levelNum, appointNumber});
+                return StatusCode.LEVEL_ROLLBACK_OUT_NUMBER;
+            }
+
+            //已筹金额和预约金额回滚,项目状态不用改变
+            Item itemParams = new Item();
+            itemParams.setItemId(itemId);
+            itemParams.setCompletedAmount(totalAmount.multiply(new BigDecimal(-1)));
+            itemParams.setAppointAmount(totalAmount.multiply(new BigDecimal(-1)));
+            int i = itemDao.changeAmount(itemParams);
+            if(i != 1){
+                LOGGER.warn(">> update amount fail....");
+                throw new BusinessException("update amount fail....");
+            }
+
+            int itemStatus = item.getItemStatus();
+            //档位已筹数量和预约数量回滚，以及档位状态的变化（项目状态是档位状态的前提）
+            ItemLevel levelParam = new ItemLevel();
+
+            levelParam.setLevelId(levelId);
+            levelParam.setCompletedNumber(currentNumber);
+            levelParam.setBookNumber(aCurrentNumber);
+            //预热状态时
+            if(itemStatus == Constants.ITEM_PERHEARTING){
+                if(totalNumber > aCurrentNumber){
+                    levelParam.setLevelStatus(Constants.LEVEL_APPOINTING);
+                }else{
+                    levelParam.setLevelStatus(Constants.LEVEL_CANDIDITING);
+                }
+            }else if(itemStatus == Constants.ITEM_CROWDING){ //认筹状态时
+                if(totalNumber > currentNumber){
+                    levelParam.setLevelStatus(Constants.LEVEL_CROWDING);
+                }else{
+                    levelParam.setLevelStatus(Constants.LEVEL_COMPLETED);
+                }
+            }else if(itemStatus == Constants.ITEM_COMPLETED){ //完成状态时
+
+            }
+
+            int j = itemLevelService.updateNumber(levelParam);
+            if(j != 1){
+                LOGGER.warn(">>ItemServiceImpl.refund update number fail....");
+                throw new BusinessException("update number fail....");
+            }
+
+            return StatusCode.OK;
+        }catch (Exception e){
+            String errorMsg = ">>ItemServiceImpl.refund change amount throw exception: {}";
+            LOGGER.error(errorMsg, e);
+            throw new BusinessException(errorMsg, e);
+        }
+    }
+
+    @Override
     public Map<String, Object> moreDetail(int id) {
         return itemDao.moreDetail(id);
     }

@@ -79,8 +79,7 @@ public class FaqController extends BaseController{
                          @RequestParam(value = "faq_question")String faqQuestion,
                          @RequestParam(value = "faq_answer")String faqAnswer){
         try {
-            addLogOperation("常见问题新增", OperationTypeEnum.INSERT.getIndex(),classId,"classId||"+classId+",className||"+className+"" +
-                    ",faqQuestion||"+faqQuestion+",faqAnswer||"+faqAnswer+"");
+            addLogOperation("常见问题新增", OperationTypeEnum.INSERT.getIndex(),classId,"classId||"+classId+",className||"+className+"");
 
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
@@ -179,8 +178,7 @@ public class FaqController extends BaseController{
                              @RequestParam(value = "faq_question")String faqQuestion,
                              @RequestParam(value = "faq_answer")String faqAnswer){
         try {
-        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+",faqId||"+faqId+"" +
-                ",faqQuestion||"+faqQuestion+",faqAnswer||"+faqAnswer+"");
+        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
 
             Map<String,Object> map = new HashedMap();
             Map<String,String> paramsMap = new HashedMap();
