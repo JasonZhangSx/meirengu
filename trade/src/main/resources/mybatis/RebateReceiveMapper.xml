@@ -161,4 +161,26 @@
 		<include refid="findPage_where"/>
 	</select>
 	<!-- 分页相关结束 -->
+	<!-- 优惠券失效 -->
+	<update id="invalidRebate">
+		UPDATE rebate_receive
+		SET `status` = 3
+		WHERE
+			id IN (
+				SELECT
+					tempR.id
+				FROM
+					(
+						SELECT
+						rr.id
+						FROM
+						rebate_receive rr,
+						rebate r
+						WHERE
+						rr.rebate_sn = r.rebate_sn
+						AND rr.`status` = 1
+						AND r.valid_end_time &lt; CURDATE()
+					) AS tempR
+			);
+	</update>
 </mapper>

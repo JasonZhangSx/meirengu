@@ -346,4 +346,11 @@ public class RebateReceiveServiceImpl extends BaseServiceImpl<RebateReceive> imp
         return rebateReceiveDao.getCount(map);
     }
 
+    /**
+     * 优惠券失效
+     */
+    public void invalidRebate(){
+        rebateReceiveDao.invalidRebate();
+    }
+
 }

@@ -2,6 +2,7 @@ package com.meirengu.erp.controller.cms;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
@@ -99,6 +100,8 @@ public class FeedbackController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("意见反馈处理", OperationTypeEnum.UPDATE.getIndex(),feedbackId.toString(),"status|0|1");
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));

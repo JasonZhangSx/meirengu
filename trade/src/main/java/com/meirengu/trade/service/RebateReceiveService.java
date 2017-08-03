@@ -56,4 +56,9 @@ public interface RebateReceiveService extends BaseService<RebateReceive>{
      * @return
      */
     Integer getCount(Map map);
+
+    /**
+     * 优惠券失效
+     */
+    void invalidRebate();
 }

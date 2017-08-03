@@ -975,6 +975,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             paramJson.put("invited_user_phone",map.get("userPhone"));
             paramJson.put("invest_time",map.get("finishedTime"));
             sendUserEditInviter(paramJson.toJSONString(), order.getOrderSn());
+            //项目类型
+            int itemType = Integer.parseInt(order.getOrderSn().substring(2,3));
+            if (itemType == 2) {
+                JSONObject paramJson1 = new JSONObject();
+                paramJson.put("item_id",map.get("itemId"));
+                paramJson.put("level_id",map.get("itemLevelId"));
+                paramJson.put("user_id",map.get("userId"));
+                paramJson.put("order_id",map.get("orderId"));
+                paramJson.put("type",itemType);
+                sendUserCreateContract(paramJson1.toJSONString(), order.getOrderSn());
+            }
         }
     }
     /**
@@ -1105,6 +1116,30 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     }
 
     /**
+     * 发送消息：72小时后通知用户系统合同生成
+     * @param paramStr
+     */
+    private void sendUserCreateContract(String paramStr, String orderSn){
+        String key = "UCC" + orderSn;
+        Message msg = new Message("zyguser", "createContract", key, paramStr.getBytes());
+        msg.setDelayTimeLevel(21);
+        SendResult sendResult = null;
+        try {
+            sendResult = producer.getDefaultMQProducer().send(msg);
+            logger.info("sendResult: {}, key: {}", sendResult, key);
+        } catch (Exception e) {
+            logger.error("发送消息异常：{}", e);
+            e.printStackTrace();
+        }
+
+        // 当消息发送失败时如何处理
+        if (sendResult == null || sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // TODO
+            logger.error("发送消息失败 sendResult: {}, key: {} ", sendResult, key);
+        }
+    }
+
+    /**
      * 生成的订单号放入rocketmq延迟队列，72小时内未支付则订单失效
      * @param orderSn
      */
@@ -1158,7 +1193,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      * 订单失效
      * @return
      */
-    public void orderLoseEfficacy(String orderSn) throws IOException {
+    public void orderLoseEfficacy(String orderSn, int... type) throws IOException {
         //订单在24小时内未支付，置失效
         Map<String, Object> orderMap = orderDao.orderDetailBySn(orderSn);
         Map<String, String> params = null;
@@ -1184,6 +1219,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
                 HttpResult httpResult = HttpUtil.doPostForm(url, params);
                 logger.debug("Request: {} getResponse: {}", url, httpResult);
 
+                if (type.length>0 && type[0]==2) {
+                    return;
+                }
                 // 发送短信提醒用户
                 // 1790354=【美人谷】亲，您的#item_name#项目订单由于超时未支付，订单已关闭了。您可以登录APP重新认购。感谢你支持#item_name#项目。
                 params = new HashMap<String, String>();

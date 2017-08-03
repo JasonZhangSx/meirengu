@@ -176,6 +176,20 @@ public class RebateReceiveController extends BaseController{
         return setResult(StatusCode.OK, url, StatusCode.codeMsgMap.get(StatusCode.OK));
     }
 
+    /**
+     * 优惠券失效
+     */
+    @RequestMapping(value = "/invalid_rebate", method = RequestMethod.POST)
+    public Result invalidRebate(){
+        try{
+            rebateReceiveService.invalidRebate();
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

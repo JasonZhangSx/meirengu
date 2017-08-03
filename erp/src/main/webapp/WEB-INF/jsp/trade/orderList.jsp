@@ -240,7 +240,6 @@
                     "targets": 18,
                     "render": function (data, type, row, meta) {
                         var context;
-                        var flag = false;
                         //如果已支付大于72小时，不显示申请退款按钮
                         var orderState = row.orderState;
                         if (orderState == 6) {
@@ -248,15 +247,21 @@
                             var cuttentTimeMills = new Date().getTime();
                             var time_different = cuttentTimeMills - finishedTime;
                             if (time_different < 1000*60*60*72) {
-                                flag = true;
+                                context =
+                                    {
+                                        func: [
+                                            {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"},
+                                            {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"}
+                                        ]
+                                    };
                             }
-                        }
-                        if (flag) {
+                        //未支付状态可以取消订单
+                        } else if (orderState == 4) {
                             context =
                                 {
                                     func: [
                                         {"name": "查看", "fn": "show(\'" + row.orderId + "\')", "type": "default"},
-                                        {"name": "申请退款", "fn": "edit(\'" + row.orderId + "\')", "type": "primary"}
+                                        {"name": "订单失效", "fn": "invalid(\'" + row.orderSn + "\')", "type": "primary"}
                                     ]
                                 };
                         } else {
@@ -385,6 +390,48 @@
                 $("#refundMessage").val("");
             }
         });
+    }
+    /**
+     * 订单啊置失效
+     **/
+    function invalid(orderSn) {
+        layer.confirm('是否置该订单为失效状态？', {
+                btn: ['失效','取消'],
+                shade: false,
+                closeBtn: 0
+            },
+            //order_state 通过是2，不通过是3
+            function () {
+                if (orderLossEfficacy(orderSn)) {
+                    layer.msg('已失效', {icon: 6, time: 1000});
+                    table.ajax.reload();
+                } else {
+                    layer.msg('错误代码: ' + $("#errcode").val() + ", " + $("#errmsg").val(), {icon: 6, time: 5000});
+                }
+            });
+    }
+
+    function orderLossEfficacy(orderSn) {
+        var url = "<%=basePath %>order/orderLossEfficacy/"+orderSn;
+        var flag=false;
+        $.ajax({
+            type: "post",
+            url: url,
+            cache:false,
+            async:false,
+            dataType:"json",
+            success: function(data){
+                var code = data.code;//200是成功，其他是失败
+                if(code=="200"){
+                    flag=true;
+                }else{
+                    $("#errcode").val(data.code);
+                    $("#errmsg").val(data.msg);
+                    flag=false;
+                }
+            }
+        });
+        return flag;
     }
     /*查看*/
     function show(id) {
