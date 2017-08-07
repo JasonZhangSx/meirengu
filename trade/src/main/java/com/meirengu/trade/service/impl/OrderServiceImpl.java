@@ -979,11 +979,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
             int itemType = Integer.parseInt(order.getOrderSn().substring(2,3));
             if (itemType == 2) {
                 JSONObject paramJson1 = new JSONObject();
-                paramJson.put("item_id",map.get("itemId"));
-                paramJson.put("level_id",map.get("itemLevelId"));
-                paramJson.put("user_id",map.get("userId"));
-                paramJson.put("order_id",map.get("orderId"));
-                paramJson.put("type",itemType);
+                paramJson1.put("item_id",map.get("itemId"));
+                paramJson1.put("level_id",map.get("itemLevelId"));
+                paramJson1.put("user_id",map.get("userId"));
+                paramJson1.put("order_id",map.get("orderId"));
+                paramJson1.put("type",itemType);
                 sendUserCreateContract(paramJson1.toJSONString(), order.getOrderSn());
             }
         }
@@ -1121,7 +1121,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
      */
     private void sendUserCreateContract(String paramStr, String orderSn){
         String key = "UCC" + orderSn;
-        Message msg = new Message("zyguser", "createContract", key, paramStr.getBytes());
+        Message msg = new Message("user", "createContract", key, paramStr.getBytes());
         msg.setDelayTimeLevel(21);
         SendResult sendResult = null;
         try {
