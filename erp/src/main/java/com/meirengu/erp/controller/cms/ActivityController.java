@@ -78,8 +78,7 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "end_time")String endTime){
         try {
             addLogOperation("活动信息新增", OperationTypeEnum.INSERT.getIndex(),"","" +
-                    "activityType||"+activityType+",activityName||"+activityName+",activityImage||"+activityImage+",activityLink||"+activityLink+"" +
-                    ",activitySort||"+activitySort+",remarks||"+remarks+",status||"+status+",startTime||"+startTime+",endTime||"+endTime+"");
+                    "activityType||"+activityType+",activityName||"+activityName+"");
 
 
             Map<String,String> paramsMap = new HashMap<String,String>();
@@ -175,8 +174,7 @@ public class ActivityController extends BaseController{
         Map<String,String> paramsMap = new HashedMap();
         try {
             addLogOperation("活动信息修改", OperationTypeEnum.UPDATE.getIndex(),activityId,"" +
-                    "activityType||"+activityType+",activityName||"+activityName+",activityImage||"+activityImage+",activityLink||"+activityLink+"" +
-                    ",activitySort||"+activitySort+",remarks||"+remarks+",status||"+status+",startTime||"+startTime+",endTime||"+endTime+"");
+                    "activityType||"+activityType+",activityName||"+activityName+"");
 
             paramsMap.put("activity_id",activityId);
             paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
