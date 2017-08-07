@@ -154,7 +154,7 @@ public class ContactServiceImpl implements ContactService {
                     html = html.replace("{platformServiceFee}",String.valueOf(data.get("platformServiceFee"))+"%");//平台服务费
 
                     html = html.replace("{shareholder}",data.get("shareholder"));//股东
-                    html = html.replace("{shareholderIdCard}",data.get("shareholderArea"));//股东身份证号
+                    html = html.replace("{shareholderIdCard}",data.get("shareholderIdCard"));//股东身份证号
                     html = html.replace("{shareholderArea}",data.get("shareholderArea"));//股东地址
                     html = html.replace("{guarantor}",data.get("guarantor"));//担保人
                     html = html.replace("{guarantorIdCard}",data.get("guarantorIdCard"));//担保人身份证号
@@ -253,9 +253,9 @@ public class ContactServiceImpl implements ContactService {
             String html = IOUtils.toString(fileUtils.download(contractFolderName,"partner_lp_agreement.html"),"UTF-8");
             logger.info(html);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("读取合伙协议异常:{}",e.getMessage());
         }
-        //合同内容替换
+        // TODO: 2017/8/3 合同内容替换  并盖章
 
 
 
@@ -264,7 +264,6 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Result CreateEquityContactFile(Map<String, String> map) {
 
-        // TODO 准备股权合同数据
         try {
             //生成盖章合同
             ContactHtmlCreateFileRequest request=new ContactHtmlCreateFileRequest();
@@ -282,7 +281,7 @@ public class ContactServiceImpl implements ContactService {
 
             OSSFileUtils fileUtils = new OSSFileUtils(endpoint, accessKeyId, accessKeySecret, bucketName, callback);
             String equityIncome = IOUtils.toString(fileUtils.download(contractFolderName,"equity_investment_agreement.html"),"UTF-8");//股权收益模板
-
+            // TODO: 2017/8/3 股权合同内容替换  并盖章
 //            partnershipAgreement = partnershipAgreement.replace("","");
 //            equityIncome = equityIncome.replace("","");
 //
@@ -486,4 +485,9 @@ public class ContactServiceImpl implements ContactService {
             return this.setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
         }
     }
+
+
+
+
+
 }
