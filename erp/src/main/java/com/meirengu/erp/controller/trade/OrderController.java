@@ -157,4 +157,41 @@ public class OrderController extends BaseController{
         }
     }
 
+    /**
+     * 订单置失效
+     * @param orderSn
+     * @return
+     */
+    @RequestMapping(value = "/orderLossEfficacy/{orderSn}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result orderLossEfficacy(@PathVariable String orderSn){
+        if (StringUtils.isEmpty(orderSn)) {
+            return setResult(StatusCode.MISSING_ARGUMENT, null, StatusCode.codeMsgMap.get(StatusCode.MISSING_ARGUMENT));
+        }
+        String url = ConfigUtil.getConfig("order.invalid.url");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("order_sn", orderSn.trim());
+        try {
+            HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
+            int statusCode = hr.getStatusCode();
+            if(statusCode == StatusCode.OK){
+                String content = hr.getContent();
+                JSONObject jsonObject = JSONObject.parseObject(content);
+                Integer code = jsonObject.getIntValue("code");
+                if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("订单置失效", OperationTypeEnum.UPDATE.getIndex(),orderSn,"order_state|4|5");
+                    return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+                }else {
+                    return setResult(code, null, StatusCode.codeMsgMap.get(code));
+                }
+            } else {
+                return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
+            }
+        } catch (Exception e) {
+            logger.error("throw exception:{}", e);
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+    }
+
 }

@@ -701,9 +701,17 @@ public class OrderController extends BaseController{
      * @return
      */
     @RequestMapping(value = "/order_loss_efficacy")
-    public void orderLoseEfficacy(@RequestParam(value = "order_sn", required = true) String orderSn) throws Exception {
+    public Result orderLoseEfficacy(@RequestParam(value = "order_sn", required = true) String orderSn) throws Exception {
         logger.info("订单置失效");
-        orderService.orderLoseEfficacy(orderSn);
+        try {
+            orderService.orderLoseEfficacy(orderSn,2);
+            return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
+        } catch (Exception e) {
+            logger.error("throw exception: {}", e);
+            e.printStackTrace();
+            return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
     /**

@@ -114,9 +114,11 @@ public interface OrderService extends BaseService<Order>{
 
     /**
      * 订单失效
-     * @return
+     * @param orderSn
+     * @param type          2为人工置失效，1为定时失效
+     * @throws IOException
      */
-    void orderLoseEfficacy(String orderSn) throws IOException ;
+    void orderLoseEfficacy(String orderSn, int... type) throws IOException ;
 
     /**
      * 订单失效前提醒

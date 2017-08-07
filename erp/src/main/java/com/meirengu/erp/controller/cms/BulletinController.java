@@ -2,6 +2,7 @@ package com.meirengu.erp.controller.cms;
 
 import com.alibaba.fastjson.JSONObject;
 import com.meirengu.common.StatusCode;
+import com.meirengu.commons.authority.common.enums.OperationTypeEnum;
 import com.meirengu.erp.controller.BaseController;
 import com.meirengu.erp.utils.ConfigUtil;
 import com.meirengu.erp.vo.QueryVo;
@@ -125,7 +126,7 @@ public class BulletinController extends BaseController{
         Map<String, String> params = new HashMap<String, String>();
         params.put("bulletin_title", bulletinTitle);
         params.put("bulletin_content", bulletinContent);
-        params.put("operate_account", "admin");//稍后修改
+        params.put("operate_account", getLoginUser().getUserName());
         try {
             HttpUtil.HttpResult hr = HttpUtil.doPostForm(url, params);
             logger.debug("Request: {} getResponse: {}", url, hr);
@@ -135,6 +136,8 @@ public class BulletinController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("公告新增", OperationTypeEnum.INSERT.getIndex(),"","bulletinTitle||" + bulletinTitle);
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));
@@ -179,6 +182,8 @@ public class BulletinController extends BaseController{
                 JSONObject jsonObject = JSONObject.parseObject(content);
                 Integer code = jsonObject.getIntValue("code");
                 if(code != null && code == StatusCode.OK){
+                    //添加操作日志
+                    addLogOperation("公告修改", OperationTypeEnum.INSERT.getIndex(),bulletinId.toString(),"");
                     return setResult(StatusCode.OK, null, StatusCode.codeMsgMap.get(StatusCode.OK));
                 }else {
                     return setResult(code, null, StatusCode.codeMsgMap.get(code));

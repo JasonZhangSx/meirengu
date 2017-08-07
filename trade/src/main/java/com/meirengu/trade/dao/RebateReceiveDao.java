@@ -30,4 +30,9 @@ public interface RebateReceiveDao extends BaseDao<RebateReceive>{
      */
     public Integer getRebateInfoCount(Map map);
 
+    /**
+     * 优惠券失效
+     */
+    public void invalidRebate();
+
 }
