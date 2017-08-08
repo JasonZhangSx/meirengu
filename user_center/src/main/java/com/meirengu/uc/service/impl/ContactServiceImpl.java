@@ -154,7 +154,7 @@ public class ContactServiceImpl implements ContactService {
                     html = html.replace("{platformServiceFee}",String.valueOf(data.get("platformServiceFee"))+"%");//平台服务费
 
                     html = html.replace("{shareholder}",data.get("shareholder"));//股东
-                    html = html.replace("{shareholderIdCard}",data.get("shareholderIdCard"));//股东身份证号
+                    html = html.replace("{shareholderIdCard}",data.get("shareholderArea"));//股东身份证号
                     html = html.replace("{shareholderArea}",data.get("shareholderArea"));//股东地址
                     html = html.replace("{guarantor}",data.get("guarantor"));//担保人
                     html = html.replace("{guarantorIdCard}",data.get("guarantorIdCard"));//担保人身份证号
@@ -486,8 +486,10 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
-
-
-
-
+    @Override
+    public  List<Contract> selectContactFile(String orderId) {
+        Contract contract = new Contract();
+        contract.setOrderId(Integer.parseInt(orderId));
+        return contractDao.select(contract);
+    }
 }

@@ -1,6 +1,7 @@
 package com.meirengu.uc.service;
 
 import com.meirengu.model.Result;
+import com.meirengu.uc.model.Contract;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,6 @@ public interface ContactService {
     Result CreateHHXYContactFile(Map<String, String> map);
     //生成股权投资协议
     Result CreateEquityContactFile(Map<String, String> map);
+
+    List<Contract> selectContactFile(String orderId);
 }

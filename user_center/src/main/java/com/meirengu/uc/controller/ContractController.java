@@ -5,6 +5,7 @@ import com.meirengu.controller.BaseController;
 import com.meirengu.model.Result;
 import com.meirengu.rocketmq.RocketmqEvent;
 import com.meirengu.uc.common.Constants;
+import com.meirengu.uc.model.Contract;
 import com.meirengu.uc.service.ContactService;
 import com.meirengu.uc.utils.ConfigUtil;
 import com.meirengu.utils.JacksonUtil;
@@ -45,15 +46,20 @@ public class ContractController extends BaseController{
         String message = event.getMsg();
         Map<String,Object> map = (Map<String,Object>)JacksonUtil.readValue(message,Map.class);
 
-        String itemId = String.valueOf(map.get("item_id"));
-        String levelId = String.valueOf(map.get("level_id"));
-        String userId = String.valueOf(map.get("user_id"));
-        String orderId = String.valueOf(map.get("order_id"));
-        Integer type = Integer.parseInt(String.valueOf(map.get("type")));
+        List<Contract> contractList=  contactService.selectContactFile(String.valueOf(map.get("order_id")));
+        if(contractList.size() != 0){
+            logger.info("消息重复消费:{}",event.getMsg());
+        }else{
+            String itemId = String.valueOf(map.get("item_id"));
+            String levelId = String.valueOf(map.get("level_id"));
+            String userId = String.valueOf(map.get("user_id"));
+            String orderId = String.valueOf(map.get("order_id"));
+            Integer type = Integer.parseInt(String.valueOf(map.get("type")));
 
-        Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
-        if(result.getCode() != StatusCode.OK){
-            this.createContactFile(itemId,levelId,userId,orderId,type);
+            Result result = this.createContactFile(itemId,levelId,userId,orderId,type);
+            if(result.getCode() != StatusCode.OK){
+                this.createContactFile(itemId,levelId,userId,orderId,type);
+            }
         }
     }
 
