@@ -58,48 +58,52 @@ public class UserController extends BaseController{
                                     @RequestParam(value="realname", required = false ,defaultValue = "") String realname,
                                     @RequestParam(value="idcard", required = false ,defaultValue = "") String idcard,
                                     @RequestParam(value="is_auth", required = false ,defaultValue = "") String isAuth){
-
-        addLogOperation("用户信息查看", OperationTypeEnum.SELECT.getIndex(),phone,"");
-
-        Map<String, Object> map = new HashMap<>();
-        //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
-        if(draw != 1) { //首次不加载数据
-            String url = ConfigUtil.getConfig("user.list");
-            //查询参数
-            Map<String, String> paramsMap = new HashedMap();
-            paramsMap.put("phone", phone);
-            paramsMap.put("realname", realname);
-            paramsMap.put("idcard", idcard);
-            paramsMap.put("is_auth", isAuth);
-            /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
-            int page = Integer.parseInt(request.getParameter("start")) / Integer.parseInt(request.getParameter("length")) + 1;
-            paramsMap.put("page", page + "");
-            paramsMap.put("per_page", request.getParameter("length"));
+        Map<String, Object> map = new HashMap<>();
+        try {
+            //封装返回集合
+            List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
+            if(draw != 1) { //首次不加载数据
+                String url = ConfigUtil.getConfig("user.list");
+                //查询参数
+                Map<String, String> paramsMap = new HashedMap();
+                paramsMap.put("phone", phone);
+                paramsMap.put("realname", realname);
+                paramsMap.put("idcard", idcard);
+                paramsMap.put("is_auth", isAuth);
+                /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
+                int page = Integer.parseInt(request.getParameter("start")) / Integer.parseInt(request.getParameter("length")) + 1;
+                paramsMap.put("page", page + "");
+                paramsMap.put("per_page", request.getParameter("length"));
 
-            map = (Map<String, Object>) super.httpPost(url, paramsMap);
-            if(map == null){
+                map = (Map<String, Object>) super.httpPost(url, paramsMap);
+                if(map == null){
+                    //保存给datatabls 分页数据
+                    view.setiTotalDisplayRecords(0);//显示总记录
+                    view.setiTotalRecords(0);//数据库总记录
+                }else{
+                    userList = (List<Map<String,Object>>) map.get("list");
+                    //后台处理数据 保存编号 没有编号的不需要这一步
+                    for (int i = 0;i<userList.size();i++){
+                        userList.get(i).put("id",i+1);
+                    }
+                    //保存给datatabls 分页数据
+                    view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+                    view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+                }
+            }else{
                 //保存给datatabls 分页数据
                 view.setiTotalDisplayRecords(0);//显示总记录
                 view.setiTotalRecords(0);//数据库总记录
-            }else{
-                userList = (List<Map<String,Object>>) map.get("list");
-                //后台处理数据 保存编号 没有编号的不需要这一步
-                for (int i = 0;i<userList.size();i++){
-                    userList.get(i).put("id",i+1);
-                }
-                //保存给datatabls 分页数据
-                view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-                view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
             }
-        }else{
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(0);//显示总记录
-            view.setiTotalRecords(0);//数据库总记录
+            view.setAaData(userList);
+            return view;
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return view;
+        }finally {
+            addLogOperation("用户信息查看", OperationTypeEnum.SELECT.getIndex(),phone,"");
         }
-        view.setAaData(userList);
-        return view;
     }
 
     /**
@@ -116,8 +120,6 @@ public class UserController extends BaseController{
                                   @RequestParam(value = "is_allow_talk", required = false) String isAllowTalk) {
         logger.info("UserController updateUserState userId :{} state :{} isAuth :{} ,isBuy :{} ,isAllowInform :{} ,isAllowTalk :{} ",
                 userId,state,isAuth,isBuy,isAllowInform,isAllowTalk);
-        addLogOperation("用户权限信息修改", OperationTypeEnum.UPDATE.getIndex(),userId,"" +
-                "state||"+state+",isAuth||"+isAuth+",isBuy||"+isBuy+",isAllowInform||"+isAllowInform+",isAllowTalk||"+isAllowTalk+"");
 
         try {
             Map<String,String> paramsMap = new HashedMap();
@@ -143,6 +145,9 @@ public class UserController extends BaseController{
         } catch (Exception e) {
             logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("用户权限信息修改", OperationTypeEnum.UPDATE.getIndex(),userId,"" +
+                    "state||"+state+",isAuth||"+isAuth+",isBuy||"+isBuy+",isAllowInform||"+isAllowInform+",isAllowTalk||"+isAllowTalk+"");
         }
     }
 
@@ -154,7 +159,6 @@ public class UserController extends BaseController{
      */
     @RequestMapping("detail")
     public ModelAndView userDetail( @RequestParam(value="phone", required = true) String phone){
-        addLogOperation("用户详情信息", OperationTypeEnum.SELECT.getIndex(),phone,"");
 
         Map<String, Object> map = new HashMap<>();
         String urlForGetUser = ConfigUtil.getConfig("user.list");
@@ -177,16 +181,17 @@ public class UserController extends BaseController{
             // TODO: 3/30/2017 可能会有exception
             map.put("userInfo", user);
             map.put("mapAddress",mapAddress);
-
+            return new ModelAndView("/user/userDetail", map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:", e);
+            return new ModelAndView("/user/userDetail", map);
+        }finally {
+            addLogOperation("用户详情信息", OperationTypeEnum.SELECT.getIndex(),phone,"");
         }
-        return new ModelAndView("/user/userDetail", map);
     }
 
     @RequestMapping(value="/export", method= RequestMethod.GET)
     public ModelAndView userExport(HttpServletResponse response){
-        addLogOperation("用户信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
 
         try {
             Map<String,String> paramsMap = new HashedMap();
@@ -204,9 +209,12 @@ public class UserController extends BaseController{
                 list.add(user);
             }
             new ExportExcel("", User.class).setDataList(list).write(response, fileName).dispose();
+            return new ModelAndView("/user/userList");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:", e);
+            return new ModelAndView("/user/userList");
+        }finally {
+            addLogOperation("用户信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
         }
-        return new ModelAndView("/user/userList");
     }
 }

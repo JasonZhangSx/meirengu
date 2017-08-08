@@ -59,7 +59,6 @@ public class FaqClassController extends BaseController{
     @ResponseBody
     public Result insert(@RequestParam(value = "class_name")String className){
         try {
-            addLogOperation("常见问题分类新增", OperationTypeEnum.INSERT.getIndex(),"","className||"+className+"");
 
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
@@ -83,6 +82,8 @@ public class FaqClassController extends BaseController{
         }catch (Exception e){
             logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("常见问题分类新增", OperationTypeEnum.INSERT.getIndex(),"","className||"+className+"");
         }
     }
 
@@ -95,7 +96,6 @@ public class FaqClassController extends BaseController{
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         try {
-            addLogOperation("常见问题分类查看", OperationTypeEnum.SELECT.getIndex(),"","");
 
             Map<String, Object> map = new HashMap<>();
             String url = ConfigUtil.getConfig("news.faqclass.list");
@@ -119,17 +119,19 @@ public class FaqClassController extends BaseController{
                 view.setiTotalRecords(0);
             }
             view.setAaData(activityList);
+            return view;
         } catch (IOException e) {
-            logger.info("FaqClass list page throws Exception :{}" ,e);
+            logger.error("FaqClass list page throws Exception :{}" ,e);
+            return view;
+        }finally {
+            addLogOperation("常见问题分类查看", OperationTypeEnum.SELECT.getIndex(),"","");
         }
-        return view;
     }
 
     @RequestMapping("update")
     @ResponseBody
     public Map update( @RequestParam(value="class_id", required = true ) String classId,
                        @RequestParam(value = "status" , required = false)String status){
-        addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"status||"+status+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
@@ -142,16 +144,18 @@ public class FaqClassController extends BaseController{
             String url = ConfigUtil.getConfig("news.faqclass.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
+            return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:", e);
+            return map;
+        }finally {
+            addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"status||"+status+"");
         }
-        return map;
     }
     @RequestMapping("edit")
     @ResponseBody
     public Result edit( @RequestParam(value="class_id", required = true ) String classId,
                        @RequestParam(value = "class_name" , required = false)String className){
-        addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
@@ -180,6 +184,8 @@ public class FaqClassController extends BaseController{
         } catch (Exception e) {
             logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("常见问题分类信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
         }
     }
     /**

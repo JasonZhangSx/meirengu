@@ -77,9 +77,6 @@ public class ActivityController extends BaseController{
                          @RequestParam(value = "start_time")String startTime,
                          @RequestParam(value = "end_time")String endTime){
         try {
-            addLogOperation("活动信息新增", OperationTypeEnum.INSERT.getIndex(),"","" +
-                    "activityType||"+activityType+",activityName||"+activityName+"");
-
 
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
@@ -110,8 +107,10 @@ public class ActivityController extends BaseController{
                 return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         }catch (Exception e){
-            logger.info("throw exception:", e);
+            logger.error("throw exception:", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("活动信息新增", OperationTypeEnum.INSERT.getIndex(),"","activityType||"+activityType+",activityName||"+activityName+"");
         }
     }
 
@@ -128,33 +127,40 @@ public class ActivityController extends BaseController{
                                  @RequestParam(value="status", required = false ,defaultValue = "") String status,
                                  @RequestParam(value="activity_type", required = false ,defaultValue = "") String activityType,
                                  @RequestParam(value="activity_name", required = false ,defaultValue = "") String activityName){
-        addLogOperation("活动信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
 
-        Map<String,String> paramsMap = new HashedMap();
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("news.activity.list");
-        //查询参数
-        paramsMap.put("activity_id",activityId);
-        paramsMap.put("activity_name",activityName);
-        paramsMap.put("activity_type",activityType);
-        paramsMap.put("status",status);
+        try{
+            Map<String,String> paramsMap = new HashedMap();
+            Map<String, Object> map = new HashMap<>();
+            String url = ConfigUtil.getConfig("news.activity.list");
+            //查询参数
+            paramsMap.put("activity_id",activityId);
+            paramsMap.put("activity_name",activityName);
+            paramsMap.put("activity_type",activityType);
+            paramsMap.put("status",status);
         /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
-        int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
-        paramsMap.put("page",page+"");
-        paramsMap.put("per_page",request.getParameter("length"));
+            int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
+            paramsMap.put("page",page+"");
+            paramsMap.put("per_page",request.getParameter("length"));
 
-        map = (Map<String,Object>)super.httpPost(url,paramsMap);
+            map = (Map<String,Object>)super.httpPost(url,paramsMap);
 
-        //封装返回集合
-        DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
+            //封装返回集合
+            DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
+            List<Map<String,Object>> activityList = (List<Map<String,Object>>) map.get("list");
 
-        //保存给datatabls 分页数据
-        view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-        view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            //保存给datatabls 分页数据
+            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
 
-        view.setAaData(activityList);
-        return view;
+            view.setAaData(activityList);
+            return view;
+        }catch (Exception e){
+            logger.error("throw exception:{}", e);
+            return new DatatablesViewPage<Map<String,Object>>();
+        }finally {
+            addLogOperation("活动信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
+        }
+
     }
 
     @RequestMapping("update")
@@ -173,8 +179,6 @@ public class ActivityController extends BaseController{
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
         try {
-            addLogOperation("活动信息修改", OperationTypeEnum.UPDATE.getIndex(),activityId,"" +
-                    "activityType||"+activityType+",activityName||"+activityName+"");
 
             paramsMap.put("activity_id",activityId);
             paramsMap.put("operate_account",((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
@@ -223,6 +227,8 @@ public class ActivityController extends BaseController{
         } catch (Exception e) {
             logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("活动信息修改", OperationTypeEnum.UPDATE.getIndex(),activityId,"activityType||"+activityType+",activityName||"+activityName+"");
         }
     }
 

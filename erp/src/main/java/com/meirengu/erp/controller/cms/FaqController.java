@@ -79,7 +79,6 @@ public class FaqController extends BaseController{
                          @RequestParam(value = "faq_question")String faqQuestion,
                          @RequestParam(value = "faq_answer")String faqAnswer){
         try {
-            addLogOperation("常见问题新增", OperationTypeEnum.INSERT.getIndex(),classId,"classId||"+classId+",className||"+className+"");
 
             Map<String,String> paramsMap = new HashMap<String,String>();
             paramsMap.put("operate_account", ((Account)(SecurityUtils.getSubject().getPrincipal())).getUserName());
@@ -104,8 +103,10 @@ public class FaqController extends BaseController{
                 return setResult(statusCode, null, StatusCode.codeMsgMap.get(statusCode));
             }
         }catch (Exception e){
-            logger.info("FaqController insert  throw exception:", e.getMessage());
+            logger.error("FaqController insert  throw exception:", e.getMessage());
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("常见问题新增", OperationTypeEnum.INSERT.getIndex(),classId,"classId||"+classId+",className||"+className+"");
         }
     }
 
@@ -118,7 +119,6 @@ public class FaqController extends BaseController{
 
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
         try {
-            addLogOperation("常见问题查看", OperationTypeEnum.SELECT.getIndex(),"","");
 
             Map<String, Object> map = new HashMap<>();
             String url = ConfigUtil.getConfig("news.faq.list");
@@ -142,17 +142,19 @@ public class FaqController extends BaseController{
                 view.setiTotalRecords(0);
             }
             view.setAaData(activityList);
+            return view;
         } catch (IOException e) {
             logger.info("faq list page throws Exception :{}" ,e);
+            return view;
+        }finally {
+            addLogOperation("常见问题查看", OperationTypeEnum.SELECT.getIndex(),"","");
         }
-        return view;
     }
 
     @RequestMapping("update")
     @ResponseBody
     public Map update( @RequestParam(value="faq_id", required = true ) String faqId,
                        @RequestParam(value = "status" , required = false)String status){
-        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),faqId,"status||"+status+"");
 
         Map<String,Object> map = new HashedMap();
         Map<String,String> paramsMap = new HashedMap();
@@ -165,10 +167,13 @@ public class FaqController extends BaseController{
             String url = ConfigUtil.getConfig("news.faq.update");
             HttpUtil.HttpResult hr = HttpUtil.doPut(url, paramsMap);
             map.put("code",hr.getStatusCode());
+            return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:{}", e);
+            return map;
+        }finally {
+            addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),faqId,"status||"+status+"");
         }
-        return map;
     }
     @RequestMapping("edit")
     @ResponseBody
@@ -178,7 +183,6 @@ public class FaqController extends BaseController{
                              @RequestParam(value = "faq_question")String faqQuestion,
                              @RequestParam(value = "faq_answer")String faqAnswer){
         try {
-        addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
 
             Map<String,Object> map = new HashedMap();
             Map<String,String> paramsMap = new HashedMap();
@@ -206,6 +210,8 @@ public class FaqController extends BaseController{
         } catch (Exception e) {
             logger.error("throw exception:{}", e);
             return setResult(StatusCode.INTERNAL_SERVER_ERROR, null, StatusCode.codeMsgMap.get(StatusCode.INTERNAL_SERVER_ERROR));
+        }finally {
+            addLogOperation("常见问题信息修改", OperationTypeEnum.UPDATE.getIndex(),classId,"className||"+className+"");
         }
     }
     /**

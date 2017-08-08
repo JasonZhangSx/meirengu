@@ -47,47 +47,51 @@ public class InviterController extends BaseController{
                                  @RequestParam(value="invite_phone", required = false ,defaultValue = "") String invitePhone,
                                  @RequestParam(value="invite_idcard", required = false ,defaultValue = "") String inviteIdcard,
                                  @RequestParam(value="invest_conditions", required = false ,defaultValue = "") String investConditions){
-        addLogOperation("邀请关系信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
-
-        Map<String,String> paramsMap = new HashedMap();
-        Map<String, Object> map = new HashMap<>();
-        String url = ConfigUtil.getConfig("user.inviter.list");
-        //查询参数
-        paramsMap.put("phone",phone);
-        paramsMap.put("invite_phone",invitePhone);
-        paramsMap.put("invite_idcard",inviteIdcard);
-        paramsMap.put("invest_conditions",investConditions);
-        /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
-        int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
-        paramsMap.put("page",page+"");
-        paramsMap.put("per_page",request.getParameter("length"));
-
-        map = (Map<String,Object>)super.httpPost(url,paramsMap);
-        //封装返回集合
         DatatablesViewPage<Map<String,Object>> view = new DatatablesViewPage<Map<String,Object>>();
-        List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
-        if(map == null){
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(0);//显示总记录
-            view.setiTotalRecords(0);//数据库总记录
-        }else{
-            userList = (List<Map<String,Object>>) map.get("list");
-            for(Map user:userList){
-                user.put("invitedIdCard", InfoProcessUtil.generateDefaultIdCard(String.valueOf(user.get("invitedIdCard"))));
+        try {
+            Map<String,String> paramsMap = new HashedMap();
+            Map<String, Object> map = new HashMap<>();
+            String url = ConfigUtil.getConfig("user.inviter.list");
+            //查询参数
+            paramsMap.put("phone",phone);
+            paramsMap.put("invite_phone",invitePhone);
+            paramsMap.put("invite_idcard",inviteIdcard);
+            paramsMap.put("invest_conditions",investConditions);
+        /*配置分页数据 datatables传递过来的是 从第几条开始 以及要查看的数据长度*/
+            int page = Integer.parseInt(request.getParameter("start"))/Integer.parseInt(request.getParameter("length"))+ 1;
+            paramsMap.put("page",page+"");
+            paramsMap.put("per_page",request.getParameter("length"));
+
+            map = (Map<String,Object>)super.httpPost(url,paramsMap);
+            //封装返回集合
+            List<Map<String,Object>> userList = new ArrayList<Map<String, Object>>();
+            if(map == null){
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(0);//显示总记录
+                view.setiTotalRecords(0);//数据库总记录
+            }else{
+                userList = (List<Map<String,Object>>) map.get("list");
+                for(Map user:userList){
+                    user.put("invitedIdCard", InfoProcessUtil.generateDefaultIdCard(String.valueOf(user.get("invitedIdCard"))));
+                }
+                //保存给datatabls 分页数据
+                view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
+                view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
             }
-            //保存给datatabls 分页数据
-            view.setiTotalDisplayRecords(Integer.valueOf(map.get("totalCount")+""));//显示总记录
-            view.setiTotalRecords(Integer.valueOf(map.get("totalCount")+""));//数据库总记录
+            view.setAaData(userList);
+            return view;
+        }catch (Exception e){
+            logger.error("throw exception:", e);
+            return view;
+        }finally {
+            addLogOperation("邀请关系信息查看", OperationTypeEnum.SELECT.getIndex(),"","");
         }
-        view.setAaData(userList);
-        return view;
     }
 
     @RequestMapping(value="/export", method= RequestMethod.GET)
     public ModelAndView inviterExport(HttpServletResponse response){
 
         try {
-            addLogOperation("邀请关系信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
 
             Map<String,String> paramsMap = new HashedMap();
             Map<String, Object> map = new HashMap<>();
@@ -104,10 +108,13 @@ public class InviterController extends BaseController{
                 list.add(inviterVo);
             }
             new ExportExcel("", InviterVo.class).setDataList(list).write(response, fileName).dispose();
+            return new ModelAndView("/user/userInvite");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("throw exception:", e);
+            return new ModelAndView("/user/userInvite");
+        }finally {
+            addLogOperation("邀请关系信息导出", OperationTypeEnum.EXPORT.getIndex(),"","");
         }
-        return new ModelAndView("/user/userInvite");
     }
 
 }
