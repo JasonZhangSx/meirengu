@@ -24,7 +24,7 @@
 
     <!--为 @async 设定线程池-->
     <task:annotation-driven executor="asyncExecutor" />
-    <task:executor id="asyncExecutor" pool-size="10-100" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
+    <task:executor id="asyncExecutor" pool-size="3-8" queue-capacity="10" rejection-policy="CALLER_RUNS"/>
 
     <!-- redis配置 -->
     <context:property-placeholder location="classpath:redis.properties"/>
